@@ -367,23 +367,23 @@ public class Users {
         }
     }
 }
-extension DropboxClient {
+extension BabelClient {
     /// Get information about a user's account.
     ///
     /// :param: accountId
     ///        A user's account identifier.
-    public func usersGetAccount(#accountId: String) -> DropboxRpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
+    public func usersGetAccount(#accountId: String) -> BabelRpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
         let request = Users.GetAccountArg(accountId: accountId)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/users/get_account", params: Users.GetAccountArgSerializer().serialize(request), responseSerializer: Users.BasicAccountSerializer(), errorSerializer: Users.GetAccountErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/users/get_account", params: Users.GetAccountArgSerializer().serialize(request), responseSerializer: Users.BasicAccountSerializer(), errorSerializer: Users.GetAccountErrorSerializer())
     }
     /// Get information about the current user's account.
     ///
-    public func usersGetCurrentAccount() -> DropboxRpcRequest<Users.FullAccountSerializer, VoidSerializer> {
-        return DropboxRpcRequest(client: self, host: "meta", route: "/users/get_current_account", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.FullAccountSerializer(), errorSerializer: Serialization._VoidSerializer)
+    public func usersGetCurrentAccount() -> BabelRpcRequest<Users.FullAccountSerializer, VoidSerializer> {
+        return BabelRpcRequest(client: self, host: "meta", route: "/users/get_current_account", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.FullAccountSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /// Get the space usage information for the current user's account.
     ///
-    public func usersGetSpaceUsage() -> DropboxRpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
-        return DropboxRpcRequest(client: self, host: "meta", route: "/users/get_space_usage", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
+    public func usersGetSpaceUsage() -> BabelRpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
+        return BabelRpcRequest(client: self, host: "meta", route: "/users/get_space_usage", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
 }

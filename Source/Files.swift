@@ -3,6 +3,47 @@
 
 import Foundation
 public class Files {
+    /// Metadata (excluding name or path) for a file or folder. You should never
+    /// see a bare `Metadata` instance; you will always receive an instance of
+    /// `FileMetadata` or `FolderMetadata`.
+    ///
+    /// - File
+    /// - Folder
+    public enum Metadata : Printable {
+        case File(Files.FileMetadata)
+        case Folder(Files.FolderMetadata)
+        public var description : String {
+            return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
+        }
+    }
+    public class MetadataSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: Metadata) -> JSON {
+            switch value {
+                case .File(let arg):
+                    return .Dictionary(["file": FileMetadataSerializer().serialize(arg)])
+                case .Folder(let arg):
+                    return .Dictionary(["folder": FolderMetadataSerializer().serialize(arg)])
+            }
+        }
+        public func deserialize(json: JSON) -> Metadata {
+            switch json {
+                case .Dictionary(let d):
+                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
+                    if let val = d["file"] {
+                        let obj = FileMetadataSerializer().deserialize(val)
+                        return Metadata.File(obj)
+                    }
+                    else if let val = d["folder"] {
+                        let obj = FolderMetadataSerializer().deserialize(val)
+                        return Metadata.Folder(obj)
+                    }
+                    else { assert(false, "Unexpected tag") }
+                default:
+                    assert(false, "Failed to deserialize")
+            }
+        }
+    }
     /// Metadata (excluding name or path) for a file.
     ///
     /// :param: clientModified
@@ -28,7 +69,7 @@ public class Files {
         public init(clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64) {
             self.clientModified = clientModified
             self.serverModified = serverModified
-            stringValidator()(value: rev)
+            stringValidator(minLength: 9, pattern: "[0-9a-f]+")(value: rev)
             self.rev = rev
             comparableValidator()(value: size)
             self.size = size
@@ -84,47 +125,6 @@ public class Files {
                     return FolderMetadata()
                 default:
                     assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// Metadata (excluding name or path) for a file or folder. You should never
-    /// see a bare `Metadata` instance; you will always receive an instance of
-    /// `FileMetadata` or `FolderMetadata`.
-    ///
-    /// - File
-    /// - Folder
-    public enum Metadata : Printable {
-        case File(Files.FileMetadata)
-        case Folder(Files.FolderMetadata)
-        public var description : String {
-            return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
-        }
-    }
-    public class MetadataSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: Metadata) -> JSON {
-            switch value {
-                case .File(let arg):
-                    return .Dictionary(["file": FileMetadataSerializer().serialize(arg)])
-                case .Folder(let arg):
-                    return .Dictionary(["folder": FolderMetadataSerializer().serialize(arg)])
-            }
-        }
-        public func deserialize(json: JSON) -> Metadata {
-            switch json {
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["file"] {
-                        let obj = FileMetadataSerializer().deserialize(val)
-                        return Metadata.File(obj)
-                    }
-                    else if let val = d["folder"] {
-                        let obj = FolderMetadataSerializer().deserialize(val)
-                        return Metadata.Folder(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
-                default:
-                    assert(false, "Failed to deserialize")
             }
         }
     }
@@ -984,7 +984,7 @@ public class Files {
         public init(path: String, rev: String? = nil) {
             stringValidator()(value: path)
             self.path = path
-            nullableValidator(stringValidator())(value: rev)
+            nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(value: rev)
             self.rev = rev
         }
         public var description : String {
@@ -1445,10 +1445,11 @@ public class Files {
     ///   It's never a conflict. Overwrite the existing file. The autorename
     ///   strategy is the same as it is for `add`.
     /// - Update:
-    ///   It's a conflict only if the current "rev" matches the given "rev". The
-    ///   autorename strategy is to append the string "conflicted copy" to the
-    ///   file name. For example, "document.txt" might become "document
-    ///   (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
+    ///   It's a conflict only if the current "rev" doesn't match the given
+    ///   "rev". The autorename strategy is to append the string "conflicted
+    ///   copy" to the file name. For example, "document.txt" might become
+    ///   "document (conflicted copy).txt" or "document (Panda's conflicted
+    ///   copy).txt".
     public enum WriteMode : Printable {
         case Add
         case Overwrite
@@ -2162,14 +2163,14 @@ public class Files {
         }
     }
 }
-extension DropboxClient {
+extension BabelClient {
     /// Returns the metadata for a file or folder.
     ///
     /// :param: path
     ///        The path of the file or folder on Dropbox. Must not be the root.
-    public func filesGetMetadata(#path: String) -> DropboxRpcRequest<Files.MetadataWithNameSerializer, Files.GetMetadataErrorSerializer> {
+    public func filesGetMetadata(#path: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
     }
     /// Returns the contents of a folder. NOTE: We're definitely going to
     /// streamline this interface.
@@ -2177,9 +2178,9 @@ extension DropboxClient {
     /// :param: path
     ///        The path to the folder you want to see the contents of. May be
     ///        the root (i.e. empty).
-    public func filesListFolder(#path: String) -> DropboxRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    public func filesListFolder(#path: String) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /// Once a cursor has been retrieved from :route:`list_folder`, use this to
     /// paginate through all files and retrieve updates to the folder. NOTE:
@@ -2188,9 +2189,9 @@ extension DropboxClient {
     /// :param: cursor
     ///        The cursor returned in the `ListFolderFooter` component of a
     ///        `list_folder` or `list_folder/continue` request.
-    public func filesListFolderContinue(#cursor: String) -> DropboxRpcRequest<Files.ListFolderContinueResultSerializer, Files.ListFolderContinueErrorSerializer> {
+    public func filesListFolderContinue(#cursor: String) -> BabelRpcRequest<Files.ListFolderContinueResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let request = Files.ListFolderContinueArg(cursor: cursor)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderContinueResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderContinueResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
     }
     /// Download a file from a user's Dropbox.
     ///
@@ -2198,17 +2199,17 @@ extension DropboxClient {
     ///        The path of the file to download.
     /// :param: rev
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesDownload(#path: String, rev: String? = nil) -> DropboxDownloadRequest<Files.FileMetadataWithNameSerializer, Files.DownloadErrorSerializer> {
+    public func filesDownload(#path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataWithNameSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
-        return DropboxDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.DownloadErrorSerializer())
+        return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.DownloadErrorSerializer())
     }
     /// Start a new upload session. This is used to upload a single file with
     /// multiple calls.
     ///
     /// :param: body
     ///        The binary payload to upload
-    public func filesUploadSessionStart(#body: NSData) -> DropboxUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
-        return DropboxUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), body: body, responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+    public func filesUploadSessionStart(#body: NSData) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), body: body, responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /// Append more data to an upload session.
     ///
@@ -2220,9 +2221,9 @@ extension DropboxClient {
     ///        network error.
     /// :param: body
     ///        The binary payload to upload
-    public func filesUploadSessionAppend(#sessionId: String, offset: UInt64, body: NSData) -> DropboxUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    public func filesUploadSessionAppend(#sessionId: String, offset: UInt64, body: NSData) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
-        return DropboxUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), body: body, responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), body: body, responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer())
     }
     /// Finish an upload session and save the uploaded data to the given file
     /// path.
@@ -2233,9 +2234,9 @@ extension DropboxClient {
     ///        Contains the path and other optional modifiers for the commit.
     /// :param: body
     ///        The binary payload to upload
-    public func filesUploadSessionFinish(#cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> DropboxUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadSessionFinishErrorSerializer> {
+    public func filesUploadSessionFinish(#cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return DropboxUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
     }
     /// Create a new file with the contents provided in the request.
     ///
@@ -2259,9 +2260,9 @@ extension DropboxClient {
     ///        result in a user notification.
     /// :param: body
     ///        The binary payload to upload
-    public func filesUpload(#path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> DropboxUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadErrorSerializer> {
+    public func filesUpload(#path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return DropboxUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadErrorSerializer())
     }
     /// Searches for files and folders.
     ///
@@ -2280,9 +2281,9 @@ extension DropboxClient {
     /// :param: mode
     ///        The search mode (filename, filename_and_content, or
     ///        deleted_filename).
-    public func filesSearch(#path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> DropboxRpcRequest<Files.SearchResultsSerializer, Files.SearchErrorSerializer> {
+    public func filesSearch(#path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> BabelRpcRequest<Files.SearchResultsSerializer, Files.SearchErrorSerializer> {
         let request = Files.SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/search", params: Files.SearchQuerySerializer().serialize(request), responseSerializer: Files.SearchResultsSerializer(), errorSerializer: Files.SearchErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/search", params: Files.SearchQuerySerializer().serialize(request), responseSerializer: Files.SearchResultsSerializer(), errorSerializer: Files.SearchErrorSerializer())
     }
     /// Create a folder at a given path. No file or folder may exist at the
     /// path. The parent folder will be created if it does not already exist
@@ -2292,18 +2293,18 @@ extension DropboxClient {
     ///
     /// :param: path
     ///        Path in the user's Dropbox to create.
-    public func filesCreateFolder(#path: String) -> DropboxRpcRequest<Files.FolderMetadataSerializer, Files.PathErrorSerializer> {
+    public func filesCreateFolder(#path: String) -> BabelRpcRequest<Files.FolderMetadataSerializer, Files.PathErrorSerializer> {
         let request = Files.CreateFolderArg(path: path)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
     }
     /// Delete the file or folder at a given path. If the path is a folder all
     /// its contents will be deleted too.
     ///
     /// :param: path
     ///        Path in the user's Dropbox to delete.
-    public func filesDelete(#path: String) -> DropboxRpcRequest<Files.MetadataSerializer, Files.PathErrorSerializer> {
+    public func filesDelete(#path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.PathErrorSerializer> {
         let request = Files.DeleteArg(path: path)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
     }
     /// Copy a file or folder to a different destination in the user's Dropbox.
     /// If the source path is a folder all its contents will be copied. The
@@ -2313,9 +2314,9 @@ extension DropboxClient {
     ///        Path in the user's Dropbox to be copied or moved.
     /// :param: toPath
     ///        Path in the user's Dropbox that is the destination.
-    public func filesCopy(#fromPath: String, toPath: String) -> DropboxRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
+    public func filesCopy(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
     /// Move a file or folder to a different destination in the user's Dropbox.
     /// If the source path is a folder all its contents will be moved. The
@@ -2325,8 +2326,8 @@ extension DropboxClient {
     ///        Path in the user's Dropbox to be copied or moved.
     /// :param: toPath
     ///        Path in the user's Dropbox that is the destination.
-    public func filesMove(#fromPath: String, toPath: String) -> DropboxRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
+    public func filesMove(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return DropboxRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
 }

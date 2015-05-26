@@ -1,9 +1,6 @@
 import Foundation
 import Alamofire
 
-// Dropbox API errors
-public let DropboxErrorDomain = "com.dropbox.error"
-
 public class Box<T> {
 	public let unboxed : T
 	init (_ v : T) { self.unboxed = v }
@@ -56,17 +53,17 @@ func utf8Decode(data: NSData) -> String? {
 }
 
 
-/// Represents a Dropbox API request
+/// Represents a Babel request
 ///
 /// These objects are constructed by the SDK; users of the SDK do not need to create them manually.
 ///
 /// Pass in a closure to the `response` method to handle a response or error.
-public class DropboxRequest<RType : JSONSerializer, EType : JSONSerializer> {
+public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
     let errorSerializer : EType
     let responseSerializer : RType
     let request : Request
     
-    init(client: DropboxClient,
+    init(client: BabelClient,
         host: String,
         route: String,
         responseSerializer: RType,
@@ -111,8 +108,8 @@ public class DropboxRequest<RType : JSONSerializer, EType : JSONSerializer> {
 }
 
 /// An "rpc-style" request
-public class DropboxRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : DropboxRequest<RType, EType> {
-    init(client: DropboxClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
+public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
+    init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
             var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
@@ -139,8 +136,8 @@ public class DropboxRpcRequest<RType : JSONSerializer, EType : JSONSerializer> :
     }
 }
 
-public class DropboxUploadRequest<RType : JSONSerializer, EType : JSONSerializer> : DropboxRequest<RType, EType> {
-    init(client: DropboxClient, host: String, route: String, params: JSON, body: NSData, responseSerializer: RType, errorSerializer: EType) {
+public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
+    init(client: BabelClient, host: String, route: String, params: JSON, body: NSData, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
             var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
@@ -185,8 +182,8 @@ public class DropboxUploadRequest<RType : JSONSerializer, EType : JSONSerializer
 
 }
 
-public class DropboxDownloadRequest<RType : JSONSerializer, EType : JSONSerializer> : DropboxRequest<RType, EType> {
-    init(client: DropboxClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
+public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
+    init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
             var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
@@ -233,94 +230,16 @@ public class DropboxDownloadRequest<RType : JSONSerializer, EType : JSONSerializ
 }
 
 /// A dropbox API client
-public class DropboxClient {
-    var accessToken: DropboxAccessToken
+public class BabelClient {
     var baseHosts : [String : String]
-    
-    public static var sharedClient : DropboxClient!
     
     var manager : Manager
     
-    public init(accessToken: DropboxAccessToken, baseApiUrl: String, baseContentUrl: String, baseNotifyUrl: String) {
-        self.accessToken = accessToken
-        self.baseHosts = [
-            "meta" : baseApiUrl,
-            "content": baseContentUrl,
-            "notify": baseNotifyUrl,
-        ]
-        
-        // Authentication header with access token
-        
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        
-        configuration.HTTPAdditionalHeaders = [
-            "Authorization" : "Bearer \(accessToken)",
-        ]
-        
-        self.manager = Manager(configuration: configuration)
 
-    }
     
-    public convenience init(accessToken: DropboxAccessToken) {
-        self.init(accessToken: accessToken,
-            baseApiUrl: "https://api.dropbox.com/2-beta",
-            baseContentUrl: "https://api-content.dropbox.com/2-beta",
-            baseNotifyUrl: "https://api-notify.dropbox.com")
-    }
-    
-    /// Invoke an RPC request. Users of the SDK should not need to call this manually.
-    ///
-    /// :param: host
-    ///         The host to call
-    /// :param: route
-    ///         The route to call
-    /// :param: params
-    ///         The already-serialized parameter object
-    /// :param: responseSerializer
-    ///         The response serializer
-    /// :param: errorSerializer
-    ///         The error serializer
-    /// :returns: A Dropbox RPC request
-    func runRpcRequest<RType: JSONSerializer, EType: JSONSerializer>(#host: String, route: String, params: JSON,responseSerializer: RType, errorSerializer: EType) -> DropboxRpcRequest<RType, EType> {
-        return DropboxRpcRequest(client: self, host: host, route: route, params: params, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-    }
-    
-    /// Invoke an Upload request. Users of the SDK should not need to call this manually.
-    ///
-    /// :param: host
-    ///         The host to call
-    /// :param: route
-    ///         The route to call
-    /// :param: params
-    ///         The already-serialized parameter object
-    /// :param: responseSerializer
-    ///         The response serializer
-    /// :param: errorSerializer
-    ///         The error serializer
-    /// :returns: A Dropbox upload request
-    func runUploadRequest<RType: JSONSerializer, EType: JSONSerializer>(#host: String, route: String, params: JSON, body: NSData, responseSerializer: RType, errorSerializer: EType) -> DropboxUploadRequest<RType, EType> {
-        return DropboxUploadRequest(client: self, host: host, route: route, params: params, body: body, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-    }
-    
-    /// Invoke a Download request. Users of the SDK should not need to call this manually.
-    ///
-    /// :param: host
-    ///         The host to call
-    /// :param: route
-    ///         The route to call
-    /// :param: params
-    ///         The already-serialized parameter object
-    /// :param: responseSerializer
-    ///         The response serializer
-    /// :param: errorSerializer
-    ///         The error serializer
-    /// :returns: A Dropbox RPC request
-    func runDownloadRequest<RType: JSONSerializer, EType: JSONSerializer>(#host: String, route: String, params: JSON,responseSerializer: RType, errorSerializer: EType) -> DropboxDownloadRequest<RType, EType> {
-        return DropboxDownloadRequest(client: self, host: host, route: route, params: params, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    public init(manager : Manager, baseHosts : [String : String]) {
+        self.baseHosts = baseHosts
+        self.manager = manager
     }
 }
-
-
-
-
 
