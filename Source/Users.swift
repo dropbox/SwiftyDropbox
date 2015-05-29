@@ -52,21 +52,22 @@ public class Users {
         public func serialize(value: GetAccountError) -> JSON {
             switch value {
                 case .NoAccount:
-                    return .Str("no_account")
+                    return .Dictionary([".tag": .Str("no_account")])
                 case .Unknown:
-                    return .Str("unknown")
+                    return .Dictionary([".tag": .Str("unknown")])
             }
         }
         public func deserialize(json: JSON) -> GetAccountError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "no_account":
                             return GetAccountError.NoAccount
                         case "unknown":
                             return GetAccountError.Unknown
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return GetAccountError.Unknown
                     }
                 default:
                     assert(false, "Failed to deserialize")

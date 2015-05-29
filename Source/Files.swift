@@ -7,11 +7,9 @@ public class Files {
     /// see a bare `Metadata` instance; you will always receive an instance of
     /// `FileMetadata` or `FolderMetadata`.
     ///
-    /// - File
-    /// - Folder
-    public enum Metadata : Printable {
-        case File(Files.FileMetadata)
-        case Folder(Files.FolderMetadata)
+    public class Metadata: Printable {
+        public init() {
+        }
         public var description : String {
             return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
         }
@@ -19,28 +17,23 @@ public class Files {
     public class MetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: Metadata) -> JSON {
-            switch value {
-                case .File(let arg):
-                    return .Dictionary(["file": FileMetadataSerializer().serialize(arg)])
-                case .Folder(let arg):
-                    return .Dictionary(["folder": FolderMetadataSerializer().serialize(arg)])
-            }
+            var output = [String : JSON]()
+            return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> Metadata {
             switch json {
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["file"] {
-                        let obj = FileMetadataSerializer().deserialize(val)
-                        return Metadata.File(obj)
+                case .Dictionary(let dict):
+                    let tag = Serialization.getTag(dict)
+                    switch tag {
+                        case "file":
+                            return FileMetadataSerializer().deserialize(json)
+                        case "folder":
+                            return FolderMetadataSerializer().deserialize(json)
+                        default:
+                            fatalError("Unknown tag \(tag)")
                     }
-                    else if let val = d["folder"] {
-                        let obj = FolderMetadataSerializer().deserialize(val)
-                        return Metadata.Folder(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
-                    assert(false, "Failed to deserialize")
+                    assert(false, "Type error deserializing")
             }
         }
     }
@@ -61,7 +54,7 @@ public class Files {
     ///        detect changes and avoid conflicts.
     /// :param: size
     ///        The file size in bytes.
-    public class FileMetadata: Printable {
+    public class FileMetadata: Metadata, Printable {
         public let clientModified : NSDate
         public let serverModified : NSDate
         public let rev : String
@@ -73,8 +66,9 @@ public class Files {
             self.rev = rev
             comparableValidator()(value: size)
             self.size = size
+            super.init()
         }
-        public var description : String {
+        public override var description : String {
             return "\(prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
         }
     }
@@ -106,10 +100,8 @@ public class Files {
     /// fields defined here, but we will add folder-specific metadata in the
     /// future.)
     ///
-    public class FolderMetadata: Printable {
-        public init() {
-        }
-        public var description : String {
+    public class FolderMetadata: Metadata, Printable {
+        public override var description : String {
             return "\(prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
         }
     }
@@ -260,21 +252,22 @@ public class Files {
         public func serialize(value: GetMetadataError) -> JSON {
             switch value {
                 case .NotFound:
-                    return .Str("not_found")
+                    return .Dictionary([".tag": .Str("not_found")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> GetMetadataError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "not_found":
                             return GetMetadataError.NotFound
                         case "other":
                             return GetMetadataError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return GetMetadataError.Other
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -482,21 +475,22 @@ public class Files {
         public func serialize(value: FolderPathError) -> JSON {
             switch value {
                 case .NotFound:
-                    return .Str("not_found")
+                    return .Dictionary([".tag": .Str("not_found")])
                 case .NotFolder:
-                    return .Str("not_folder")
+                    return .Dictionary([".tag": .Str("not_folder")])
             }
         }
         public func deserialize(json: JSON) -> FolderPathError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "not_found":
                             return FolderPathError.NotFound
                         case "not_folder":
                             return FolderPathError.NotFolder
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -518,17 +512,18 @@ public class Files {
         public func serialize(value: ListFolderError) -> JSON {
             switch value {
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> ListFolderError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "other":
                             return ListFolderError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return ListFolderError.Other
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -589,24 +584,25 @@ public class Files {
         public func serialize(value: ListFolderContinueEntries) -> JSON {
             switch value {
                 case .Continue(let arg):
-                    return .Dictionary(["continue": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
+                    return .Dictionary([".tag": .Str("continue"), "continue": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
                 case .Restart(let arg):
-                    return .Dictionary(["restart": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
+                    return .Dictionary([".tag": .Str("restart"), "restart": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
             }
         }
         public func deserialize(json: JSON) -> ListFolderContinueEntries {
             switch json {
                 case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["continue"] {
-                        let obj = ArraySerializer(ChangeEntrySerializer()).deserialize(val)
-                        return ListFolderContinueEntries.Continue(obj)
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "continue":
+                            let v = ArraySerializer(ChangeEntrySerializer()).deserialize(d["continue"] ?? .Null)
+                            return ListFolderContinueEntries.Continue(v)
+                        case "restart":
+                            let v = ArraySerializer(ChangeEntrySerializer()).deserialize(d["restart"] ?? .Null)
+                            return ListFolderContinueEntries.Restart(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
                     }
-                    else if let val = d["restart"] {
-                        let obj = ArraySerializer(ChangeEntrySerializer()).deserialize(val)
-                        return ListFolderContinueEntries.Restart(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -673,31 +669,28 @@ public class Files {
         public func serialize(value: ListFolderContinueError) -> JSON {
             switch value {
                 case .Reset:
-                    return .Str("reset")
+                    return .Dictionary([".tag": .Str("reset")])
                 case .ListFolderError(let arg):
-                    return .Dictionary(["list_folder_error": ListFolderErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("list_folder_error"), "list_folder_error": ListFolderErrorSerializer().serialize(arg)])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> ListFolderContinueError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "reset":
                             return ListFolderContinueError.Reset
+                        case "list_folder_error":
+                            let v = ListFolderErrorSerializer().deserialize(d["list_folder_error"] ?? .Null)
+                            return ListFolderContinueError.ListFolderError(v)
                         case "other":
                             return ListFolderContinueError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return ListFolderContinueError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["list_folder_error"] {
-                        let obj = ListFolderErrorSerializer().deserialize(val)
-                        return ListFolderContinueError.ListFolderError(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -721,21 +714,22 @@ public class Files {
         public func serialize(value: NoFileReason) -> JSON {
             switch value {
                 case .NotFound:
-                    return .Str("not_found")
+                    return .Dictionary([".tag": .Str("not_found")])
                 case .IsFolder:
-                    return .Str("is_folder")
+                    return .Dictionary([".tag": .Str("is_folder")])
             }
         }
         public func deserialize(json: JSON) -> NoFileReason {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "not_found":
                             return NoFileReason.NotFound
                         case "is_folder":
                             return NoFileReason.IsFolder
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -792,21 +786,22 @@ public class Files {
         public func serialize(value: RestrictedReason) -> JSON {
             switch value {
                 case .Dmca:
-                    return .Str("dmca")
+                    return .Dictionary([".tag": .Str("dmca")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> RestrictedReason {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "dmca":
                             return RestrictedReason.Dmca
                         case "other":
                             return RestrictedReason.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return RestrictedReason.Other
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -862,27 +857,24 @@ public class Files {
         public func serialize(value: DisallowedReason) -> JSON {
             switch value {
                 case .Permission:
-                    return .Str("permission")
+                    return .Dictionary([".tag": .Str("permission")])
                 case .Restricted(let arg):
-                    return .Dictionary(["restricted": RestrictedSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("restricted"), "restricted": RestrictedSerializer().serialize(arg)])
             }
         }
         public func deserialize(json: JSON) -> DisallowedReason {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "permission":
                             return DisallowedReason.Permission
+                        case "restricted":
+                            let v = RestrictedSerializer().deserialize(d["restricted"] ?? .Null)
+                            return DisallowedReason.Restricted(v)
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["restricted"] {
-                        let obj = RestrictedSerializer().deserialize(val)
-                        return DisallowedReason.Restricted(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -940,33 +932,29 @@ public class Files {
         public func serialize(value: DownloadError) -> JSON {
             switch value {
                 case .Disallowed(let arg):
-                    return .Dictionary(["disallowed": DisallowedSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("disallowed"), "disallowed": DisallowedSerializer().serialize(arg)])
                 case .NoFile(let arg):
-                    return .Dictionary(["no_file": NoFileSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("no_file"), "no_file": NoFileSerializer().serialize(arg)])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> DownloadError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disallowed":
+                            let v = DisallowedSerializer().deserialize(d["disallowed"] ?? .Null)
+                            return DownloadError.Disallowed(v)
+                        case "no_file":
+                            let v = NoFileSerializer().deserialize(d["no_file"] ?? .Null)
+                            return DownloadError.NoFile(v)
                         case "other":
                             return DownloadError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return DownloadError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["disallowed"] {
-                        let obj = DisallowedSerializer().deserialize(val)
-                        return DownloadError.Disallowed(obj)
-                    }
-                    else if let val = d["no_file"] {
-                        let obj = NoFileSerializer().deserialize(val)
-                        return DownloadError.NoFile(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1035,19 +1023,20 @@ public class Files {
         public func serialize(value: CommitConflictError) -> JSON {
             switch value {
                 case .File:
-                    return .Str("file")
+                    return .Dictionary([".tag": .Str("file")])
                 case .Folder:
-                    return .Str("folder")
+                    return .Dictionary([".tag": .Str("folder")])
                 case .AutorenameFailed:
-                    return .Str("autorename_failed")
+                    return .Dictionary([".tag": .Str("autorename_failed")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> CommitConflictError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "file":
                             return CommitConflictError.File
                         case "folder":
@@ -1057,7 +1046,7 @@ public class Files {
                         case "other":
                             return CommitConflictError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return CommitConflictError.Other
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -1089,19 +1078,23 @@ public class Files {
         public func serialize(value: CommitError) -> JSON {
             switch value {
                 case .Conflict(let arg):
-                    return .Dictionary(["conflict": CommitConflictErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("conflict"), "conflict": CommitConflictErrorSerializer().serialize(arg)])
                 case .NoWritePermission:
-                    return .Str("no_write_permission")
+                    return .Dictionary([".tag": .Str("no_write_permission")])
                 case .InsufficientQuota:
-                    return .Str("insufficient_quota")
+                    return .Dictionary([".tag": .Str("insufficient_quota")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> CommitError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "conflict":
+                            let v = CommitConflictErrorSerializer().deserialize(d["conflict"] ?? .Null)
+                            return CommitError.Conflict(v)
                         case "no_write_permission":
                             return CommitError.NoWritePermission
                         case "insufficient_quota":
@@ -1109,15 +1102,8 @@ public class Files {
                         case "other":
                             return CommitError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return CommitError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["conflict"] {
-                        let obj = CommitConflictErrorSerializer().deserialize(val)
-                        return CommitError.Conflict(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1221,35 +1207,32 @@ public class Files {
         public func serialize(value: UploadSessionLookupError) -> JSON {
             switch value {
                 case .NotFound:
-                    return .Str("not_found")
+                    return .Dictionary([".tag": .Str("not_found")])
                 case .IncorrectOffset(let arg):
-                    return .Dictionary(["incorrect_offset": UploadSessionOffsetErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("incorrect_offset"), "incorrect_offset": UploadSessionOffsetErrorSerializer().serialize(arg)])
                 case .Closed:
-                    return .Str("closed")
+                    return .Dictionary([".tag": .Str("closed")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> UploadSessionLookupError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "not_found":
                             return UploadSessionLookupError.NotFound
+                        case "incorrect_offset":
+                            let v = UploadSessionOffsetErrorSerializer().deserialize(d["incorrect_offset"] ?? .Null)
+                            return UploadSessionLookupError.IncorrectOffset(v)
                         case "closed":
                             return UploadSessionLookupError.Closed
                         case "other":
                             return UploadSessionLookupError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return UploadSessionLookupError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["incorrect_offset"] {
-                        let obj = UploadSessionOffsetErrorSerializer().deserialize(val)
-                        return UploadSessionLookupError.IncorrectOffset(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1273,27 +1256,24 @@ public class Files {
         public func serialize(value: UploadError) -> JSON {
             switch value {
                 case .CommitFailed(let arg):
-                    return .Dictionary(["commit_failed": UploadCommitErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("commit_failed"), "commit_failed": UploadCommitErrorSerializer().serialize(arg)])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> UploadError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "commit_failed":
+                            let v = UploadCommitErrorSerializer().deserialize(d["commit_failed"] ?? .Null)
+                            return UploadError.CommitFailed(v)
                         case "other":
                             return UploadError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return UploadError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["commit_failed"] {
-                        let obj = UploadCommitErrorSerializer().deserialize(val)
-                        return UploadError.CommitFailed(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1320,33 +1300,29 @@ public class Files {
         public func serialize(value: UploadSessionFinishError) -> JSON {
             switch value {
                 case .LookupFailed(let arg):
-                    return .Dictionary(["lookup_failed": UploadSessionLookupErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("lookup_failed"), "lookup_failed": UploadSessionLookupErrorSerializer().serialize(arg)])
                 case .CommitFailed(let arg):
-                    return .Dictionary(["commit_failed": CommitErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("commit_failed"), "commit_failed": CommitErrorSerializer().serialize(arg)])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> UploadSessionFinishError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "lookup_failed":
+                            let v = UploadSessionLookupErrorSerializer().deserialize(d["lookup_failed"] ?? .Null)
+                            return UploadSessionFinishError.LookupFailed(v)
+                        case "commit_failed":
+                            let v = CommitErrorSerializer().deserialize(d["commit_failed"] ?? .Null)
+                            return UploadSessionFinishError.CommitFailed(v)
                         case "other":
                             return UploadSessionFinishError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return UploadSessionFinishError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["lookup_failed"] {
-                        let obj = UploadSessionLookupErrorSerializer().deserialize(val)
-                        return UploadSessionFinishError.LookupFailed(obj)
-                    }
-                    else if let val = d["commit_failed"] {
-                        let obj = CommitErrorSerializer().deserialize(val)
-                        return UploadSessionFinishError.CommitFailed(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1463,31 +1439,28 @@ public class Files {
         public func serialize(value: WriteMode) -> JSON {
             switch value {
                 case .Add:
-                    return .Str("add")
+                    return .Dictionary([".tag": .Str("add")])
                 case .Overwrite:
-                    return .Str("overwrite")
+                    return .Dictionary([".tag": .Str("overwrite")])
                 case .Update(let arg):
-                    return .Dictionary(["update": Serialization._StringSerializer.serialize(arg)])
+                    return .Dictionary([".tag": .Str("update"), "update": Serialization._StringSerializer.serialize(arg)])
             }
         }
         public func deserialize(json: JSON) -> WriteMode {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "add":
                             return WriteMode.Add
                         case "overwrite":
                             return WriteMode.Overwrite
+                        case "update":
+                            let v = Serialization._StringSerializer.deserialize(d["update"] ?? .Null)
+                            return WriteMode.Update(v)
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["update"] {
-                        let obj = Serialization._StringSerializer.deserialize(val)
-                        return WriteMode.Update(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -1616,17 +1589,18 @@ public class Files {
         public func serialize(value: SearchMode) -> JSON {
             switch value {
                 case .Filename:
-                    return .Str("filename")
+                    return .Dictionary([".tag": .Str("filename")])
                 case .FilenameAndContent:
-                    return .Str("filename_and_content")
+                    return .Dictionary([".tag": .Str("filename_and_content")])
                 case .DeletedFilename:
-                    return .Str("deleted_filename")
+                    return .Dictionary([".tag": .Str("deleted_filename")])
             }
         }
         public func deserialize(json: JSON) -> SearchMode {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "filename":
                             return SearchMode.Filename
                         case "filename_and_content":
@@ -1634,7 +1608,7 @@ public class Files {
                         case "deleted_filename":
                             return SearchMode.DeletedFilename
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -1726,17 +1700,18 @@ public class Files {
         public func serialize(value: SearchMatchType) -> JSON {
             switch value {
                 case .Filename:
-                    return .Str("filename")
+                    return .Dictionary([".tag": .Str("filename")])
                 case .Content:
-                    return .Str("content")
+                    return .Dictionary([".tag": .Str("content")])
                 case .Both:
-                    return .Str("both")
+                    return .Dictionary([".tag": .Str("both")])
             }
         }
         public func deserialize(json: JSON) -> SearchMatchType {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "filename":
                             return SearchMatchType.Filename
                         case "content":
@@ -1744,7 +1719,7 @@ public class Files {
                         case "both":
                             return SearchMatchType.Both
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -1849,17 +1824,18 @@ public class Files {
         public func serialize(value: SearchError) -> JSON {
             switch value {
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> SearchError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "other":
                             return SearchError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return SearchError.Other
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -1917,39 +1893,43 @@ public class Files {
         public func serialize(value: PathError) -> JSON {
             switch value {
                 case .RootDisallowed:
-                    return .Str("root_disallowed")
+                    return .Dictionary([".tag": .Str("root_disallowed")])
                 case .MalformedPath(let arg):
-                    return .Dictionary(["malformed_path": Serialization._StringSerializer.serialize(arg)])
+                    return .Dictionary([".tag": .Str("malformed_path"), "malformed_path": Serialization._StringSerializer.serialize(arg)])
                 case .NotFound:
-                    return .Str("not_found")
+                    return .Dictionary([".tag": .Str("not_found")])
                 case .FileDisallowed:
-                    return .Str("file_disallowed")
+                    return .Dictionary([".tag": .Str("file_disallowed")])
                 case .FolderDisallowed:
-                    return .Str("folder_disallowed")
+                    return .Dictionary([".tag": .Str("folder_disallowed")])
                 case .ConflictFile:
-                    return .Str("conflict_file")
+                    return .Dictionary([".tag": .Str("conflict_file")])
                 case .ConflictFolder:
-                    return .Str("conflict_folder")
+                    return .Dictionary([".tag": .Str("conflict_folder")])
                 case .ConflictFileAncestor:
-                    return .Str("conflict_file_ancestor")
+                    return .Dictionary([".tag": .Str("conflict_file_ancestor")])
                 case .ReadOnly:
-                    return .Str("read_only")
+                    return .Dictionary([".tag": .Str("read_only")])
                 case .SharedFolderDisallowed:
-                    return .Str("shared_folder_disallowed")
+                    return .Dictionary([".tag": .Str("shared_folder_disallowed")])
                 case .AutorenameFiled:
-                    return .Str("autorename_filed")
+                    return .Dictionary([".tag": .Str("autorename_filed")])
                 case .Misc(let arg):
-                    return .Dictionary(["misc": Serialization._StringSerializer.serialize(arg)])
+                    return .Dictionary([".tag": .Str("misc"), "misc": Serialization._StringSerializer.serialize(arg)])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> PathError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "root_disallowed":
                             return PathError.RootDisallowed
+                        case "malformed_path":
+                            let v = Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .Null)
+                            return PathError.MalformedPath(v)
                         case "not_found":
                             return PathError.NotFound
                         case "file_disallowed":
@@ -1968,22 +1948,14 @@ public class Files {
                             return PathError.SharedFolderDisallowed
                         case "autorename_filed":
                             return PathError.AutorenameFiled
+                        case "misc":
+                            let v = Serialization._StringSerializer.deserialize(d["misc"] ?? .Null)
+                            return PathError.Misc(v)
                         case "other":
                             return PathError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return PathError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["malformed_path"] {
-                        let obj = Serialization._StringSerializer.deserialize(val)
-                        return PathError.MalformedPath(obj)
-                    }
-                    else if let val = d["misc"] {
-                        let obj = Serialization._StringSerializer.deserialize(val)
-                        return PathError.Misc(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
@@ -2122,21 +2094,28 @@ public class Files {
         public func serialize(value: RelocationError) -> JSON {
             switch value {
                 case .FromError(let arg):
-                    return .Dictionary(["from_error": PathErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("from_error"), "from_error": PathErrorSerializer().serialize(arg)])
                 case .ToError(let arg):
-                    return .Dictionary(["to_error": PathErrorSerializer().serialize(arg)])
+                    return .Dictionary([".tag": .Str("to_error"), "to_error": PathErrorSerializer().serialize(arg)])
                 case .TooManyFiles:
-                    return .Str("too_many_files")
+                    return .Dictionary([".tag": .Str("too_many_files")])
                 case .QuotaError:
-                    return .Str("quota_error")
+                    return .Dictionary([".tag": .Str("quota_error")])
                 case .Other:
-                    return .Str("other")
+                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> RelocationError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "from_error":
+                            let v = PathErrorSerializer().deserialize(d["from_error"] ?? .Null)
+                            return RelocationError.FromError(v)
+                        case "to_error":
+                            let v = PathErrorSerializer().deserialize(d["to_error"] ?? .Null)
+                            return RelocationError.ToError(v)
                         case "too_many_files":
                             return RelocationError.TooManyFiles
                         case "quota_error":
@@ -2144,19 +2123,8 @@ public class Files {
                         case "other":
                             return RelocationError.Other
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return RelocationError.Other
                     }
-                case .Dictionary(let d):
-                    assert(d.count == 1, "Expected 1 key, got \(d.count)")
-                    if let val = d["from_error"] {
-                        let obj = PathErrorSerializer().deserialize(val)
-                        return RelocationError.FromError(obj)
-                    }
-                    else if let val = d["to_error"] {
-                        let obj = PathErrorSerializer().deserialize(val)
-                        return RelocationError.ToError(obj)
-                    }
-                    else { assert(false, "Unexpected tag") }
                 default:
                     assert(false, "Failed to deserialize")
             }
