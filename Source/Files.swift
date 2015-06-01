@@ -3,12 +3,24 @@
 
 import Foundation
 public class Files {
-    /// Metadata (excluding name or path) for a file or folder. You should never
-    /// see a bare `Metadata` instance; you will always receive an instance of
-    /// `FileMetadata` or `FolderMetadata`.
+    /// Metadata for a file or folder. You should never see a bare `Metadata`
+    /// instance; you will always receive an instance of `FileMetadata` or
+    /// `FolderMetadata`.
     ///
+    /// :param: name
+    ///        The last component of the path (including extension). This never
+    ///        contains a slash.
+    /// :param: pathLower
+    ///        The lowercased full path in the user's Dropbox. This always
+    ///        starts with a slash.
     public class Metadata: Printable {
-        public init() {
+        public let name : String
+        public let pathLower : String
+        public init(name: String, pathLower: String) {
+            stringValidator()(value: name)
+            self.name = name
+            stringValidator()(value: pathLower)
+            self.pathLower = pathLower
         }
         public var description : String {
             return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
@@ -17,7 +29,28 @@ public class Files {
     public class MetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: Metadata) -> JSON {
-            var output = [String : JSON]()
+            var output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
+            ]
+            switch value {
+                case let file as Files.FileMetadata:
+                    for (k,v) in Serialization.getFields(FileMetadataSerializer().serialize(file)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .Str("file")
+                case let folder as Files.FolderMetadata:
+                    for (k,v) in Serialization.getFields(FolderMetadataSerializer().serialize(folder)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .Str("folder")
+                case let deleted as Files.DeletedMetadata:
+                    for (k,v) in Serialization.getFields(DeletedMetadataSerializer().serialize(deleted)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .Str("deleted")
+                default: fatalError("Tried to serialize unexpected subtype")
+            }
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> Metadata {
@@ -29,6 +62,8 @@ public class Files {
                             return FileMetadataSerializer().deserialize(json)
                         case "folder":
                             return FolderMetadataSerializer().deserialize(json)
+                        case "deleted":
+                            return DeletedMetadataSerializer().deserialize(json)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -59,14 +94,14 @@ public class Files {
         public let serverModified : NSDate
         public let rev : String
         public let size : UInt64
-        public init(clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64) {
+        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64) {
             self.clientModified = clientModified
             self.serverModified = serverModified
             stringValidator(minLength: 9, pattern: "[0-9a-f]+")(value: rev)
             self.rev = rev
             comparableValidator()(value: size)
             self.size = size
-            super.init()
+            super.init(name: name, pathLower: pathLower)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
@@ -76,6 +111,8 @@ public class Files {
         public init() { }
         public func serialize(value: FileMetadata) -> JSON {
             var output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "client_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.clientModified),
             "server_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.serverModified),
             "rev": Serialization._StringSerializer.serialize(value.rev),
@@ -86,11 +123,13 @@ public class Files {
         public func deserialize(json: JSON) -> FileMetadata {
             switch json {
                 case .Dictionary(let dict):
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
+                    let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
                     let clientModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["client_modified"] ?? .Null)
                     let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .Null)
                     let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
                     let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .Null)
-                    return FileMetadata(clientModified: clientModified, serverModified: serverModified, rev: rev, size: size)
+                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size)
                 default:
                     assert(false, "Type error deserializing")
             }
@@ -108,127 +147,46 @@ public class Files {
     public class FolderMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: FolderMetadata) -> JSON {
-            var output = [String : JSON]()
+            var output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
+            ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> FolderMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    return FolderMetadata()
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
+                    let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
+                    return FolderMetadata(name: name, pathLower: pathLower)
                 default:
                     assert(false, "Type error deserializing")
             }
         }
     }
-    /// Metadata for a file including the name.
+    /// Indicates a deleted file or folder in results returned by
+    /// `list_folder/continue` or `search`.
     ///
-    /// :param: name
-    ///        The last component of the path.
-    /// :param: metadata
-    ///        The rest of the metadata.
-    public class FileMetadataWithName: Printable {
-        public let name : String
-        public let metadata : FileMetadata
-        public init(name: String, metadata: FileMetadata) {
-            stringValidator()(value: name)
-            self.name = name
-            self.metadata = metadata
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(FileMetadataWithNameSerializer().serialize(self)))"
+    public class DeletedMetadata: Metadata, Printable {
+        public override var description : String {
+            return "\(prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
     }
-    public class FileMetadataWithNameSerializer: JSONSerializer {
+    public class DeletedMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(value: FileMetadataWithName) -> JSON {
+        public func serialize(value: DeletedMetadata) -> JSON {
             var output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
-            "metadata": FileMetadataSerializer().serialize(value.metadata),
+            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             ]
             return .Dictionary(output)
         }
-        public func deserialize(json: JSON) -> FileMetadataWithName {
+        public func deserialize(json: JSON) -> DeletedMetadata {
             switch json {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let metadata = FileMetadataSerializer().deserialize(dict["metadata"] ?? .Null)
-                    return FileMetadataWithName(name: name, metadata: metadata)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// Metadata for a file or folder including the name.
-    ///
-    /// :param: name
-    ///        The last component of the path.
-    /// :param: metadata
-    ///        The rest of the metadata.
-    public class MetadataWithName: Printable {
-        public let name : String
-        public let metadata : Metadata
-        public init(name: String, metadata: Metadata) {
-            stringValidator()(value: name)
-            self.name = name
-            self.metadata = metadata
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(MetadataWithNameSerializer().serialize(self)))"
-        }
-    }
-    public class MetadataWithNameSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: MetadataWithName) -> JSON {
-            var output = [ 
-            "name": Serialization._StringSerializer.serialize(value.name),
-            "metadata": MetadataSerializer().serialize(value.metadata),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> MetadataWithName {
-            switch json {
-                case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let metadata = MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
-                    return MetadataWithName(name: name, metadata: metadata)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// Metadata for a file or folder including the full path.
-    ///
-    /// :param: path
-    ///        The full path.
-    /// :param: metadata
-    ///        The rest of the metadata.
-    public class MetadataWithPath: Printable {
-        public let path : String
-        public let metadata : Metadata
-        public init(path: String, metadata: Metadata) {
-            stringValidator()(value: path)
-            self.path = path
-            self.metadata = metadata
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(MetadataWithPathSerializer().serialize(self)))"
-        }
-    }
-    public class MetadataWithPathSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: MetadataWithPath) -> JSON {
-            var output = [ 
-            "path": Serialization._StringSerializer.serialize(value.path),
-            "metadata": MetadataSerializer().serialize(value.metadata),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> MetadataWithPath {
-            switch json {
-                case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let metadata = MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
-                    return MetadataWithPath(path: path, metadata: metadata)
+                    let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
+                    return DeletedMetadata(name: name, pathLower: pathLower)
                 default:
                     assert(false, "Type error deserializing")
             }
@@ -306,46 +264,6 @@ public class Files {
             }
         }
     }
-    /// Additional information returned by `list_folder` and
-    /// `list_folder/continue`.
-    ///
-    /// :param: cursor
-    ///        Pass the cursor into `list_folder/continue` to see what's changed
-    ///        in the folder since your previous query.
-    /// :param: hasMore
-    ///        If true, then there are more entries available.
-    public class ListFolderFooter: Printable {
-        public let cursor : String
-        public let hasMore : Bool
-        public init(cursor: String, hasMore: Bool) {
-            stringValidator()(value: cursor)
-            self.cursor = cursor
-            self.hasMore = hasMore
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderFooterSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderFooterSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderFooter) -> JSON {
-            var output = [ 
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> ListFolderFooter {
-            switch json {
-                case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    return ListFolderFooter(cursor: cursor, hasMore: hasMore)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
     /// Arguments for `list_folder`.
     ///
     /// :param: path
@@ -379,59 +297,25 @@ public class Files {
             }
         }
     }
-    /// Item returned for a file or folder by `list_folder` and
-    /// `list_folder/continue`.
-    ///
-    /// :param: name
-    ///        The name and extension of the file.
-    /// :param: metadata
-    ///        The rest of the metadata. This is `null` if the file or folder is
-    ///        deleted.
-    public class ChangeEntry: Printable {
-        public let name : String
-        public let metadata : Metadata?
-        public init(name: String, metadata: Metadata? = nil) {
-            stringValidator()(value: name)
-            self.name = name
-            self.metadata = metadata
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(ChangeEntrySerializer().serialize(self)))"
-        }
-    }
-    public class ChangeEntrySerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ChangeEntry) -> JSON {
-            var output = [ 
-            "name": Serialization._StringSerializer.serialize(value.name),
-            "metadata": NullableSerializer(MetadataSerializer()).serialize(value.metadata),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> ChangeEntry {
-            switch json {
-                case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let metadata = NullableSerializer(MetadataSerializer()).deserialize(dict["metadata"] ?? .Null)
-                    return ChangeEntry(name: name, metadata: metadata)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
     /// Information returned by `list_folder`.
     ///
     /// :param: entries
     ///        The files and (direct) subfolders in the folder.
-    /// :param: footer
-    ///        Additional information for making future calls to
-    ///        `list_folder/continue`.
+    /// :param: cursor
+    ///        Pass the cursor into `list_folder/continue` to see what's changed
+    ///        in the folder since your previous query.
+    /// :param: hasMore
+    ///        If true, then there are more entries available. Pass the cursor
+    ///        to `list_folder/continue` to retrieve the rest.
     public class ListFolderResult: Printable {
-        public let entries : Array<ChangeEntry>
-        public let footer : ListFolderFooter
-        public init(entries: Array<ChangeEntry>, footer: ListFolderFooter) {
+        public let entries : Array<Metadata>
+        public let cursor : String
+        public let hasMore : Bool
+        public init(entries: Array<Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
-            self.footer = footer
+            stringValidator()(value: cursor)
+            self.cursor = cursor
+            self.hasMore = hasMore
         }
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
@@ -441,17 +325,19 @@ public class Files {
         public init() { }
         public func serialize(value: ListFolderResult) -> JSON {
             var output = [ 
-            "entries": ArraySerializer(ChangeEntrySerializer()).serialize(value.entries),
-            "footer": ListFolderFooterSerializer().serialize(value.footer),
+            "entries": ArraySerializer(MetadataSerializer()).serialize(value.entries),
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> ListFolderResult {
             switch json {
                 case .Dictionary(let dict):
-                    let entries = ArraySerializer(ChangeEntrySerializer()).deserialize(dict["entries"] ?? .Null)
-                    let footer = ListFolderFooterSerializer().deserialize(dict["footer"] ?? .Null)
-                    return ListFolderResult(entries: entries, footer: footer)
+                    let entries = ArraySerializer(MetadataSerializer()).deserialize(dict["entries"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
+                    return ListFolderResult(entries: entries, cursor: cursor, hasMore: hasMore)
                 default:
                     assert(false, "Type error deserializing")
             }
@@ -533,8 +419,7 @@ public class Files {
     /// Arguments for `list_folder/continue`.
     ///
     /// :param: cursor
-    ///        The cursor returned in the `ListFolderFooter` component of a
-    ///        `list_folder` or `list_folder/continue` request.
+    ///        The cursor returned by `list_folder` or `list_folder/continue`.
     public class ListFolderContinueArg: Printable {
         public let cursor : String
         public init(cursor: String) {
@@ -563,103 +448,13 @@ public class Files {
             }
         }
     }
-    /// Entries for files and (direct) subfolders reported by
-    /// `list_folder/continue`. This is a union with two options: `continue` if
-    /// this call is returning entries in addition to the last call; `restart`
-    /// if this call is starting the listing from the beginning.
-    ///
-    /// - Continue:
-    ///   Files and folders changed since the last call.
-    /// - Restart:
-    ///   Fresh files and folders.
-    public enum ListFolderContinueEntries : Printable {
-        case Continue(Array<Files.ChangeEntry>)
-        case Restart(Array<Files.ChangeEntry>)
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderContinueEntriesSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderContinueEntriesSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderContinueEntries) -> JSON {
-            switch value {
-                case .Continue(let arg):
-                    return .Dictionary([".tag": .Str("continue"), "continue": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
-                case .Restart(let arg):
-                    return .Dictionary([".tag": .Str("restart"), "restart": ArraySerializer(ChangeEntrySerializer()).serialize(arg)])
-            }
-        }
-        public func deserialize(json: JSON) -> ListFolderContinueEntries {
-            switch json {
-                case .Dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "continue":
-                            let v = ArraySerializer(ChangeEntrySerializer()).deserialize(d["continue"] ?? .Null)
-                            return ListFolderContinueEntries.Continue(v)
-                        case "restart":
-                            let v = ArraySerializer(ChangeEntrySerializer()).deserialize(d["restart"] ?? .Null)
-                            return ListFolderContinueEntries.Restart(v)
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
-                default:
-                    assert(false, "Failed to deserialize")
-            }
-        }
-    }
-    /// Information returned by `list_folder/continue`.
-    ///
-    /// :param: entries
-    ///        The file and folder entries returned by this call.
-    /// :param: footer
-    ///        Additional information for making future calls to
-    ///        `list_folder/continue`.
-    public class ListFolderContinueResult: Printable {
-        public let entries : ListFolderContinueEntries
-        public let footer : ListFolderFooter
-        public init(entries: ListFolderContinueEntries, footer: ListFolderFooter) {
-            self.entries = entries
-            self.footer = footer
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderContinueResultSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderContinueResultSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderContinueResult) -> JSON {
-            var output = [ 
-            "entries": ListFolderContinueEntriesSerializer().serialize(value.entries),
-            "footer": ListFolderFooterSerializer().serialize(value.footer),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> ListFolderContinueResult {
-            switch json {
-                case .Dictionary(let dict):
-                    let entries = ListFolderContinueEntriesSerializer().deserialize(dict["entries"] ?? .Null)
-                    let footer = ListFolderFooterSerializer().deserialize(dict["footer"] ?? .Null)
-                    return ListFolderContinueResult(entries: entries, footer: footer)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
     /// Error returned by `list_folder/continue`.
     ///
     /// - Reset:
-    ///   Indicates that the format of the cursor has changed in a backwards
-    ///   incompatible way which means the client must call `list_folder` to
+    ///   Indicates that the cursor has been invalidated. Call `list_folder` to
     ///   obtain a new cursor.
-    /// - ListFolderError:
-    ///   An error in common with `list_folder`.
-    /// - Other:
-    ///   An unspecified error.
     public enum ListFolderContinueError : Printable {
         case Reset
-        case ListFolderError(Files.ListFolderError)
-        case Other
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
         }
@@ -670,10 +465,6 @@ public class Files {
             switch value {
                 case .Reset:
                     return .Dictionary([".tag": .Str("reset")])
-                case .ListFolderError(let arg):
-                    return .Dictionary([".tag": .Str("list_folder_error"), "list_folder_error": ListFolderErrorSerializer().serialize(arg)])
-                case .Other:
-                    return .Dictionary([".tag": .Str("other")])
             }
         }
         public func deserialize(json: JSON) -> ListFolderContinueError {
@@ -683,13 +474,8 @@ public class Files {
                     switch tag {
                         case "reset":
                             return ListFolderContinueError.Reset
-                        case "list_folder_error":
-                            let v = ListFolderErrorSerializer().deserialize(d["list_folder_error"] ?? .Null)
-                            return ListFolderContinueError.ListFolderError(v)
-                        case "other":
-                            return ListFolderContinueError.Other
                         default:
-                            return ListFolderContinueError.Other
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -1734,8 +1520,8 @@ public class Files {
     ///        The metadata for the matched file or folder.
     public class SearchMatch: Printable {
         public let matchType : SearchMatchType
-        public let metadata : MetadataWithPath
-        public init(matchType: SearchMatchType, metadata: MetadataWithPath) {
+        public let metadata : Metadata
+        public init(matchType: SearchMatchType, metadata: Metadata) {
             self.matchType = matchType
             self.metadata = metadata
         }
@@ -1748,7 +1534,7 @@ public class Files {
         public func serialize(value: SearchMatch) -> JSON {
             var output = [ 
             "match_type": SearchMatchTypeSerializer().serialize(value.matchType),
-            "metadata": MetadataWithPathSerializer().serialize(value.metadata),
+            "metadata": MetadataSerializer().serialize(value.metadata),
             ]
             return .Dictionary(output)
         }
@@ -1756,7 +1542,7 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let matchType = SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .Null)
-                    let metadata = MetadataWithPathSerializer().deserialize(dict["metadata"] ?? .Null)
+                    let metadata = MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
                     return SearchMatch(matchType: matchType, metadata: metadata)
                 default:
                     assert(false, "Type error deserializing")
@@ -2136,9 +1922,9 @@ extension BabelClient {
     ///
     /// :param: path
     ///        The path of the file or folder on Dropbox. Must not be the root.
-    public func filesGetMetadata(#path: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.GetMetadataErrorSerializer> {
+    public func filesGetMetadata(#path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path)
-        return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
     }
     /// Returns the contents of a folder. NOTE: We're definitely going to
     /// streamline this interface.
@@ -2155,11 +1941,10 @@ extension BabelClient {
     /// We're definitely going to streamline this interface.
     ///
     /// :param: cursor
-    ///        The cursor returned in the `ListFolderFooter` component of a
-    ///        `list_folder` or `list_folder/continue` request.
-    public func filesListFolderContinue(#cursor: String) -> BabelRpcRequest<Files.ListFolderContinueResultSerializer, Files.ListFolderContinueErrorSerializer> {
+    ///        The cursor returned by `list_folder` or `list_folder/continue`.
+    public func filesListFolderContinue(#cursor: String) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let request = Files.ListFolderContinueArg(cursor: cursor)
-        return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderContinueResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
     }
     /// Download a file from a user's Dropbox.
     ///
@@ -2167,9 +1952,9 @@ extension BabelClient {
     ///        The path of the file to download.
     /// :param: rev
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesDownload(#path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataWithNameSerializer, Files.DownloadErrorSerializer> {
+    public func filesDownload(#path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
-        return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.DownloadErrorSerializer())
+        return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer())
     }
     /// Start a new upload session. This is used to upload a single file with
     /// multiple calls.
@@ -2202,9 +1987,9 @@ extension BabelClient {
     ///        Contains the path and other optional modifiers for the commit.
     /// :param: body
     ///        The binary payload to upload
-    public func filesUploadSessionFinish(#cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadSessionFinishErrorSerializer> {
+    public func filesUploadSessionFinish(#cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
     }
     /// Create a new file with the contents provided in the request.
     ///
@@ -2228,9 +2013,9 @@ extension BabelClient {
     ///        result in a user notification.
     /// :param: body
     ///        The binary payload to upload
-    public func filesUpload(#path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataWithNameSerializer, Files.UploadErrorSerializer> {
+    public func filesUpload(#path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataWithNameSerializer(), errorSerializer: Files.UploadErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer())
     }
     /// Searches for files and folders.
     ///
@@ -2282,9 +2067,9 @@ extension BabelClient {
     ///        Path in the user's Dropbox to be copied or moved.
     /// :param: toPath
     ///        Path in the user's Dropbox that is the destination.
-    public func filesCopy(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
+    public func filesCopy(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return BabelRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
     /// Move a file or folder to a different destination in the user's Dropbox.
     /// If the source path is a folder all its contents will be moved. The
@@ -2294,8 +2079,8 @@ extension BabelClient {
     ///        Path in the user's Dropbox to be copied or moved.
     /// :param: toPath
     ///        Path in the user's Dropbox that is the destination.
-    public func filesMove(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataWithNameSerializer, Files.RelocationErrorSerializer> {
+    public func filesMove(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataWithNameSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
 }
