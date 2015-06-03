@@ -52,21 +52,69 @@ public class Users {
         public func serialize(value: GetAccountError) -> JSON {
             switch value {
                 case .NoAccount:
-                    return .Str("no_account")
+                    return .Dictionary([".tag": .Str("no_account")])
                 case .Unknown:
-                    return .Str("unknown")
+                    return .Dictionary([".tag": .Str("unknown")])
             }
         }
         public func deserialize(json: JSON) -> GetAccountError {
             switch json {
-                case .Str(let str):
-                    switch str {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
                         case "no_account":
                             return GetAccountError.NoAccount
                         case "unknown":
                             return GetAccountError.Unknown
                         default:
-                            assert(false, "Invalid tag \"\(str)\"")
+                            return GetAccountError.Unknown
+                    }
+                default:
+                    assert(false, "Failed to deserialize")
+            }
+        }
+    }
+    /// What type of account this user has.
+    ///
+    /// - Basic:
+    ///   The basic account type.
+    /// - Pro:
+    ///   The Dropbox Pro account type.
+    /// - Business:
+    ///   The Dropbox for Business account type.
+    public enum AccountType : Printable {
+        case Basic
+        case Pro
+        case Business
+        public var description : String {
+            return "\(prepareJSONForSerialization(AccountTypeSerializer().serialize(self)))"
+        }
+    }
+    public class AccountTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: AccountType) -> JSON {
+            switch value {
+                case .Basic:
+                    return .Dictionary([".tag": .Str("basic")])
+                case .Pro:
+                    return .Dictionary([".tag": .Str("pro")])
+                case .Business:
+                    return .Dictionary([".tag": .Str("business")])
+            }
+        }
+        public func deserialize(json: JSON) -> AccountType {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "basic":
+                            return AccountType.Basic
+                        case "pro":
+                            return AccountType.Pro
+                        case "business":
+                            return AccountType.Business
+                        default:
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     assert(false, "Failed to deserialize")
@@ -169,6 +217,8 @@ public class Users {
     ///        Whether the user has a personal and work account. If the current
     ///        account is personal, then `team` will always be `null`, but
     ///        `is_paired` will indicate if a work account is linked.
+    /// :param: accountType
+    ///        What type of account this user has.
     public class FullAccount: Account, Printable {
         public let email : String
         public let country : String?
@@ -176,7 +226,8 @@ public class Users {
         public let referralLink : String
         public let team : Team?
         public let isPaired : Bool
-        public init(accountId: String, name: Name, email: String, locale: String, referralLink: String, isPaired: Bool, country: String? = nil, team: Team? = nil) {
+        public let accountType : AccountType
+        public init(accountId: String, name: Name, email: String, locale: String, referralLink: String, isPaired: Bool, accountType: AccountType, country: String? = nil, team: Team? = nil) {
             stringValidator()(value: email)
             self.email = email
             nullableValidator(stringValidator(minLength: 2, maxLength: 2))(value: country)
@@ -187,6 +238,7 @@ public class Users {
             self.referralLink = referralLink
             self.team = team
             self.isPaired = isPaired
+            self.accountType = accountType
             super.init(accountId: accountId, name: name)
         }
         public override var description : String {
@@ -203,6 +255,7 @@ public class Users {
             "locale": Serialization._StringSerializer.serialize(value.locale),
             "referral_link": Serialization._StringSerializer.serialize(value.referralLink),
             "is_paired": Serialization._BoolSerializer.serialize(value.isPaired),
+            "account_type": AccountTypeSerializer().serialize(value.accountType),
             "country": NullableSerializer(Serialization._StringSerializer).serialize(value.country),
             "team": NullableSerializer(TeamSerializer()).serialize(value.team),
             ]
@@ -217,9 +270,10 @@ public class Users {
                     let locale = Serialization._StringSerializer.deserialize(dict["locale"] ?? .Null)
                     let referralLink = Serialization._StringSerializer.deserialize(dict["referral_link"] ?? .Null)
                     let isPaired = Serialization._BoolSerializer.deserialize(dict["is_paired"] ?? .Null)
+                    let accountType = AccountTypeSerializer().deserialize(dict["account_type"] ?? .Null)
                     let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
                     let team = NullableSerializer(TeamSerializer()).deserialize(dict["team"] ?? .Null)
-                    return FullAccount(accountId: accountId, name: name, email: email, locale: locale, referralLink: referralLink, isPaired: isPaired, country: country, team: team)
+                    return FullAccount(accountId: accountId, name: name, email: email, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
                 default:
                     assert(false, "Type error deserializing")
             }
@@ -322,23 +376,18 @@ public class Users {
     }
     /// Information about a user's space usage and quota.
     ///
-    /// :param: quota
-    ///        The user's total quota allocation (bytes).
-    /// :param: usageIndividual
-    ///        The user's used quota not including shared folders (bytes).
-    /// :param: usageShared
-    ///        The user's used quota in shared folders (bytes).
+    /// :param: allocated
+    ///        The user's total space allocation (bytes).
+    /// :param: used
+    ///        The user's total space usage (bytes).
     public class SpaceUsage: Printable {
-        public let quota : UInt64
-        public let usageIndividual : UInt64
-        public let usageShared : UInt64
-        public init(quota: UInt64, usageIndividual: UInt64, usageShared: UInt64) {
-            comparableValidator()(value: quota)
-            self.quota = quota
-            comparableValidator()(value: usageIndividual)
-            self.usageIndividual = usageIndividual
-            comparableValidator()(value: usageShared)
-            self.usageShared = usageShared
+        public let allocated : UInt64
+        public let used : UInt64
+        public init(allocated: UInt64, used: UInt64) {
+            comparableValidator()(value: allocated)
+            self.allocated = allocated
+            comparableValidator()(value: used)
+            self.used = used
         }
         public var description : String {
             return "\(prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
@@ -348,19 +397,17 @@ public class Users {
         public init() { }
         public func serialize(value: SpaceUsage) -> JSON {
             var output = [ 
-            "quota": Serialization._UInt64Serializer.serialize(value.quota),
-            "usage_individual": Serialization._UInt64Serializer.serialize(value.usageIndividual),
-            "usage_shared": Serialization._UInt64Serializer.serialize(value.usageShared),
+            "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
+            "used": Serialization._UInt64Serializer.serialize(value.used),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> SpaceUsage {
             switch json {
                 case .Dictionary(let dict):
-                    let quota = Serialization._UInt64Serializer.deserialize(dict["quota"] ?? .Null)
-                    let usageIndividual = Serialization._UInt64Serializer.deserialize(dict["usage_individual"] ?? .Null)
-                    let usageShared = Serialization._UInt64Serializer.deserialize(dict["usage_shared"] ?? .Null)
-                    return SpaceUsage(quota: quota, usageIndividual: usageIndividual, usageShared: usageShared)
+                    let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
+                    let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .Null)
+                    return SpaceUsage(allocated: allocated, used: used)
                 default:
                     assert(false, "Type error deserializing")
             }

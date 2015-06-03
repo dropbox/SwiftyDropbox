@@ -397,6 +397,20 @@ struct Serialization {
     static var _VoidSerializer = VoidSerializer()
     static var _NSDataSerializer = NSDataSerializer()
     static var _DoubleSerializer = DoubleSerializer()
+
+    static func getFields(json : JSON) -> [String : JSON] {
+        switch json {
+            case .Dictionary(let dict):
+                return dict
+            default:
+                fatalError("Type error")
+        }
+    }
+
+    static func getTag(d: [String : JSON]) -> String {
+        return _StringSerializer.deserialize(d[".tag"]!)
+    }
+
 }
 
 
