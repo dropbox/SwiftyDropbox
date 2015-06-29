@@ -51,6 +51,8 @@ public enum OAuth2Error {
     }
 }
 
+private let kDBLinkNonce = "dropbox.sync.nonce"
+
 /// The result of an authorization attempt.
 ///
 /// - `Success` - The authorization succeeded. Includes a `DropboxAccessToken`.
@@ -152,6 +154,8 @@ public class DropboxAuthManager {
     
     let appKey : String
     let redirectURL: NSURL
+    let dauthRedirectURL: NSURL
+
     let host: String
     
     
@@ -162,6 +166,7 @@ public class DropboxAuthManager {
         self.appKey = appKey
         self.host = host
         self.redirectURL = NSURL(string: "db-\(self.appKey)://2/token")!
+        self.dauthRedirectURL = NSURL(string: "db-\(self.appKey)://1/connect")!
     }
     
     convenience public init(appKey: String) {
@@ -182,10 +187,30 @@ public class DropboxAuthManager {
         return components.URL!
     }
     
+    private func dAuthURL(nonce: String?) -> NSURL {
+        let components = NSURLComponents()
+        components.scheme =  "dbapi-2"
+        components.host = "1"
+        components.path = "/connect"
+        
+        if let n = nonce {
+            let state = "oauth2:\(n)"
+            components.queryItems = [
+                NSURLQueryItem(name: "k", value: self.appKey),
+                NSURLQueryItem(name: "s", value: ""),
+                NSURLQueryItem(name: "state", value: state),
+            ]
+        }
+        return components.URL!
+    }
+    
     private func canHandleURL(url: NSURL) -> Bool {
-        return (url.scheme == self.redirectURL.scheme
-            &&  url.host == self.redirectURL.host
-            &&  url.path == self.redirectURL.path)
+        for known in [self.redirectURL, self.dauthRedirectURL] {
+            if (url.scheme == known.scheme &&  url.host == known.host && url.path == known.path) {
+                return true
+            }
+        }
+        return false
     }
     
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
@@ -193,33 +218,55 @@ public class DropboxAuthManager {
     /// :param: controller
     ///         The controller to present from
     public func authorizeFromController(controller: UIViewController) {
-        let web = DropboxConnectController(
-            URL: self.authURL(),
-            tryIntercept: { url in
-                if self.canHandleURL(url) {
-                    UIApplication.sharedApplication().openURL(url)
-                    return true
-                } else {
-                    return false
+        if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
+            let nonce = NSUUID().UUIDString
+            NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+            UIApplication.sharedApplication().openURL(dAuthURL(nonce))
+        } else {
+            let web = DropboxConnectController(
+                URL: self.authURL(),
+                tryIntercept: { url in
+                    if self.canHandleURL(url) {
+                        UIApplication.sharedApplication().openURL(url)
+                        return true
+                    } else {
+                        return false
+                    }
                 }
-            }
-        )
-        
-        let navigationController = UINavigationController(rootViewController: web)
-        controller.presentViewController(navigationController, animated: true, completion: nil)
+            )
+            let navigationController = UINavigationController(rootViewController: web)
+            controller.presentViewController(navigationController, animated: true, completion: nil)
+        }
     }
     
-    
-    /// Try to handle a redirect back into the application
-    ///
-    /// :param: url
-    ///         The URL to attempt to handle
-    /// :returns: `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
-    public func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
-        if !self.canHandleURL(url) {
-            return nil
+    private func extractfromDAuthURL(url: NSURL) -> DropboxAuthResult {
+        switch url.path ?? "" {
+        case "/connect":
+            var results = [String: String]()
+            let pairs  = url.query?.componentsSeparatedByString("&") ?? []
+            
+            for pair in pairs {
+                let kv = pair.componentsSeparatedByString("=")
+                results.updateValue(kv[1], forKey: kv[0])
+            }
+            let state = results["state"]?.componentsSeparatedByString("%3A") ?? []
+            
+            let nonce = NSUserDefaults.standardUserDefaults().objectForKey(kDBLinkNonce) as? String
+            if state.count == 2 && state[0] == "oauth2" && state[1] == nonce! {
+                let accessToken = results["oauth_token_secret"]!
+                let uid = results["uid"]!
+                return .Success(DropboxAccessToken(accessToken: accessToken, uid: uid))
+            } else {
+                return .Error(.Unknown, "Unable to verify link request")
+            }
+        default:
+            return .Error(.AccessDenied, "User cancelled Dropbox link")
         }
-        
+    }
+    
+    private func extractFromRedirectURL(url: NSURL) -> DropboxAuthResult {
         var results = [String: String]()
         let pairs  = url.fragment?.componentsSeparatedByString("&") ?? []
         
@@ -234,9 +281,34 @@ public class DropboxAuthManager {
         } else {
             let accessToken = results["access_token"]!
             let uid = results["uid"]!
-        
-            Keychain.set(key: uid, value: accessToken)
             return .Success(DropboxAccessToken(accessToken: accessToken, uid: uid))
+        }
+    }
+    
+    /// Try to handle a redirect back into the application
+    ///
+    /// :param: url
+    ///         The URL to attempt to handle
+    /// :returns: `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
+    public func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
+        
+        if !self.canHandleURL(url) {
+            return nil
+        }
+        
+        let result : DropboxAuthResult
+        if url.host == "1" { // dauth
+            result = extractfromDAuthURL(url)
+        } else {
+            result = extractFromRedirectURL(url)
+        }
+        
+        switch result {
+        case .Success(let token):
+            Keychain.set(key: token.uid, value: token.accessToken)
+            return result
+        default:
+            return result
         }
     }
     
