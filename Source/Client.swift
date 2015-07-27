@@ -44,12 +44,24 @@ public enum CallError<ErrorType> : Printable {
     }
 }
 
-func utf8Decode(data: NSData) -> String? {
-    if let nsstring = NSString(data: data, encoding: NSUTF8StringEncoding) {
-        return nsstring as String
-    } else {
-        return nil
+func utf8Decode(data: NSData) -> String {
+    return NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+}
+
+func asciiEscape(s: String) -> String {
+    var out : String = ""
+
+    for char in s.unicodeScalars {
+        var esc = "\(char)"
+        if !char.isASCII() {
+            esc = NSString(format:"\\u%04x", char.value) as String
+        } else {
+            esc = "\(char)"
+        }
+        out += esc
+        
     }
+    return out
 }
 
 
@@ -144,7 +156,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
             mutableRequest.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
             mutableRequest.HTTPBody = body
             if let data = dumpJSON(params) {
-                let value = utf8Decode(data)
+                let value = asciiEscape(utf8Decode(data))
                 mutableRequest.addValue(value, forHTTPHeaderField: "Dropbox-Api-Arg")
             }
             
@@ -188,7 +200,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         requestEncoder: ({ convertible, _ in
             var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             if let data = dumpJSON(params) {
-                let value = utf8Decode(data)
+                let value = asciiEscape(utf8Decode(data))
                 mutableRequest.addValue(value, forHTTPHeaderField: "Dropbox-Api-Arg")
             }
             
