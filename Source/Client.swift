@@ -100,7 +100,7 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                 return .BadInputError(message)
             case 429:
                  return .RateLimitError
-            case 409:
+            case 403, 404, 409:
                 let json = parseJSON(data)
                 switch json {
                 case .Dictionary(let d):
