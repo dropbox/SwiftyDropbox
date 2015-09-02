@@ -9,7 +9,7 @@ public func setAssertFunc( assertFunc: (Bool, String) -> Void) {
 }
 
 
-public func arrayValidator<T>(#minItems : Int?, #maxItems : Int?, #itemValidator: T -> Void)(value : Array<T>) -> Void {
+public func arrayValidator<T>(minItems minItems : Int?, maxItems : Int?, itemValidator: T -> Void)(value : Array<T>) -> Void {
     if let min = minItems {
         _assertFunc(value.count >= min, "\(value) must have at least \(min) items")
     }
@@ -24,12 +24,12 @@ public func arrayValidator<T>(#minItems : Int?, #maxItems : Int?, #itemValidator
     
 }
 
-public func arrayValidator<T>(#itemValidator: T -> Void)(value : Array<T>) -> Void {
+public func arrayValidator<T>(itemValidator itemValidator: T -> Void)(value : Array<T>) -> Void {
     arrayValidator(minItems: nil, maxItems: nil, itemValidator: itemValidator)(value: value)
 }
 
 public func stringValidator(minLength : Int? = nil, maxLength : Int? = nil, pattern: String? = nil)(value: String) -> Void {
-    let length = count(value)
+    let length = value.characters.count
     if let min = minLength {
         _assertFunc(length >= min, "\"\(value)\" must be at least \(min) characters")
     }
@@ -38,7 +38,7 @@ public func stringValidator(minLength : Int? = nil, maxLength : Int? = nil, patt
     }
     
     if let pat = pattern {
-        let re = NSRegularExpression(pattern: pat, options: nil, error: nil)!
+        let re = try! NSRegularExpression(pattern: pat, options: nil as NSRegularExpressionOptions)
         let matches = re.matchesInString(value, options: nil, range: NSMakeRange(0, length))
         _assertFunc(matches.count > 0, "\"\(value) must match pattern \"\(re.pattern)\"")
     }
@@ -60,7 +60,7 @@ public func nullableValidator<T>(internalValidator : (T) -> Void)(value : T?) ->
     }
 }
 
-public func binaryValidator(#minLength : Int?, #maxLength: Int?)(value: NSData) -> Void {
+public func binaryValidator(minLength minLength : Int?, maxLength: Int?)(value: NSData) -> Void {
     let length = value.length
     if let min = minLength {
         _assertFunc(length >= min, "\"\(value)\" must be at least \(min) bytes")

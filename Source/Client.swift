@@ -5,7 +5,7 @@ public class Box<T> {
 	public let unboxed : T
 	init (_ v : T) { self.unboxed = v }
 }
-public enum CallError<ErrorType> : Printable {
+public enum CallError<ErrorType> : CustomStringConvertible {
     case InternalServerError(Int, String?)
     case BadInputError(String?)
     case RateLimitError
@@ -38,7 +38,7 @@ public enum CallError<ErrorType> : Printable {
                 ret += ": \(m)"
             }
             return ret
-        case .RouteError(let box):
+        case .RouteError:
             return "API route error - handle programmatically"
         }
     }
@@ -73,7 +73,7 @@ func asciiEscape(s: String) -> String {
 public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
     let errorSerializer : EType
     let responseSerializer : RType
-    let request : Request
+    let request : Alamofire.Request
     
     init(client: BabelClient,
         host: String,
@@ -124,7 +124,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
     init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             mutableRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
             mutableRequest.HTTPBody = dumpJSON(params)
             return (mutableRequest, nil)
@@ -137,7 +137,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
     public func response(completionHandler: (RType.ValueType?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
-            let data = dataObj as! NSData
+            let data = dataObj!
             if error != nil {
                 completionHandler(nil, self.handleResponseError(response, data: data))
             } else {
@@ -152,7 +152,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
     init(client: BabelClient, host: String, route: String, params: JSON, body: NSData, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             mutableRequest.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
             mutableRequest.HTTPBody = body
             if let data = dumpJSON(params) {
@@ -182,7 +182,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
     public func response(completionHandler: (RType.ValueType?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
-            let data = dataObj as! NSData
+            let data = dataObj!
             if error != nil {
                 completionHandler(nil, self.handleResponseError(response, data: data))
             } else {
@@ -198,7 +198,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             if let data = dumpJSON(params) {
                 let value = asciiEscape(utf8Decode(data))
                 mutableRequest.addValue(value, forHTTPHeaderField: "Dropbox-Api-Arg")
@@ -226,7 +226,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     public func response(completionHandler: ( (RType.ValueType, NSData)?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
-            let data = dataObj as! NSData
+            let data = dataObj!
             if error != nil {
                 completionHandler(nil, self.handleResponseError(response, data: data))
             } else {

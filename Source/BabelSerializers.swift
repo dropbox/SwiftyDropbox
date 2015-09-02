@@ -66,7 +66,7 @@ func dumpJSON(json: JSON) -> NSData? {
     default:
         let obj : AnyObject = prepareJSONForSerialization(json)
         if NSJSONSerialization.isValidJSONObject(obj) {
-            return NSJSONSerialization.dataWithJSONObject(obj, options: nil, error: nil)
+            return try! NSJSONSerialization.dataWithJSONObject(obj, options: nil as NSJSONWritingOptions)
         } else {
             assert(false, "Invalid JSON toplevel type")
         }
@@ -74,11 +74,7 @@ func dumpJSON(json: JSON) -> NSData? {
 }
 
 func parseJSON(data: NSData) -> JSON {
-    var error: NSError?
-    
-    let obj: AnyObject = NSJSONSerialization.JSONObjectWithData(data,
-        options: NSJSONReadingOptions.AllowFragments,
-        error: &error)!
+    let obj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
     return objectToJSON(obj)
     
 }
@@ -86,8 +82,8 @@ func parseJSON(data: NSData) -> JSON {
 
 public protocol JSONSerializer {
     typealias ValueType
-    func serialize(ValueType) -> JSON
-    func deserialize(JSON) -> ValueType
+    func serialize(_: ValueType) -> JSON
+    func deserialize(_: JSON) -> ValueType
 }
 
 public class VoidSerializer : JSONSerializer {
