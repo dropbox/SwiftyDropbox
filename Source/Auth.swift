@@ -5,7 +5,7 @@ import Security
 
 import Foundation
 
-public class DropboxAccessToken : Printable {
+public class DropboxAccessToken : CustomStringConvertible {
     var accessToken: String
     var uid: String
     
@@ -63,7 +63,7 @@ public enum DropboxAuthResult {
 }
 
 private class Keychain {
-    class func set(#key: String, value: String) -> Bool {
+    class func set(key key: String, value: String) -> Bool {
         if let data = value.dataUsingEncoding(NSUTF8StringEncoding) {
             return set(key: key, value: data)
         } else {
@@ -71,11 +71,11 @@ private class Keychain {
         }
     }
     
-    class func set(#key: String, value: NSData) -> Bool {
+    class func set(key key: String, value: NSData) -> Bool {
         let query : CFDictionaryRef = [
-            (      kSecClass as! String): kSecClassGenericPassword,
-            (kSecAttrAccount as! String): key,
-            (  kSecValueData as! String): value
+            (      kSecClass as String): kSecClassGenericPassword,
+            (kSecAttrAccount as String): key,
+            (  kSecValueData as String): value
         ]
         
         SecItemDelete(query)
@@ -85,17 +85,17 @@ private class Keychain {
     
     class func getAsData(key: String) -> NSData? {
         let query : CFDictionaryRef = [
-            (      kSecClass as! String): kSecClassGenericPassword,
-            (kSecAttrAccount as! String): key,
-            ( kSecReturnData as! String): kCFBooleanTrue,
-            ( kSecMatchLimit as! String): kSecMatchLimitOne
+            (      kSecClass as String): kSecClassGenericPassword,
+            (kSecAttrAccount as String): key,
+            ( kSecReturnData as String): kCFBooleanTrue,
+            ( kSecMatchLimit as String): kSecMatchLimitOne
         ]
         
-        var dataTypeRef : Unmanaged<AnyObject>?
+        var dataTypeRef : AnyObject?
         let status = SecItemCopyMatching(query, &dataTypeRef)
         
         if status == noErr {
-            return dataTypeRef?.takeRetainedValue() as? NSData
+            return dataTypeRef as? NSData
         }
         
         return nil
@@ -103,16 +103,16 @@ private class Keychain {
     
     class func getAll() -> [String] {
         let query : CFDictionaryRef = [
-            (            kSecClass as! String): kSecClassGenericPassword,
-            ( kSecReturnAttributes as! String): kCFBooleanTrue,
-            (       kSecMatchLimit as! String): kSecMatchLimitAll
+            (            kSecClass as String): kSecClassGenericPassword,
+            ( kSecReturnAttributes as String): kCFBooleanTrue,
+            (       kSecMatchLimit as String): kSecMatchLimitAll
         ]
         
-        var dataTypeRef : Unmanaged<AnyObject>?
+        var dataTypeRef : AnyObject?
         let status = SecItemCopyMatching(query, &dataTypeRef)
         
         if status == noErr {
-            let results = dataTypeRef?.takeRetainedValue() as! [[String : AnyObject]]
+            let results = dataTypeRef as! [[String : AnyObject]]
             
             return results.map { d in d["acct"] as! String }
         
@@ -132,8 +132,8 @@ private class Keychain {
     
     class func delete(key: String) -> Bool {
         let query : CFDictionaryRef = [
-            (kSecClass as! String) : kSecClassGenericPassword,
-            (kSecAttrAccount as! String): key
+            (kSecClass as String) : kSecClassGenericPassword,
+            (kSecAttrAccount as String): key
         ]
         
         return SecItemDelete(query) == noErr
@@ -141,7 +141,7 @@ private class Keychain {
     
     class func clear() -> Bool {
         let query : CFDictionaryRef = [
-            (kSecClass as! String) : kSecClassGenericPassword,
+            (kSecClass as String) : kSecClassGenericPassword,
         ]
         
         return SecItemDelete(query) == noErr
@@ -338,7 +338,7 @@ public class DropboxAuthManager {
     /// :param: user
     ///         The user whose token to retrieve
     /// :returns: An access token if present, otherwise `nil`.
-    public func getAccessToken(#user: String) -> DropboxAccessToken? {
+    public func getAccessToken(user user: String) -> DropboxAccessToken? {
         if let accessToken = Keychain.get(user) {
             return DropboxAccessToken(accessToken: accessToken, uid: user)
         } else {
@@ -399,7 +399,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         self.tryIntercept = tryIntercept
     }
     
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -465,11 +465,11 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         dismiss(asCancel: true, animated: (sender != nil))
     }
     
-    func dismiss(#animated: Bool) {
+    func dismiss(animated animated: Bool) {
         dismiss(asCancel: false, animated: animated)
     }
     
-    func dismiss(#asCancel: Bool, animated: Bool) {
+    func dismiss(asCancel asCancel: Bool, animated: Bool) {
         webView.stopLoading()
         
         self.onWillDismiss?(didCancel: asCancel)

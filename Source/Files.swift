@@ -5,13 +5,13 @@ import Foundation
 public class Files {
     /// Metadata for a file or folder.
     ///
-    /// :param: name
+    /// - parameter name:
     ///        The last component of the path (including extension). This never
     ///        contains a slash.
-    /// :param: pathLower
+    /// - parameter pathLower:
     ///        The lowercased full path in the user's Dropbox. This always
     ///        starts with a slash.
-    public class Metadata: Printable {
+    public class Metadata: CustomStringConvertible {
         public let name : String
         public let pathLower : String
         public init(name: String, pathLower: String) {
@@ -72,35 +72,35 @@ public class Files {
     }
     /// Metadata (excluding name or path) for a file.
     ///
-    /// :param: id
+    /// - parameter id:
     ///        A unique identifier for the file.
-    /// :param: clientModified
+    /// - parameter clientModified:
     ///        For files, this is the modification time set by the desktop
     ///        client when the file was added to Dropbox. Since this time is not
     ///        verified (the Dropbox server stores whatever the desktop client
     ///        sends up), this should only be used for display purposes (such as
     ///        sorting) and not, for example, to determine if a file has changed
     ///        or not.
-    /// :param: serverModified
+    /// - parameter serverModified:
     ///        The last time the file was modified on Dropbox.
-    /// :param: rev
+    /// - parameter rev:
     ///        A unique identifier for the current revision of a file. This
     ///        field is the same rev as elsewhere in the API and can be used to
     ///        detect changes and avoid conflicts.
-    /// :param: size
+    /// - parameter size:
     ///        The file size in bytes.
-    public class FileMetadata: Metadata, Printable {
+    public class FileMetadata: Metadata {
         public let id : String?
         public let clientModified : NSDate
         public let serverModified : NSDate
         public let rev : String
         public let size : UInt64
         public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil) {
-            nullableValidator(stringValidator(minLength: 1))(value: id)
+            nullableValidator(stringValidator(maxLength: 1))(value: id)
             self.id = id
             self.clientModified = clientModified
             self.serverModified = serverModified
-            stringValidator(minLength: 9, pattern: "[0-9a-f]+")(value: rev)
+            stringValidator(maxLength: 9, pattern: "[0-9a-f]+")(value: rev)
             self.rev = rev
             comparableValidator()(value: size)
             self.size = size
@@ -113,7 +113,7 @@ public class Files {
     public class FileMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: FileMetadata) -> JSON {
-            var output = [ 
+            let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "client_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.clientModified),
@@ -144,12 +144,12 @@ public class Files {
     /// fields defined here, but we will add folder-specific metadata in the
     /// future.)
     ///
-    /// :param: id
+    /// - parameter id:
     ///        A unique identifier for the folder.
-    public class FolderMetadata: Metadata, Printable {
+    public class FolderMetadata: Metadata {
         public let id : String?
         public init(name: String, pathLower: String, id: String? = nil) {
-            nullableValidator(stringValidator(minLength: 1))(value: id)
+            nullableValidator(stringValidator(maxLength: 1))(value: id)
             self.id = id
             super.init(name: name, pathLower: pathLower)
         }
@@ -160,7 +160,7 @@ public class Files {
     public class FolderMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: FolderMetadata) -> JSON {
-            var output = [ 
+            let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
@@ -182,7 +182,7 @@ public class Files {
     /// Indicates a deleted file or folder in results returned by
     /// `list_folder/continue` or `search`.
     ///
-    public class DeletedMetadata: Metadata, Printable {
+    public class DeletedMetadata: Metadata {
         public override var description : String {
             return "\(prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
@@ -190,7 +190,7 @@ public class Files {
     public class DeletedMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: DeletedMetadata) -> JSON {
-            var output = [ 
+            let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             ]
@@ -213,7 +213,7 @@ public class Files {
     ///   File is not found at the specified path.
     /// - Other:
     ///   An unspecified error.
-    public enum GetMetadataError : Printable {
+    public enum GetMetadataError : CustomStringConvertible {
         case NotFound
         case Other
         public var description : String {
@@ -253,10 +253,10 @@ public class Files {
     }
     /// Arguments for `get_metadata`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path or ID of a file or folder on Dropbox. Must not be the
     ///        root.
-    public class GetMetadataArg: Printable {
+    public class GetMetadataArg: CustomStringConvertible {
         public let path : String
         public init(path: String) {
             stringValidator()(value: path)
@@ -269,7 +269,7 @@ public class Files {
     public class GetMetadataArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: GetMetadataArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .Dictionary(output)
@@ -286,14 +286,14 @@ public class Files {
     }
     /// Arguments for `list_folder`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the folder you want to see the contents of. May be
     ///        the root (i.e. empty).
-    /// :param: recursive
+    /// - parameter recursive:
     ///        If true, list folder operation will be applied recursively to all
     ///        subfolders. And the response will contain contents of all
     ///        subfolders
-    public class ListFolderArg: Printable {
+    public class ListFolderArg: CustomStringConvertible {
         public let path : String
         public let recursive : Bool
         public init(path: String, recursive: Bool = false) {
@@ -308,7 +308,7 @@ public class Files {
     public class ListFolderArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListFolderArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "recursive": Serialization._BoolSerializer.serialize(value.recursive),
             ]
@@ -327,15 +327,15 @@ public class Files {
     }
     /// Information returned by `list_folder`.
     ///
-    /// :param: entries
+    /// - parameter entries:
     ///        The files and (direct) subfolders in the folder.
-    /// :param: cursor
+    /// - parameter cursor:
     ///        Pass the cursor into `list_folder/continue` to see what's changed
     ///        in the folder since your previous query.
-    /// :param: hasMore
+    /// - parameter hasMore:
     ///        If true, then there are more entries available. Pass the cursor
     ///        to `list_folder/continue` to retrieve the rest.
-    public class ListFolderResult: Printable {
+    public class ListFolderResult: CustomStringConvertible {
         public let entries : Array<Metadata>
         public let cursor : String
         public let hasMore : Bool
@@ -352,7 +352,7 @@ public class Files {
     public class ListFolderResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListFolderResult) -> JSON {
-            var output = [ 
+            let output = [ 
             "entries": ArraySerializer(MetadataSerializer()).serialize(value.entries),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -377,7 +377,7 @@ public class Files {
     ///   There is no file or folder at the given path.
     /// - NotFolder:
     ///   Entry at path is not a folder.
-    public enum FolderPathError : Printable {
+    public enum FolderPathError : CustomStringConvertible {
         case NotFound
         case NotFolder
         public var description : String {
@@ -419,7 +419,7 @@ public class Files {
     ///
     /// - Other:
     ///   An unspecified error.
-    public enum ListFolderError : Printable {
+    public enum ListFolderError : CustomStringConvertible {
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
@@ -452,9 +452,9 @@ public class Files {
     }
     /// Arguments for `list_folder/continue`.
     ///
-    /// :param: cursor
+    /// - parameter cursor:
     ///        The cursor returned by `list_folder` or `list_folder/continue`.
-    public class ListFolderContinueArg: Printable {
+    public class ListFolderContinueArg: CustomStringConvertible {
         public let cursor : String
         public init(cursor: String) {
             stringValidator()(value: cursor)
@@ -467,7 +467,7 @@ public class Files {
     public class ListFolderContinueArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListFolderContinueArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .Dictionary(output)
@@ -487,7 +487,7 @@ public class Files {
     /// - Reset:
     ///   Indicates that the cursor has been invalidated. Call `list_folder` to
     ///   obtain a new cursor.
-    public enum ListFolderContinueError : Printable {
+    public enum ListFolderContinueError : CustomStringConvertible {
         case Reset
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
@@ -520,10 +520,10 @@ public class Files {
     }
     /// Information returned by `list_folder/get_latest_cursor`.
     ///
-    /// :param: cursor
+    /// - parameter cursor:
     ///        Pass the cursor into `list_folder/continue` to see what's changed
     ///        in the folder since your previous query.
-    public class ListFolderGetLatestCursorResult: Printable {
+    public class ListFolderGetLatestCursorResult: CustomStringConvertible {
         public let cursor : String
         public init(cursor: String) {
             stringValidator()(value: cursor)
@@ -536,7 +536,7 @@ public class Files {
     public class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListFolderGetLatestCursorResult) -> JSON {
-            var output = [ 
+            let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .Dictionary(output)
@@ -557,7 +557,7 @@ public class Files {
     ///   The path is not found.
     /// - IsFolder:
     ///   The path refers to a folder. Only files can be downloaded.
-    public enum NoFileReason : Printable {
+    public enum NoFileReason : CustomStringConvertible {
         case NotFound
         case IsFolder
         public var description : String {
@@ -597,9 +597,9 @@ public class Files {
     }
     /// Error structure for `download`.
     ///
-    /// :param: reason
+    /// - parameter reason:
     ///        The path could not be downloaded. The value gives the reason.
-    public class NoFile: Printable {
+    public class NoFile: CustomStringConvertible {
         public let reason : NoFileReason
         public init(reason: NoFileReason) {
             self.reason = reason
@@ -611,7 +611,7 @@ public class Files {
     public class NoFileSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: NoFile) -> JSON {
-            var output = [ 
+            let output = [ 
             "reason": NoFileReasonSerializer().serialize(value.reason),
             ]
             return .Dictionary(output)
@@ -633,7 +633,7 @@ public class Files {
     ///   Copyright Act) takedown request.
     /// - Other:
     ///   The download is forbidden for some other reason.
-    public enum RestrictedReason : Printable {
+    public enum RestrictedReason : CustomStringConvertible {
         case Dmca
         case Other
         public var description : String {
@@ -673,9 +673,9 @@ public class Files {
     }
     /// Error structure for `download`.
     ///
-    /// :param: reason
+    /// - parameter reason:
     ///        The download is forbidden. The value gives the reason.
-    public class Restricted: Printable {
+    public class Restricted: CustomStringConvertible {
         public let reason : RestrictedReason
         public init(reason: RestrictedReason) {
             self.reason = reason
@@ -687,7 +687,7 @@ public class Files {
     public class RestrictedSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: Restricted) -> JSON {
-            var output = [ 
+            let output = [ 
             "reason": RestrictedReasonSerializer().serialize(value.reason),
             ]
             return .Dictionary(output)
@@ -708,7 +708,7 @@ public class Files {
     ///   The requesting user has no permission to access the file.
     /// - Restricted:
     ///   The download is forbidden; see the value for the reason.
-    public enum DisallowedReason : Printable {
+    public enum DisallowedReason : CustomStringConvertible {
         case Permission
         case Restricted(Files.Restricted)
         public var description : String {
@@ -749,9 +749,9 @@ public class Files {
     }
     /// Error structure for `download`.
     ///
-    /// :param: reason
+    /// - parameter reason:
     ///        The reason why the download is disallowed.
-    public class Disallowed: Printable {
+    public class Disallowed: CustomStringConvertible {
         public let reason : DisallowedReason
         public init(reason: DisallowedReason) {
             self.reason = reason
@@ -763,7 +763,7 @@ public class Files {
     public class DisallowedSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: Disallowed) -> JSON {
-            var output = [ 
+            let output = [ 
             "reason": DisallowedReasonSerializer().serialize(value.reason),
             ]
             return .Dictionary(output)
@@ -786,7 +786,7 @@ public class Files {
     ///   The path cannot be downloaded.
     /// - Other:
     ///   An unspecified error.
-    public enum DownloadError : Printable {
+    public enum DownloadError : CustomStringConvertible {
         case Disallowed(Files.Disallowed)
         case NoFile(Files.NoFile)
         case Other
@@ -835,17 +835,17 @@ public class Files {
     }
     /// Arguments for `download`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path of the file to download.
-    /// :param: rev
+    /// - parameter rev:
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public class DownloadArg: Printable {
+    public class DownloadArg: CustomStringConvertible {
         public let path : String
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator()(value: path)
             self.path = path
-            nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(value: rev)
+            nullableValidator(stringValidator(maxLength: 9, pattern: "[0-9a-f]+"))(value: rev)
             self.rev = rev
         }
         public var description : String {
@@ -855,7 +855,7 @@ public class Files {
     public class DownloadArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: DownloadArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
@@ -882,7 +882,7 @@ public class Files {
     ///   File could not be automatically renamed.
     /// - Other:
     ///   An unspecified error.
-    public enum CommitConflictError : Printable {
+    public enum CommitConflictError : CustomStringConvertible {
         case File
         case Folder
         case AutorenameFailed
@@ -945,7 +945,7 @@ public class Files {
     ///   User does not have sufficient space quota to save the file.
     /// - Other:
     ///   An unspecified error.
-    public enum CommitError : Printable {
+    public enum CommitError : CustomStringConvertible {
         case Conflict(Files.CommitConflictError)
         case NoWritePermission
         case InsufficientQuota
@@ -1000,11 +1000,11 @@ public class Files {
     }
     /// Error structure for commit errors.
     ///
-    /// :param: reason
+    /// - parameter reason:
     ///        The reason why the commit failed.
-    /// :param: uploadSessionId
+    /// - parameter uploadSessionId:
     ///        The upload session ID; this may be used to retry the commit.
-    public class UploadCommitError: Printable {
+    public class UploadCommitError: CustomStringConvertible {
         public let reason : CommitError
         public let uploadSessionId : String
         public init(reason: CommitError, uploadSessionId: String) {
@@ -1019,7 +1019,7 @@ public class Files {
     public class UploadCommitErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: UploadCommitError) -> JSON {
-            var output = [ 
+            let output = [ 
             "reason": CommitErrorSerializer().serialize(value.reason),
             "upload_session_id": Serialization._StringSerializer.serialize(value.uploadSessionId),
             ]
@@ -1038,9 +1038,9 @@ public class Files {
     }
     /// Error structure for recovering the correct upload offset.
     ///
-    /// :param: correctOffset
+    /// - parameter correctOffset:
     ///        The offset up to which data has been collected.
-    public class UploadSessionOffsetError: Printable {
+    public class UploadSessionOffsetError: CustomStringConvertible {
         public let correctOffset : UInt64
         public init(correctOffset: UInt64) {
             comparableValidator()(value: correctOffset)
@@ -1053,7 +1053,7 @@ public class Files {
     public class UploadSessionOffsetErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: UploadSessionOffsetError) -> JSON {
-            var output = [ 
+            let output = [ 
             "correct_offset": Serialization._UInt64Serializer.serialize(value.correctOffset),
             ]
             return .Dictionary(output)
@@ -1082,7 +1082,7 @@ public class Files {
     ///   been closed (i.e. committed).
     /// - Other:
     ///   An unspecified error.
-    public enum UploadSessionLookupError : Printable {
+    public enum UploadSessionLookupError : CustomStringConvertible {
         case NotFound
         case IncorrectOffset(Files.UploadSessionOffsetError)
         case Closed
@@ -1141,7 +1141,7 @@ public class Files {
     ///   The upload failed; the value explains the reason.
     /// - Other:
     ///   An unspecified error.
-    public enum UploadError : Printable {
+    public enum UploadError : CustomStringConvertible {
         case CommitFailed(Files.UploadCommitError)
         case Other
         public var description : String {
@@ -1188,7 +1188,7 @@ public class Files {
     ///   The commit failed; the value explains the reason.
     /// - Other:
     ///   An unspecified error.
-    public enum UploadSessionFinishError : Printable {
+    public enum UploadSessionFinishError : CustomStringConvertible {
         case LookupFailed(Files.UploadSessionLookupError)
         case CommitFailed(Files.CommitError)
         case Other
@@ -1237,10 +1237,10 @@ public class Files {
     }
     /// The result of `upload_session/start`.
     ///
-    /// :param: sessionId
+    /// - parameter sessionId:
     ///        A unique identifier for the upload session. Pass this to
     ///        `upload_session/append` and `upload_session/finish`.
-    public class UploadSessionStartResult: Printable {
+    public class UploadSessionStartResult: CustomStringConvertible {
         public let sessionId : String
         public init(sessionId: String) {
             stringValidator()(value: sessionId)
@@ -1253,7 +1253,7 @@ public class Files {
     public class UploadSessionStartResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: UploadSessionStartResult) -> JSON {
-            var output = [ 
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             ]
             return .Dictionary(output)
@@ -1271,13 +1271,13 @@ public class Files {
     /// Arguments for `upload_session/append`. Also used by
     /// `upload_session/finish`.
     ///
-    /// :param: sessionId
+    /// - parameter sessionId:
     ///        The upload session ID (returned by `upload_session/start`).
-    /// :param: offset
+    /// - parameter offset:
     ///        The amount of data that has been uploaded so far. We use this to
     ///        make sure upload data isn't lost or duplicated in the event of a
     ///        network error.
-    public class UploadSessionCursor: Printable {
+    public class UploadSessionCursor: CustomStringConvertible {
         public let sessionId : String
         public let offset : UInt64
         public init(sessionId: String, offset: UInt64) {
@@ -1293,7 +1293,7 @@ public class Files {
     public class UploadSessionCursorSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: UploadSessionCursor) -> JSON {
-            var output = [ 
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "offset": Serialization._UInt64Serializer.serialize(value.offset),
             ]
@@ -1333,7 +1333,7 @@ public class Files {
     ///   copy" to the file name. For example, "document.txt" might become
     ///   "document (conflicted copy).txt" or "document (Panda's conflicted
     ///   copy).txt".
-    public enum WriteMode : Printable {
+    public enum WriteMode : CustomStringConvertible {
         case Add
         case Overwrite
         case Update(String)
@@ -1382,25 +1382,25 @@ public class Files {
     /// Arguments for `upload`. Also part of the arguments to
     /// `upload_session/finish`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to save the file.
-    /// :param: mode
+    /// - parameter mode:
     ///        Selects what to do if the file already exists.
-    /// :param: autorename
+    /// - parameter autorename:
     ///        If there's a conflict, as determined by `mode`, have the Dropbox
     ///        server try to autorename the file to avoid conflict.
-    /// :param: clientModified
+    /// - parameter clientModified:
     ///        The value to store as the `client_modified` timestamp. Dropbox
     ///        automatically records the time at which the file was written to
     ///        the Dropbox servers. It can also record an additional timestamp,
     ///        provided by Dropbox desktop clients, mobile clients, and API apps
     ///        of when the file was actually created or modified.
-    /// :param: mute
+    /// - parameter mute:
     ///        Normally, users are made aware of any file modifications in their
     ///        Dropbox account via notifications in the client software. If
     ///        `true`, this tells the clients that this modification shouldn't
     ///        result in a user notification.
-    public class CommitInfo: Printable {
+    public class CommitInfo: CustomStringConvertible {
         public let path : String
         public let mode : WriteMode
         public let autorename : Bool
@@ -1421,7 +1421,7 @@ public class Files {
     public class CommitInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: CommitInfo) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "mode": WriteModeSerializer().serialize(value.mode),
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
@@ -1446,11 +1446,11 @@ public class Files {
     }
     /// Arguments for `upload_session/finish`.
     ///
-    /// :param: cursor
+    /// - parameter cursor:
     ///        Contains the upload session ID and the offset.
-    /// :param: commit
+    /// - parameter commit:
     ///        Contains the path and other optional modifiers for the commit.
-    public class UploadSessionFinishArg: Printable {
+    public class UploadSessionFinishArg: CustomStringConvertible {
         public let cursor : UploadSessionCursor
         public let commit : CommitInfo
         public init(cursor: UploadSessionCursor, commit: CommitInfo) {
@@ -1464,7 +1464,7 @@ public class Files {
     public class UploadSessionFinishArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: UploadSessionFinishArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "cursor": UploadSessionCursorSerializer().serialize(value.cursor),
             "commit": CommitInfoSerializer().serialize(value.commit),
             ]
@@ -1489,7 +1489,7 @@ public class Files {
     ///   Search file and folder names as well as file contents.
     /// - DeletedFilename:
     ///   Search for deleted file and folder names.
-    public enum SearchMode : Printable {
+    public enum SearchMode : CustomStringConvertible {
         case Filename
         case FilenameAndContent
         case DeletedFilename
@@ -1536,22 +1536,22 @@ public class Files {
     }
     /// Arguments for `search`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path in the user's Dropbox to search. Should probably be a
     ///        folder. May be the root (i.e. empty).
-    /// :param: query
+    /// - parameter query:
     ///        The string to search for. The search string is split on spaces
     ///        into multiple tokens. For file name searching, the last token is
     ///        used for prefix matching (i.e. "bat c" matches "bat cave" but not
     ///        "batman car").
-    /// :param: start
+    /// - parameter start:
     ///        The starting index within the search results (used for paging).
-    /// :param: maxResults
+    /// - parameter maxResults:
     ///        The maximum number of search results to return.
-    /// :param: mode
+    /// - parameter mode:
     ///        The search mode (filename, filename_and_content, or
     ///        deleted_filename).
-    public class SearchQuery: Printable {
+    public class SearchQuery: CustomStringConvertible {
         public let path : String
         public let query : String
         public let start : UInt64
@@ -1564,7 +1564,7 @@ public class Files {
             self.query = query
             comparableValidator()(value: start)
             self.start = start
-            comparableValidator(minValue: 1, maxValue: 1000)(value: maxResults)
+            comparableValidator(1, maxValue: 1000)(value: maxResults)
             self.maxResults = maxResults
             self.mode = mode
         }
@@ -1575,7 +1575,7 @@ public class Files {
     public class SearchQuerySerializer: JSONSerializer {
         public init() { }
         public func serialize(value: SearchQuery) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "query": Serialization._StringSerializer.serialize(value.query),
             "start": Serialization._UInt64Serializer.serialize(value.start),
@@ -1606,7 +1606,7 @@ public class Files {
     ///   This item was matched based on its file contents.
     /// - Both:
     ///   This item was matched based on both its contents and its file name.
-    public enum SearchMatchType : Printable {
+    public enum SearchMatchType : CustomStringConvertible {
         case Filename
         case Content
         case Both
@@ -1653,11 +1653,11 @@ public class Files {
     }
     /// Describes a search result.
     ///
-    /// :param: matchType
+    /// - parameter matchType:
     ///        The type of the match.
-    /// :param: metadata
+    /// - parameter metadata:
     ///        The metadata for the matched file or folder.
-    public class SearchMatch: Printable {
+    public class SearchMatch: CustomStringConvertible {
         public let matchType : SearchMatchType
         public let metadata : Metadata
         public init(matchType: SearchMatchType, metadata: Metadata) {
@@ -1671,7 +1671,7 @@ public class Files {
     public class SearchMatchSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: SearchMatch) -> JSON {
-            var output = [ 
+            let output = [ 
             "match_type": SearchMatchTypeSerializer().serialize(value.matchType),
             "metadata": MetadataSerializer().serialize(value.metadata),
             ]
@@ -1690,15 +1690,15 @@ public class Files {
     }
     /// Information returned by `search`.
     ///
-    /// :param: matches
+    /// - parameter matches:
     ///        A list (possibly empty) of matches for the query.
-    /// :param: more
+    /// - parameter more:
     ///        Used for paging. If true, indicates there is another page of
     ///        results available that can be fetched by calling `search` again.
-    /// :param: start
+    /// - parameter start:
     ///        Used for paging. Value to set the start argument to when calling
     ///        `search` to fetch the next page of results.
-    public class SearchResults: Printable {
+    public class SearchResults: CustomStringConvertible {
         public let matches : Array<SearchMatch>
         public let more : Bool
         public let start : UInt64
@@ -1715,7 +1715,7 @@ public class Files {
     public class SearchResultsSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: SearchResults) -> JSON {
-            var output = [ 
+            let output = [ 
             "matches": ArraySerializer(SearchMatchSerializer()).serialize(value.matches),
             "more": Serialization._BoolSerializer.serialize(value.more),
             "start": Serialization._UInt64Serializer.serialize(value.start),
@@ -1738,7 +1738,7 @@ public class Files {
     ///
     /// - Other:
     ///   An unspecified error.
-    public enum SearchError : Printable {
+    public enum SearchError : CustomStringConvertible {
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
@@ -1797,7 +1797,7 @@ public class Files {
     ///   Miscellaneous error (see error message).
     /// - Other:
     ///   An unspecified error.
-    public enum PathError : Printable {
+    public enum PathError : CustomStringConvertible {
         case RootDisallowed
         case MalformedPath(String)
         case NotFound
@@ -1916,9 +1916,9 @@ public class Files {
     }
     /// Arguments for `create_folder`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to create.
-    public class CreateFolderArg: Printable {
+    public class CreateFolderArg: CustomStringConvertible {
         public let path : String
         public init(path: String) {
             stringValidator()(value: path)
@@ -1931,7 +1931,7 @@ public class Files {
     public class CreateFolderArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: CreateFolderArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .Dictionary(output)
@@ -1948,9 +1948,9 @@ public class Files {
     }
     /// Arguments for `delete`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to delete.
-    public class DeleteArg: Printable {
+    public class DeleteArg: CustomStringConvertible {
         public let path : String
         public init(path: String) {
             stringValidator()(value: path)
@@ -1963,7 +1963,7 @@ public class Files {
     public class DeleteArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: DeleteArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .Dictionary(output)
@@ -1980,11 +1980,11 @@ public class Files {
     }
     /// Arguments for `copy` and `move`.
     ///
-    /// :param: fromPath
+    /// - parameter fromPath:
     ///        Path in the user's Dropbox to be copied or moved.
-    /// :param: toPath
+    /// - parameter toPath:
     ///        Path in the user's Dropbox that is the destination.
-    public class RelocationArg: Printable {
+    public class RelocationArg: CustomStringConvertible {
         public let fromPath : String
         public let toPath : String
         public init(fromPath: String, toPath: String) {
@@ -2000,7 +2000,7 @@ public class Files {
     public class RelocationArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: RelocationArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "from_path": Serialization._StringSerializer.serialize(value.fromPath),
             "to_path": Serialization._StringSerializer.serialize(value.toPath),
             ]
@@ -2032,7 +2032,7 @@ public class Files {
     ///   Quota exceeded.
     /// - Other:
     ///   An unspecified error.
-    public enum RelocationError : Printable {
+    public enum RelocationError : CustomStringConvertible {
         case FromError(Files.PathError)
         case ToError(Files.PathError)
         case TooManyFiles
@@ -2105,7 +2105,7 @@ public class Files {
     ///   640 by 480 px.
     /// - Xl:
     ///   1024 by 768
-    public enum ThumbnailSize : Printable {
+    public enum ThumbnailSize : CustomStringConvertible {
         case Xs
         case S
         case M
@@ -2168,7 +2168,7 @@ public class Files {
     ///
     /// - Jpeg
     /// - Png
-    public enum ThumbnailFormat : Printable {
+    public enum ThumbnailFormat : CustomStringConvertible {
         case Jpeg
         case Png
         public var description : String {
@@ -2211,15 +2211,15 @@ public class Files {
     /// Photos that are larger than 20MB in size won't be converted to a
     /// thumbnail.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the image file you want to thumbnail.
-    /// :param: format
+    /// - parameter format:
     ///        The format for the thumbnail image, jpeg (default) or png. For
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
-    /// :param: size
+    /// - parameter size:
     ///        The size for the thumbnail image (default s).
-    public class ThumbnailArg: Printable {
+    public class ThumbnailArg: CustomStringConvertible {
         public let path : String
         public let format : ThumbnailFormat
         public let size : ThumbnailSize
@@ -2236,7 +2236,7 @@ public class Files {
     public class ThumbnailArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ThumbnailArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "format": ThumbnailFormatSerializer().serialize(value.format),
             "size": ThumbnailSizeSerializer().serialize(value.size),
@@ -2269,7 +2269,7 @@ public class Files {
     ///   The image cannot be converted to a thumbnail.
     /// - ConversionError:
     ///   An error occurs during thumbnail conversion.
-    public enum ThumbnailError : Printable {
+    public enum ThumbnailError : CustomStringConvertible {
         case DownloadError(Files.DownloadError)
         case UnsupportedExtension
         case UnsupportedFormat
@@ -2338,17 +2338,17 @@ public class Files {
     }
     /// Arguments for `get_preview`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path of the file to preview.
-    /// :param: rev
+    /// - parameter rev:
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public class PreviewArg: Printable {
+    public class PreviewArg: CustomStringConvertible {
         public let path : String
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator()(value: path)
             self.path = path
-            nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(value: rev)
+            nullableValidator(stringValidator(maxLength: 9, pattern: "[0-9a-f]+"))(value: rev)
             self.rev = rev
         }
         public var description : String {
@@ -2358,7 +2358,7 @@ public class Files {
     public class PreviewArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: PreviewArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
@@ -2386,7 +2386,7 @@ public class Files {
     ///   The file extension is not supported preview generation.
     /// - UnsupportedContent:
     ///   The file content is not supported for preview generation.
-    public enum PreviewError : Printable {
+    public enum PreviewError : CustomStringConvertible {
         case DownloadError(Files.DownloadError)
         case InProgress
         case UnsupportedExtension
@@ -2441,17 +2441,17 @@ public class Files {
     }
     /// Arguments for `list_revisions`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the file you want to see the revisions of.
-    /// :param: limit
+    /// - parameter limit:
     ///        The maximum number of revision entries returned.
-    public class ListRevisionsArg: Printable {
+    public class ListRevisionsArg: CustomStringConvertible {
         public let path : String
         public let limit : UInt64
         public init(path: String, limit: UInt64 = 10) {
             stringValidator()(value: path)
             self.path = path
-            comparableValidator(minValue: 1, maxValue: 100)(value: limit)
+            comparableValidator(1, maxValue: 100)(value: limit)
             self.limit = limit
         }
         public var description : String {
@@ -2461,7 +2461,7 @@ public class Files {
     public class ListRevisionsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListRevisionsArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "limit": Serialization._UInt64Serializer.serialize(value.limit),
             ]
@@ -2482,7 +2482,7 @@ public class Files {
     ///
     /// - DownloadError:
     ///   An error occurs when downloading metadata for the file.
-    public enum ListRevisionsError : Printable {
+    public enum ListRevisionsError : CustomStringConvertible {
         case DownloadError(Files.DownloadError)
         public var description : String {
             return "\(prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
@@ -2516,12 +2516,12 @@ public class Files {
     }
     /// Information returned by `list_revisions`.
     ///
-    /// :param: isDeleted
+    /// - parameter isDeleted:
     ///        If the file is deleted.
-    /// :param: entries
+    /// - parameter entries:
     ///        The revisions for the file. Only non-delete revisions will show
     ///        up here.
-    public class ListRevisionsResult: Printable {
+    public class ListRevisionsResult: CustomStringConvertible {
         public let isDeleted : Bool
         public let entries : Array<FileMetadata>
         public init(isDeleted: Bool, entries: Array<FileMetadata>) {
@@ -2535,7 +2535,7 @@ public class Files {
     public class ListRevisionsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: ListRevisionsResult) -> JSON {
-            var output = [ 
+            let output = [ 
             "is_deleted": Serialization._BoolSerializer.serialize(value.isDeleted),
             "entries": ArraySerializer(FileMetadataSerializer()).serialize(value.entries),
             ]
@@ -2554,17 +2554,17 @@ public class Files {
     }
     /// Arguments for `restore`.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the file you want to restore.
-    /// :param: rev
+    /// - parameter rev:
     ///        The revision to restore for the file.
-    public class RestoreArg: Printable {
+    public class RestoreArg: CustomStringConvertible {
         public let path : String
         public let rev : String
         public init(path: String, rev: String) {
             stringValidator()(value: path)
             self.path = path
-            stringValidator(minLength: 9, pattern: "[0-9a-f]+")(value: rev)
+            stringValidator(maxLength: 9, pattern: "[0-9a-f]+")(value: rev)
             self.rev = rev
         }
         public var description : String {
@@ -2574,7 +2574,7 @@ public class Files {
     public class RestoreArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(value: RestoreArg) -> JSON {
-            var output = [ 
+            let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": Serialization._StringSerializer.serialize(value.rev),
             ]
@@ -2599,7 +2599,7 @@ public class Files {
     ///   The commit for the restore failed.
     /// - InvalidRevision:
     ///   The revision is invalid. It may point to a different file.
-    public enum RestoreError : Printable {
+    public enum RestoreError : CustomStringConvertible {
         case DownloadError(Files.DownloadError)
         case CommitFailed(Files.CommitError)
         case InvalidRevision
@@ -2650,24 +2650,24 @@ public class Files {
 extension BabelClient {
     /// Returns the metadata for a file or folder.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path or ID of a file or folder on Dropbox. Must not be the
     ///        root.
-    public func filesGetMetadata(#path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
+    public func filesGetMetadata(path path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
     }
     /// Returns the contents of a folder. NOTE: We're definitely going to
     /// streamline this interface.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the folder you want to see the contents of. May be
     ///        the root (i.e. empty).
-    /// :param: recursive
+    /// - parameter recursive:
     ///        If true, list folder operation will be applied recursively to all
     ///        subfolders. And the response will contain contents of all
     ///        subfolders
-    public func filesListFolder(#path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    public func filesListFolder(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
@@ -2675,9 +2675,9 @@ extension BabelClient {
     /// paginate through all files and retrieve updates to the folder. NOTE:
     /// We're definitely going to streamline this interface.
     ///
-    /// :param: cursor
+    /// - parameter cursor:
     ///        The cursor returned by `list_folder` or `list_folder/continue`.
-    public func filesListFolderContinue(#cursor: String) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
+    public func filesListFolderContinue(cursor cursor: String) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let request = Files.ListFolderContinueArg(cursor: cursor)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
     }
@@ -2687,106 +2687,106 @@ extension BabelClient {
     /// about new files and modifications and doesn't need to know about files
     /// that already exist in Dropbox.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the folder you want to see the contents of. May be
     ///        the root (i.e. empty).
-    /// :param: recursive
+    /// - parameter recursive:
     ///        If true, list folder operation will be applied recursively to all
     ///        subfolders. And the response will contain contents of all
     ///        subfolders
-    public func filesListFolderGetLatestCursor(#path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+    public func filesListFolderGetLatestCursor(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/get_latest_cursor", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /// Download a file from a user's Dropbox.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path of the file to download.
-    /// :param: rev
+    /// - parameter rev:
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesDownload(#path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    public func filesDownload(path path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer())
     }
     /// Start a new upload session. This is used to upload a single file with
     /// multiple calls.
     ///
-    /// :param: body
+    /// - parameter body:
     ///        The binary payload to upload
-    public func filesUploadSessionStart(#body: NSData) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+    public func filesUploadSessionStart(body body: NSData) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
         return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), body: body, responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /// Append more data to an upload session.
     ///
-    /// :param: sessionId
+    /// - parameter sessionId:
     ///        The upload session ID (returned by `upload_session/start`).
-    /// :param: offset
+    /// - parameter offset:
     ///        The amount of data that has been uploaded so far. We use this to
     ///        make sure upload data isn't lost or duplicated in the event of a
     ///        network error.
-    /// :param: body
+    /// - parameter body:
     ///        The binary payload to upload
-    public func filesUploadSessionAppend(#sessionId: String, offset: UInt64, body: NSData) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    public func filesUploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSData) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), body: body, responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer())
     }
     /// Finish an upload session and save the uploaded data to the given file
     /// path.
     ///
-    /// :param: cursor
+    /// - parameter cursor:
     ///        Contains the upload session ID and the offset.
-    /// :param: commit
+    /// - parameter commit:
     ///        Contains the path and other optional modifiers for the commit.
-    /// :param: body
+    /// - parameter body:
     ///        The binary payload to upload
-    public func filesUploadSessionFinish(#cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+    public func filesUploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
         return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
     }
     /// Create a new file with the contents provided in the request.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to save the file.
-    /// :param: mode
+    /// - parameter mode:
     ///        Selects what to do if the file already exists.
-    /// :param: autorename
+    /// - parameter autorename:
     ///        If there's a conflict, as determined by `mode`, have the Dropbox
     ///        server try to autorename the file to avoid conflict.
-    /// :param: clientModified
+    /// - parameter clientModified:
     ///        The value to store as the `client_modified` timestamp. Dropbox
     ///        automatically records the time at which the file was written to
     ///        the Dropbox servers. It can also record an additional timestamp,
     ///        provided by Dropbox desktop clients, mobile clients, and API apps
     ///        of when the file was actually created or modified.
-    /// :param: mute
+    /// - parameter mute:
     ///        Normally, users are made aware of any file modifications in their
     ///        Dropbox account via notifications in the client software. If
     ///        `true`, this tells the clients that this modification shouldn't
     ///        result in a user notification.
-    /// :param: body
+    /// - parameter body:
     ///        The binary payload to upload
-    public func filesUpload(#path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    public func filesUpload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
         return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer())
     }
     /// Searches for files and folders.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path in the user's Dropbox to search. Should probably be a
     ///        folder. May be the root (i.e. empty).
-    /// :param: query
+    /// - parameter query:
     ///        The string to search for. The search string is split on spaces
     ///        into multiple tokens. For file name searching, the last token is
     ///        used for prefix matching (i.e. "bat c" matches "bat cave" but not
     ///        "batman car").
-    /// :param: start
+    /// - parameter start:
     ///        The starting index within the search results (used for paging).
-    /// :param: maxResults
+    /// - parameter maxResults:
     ///        The maximum number of search results to return.
-    /// :param: mode
+    /// - parameter mode:
     ///        The search mode (filename, filename_and_content, or
     ///        deleted_filename).
-    public func filesSearch(#path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> BabelRpcRequest<Files.SearchResultsSerializer, Files.SearchErrorSerializer> {
+    public func filesSearch(path path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> BabelRpcRequest<Files.SearchResultsSerializer, Files.SearchErrorSerializer> {
         let request = Files.SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/search", params: Files.SearchQuerySerializer().serialize(request), responseSerializer: Files.SearchResultsSerializer(), errorSerializer: Files.SearchErrorSerializer())
     }
@@ -2796,18 +2796,18 @@ extension BabelClient {
     /// any ancestor). If an ancestor is a shared folder it must have write
     /// access.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to create.
-    public func filesCreateFolder(#path: String) -> BabelRpcRequest<Files.FolderMetadataSerializer, Files.PathErrorSerializer> {
+    public func filesCreateFolder(path path: String) -> BabelRpcRequest<Files.FolderMetadataSerializer, Files.PathErrorSerializer> {
         let request = Files.CreateFolderArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
     }
     /// Delete the file or folder at a given path. If the path is a folder all
     /// its contents will be deleted too.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        Path in the user's Dropbox to delete.
-    public func filesDelete(#path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.PathErrorSerializer> {
+    public func filesDelete(path path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.PathErrorSerializer> {
         let request = Files.DeleteArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.PathErrorSerializer())
     }
@@ -2815,11 +2815,11 @@ extension BabelClient {
     /// If the source path is a folder all its contents will be copied. The
     /// destination path must not yet exist.
     ///
-    /// :param: fromPath
+    /// - parameter fromPath:
     ///        Path in the user's Dropbox to be copied or moved.
-    /// :param: toPath
+    /// - parameter toPath:
     ///        Path in the user's Dropbox that is the destination.
-    public func filesCopy(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    public func filesCopy(fromPath fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
@@ -2827,25 +2827,25 @@ extension BabelClient {
     /// If the source path is a folder all its contents will be moved. The
     /// destination path must not yet exist.
     ///
-    /// :param: fromPath
+    /// - parameter fromPath:
     ///        Path in the user's Dropbox to be copied or moved.
-    /// :param: toPath
+    /// - parameter toPath:
     ///        Path in the user's Dropbox that is the destination.
-    public func filesMove(#fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    public func filesMove(fromPath fromPath: String, toPath: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
     /// Get a thumbnail for an image.
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the image file you want to thumbnail.
-    /// :param: format
+    /// - parameter format:
     ///        The format for the thumbnail image, jpeg (default) or png. For
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
-    /// :param: size
+    /// - parameter size:
     ///        The size for the thumbnail image (default s).
-    public func filesGetThumbnail(#path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer())
     }
@@ -2853,31 +2853,31 @@ extension BabelClient {
     /// files with  the following extensions: .doc, .docx, .docm, .ppt, .pps,
     /// .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path of the file to preview.
-    /// :param: rev
+    /// - parameter rev:
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesGetPreview(#path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    public func filesGetPreview(path path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let request = Files.PreviewArg(path: path, rev: rev)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer())
     }
     /// Return revisions of a file
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the file you want to see the revisions of.
-    /// :param: limit
+    /// - parameter limit:
     ///        The maximum number of revision entries returned.
-    public func filesListRevisions(#path: String, limit: UInt64 = 10) -> BabelRpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
+    public func filesListRevisions(path path: String, limit: UInt64 = 10) -> BabelRpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
         let request = Files.ListRevisionsArg(path: path, limit: limit)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_revisions", params: Files.ListRevisionsArgSerializer().serialize(request), responseSerializer: Files.ListRevisionsResultSerializer(), errorSerializer: Files.ListRevisionsErrorSerializer())
     }
     /// Restore a file to a specific revision
     ///
-    /// :param: path
+    /// - parameter path:
     ///        The path to the file you want to restore.
-    /// :param: rev
+    /// - parameter rev:
     ///        The revision to restore for the file.
-    public func filesRestore(#path: String, rev: String) -> BabelRpcRequest<Files.FileMetadataSerializer, Files.RestoreErrorSerializer> {
+    public func filesRestore(path path: String, rev: String) -> BabelRpcRequest<Files.FileMetadataSerializer, Files.RestoreErrorSerializer> {
         let request = Files.RestoreArg(path: path, rev: rev)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/restore", params: Files.RestoreArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.RestoreErrorSerializer())
     }

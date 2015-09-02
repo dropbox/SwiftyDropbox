@@ -5,7 +5,7 @@ public class Box<T> {
 	public let unboxed : T
 	init (_ v : T) { self.unboxed = v }
 }
-public enum CallError<ErrorType> : Printable {
+public enum CallError<ErrorType> : CustomStringConvertible {
     case InternalServerError(Int, String?)
     case BadInputError(String?)
     case RateLimitError
@@ -38,7 +38,7 @@ public enum CallError<ErrorType> : Printable {
                 ret += ": \(m)"
             }
             return ret
-        case .RouteError(let box):
+        case .RouteError( _):
             return "API route error - handle programmatically"
         }
     }
@@ -124,7 +124,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
     init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             mutableRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
             mutableRequest.HTTPBody = dumpJSON(params)
             return (mutableRequest, nil)
@@ -133,7 +133,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
     
     /// Called when a request completes.
     ///
-    /// :param: completionHandler A closure which takes a (response, error) and handles the result of the call appropriately.
+    /// - parameter completionHandler: A closure which takes a (response, error) and handles the result of the call appropriately.
     public func response(completionHandler: (RType.ValueType?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
@@ -152,7 +152,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
     init(client: BabelClient, host: String, route: String, params: JSON, body: NSData, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             mutableRequest.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
             mutableRequest.HTTPBody = body
             if let data = dumpJSON(params) {
@@ -166,19 +166,19 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
     
     /// Called as the upload progresses. 
     ///
-    /// :param: closure
+    /// - parameter closure:
     ///         a callback taking three arguments (`bytesWritten`, `totalBytesWritten`, `totalBytesExpectedToWrite`)
-    /// :returns: The request, for chaining purposes
+    /// - returns: The request, for chaining purposes
     public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
-        self.request.progress(closure: closure)
+        self.request.progress(closure)
         return self
     }
     
     /// Called when a request completes.
     ///
-    /// :param: completionHandler 
+    /// - parameter completionHandler: 
     ///         A callback taking two arguments (`response`, `error`) which handles the result of the call appropriately.
-    /// :returns: The request, for chaining purposes.
+    /// - returns: The request, for chaining purposes.
     public func response(completionHandler: (RType.ValueType?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
@@ -198,7 +198,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         super.init( client: client, host: host, route: route, responseSerializer: responseSerializer, errorSerializer: errorSerializer,
         requestEncoder: ({ convertible, _ in
-            var mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
+            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
             if let data = dumpJSON(params) {
                 let value = asciiEscape(utf8Decode(data))
                 mutableRequest.addValue(value, forHTTPHeaderField: "Dropbox-Api-Arg")
@@ -210,19 +210,19 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     
     /// Called as the download progresses
     /// 
-    /// :param: closure
+    /// - parameter closure:
     ///         a callback taking three arguments (`bytesRead`, `totalBytesRead`, `totalBytesExpectedToRead`)
-    /// :returns: The request, for chaining purposes.
+    /// - returns: The request, for chaining purposes.
     public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
-        self.request.progress(closure: closure)
+        self.request.progress(closure)
         return self
     }
     
     /// Called when a request completes.
     ///
-    /// :param: completionHandler
+    /// - parameter completionHandler:
     ///         A callback taking two arguments (`response`, `error`) which handles the result of the call appropriately.
-    /// :returns: The request, for chaining purposes.
+    /// - returns: The request, for chaining purposes.
     public func response(completionHandler: ( (RType.ValueType, NSData)?, CallError<EType.ValueType>?) -> Void) -> Self {
         self.request.validate().response {
             (request, response, dataObj, error) -> Void in
