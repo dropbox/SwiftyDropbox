@@ -107,6 +107,7 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                     return .RouteError(Box(self.errorSerializer.deserialize(d["reason"]!)))
                 default:
                     assert(false, "Failed to parse error type")
+                    return .BadInputError("")
                 }
 
             default:

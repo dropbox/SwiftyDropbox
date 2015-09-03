@@ -32,6 +32,7 @@ public class Users {
                     return GetAccountArg(accountId: accountId)
                 default:
                     assert(false, "Type error deserializing")
+                    return GetAccountArg(accountId: "")
             }
         }
     }
@@ -75,6 +76,7 @@ public class Users {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return GetAccountError.Unknown
             }
         }
     }
@@ -128,6 +130,7 @@ public class Users {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return AccountType.Basic
             }
         }
     }
@@ -167,6 +170,7 @@ public class Users {
                     return Account(accountId: accountId, name: name)
                 default:
                     assert(false, "Type error deserializing")
+                    return Account(accountId: "", name: Name(givenName: "", surname: "", familiarName: "", displayName: ""))
             }
         }
     }
@@ -204,6 +208,7 @@ public class Users {
                     return BasicAccount(accountId: accountId, name: name, isTeammate: isTeammate)
                 default:
                     assert(false, "Type error deserializing")
+                    return BasicAccount(accountId: "", name: Users.Name(givenName: "", surname: "", familiarName: "", displayName: ""), isTeammate: false)
             }
         }
     }
@@ -286,6 +291,7 @@ public class Users {
                     return FullAccount(accountId: accountId, name: name, email: email, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
                 default:
                     assert(false, "Type error deserializing")
+                    return FullAccount(accountId: "", name: Users.Name(givenName: "", surname: "", familiarName: "", displayName: ""), email: "", locale: "", referralLink: "", isPaired: false, accountType: Users.AccountType.Basic, country: nil, team: nil)
             }
         }
     }
@@ -325,6 +331,7 @@ public class Users {
                     return Team(id: id, name: name)
                 default:
                     assert(false, "Type error deserializing")
+                    return Team(id: "", name: "")
             }
         }
     }
@@ -381,6 +388,7 @@ public class Users {
                     return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName)
                 default:
                     assert(false, "Type error deserializing")
+                    return Name(givenName: "", surname: "", familiarName: "", displayName: "")
             }
         }
     }
@@ -544,6 +552,7 @@ public class Users {
                     return TeamSpaceAllocation(used: used, allocated: allocated)
                 default:
                     assert(false, "Type error deserializing")
+                    return SpaceUsage(allocated: 0, used: 0)
             }
         }
     }

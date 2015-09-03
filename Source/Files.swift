@@ -67,6 +67,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Type error deserializing")
+                    return Metadata(name: "", pathLower: "")
             }
         }
     }
@@ -137,6 +138,7 @@ public class Files {
                     return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, id: id)
                 default:
                     assert(false, "Type error deserializing")
+                    return FileMetadata(name: "", pathLower: "", clientModified: NSDate(), serverModified: NSDate(), rev: "", size: 0)
             }
         }
     }
@@ -176,6 +178,7 @@ public class Files {
                     return FolderMetadata(name: name, pathLower: pathLower, id: id)
                 default:
                     assert(false, "Type error deserializing")
+                    return FolderMetadata(name: "", pathLower: "")
             }
         }
     }
@@ -204,6 +207,7 @@ public class Files {
                     return DeletedMetadata(name: name, pathLower: pathLower)
                 default:
                     assert(false, "Type error deserializing")
+                    return DeletedMetadata(name: "", pathLower: "")
             }
         }
     }
@@ -248,6 +252,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return GetMetadataError.Other
             }
         }
     }
@@ -281,6 +286,7 @@ public class Files {
                     return GetMetadataArg(path: path)
                 default:
                     assert(false, "Type error deserializing")
+                    return GetMetadataArg(path: "")
             }
         }
     }
@@ -322,6 +328,7 @@ public class Files {
                     return ListFolderArg(path: path, recursive: recursive)
                 default:
                     assert(false, "Type error deserializing")
+                    return ListFolderArg(path: "")
             }
         }
     }
@@ -368,6 +375,7 @@ public class Files {
                     return ListFolderResult(entries: entries, cursor: cursor, hasMore: hasMore)
                 default:
                     assert(false, "Type error deserializing")
+                    return ListFolderResult(entries: ArraySerializer(MetadataSerializer()).deserialize(.Null), cursor: "", hasMore: false)
             }
         }
     }
@@ -412,6 +420,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return FolderPathError.NotFound
             }
         }
     }
@@ -447,6 +456,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return ListFolderError.Other
             }
         }
     }
@@ -479,6 +489,7 @@ public class Files {
                     return ListFolderContinueArg(cursor: cursor)
                 default:
                     assert(false, "Type error deserializing")
+                    return ListFolderContinueArg(cursor: "")
             }
         }
     }
@@ -515,6 +526,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return ListFolderContinueError.Reset
             }
         }
     }
@@ -592,6 +604,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return NoFileReason.NotFound
             }
         }
     }
@@ -623,6 +636,8 @@ public class Files {
                     return NoFile(reason: reason)
                 default:
                     assert(false, "Type error deserializing")
+                    let reason = NoFileReasonSerializer().deserialize(.Null)
+                    return NoFile(reason: reason)
             }
         }
     }
@@ -668,6 +683,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return RestrictedReason.Other
             }
         }
     }
@@ -699,6 +715,7 @@ public class Files {
                     return Restricted(reason: reason)
                 default:
                     assert(false, "Type error deserializing")
+                    return Restricted(reason: RestrictedReasonSerializer().deserialize(.Null))
             }
         }
     }
@@ -744,6 +761,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return DisallowedReason.Permission
             }
         }
     }
@@ -775,6 +793,7 @@ public class Files {
                     return Disallowed(reason: reason)
                 default:
                     assert(false, "Type error deserializing")
+                    return Disallowed(reason: DisallowedReasonSerializer().deserialize(.Null))
             }
         }
     }
@@ -830,6 +849,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return DownloadError.Other
             }
         }
     }
@@ -869,6 +889,7 @@ public class Files {
                     return DownloadArg(path: path, rev: rev)
                 default:
                     assert(false, "Type error deserializing")
+                    return DownloadArg(path: "", rev: nil)
             }
         }
     }
@@ -931,6 +952,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return CommitConflictError.Other
             }
         }
     }
@@ -995,6 +1017,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return CommitError.Other
             }
         }
     }
@@ -1033,6 +1056,7 @@ public class Files {
                     return UploadCommitError(reason: reason, uploadSessionId: uploadSessionId)
                 default:
                     assert(false, "Type error deserializing")
+                    return UploadCommitError(reason: Files.CommitError.Other, uploadSessionId: "")
             }
         }
     }
@@ -1065,6 +1089,7 @@ public class Files {
                     return UploadSessionOffsetError(correctOffset: correctOffset)
                 default:
                     assert(false, "Type error deserializing")
+                    return UploadSessionOffsetError(correctOffset: 0)
             }
         }
     }
@@ -1132,6 +1157,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return UploadSessionLookupError.Other
             }
         }
     }
@@ -1177,6 +1203,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return UploadError.Other
             }
         }
     }
@@ -1232,6 +1259,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return UploadSessionFinishError.Other
             }
         }
     }
@@ -1265,6 +1293,7 @@ public class Files {
                     return UploadSessionStartResult(sessionId: sessionId)
                 default:
                     assert(false, "Type error deserializing")
+                    return UploadSessionStartResult(sessionId: "")
             }
         }
     }
@@ -1307,6 +1336,7 @@ public class Files {
                     return UploadSessionCursor(sessionId: sessionId, offset: offset)
                 default:
                     assert(false, "Type error deserializing")
+                    return UploadSessionCursor(sessionId: "", offset: 0)
             }
         }
     }
@@ -1376,6 +1406,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return WriteMode.Add
             }
         }
     }
@@ -1441,6 +1472,7 @@ public class Files {
                     return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
                 default:
                     assert(false, "Type error deserializing")
+                    return CommitInfo(path: "", mode: Files.WriteMode.Add, autorename: false, clientModified: nil, mute: false)
             }
         }
     }
@@ -1478,6 +1510,7 @@ public class Files {
                     return UploadSessionFinishArg(cursor: cursor, commit: commit)
                 default:
                     assert(false, "Type error deserializing")
+                    return UploadSessionFinishArg(cursor: UploadSessionCursorSerializer().deserialize(.Null), commit: CommitInfoSerializer().deserialize(.Null))
             }
         }
     }
@@ -1531,6 +1564,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return SearchMode.Filename
             }
         }
     }
@@ -1595,6 +1629,7 @@ public class Files {
                     return SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
                     assert(false, "Type error deserializing")
+                    return SearchQuery(path: "", query: "", start: 0, maxResults: 0, mode: Files.SearchMode.Filename)
             }
         }
     }
@@ -1648,6 +1683,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return SearchMatchType.Both
             }
         }
     }
@@ -1685,6 +1721,7 @@ public class Files {
                     return SearchMatch(matchType: matchType, metadata: metadata)
                 default:
                     assert(false, "Type error deserializing")
+                    return SearchMatch(matchType: SearchMatchTypeSerializer().deserialize(.Null), metadata: MetadataSerializer().deserialize(.Null))
             }
         }
     }
@@ -1731,6 +1768,7 @@ public class Files {
                     return SearchResults(matches: matches, more: more, start: start)
                 default:
                     assert(false, "Type error deserializing")
+                    return SearchResults(matches: ArraySerializer(SearchMatchSerializer()).deserialize(.Null), more: false, start: 0)
             }
         }
     }
@@ -1766,6 +1804,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return SearchError.Other
             }
         }
     }
@@ -1911,6 +1950,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return PathError.Other
             }
         }
     }
@@ -1943,6 +1983,7 @@ public class Files {
                     return CreateFolderArg(path: path)
                 default:
                     assert(false, "Type error deserializing")
+                    return CreateFolderArg(path: "")
             }
         }
     }
@@ -1975,6 +2016,7 @@ public class Files {
                     return DeleteArg(path: path)
                 default:
                     assert(false, "Type error deserializing")
+                    return DeleteArg(path: "")
             }
         }
     }
@@ -2014,6 +2056,7 @@ public class Files {
                     return RelocationArg(fromPath: fromPath, toPath: toPath)
                 default:
                     assert(false, "Type error deserializing")
+                    return RelocationArg(fromPath: "", toPath: "")
             }
         }
     }
@@ -2090,6 +2133,7 @@ public class Files {
                     }
                 default:
                     assert(false, "Failed to deserialize")
+                    return RelocationError.Other
             }
         }
     }

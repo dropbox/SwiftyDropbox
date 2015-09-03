@@ -31,6 +31,7 @@ func objectToJSON(json : AnyObject) -> JSON {
         return .Array(array.map(objectToJSON))
     default:
         assert(false, "Unknown type trying to parse JSON.")
+        return .Null
     }
 }
 
@@ -69,6 +70,7 @@ func dumpJSON(json: JSON) -> NSData? {
             return NSJSONSerialization.dataWithJSONObject(obj, options: nil, error: nil)
         } else {
             assert(false, "Invalid JSON toplevel type")
+            return NSData()
         }
     }
 }
@@ -125,6 +127,7 @@ public class ArraySerializer<T : JSONSerializer> : JSONSerializer {
             return arr.map { self.elementSerializer.deserialize($0) }
         default:
             assert(false, "Type error deserializing")
+            return Array<T.ValueType>()
         }
     }
 }
@@ -140,6 +143,7 @@ public class StringSerializer : JSONSerializer {
             return s
         default:
             assert(false, "Type error deserializing")
+            return ""
         }
     }
 }
@@ -252,6 +256,7 @@ public class NSDateSerializer : JSONSerializer {
             return self.dateFormatter.dateFromString(s)!
         default:
             assert(false, "Type error deserializing")
+            return NSDate()
         }
     }
 }
@@ -266,6 +271,7 @@ public class BoolSerializer : JSONSerializer {
             return b.boolValue
         default:
             assert(false, "Type error deserializing")
+            return false
         }
     }
 }
@@ -281,6 +287,7 @@ public class UInt64Serializer : JSONSerializer {
             return n.unsignedLongLongValue
         default:
             assert(false, "Type error deserializing")
+            return 0
         }
     }
 }
@@ -296,6 +303,7 @@ public class Int64Serializer : JSONSerializer {
             return n.longLongValue
         default:
             assert(false, "Type error deserializing")
+            return 0
         }
     }
 }
@@ -311,6 +319,7 @@ public class Int32Serializer : JSONSerializer {
             return n.intValue
         default:
             assert(false, "Type error deserializing")
+            return 0
         }
     }
 }
@@ -325,6 +334,7 @@ public class UInt32Serializer : JSONSerializer {
             return n.unsignedIntValue
         default:
             assert(false, "Type error deserializing")
+            return 0
         }
     }
 }
@@ -340,6 +350,7 @@ public class NSDataSerializer : JSONSerializer {
             return NSData(base64EncodedString: s, options: nil)!
         default:
             assert(false, "Type error deserializing")
+            return NSData()
         }
     }
 }
@@ -355,6 +366,7 @@ public class DoubleSerializer : JSONSerializer {
             return n.doubleValue
         default:
             assert(false, "Type error deserializing")
+            return 0
         }
     }
 }
