@@ -80,11 +80,11 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
         route: String,
         responseSerializer: RType,
         errorSerializer: EType,
-        requestEncoder: (URLRequestConvertible, [String: AnyObject]?) -> (NSURLRequest, NSError?)) {
+        requestEncoder: (URLRequestConvertible, [String: AnyObject]?) -> (NSMutableURLRequest, NSError?)) {
             self.errorSerializer = errorSerializer
             self.responseSerializer = responseSerializer
             let url = "\(client.baseHosts[host]!)\(route)"
-            self.request = client.manager.request(.POST, url, parameters: [:], encoding: .Custom(requestEncoder))
+            self.request = client.manager.request(.POST, url, parameters: [:], encoding: ParameterEncoding.Custom(requestEncoder))
     }
     
 
@@ -170,7 +170,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
     ///         a callback taking three arguments (`bytesWritten`, `totalBytesWritten`, `totalBytesExpectedToWrite`)
     /// :returns: The request, for chaining purposes
     public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
-        self.request.progress(closure: closure)
+        self.request.progress(closure)
         return self
     }
     
@@ -214,7 +214,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     ///         a callback taking three arguments (`bytesRead`, `totalBytesRead`, `totalBytesExpectedToRead`)
     /// :returns: The request, for chaining purposes.
     public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
-        self.request.progress(closure: closure)
+        self.request.progress(closure)
         return self
     }
     

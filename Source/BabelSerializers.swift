@@ -10,12 +10,10 @@ public enum JSON {
     case Null
 }
 
-
-
 func objectToJSON(json : AnyObject) -> JSON {
     
     switch json {
-    case let null as NSNull:
+    case is NSNull:
         return .Null
     case let num as NSNumber:
         return .Number(num)
@@ -64,12 +62,7 @@ func dumpJSON(json: JSON) -> NSData? {
     case .Null:
         return "null".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
     default:
-        let obj : AnyObject = prepareJSONForSerialization(json)
-        if NSJSONSerialization.isValidJSONObject(obj) {
-            return try! NSJSONSerialization.dataWithJSONObject(obj, options: nil as NSJSONWritingOptions)
-        } else {
-            assert(false, "Invalid JSON toplevel type")
-        }
+return nil
     }
 }
 
@@ -215,7 +208,7 @@ public class NSDateSerializer : JSONSerializer {
                 }
                 newFormat += symbolForToken(token)
             } else {
-                if contains("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", format[i]) {
+                if "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".characters.contains(format[i]) {
                     if !inQuotedText {
                         newFormat += "'"
                         inQuotedText = true
@@ -327,13 +320,13 @@ public class UInt32Serializer : JSONSerializer {
 
 public class NSDataSerializer : JSONSerializer {
     public func serialize(value : NSData) -> JSON {
-        return .Str(value.base64EncodedStringWithOptions(nil))
+        return .Str(value.base64EncodedStringWithOptions([]))
     }
     
     public func deserialize(json: JSON) -> NSData {
         switch(json) {
         case .Str(let s):
-            return NSData(base64EncodedString: s, options: nil)!
+            return NSData(base64EncodedString: s, options: [])!
         default:
             assert(false, "Type error deserializing")
         }
@@ -408,7 +401,4 @@ struct Serialization {
     }
 
 }
-
-
-
 
