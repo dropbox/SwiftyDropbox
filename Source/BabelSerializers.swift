@@ -30,7 +30,7 @@ func objectToJSON(json : AnyObject) -> JSON {
     case let array as [AnyObject]:
         return .Array(array.map(objectToJSON))
     default:
-        assert(false, "Unknown type trying to parse JSON.")
+        fatalError("Unknown type trying to parse JSON.")
     }
 }
 
@@ -68,7 +68,7 @@ func dumpJSON(json: JSON) -> NSData? {
         if NSJSONSerialization.isValidJSONObject(obj) {
             return NSJSONSerialization.dataWithJSONObject(obj, options: nil, error: nil)
         } else {
-            assert(false, "Invalid JSON toplevel type")
+            fatalError("Invalid JSON toplevel type")
         }
     }
 }
@@ -100,7 +100,7 @@ public class VoidSerializer : JSONSerializer {
         case .Null:
             return
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
         
     }
@@ -124,7 +124,7 @@ public class ArraySerializer<T : JSONSerializer> : JSONSerializer {
         case .Array(let arr):
             return arr.map { self.elementSerializer.deserialize($0) }
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -139,7 +139,7 @@ public class StringSerializer : JSONSerializer {
         case .Str(let s):
             return s
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -251,7 +251,7 @@ public class NSDateSerializer : JSONSerializer {
         case .Str(let s):
             return self.dateFormatter.dateFromString(s)!
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -265,7 +265,7 @@ public class BoolSerializer : JSONSerializer {
         case .Number(let b):
             return b.boolValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -280,7 +280,7 @@ public class UInt64Serializer : JSONSerializer {
         case .Number(let n):
             return n.unsignedLongLongValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -295,7 +295,7 @@ public class Int64Serializer : JSONSerializer {
         case .Number(let n):
             return n.longLongValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -310,7 +310,7 @@ public class Int32Serializer : JSONSerializer {
         case .Number(let n):
             return n.intValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -324,7 +324,7 @@ public class UInt32Serializer : JSONSerializer {
         case .Number(let n):
             return n.unsignedIntValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -339,7 +339,7 @@ public class NSDataSerializer : JSONSerializer {
         case .Str(let s):
             return NSData(base64EncodedString: s, options: nil)!
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }
@@ -354,7 +354,7 @@ public class DoubleSerializer : JSONSerializer {
         case .Number(let n):
             return n.doubleValue
         default:
-            assert(false, "Type error deserializing")
+            fatalError("Type error deserializing")
         }
     }
 }

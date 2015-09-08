@@ -100,13 +100,13 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                 return .BadInputError(message)
             case 429:
                  return .RateLimitError
-            case 403, 404, 409:
+            case 409:
                 let json = parseJSON(data)
                 switch json {
                 case .Dictionary(let d):
                     return .RouteError(Box(self.errorSerializer.deserialize(d["reason"]!)))
                 default:
-                    assert(false, "Failed to parse error type")
+                    fatalError("Failed to parse error type")
                 }
 
             default:

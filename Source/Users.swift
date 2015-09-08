@@ -31,7 +31,7 @@ public class Users {
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
                     return GetAccountArg(accountId: accountId)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -74,7 +74,7 @@ public class Users {
                             return GetAccountError.Unknown
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -127,7 +127,7 @@ public class Users {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -166,7 +166,7 @@ public class Users {
                     let name = NameSerializer().deserialize(dict["name"] ?? .Null)
                     return Account(accountId: accountId, name: name)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -203,7 +203,7 @@ public class Users {
                     let isTeammate = Serialization._BoolSerializer.deserialize(dict["is_teammate"] ?? .Null)
                     return BasicAccount(accountId: accountId, name: name, isTeammate: isTeammate)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -285,7 +285,7 @@ public class Users {
                     let team = NullableSerializer(TeamSerializer()).deserialize(dict["team"] ?? .Null)
                     return FullAccount(accountId: accountId, name: name, email: email, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -324,7 +324,7 @@ public class Users {
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     return Team(id: id, name: name)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -380,7 +380,7 @@ public class Users {
                     let displayName = Serialization._StringSerializer.deserialize(dict["display_name"] ?? .Null)
                     return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -418,7 +418,7 @@ public class Users {
                     let allocation = SpaceAllocationSerializer().deserialize(dict["allocation"] ?? .Null)
                     return SpaceUsage(used: used, allocation: allocation)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -472,7 +472,7 @@ public class Users {
                             return SpaceAllocation.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -504,7 +504,7 @@ public class Users {
                     let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
                     return IndividualSpaceAllocation(allocated: allocated)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -543,7 +543,7 @@ public class Users {
                     let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
                     return TeamSpaceAllocation(used: used, allocated: allocated)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
