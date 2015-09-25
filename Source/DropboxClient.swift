@@ -51,7 +51,15 @@ public class Dropbox {
             DropboxClient.sharedClient = Dropbox.authorizedClient
         }
     }
-
+    
+    public static func setupWithAppKey(appKey:String,token:DropboxAccessToken) {
+        precondition(DropboxAuthManager.sharedAuthManager == nil, "Only call `Dropbox.initAppWithKey` once")
+        DropboxAuthManager.sharedAuthManager = DropboxAuthManager(appKey: appKey)
+        
+        Dropbox.authorizedClient = DropboxClient(accessToken: token)
+        DropboxClient.sharedClient = Dropbox.authorizedClient
+    }
+    
     public static func authorizeFromController(controller: UIViewController) {
         precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
         precondition(Dropbox.authorizedClient == nil, "Client is already authorized")

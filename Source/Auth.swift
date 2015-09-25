@@ -9,7 +9,7 @@ public class DropboxAccessToken : CustomStringConvertible {
     var accessToken: String
     var uid: String
     
-    init(accessToken: String, uid: String) {
+    public init(accessToken: String, uid: String) {
         self.accessToken = accessToken
         self.uid = uid
     }
