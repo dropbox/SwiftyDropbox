@@ -106,7 +106,7 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                 case .Dictionary(let d):
                     return .RouteError(Box(self.errorSerializer.deserialize(d["reason"]!)))
                 default:
-                    assert(false, "Failed to parse error type")
+                    fatalError("Failed to parse error type")
                 }
 
             default:

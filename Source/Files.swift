@@ -33,17 +33,17 @@ public class Files {
             ]
             switch value {
                 case let file as Files.FileMetadata:
-                    for (k,v) in Serialization.getFields(FileMetadataSerializer().serialize(file)) {
+                    for (k,v) in Serialization.getFields(Files.FileMetadataSerializer().serialize(file)) {
                         output[k] = v
                     }
                     output[".tag"] = .Str("file")
                 case let folder as Files.FolderMetadata:
-                    for (k,v) in Serialization.getFields(FolderMetadataSerializer().serialize(folder)) {
+                    for (k,v) in Serialization.getFields(Files.FolderMetadataSerializer().serialize(folder)) {
                         output[k] = v
                     }
                     output[".tag"] = .Str("folder")
                 case let deleted as Files.DeletedMetadata:
-                    for (k,v) in Serialization.getFields(DeletedMetadataSerializer().serialize(deleted)) {
+                    for (k,v) in Serialization.getFields(Files.DeletedMetadataSerializer().serialize(deleted)) {
                         output[k] = v
                     }
                     output[".tag"] = .Str("deleted")
@@ -57,16 +57,16 @@ public class Files {
                     let tag = Serialization.getTag(dict)
                     switch tag {
                         case "file":
-                            return FileMetadataSerializer().deserialize(json)
+                            return Files.FileMetadataSerializer().deserialize(json)
                         case "folder":
-                            return FolderMetadataSerializer().deserialize(json)
+                            return Files.FolderMetadataSerializer().deserialize(json)
                         case "deleted":
-                            return DeletedMetadataSerializer().deserialize(json)
+                            return Files.DeletedMetadataSerializer().deserialize(json)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -136,7 +136,7 @@ public class Files {
                     let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
                     return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, id: id)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -175,7 +175,7 @@ public class Files {
                     let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
                     return FolderMetadata(name: name, pathLower: pathLower, id: id)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -203,7 +203,7 @@ public class Files {
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
                     return DeletedMetadata(name: name, pathLower: pathLower)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -221,7 +221,7 @@ public class Files {
         public func serialize(value: GetMetadataError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
             }
@@ -232,24 +232,24 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return GetMetadataError.Path(v)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
     /// Arguments for `get_metadata`.
     ///
     /// :param: path
-    ///        The path of a file or folder on Dropbox
+    ///        The path or ID of a file or folder on Dropbox
     public class GetMetadataArg: CustomStringConvertible {
         public let path : String
         public init(path: String) {
-            stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
+            stringValidator(pattern: "(/|id:).*")(value: path)
             self.path = path
         }
         public var description : String {
@@ -270,134 +270,7 @@ public class Files {
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     return GetMetadataArg(path: path)
                 default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// Arguments for `list_folder/longpoll`.
-    ///
-    /// :param: cursor
-    ///        A cursor as returned by `list_folder` or `list_folder/continue`
-    /// :param: timeout
-    ///        A timeout in seconds. The request will block for at most this
-    ///        length of time, plus up to 90 seconds of random jitter added to
-    ///        avoid the thundering herd problem. Care should be taken when
-    ///        using this parameter, as some network infrastructure does not
-    ///        support long timeouts.
-    public class ListFolderLongpollArg: CustomStringConvertible {
-        public let cursor : String
-        public let timeout : UInt64
-        public init(cursor: String, timeout: UInt64 = 30) {
-            stringValidator()(value: cursor)
-            self.cursor = cursor
-            comparableValidator(minValue: 30, maxValue: 480)(value: timeout)
-            self.timeout = timeout
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderLongpollArgSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderLongpollArg) -> JSON {
-            let output = [ 
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
-            "timeout": Serialization._UInt64Serializer.serialize(value.timeout),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> ListFolderLongpollArg {
-            switch json {
-                case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .Null)
-                    return ListFolderLongpollArg(cursor: cursor, timeout: timeout)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// Information returned by `list_folder/longpoll`
-    ///
-    /// :param: changes
-    ///        Indicates whether new changes are available. If true, call
-    ///        `list_folder` to retrieve the changes.
-    /// :param: backoff
-    ///        If present, backoff for at least this many seconds before calling
-    ///        `list_folder/longpoll` again.
-    public class ListFolderLongpollResult: CustomStringConvertible {
-        public let changes : Bool
-        public let backoff : UInt64?
-        public init(changes: Bool, backoff: UInt64? = nil) {
-            self.changes = changes
-            nullableValidator(comparableValidator())(value: backoff)
-            self.backoff = backoff
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderLongpollResultSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderLongpollResult) -> JSON {
-            let output = [ 
-            "changes": Serialization._BoolSerializer.serialize(value.changes),
-            "backoff": NullableSerializer(Serialization._UInt64Serializer).serialize(value.backoff),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> ListFolderLongpollResult {
-            switch json {
-                case .Dictionary(let dict):
-                    let changes = Serialization._BoolSerializer.deserialize(dict["changes"] ?? .Null)
-                    let backoff = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["backoff"] ?? .Null)
-                    return ListFolderLongpollResult(changes: changes, backoff: backoff)
-                default:
-                    assert(false, "Type error deserializing")
-            }
-        }
-    }
-    /// The ListFolderLongpollError union
-    ///
-    /// - Reset:
-    ///   Indicates that the cursor has been invalidated. Call `list_folder` to
-    ///   obtain a new cursor.
-    /// - Other
-    public enum ListFolderLongpollError : CustomStringConvertible {
-        case Reset
-        case Other
-        public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
-        }
-    }
-    public class ListFolderLongpollErrorSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: ListFolderLongpollError) -> JSON {
-            switch value {
-                case .Reset:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("reset")
-                    return .Dictionary(d)
-                case .Other:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("other")
-                    return .Dictionary(d)
-            }
-        }
-        public func deserialize(json: JSON) -> ListFolderLongpollError {
-            switch json {
-                case .Dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "reset":
-                            return ListFolderLongpollError.Reset
-                        case "other":
-                            return ListFolderLongpollError.Other
-                        default:
-                            return ListFolderLongpollError.Other
-                    }
-                default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -437,7 +310,7 @@ public class Files {
                     let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Null)
                     return ListFolderArg(path: path, recursive: recursive)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -452,10 +325,10 @@ public class Files {
     ///        If true, then there are more entries available. Pass the cursor
     ///        to `list_folder/continue` to retrieve the rest.
     public class ListFolderResult: CustomStringConvertible {
-        public let entries : Array<Metadata>
+        public let entries : Array<Files.Metadata>
         public let cursor : String
         public let hasMore : Bool
-        public init(entries: Array<Metadata>, cursor: String, hasMore: Bool) {
+        public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
             stringValidator()(value: cursor)
             self.cursor = cursor
@@ -469,7 +342,7 @@ public class Files {
         public init() { }
         public func serialize(value: ListFolderResult) -> JSON {
             let output = [ 
-            "entries": ArraySerializer(MetadataSerializer()).serialize(value.entries),
+            "entries": ArraySerializer(Files.MetadataSerializer()).serialize(value.entries),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             ]
@@ -478,12 +351,12 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderResult {
             switch json {
                 case .Dictionary(let dict):
-                    let entries = ArraySerializer(MetadataSerializer()).deserialize(dict["entries"] ?? .Null)
+                    let entries = ArraySerializer(Files.MetadataSerializer()).deserialize(dict["entries"] ?? .Null)
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
                     let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
                     return ListFolderResult(entries: entries, cursor: cursor, hasMore: hasMore)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -504,7 +377,7 @@ public class Files {
         public func serialize(value: ListFolderError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Other:
@@ -519,7 +392,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return ListFolderError.Path(v)
                         case "other":
                             return ListFolderError.Other
@@ -527,7 +400,7 @@ public class Files {
                             return ListFolderError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -559,7 +432,7 @@ public class Files {
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
                     return ListFolderContinueArg(cursor: cursor)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -583,7 +456,7 @@ public class Files {
         public func serialize(value: ListFolderContinueError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Reset:
@@ -602,7 +475,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return ListFolderContinueError.Path(v)
                         case "reset":
                             return ListFolderContinueError.Reset
@@ -612,7 +485,7 @@ public class Files {
                             return ListFolderContinueError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -645,7 +518,7 @@ public class Files {
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
                     return ListFolderGetLatestCursorResult(cursor: cursor)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -666,7 +539,7 @@ public class Files {
         public func serialize(value: DownloadError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Other:
@@ -681,7 +554,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return DownloadError.Path(v)
                         case "other":
                             return DownloadError.Other
@@ -689,7 +562,7 @@ public class Files {
                             return DownloadError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -728,7 +601,7 @@ public class Files {
                     let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .Null)
                     return DownloadArg(path: path, rev: rev)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -739,9 +612,9 @@ public class Files {
     /// :param: uploadSessionId
     ///        The upload session ID; this may be used to retry the commit.
     public class UploadWriteFailed: CustomStringConvertible {
-        public let reason : WriteError
+        public let reason : Files.WriteError
         public let uploadSessionId : String
-        public init(reason: WriteError, uploadSessionId: String) {
+        public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
             stringValidator()(value: uploadSessionId)
             self.uploadSessionId = uploadSessionId
@@ -754,7 +627,7 @@ public class Files {
         public init() { }
         public func serialize(value: UploadWriteFailed) -> JSON {
             let output = [ 
-            "reason": WriteErrorSerializer().serialize(value.reason),
+            "reason": Files.WriteErrorSerializer().serialize(value.reason),
             "upload_session_id": Serialization._StringSerializer.serialize(value.uploadSessionId),
             ]
             return .Dictionary(output)
@@ -762,11 +635,11 @@ public class Files {
         public func deserialize(json: JSON) -> UploadWriteFailed {
             switch json {
                 case .Dictionary(let dict):
-                    let reason = WriteErrorSerializer().deserialize(dict["reason"] ?? .Null)
+                    let reason = Files.WriteErrorSerializer().deserialize(dict["reason"] ?? .Null)
                     let uploadSessionId = Serialization._StringSerializer.deserialize(dict["upload_session_id"] ?? .Null)
                     return UploadWriteFailed(reason: reason, uploadSessionId: uploadSessionId)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -788,7 +661,7 @@ public class Files {
         public func serialize(value: UploadError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = Serialization.getFields(UploadWriteFailedSerializer().serialize(arg))
+                    var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Other:
@@ -803,7 +676,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = UploadWriteFailedSerializer().deserialize(json)
+                            let v = Files.UploadWriteFailedSerializer().deserialize(json)
                             return UploadError.Path(v)
                         case "other":
                             return UploadError.Other
@@ -811,7 +684,7 @@ public class Files {
                             return UploadError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -843,7 +716,7 @@ public class Files {
                     let correctOffset = Serialization._UInt64Serializer.deserialize(dict["correct_offset"] ?? .Null)
                     return UploadSessionOffsetError(correctOffset: correctOffset)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -879,7 +752,7 @@ public class Files {
                     d[".tag"] = .Str("not_found")
                     return .Dictionary(d)
                 case .IncorrectOffset(let arg):
-                    var d = Serialization.getFields(UploadSessionOffsetErrorSerializer().serialize(arg))
+                    var d = Serialization.getFields(Files.UploadSessionOffsetErrorSerializer().serialize(arg))
                     d[".tag"] = .Str("incorrect_offset")
                     return .Dictionary(d)
                 case .Closed:
@@ -900,7 +773,7 @@ public class Files {
                         case "not_found":
                             return UploadSessionLookupError.NotFound
                         case "incorrect_offset":
-                            let v = UploadSessionOffsetErrorSerializer().deserialize(json)
+                            let v = Files.UploadSessionOffsetErrorSerializer().deserialize(json)
                             return UploadSessionLookupError.IncorrectOffset(v)
                         case "closed":
                             return UploadSessionLookupError.Closed
@@ -910,7 +783,7 @@ public class Files {
                             return UploadSessionLookupError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -935,11 +808,11 @@ public class Files {
         public func serialize(value: UploadSessionFinishError) -> JSON {
             switch value {
                 case .LookupFailed(let arg):
-                    var d = ["lookup_failed": UploadSessionLookupErrorSerializer().serialize(arg)]
+                    var d = ["lookup_failed": Files.UploadSessionLookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("lookup_failed")
                     return .Dictionary(d)
                 case .Path(let arg):
-                    var d = ["path": WriteErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Other:
@@ -954,10 +827,10 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "lookup_failed":
-                            let v = UploadSessionLookupErrorSerializer().deserialize(d["lookup_failed"] ?? .Null)
+                            let v = Files.UploadSessionLookupErrorSerializer().deserialize(d["lookup_failed"] ?? .Null)
                             return UploadSessionFinishError.LookupFailed(v)
                         case "path":
-                            let v = WriteErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["path"] ?? .Null)
                             return UploadSessionFinishError.Path(v)
                         case "other":
                             return UploadSessionFinishError.Other
@@ -965,7 +838,7 @@ public class Files {
                             return UploadSessionFinishError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -998,7 +871,7 @@ public class Files {
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
                     return UploadSessionStartResult(sessionId: sessionId)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1040,7 +913,7 @@ public class Files {
                     let offset = Serialization._UInt64Serializer.deserialize(dict["offset"] ?? .Null)
                     return UploadSessionCursor(sessionId: sessionId, offset: offset)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1109,7 +982,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1136,11 +1009,11 @@ public class Files {
     ///        result in a user notification.
     public class CommitInfo: CustomStringConvertible {
         public let path : String
-        public let mode : WriteMode
+        public let mode : Files.WriteMode
         public let autorename : Bool
         public let clientModified : NSDate?
         public let mute : Bool
-        public init(path: String, mode: WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false) {
+        public init(path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false) {
             stringValidator(pattern: "/.*")(value: path)
             self.path = path
             self.mode = mode
@@ -1157,7 +1030,7 @@ public class Files {
         public func serialize(value: CommitInfo) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
-            "mode": WriteModeSerializer().serialize(value.mode),
+            "mode": Files.WriteModeSerializer().serialize(value.mode),
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
@@ -1168,13 +1041,13 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let mode = WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
                     let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Null)
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .Null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Null)
                     return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1185,9 +1058,9 @@ public class Files {
     /// :param: commit
     ///        Contains the path and other optional modifiers for the commit.
     public class UploadSessionFinishArg: CustomStringConvertible {
-        public let cursor : UploadSessionCursor
-        public let commit : CommitInfo
-        public init(cursor: UploadSessionCursor, commit: CommitInfo) {
+        public let cursor : Files.UploadSessionCursor
+        public let commit : Files.CommitInfo
+        public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
             self.cursor = cursor
             self.commit = commit
         }
@@ -1199,19 +1072,19 @@ public class Files {
         public init() { }
         public func serialize(value: UploadSessionFinishArg) -> JSON {
             let output = [ 
-            "cursor": UploadSessionCursorSerializer().serialize(value.cursor),
-            "commit": CommitInfoSerializer().serialize(value.commit),
+            "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
+            "commit": Files.CommitInfoSerializer().serialize(value.commit),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> UploadSessionFinishArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .Null)
-                    let commit = CommitInfoSerializer().deserialize(dict["commit"] ?? .Null)
+                    let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .Null)
+                    let commit = Files.CommitInfoSerializer().deserialize(dict["commit"] ?? .Null)
                     return UploadSessionFinishArg(cursor: cursor, commit: commit)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1264,7 +1137,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1290,8 +1163,8 @@ public class Files {
         public let query : String
         public let start : UInt64
         public let maxResults : UInt64
-        public let mode : SearchMode
-        public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: SearchMode = .Filename) {
+        public let mode : Files.SearchMode
+        public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) {
             stringValidator(pattern: "(/.*)?")(value: path)
             self.path = path
             stringValidator()(value: query)
@@ -1314,7 +1187,7 @@ public class Files {
             "query": Serialization._StringSerializer.serialize(value.query),
             "start": Serialization._UInt64Serializer.serialize(value.start),
             "max_results": Serialization._UInt64Serializer.serialize(value.maxResults),
-            "mode": SearchModeSerializer().serialize(value.mode),
+            "mode": Files.SearchModeSerializer().serialize(value.mode),
             ]
             return .Dictionary(output)
         }
@@ -1325,10 +1198,10 @@ public class Files {
                     let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .Null)
                     let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
                     let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .Null)
-                    let mode = SearchModeSerializer().deserialize(dict["mode"] ?? .Null)
+                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? .Null)
                     return SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1381,7 +1254,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1392,9 +1265,9 @@ public class Files {
     /// :param: metadata
     ///        The metadata for the matched file or folder.
     public class SearchMatch: CustomStringConvertible {
-        public let matchType : SearchMatchType
-        public let metadata : Metadata
-        public init(matchType: SearchMatchType, metadata: Metadata) {
+        public let matchType : Files.SearchMatchType
+        public let metadata : Files.Metadata
+        public init(matchType: Files.SearchMatchType, metadata: Files.Metadata) {
             self.matchType = matchType
             self.metadata = metadata
         }
@@ -1406,19 +1279,19 @@ public class Files {
         public init() { }
         public func serialize(value: SearchMatch) -> JSON {
             let output = [ 
-            "match_type": SearchMatchTypeSerializer().serialize(value.matchType),
-            "metadata": MetadataSerializer().serialize(value.metadata),
+            "match_type": Files.SearchMatchTypeSerializer().serialize(value.matchType),
+            "metadata": Files.MetadataSerializer().serialize(value.metadata),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> SearchMatch {
             switch json {
                 case .Dictionary(let dict):
-                    let matchType = SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .Null)
-                    let metadata = MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
+                    let matchType = Files.SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .Null)
+                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
                     return SearchMatch(matchType: matchType, metadata: metadata)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1433,10 +1306,10 @@ public class Files {
     ///        Used for paging. Value to set the start argument to when calling
     ///        `search` to fetch the next page of results.
     public class SearchResults: CustomStringConvertible {
-        public let matches : Array<SearchMatch>
+        public let matches : Array<Files.SearchMatch>
         public let more : Bool
         public let start : UInt64
-        public init(matches: Array<SearchMatch>, more: Bool, start: UInt64) {
+        public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64) {
             self.matches = matches
             self.more = more
             comparableValidator()(value: start)
@@ -1450,7 +1323,7 @@ public class Files {
         public init() { }
         public func serialize(value: SearchResults) -> JSON {
             let output = [ 
-            "matches": ArraySerializer(SearchMatchSerializer()).serialize(value.matches),
+            "matches": ArraySerializer(Files.SearchMatchSerializer()).serialize(value.matches),
             "more": Serialization._BoolSerializer.serialize(value.more),
             "start": Serialization._UInt64Serializer.serialize(value.start),
             ]
@@ -1459,12 +1332,12 @@ public class Files {
         public func deserialize(json: JSON) -> SearchResults {
             switch json {
                 case .Dictionary(let dict):
-                    let matches = ArraySerializer(SearchMatchSerializer()).deserialize(dict["matches"] ?? .Null)
+                    let matches = ArraySerializer(Files.SearchMatchSerializer()).deserialize(dict["matches"] ?? .Null)
                     let more = Serialization._BoolSerializer.deserialize(dict["more"] ?? .Null)
                     let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
                     return SearchResults(matches: matches, more: more, start: start)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1485,7 +1358,7 @@ public class Files {
         public func serialize(value: SearchError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .Other:
@@ -1500,7 +1373,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return SearchError.Path(v)
                         case "other":
                             return SearchError.Other
@@ -1508,7 +1381,7 @@ public class Files {
                             return SearchError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1591,7 +1464,7 @@ public class Files {
                             return LookupError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1629,7 +1502,7 @@ public class Files {
                     d[".tag"] = .Str("malformed_path")
                     return .Dictionary(d)
                 case .Conflict(let arg):
-                    var d = ["conflict": WriteConflictErrorSerializer().serialize(arg)]
+                    var d = ["conflict": Files.WriteConflictErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("conflict")
                     return .Dictionary(d)
                 case .NoWritePermission:
@@ -1659,7 +1532,7 @@ public class Files {
                             let v = Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .Null)
                             return WriteError.MalformedPath(v)
                         case "conflict":
-                            let v = WriteConflictErrorSerializer().deserialize(d["conflict"] ?? .Null)
+                            let v = Files.WriteConflictErrorSerializer().deserialize(d["conflict"] ?? .Null)
                             return WriteError.Conflict(v)
                         case "no_write_permission":
                             return WriteError.NoWritePermission
@@ -1673,7 +1546,7 @@ public class Files {
                             return WriteError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1735,7 +1608,7 @@ public class Files {
                             return WriteConflictError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1767,7 +1640,7 @@ public class Files {
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     return CreateFolderArg(path: path)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1785,7 +1658,7 @@ public class Files {
         public func serialize(value: CreateFolderError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": WriteErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
             }
@@ -1796,13 +1669,13 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = WriteErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["path"] ?? .Null)
                             return CreateFolderError.Path(v)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1834,7 +1707,7 @@ public class Files {
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     return DeleteArg(path: path)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1856,11 +1729,11 @@ public class Files {
         public func serialize(value: DeleteError) -> JSON {
             switch value {
                 case .PathLookup(let arg):
-                    var d = ["path_lookup": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path_lookup": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path_lookup")
                     return .Dictionary(d)
                 case .PathWrite(let arg):
-                    var d = ["path_write": WriteErrorSerializer().serialize(arg)]
+                    var d = ["path_write": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path_write")
                     return .Dictionary(d)
                 case .Other:
@@ -1875,10 +1748,10 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path_lookup":
-                            let v = LookupErrorSerializer().deserialize(d["path_lookup"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path_lookup"] ?? .Null)
                             return DeleteError.PathLookup(v)
                         case "path_write":
-                            let v = WriteErrorSerializer().deserialize(d["path_write"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["path_write"] ?? .Null)
                             return DeleteError.PathWrite(v)
                         case "other":
                             return DeleteError.Other
@@ -1886,7 +1759,7 @@ public class Files {
                             return DeleteError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1925,7 +1798,7 @@ public class Files {
                     let toPath = Serialization._StringSerializer.deserialize(dict["to_path"] ?? .Null)
                     return RelocationArg(fromPath: fromPath, toPath: toPath)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1960,15 +1833,15 @@ public class Files {
         public func serialize(value: RelocationError) -> JSON {
             switch value {
                 case .FromLookup(let arg):
-                    var d = ["from_lookup": LookupErrorSerializer().serialize(arg)]
+                    var d = ["from_lookup": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("from_lookup")
                     return .Dictionary(d)
                 case .FromWrite(let arg):
-                    var d = ["from_write": WriteErrorSerializer().serialize(arg)]
+                    var d = ["from_write": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("from_write")
                     return .Dictionary(d)
                 case .To(let arg):
-                    var d = ["to": WriteErrorSerializer().serialize(arg)]
+                    var d = ["to": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("to")
                     return .Dictionary(d)
                 case .CantCopySharedFolder:
@@ -1995,13 +1868,13 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "from_lookup":
-                            let v = LookupErrorSerializer().deserialize(d["from_lookup"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["from_lookup"] ?? .Null)
                             return RelocationError.FromLookup(v)
                         case "from_write":
-                            let v = WriteErrorSerializer().deserialize(d["from_write"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["from_write"] ?? .Null)
                             return RelocationError.FromWrite(v)
                         case "to":
-                            let v = WriteErrorSerializer().deserialize(d["to"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["to"] ?? .Null)
                             return RelocationError.To(v)
                         case "cant_copy_shared_folder":
                             return RelocationError.CantCopySharedFolder
@@ -2015,28 +1888,28 @@ public class Files {
                             return RelocationError.Other
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
-    /// The ThumbnailSize union
+    /// The size option for thumbnail image.
     ///
-    /// - W32h32:
+    /// - Xs:
     ///   32 by 32 px.
-    /// - W64h64:
+    /// - S:
     ///   64 by 64 px.
-    /// - W128h128:
+    /// - M:
     ///   128 by 128 px.
-    /// - W640h480:
+    /// - L:
     ///   640 by 480 px.
-    /// - W1024h768:
+    /// - Xl:
     ///   1024 by 768
     public enum ThumbnailSize : CustomStringConvertible {
-        case W32h32
-        case W64h64
-        case W128h128
-        case W640h480
-        case W1024h768
+        case Xs
+        case S
+        case M
+        case L
+        case Xl
         public var description : String {
             return "\(prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
@@ -2045,25 +1918,25 @@ public class Files {
         public init() { }
         public func serialize(value: ThumbnailSize) -> JSON {
             switch value {
-                case .W32h32:
+                case .Xs:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("w32h32")
+                    d[".tag"] = .Str("xs")
                     return .Dictionary(d)
-                case .W64h64:
+                case .S:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("w64h64")
+                    d[".tag"] = .Str("s")
                     return .Dictionary(d)
-                case .W128h128:
+                case .M:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("w128h128")
+                    d[".tag"] = .Str("m")
                     return .Dictionary(d)
-                case .W640h480:
+                case .L:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("w640h480")
+                    d[".tag"] = .Str("l")
                     return .Dictionary(d)
-                case .W1024h768:
+                case .Xl:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("w1024h768")
+                    d[".tag"] = .Str("xl")
                     return .Dictionary(d)
             }
         }
@@ -2072,25 +1945,25 @@ public class Files {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "w32h32":
-                            return ThumbnailSize.W32h32
-                        case "w64h64":
-                            return ThumbnailSize.W64h64
-                        case "w128h128":
-                            return ThumbnailSize.W128h128
-                        case "w640h480":
-                            return ThumbnailSize.W640h480
-                        case "w1024h768":
-                            return ThumbnailSize.W1024h768
+                        case "xs":
+                            return ThumbnailSize.Xs
+                        case "s":
+                            return ThumbnailSize.S
+                        case "m":
+                            return ThumbnailSize.M
+                        case "l":
+                            return ThumbnailSize.L
+                        case "xl":
+                            return ThumbnailSize.Xl
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
-    /// The ThumbnailFormat union
+    /// The format option for thumbnail image.
     ///
     /// - Jpeg
     /// - Png
@@ -2128,11 +2001,14 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
-    /// The ThumbnailArg struct
+    /// Arguments for `get_thumbnail`. This method currently supports files with
+    /// the following file extensions: jpg, jpeg, png, tiff, tif, gif and bmp.
+    /// Photos that are larger than 20MB in size won't be converted to a
+    /// thumbnail.
     ///
     /// :param: path
     ///        The path to the image file you want to thumbnail.
@@ -2141,12 +2017,12 @@ public class Files {
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
     /// :param: size
-    ///        The size for the thumbnail image.
+    ///        The size for the thumbnail image (default s).
     public class ThumbnailArg: CustomStringConvertible {
         public let path : String
-        public let format : ThumbnailFormat
-        public let size : ThumbnailSize
-        public init(path: String, format: ThumbnailFormat = .Jpeg, size: ThumbnailSize = .W64h64) {
+        public let format : Files.ThumbnailFormat
+        public let size : Files.ThumbnailSize
+        public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) {
             stringValidator(pattern: "/.*")(value: path)
             self.path = path
             self.format = format
@@ -2161,8 +2037,8 @@ public class Files {
         public func serialize(value: ThumbnailArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
-            "format": ThumbnailFormatSerializer().serialize(value.format),
-            "size": ThumbnailSizeSerializer().serialize(value.size),
+            "format": Files.ThumbnailFormatSerializer().serialize(value.format),
+            "size": Files.ThumbnailSizeSerializer().serialize(value.size),
             ]
             return .Dictionary(output)
         }
@@ -2170,20 +2046,24 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let format = ThumbnailFormatSerializer().deserialize(dict["format"] ?? .Null)
-                    let size = ThumbnailSizeSerializer().deserialize(dict["size"] ?? .Null)
+                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? .Null)
+                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? .Null)
                     return ThumbnailArg(path: path, format: format, size: size)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
-    /// The ThumbnailError union
+    /// Errors reported by `get_thumbnail`.
     ///
     /// - Path:
     ///   An error occurs when downloading metadata for the image.
     /// - UnsupportedExtension:
     ///   The file extension doesn't allow conversion to a thumbnail.
+    /// - UnsupportedFormat:
+    ///   The thumbnail format specified is not supported.
+    /// - UnsupportedSize:
+    ///   The size value specified is not supported.
     /// - UnsupportedImage:
     ///   The image cannot be converted to a thumbnail.
     /// - ConversionError:
@@ -2191,6 +2071,8 @@ public class Files {
     public enum ThumbnailError : CustomStringConvertible {
         case Path(Files.LookupError)
         case UnsupportedExtension
+        case UnsupportedFormat
+        case UnsupportedSize
         case UnsupportedImage
         case ConversionError
         public var description : String {
@@ -2202,12 +2084,20 @@ public class Files {
         public func serialize(value: ThumbnailError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .UnsupportedExtension:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("unsupported_extension")
+                    return .Dictionary(d)
+                case .UnsupportedFormat:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("unsupported_format")
+                    return .Dictionary(d)
+                case .UnsupportedSize:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("unsupported_size")
                     return .Dictionary(d)
                 case .UnsupportedImage:
                     var d = [String : JSON]()
@@ -2225,10 +2115,14 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return ThumbnailError.Path(v)
                         case "unsupported_extension":
                             return ThumbnailError.UnsupportedExtension
+                        case "unsupported_format":
+                            return ThumbnailError.UnsupportedFormat
+                        case "unsupported_size":
+                            return ThumbnailError.UnsupportedSize
                         case "unsupported_image":
                             return ThumbnailError.UnsupportedImage
                         case "conversion_error":
@@ -2237,7 +2131,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -2276,7 +2170,7 @@ public class Files {
                     let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .Null)
                     return PreviewArg(path: path, rev: rev)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -2305,7 +2199,7 @@ public class Files {
         public func serialize(value: PreviewError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
                 case .InProgress:
@@ -2328,7 +2222,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return PreviewError.Path(v)
                         case "in_progress":
                             return PreviewError.InProgress
@@ -2340,7 +2234,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -2379,7 +2273,7 @@ public class Files {
                     let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .Null)
                     return ListRevisionsArg(path: path, limit: limit)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -2397,7 +2291,7 @@ public class Files {
         public func serialize(value: ListRevisionsError) -> JSON {
             switch value {
                 case .Path(let arg):
-                    var d = ["path": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
             }
@@ -2408,13 +2302,13 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path":
-                            let v = LookupErrorSerializer().deserialize(d["path"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return ListRevisionsError.Path(v)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -2427,8 +2321,8 @@ public class Files {
     ///        up here.
     public class ListRevisionsResult: CustomStringConvertible {
         public let isDeleted : Bool
-        public let entries : Array<FileMetadata>
-        public init(isDeleted: Bool, entries: Array<FileMetadata>) {
+        public let entries : Array<Files.FileMetadata>
+        public init(isDeleted: Bool, entries: Array<Files.FileMetadata>) {
             self.isDeleted = isDeleted
             self.entries = entries
         }
@@ -2441,7 +2335,7 @@ public class Files {
         public func serialize(value: ListRevisionsResult) -> JSON {
             let output = [ 
             "is_deleted": Serialization._BoolSerializer.serialize(value.isDeleted),
-            "entries": ArraySerializer(FileMetadataSerializer()).serialize(value.entries),
+            "entries": ArraySerializer(Files.FileMetadataSerializer()).serialize(value.entries),
             ]
             return .Dictionary(output)
         }
@@ -2449,10 +2343,10 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let isDeleted = Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .Null)
-                    let entries = ArraySerializer(FileMetadataSerializer()).deserialize(dict["entries"] ?? .Null)
+                    let entries = ArraySerializer(Files.FileMetadataSerializer()).deserialize(dict["entries"] ?? .Null)
                     return ListRevisionsResult(isDeleted: isDeleted, entries: entries)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -2491,7 +2385,7 @@ public class Files {
                     let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
                     return RestoreArg(path: path, rev: rev)
                 default:
-                    assert(false, "Type error deserializing")
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -2516,11 +2410,11 @@ public class Files {
         public func serialize(value: RestoreError) -> JSON {
             switch value {
                 case .PathLookup(let arg):
-                    var d = ["path_lookup": LookupErrorSerializer().serialize(arg)]
+                    var d = ["path_lookup": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path_lookup")
                     return .Dictionary(d)
                 case .PathWrite(let arg):
-                    var d = ["path_write": WriteErrorSerializer().serialize(arg)]
+                    var d = ["path_write": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path_write")
                     return .Dictionary(d)
                 case .InvalidRevision:
@@ -2535,10 +2429,10 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "path_lookup":
-                            let v = LookupErrorSerializer().deserialize(d["path_lookup"] ?? .Null)
+                            let v = Files.LookupErrorSerializer().deserialize(d["path_lookup"] ?? .Null)
                             return RestoreError.PathLookup(v)
                         case "path_write":
-                            let v = WriteErrorSerializer().deserialize(d["path_write"] ?? .Null)
+                            let v = Files.WriteErrorSerializer().deserialize(d["path_write"] ?? .Null)
                             return RestoreError.PathWrite(v)
                         case "invalid_revision":
                             return RestoreError.InvalidRevision
@@ -2546,7 +2440,7 @@ public class Files {
                             fatalError("Unknown tag \(tag)")
                     }
                 default:
-                    assert(false, "Failed to deserialize")
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -2555,27 +2449,10 @@ extension BabelClient {
     /// Returns the metadata for a file or folder.
     ///
     /// :param: path
-    ///        The path of a file or folder on Dropbox
+    ///        The path or ID of a file or folder on Dropbox
     public func filesGetMetadata(path path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
-    }
-    /// A longpoll endpoint to wait for changes on an account. In conjunction
-    /// with :route:`list_folder`, this call gives you a low-latency way to
-    /// monitor an account for file changes. The connection will block until
-    /// there are changes available or a timeout occurs.
-    ///
-    /// :param: cursor
-    ///        A cursor as returned by `list_folder` or `list_folder/continue`
-    /// :param: timeout
-    ///        A timeout in seconds. The request will block for at most this
-    ///        length of time, plus up to 90 seconds of random jitter added to
-    ///        avoid the thundering herd problem. Care should be taken when
-    ///        using this parameter, as some network infrastructure does not
-    ///        support long timeouts.
-    public func filesListFolderLongpoll(cursor cursor: String, timeout: UInt64 = 30) -> BabelRpcRequest<Files.ListFolderLongpollResultSerializer, Files.ListFolderLongpollErrorSerializer> {
-        let request = Files.ListFolderLongpollArg(cursor: cursor, timeout: timeout)
-        return BabelRpcRequest(client: self, host: "notify", route: "/files/list_folder/longpoll", params: Files.ListFolderLongpollArgSerializer().serialize(request), responseSerializer: Files.ListFolderLongpollResultSerializer(), errorSerializer: Files.ListFolderLongpollErrorSerializer())
     }
     /// Returns the contents of a folder. NOTE: We're definitely going to
     /// streamline this interface.
@@ -2753,10 +2630,7 @@ extension BabelClient {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
-    /// Get a thumbnail for an image. This method currently supports files with
-    /// the following file extensions: jpg, jpeg, png, tiff, tif, gif and bmp.
-    /// Photos that are larger than 20MB in size won't be converted to a
-    /// thumbnail.
+    /// Get a thumbnail for an image.
     ///
     /// :param: path
     ///        The path to the image file you want to thumbnail.
@@ -2765,8 +2639,8 @@ extension BabelClient {
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
     /// :param: size
-    ///        The size for the thumbnail image.
-    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    ///        The size for the thumbnail image (default s).
+    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer())
     }
