@@ -6,31 +6,43 @@ public class Box<T> {
 	init (_ v : T) { self.unboxed = v }
 }
 public enum CallError<ErrorType> : CustomStringConvertible {
-    case InternalServerError(Int, String?)
-    case BadInputError(String?)
+    case InternalServerError(Int, String?, String?)
+    case BadInputError(String?, String?)
     case RateLimitError
-    case HTTPError(Int?, String?)
+    case HTTPError(Int?, String?, String?)
     case RouteError(Box<ErrorType>)
     
     
     public var description : String {
         switch self {
-        case .InternalServerError(let code, let message):
-            var ret = "Internal Server Error \(code)"
+        case let .InternalServerError(code, message, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "Internal Server Error \(code)"
             if let m = message {
                 ret += ": \(m)"
             }
             return ret
-        case .BadInputError(let message):
-            var ret = "Bad Input"
+        case let .BadInputError(message, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "Bad Input"
             if let m = message {
                 ret += ": \(m)"
             }
             return ret
         case .RateLimitError:
             return "Rate limited"
-        case .HTTPError(let code, let message):
-            var ret = "HTTP Error"
+        case let .HTTPError(code, message, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "HTTP Error"
             if let c = code {
                 ret += "\(c)"
             }
@@ -90,14 +102,15 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
 
     
     func handleResponseError(response: NSHTTPURLResponse?, data: NSData) -> CallError<EType.ValueType> {
+        let requestId = response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
         if let code = response?.statusCode {
             switch code {
             case 500...599:
                 let message = utf8Decode(data)
-                return .InternalServerError(code, message)
+                return .InternalServerError(code, message, requestId)
             case 400:
                 let message = utf8Decode(data)
-                return .BadInputError(message)
+                return .BadInputError(message, requestId)
             case 429:
                  return .RateLimitError
             case 403, 404, 409:
@@ -110,11 +123,11 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                 }
 
             default:
-                return .HTTPError(code, "An error occurred.")
+                return .HTTPError(code, "An error occurred.", requestId)
             }
         } else {
             let message = utf8Decode(data)
-            return .HTTPError(nil, message)
+            return .HTTPError(nil, message, requestId)
         }
     }
 }
