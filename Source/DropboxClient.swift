@@ -22,6 +22,7 @@ public class DropboxClient : BabelClient {
         // Authentication header with access token
         configuration.HTTPAdditionalHeaders = [
             "Authorization" : "Bearer \(self.accessToken)",
+            "User-Agent": "OfficialDropboxSwiftSDKv2/0.4"
         ]
         
         let manager = Manager(configuration: configuration)
