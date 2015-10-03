@@ -41,4 +41,4 @@ token for your own Dropbox account.
 
 ## Read more
 
-Read more about SwiftyDropbox on our [developer blog](https://blogs.dropbox.com/developers/2015/05/try-out-swiftydropbox-the-new-swift-sdk-for-dropbox-api-v2/).
+Read more about SwiftyDropbox on our [developer site](https://www.dropbox.com/developers/documentation/swift).
