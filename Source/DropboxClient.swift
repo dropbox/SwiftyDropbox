@@ -9,6 +9,45 @@
 import Foundation
 import Alamofire
 
+class DropboxServerTrustPolicyManager: ServerTrustPolicyManager {
+    init() {
+        super.init(policies: [String : ServerTrustPolicy]())
+    }
+        
+    override func serverTrustPolicyForHost(host: String) -> ServerTrustPolicy? {
+        let trustPolicy = ServerTrustPolicy.CustomEvaluation {(serverTrust, host) in
+            let policy = SecPolicyCreateSSL(true,  host as CFString)
+            SecTrustSetPolicies(serverTrust, [policy])
+            
+            let certificates = SecurityUtil.rootCertificates()
+            SecTrustSetAnchorCertificates(serverTrust, certificates)
+            SecTrustSetAnchorCertificatesOnly(serverTrust, true)
+            
+            var isValid = false
+            var result = SecTrustResultType(kSecTrustResultInvalid)
+            let status = SecTrustEvaluate(serverTrust, &result)
+            
+            if status == errSecSuccess {
+                let unspecified = SecTrustResultType(kSecTrustResultUnspecified)
+                let proceed = SecTrustResultType(kSecTrustResultProceed)
+                
+                isValid = result == unspecified || result == proceed
+            }
+            
+            if (isValid) {
+                let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+                isValid = !SecurityUtil.isRevokedCertificate(certificate)
+            }
+            
+            return isValid
+
+        }
+        
+        return trustPolicy
+    }
+}
+
+
 public class DropboxClient : BabelClient {
     
     let accessToken : DropboxAccessToken
@@ -25,7 +64,7 @@ public class DropboxClient : BabelClient {
             "User-Agent": "OfficialDropboxSwiftSDKv2/0.4"
         ]
         
-        let manager = Manager(configuration: configuration)
+        let manager = Manager(configuration: configuration, serverTrustPolicyManager: DropboxServerTrustPolicyManager())
         super.init(manager: manager, baseHosts : [
             "meta" : baseApiUrl,
             "content": baseContentUrl,

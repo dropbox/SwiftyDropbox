@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://dropbox.com/developers/"
   s.license      = "MIT"
   s.author       = { "Ryan Pearl" => "rpearl@dropbox.com" }
-  s.source_files = "Source/*.swift"
+  s.source_files = "Source/*.{h,m,swift}"
   s.requires_arc = true
   s.ios.deployment_target = "8.0"
   s.dependency "Alamofire", "~> 2.0.0-beta.3"
