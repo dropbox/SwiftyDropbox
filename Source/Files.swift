@@ -70,7 +70,7 @@ public class Files {
             }
         }
     }
-    /// Metadata (excluding name or path) for a file.
+    /// The FileMetadata struct
     ///
     /// :param: id
     ///        A unique identifier for the file.
@@ -140,9 +140,7 @@ public class Files {
             }
         }
     }
-    /// Metadata (excluding name or path) for a folder. (There are currently no
-    /// fields defined here, but we will add folder-specific metadata in the
-    /// future.)
+    /// The FolderMetadata struct
     ///
     /// :param: id
     ///        A unique identifier for the folder.
@@ -179,8 +177,8 @@ public class Files {
             }
         }
     }
-    /// Indicates a deleted file or folder in results returned by
-    /// `list_folder/continue` or `search`.
+    /// Indicates that there used to be a file or folder at this path, but it no
+    /// longer exists.
     ///
     public class DeletedMetadata: Metadata {
         public override var description : String {
@@ -207,7 +205,7 @@ public class Files {
             }
         }
     }
-    /// Error returned by `get_metadata`.
+    /// The GetMetadataError union
     ///
     /// - Path
     public enum GetMetadataError : CustomStringConvertible {
@@ -242,14 +240,14 @@ public class Files {
             }
         }
     }
-    /// Arguments for `get_metadata`.
+    /// The GetMetadataArg struct
     ///
     /// :param: path
-    ///        The path or ID of a file or folder on Dropbox
+    ///        The path of a file or folder on Dropbox
     public class GetMetadataArg: CustomStringConvertible {
         public let path : String
         public init(path: String) {
-            stringValidator(pattern: "(/|id:).*")(value: path)
+            stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
             self.path = path
         }
         public var description : String {
@@ -274,14 +272,14 @@ public class Files {
             }
         }
     }
-    /// Arguments for `list_folder`.
+    /// The ListFolderArg struct
     ///
     /// :param: path
     ///        The path to the folder you want to see the contents of.
     /// :param: recursive
-    ///        If true, list folder operation will be applied recursively to all
-    ///        subfolders. And the response will contain contents of all
-    ///        subfolders
+    ///        If true, the list folder operation will be applied recursively to
+    ///        all subfolders and the response will contain contents of all
+    ///        subfolders.
     public class ListFolderArg: CustomStringConvertible {
         public let path : String
         public let recursive : Bool
@@ -314,7 +312,7 @@ public class Files {
             }
         }
     }
-    /// Information returned by `list_folder`.
+    /// The ListFolderResult struct
     ///
     /// :param: entries
     ///        The files and (direct) subfolders in the folder.
@@ -360,7 +358,7 @@ public class Files {
             }
         }
     }
-    /// Error returned by `list_folder` and `list_folder/continue`.
+    /// The ListFolderError union
     ///
     /// - Path
     /// - Other:
@@ -404,10 +402,11 @@ public class Files {
             }
         }
     }
-    /// Arguments for `list_folder/continue`.
+    /// The ListFolderContinueArg struct
     ///
     /// :param: cursor
-    ///        The cursor returned by `list_folder` or `list_folder/continue`.
+    ///        The cursor returned by your last call to `list_folder` or
+    ///        `list_folder/continue`.
     public class ListFolderContinueArg: CustomStringConvertible {
         public let cursor : String
         public init(cursor: String) {
@@ -436,7 +435,7 @@ public class Files {
             }
         }
     }
-    /// Error returned by `list_folder/continue`.
+    /// The ListFolderContinueError union
     ///
     /// - Path
     /// - Reset:
@@ -489,7 +488,7 @@ public class Files {
             }
         }
     }
-    /// Information returned by `list_folder/get_latest_cursor`.
+    /// The ListFolderGetLatestCursorResult struct
     ///
     /// :param: cursor
     ///        Pass the cursor into `list_folder/continue` to see what's changed
@@ -522,7 +521,7 @@ public class Files {
             }
         }
     }
-    /// Errors from `download`.
+    /// The DownloadError union
     ///
     /// - Path
     /// - Other:
@@ -566,7 +565,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `download`.
+    /// The DownloadArg struct
     ///
     /// :param: path
     ///        The path of the file to download.
@@ -643,7 +642,7 @@ public class Files {
             }
         }
     }
-    /// Errors for upload.
+    /// The UploadError union
     ///
     /// - Path:
     ///   Unable to save the uploaded contents to a file.
@@ -688,7 +687,7 @@ public class Files {
             }
         }
     }
-    /// Error structure for recovering the correct upload offset.
+    /// The UploadSessionOffsetError struct
     ///
     /// :param: correctOffset
     ///        The offset up to which data has been collected.
@@ -720,7 +719,7 @@ public class Files {
             }
         }
     }
-    /// Errors related to upload sessions.
+    /// The UploadSessionLookupError union
     ///
     /// - NotFound:
     ///   The upload session id was not found.
@@ -787,7 +786,7 @@ public class Files {
             }
         }
     }
-    /// Errors for `upload_session/finish`.
+    /// The UploadSessionFinishError union
     ///
     /// - LookupFailed:
     ///   The session arguments are incorrect; the value explains the reason.
@@ -842,7 +841,7 @@ public class Files {
             }
         }
     }
-    /// The result of `upload_session/start`.
+    /// The UploadSessionStartResult struct
     ///
     /// :param: sessionId
     ///        A unique identifier for the upload session. Pass this to
@@ -875,8 +874,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `upload_session/append`. Also used by
-    /// `upload_session/finish`.
+    /// The UploadSessionCursor struct
     ///
     /// :param: sessionId
     ///        The upload session ID (returned by `upload_session/start`).
@@ -928,18 +926,17 @@ public class Files {
     /// contents you're trying to write.
     ///
     /// - Add:
-    ///   It's always a conflict. The autorename strategy is to append a number
-    ///   to the file name. For example "document.txt" might become "document
-    ///   (2).txt".
+    ///   Never overwrite the existing file. The autorename strategy is to
+    ///   append a number to the file name. For example, "document.txt" might
+    ///   become "document (2).txt".
     /// - Overwrite:
-    ///   It's never a conflict. Overwrite the existing file. The autorename
-    ///   strategy is the same as it is for `add`.
+    ///   Always overwrite the existing file. The autorename strategy is the
+    ///   same as it is for `add`.
     /// - Update:
-    ///   It's a conflict only if the current "rev" doesn't match the given
-    ///   "rev". The autorename strategy is to append the string "conflicted
-    ///   copy" to the file name. For example, "document.txt" might become
-    ///   "document (conflicted copy).txt" or "document (Panda's conflicted
-    ///   copy).txt".
+    ///   Overwrite if the given "rev" matches the existing file's "rev". The
+    ///   autorename strategy is to append the string "conflicted copy" to the
+    ///   file name. For example, "document.txt" might become "document
+    ///   (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
     public enum WriteMode : CustomStringConvertible {
         case Add
         case Overwrite
@@ -986,8 +983,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `upload`. Also part of the arguments to
-    /// `upload_session/finish`.
+    /// The CommitInfo struct
     ///
     /// :param: path
     ///        Path in the user's Dropbox to save the file.
@@ -1051,7 +1047,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `upload_session/finish`.
+    /// The UploadSessionFinishArg struct
     ///
     /// :param: cursor
     ///        Contains the upload session ID and the offset.
@@ -1088,7 +1084,7 @@ public class Files {
             }
         }
     }
-    /// Select which type of data to search.
+    /// The SearchMode union
     ///
     /// - Filename:
     ///   Search file and folder names.
@@ -1141,7 +1137,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `search`.
+    /// The SearchArg struct
     ///
     /// :param: path
     ///        The path in the user's Dropbox to search. Should probably be a
@@ -1158,7 +1154,7 @@ public class Files {
     /// :param: mode
     ///        The search mode (filename, filename_and_content, or
     ///        deleted_filename).
-    public class SearchQuery: CustomStringConvertible {
+    public class SearchArg: CustomStringConvertible {
         public let path : String
         public let query : String
         public let start : UInt64
@@ -1176,12 +1172,12 @@ public class Files {
             self.mode = mode
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchQuerySerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
         }
     }
-    public class SearchQuerySerializer: JSONSerializer {
+    public class SearchArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(value: SearchQuery) -> JSON {
+        public func serialize(value: SearchArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "query": Serialization._StringSerializer.serialize(value.query),
@@ -1191,7 +1187,7 @@ public class Files {
             ]
             return .Dictionary(output)
         }
-        public func deserialize(json: JSON) -> SearchQuery {
+        public func deserialize(json: JSON) -> SearchArg {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
@@ -1199,7 +1195,7 @@ public class Files {
                     let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
                     let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .Null)
                     let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? .Null)
-                    return SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
+                    return SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1258,7 +1254,7 @@ public class Files {
             }
         }
     }
-    /// Describes a search result.
+    /// The SearchMatch struct
     ///
     /// :param: matchType
     ///        The type of the match.
@@ -1295,7 +1291,7 @@ public class Files {
             }
         }
     }
-    /// Information returned by `search`.
+    /// The SearchResult struct
     ///
     /// :param: matches
     ///        A list (possibly empty) of matches for the query.
@@ -1305,7 +1301,7 @@ public class Files {
     /// :param: start
     ///        Used for paging. Value to set the start argument to when calling
     ///        `search` to fetch the next page of results.
-    public class SearchResults: CustomStringConvertible {
+    public class SearchResult: CustomStringConvertible {
         public let matches : Array<Files.SearchMatch>
         public let more : Bool
         public let start : UInt64
@@ -1316,12 +1312,12 @@ public class Files {
             self.start = start
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchResultsSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
         }
     }
-    public class SearchResultsSerializer: JSONSerializer {
+    public class SearchResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(value: SearchResults) -> JSON {
+        public func serialize(value: SearchResult) -> JSON {
             let output = [ 
             "matches": ArraySerializer(Files.SearchMatchSerializer()).serialize(value.matches),
             "more": Serialization._BoolSerializer.serialize(value.more),
@@ -1329,19 +1325,19 @@ public class Files {
             ]
             return .Dictionary(output)
         }
-        public func deserialize(json: JSON) -> SearchResults {
+        public func deserialize(json: JSON) -> SearchResult {
             switch json {
                 case .Dictionary(let dict):
                     let matches = ArraySerializer(Files.SearchMatchSerializer()).deserialize(dict["matches"] ?? .Null)
                     let more = Serialization._BoolSerializer.deserialize(dict["more"] ?? .Null)
                     let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
-                    return SearchResults(matches: matches, more: more, start: start)
+                    return SearchResult(matches: matches, more: more, start: start)
                 default:
                     fatalError("Type error deserializing")
             }
         }
     }
-    /// Errors for `search`.
+    /// The SearchError union
     ///
     /// - Path
     /// - Other:
@@ -1612,7 +1608,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `create_folder`.
+    /// The CreateFolderArg struct
     ///
     /// :param: path
     ///        Path in the user's Dropbox to create.
@@ -1679,7 +1675,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `delete`.
+    /// The DeleteArg struct
     ///
     /// :param: path
     ///        Path in the user's Dropbox to delete.
@@ -1763,7 +1759,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `copy` and `move`.
+    /// The RelocationArg struct
     ///
     /// :param: fromPath
     ///        Path in the user's Dropbox to be copied or moved.
@@ -1802,7 +1798,7 @@ public class Files {
             }
         }
     }
-    /// Errors reported by `copy` and `move`.
+    /// The RelocationError union
     ///
     /// - FromLookup
     /// - FromWrite
@@ -1892,24 +1888,24 @@ public class Files {
             }
         }
     }
-    /// The size option for thumbnail image.
+    /// The ThumbnailSize union
     ///
-    /// - Xs:
+    /// - W32h32:
     ///   32 by 32 px.
-    /// - S:
+    /// - W64h64:
     ///   64 by 64 px.
-    /// - M:
+    /// - W128h128:
     ///   128 by 128 px.
-    /// - L:
+    /// - W640h480:
     ///   640 by 480 px.
-    /// - Xl:
+    /// - W1024h768:
     ///   1024 by 768
     public enum ThumbnailSize : CustomStringConvertible {
-        case Xs
-        case S
-        case M
-        case L
-        case Xl
+        case W32h32
+        case W64h64
+        case W128h128
+        case W640h480
+        case W1024h768
         public var description : String {
             return "\(prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
@@ -1918,25 +1914,25 @@ public class Files {
         public init() { }
         public func serialize(value: ThumbnailSize) -> JSON {
             switch value {
-                case .Xs:
+                case .W32h32:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("xs")
+                    d[".tag"] = .Str("w32h32")
                     return .Dictionary(d)
-                case .S:
+                case .W64h64:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("s")
+                    d[".tag"] = .Str("w64h64")
                     return .Dictionary(d)
-                case .M:
+                case .W128h128:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("m")
+                    d[".tag"] = .Str("w128h128")
                     return .Dictionary(d)
-                case .L:
+                case .W640h480:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("l")
+                    d[".tag"] = .Str("w640h480")
                     return .Dictionary(d)
-                case .Xl:
+                case .W1024h768:
                     var d = [String : JSON]()
-                    d[".tag"] = .Str("xl")
+                    d[".tag"] = .Str("w1024h768")
                     return .Dictionary(d)
             }
         }
@@ -1945,16 +1941,16 @@ public class Files {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "xs":
-                            return ThumbnailSize.Xs
-                        case "s":
-                            return ThumbnailSize.S
-                        case "m":
-                            return ThumbnailSize.M
-                        case "l":
-                            return ThumbnailSize.L
-                        case "xl":
-                            return ThumbnailSize.Xl
+                        case "w32h32":
+                            return ThumbnailSize.W32h32
+                        case "w64h64":
+                            return ThumbnailSize.W64h64
+                        case "w128h128":
+                            return ThumbnailSize.W128h128
+                        case "w640h480":
+                            return ThumbnailSize.W640h480
+                        case "w1024h768":
+                            return ThumbnailSize.W1024h768
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -1963,7 +1959,7 @@ public class Files {
             }
         }
     }
-    /// The format option for thumbnail image.
+    /// The ThumbnailFormat union
     ///
     /// - Jpeg
     /// - Png
@@ -2005,10 +2001,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `get_thumbnail`. This method currently supports files with
-    /// the following file extensions: jpg, jpeg, png, tiff, tif, gif and bmp.
-    /// Photos that are larger than 20MB in size won't be converted to a
-    /// thumbnail.
+    /// The ThumbnailArg struct
     ///
     /// :param: path
     ///        The path to the image file you want to thumbnail.
@@ -2017,12 +2010,12 @@ public class Files {
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
     /// :param: size
-    ///        The size for the thumbnail image (default s).
+    ///        The size for the thumbnail image.
     public class ThumbnailArg: CustomStringConvertible {
         public let path : String
         public let format : Files.ThumbnailFormat
         public let size : Files.ThumbnailSize
-        public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) {
+        public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) {
             stringValidator(pattern: "/.*")(value: path)
             self.path = path
             self.format = format
@@ -2054,16 +2047,12 @@ public class Files {
             }
         }
     }
-    /// Errors reported by `get_thumbnail`.
+    /// The ThumbnailError union
     ///
     /// - Path:
     ///   An error occurs when downloading metadata for the image.
     /// - UnsupportedExtension:
     ///   The file extension doesn't allow conversion to a thumbnail.
-    /// - UnsupportedFormat:
-    ///   The thumbnail format specified is not supported.
-    /// - UnsupportedSize:
-    ///   The size value specified is not supported.
     /// - UnsupportedImage:
     ///   The image cannot be converted to a thumbnail.
     /// - ConversionError:
@@ -2071,8 +2060,6 @@ public class Files {
     public enum ThumbnailError : CustomStringConvertible {
         case Path(Files.LookupError)
         case UnsupportedExtension
-        case UnsupportedFormat
-        case UnsupportedSize
         case UnsupportedImage
         case ConversionError
         public var description : String {
@@ -2090,14 +2077,6 @@ public class Files {
                 case .UnsupportedExtension:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("unsupported_extension")
-                    return .Dictionary(d)
-                case .UnsupportedFormat:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("unsupported_format")
-                    return .Dictionary(d)
-                case .UnsupportedSize:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("unsupported_size")
                     return .Dictionary(d)
                 case .UnsupportedImage:
                     var d = [String : JSON]()
@@ -2119,10 +2098,6 @@ public class Files {
                             return ThumbnailError.Path(v)
                         case "unsupported_extension":
                             return ThumbnailError.UnsupportedExtension
-                        case "unsupported_format":
-                            return ThumbnailError.UnsupportedFormat
-                        case "unsupported_size":
-                            return ThumbnailError.UnsupportedSize
                         case "unsupported_image":
                             return ThumbnailError.UnsupportedImage
                         case "conversion_error":
@@ -2135,7 +2110,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `get_preview`.
+    /// The PreviewArg struct
     ///
     /// :param: path
     ///        The path of the file to preview.
@@ -2174,7 +2149,7 @@ public class Files {
             }
         }
     }
-    /// Errors reported by `get_preview`.
+    /// The PreviewError union
     ///
     /// - Path:
     ///   An error occurs when downloading metadata for the file.
@@ -2238,7 +2213,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `list_revisions`.
+    /// The ListRevisionsArg struct
     ///
     /// :param: path
     ///        The path to the file you want to see the revisions of.
@@ -2277,11 +2252,13 @@ public class Files {
             }
         }
     }
-    /// Errors reported by `list_revisions`.
+    /// The ListRevisionsError union
     ///
     /// - Path
+    /// - Other
     public enum ListRevisionsError : CustomStringConvertible {
         case Path(Files.LookupError)
+        case Other
         public var description : String {
             return "\(prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
         }
@@ -2294,6 +2271,10 @@ public class Files {
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("path")
                     return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
             }
         }
         public func deserialize(json: JSON) -> ListRevisionsError {
@@ -2304,15 +2285,17 @@ public class Files {
                         case "path":
                             let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .Null)
                             return ListRevisionsError.Path(v)
+                        case "other":
+                            return ListRevisionsError.Other
                         default:
-                            fatalError("Unknown tag \(tag)")
+                            return ListRevisionsError.Other
                     }
                 default:
                     fatalError("Failed to deserialize")
             }
         }
     }
-    /// Information returned by `list_revisions`.
+    /// The ListRevisionsResult struct
     ///
     /// :param: isDeleted
     ///        If the file is deleted.
@@ -2350,7 +2333,7 @@ public class Files {
             }
         }
     }
-    /// Arguments for `restore`.
+    /// The RestoreArg struct
     ///
     /// :param: path
     ///        The path to the file you want to restore.
@@ -2389,7 +2372,7 @@ public class Files {
             }
         }
     }
-    /// Errors reported by `restore`.
+    /// The RestoreError union
     ///
     /// - PathLookup:
     ///   An error occurs when downloading metadata for the file.
@@ -2397,10 +2380,12 @@ public class Files {
     ///   An error occurs when trying to restore the file to that path.
     /// - InvalidRevision:
     ///   The revision is invalid. It may point to a different file.
+    /// - Other
     public enum RestoreError : CustomStringConvertible {
         case PathLookup(Files.LookupError)
         case PathWrite(Files.WriteError)
         case InvalidRevision
+        case Other
         public var description : String {
             return "\(prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
         }
@@ -2421,6 +2406,10 @@ public class Files {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("invalid_revision")
                     return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
             }
         }
         public func deserialize(json: JSON) -> RestoreError {
@@ -2436,8 +2425,10 @@ public class Files {
                             return RestoreError.PathWrite(v)
                         case "invalid_revision":
                             return RestoreError.InvalidRevision
+                        case "other":
+                            return RestoreError.Other
                         default:
-                            fatalError("Unknown tag \(tag)")
+                            return RestoreError.Other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -2449,30 +2440,29 @@ extension BabelClient {
     /// Returns the metadata for a file or folder.
     ///
     /// :param: path
-    ///        The path or ID of a file or folder on Dropbox
+    ///        The path of a file or folder on Dropbox
     public func filesGetMetadata(path path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
     }
-    /// Returns the contents of a folder. NOTE: We're definitely going to
-    /// streamline this interface.
+    /// Returns the contents of a folder.
     ///
     /// :param: path
     ///        The path to the folder you want to see the contents of.
     /// :param: recursive
-    ///        If true, list folder operation will be applied recursively to all
-    ///        subfolders. And the response will contain contents of all
-    ///        subfolders
+    ///        If true, the list folder operation will be applied recursively to
+    ///        all subfolders and the response will contain contents of all
+    ///        subfolders.
     public func filesListFolder(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /// Once a cursor has been retrieved from :route:`list_folder`, use this to
-    /// paginate through all files and retrieve updates to the folder. NOTE:
-    /// We're definitely going to streamline this interface.
+    /// paginate through all files and retrieve updates to the folder.
     ///
     /// :param: cursor
-    ///        The cursor returned by `list_folder` or `list_folder/continue`.
+    ///        The cursor returned by your last call to `list_folder` or
+    ///        `list_folder/continue`.
     public func filesListFolderContinue(cursor cursor: String) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let request = Files.ListFolderContinueArg(cursor: cursor)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
@@ -2486,9 +2476,9 @@ extension BabelClient {
     /// :param: path
     ///        The path to the folder you want to see the contents of.
     /// :param: recursive
-    ///        If true, list folder operation will be applied recursively to all
-    ///        subfolders. And the response will contain contents of all
-    ///        subfolders
+    ///        If true, the list folder operation will be applied recursively to
+    ///        all subfolders and the response will contain contents of all
+    ///        subfolders.
     public func filesListFolderGetLatestCursor(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/get_latest_cursor", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
@@ -2503,8 +2493,11 @@ extension BabelClient {
         let request = Files.DownloadArg(path: path, rev: rev)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer())
     }
-    /// Start a new upload session. This is used to upload a single file with
-    /// multiple calls.
+    /// Upload sessions allow you to upload a single file using multiple
+    /// requests. This call starts a new upload session with the given data.
+    /// You can then use :route:`upload_session/append` to add more data and
+    /// :route:`upload_session/finish` to save all the data to a file in
+    /// Dropbox.
     ///
     /// :param: body
     ///        The binary payload to upload
@@ -2581,15 +2574,11 @@ extension BabelClient {
     /// :param: mode
     ///        The search mode (filename, filename_and_content, or
     ///        deleted_filename).
-    public func filesSearch(path path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> BabelRpcRequest<Files.SearchResultsSerializer, Files.SearchErrorSerializer> {
-        let request = Files.SearchQuery(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
-        return BabelRpcRequest(client: self, host: "meta", route: "/files/search", params: Files.SearchQuerySerializer().serialize(request), responseSerializer: Files.SearchResultsSerializer(), errorSerializer: Files.SearchErrorSerializer())
+    public func filesSearch(path path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> BabelRpcRequest<Files.SearchResultSerializer, Files.SearchErrorSerializer> {
+        let request = Files.SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/search", params: Files.SearchArgSerializer().serialize(request), responseSerializer: Files.SearchResultSerializer(), errorSerializer: Files.SearchErrorSerializer())
     }
-    /// Create a folder at a given path. No file or folder may exist at the
-    /// path. The parent folder will be created if it does not already exist
-    /// (and so on). If the parent exists it must be a folder (and the same for
-    /// any ancestor). If an ancestor is a shared folder it must have write
-    /// access.
+    /// Create a folder at a given path.
     ///
     /// :param: path
     ///        Path in the user's Dropbox to create.
@@ -2597,7 +2586,7 @@ extension BabelClient {
         let request = Files.CreateFolderArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.CreateFolderErrorSerializer())
     }
-    /// Delete the file or folder at a given path. If the path is a folder all
+    /// Delete the file or folder at a given path. If the path is a folder, all
     /// its contents will be deleted too.
     ///
     /// :param: path
@@ -2606,9 +2595,8 @@ extension BabelClient {
         let request = Files.DeleteArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.DeleteErrorSerializer())
     }
-    /// Copy a file or folder to a different destination in the user's Dropbox.
-    /// If the source path is a folder all its contents will be copied. The
-    /// destination path must not yet exist.
+    /// Copy a file or folder to a different location in the user's Dropbox. If
+    /// the source path is a folder all its contents will be copied.
     ///
     /// :param: fromPath
     ///        Path in the user's Dropbox to be copied or moved.
@@ -2618,9 +2606,8 @@ extension BabelClient {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
-    /// Move a file or folder to a different destination in the user's Dropbox.
-    /// If the source path is a folder all its contents will be moved. The
-    /// destination path must not yet exist.
+    /// Move a file or folder to a different location in the user's Dropbox. If
+    /// the source path is a folder all its contents will be moved.
     ///
     /// :param: fromPath
     ///        Path in the user's Dropbox to be copied or moved.
@@ -2630,7 +2617,10 @@ extension BabelClient {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
-    /// Get a thumbnail for an image.
+    /// Get a thumbnail for an image. This method currently supports files with
+    /// the following file extensions: jpg, jpeg, png, tiff, tif, gif and bmp.
+    /// Photos that are larger than 20MB in size won't be converted to a
+    /// thumbnail.
     ///
     /// :param: path
     ///        The path to the image file you want to thumbnail.
@@ -2639,8 +2629,8 @@ extension BabelClient {
     ///        images that are photos, jpeg should be preferred, while png is
     ///        better for screenshots and digital arts.
     /// :param: size
-    ///        The size for the thumbnail image (default s).
-    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .S) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    ///        The size for the thumbnail image.
+    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
         return BabelDownloadRequest(client: self, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer())
     }

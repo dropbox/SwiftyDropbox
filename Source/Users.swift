@@ -3,7 +3,7 @@
 
 import Foundation
 public class Users {
-    /// Arguments for `get_account`.
+    /// The GetAccountArg struct
     ///
     /// :param: accountId
     ///        A user's account identifier.
@@ -35,7 +35,7 @@ public class Users {
             }
         }
     }
-    /// Error returned by `get_account`.
+    /// The GetAccountError union
     ///
     /// - NoAccount:
     ///   The specified `GetAccountArg.account_id` does not exist.

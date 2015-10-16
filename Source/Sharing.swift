@@ -223,7 +223,7 @@ public class Sharing {
             }
         }
     }
-    /// Arguments for `get_shared_links`.
+    /// The GetSharedLinksArg struct
     ///
     /// :param: path
     ///        See `get_shared_links` description.
@@ -255,7 +255,7 @@ public class Sharing {
             }
         }
     }
-    /// Result for `get_shared_links`.
+    /// The GetSharedLinksResult struct
     ///
     /// :param: links
     ///        Shared links applicable to the path argument.
@@ -374,7 +374,7 @@ public class Sharing {
             }
         }
     }
-    /// Arguments for `create_shared_link`.
+    /// The CreateSharedLinkArg struct
     ///
     /// :param: path
     ///        The path to share.
@@ -795,7 +795,8 @@ public class Sharing {
     /// The base type for shared folder metadata.
     ///
     /// :param: pathLower
-    ///        The lower-cased full path of this shared folder.
+    ///        The lower-cased full path of this shared folder. Absent for
+    ///        unmounted folders.
     /// :param: name
     ///        The name of the this shared folder.
     /// :param: id
@@ -805,13 +806,13 @@ public class Sharing {
     /// :param: sharedLinkPolicy
     ///        Who links can be shared with.
     public class SharedFolderMetadata: CustomStringConvertible {
-        public let pathLower : String
+        public let pathLower : String?
         public let name : String
         public let id : String
         public let accessType : Sharing.AccessType
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy
-        public init(pathLower: String, name: String, id: String, accessType: Sharing.AccessType, sharedLinkPolicy: Sharing.SharedLinkPolicy) {
-            stringValidator()(value: pathLower)
+        public init(name: String, id: String, accessType: Sharing.AccessType, sharedLinkPolicy: Sharing.SharedLinkPolicy, pathLower: String? = nil) {
+            nullableValidator(stringValidator())(value: pathLower)
             self.pathLower = pathLower
             stringValidator()(value: name)
             self.name = name
@@ -828,11 +829,11 @@ public class Sharing {
         public init() { }
         public func serialize(value: SharedFolderMetadata) -> JSON {
             var output = [ 
-            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
             "access_type": Sharing.AccessTypeSerializer().serialize(value.accessType),
             "shared_link_policy": Sharing.SharedLinkPolicySerializer().serialize(value.sharedLinkPolicy),
+            "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             ]
             switch value {
                 case let basic as Sharing.BasicSharedFolderMetadata:
@@ -877,23 +878,23 @@ public class Sharing {
         public init() { }
         public func serialize(value: BasicSharedFolderMetadata) -> JSON {
             let output = [ 
-            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
             "access_type": Sharing.AccessTypeSerializer().serialize(value.accessType),
             "shared_link_policy": Sharing.SharedLinkPolicySerializer().serialize(value.sharedLinkPolicy),
+            "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> BasicSharedFolderMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
                     let accessType = Sharing.AccessTypeSerializer().deserialize(dict["access_type"] ?? .Null)
                     let sharedLinkPolicy = Sharing.SharedLinkPolicySerializer().deserialize(dict["shared_link_policy"] ?? .Null)
-                    return BasicSharedFolderMetadata(pathLower: pathLower, name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
+                    return BasicSharedFolderMetadata(name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy, pathLower: pathLower)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -909,10 +910,10 @@ public class Sharing {
     public class FullSharedFolderMetadata: SharedFolderMetadata {
         public let membership : Array<Sharing.UserMembershipInfo>
         public let groups : Array<Sharing.GroupMembershipInfo>
-        public init(pathLower: String, name: String, id: String, accessType: Sharing.AccessType, sharedLinkPolicy: Sharing.SharedLinkPolicy, membership: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>) {
+        public init(name: String, id: String, accessType: Sharing.AccessType, sharedLinkPolicy: Sharing.SharedLinkPolicy, membership: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, pathLower: String? = nil) {
             self.membership = membership
             self.groups = groups
-            super.init(pathLower: pathLower, name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy)
+            super.init(name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy, pathLower: pathLower)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(FullSharedFolderMetadataSerializer().serialize(self)))"
@@ -922,27 +923,27 @@ public class Sharing {
         public init() { }
         public func serialize(value: FullSharedFolderMetadata) -> JSON {
             let output = [ 
-            "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
             "access_type": Sharing.AccessTypeSerializer().serialize(value.accessType),
             "shared_link_policy": Sharing.SharedLinkPolicySerializer().serialize(value.sharedLinkPolicy),
             "membership": ArraySerializer(Sharing.UserMembershipInfoSerializer()).serialize(value.membership),
             "groups": ArraySerializer(Sharing.GroupMembershipInfoSerializer()).serialize(value.groups),
+            "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> FullSharedFolderMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
                     let accessType = Sharing.AccessTypeSerializer().deserialize(dict["access_type"] ?? .Null)
                     let sharedLinkPolicy = Sharing.SharedLinkPolicySerializer().deserialize(dict["shared_link_policy"] ?? .Null)
                     let membership = ArraySerializer(Sharing.UserMembershipInfoSerializer()).deserialize(dict["membership"] ?? .Null)
                     let groups = ArraySerializer(Sharing.GroupMembershipInfoSerializer()).deserialize(dict["groups"] ?? .Null)
-                    return FullSharedFolderMetadata(pathLower: pathLower, name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy, membership: membership, groups: groups)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
+                    return FullSharedFolderMetadata(name: name, id: id, accessType: accessType, sharedLinkPolicy: sharedLinkPolicy, membership: membership, groups: groups, pathLower: pathLower)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1038,7 +1039,7 @@ public class Sharing {
             }
         }
     }
-    /// Arguments for `get_shared_folder`.
+    /// The GetSharedFolderArgs struct
     ///
     /// :param: id
     ///        The ID for the shared folder.
@@ -1076,14 +1077,19 @@ public class Sharing {
             }
         }
     }
-    /// Arguments for `list_shared_folders`.
+    /// The ListSharedFoldersArgs struct
     ///
     /// :param: includeMembership
     ///        If include user and group membership information in the response.
+    /// :param: showUnmounted
+    ///        Determines whether the returned list of shared folders will
+    ///        include folders  that the user has left (but may still rejoin).
     public class ListSharedFoldersArgs: CustomStringConvertible {
         public let includeMembership : Bool
-        public init(includeMembership: Bool = false) {
+        public let showUnmounted : Bool
+        public init(includeMembership: Bool = false, showUnmounted: Bool = false) {
             self.includeMembership = includeMembership
+            self.showUnmounted = showUnmounted
         }
         public var description : String {
             return "\(prepareJSONForSerialization(ListSharedFoldersArgsSerializer().serialize(self)))"
@@ -1094,6 +1100,7 @@ public class Sharing {
         public func serialize(value: ListSharedFoldersArgs) -> JSON {
             let output = [ 
             "include_membership": Serialization._BoolSerializer.serialize(value.includeMembership),
+            "show_unmounted": Serialization._BoolSerializer.serialize(value.showUnmounted),
             ]
             return .Dictionary(output)
         }
@@ -1101,13 +1108,15 @@ public class Sharing {
             switch json {
                 case .Dictionary(let dict):
                     let includeMembership = Serialization._BoolSerializer.deserialize(dict["include_membership"] ?? .Null)
-                    return ListSharedFoldersArgs(includeMembership: includeMembership)
+                    let showUnmounted = Serialization._BoolSerializer.deserialize(dict["show_unmounted"] ?? .Null)
+                    return ListSharedFoldersArgs(includeMembership: includeMembership, showUnmounted: showUnmounted)
                 default:
                     fatalError("Type error deserializing")
             }
         }
     }
-    /// Result for `list_shared_folders`.
+    /// Result for `list_shared_folders`. Unmounted shared folders can be
+    /// identified by the absence of `SharedFolderMetadata.path_lower`.
     ///
     /// :param: entries
     ///        List of all shared folders the authenticated user has access to.
@@ -1188,8 +1197,11 @@ extension BabelClient {
     ///
     /// :param: includeMembership
     ///        If include user and group membership information in the response.
-    public func sharingListSharedFolders(includeMembership: Bool = false) -> BabelRpcRequest<Sharing.ListSharedFoldersResultSerializer, VoidSerializer> {
-        let request = Sharing.ListSharedFoldersArgs(includeMembership: includeMembership)
+    /// :param: showUnmounted
+    ///        Determines whether the returned list of shared folders will
+    ///        include folders  that the user has left (but may still rejoin).
+    public func sharingListSharedFolders(includeMembership: Bool = false, showUnmounted: Bool = false) -> BabelRpcRequest<Sharing.ListSharedFoldersResultSerializer, VoidSerializer> {
+        let request = Sharing.ListSharedFoldersArgs(includeMembership: includeMembership, showUnmounted: showUnmounted)
         return BabelRpcRequest(client: self, host: "meta", route: "/sharing/list_shared_folders", params: Sharing.ListSharedFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListSharedFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
 }
