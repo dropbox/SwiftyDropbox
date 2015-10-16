@@ -10,7 +10,7 @@ public enum CallError<ErrorType> : CustomStringConvertible {
     case BadInputError(String?, String?)
     case RateLimitError
     case HTTPError(Int?, String?, String?)
-    case RouteError(Box<ErrorType>)
+    case RouteError(Box<ErrorType>, String?)
     
     
     public var description : String {
@@ -50,8 +50,13 @@ public enum CallError<ErrorType> : CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case .RouteError:
-            return "API route error - handle programmatically"
+        case let .RouteError(_, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "API route error - handle programmatically"
+            return ret
         }
     }
 }
@@ -117,7 +122,7 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
                 let json = parseJSON(data)
                 switch json {
                 case .Dictionary(let d):
-                    return .RouteError(Box(self.errorSerializer.deserialize(d["error"]!)))
+                    return .RouteError(Box(self.errorSerializer.deserialize(d["error"]!)), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
