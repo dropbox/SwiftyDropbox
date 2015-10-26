@@ -62,7 +62,19 @@ public enum DropboxAuthResult {
     case Error(OAuth2Error, String)
 }
 
-private class Keychain {
+class Keychain {
+    
+    class func queryWithDict(query: [String : AnyObject]) -> CFDictionaryRef
+    {
+        let bundleId = NSBundle.mainBundle().bundleIdentifier ?? ""
+        var queryDict = query
+        
+        queryDict[kSecClass as String]       = kSecClassGenericPassword
+        queryDict[kSecAttrService as String] = "\(bundleId).dropbox.authv2"
+
+        return queryDict
+    }
+
     class func set(key: String, value: String) -> Bool {
         if let data = value.dataUsingEncoding(NSUTF8StringEncoding) {
             return set(key, value: data)
@@ -72,11 +84,10 @@ private class Keychain {
     }
     
     class func set(key: String, value: NSData) -> Bool {
-        let query : CFDictionaryRef = [
-            (      kSecClass as String): kSecClassGenericPassword,
+        let query = Keychain.queryWithDict([
             (kSecAttrAccount as String): key,
             (  kSecValueData as String): value
-        ]
+        ])
         
         SecItemDelete(query)
         
@@ -84,12 +95,11 @@ private class Keychain {
     }
     
     class func getAsData(key: String) -> NSData? {
-        let query : CFDictionaryRef = [
-            (      kSecClass as String): kSecClassGenericPassword,
+        let query = Keychain.queryWithDict([
             (kSecAttrAccount as String): key,
             ( kSecReturnData as String): kCFBooleanTrue,
             ( kSecMatchLimit as String): kSecMatchLimitOne
-        ]
+        ])
         
         var dataResult : AnyObject?
         let status = withUnsafeMutablePointer(&dataResult) { (ptr) in
@@ -103,12 +113,31 @@ private class Keychain {
         return nil
     }
     
-    class func getAll() -> [String] {
+    class func dbgListAllItems() {
         let query : CFDictionaryRef = [
-            (            kSecClass as String): kSecClassGenericPassword,
-            ( kSecReturnAttributes as String): kCFBooleanTrue,
+            (kSecClass as String)           : kSecClassGenericPassword,
+            (kSecReturnAttributes as String): kCFBooleanTrue,
             (       kSecMatchLimit as String): kSecMatchLimitAll
         ]
+        
+        var dataResult : AnyObject?
+        let status = withUnsafeMutablePointer(&dataResult) { (ptr) in
+            SecItemCopyMatching(query, UnsafeMutablePointer(ptr))
+        }
+        
+        if status == noErr {
+            let results = dataResult as? [[String : AnyObject]] ?? []
+            
+            print(results.map {d in (d["svce"] as! String, d["acct"] as! String)})
+        }
+
+    }
+    
+    class func getAll() -> [String] {
+        let query = Keychain.queryWithDict([
+            ( kSecReturnAttributes as String): kCFBooleanTrue,
+            (       kSecMatchLimit as String): kSecMatchLimitAll
+        ])
         
         var dataResult : AnyObject?
         let status = withUnsafeMutablePointer(&dataResult) { (ptr) in
@@ -134,19 +163,15 @@ private class Keychain {
     }
     
     class func delete(key: String) -> Bool {
-        let query : CFDictionaryRef = [
-            (kSecClass as String) : kSecClassGenericPassword,
+        let query = Keychain.queryWithDict([
             (kSecAttrAccount as String): key
-        ]
+        ])
         
         return SecItemDelete(query) == noErr
     }
     
     class func clear() -> Bool {
-        let query : CFDictionaryRef = [
-            (kSecClass as String) : kSecClassGenericPassword,
-        ]
-        
+        let query = Keychain.queryWithDict([:])
         return SecItemDelete(query) == noErr
     }
 }
