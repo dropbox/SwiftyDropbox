@@ -6,8 +6,8 @@ import Security
 import Foundation
 
 public class DropboxAccessToken : CustomStringConvertible {
-    var accessToken: String
-    var uid: String
+    public let accessToken: String
+    public let uid: String
     
     public init(accessToken: String, uid: String) {
         self.accessToken = accessToken
