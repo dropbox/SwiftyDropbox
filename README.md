@@ -17,7 +17,7 @@ To get started with SwiftyDropbox, we recommend you add it to your project using
   platform :ios, '8.0'
   use_frameworks!
 
-  pod 'SwiftyDropbox', :git => 'git@github.com:dropbox/SwiftyDropbox.git', :tag => '0.6'
+  pod 'SwiftyDropbox', :git => 'git@github.com:dropbox/SwiftyDropbox.git', :tag => '0.7'
 ``` 
 
 1. From the project directory, install the SwiftyDropbox SDK with:

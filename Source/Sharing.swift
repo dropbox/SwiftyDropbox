@@ -23,7 +23,7 @@ public class Sharing {
     ///   access the link. Login is required.
     /// - Other:
     ///   An unknown restriction is in place.
-    public enum Visibility : CustomStringConvertible {
+    public enum Visibility: CustomStringConvertible {
         case Public
         case TeamOnly
         case Password
@@ -290,7 +290,7 @@ public class Sharing {
     ///
     /// - Path
     /// - Other
-    public enum GetSharedLinksError : CustomStringConvertible {
+    public enum GetSharedLinksError: CustomStringConvertible {
         case Path(String?)
         case Other
         public var description : String {
@@ -336,7 +336,7 @@ public class Sharing {
     ///   Assume pending uploads are files.
     /// - Folder:
     ///   Assume pending uploads are folders.
-    public enum PendingUploadMode : CustomStringConvertible {
+    public enum PendingUploadMode: CustomStringConvertible {
         case File
         case Folder
         public var description : String {
@@ -424,7 +424,7 @@ public class Sharing {
     ///
     /// - Path
     /// - Other
-    public enum CreateSharedLinkError : CustomStringConvertible {
+    public enum CreateSharedLinkError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Other
         public var description : String {
@@ -475,7 +475,7 @@ public class Sharing {
     ///   The member can only view the shared folder.
     /// - Other:
     ///   An unknown access type.
-    public enum AccessType : CustomStringConvertible {
+    public enum AccessType: CustomStringConvertible {
         case Owner
         case Editor
         case Viewer
@@ -535,7 +535,7 @@ public class Sharing {
     ///   Links can only be shared among members of the shared folder.
     /// - Other:
     ///   An unknown shared link policy.
-    public enum SharedLinkPolicy : CustomStringConvertible {
+    public enum SharedLinkPolicy: CustomStringConvertible {
         case All
         case MembersOnly
         case Other
@@ -966,7 +966,7 @@ public class Sharing {
     ///   The folder is a team shared folder and the user cannot access it.
     /// - IsAppFolder:
     ///   The folder is an app folder and cannot be shared.
-    public enum SharedFolderAccessError : CustomStringConvertible {
+    public enum SharedFolderAccessError: CustomStringConvertible {
         case InvalidId
         case NotMember
         case HasLeft

@@ -40,7 +40,7 @@ public class Users {
     /// - NoAccount:
     ///   The specified `GetAccountArg.account_id` does not exist.
     /// - Unknown
-    public enum GetAccountError : CustomStringConvertible {
+    public enum GetAccountError: CustomStringConvertible {
         case NoAccount
         case Unknown
         public var description : String {
@@ -86,7 +86,7 @@ public class Users {
     ///   The Dropbox Pro account type.
     /// - Business:
     ///   The Dropbox for Business account type.
-    public enum AccountType : CustomStringConvertible {
+    public enum AccountType: CustomStringConvertible {
         case Basic
         case Pro
         case Business
@@ -429,7 +429,7 @@ public class Users {
     /// - Team:
     ///   The user shares space with other members of their team.
     /// - Other
-    public enum SpaceAllocation : CustomStringConvertible {
+    public enum SpaceAllocation: CustomStringConvertible {
         case Individual(Users.IndividualSpaceAllocation)
         case Team(Users.TeamSpaceAllocation)
         case Other

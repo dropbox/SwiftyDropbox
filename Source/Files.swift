@@ -208,7 +208,7 @@ public class Files {
     /// The GetMetadataError union
     ///
     /// - Path
-    public enum GetMetadataError : CustomStringConvertible {
+    public enum GetMetadataError: CustomStringConvertible {
         case Path(Files.LookupError)
         public var description : String {
             return "\(prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
@@ -363,7 +363,7 @@ public class Files {
     /// - Path
     /// - Other:
     ///   An unspecified error.
-    public enum ListFolderError : CustomStringConvertible {
+    public enum ListFolderError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Other
         public var description : String {
@@ -442,7 +442,7 @@ public class Files {
     ///   Indicates that the cursor has been invalidated. Call `list_folder` to
     ///   obtain a new cursor.
     /// - Other
-    public enum ListFolderContinueError : CustomStringConvertible {
+    public enum ListFolderContinueError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Reset
         case Other
@@ -526,7 +526,7 @@ public class Files {
     /// - Path
     /// - Other:
     ///   An unspecified error.
-    public enum DownloadError : CustomStringConvertible {
+    public enum DownloadError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Other
         public var description : String {
@@ -648,7 +648,7 @@ public class Files {
     ///   Unable to save the uploaded contents to a file.
     /// - Other:
     ///   An unspecified error.
-    public enum UploadError : CustomStringConvertible {
+    public enum UploadError: CustomStringConvertible {
         case Path(Files.UploadWriteFailed)
         case Other
         public var description : String {
@@ -733,7 +733,7 @@ public class Files {
     ///   been closed (i.e. committed).
     /// - Other:
     ///   An unspecified error.
-    public enum UploadSessionLookupError : CustomStringConvertible {
+    public enum UploadSessionLookupError: CustomStringConvertible {
         case NotFound
         case IncorrectOffset(Files.UploadSessionOffsetError)
         case Closed
@@ -794,7 +794,7 @@ public class Files {
     ///   Unable to save the uploaded contents to a file.
     /// - Other:
     ///   An unspecified error.
-    public enum UploadSessionFinishError : CustomStringConvertible {
+    public enum UploadSessionFinishError: CustomStringConvertible {
         case LookupFailed(Files.UploadSessionLookupError)
         case Path(Files.WriteError)
         case Other
@@ -937,7 +937,7 @@ public class Files {
     ///   autorename strategy is to append the string "conflicted copy" to the
     ///   file name. For example, "document.txt" might become "document
     ///   (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
-    public enum WriteMode : CustomStringConvertible {
+    public enum WriteMode: CustomStringConvertible {
         case Add
         case Overwrite
         case Update(String)
@@ -1092,7 +1092,7 @@ public class Files {
     ///   Search file and folder names as well as file contents.
     /// - DeletedFilename:
     ///   Search for deleted file and folder names.
-    public enum SearchMode : CustomStringConvertible {
+    public enum SearchMode: CustomStringConvertible {
         case Filename
         case FilenameAndContent
         case DeletedFilename
@@ -1209,7 +1209,7 @@ public class Files {
     ///   This item was matched based on its file contents.
     /// - Both:
     ///   This item was matched based on both its contents and its file name.
-    public enum SearchMatchType : CustomStringConvertible {
+    public enum SearchMatchType: CustomStringConvertible {
         case Filename
         case Content
         case Both
@@ -1342,7 +1342,7 @@ public class Files {
     /// - Path
     /// - Other:
     ///   An unspecified error.
-    public enum SearchError : CustomStringConvertible {
+    public enum SearchError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Other
         public var description : String {
@@ -1397,7 +1397,7 @@ public class Files {
     ///   example, sometimes there are legal restrictions due to copyright
     ///   claims.
     /// - Other
-    public enum LookupError : CustomStringConvertible {
+    public enum LookupError: CustomStringConvertible {
         case MalformedPath(String?)
         case NotFound
         case NotFile
@@ -1478,7 +1478,7 @@ public class Files {
     /// - DisallowedName:
     ///   Dropbox will not save the file or folder because it of its name.
     /// - Other
-    public enum WriteError : CustomStringConvertible {
+    public enum WriteError: CustomStringConvertible {
         case MalformedPath(String?)
         case Conflict(Files.WriteConflictError)
         case NoWritePermission
@@ -1556,7 +1556,7 @@ public class Files {
     ///   There's a file at an ancestor path, so we couldn't create the required
     ///   parent folders.
     /// - Other
-    public enum WriteConflictError : CustomStringConvertible {
+    public enum WriteConflictError: CustomStringConvertible {
         case File
         case Folder
         case FileAncestor
@@ -1643,7 +1643,7 @@ public class Files {
     /// The CreateFolderError union
     ///
     /// - Path
-    public enum CreateFolderError : CustomStringConvertible {
+    public enum CreateFolderError: CustomStringConvertible {
         case Path(Files.WriteError)
         public var description : String {
             return "\(prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
@@ -1712,7 +1712,7 @@ public class Files {
     /// - PathLookup
     /// - PathWrite
     /// - Other
-    public enum DeleteError : CustomStringConvertible {
+    public enum DeleteError: CustomStringConvertible {
         case PathLookup(Files.LookupError)
         case PathWrite(Files.WriteError)
         case Other
@@ -1812,7 +1812,7 @@ public class Files {
     ///   The operation would involve more than 10,000 files and folders.
     /// - Other:
     ///   An unspecified error.
-    public enum RelocationError : CustomStringConvertible {
+    public enum RelocationError: CustomStringConvertible {
         case FromLookup(Files.LookupError)
         case FromWrite(Files.WriteError)
         case To(Files.WriteError)
@@ -1900,7 +1900,7 @@ public class Files {
     ///   640 by 480 px.
     /// - W1024h768:
     ///   1024 by 768
-    public enum ThumbnailSize : CustomStringConvertible {
+    public enum ThumbnailSize: CustomStringConvertible {
         case W32h32
         case W64h64
         case W128h128
@@ -1963,7 +1963,7 @@ public class Files {
     ///
     /// - Jpeg
     /// - Png
-    public enum ThumbnailFormat : CustomStringConvertible {
+    public enum ThumbnailFormat: CustomStringConvertible {
         case Jpeg
         case Png
         public var description : String {
@@ -2057,7 +2057,7 @@ public class Files {
     ///   The image cannot be converted to a thumbnail.
     /// - ConversionError:
     ///   An error occurs during thumbnail conversion.
-    public enum ThumbnailError : CustomStringConvertible {
+    public enum ThumbnailError: CustomStringConvertible {
         case Path(Files.LookupError)
         case UnsupportedExtension
         case UnsupportedImage
@@ -2160,7 +2160,7 @@ public class Files {
     ///   The file extension is not supported preview generation.
     /// - UnsupportedContent:
     ///   The file content is not supported for preview generation.
-    public enum PreviewError : CustomStringConvertible {
+    public enum PreviewError: CustomStringConvertible {
         case Path(Files.LookupError)
         case InProgress
         case UnsupportedExtension
@@ -2256,7 +2256,7 @@ public class Files {
     ///
     /// - Path
     /// - Other
-    public enum ListRevisionsError : CustomStringConvertible {
+    public enum ListRevisionsError: CustomStringConvertible {
         case Path(Files.LookupError)
         case Other
         public var description : String {
@@ -2381,7 +2381,7 @@ public class Files {
     /// - InvalidRevision:
     ///   The revision is invalid. It may point to a different file.
     /// - Other
-    public enum RestoreError : CustomStringConvertible {
+    public enum RestoreError: CustomStringConvertible {
         case PathLookup(Files.LookupError)
         case PathWrite(Files.WriteError)
         case InvalidRevision
@@ -2489,9 +2489,12 @@ extension BabelClient {
     ///        The path of the file to download.
     /// :param: rev
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesDownload(path path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    /// :param: destination
+    ///        A closure used to compute the destination,given the temporary
+    ///        file location and the response
+    public func filesDownload(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
-        return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer())
+        return BabelDownloadRequest(client: self, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination)
     }
     /// Upload sessions allow you to upload a single file using multiple
     /// requests. This call starts a new upload session with the given data.
@@ -2500,9 +2503,31 @@ extension BabelClient {
     /// Dropbox.
     ///
     /// :param: body
-    ///        The binary payload to upload
+    ///        The file to upload, as an NSData object
     public func filesUploadSessionStart(body body: NSData) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), body: body, responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Data(body))
+    }
+    /// Upload sessions allow you to upload a single file using multiple
+    /// requests. This call starts a new upload session with the given data.
+    /// You can then use :route:`upload_session/append` to add more data and
+    /// :route:`upload_session/finish` to save all the data to a file in
+    /// Dropbox.
+    ///
+    /// :param: body
+    ///        The file to upload, as an NSURL object
+    public func filesUploadSessionStart(body body: NSURL) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .File(body))
+    }
+    /// Upload sessions allow you to upload a single file using multiple
+    /// requests. This call starts a new upload session with the given data.
+    /// You can then use :route:`upload_session/append` to add more data and
+    /// :route:`upload_session/finish` to save all the data to a file in
+    /// Dropbox.
+    ///
+    /// :param: body
+    ///        The file to upload, as an NSInputStream object
+    public func filesUploadSessionStart(body body: NSInputStream) -> BabelUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Stream(body))
     }
     /// Append more data to an upload session.
     ///
@@ -2513,10 +2538,38 @@ extension BabelClient {
     ///        make sure upload data isn't lost or duplicated in the event of a
     ///        network error.
     /// :param: body
-    ///        The binary payload to upload
+    ///        The file to upload, as an NSData object
     public func filesUploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSData) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), body: body, responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Data(body))
+    }
+    /// Append more data to an upload session.
+    ///
+    /// :param: sessionId
+    ///        The upload session ID (returned by `upload_session/start`).
+    /// :param: offset
+    ///        The amount of data that has been uploaded so far. We use this to
+    ///        make sure upload data isn't lost or duplicated in the event of a
+    ///        network error.
+    /// :param: body
+    ///        The file to upload, as an NSURL object
+    public func filesUploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSURL) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+        let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .File(body))
+    }
+    /// Append more data to an upload session.
+    ///
+    /// :param: sessionId
+    ///        The upload session ID (returned by `upload_session/start`).
+    /// :param: offset
+    ///        The amount of data that has been uploaded so far. We use this to
+    ///        make sure upload data isn't lost or duplicated in the event of a
+    ///        network error.
+    /// :param: body
+    ///        The file to upload, as an NSInputStream object
+    public func filesUploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSInputStream) -> BabelUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+        let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Stream(body))
     }
     /// Finish an upload session and save the uploaded data to the given file
     /// path.
@@ -2526,10 +2579,36 @@ extension BabelClient {
     /// :param: commit
     ///        Contains the path and other optional modifiers for the commit.
     /// :param: body
-    ///        The binary payload to upload
+    ///        The file to upload, as an NSData object
     public func filesUploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Data(body))
+    }
+    /// Finish an upload session and save the uploaded data to the given file
+    /// path.
+    ///
+    /// :param: cursor
+    ///        Contains the upload session ID and the offset.
+    /// :param: commit
+    ///        Contains the path and other optional modifiers for the commit.
+    /// :param: body
+    ///        The file to upload, as an NSURL object
+    public func filesUploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSURL) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+        let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .File(body))
+    }
+    /// Finish an upload session and save the uploaded data to the given file
+    /// path.
+    ///
+    /// :param: cursor
+    ///        Contains the upload session ID and the offset.
+    /// :param: commit
+    ///        Contains the path and other optional modifiers for the commit.
+    /// :param: body
+    ///        The file to upload, as an NSInputStream object
+    public func filesUploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSInputStream) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+        let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Stream(body))
     }
     /// Create a new file with the contents provided in the request.
     ///
@@ -2552,10 +2631,62 @@ extension BabelClient {
     ///        `true`, this tells the clients that this modification shouldn't
     ///        result in a user notification.
     /// :param: body
-    ///        The binary payload to upload
+    ///        The file to upload, as an NSData object
     public func filesUpload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), body: body, responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer())
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Data(body))
+    }
+    /// Create a new file with the contents provided in the request.
+    ///
+    /// :param: path
+    ///        Path in the user's Dropbox to save the file.
+    /// :param: mode
+    ///        Selects what to do if the file already exists.
+    /// :param: autorename
+    ///        If there's a conflict, as determined by `mode`, have the Dropbox
+    ///        server try to autorename the file to avoid conflict.
+    /// :param: clientModified
+    ///        The value to store as the `client_modified` timestamp. Dropbox
+    ///        automatically records the time at which the file was written to
+    ///        the Dropbox servers. It can also record an additional timestamp,
+    ///        provided by Dropbox desktop clients, mobile clients, and API apps
+    ///        of when the file was actually created or modified.
+    /// :param: mute
+    ///        Normally, users are made aware of any file modifications in their
+    ///        Dropbox account via notifications in the client software. If
+    ///        `true`, this tells the clients that this modification shouldn't
+    ///        result in a user notification.
+    /// :param: body
+    ///        The file to upload, as an NSURL object
+    public func filesUpload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSURL) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+        let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .File(body))
+    }
+    /// Create a new file with the contents provided in the request.
+    ///
+    /// :param: path
+    ///        Path in the user's Dropbox to save the file.
+    /// :param: mode
+    ///        Selects what to do if the file already exists.
+    /// :param: autorename
+    ///        If there's a conflict, as determined by `mode`, have the Dropbox
+    ///        server try to autorename the file to avoid conflict.
+    /// :param: clientModified
+    ///        The value to store as the `client_modified` timestamp. Dropbox
+    ///        automatically records the time at which the file was written to
+    ///        the Dropbox servers. It can also record an additional timestamp,
+    ///        provided by Dropbox desktop clients, mobile clients, and API apps
+    ///        of when the file was actually created or modified.
+    /// :param: mute
+    ///        Normally, users are made aware of any file modifications in their
+    ///        Dropbox account via notifications in the client software. If
+    ///        `true`, this tells the clients that this modification shouldn't
+    ///        result in a user notification.
+    /// :param: body
+    ///        The file to upload, as an NSInputStream object
+    public func filesUpload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSInputStream) -> BabelUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+        let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+        return BabelUploadRequest(client: self, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Stream(body))
     }
     /// Searches for files and folders.
     ///
@@ -2630,9 +2761,12 @@ extension BabelClient {
     ///        better for screenshots and digital arts.
     /// :param: size
     ///        The size for the thumbnail image.
-    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    /// :param: destination
+    ///        A closure used to compute the destination,given the temporary
+    ///        file location and the response
+    public func filesGetThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
-        return BabelDownloadRequest(client: self, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer())
+        return BabelDownloadRequest(client: self, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer(), destination: destination)
     }
     /// Get a preview for a file. Currently previews are only generated for the
     /// files with  the following extensions: .doc, .docx, .docm, .ppt, .pps,
@@ -2642,9 +2776,12 @@ extension BabelClient {
     ///        The path of the file to preview.
     /// :param: rev
     ///        Optional revision, taken from the corresponding `Metadata` field.
-    public func filesGetPreview(path path: String, rev: String? = nil) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    /// :param: destination
+    ///        A closure used to compute the destination,given the temporary
+    ///        file location and the response
+    public func filesGetPreview(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let request = Files.PreviewArg(path: path, rev: rev)
-        return BabelDownloadRequest(client: self, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer())
+        return BabelDownloadRequest(client: self, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer(), destination: destination)
     }
     /// Return revisions of a file
     ///
