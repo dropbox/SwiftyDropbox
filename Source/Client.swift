@@ -258,27 +258,20 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         let url = "\(client.baseHosts[host]!)\(route)"
         var headers = [String : String]()
         urlPath = nil
-
+        
         if let data = dumpJSON(params) {
             let value = asciiEscape(utf8Decode(data))
             headers["Dropbox-Api-Arg"] = value
         }
-
-
-        
-        
-        weak var _self : BabelDownloadRequest<RType, EType>!
         
         let dest : (NSURL, NSHTTPURLResponse) -> NSURL = { url, resp in
             let ret = destination(url, resp)
-            _self.urlPath = ret
             return ret
         }
         
         let request = client.manager.download(.POST, url, headers: headers, destination: dest)
-
+        
         super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-        _self = self
     }
     
     /// Called as the download progresses
