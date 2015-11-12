@@ -9,7 +9,7 @@ public func setAssertFunc( assertFunc: (Bool, String) -> Void) {
 }
 
 
-public func arrayValidator<T>(minItems minItems : Int?, maxItems : Int?, itemValidator: T -> Void)(value : Array<T>) -> Void {
+public func arrayValidator<T>(minItems minItems : Int? = nil, maxItems : Int? = nil, itemValidator: T -> Void)(value : Array<T>) -> Void {
     if let min = minItems {
         _assertFunc(value.count >= min, "\(value) must have at least \(min) items")
     }
@@ -22,10 +22,6 @@ public func arrayValidator<T>(minItems minItems : Int?, maxItems : Int?, itemVal
         itemValidator(el)
     }
     
-}
-
-public func arrayValidator<T>(itemValidator itemValidator: T -> Void)(value : Array<T>) -> Void {
-    arrayValidator(minItems: nil, maxItems: nil, itemValidator: itemValidator)(value: value)
 }
 
 public func stringValidator(minLength minLength : Int? = nil, maxLength : Int? = nil, pattern: String? = nil)(value: String) -> Void {
