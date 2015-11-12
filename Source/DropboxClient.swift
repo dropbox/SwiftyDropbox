@@ -77,7 +77,7 @@ public class DropboxClient : BabelClient {
         self.init(accessToken: accessToken,
             baseApiUrl: "https://api.dropbox.com/2",
             baseContentUrl: "https://api-content.dropbox.com/2",
-            baseNotifyUrl: "https://api-notify.dropbox.com")
+            baseNotifyUrl: "https://notify.dropboxapi.com/2")
     }
 }
 public class Dropbox {
