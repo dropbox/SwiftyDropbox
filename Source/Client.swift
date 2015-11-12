@@ -153,7 +153,11 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
 public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
     init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
         let url = "\(client.baseHosts[host]!)\(route)"
-        let headers = ["Content-Type": "application/json"]
+        var headers = ["Content-Type": "application/json"]
+        let noauth = (host == "notify")
+        for (header, val) in client.additionalHeaders(noauth) {
+            headers[header] = val
+        }
         
         let request = client.manager.request(.POST, url, parameters: [:], headers: headers, encoding: ParameterEncoding.Custom {(convertible, _) in
                 let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
@@ -201,6 +205,11 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
             var headers = [
                 "Content-Type": "application/octet-stream",
             ]
+            let noauth = (host == "notify")
+            for (header, val) in client.additionalHeaders(noauth) {
+                headers[header] = val
+            }
+            
             if let data = dumpJSON(params) {
                 let value = asciiEscape(utf8Decode(data))
                 headers["Dropbox-Api-Arg"] = value
@@ -263,9 +272,11 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
             let value = asciiEscape(utf8Decode(data))
             headers["Dropbox-Api-Arg"] = value
         }
-
-
         
+        let noauth = (host == "notify")
+        for (header, val) in client.additionalHeaders(noauth) {
+            headers[header] = val
+        }
         
         weak var _self : BabelDownloadRequest<RType, EType>!
         
@@ -322,7 +333,9 @@ public class BabelClient {
     
     var manager : Manager
     
-
+    public func additionalHeaders(noauth : Bool) -> [String : String] {
+        return [:]
+    }
     
     public init(manager : Manager, baseHosts : [String : String]) {
         self.baseHosts = baseHosts

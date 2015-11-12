@@ -54,17 +54,18 @@ public class DropboxClient : BabelClient {
     
     public static var sharedClient : DropboxClient!
     
+    public override func additionalHeaders(noauth : Bool) -> [String: String] {
+        var headers = ["User-Agent": "OfficialDropboxSwiftSDKv2/0.7"]
+        if (!noauth) {
+            headers["Authorization"] = "Bearer \(self.accessToken)"
+        }
+        return headers
+    }
+    
     public init(accessToken: DropboxAccessToken, baseApiUrl: String, baseContentUrl: String, baseNotifyUrl: String) {
         self.accessToken = accessToken
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
-        // Authentication header with access token
-        configuration.HTTPAdditionalHeaders = [
-            "Authorization" : "Bearer \(self.accessToken)",
-            "User-Agent": "OfficialDropboxSwiftSDKv2/0.4"
-        ]
-        
-        let manager = Manager(configuration: configuration, serverTrustPolicyManager: DropboxServerTrustPolicyManager())
+        let manager = Manager(serverTrustPolicyManager: DropboxServerTrustPolicyManager())
         super.init(manager: manager, baseHosts : [
             "meta" : baseApiUrl,
             "content": baseContentUrl,
