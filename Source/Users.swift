@@ -175,7 +175,7 @@ public class Users {
     /// :param: isTeammate
     ///        Whether this user is a teammate of the current user. If this
     ///        account is the current user's account, then this will be `true`.
-    public class BasicAccount: Account {
+    public class BasicAccount: Users.Account {
         public let isTeammate : Bool
         public init(accountId: String, name: Users.Name, isTeammate: Bool) {
             self.isTeammate = isTeammate
@@ -229,7 +229,7 @@ public class Users {
     ///        `is_paired` will indicate if a work account is linked.
     /// :param: accountType
     ///        What type of account this user has.
-    public class FullAccount: Account {
+    public class FullAccount: Users.Account {
         public let email : String
         public let country : String?
         public let locale : String
@@ -242,7 +242,7 @@ public class Users {
             self.email = email
             nullableValidator(stringValidator(minLength: 2, maxLength: 2))(value: country)
             self.country = country
-            stringValidator(minLength: 2, maxLength: 2)(value: locale)
+            stringValidator(minLength: 2)(value: locale)
             self.locale = locale
             stringValidator()(value: referralLink)
             self.referralLink = referralLink
@@ -547,6 +547,84 @@ public class Users {
             }
         }
     }
+    /// The GetAccountBatchArg struct
+    ///
+    /// :param: accountIds
+    ///        List of user account identifiers.  Should not contain any
+    ///        duplicate account IDs.
+    public class GetAccountBatchArg: CustomStringConvertible {
+        public let accountIds : Array<String>
+        public init(accountIds: Array<String>) {
+            arrayValidator(minItems: 1, itemValidator: stringValidator(minLength: 40, maxLength: 40))(value: accountIds)
+            self.accountIds = accountIds
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(GetAccountBatchArgSerializer().serialize(self)))"
+        }
+    }
+    public class GetAccountBatchArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GetAccountBatchArg) -> JSON {
+            let output = [ 
+            "account_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.accountIds),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> GetAccountBatchArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let accountIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["account_ids"] ?? .Null)
+                    return GetAccountBatchArg(accountIds: accountIds)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// The GetAccountBatchError union
+    ///
+    /// - NoAccount:
+    ///   The value is an account ID specified in
+    ///   `GetAccountBatchArg.account_ids` that does not exist.
+    /// - Other
+    public enum GetAccountBatchError: CustomStringConvertible {
+        case NoAccount(String)
+        case Other
+        public var description : String {
+            return "\(prepareJSONForSerialization(GetAccountBatchErrorSerializer().serialize(self)))"
+        }
+    }
+    public class GetAccountBatchErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GetAccountBatchError) -> JSON {
+            switch value {
+                case .NoAccount(let arg):
+                    var d = ["no_account": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .Str("no_account")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> GetAccountBatchError {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "no_account":
+                            let v = Serialization._StringSerializer.deserialize(d["no_account"] ?? .Null)
+                            return GetAccountBatchError.NoAccount(v)
+                        case "other":
+                            return GetAccountBatchError.Other
+                        default:
+                            return GetAccountBatchError.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
 }
 extension BabelClient {
     /// Get information about a user's account.
@@ -566,5 +644,15 @@ extension BabelClient {
     ///
     public func usersGetSpaceUsage() -> BabelRpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
         return BabelRpcRequest(client: self, host: "meta", route: "/users/get_space_usage", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
+    }
+    /// Get information about multiple user accounts.  At most 300 accounts may
+    /// be queried per request.
+    ///
+    /// :param: accountIds
+    ///        List of user account identifiers.  Should not contain any
+    ///        duplicate account IDs.
+    public func usersGetAccountBatch(accountIds accountIds: Array<String>) -> BabelRpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
+        let request = Users.GetAccountBatchArg(accountIds: accountIds)
+        return BabelRpcRequest(client: self, host: "meta", route: "/users/get_account_batch", params: Users.GetAccountBatchArgSerializer().serialize(request), responseSerializer: ArraySerializer(Users.BasicAccountSerializer()), errorSerializer: Users.GetAccountBatchErrorSerializer())
     }
 }

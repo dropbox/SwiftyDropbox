@@ -70,6 +70,259 @@ public class Files {
             }
         }
     }
+    /// Dimensions for a photo or video.
+    ///
+    /// :param: height
+    ///        Height of the photo/video.
+    /// :param: width
+    ///        Width of the photo/video.
+    public class Dimensions: CustomStringConvertible {
+        public let height : UInt64
+        public let width : UInt64
+        public init(height: UInt64, width: UInt64) {
+            comparableValidator()(value: height)
+            self.height = height
+            comparableValidator()(value: width)
+            self.width = width
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
+        }
+    }
+    public class DimensionsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: Dimensions) -> JSON {
+            let output = [ 
+            "height": Serialization._UInt64Serializer.serialize(value.height),
+            "width": Serialization._UInt64Serializer.serialize(value.width),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> Dimensions {
+            switch json {
+                case .Dictionary(let dict):
+                    let height = Serialization._UInt64Serializer.deserialize(dict["height"] ?? .Null)
+                    let width = Serialization._UInt64Serializer.deserialize(dict["width"] ?? .Null)
+                    return Dimensions(height: height, width: width)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// GPS coordinates for a photo or video.
+    ///
+    /// :param: latitude
+    ///        Latitude of the GPS coordinates.
+    /// :param: longitude
+    ///        Longitude of the GPS coordinates.
+    public class GpsCoordinates: CustomStringConvertible {
+        public let latitude : Double
+        public let longitude : Double
+        public init(latitude: Double, longitude: Double) {
+            comparableValidator()(value: latitude)
+            self.latitude = latitude
+            comparableValidator()(value: longitude)
+            self.longitude = longitude
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
+        }
+    }
+    public class GpsCoordinatesSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GpsCoordinates) -> JSON {
+            let output = [ 
+            "latitude": Serialization._DoubleSerializer.serialize(value.latitude),
+            "longitude": Serialization._DoubleSerializer.serialize(value.longitude),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> GpsCoordinates {
+            switch json {
+                case .Dictionary(let dict):
+                    let latitude = Serialization._DoubleSerializer.deserialize(dict["latitude"] ?? .Null)
+                    let longitude = Serialization._DoubleSerializer.deserialize(dict["longitude"] ?? .Null)
+                    return GpsCoordinates(latitude: latitude, longitude: longitude)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// Metadata for a photo or video.
+    ///
+    /// :param: dimensions
+    ///        Dimension of the photo/video.
+    /// :param: location
+    ///        The GPS coordinate of the photo/video.
+    /// :param: timeTaken
+    ///        The timestamp when the photo/video is taken.
+    public class MediaMetadata: CustomStringConvertible {
+        public let dimensions : Files.Dimensions?
+        public let location : Files.GpsCoordinates?
+        public let timeTaken : NSDate?
+        public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil) {
+            self.dimensions = dimensions
+            self.location = location
+            self.timeTaken = timeTaken
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
+        }
+    }
+    public class MediaMetadataSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: MediaMetadata) -> JSON {
+            var output = [ 
+            "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
+            "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
+            "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),
+            ]
+            switch value {
+                case let photo as Files.PhotoMetadata:
+                    for (k,v) in Serialization.getFields(Files.PhotoMetadataSerializer().serialize(photo)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .Str("photo")
+                case let video as Files.VideoMetadata:
+                    for (k,v) in Serialization.getFields(Files.VideoMetadataSerializer().serialize(video)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .Str("video")
+                default: fatalError("Tried to serialize unexpected subtype")
+            }
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> MediaMetadata {
+            switch json {
+                case .Dictionary(let dict):
+                    let tag = Serialization.getTag(dict)
+                    switch tag {
+                        case "photo":
+                            return Files.PhotoMetadataSerializer().deserialize(json)
+                        case "video":
+                            return Files.VideoMetadataSerializer().deserialize(json)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// Metadata for a photo.
+    ///
+    public class PhotoMetadata: Files.MediaMetadata {
+        public override var description : String {
+            return "\(prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
+        }
+    }
+    public class PhotoMetadataSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: PhotoMetadata) -> JSON {
+            let output = [ 
+            "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
+            "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
+            "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> PhotoMetadata {
+            switch json {
+                case .Dictionary(let dict):
+                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .Null)
+                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .Null)
+                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .Null)
+                    return PhotoMetadata(dimensions: dimensions, location: location, timeTaken: timeTaken)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// Metadata for a video.
+    ///
+    /// :param: duration
+    ///        The duration of the video in milliseconds.
+    public class VideoMetadata: Files.MediaMetadata {
+        public let duration : UInt64?
+        public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil, duration: UInt64? = nil) {
+            nullableValidator(comparableValidator())(value: duration)
+            self.duration = duration
+            super.init(dimensions: dimensions, location: location, timeTaken: timeTaken)
+        }
+        public override var description : String {
+            return "\(prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
+        }
+    }
+    public class VideoMetadataSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: VideoMetadata) -> JSON {
+            let output = [ 
+            "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
+            "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
+            "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),
+            "duration": NullableSerializer(Serialization._UInt64Serializer).serialize(value.duration),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> VideoMetadata {
+            switch json {
+                case .Dictionary(let dict):
+                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .Null)
+                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .Null)
+                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .Null)
+                    let duration = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["duration"] ?? .Null)
+                    return VideoMetadata(dimensions: dimensions, location: location, timeTaken: timeTaken, duration: duration)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// The MediaInfo union
+    ///
+    /// - Pending:
+    ///   Indicate the photo/video is still under processing and metadata is not
+    ///   available yet.
+    /// - Metadata:
+    ///   The metadata for the photo/video.
+    public enum MediaInfo: CustomStringConvertible {
+        case Pending
+        case Metadata(Files.MediaMetadata)
+        public var description : String {
+            return "\(prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
+        }
+    }
+    public class MediaInfoSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: MediaInfo) -> JSON {
+            switch value {
+                case .Pending:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("pending")
+                    return .Dictionary(d)
+                case .Metadata(let arg):
+                    var d = Serialization.getFields(Files.MediaMetadataSerializer().serialize(arg))
+                    d[".tag"] = .Str("metadata")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> MediaInfo {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "pending":
+                            return MediaInfo.Pending
+                        case "metadata":
+                            let v = Files.MediaMetadataSerializer().deserialize(json)
+                            return MediaInfo.Metadata(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
     /// The FileMetadata struct
     ///
     /// :param: id
@@ -89,13 +342,16 @@ public class Files {
     ///        detect changes and avoid conflicts.
     /// :param: size
     ///        The file size in bytes.
-    public class FileMetadata: Metadata {
+    /// :param: mediaInfo
+    ///        Additional information if the file is a photo or video.
+    public class FileMetadata: Files.Metadata {
         public let id : String?
         public let clientModified : NSDate
         public let serverModified : NSDate
         public let rev : String
         public let size : UInt64
-        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil) {
+        public let mediaInfo : Files.MediaInfo?
+        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil, mediaInfo: Files.MediaInfo? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
             self.id = id
             self.clientModified = clientModified
@@ -104,6 +360,7 @@ public class Files {
             self.rev = rev
             comparableValidator()(value: size)
             self.size = size
+            self.mediaInfo = mediaInfo
             super.init(name: name, pathLower: pathLower)
         }
         public override var description : String {
@@ -121,6 +378,7 @@ public class Files {
             "rev": Serialization._StringSerializer.serialize(value.rev),
             "size": Serialization._UInt64Serializer.serialize(value.size),
             "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
+            "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
             ]
             return .Dictionary(output)
         }
@@ -134,7 +392,8 @@ public class Files {
                     let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
                     let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .Null)
                     let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
-                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, id: id)
+                    let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .Null)
+                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, id: id, mediaInfo: mediaInfo)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -144,7 +403,7 @@ public class Files {
     ///
     /// :param: id
     ///        A unique identifier for the folder.
-    public class FolderMetadata: Metadata {
+    public class FolderMetadata: Files.Metadata {
         public let id : String?
         public init(name: String, pathLower: String, id: String? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
@@ -180,7 +439,7 @@ public class Files {
     /// Indicates that there used to be a file or folder at this path, but it no
     /// longer exists.
     ///
-    public class DeletedMetadata: Metadata {
+    public class DeletedMetadata: Files.Metadata {
         public override var description : String {
             return "\(prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
@@ -244,11 +503,16 @@ public class Files {
     ///
     /// :param: path
     ///        The path of a file or folder on Dropbox
+    /// :param: includeMediaInfo
+    ///        If true, :field:'FileMetadata.media_info' is set for photo and
+    ///        video.
     public class GetMetadataArg: CustomStringConvertible {
         public let path : String
-        public init(path: String) {
+        public let includeMediaInfo : Bool
+        public init(path: String, includeMediaInfo: Bool = false) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
             self.path = path
+            self.includeMediaInfo = includeMediaInfo
         }
         public var description : String {
             return "\(prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
@@ -259,6 +523,7 @@ public class Files {
         public func serialize(value: GetMetadataArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
+            "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             ]
             return .Dictionary(output)
         }
@@ -266,9 +531,137 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    return GetMetadataArg(path: path)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
+                    return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// The ListFolderLongpollArg struct
+    ///
+    /// :param: cursor
+    ///        A cursor as returned by `list_folder` or `list_folder/continue`
+    /// :param: timeout
+    ///        A timeout in seconds. The request will block for at most this
+    ///        length of time, plus up to 90 seconds of random jitter added to
+    ///        avoid the thundering herd problem. Care should be taken when
+    ///        using this parameter, as some network infrastructure does not
+    ///        support long timeouts.
+    public class ListFolderLongpollArg: CustomStringConvertible {
+        public let cursor : String
+        public let timeout : UInt64
+        public init(cursor: String, timeout: UInt64 = 30) {
+            stringValidator()(value: cursor)
+            self.cursor = cursor
+            comparableValidator(minValue: 30, maxValue: 480)(value: timeout)
+            self.timeout = timeout
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
+        }
+    }
+    public class ListFolderLongpollArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: ListFolderLongpollArg) -> JSON {
+            let output = [ 
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            "timeout": Serialization._UInt64Serializer.serialize(value.timeout),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> ListFolderLongpollArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .Null)
+                    return ListFolderLongpollArg(cursor: cursor, timeout: timeout)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// The ListFolderLongpollResult struct
+    ///
+    /// :param: changes
+    ///        Indicates whether new changes are available. If true, call
+    ///        `list_folder` to retrieve the changes.
+    /// :param: backoff
+    ///        If present, backoff for at least this many seconds before calling
+    ///        `list_folder/longpoll` again.
+    public class ListFolderLongpollResult: CustomStringConvertible {
+        public let changes : Bool
+        public let backoff : UInt64?
+        public init(changes: Bool, backoff: UInt64? = nil) {
+            self.changes = changes
+            nullableValidator(comparableValidator())(value: backoff)
+            self.backoff = backoff
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
+        }
+    }
+    public class ListFolderLongpollResultSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: ListFolderLongpollResult) -> JSON {
+            let output = [ 
+            "changes": Serialization._BoolSerializer.serialize(value.changes),
+            "backoff": NullableSerializer(Serialization._UInt64Serializer).serialize(value.backoff),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> ListFolderLongpollResult {
+            switch json {
+                case .Dictionary(let dict):
+                    let changes = Serialization._BoolSerializer.deserialize(dict["changes"] ?? .Null)
+                    let backoff = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["backoff"] ?? .Null)
+                    return ListFolderLongpollResult(changes: changes, backoff: backoff)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /// The ListFolderLongpollError union
+    ///
+    /// - Reset:
+    ///   Indicates that the cursor has been invalidated. Call `list_folder` to
+    ///   obtain a new cursor.
+    /// - Other
+    public enum ListFolderLongpollError: CustomStringConvertible {
+        case Reset
+        case Other
+        public var description : String {
+            return "\(prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
+        }
+    }
+    public class ListFolderLongpollErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: ListFolderLongpollError) -> JSON {
+            switch value {
+                case .Reset:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("reset")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> ListFolderLongpollError {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "reset":
+                            return ListFolderLongpollError.Reset
+                        case "other":
+                            return ListFolderLongpollError.Other
+                        default:
+                            return ListFolderLongpollError.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -280,13 +673,18 @@ public class Files {
     ///        If true, the list folder operation will be applied recursively to
     ///        all subfolders and the response will contain contents of all
     ///        subfolders.
+    /// :param: includeMediaInfo
+    ///        If true, :field:'FileMetadata.media_info' is set for photo and
+    ///        video.
     public class ListFolderArg: CustomStringConvertible {
         public let path : String
         public let recursive : Bool
-        public init(path: String, recursive: Bool = false) {
+        public let includeMediaInfo : Bool
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false) {
             stringValidator(pattern: "(/.*)?")(value: path)
             self.path = path
             self.recursive = recursive
+            self.includeMediaInfo = includeMediaInfo
         }
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -298,6 +696,7 @@ public class Files {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "recursive": Serialization._BoolSerializer.serialize(value.recursive),
+            "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             ]
             return .Dictionary(output)
         }
@@ -306,7 +705,8 @@ public class Files {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Null)
-                    return ListFolderArg(path: path, recursive: recursive)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -570,12 +970,12 @@ public class Files {
     /// :param: path
     ///        The path of the file to download.
     /// :param: rev
-    ///        Optional revision, taken from the corresponding `Metadata` field.
+    ///        Deprecated. Please specify revision in :field:'path' instead
     public class DownloadArg: CustomStringConvertible {
         public let path : String
         public let rev : String?
         public init(path: String, rev: String? = nil) {
-            stringValidator(pattern: "/.*")(value: path)
+            stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(value: rev)
             self.rev = rev
@@ -1444,7 +1844,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "malformed_path":
-                            let v = Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .Null)
+                            let v = NullableSerializer(Serialization._StringSerializer).deserialize(d["malformed_path"] ?? .Null)
                             return LookupError.MalformedPath(v)
                         case "not_found":
                             return LookupError.NotFound
@@ -1525,7 +1925,7 @@ public class Files {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "malformed_path":
-                            let v = Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .Null)
+                            let v = NullableSerializer(Serialization._StringSerializer).deserialize(d["malformed_path"] ?? .Null)
                             return WriteError.MalformedPath(v)
                         case "conflict":
                             let v = Files.WriteConflictErrorSerializer().deserialize(d["conflict"] ?? .Null)
@@ -2016,7 +2416,7 @@ public class Files {
         public let format : Files.ThumbnailFormat
         public let size : Files.ThumbnailSize
         public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) {
-            stringValidator(pattern: "/.*")(value: path)
+            stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
             self.path = path
             self.format = format
             self.size = size
@@ -2115,12 +2515,12 @@ public class Files {
     /// :param: path
     ///        The path of the file to preview.
     /// :param: rev
-    ///        Optional revision, taken from the corresponding `Metadata` field.
+    ///        Deprecated. Please specify revision in :field:'path' instead
     public class PreviewArg: CustomStringConvertible {
         public let path : String
         public let rev : String?
         public init(path: String, rev: String? = nil) {
-            stringValidator(pattern: "/.*")(value: path)
+            stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(value: rev)
             self.rev = rev
@@ -2441,9 +2841,29 @@ extension BabelClient {
     ///
     /// :param: path
     ///        The path of a file or folder on Dropbox
-    public func filesGetMetadata(path path: String) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
-        let request = Files.GetMetadataArg(path: path)
+    /// :param: includeMediaInfo
+    ///        If true, :field:'FileMetadata.media_info' is set for photo and
+    ///        video.
+    public func filesGetMetadata(path path: String, includeMediaInfo: Bool = false) -> BabelRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
+        let request = Files.GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
+    }
+    /// A longpoll endpoint to wait for changes on an account. In conjunction
+    /// with :route:`list_folder`, this call gives you a low-latency way to
+    /// monitor an account for file changes. The connection will block until
+    /// there are changes available or a timeout occurs.
+    ///
+    /// :param: cursor
+    ///        A cursor as returned by `list_folder` or `list_folder/continue`
+    /// :param: timeout
+    ///        A timeout in seconds. The request will block for at most this
+    ///        length of time, plus up to 90 seconds of random jitter added to
+    ///        avoid the thundering herd problem. Care should be taken when
+    ///        using this parameter, as some network infrastructure does not
+    ///        support long timeouts.
+    public func filesListFolderLongpoll(cursor cursor: String, timeout: UInt64 = 30) -> BabelRpcRequest<Files.ListFolderLongpollResultSerializer, Files.ListFolderLongpollErrorSerializer> {
+        let request = Files.ListFolderLongpollArg(cursor: cursor, timeout: timeout)
+        return BabelRpcRequest(client: self, host: "notify", route: "/files/list_folder/longpoll", params: Files.ListFolderLongpollArgSerializer().serialize(request), responseSerializer: Files.ListFolderLongpollResultSerializer(), errorSerializer: Files.ListFolderLongpollErrorSerializer())
     }
     /// Returns the contents of a folder.
     ///
@@ -2453,8 +2873,11 @@ extension BabelClient {
     ///        If true, the list folder operation will be applied recursively to
     ///        all subfolders and the response will contain contents of all
     ///        subfolders.
-    public func filesListFolder(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
-        let request = Files.ListFolderArg(path: path, recursive: recursive)
+    /// :param: includeMediaInfo
+    ///        If true, :field:'FileMetadata.media_info' is set for photo and
+    ///        video.
+    public func filesListFolder(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /// Once a cursor has been retrieved from :route:`list_folder`, use this to
@@ -2479,8 +2902,11 @@ extension BabelClient {
     ///        If true, the list folder operation will be applied recursively to
     ///        all subfolders and the response will contain contents of all
     ///        subfolders.
-    public func filesListFolderGetLatestCursor(path path: String, recursive: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
-        let request = Files.ListFolderArg(path: path, recursive: recursive)
+    /// :param: includeMediaInfo
+    ///        If true, :field:'FileMetadata.media_info' is set for photo and
+    ///        video.
+    public func filesListFolderGetLatestCursor(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/list_folder/get_latest_cursor", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /// Download a file from a user's Dropbox.
@@ -2488,7 +2914,7 @@ extension BabelClient {
     /// :param: path
     ///        The path of the file to download.
     /// :param: rev
-    ///        Optional revision, taken from the corresponding `Metadata` field.
+    ///        Deprecated. Please specify revision in :field:'path' instead
     /// :param: destination
     ///        A closure used to compute the destination,given the temporary
     ///        file location and the response
@@ -2726,6 +3152,15 @@ extension BabelClient {
         let request = Files.DeleteArg(path: path)
         return BabelRpcRequest(client: self, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.DeleteErrorSerializer())
     }
+    /// Permanently delete the file or folder at a given path (see
+    /// https://www.dropbox.com/en/help/40).
+    ///
+    /// :param: path
+    ///        Path in the user's Dropbox to delete.
+    public func filesPermanentlyDelete(path path: String) -> BabelRpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
+        let request = Files.DeleteArg(path: path)
+        return BabelRpcRequest(client: self, host: "meta", route: "/files/permanently_delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.DeleteErrorSerializer())
+    }
     /// Copy a file or folder to a different location in the user's Dropbox. If
     /// the source path is a folder all its contents will be copied.
     ///
@@ -2775,7 +3210,7 @@ extension BabelClient {
     /// :param: path
     ///        The path of the file to preview.
     /// :param: rev
-    ///        Optional revision, taken from the corresponding `Metadata` field.
+    ///        Deprecated. Please specify revision in :field:'path' instead
     /// :param: destination
     ///        A closure used to compute the destination,given the temporary
     ///        file location and the response
