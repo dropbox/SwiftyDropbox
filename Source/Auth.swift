@@ -5,8 +5,14 @@ import Security
 
 import Foundation
 
+
+/// A Dropbox access token
 public class DropboxAccessToken : CustomStringConvertible {
+    
+    /// The access token string
     public let accessToken: String
+    
+    /// The associated user
     public let uid: String
     
     public init(accessToken: String, uid: String) {
@@ -21,23 +27,29 @@ public class DropboxAccessToken : CustomStringConvertible {
 
 /// A failed authorization.
 /// See RFC6749 4.2.2.1
-///
-/// - `UnauthorizedClient` - The client is not authorized to request an access token using this method.
-/// - `AccessDenied` -  The resource owner or authorization server denied the request.
-/// - `UnsupportedResponseType` - The authorization server does not support obtaining an access token using this method.
-/// - `InvalidScope` - The requested scope is invalid, unknown, or malformed.
-/// - `ServerError` - The authorization server encountered an unexpected condition that prevented it from fulfilling the request.
-/// - `TemporarilyUnavailable` - The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
-/// - `Unknown` - Some other error (outside of the OAuth2 specification)
 public enum OAuth2Error {
+    /// The client is not authorized to request an access token using this method.
     case UnauthorizedClient
+    
+    /// The resource owner or authorization server denied the request.
     case AccessDenied
+    
+    /// The authorization server does not support obtaining an access token using this method.
     case UnsupportedResponseType
+    
+    /// The requested scope is invalid, unknown, or malformed.
     case InvalidScope
+    
+    /// The authorization server encountered an unexpected condition that prevented it from fulfilling the request.
     case ServerError
+    
+    /// The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
     case TemporarilyUnavailable
+    
+    /// Some other error (outside of the OAuth2 specification)
     case Unknown
     
+    /// Initializes an error code from the string specced in RFC6749
     init(errorCode: String) {
         switch errorCode {
             case "unauthorized_client": self = .UnauthorizedClient
@@ -54,11 +66,11 @@ public enum OAuth2Error {
 private let kDBLinkNonce = "dropbox.sync.nonce"
 
 /// The result of an authorization attempt.
-///
-/// - `Success` - The authorization succeeded. Includes a `DropboxAccessToken`.
-/// - `Error` - The authorization failed. Includes an `OAuth2Error` and a descriptive message.
 public enum DropboxAuthResult {
+    /// The authorization succeeded. Includes a `DropboxAccessToken`.
     case Success(DropboxAccessToken)
+    
+    /// The authorization failed. Includes an `OAuth2Error` and a descriptive message.
     case Error(OAuth2Error, String)
 }
 
@@ -186,10 +198,11 @@ public class DropboxAuthManager {
 
     let host: String
     
-    
+    // MARK: Shared instance
+    /// A shared instance of a `DropboxAuthManager` for convenience
     public static var sharedAuthManager : DropboxAuthManager!
     
-    
+    // MARK: Functions
     public init(appKey: String, host: String) {
         self.appKey = appKey
         self.host = host
@@ -197,6 +210,11 @@ public class DropboxAuthManager {
         self.dauthRedirectURL = NSURL(string: "db-\(self.appKey)://1/connect")!
     }
     
+    /** 
+        Create an instance
+
+        parameter appKey: The app key from the developer console that identifies this app.
+    */
     convenience public init(appKey: String) {
         self.init(appKey: appKey, host: "www.dropbox.com")
     }
@@ -243,8 +261,7 @@ public class DropboxAuthManager {
     
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
-    /// :param: controller
-    ///         The controller to present from
+    /// parameter controller: The controller to present from
     public func authorizeFromController(controller: UIViewController) {
         if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
             let nonce = NSUUID().UUIDString
@@ -313,11 +330,13 @@ public class DropboxAuthManager {
         }
     }
     
-    /// Try to handle a redirect back into the application
-    ///
-    /// :param: url
-    ///         The URL to attempt to handle
-    /// :returns: `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
+    /**
+        Try to handle a redirect back into the application
+
+        - parameter url: The URL to attempt to handle
+
+        - returns `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
+    */
     public func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
         
         if !self.canHandleURL(url) {
@@ -340,9 +359,11 @@ public class DropboxAuthManager {
         }
     }
     
-    /// Retrieve all stored access tokens
-    ///
-    /// :returns: a dictionary mapping users to their access tokens
+    /**
+        Retrieve all stored access tokens
+
+        - returns: a dictionary mapping users to their access tokens
+    */
     public func getAllAccessTokens() -> [String : DropboxAccessToken] {
         let users = Keychain.getAll()
         var ret = [String : DropboxAccessToken]()
@@ -354,18 +375,22 @@ public class DropboxAuthManager {
         return ret
     }
     
-    /// Check if there are any stored access tokens
-    ///
-    /// :returns: Whether there are stored access tokens
+    /**
+        Check if there are any stored access tokens
+
+        -returns: Whether there are stored access tokens
+    */
     public func hasStoredAccessTokens() -> Bool {
         return self.getAllAccessTokens().count != 0
     }
     
-    /// Retrieve the access token for a particular user
-    ///
-    /// :param: user
-    ///         The user whose token to retrieve
-    /// :returns: An access token if present, otherwise `nil`.
+    /**
+        Retrieve the access token for a particular user
+
+        - parameter user: The user whose token to retrieve
+
+        - returns: An access token if present, otherwise `nil`.
+    */
     public func getAccessToken(user: String) -> DropboxAccessToken? {
         if let accessToken = Keychain.get(user) {
             return DropboxAccessToken(accessToken: accessToken, uid: user)
@@ -373,35 +398,40 @@ public class DropboxAuthManager {
             return nil
         }
     }
-    
-    /// Delete a specific access token
-    ///
-    /// :param: token
-    ///         The access token to delete
-    /// :returns: whether the operation succeeded
+    /**
+        Delete a specific access token
+
+        - parameter token: The access token to delete
+
+        - returns: whether the operation succeeded
+    */
     public func clearStoredAccessToken(token: DropboxAccessToken) -> Bool {
         return Keychain.delete(token.uid)
     }
-    
-    /// Delete all stored access tokens
-    ///
-    /// :returns: whether the operation succeeded
+    /**
+        Delete all stored access tokens
+
+        - returns: whether the operation succeeded
+    */
     public func clearStoredAccessTokens() -> Bool {
         return Keychain.clear()
     }
-    
-    /// Save an access token
-    ///
-    /// :param: token
-    ///         The access token to save
-    /// :returns: whether the operation succeeded
+    /**
+        Save an access token
+
+        - parameter token: The access token to save
+
+        - returns: whether the operation succeeded
+    */
     public func storeAccessToken(token: DropboxAccessToken) -> Bool {
         return Keychain.set(token.uid, value: token.accessToken)
     }
+
+    /**
+        Utility function to return an arbitrary access token
     
-    /// Utility function to return an arbitrary access token
-    ///
-    /// :returns: the "first" access token found, if any (otherwise `nil`)
+        - returns: the "first" access token found, if any (otherwise `nil`)
+    */
     public func getFirstAccessToken() -> DropboxAccessToken? {
         return self.getAllAccessTokens().values.first
     }

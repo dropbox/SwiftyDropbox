@@ -5,6 +5,21 @@ public class Box<T> {
 	public let unboxed : T
 	init (_ v : T) { self.unboxed = v }
 }
+
+public class BabelClient {
+    var manager : Manager
+    var baseHosts : [String : String]
+    
+    func additionalHeaders(noauth: Bool) -> [String: String] {
+        return [:]
+    }
+    
+    init(manager: Manager, baseHosts : [String : String]) {
+        self.manager = manager
+        self.baseHosts = baseHosts
+    }
+}
+
 public enum CallError<EType> : CustomStringConvertible {
     case InternalServerError(Int, String?, String?)
     case BadInputError(String?, String?)
@@ -326,20 +341,3 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         return self
     }
 }
-
-/// A dropbox API client
-public class BabelClient {
-    var baseHosts : [String : String]
-    
-    var manager : Manager
-    
-    public func additionalHeaders(noauth : Bool) -> [String : String] {
-        return [:]
-    }
-    
-    public init(manager : Manager, baseHosts : [String : String]) {
-        self.baseHosts = baseHosts
-        self.manager = manager
-    }
-}
-
