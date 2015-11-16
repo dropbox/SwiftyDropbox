@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SharingRoutes Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/SharingRoutes" class="dashAnchor"></a>
+    <a title="SharingRoutes Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SwiftyDropbox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SwiftyDropbox Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SharingRoutes Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Routes.html">Routes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/FilesRoutes.html">FilesRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SharingRoutes.html">SharingRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UsersRoutes.html">UsersRoutes</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Data Types.html">Data Types</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Async.html">Async</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Files.html">Files</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Sharing.html">Sharing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Team.html">Team</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Users.html">Users</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/DropboxAuthManager.html">DropboxAuthManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DropboxAuthResult.html">DropboxAuthResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DropboxAccessToken.html">DropboxAccessToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/OAuth2Error.html">OAuth2Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Client Classes.html">Client Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/Dropbox.html">Dropbox</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DropboxClient.html">DropboxClient</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SharingRoutes</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SharingRoutes</span></code></pre>
+
+                </div>
+              </div>
+            <p>Routes for the sharing namespace</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes14getSharedLinksFS0_FTGSqSS__GCS_15BabelRpcRequestCCS_7Sharing30GetSharedLinksResultSerializerCS2_29GetSharedLinksErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/getSharedLinks(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes14getSharedLinksFS0_FTGSqSS__GCS_15BabelRpcRequestCCS_7Sharing30GetSharedLinksResultSerializerCS2_29GetSharedLinksErrorSerializer_">getSharedLinks(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a list of LinkMetadata objects for this user, including collection links. If no path is given or the
+path is empty, returns a list of all shared links for the current user, including collection links. If a
+non-empty path is given, returns a list of all shared links that allow access to the given path.  Collection
+links are never returned in this case. Note that the url field in the response is never the shortened URL. This
+API is not supported for App Folder and filetypes apps.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getSharedLinks</span><span class="p">(</span><span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">GetSharedLinksResultSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">GetSharedLinksErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>See getSharedLinks description.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.GetSharedLinksResult</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.GetSharedLinksError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes16createSharedLinkFS0_FT4pathSS8shortUrlSb13pendingUploadGSqOCS_7Sharing17PendingUploadMode__GCS_15BabelRpcRequestCS1_26PathLinkMetadataSerializerCS1_31CreateSharedLinkErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/createSharedLink(path:shortUrl:pendingUpload:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes16createSharedLinkFS0_FT4pathSS8shortUrlSb13pendingUploadGSqOCS_7Sharing17PendingUploadMode__GCS_15BabelRpcRequestCS1_26PathLinkMetadataSerializerCS1_31CreateSharedLinkErrorSerializer_">createSharedLink(path:shortUrl:pendingUpload:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a shared link. If a shared link already exists for the given path, that link is returned. Note that in
+the returned PathLinkMetadata, the url field is the shortened URL if the short_url argument is set to true. This
+API is not supported for App Folder and filetypes apps.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createSharedLink</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">shortUrl</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">pendingUpload</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">PendingUploadMode</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">PathLinkMetadataSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">CreateSharedLinkErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The path to share.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>shortUrl</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether to return a shortened URL.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pendingUpload</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If it&rsquo;s okay to share a path that does not yet exist, set this to either &lsquo;file&rsquo; or &#39;folder&rsquo; to indicate whether to assume it&rsquo;s a file or folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.PathLinkMetadata</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.CreateSharedLinkError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes16revokeSharedLinkFS0_FT3urlSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing31RevokeSharedLinkErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/revokeSharedLink(url:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes16revokeSharedLinkFS0_FT3urlSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing31RevokeSharedLinkErrorSerializer_">revokeSharedLink(url:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Revoke a shared link. This API is only supported for full dropbox apps.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">revokeSharedLink</span><span class="p">(</span><span class="n">url</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">RevokeSharedLinkErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>url</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>URL of the shared link.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.RevokeSharedLinkError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes17getFolderMetadataFS0_FT14sharedFolderIdSS17includeMembershipSb_GCS_15BabelRpcRequestCCS_7Sharing30SharedFolderMetadataSerializerCS2_33SharedFolderAccessErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/getFolderMetadata(sharedFolderId:includeMembership:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes17getFolderMetadataFS0_FT14sharedFolderIdSS17includeMembershipSb_GCS_15BabelRpcRequestCCS_7Sharing30SharedFolderMetadataSerializerCS2_33SharedFolderAccessErrorSerializer_">getFolderMetadata(sharedFolderId:includeMembership:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns shared folder metadata by its folder ID. Warning: This endpoint is in beta and is subject to minor but
+possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getFolderMetadata</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">includeMembership</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedFolderMetadataSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedFolderAccessErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>includeMembership</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, user and group membership included in the response.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.SharedFolderMetadata</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.SharedFolderAccessError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes11listFoldersFS0_FTSb_GCS_15BabelRpcRequestCCS_7Sharing27ListFoldersResultSerializerCS_14VoidSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/listFolders(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes11listFoldersFS0_FTSb_GCS_15BabelRpcRequestCCS_7Sharing27ListFoldersResultSerializerCS_14VoidSerializer_">listFolders(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return the list of all shared folders the current user has access to. Warning: This endpoint is in beta and is
+subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listFolders</span><span class="p">(</span><span class="nv">includeMembership</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">ListFoldersResultSerializer</span><span class="p">,</span> <span class="kt">VoidSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>includeMembership</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If include user and group membership information in the response.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.ListFoldersResult</code> object on success or a <code>Void</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes11shareFolderFS0_FT4pathSS12memberPolicyOCS_7Sharing12MemberPolicy15aclUpdatePolicyOS1_15AclUpdatePolicy16sharedLinkPolicyOS1_16SharedLinkPolicy10forceAsyncSb_GCS_15BabelRpcRequestCS1_27ShareFolderLaunchSerializerCS1_26ShareFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/shareFolder(path:memberPolicy:aclUpdatePolicy:sharedLinkPolicy:forceAsync:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes11shareFolderFS0_FT4pathSS12memberPolicyOCS_7Sharing12MemberPolicy15aclUpdatePolicyOS1_15AclUpdatePolicy16sharedLinkPolicyOS1_16SharedLinkPolicy10forceAsyncSb_GCS_15BabelRpcRequestCS1_27ShareFolderLaunchSerializerCS1_26ShareFolderErrorSerializer_">shareFolder(path:memberPolicy:aclUpdatePolicy:sharedLinkPolicy:forceAsync:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Share a folder with collaborators. Most sharing will be completed synchronously. Large folders will be completed
+asynchronously. To make testing the async case repeatable, set <code>ShareFolderArg.force_async</code>. If a asyncJobId in
+ShareFolderLaunch is returned, you&rsquo;ll need to call checkShareJobStatus until the action completes to get the
+metadata for the folder. Warning: This endpoint is in beta and is subject to minor but possibly
+backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">shareFolder</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">memberPolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">MemberPolicy</span> <span class="o">=</span> <span class="o">.</span><span class="kt">Anyone</span><span class="p">,</span> <span class="nv">aclUpdatePolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">AclUpdatePolicy</span> <span class="o">=</span> <span class="o">.</span><span class="kt">Owner</span><span class="p">,</span> <span class="nv">sharedLinkPolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedLinkPolicy</span> <span class="o">=</span> <span class="o">.</span><span class="kt">Anyone</span><span class="p">,</span> <span class="nv">forceAsync</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">ShareFolderLaunchSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">ShareFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>path</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The path to the folder to share. If it does not exist, then a new one is created.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memberPolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Who can be a member of this shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>aclUpdatePolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Who can add and remove members of this shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedLinkPolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The policy to apply to shared links created for content inside this shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>forceAsync</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether to force the share to happen asynchronously.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.ShareFolderLaunch</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.ShareFolderError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes18updateFolderPolicyFS0_FT14sharedFolderIdSS12memberPolicyGSqOCS_7Sharing12MemberPolicy_15aclUpdatePolicyGSqOS1_15AclUpdatePolicy_16sharedLinkPolicyGSqOS1_16SharedLinkPolicy__GCS_15BabelRpcRequestCS1_35BasicSharedFolderMetadataSerializerCS1_33UpdateFolderPolicyErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/updateFolderPolicy(sharedFolderId:memberPolicy:aclUpdatePolicy:sharedLinkPolicy:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes18updateFolderPolicyFS0_FT14sharedFolderIdSS12memberPolicyGSqOCS_7Sharing12MemberPolicy_15aclUpdatePolicyGSqOS1_15AclUpdatePolicy_16sharedLinkPolicyGSqOS1_16SharedLinkPolicy__GCS_15BabelRpcRequestCS1_35BasicSharedFolderMetadataSerializerCS1_33UpdateFolderPolicyErrorSerializer_">updateFolderPolicy(sharedFolderId:memberPolicy:aclUpdatePolicy:sharedLinkPolicy:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Update the sharing policies for a shared folder. Warning: This endpoint is in beta and is subject to minor but
+possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">updateFolderPolicy</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">memberPolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">MemberPolicy</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">aclUpdatePolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">AclUpdatePolicy</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">sharedLinkPolicy</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedLinkPolicy</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">BasicSharedFolderMetadataSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">UpdateFolderPolicyErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memberPolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Who can be a member of this shared folder. Only set this if the current user is on a team.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>aclUpdatePolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Who can add and remove members of this shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedLinkPolicy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The policy to apply to shared links created for content inside this shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.BasicSharedFolderMetadata</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.UpdateFolderPolicyError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes13unshareFolderFS0_FT14sharedFolderIdSS10leaveACopySb_GCS_15BabelRpcRequestCCS_5Async27LaunchEmptyResultSerializerCCS_7Sharing28UnshareFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/unshareFolder(sharedFolderId:leaveACopy:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes13unshareFolderFS0_FT14sharedFolderIdSS10leaveACopySb_GCS_15BabelRpcRequestCCS_5Async27LaunchEmptyResultSerializerCCS_7Sharing28UnshareFolderErrorSerializer_">unshareFolder(sharedFolderId:leaveACopy:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Allows a shared folder owner to unshare the folder. You&rsquo;ll need to call checkJobStatus to determine if the
+action has completed successfully. Warning: This endpoint is in beta and is subject to minor but possibly
+backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unshareFolder</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">leaveACopy</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Async</span><span class="o">.</span><span class="kt">LaunchEmptyResultSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">UnshareFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>leaveACopy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, members of this shared folder will get a copy of this folder after it&rsquo;s unshared. Otherwise, it will be removed from their Dropbox. The current user, who is an owner, will always retain their copy.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Async.html">Async</a>.LaunchEmptyResult</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.UnshareFolderError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes14transferFolderFS0_FT14sharedFolderIdSS11toDropboxIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing29TransferFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/transferFolder(sharedFolderId:toDropboxId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes14transferFolderFS0_FT14sharedFolderIdSS11toDropboxIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing29TransferFolderErrorSerializer_">transferFolder(sharedFolderId:toDropboxId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Transfer ownership of a shared folder to a member of the shared folder. Warning: This endpoint is in beta and is
+subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transferFolder</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">toDropboxId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">TransferFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>toDropboxId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A account or team member ID to transfer ownership to.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.TransferFolderError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes13unmountFolderFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing28UnmountFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/unmountFolder(sharedFolderId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes13unmountFolderFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing28UnmountFolderErrorSerializer_">unmountFolder(sharedFolderId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current user unmounts the designated folder. They can re-mount the folder at a later time using mountFolder.
+Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unmountFolder</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">UnmountFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.UnmountFolderError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes11mountFolderFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCCS_7Sharing35BasicSharedFolderMetadataSerializerCS2_26MountFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/mountFolder(sharedFolderId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes11mountFolderFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCCS_7Sharing35BasicSharedFolderMetadataSerializerCS2_26MountFolderErrorSerializer_">mountFolder(sharedFolderId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current user mounts the designated folder. Mount a shared folder for a user after they have been added as a
+member. Once mounted, the shared folder will appear in their <a href="../Classes/Dropbox.html">Dropbox</a>. Warning: This endpoint is in beta and is
+subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mountFolder</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">BasicSharedFolderMetadataSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">MountFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID of the shared folder to mount.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.BasicSharedFolderMetadata</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.MountFolderError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes15addFolderMemberFS0_FT14sharedFolderIdSS7membersGSaCCS_7Sharing9AddMember_5quietSb13customMessageGSqSS__GCS_15BabelRpcRequestCS_14VoidSerializerCS1_30AddFolderMemberErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/addFolderMember(sharedFolderId:members:quiet:customMessage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes15addFolderMemberFS0_FT14sharedFolderIdSS7membersGSaCCS_7Sharing9AddMember_5quietSb13customMessageGSqSS__GCS_15BabelRpcRequestCS_14VoidSerializerCS1_30AddFolderMemberErrorSerializer_">addFolderMember(sharedFolderId:members:quiet:customMessage:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another member. For the
+new member to get access to all the functionality for this folder, you will need to call mountFolder on their
+behalf. Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addFolderMember</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">members</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">AddMember</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">quiet</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">customMessage</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">AddFolderMemberErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>members</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The intended list of members to add.  Added members will receive invites to join the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>quiet</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether added members should be notified via email and device notifications of their invite.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>customMessage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional message to display to added members in their invitation.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.AddFolderMemberError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes19checkShareJobStatusFS0_FT10asyncJobIdSS_GCS_15BabelRpcRequestCCS_7Sharing30ShareFolderJobStatusSerializerCCS_5Async19PollErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/checkShareJobStatus(asyncJobId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes19checkShareJobStatusFS0_FT10asyncJobIdSS_GCS_15BabelRpcRequestCCS_7Sharing30ShareFolderJobStatusSerializerCCS_5Async19PollErrorSerializer_">checkShareJobStatus(asyncJobId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the status of an asynchronous job for sharing a folder. Warning: This endpoint is in beta and is subject
+to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">checkShareJobStatus</span><span class="p">(</span><span class="k">as</span><span class="n">yncJobId</span> <span class="k">as</span><span class="nv">yncJobId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">ShareFolderJobStatusSerializer</span><span class="p">,</span> <span class="kt">Async</span><span class="o">.</span><span class="kt">PollErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>asyncJobId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Id of the asynchronous job. This is the value of a response returned from the method that launched the job.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.ShareFolderJobStatus</code> object on success or a <code><a href="../Classes/Async.html">Async</a>.PollError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes14checkJobStatusFS0_FT10asyncJobIdSS_GCS_15BabelRpcRequestCCS_7Sharing19JobStatusSerializerCCS_5Async19PollErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/checkJobStatus(asyncJobId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes14checkJobStatusFS0_FT10asyncJobIdSS_GCS_15BabelRpcRequestCCS_7Sharing19JobStatusSerializerCCS_5Async19PollErrorSerializer_">checkJobStatus(asyncJobId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the status of an asynchronous job. Warning: This endpoint is in beta and is subject to minor but
+possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">checkJobStatus</span><span class="p">(</span><span class="k">as</span><span class="n">yncJobId</span> <span class="k">as</span><span class="nv">yncJobId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Sharing</span><span class="o">.</span><span class="kt">JobStatusSerializer</span><span class="p">,</span> <span class="kt">Async</span><span class="o">.</span><span class="kt">PollErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>asyncJobId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Id of the asynchronous job. This is the value of a response returned from the method that launched the job.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Sharing.html">Sharing</a>.JobStatus</code> object on success or a <code><a href="../Classes/Async.html">Async</a>.PollError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes18removeFolderMemberFS0_FT14sharedFolderIdSS6memberOCS_7Sharing14MemberSelector10leaveACopySb_GCS_15BabelRpcRequestCCS_5Async27LaunchEmptyResultSerializerCS1_33RemoveFolderMemberErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/removeFolderMember(sharedFolderId:member:leaveACopy:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes18removeFolderMemberFS0_FT14sharedFolderIdSS6memberOCS_7Sharing14MemberSelector10leaveACopySb_GCS_15BabelRpcRequestCCS_5Async27LaunchEmptyResultSerializerCS1_33RemoveFolderMemberErrorSerializer_">removeFolderMember(sharedFolderId:member:leaveACopy:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another member.
+Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeFolderMember</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">member</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">MemberSelector</span><span class="p">,</span> <span class="nv">leaveACopy</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Async</span><span class="o">.</span><span class="kt">LaunchEmptyResultSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">RemoveFolderMemberErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>member</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The member to remove from the folder. Only the dropboxId in MemberSelector may be set at this time.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>leaveACopy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, the removed user will keep their copy of the folder after it&rsquo;s unshared, assuming it was mounted. Otherwise, it will be removed from their Dropbox. Also, this must be set to false when kicking a group.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Async.html">Async</a>.LaunchEmptyResult</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.RemoveFolderMemberError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes18updateFolderMemberFS0_FT14sharedFolderIdSS6memberOCS_7Sharing14MemberSelector11accessLevelOS1_11AccessLevel_GCS_15BabelRpcRequestCS_14VoidSerializerCS1_33UpdateFolderMemberErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/updateFolderMember(sharedFolderId:member:accessLevel:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes18updateFolderMemberFS0_FT14sharedFolderIdSS6memberOCS_7Sharing14MemberSelector11accessLevelOS1_11AccessLevel_GCS_15BabelRpcRequestCS_14VoidSerializerCS1_33UpdateFolderMemberErrorSerializer_">updateFolderMember(sharedFolderId:member:accessLevel:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Allows an owner or editor of a shared folder to update another member&rsquo;s permissions. Warning: This endpoint is
+in beta and is subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">updateFolderMember</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">member</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">MemberSelector</span><span class="p">,</span> <span class="nv">accessLevel</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">AccessLevel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">UpdateFolderMemberErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>member</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The member of the shared folder to update.  Only the dropboxId in MemberSelector may be set at this time.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>accessLevel</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new access level for member. owner in AccessLevel is disallowed.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.UpdateFolderMemberError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC13SwiftyDropbox13SharingRoutes26relinquishFolderMembershipFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing41RelinquishFolderMembershipErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/relinquishFolderMembership(sharedFolderId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox13SharingRoutes26relinquishFolderMembershipFS0_FT14sharedFolderIdSS_GCS_15BabelRpcRequestCS_14VoidSerializerCCS_7Sharing41RelinquishFolderMembershipErrorSerializer_">relinquishFolderMembership(sharedFolderId:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The current user relinquishes their membership in the designated shared folder and will no longer have access to
+the folder.  A folder owner cannot relinquish membership in their own folder. Warning: This endpoint is in beta
+and is subject to minor but possibly backwards-incompatible changes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">relinquishFolderMembership</span><span class="p">(</span><span class="n">sharedFolderId</span> <span class="nv">sharedFolderId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">VoidSerializer</span><span class="p">,</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">RelinquishFolderMembershipErrorSerializer</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sharedFolderId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID for the shared folder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Sharing.html">Sharing</a>.RelinquishFolderMembershipError</code> object on failure.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-16)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
