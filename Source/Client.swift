@@ -182,6 +182,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
         super.init(request: request,
             responseSerializer: responseSerializer,
             errorSerializer: errorSerializer)
+        request.resume()
     }
     
     /// Called when a request completes.
@@ -243,6 +244,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
             super.init(request: request,
                        responseSerializer: responseSerializer,
                        errorSerializer: errorSerializer)
+            request.resume()
     }
 
     
@@ -305,6 +307,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
 
         super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
         _self = self
+        request.resume()
     }
     
     /// Called as the download progresses
@@ -324,11 +327,11 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     /// :returns: The request, for chaining purposes.
     public func response(completionHandler: ( (RType.ValueType, NSURL)?, CallError<EType.ValueType>?) -> Void) -> Self {
         
-        self.request.validate().response {
+        self.request.validate()
+            .response {
             (request, response, dataObj, error) -> Void in
-            let data = NSData(contentsOfURL: self.urlPath!)!
-            
             if error != nil {
+                let data = self.urlPath.flatMap { NSData(contentsOfURL: $0) }
                 completionHandler(nil, self.handleResponseError(response, data: data, error: error))
             } else {
                 let result = response!.allHeaderFields["Dropbox-Api-Result"] as! String
