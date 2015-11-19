@@ -1,6 +1,6 @@
 # SwiftyDropbox
 
-A Swift SDK for integrating with the Dropbox API v2 (preview version).
+A Swift SDK for integrating with the Dropbox API v2.
 
 ## Setup
 
