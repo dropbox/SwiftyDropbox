@@ -97,14 +97,13 @@ public class Sharing {
     }
     /**
         Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
-
-        - parameter url: URL of the shared link.
-        - parameter visibility: Who can access the link.
-        - parameter expires: Expiration time, if set. By default the link won't expire.
     */
     public class LinkMetadata: CustomStringConvertible {
+        /// URL of the shared link.
         public let url : String
+        /// Who can access the link.
         public let visibility : Sharing.Visibility
+        /// Expiration time, if set. By default the link won't expire.
         public let expires : NSDate?
         public init(url: String, visibility: Sharing.Visibility, expires: NSDate? = nil) {
             stringValidator()(value: url)
@@ -161,10 +160,9 @@ public class Sharing {
     }
     /**
         Metadata for a path-based shared link.
-
-        - parameter path: Path in user's Dropbox.
     */
     public class PathLinkMetadata: Sharing.LinkMetadata {
+        /// Path in user's Dropbox.
         public let path : String
         public init(url: String, visibility: Sharing.Visibility, path: String, expires: NSDate? = nil) {
             stringValidator()(value: path)
@@ -201,7 +199,6 @@ public class Sharing {
     }
     /**
         Metadata for a collection-based shared link.
-
     */
     public class CollectionLinkMetadata: Sharing.LinkMetadata {
         public override var description : String {
@@ -232,10 +229,9 @@ public class Sharing {
     }
     /**
         The GetSharedLinksArg struct
-
-        - parameter path: See getSharedLinks description.
     */
     public class GetSharedLinksArg: CustomStringConvertible {
+        /// See getSharedLinks description.
         public let path : String?
         public init(path: String? = nil) {
             nullableValidator(stringValidator())(value: path)
@@ -265,10 +261,9 @@ public class Sharing {
     }
     /**
         The GetSharedLinksResult struct
-
-        - parameter links: Shared links applicable to the path argument.
     */
     public class GetSharedLinksResult: CustomStringConvertible {
+        /// Shared links applicable to the path argument.
         public let links : Array<Sharing.LinkMetadata>
         public init(links: Array<Sharing.LinkMetadata>) {
             self.links = links
@@ -386,15 +381,14 @@ public class Sharing {
     }
     /**
         The CreateSharedLinkArg struct
-
-        - parameter path: The path to share.
-        - parameter shortUrl: Whether to return a shortened URL.
-        - parameter pendingUpload: If it's okay to share a path that does not yet exist, set this to either 'file' or
-        'folder' to indicate whether to assume it's a file or folder.
     */
     public class CreateSharedLinkArg: CustomStringConvertible {
+        /// The path to share.
         public let path : String
+        /// Whether to return a shortened URL.
         public let shortUrl : Bool
+        /// If it's okay to share a path that does not yet exist, set this to either 'file' or 'folder' to indicate
+        /// whether to assume it's a file or folder.
         public let pendingUpload : Sharing.PendingUploadMode?
         public init(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) {
             stringValidator()(value: path)
@@ -472,10 +466,9 @@ public class Sharing {
     }
     /**
         The RevokeSharedLinkArg struct
-
-        - parameter url: URL of the shared link.
     */
     public class RevokeSharedLinkArg: CustomStringConvertible {
+        /// URL of the shared link.
         public let url : String
         public init(url: String) {
             stringValidator()(value: url)
@@ -637,14 +630,13 @@ public class Sharing {
     }
     /**
         A set of policies governing membership and privileges for a shared folder.
-
-        - parameter memberPolicy: Who can be a member of this shared folder. Only set if the user is a member of a team.
-        - parameter aclUpdatePolicy: Who can add and remove members from this shared folder.
-        - parameter sharedLinkPolicy: Who links can be shared with.
     */
     public class FolderPolicy: CustomStringConvertible {
+        /// Who can be a member of this shared folder. Only set if the user is a member of a team.
         public let memberPolicy : Sharing.MemberPolicy?
+        /// Who can add and remove members from this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy
+        /// Who links can be shared with.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy
         public init(aclUpdatePolicy: Sharing.AclUpdatePolicy, sharedLinkPolicy: Sharing.SharedLinkPolicy, memberPolicy: Sharing.MemberPolicy? = nil) {
             self.memberPolicy = memberPolicy
@@ -845,10 +837,9 @@ public class Sharing {
     }
     /**
         The information about a member of the shared folder.
-
-        - parameter accessType: The access type for this member.
     */
     public class MembershipInfo: CustomStringConvertible {
+        /// The access type for this member.
         public let accessType : Sharing.AccessLevel
         public init(accessType: Sharing.AccessLevel) {
             self.accessType = accessType
@@ -877,14 +868,13 @@ public class Sharing {
     }
     /**
         Basic information about a user. Use usersAccount and usersAccountBatch` to obtain more detailed information.
-
-        - parameter accountId: The account ID of the user.
-        - parameter sameTeam: If the user is in the same team as current user.
-        - parameter teamMemberId: The team member ID of the shared folder member. Only present if sameTeam is true.
     */
     public class UserInfo: CustomStringConvertible {
+        /// The account ID of the user.
         public let accountId : String
+        /// If the user is in the same team as current user.
         public let sameTeam : Bool
+        /// The team member ID of the shared folder member. Only present if sameTeam is true.
         public let teamMemberId : String?
         public init(accountId: String, sameTeam: Bool, teamMemberId: String? = nil) {
             stringValidator(minLength: 40, maxLength: 40)(value: accountId)
@@ -921,10 +911,9 @@ public class Sharing {
     }
     /**
         The information about a user member of the shared folder.
-
-        - parameter user: The account information for the membership user.
     */
     public class UserMembershipInfo: Sharing.MembershipInfo {
+        /// The account information for the membership user.
         public let user : Sharing.UserInfo
         public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo) {
             self.user = user
@@ -1001,10 +990,9 @@ public class Sharing {
     }
     /**
         The information about a non-Dropbox member invited to join a shared folder.
-
-        - parameter invitee: The information for the invited user.
     */
     public class InviteeMembershipInfo: Sharing.MembershipInfo {
+        /// The information for the invited user.
         public let invitee : Sharing.InviteeInfo
         public init(accessType: Sharing.AccessLevel, invitee: Sharing.InviteeInfo) {
             self.invitee = invitee
@@ -1037,10 +1025,9 @@ public class Sharing {
     /**
         The information about a group. Groups is a way to manage a list of users  who need same access permission to the
         shared folder.
-
-        - parameter sameTeam: If the group is owned by the current user's team.
     */
     public class GroupInfo: Team.GroupSummary {
+        /// If the group is owned by the current user's team.
         public let sameTeam : Bool
         public init(groupName: String, groupId: String, memberCount: UInt32, sameTeam: Bool, groupExternalId: String? = nil) {
             self.sameTeam = sameTeam
@@ -1078,10 +1065,9 @@ public class Sharing {
     }
     /**
         The information about a group member of the shared folder.
-
-        - parameter group: The information about the membership group.
     */
     public class GroupMembershipInfo: Sharing.MembershipInfo {
+        /// The information about the membership group.
         public let group : Sharing.GroupInfo
         public init(accessType: Sharing.AccessLevel, group: Sharing.GroupInfo) {
             self.group = group
@@ -1113,20 +1099,19 @@ public class Sharing {
     }
     /**
         The base type for shared folder metadata.
-
-        - parameter pathLower: The lower-cased full path of this shared folder. Absent for unmounted folders.
-        - parameter name: The name of the this shared folder.
-        - parameter id: The ID of the shared folder.
-        - parameter accessType: The current user's access level for this shared folder.
-        - parameter isTeamFolder: Whether this folder is a team folder https://www.dropbox.com/en/help/986.
-        - parameter policy: Policies governing this shared folder.
     */
     public class SharedFolderMetadata: CustomStringConvertible {
+        /// The lower-cased full path of this shared folder. Absent for unmounted folders.
         public let pathLower : String?
+        /// The name of the this shared folder.
         public let name : String
+        /// The ID of the shared folder.
         public let id : String
+        /// The current user's access level for this shared folder.
         public let accessType : Sharing.AccessLevel
+        /// Whether this folder is a team folder https://www.dropbox.com/en/help/986.
         public let isTeamFolder : Bool
+        /// Policies governing this shared folder.
         public let policy : Sharing.FolderPolicy
         public init(name: String, id: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, pathLower: String? = nil) {
             nullableValidator(stringValidator())(value: pathLower)
@@ -1188,7 +1173,6 @@ public class Sharing {
     }
     /**
         The metadata which includes basic information about the shared folder.
-
     */
     public class BasicSharedFolderMetadata: Sharing.SharedFolderMetadata {
         public override var description : String {
@@ -1225,14 +1209,13 @@ public class Sharing {
     }
     /**
         The full metadata for the shared folder which includes user and group membership.
-
-        - parameter membership: The list of user members of the shared folder.
-        - parameter groups: The list of group members of the shared folder.
-        - parameter invitees: The list of non-Dropbox users invited to join the shared folder.
     */
     public class FullSharedFolderMetadata: Sharing.SharedFolderMetadata {
+        /// The list of user members of the shared folder.
         public let membership : Array<Sharing.UserMembershipInfo>
+        /// The list of group members of the shared folder.
         public let groups : Array<Sharing.GroupMembershipInfo>
+        /// The list of non-Dropbox users invited to join the shared folder.
         public let invitees : Array<Sharing.InviteeMembershipInfo>
         public init(name: String, id: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, membership: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, invitees: Array<Sharing.InviteeMembershipInfo>, pathLower: String? = nil) {
             self.membership = membership
@@ -1374,12 +1357,11 @@ public class Sharing {
     }
     /**
         The GetMetadataArgs struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter includeMembership: If true, user and group membership included in the response.
     */
     public class GetMetadataArgs: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// If true, user and group membership included in the response.
         public let includeMembership : Bool
         public init(sharedFolderId: String, includeMembership: Bool = true) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -1412,10 +1394,9 @@ public class Sharing {
     }
     /**
         The ListFoldersArgs struct
-
-        - parameter includeMembership: If include user and group membership information in the response.
     */
     public class ListFoldersArgs: CustomStringConvertible {
+        /// If include user and group membership information in the response.
         public let includeMembership : Bool
         public init(includeMembership: Bool = false) {
             self.includeMembership = includeMembership
@@ -1445,10 +1426,9 @@ public class Sharing {
     /**
         Result for listFolders. Unmounted shared folders can be identified by the absence of pathLower in
         SharedFolderMetadata.
-
-        - parameter entries: List of all shared folders the authenticated user has access to.
     */
     public class ListFoldersResult: CustomStringConvertible {
+        /// List of all shared folders the authenticated user has access to.
         public let entries : Array<Sharing.SharedFolderMetadata>
         public init(entries: Array<Sharing.SharedFolderMetadata>) {
             self.entries = entries
@@ -1477,18 +1457,17 @@ public class Sharing {
     }
     /**
         The ShareFolderArg struct
-
-        - parameter path: The path to the folder to share. If it does not exist, then a new one is created.
-        - parameter memberPolicy: Who can be a member of this shared folder.
-        - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
-        - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
-        - parameter forceAsync: Whether to force the share to happen asynchronously.
     */
     public class ShareFolderArg: CustomStringConvertible {
+        /// The path to the folder to share. If it does not exist, then a new one is created.
         public let path : String
+        /// Who can be a member of this shared folder.
         public let memberPolicy : Sharing.MemberPolicy
+        /// Who can add and remove members of this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy
+        /// The policy to apply to shared links created for content inside this shared folder.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy
+        /// Whether to force the share to happen asynchronously.
         public let forceAsync : Bool
         public init(path: String, memberPolicy: Sharing.MemberPolicy = .Anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .Owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .Anyone, forceAsync: Bool = false) {
             stringValidator(pattern: "/.*")(value: path)
@@ -1699,17 +1678,15 @@ public class Sharing {
     }
     /**
         If any of the policy's are unset, then they retain their current setting.
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter memberPolicy: Who can be a member of this shared folder. Only set this if the current user is on a
-        team.
-        - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
-        - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
     */
     public class UpdateFolderPolicyArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// Who can be a member of this shared folder. Only set this if the current user is on a team.
         public let memberPolicy : Sharing.MemberPolicy?
+        /// Who can add and remove members of this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy?
+        /// The policy to apply to shared links created for content inside this shared folder.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy?
         public init(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -1800,14 +1777,12 @@ public class Sharing {
     }
     /**
         The UnshareFolderArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter leaveACopy: If true, members of this shared folder will get a copy of this folder after it's
-        unshared. Otherwise, it will be removed from their Dropbox. The current user, who is an owner, will always
-        retain their copy.
     */
     public class UnshareFolderArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// If true, members of this shared folder will get a copy of this folder after it's unshared. Otherwise, it
+        /// will be removed from their Dropbox. The current user, who is an owner, will always retain their copy.
         public let leaveACopy : Bool
         public init(sharedFolderId: String, leaveACopy: Bool) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -1882,12 +1857,11 @@ public class Sharing {
     }
     /**
         The TransferFolderArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter toDropboxId: A account or team member ID to transfer ownership to.
     */
     public class TransferFolderArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// A account or team member ID to transfer ownership to.
         public let toDropboxId : String
         public init(sharedFolderId: String, toDropboxId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2007,10 +1981,9 @@ public class Sharing {
     }
     /**
         The UnmountFolderArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
     */
     public class UnmountFolderArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
         public init(sharedFolderId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2082,10 +2055,9 @@ public class Sharing {
     }
     /**
         The MountFolderArg struct
-
-        - parameter sharedFolderId: The ID of the shared folder to mount.
     */
     public class MountFolderArg: CustomStringConvertible {
+        /// The ID of the shared folder to mount.
         public let sharedFolderId : String
         public init(sharedFolderId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2187,17 +2159,15 @@ public class Sharing {
     }
     /**
         The AddFolderMemberArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter members: The intended list of members to add.  Added members will receive invites to join the shared
-        folder.
-        - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
-        - parameter customMessage: Optional message to display to added members in their invitation.
     */
     public class AddFolderMemberArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// The intended list of members to add.  Added members will receive invites to join the shared folder.
         public let members : Array<Sharing.AddMember>
+        /// Whether added members should be notified via email and device notifications of their invite.
         public let quiet : Bool
+        /// Optional message to display to added members in their invitation.
         public let customMessage : String?
         public init(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2237,13 +2207,11 @@ public class Sharing {
     }
     /**
         The member and type of access the member should have when added to a shared folder.
-
-        - parameter member: The member to add to the shared folder.
-        - parameter accessLevel: The access level to grant member to the shared folder.  owner in AccessLevel is
-        disallowed.
     */
     public class AddMember: CustomStringConvertible {
+        /// The member to add to the shared folder.
         public let member : Sharing.MemberSelector
+        /// The access level to grant member to the shared folder.  owner in AccessLevel is disallowed.
         public let accessLevel : Sharing.AccessLevel
         public init(member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel = .Viewer) {
             self.member = member
@@ -2771,17 +2739,14 @@ public class Sharing {
     }
     /**
         The RemoveFolderMemberArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter member: The member to remove from the folder. Only the dropboxId in MemberSelector may be set at
-        this time.
-        - parameter leaveACopy: If true, the removed user will keep their copy of the folder after it's unshared,
-        assuming it was mounted. Otherwise, it will be removed from their Dropbox. Also, this must be set to false when
-        kicking a group.
     */
     public class RemoveFolderMemberArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// The member to remove from the folder. Only the dropboxId in MemberSelector may be set at this time.
         public let member : Sharing.MemberSelector
+        /// If true, the removed user will keep their copy of the folder after it's unshared, assuming it was mounted.
+        /// Otherwise, it will be removed from their Dropbox. Also, this must be set to false when kicking a group.
         public let leaveACopy : Bool
         public init(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2879,15 +2844,13 @@ public class Sharing {
     }
     /**
         The UpdateFolderMemberArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
-        - parameter member: The member of the shared folder to update.  Only the dropboxId in MemberSelector may be set
-        at this time.
-        - parameter accessLevel: The new access level for member. owner in AccessLevel is disallowed.
     */
     public class UpdateFolderMemberArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
+        /// The member of the shared folder to update.  Only the dropboxId in MemberSelector may be set at this time.
         public let member : Sharing.MemberSelector
+        /// The new access level for member. owner in AccessLevel is disallowed.
         public let accessLevel : Sharing.AccessLevel
         public init(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)
@@ -2996,10 +2959,9 @@ public class Sharing {
     }
     /**
         The RelinquishFolderMembershipArg struct
-
-        - parameter sharedFolderId: The ID for the shared folder.
     */
     public class RelinquishFolderMembershipArg: CustomStringConvertible {
+        /// The ID for the shared folder.
         public let sharedFolderId : String
         public init(sharedFolderId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z]+")(value: sharedFolderId)

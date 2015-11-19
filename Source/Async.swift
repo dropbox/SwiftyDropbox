@@ -87,11 +87,9 @@ public class Async {
     }
     /**
         Arguments for methods that poll the status of an asynchronous job.
-
-        - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-        that launched the job.
     */
     public class PollArg: CustomStringConvertible {
+        /// Id of the asynchronous job. This is the value of a response returned from the method that launched the job.
         public let asyncJobId : String
         public init(asyncJobId: String) {
             stringValidator(minLength: 1)(value: asyncJobId)

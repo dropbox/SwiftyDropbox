@@ -8,10 +8,9 @@ import Foundation
 public class Users {
     /**
         The GetAccountArg struct
-
-        - parameter accountId: A user's account identifier.
     */
     public class GetAccountArg: CustomStringConvertible {
+        /// A user's account identifier.
         public let accountId : String
         public init(accountId: String) {
             stringValidator(minLength: 40, maxLength: 40)(value: accountId)
@@ -142,12 +141,11 @@ public class Users {
     }
     /**
         The amount of detail revealed about an account depends on the user being queried and the user making the query.
-
-        - parameter accountId: The user's unique Dropbox ID.
-        - parameter name: Details of a user's name.
     */
     public class Account: CustomStringConvertible {
+        /// The user's unique Dropbox ID.
         public let accountId : String
+        /// Details of a user's name.
         public let name : Users.Name
         public init(accountId: String, name: Users.Name) {
             stringValidator(minLength: 40, maxLength: 40)(value: accountId)
@@ -180,11 +178,10 @@ public class Users {
     }
     /**
         Basic information about any account.
-
-        - parameter isTeammate: Whether this user is a teammate of the current user. If this account is the current
-        user's account, then this will be true.
     */
     public class BasicAccount: Users.Account {
+        /// Whether this user is a teammate of the current user. If this account is the current user's account, then
+        /// this will be true.
         public let isTeammate : Bool
         public init(accountId: String, name: Users.Name, isTeammate: Bool) {
             self.isTeammate = isTeammate
@@ -218,25 +215,24 @@ public class Users {
     }
     /**
         Detailed information about the current user's account.
-
-        - parameter email: The user's e-mail address.
-        - parameter country: The user's two-letter country code, if available. Country codes are based on ISO 3166-1
-        http://en.wikipedia.org/wiki/ISO_3166-1.
-        - parameter locale: The language that the user specified. Locale tags will be IETF language tags
-        http://en.wikipedia.org/wiki/IETF_language_tag.
-        - parameter referralLink: The user's referral link https://www.dropbox.com/referrals.
-        - parameter team: If this account is a member of a team, information about that team.
-        - parameter isPaired: Whether the user has a personal and work account. If the current account is personal, then
-        team will always be null, but isPaired will indicate if a work account is linked.
-        - parameter accountType: What type of account this user has.
     */
     public class FullAccount: Users.Account {
+        /// The user's e-mail address.
         public let email : String
+        /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
+        /// http://en.wikipedia.org/wiki/ISO_3166-1.
         public let country : String?
+        /// The language that the user specified. Locale tags will be IETF language tags
+        /// http://en.wikipedia.org/wiki/IETF_language_tag.
         public let locale : String
+        /// The user's referral link https://www.dropbox.com/referrals.
         public let referralLink : String
+        /// If this account is a member of a team, information about that team.
         public let team : Users.Team?
+        /// Whether the user has a personal and work account. If the current account is personal, then team will always
+        /// be null, but isPaired will indicate if a work account is linked.
         public let isPaired : Bool
+        /// What type of account this user has.
         public let accountType : Users.AccountType
         public init(accountId: String, name: Users.Name, email: String, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil) {
             stringValidator()(value: email)
@@ -292,12 +288,11 @@ public class Users {
     }
     /**
         Information about a team.
-
-        - parameter id: The team's unique ID.
-        - parameter name: The name of the team.
     */
     public class Team: CustomStringConvertible {
+        /// The team's unique ID.
         public let id : String
+        /// The name of the team.
         public let name : String
         public init(id: String, name: String) {
             stringValidator()(value: id)
@@ -331,17 +326,16 @@ public class Users {
     }
     /**
         Representations for a person's name to assist with internationalization.
-
-        - parameter givenName: Also known as a first name.
-        - parameter surname: Also known as a last name or family name.
-        - parameter familiarName: Locale-dependent name. In the US, a person's familiar name is their givenName, but
-        elsewhere, it could be any combination of a person's givenName and surname.
-        - parameter displayName: A name that can be used directly to represent the name of a user's Dropbox account.
     */
     public class Name: CustomStringConvertible {
+        /// Also known as a first name.
         public let givenName : String
+        /// Also known as a last name or family name.
         public let surname : String
+        /// Locale-dependent name. In the US, a person's familiar name is their givenName, but elsewhere, it could be
+        /// any combination of a person's givenName and surname.
         public let familiarName : String
+        /// A name that can be used directly to represent the name of a user's Dropbox account.
         public let displayName : String
         public init(givenName: String, surname: String, familiarName: String, displayName: String) {
             stringValidator()(value: givenName)
@@ -383,12 +377,11 @@ public class Users {
     }
     /**
         Information about a user's space usage and quota.
-
-        - parameter used: The user's total space usage (bytes).
-        - parameter allocation: The user's space allocation.
     */
     public class SpaceUsage: CustomStringConvertible {
+        /// The user's total space usage (bytes).
         public let used : UInt64
+        /// The user's space allocation.
         public let allocation : Users.SpaceAllocation
         public init(used: UInt64, allocation: Users.SpaceAllocation) {
             comparableValidator()(value: used)
@@ -477,10 +470,9 @@ public class Users {
     }
     /**
         The IndividualSpaceAllocation struct
-
-        - parameter allocated: The total space allocated to the user's account (bytes).
     */
     public class IndividualSpaceAllocation: CustomStringConvertible {
+        /// The total space allocated to the user's account (bytes).
         public let allocated : UInt64
         public init(allocated: UInt64) {
             comparableValidator()(value: allocated)
@@ -510,12 +502,11 @@ public class Users {
     }
     /**
         The TeamSpaceAllocation struct
-
-        - parameter used: The total space currently used by the user's team (bytes).
-        - parameter allocated: The total space allocated to the user's team (bytes).
     */
     public class TeamSpaceAllocation: CustomStringConvertible {
+        /// The total space currently used by the user's team (bytes).
         public let used : UInt64
+        /// The total space allocated to the user's team (bytes).
         public let allocated : UInt64
         public init(used: UInt64, allocated: UInt64) {
             comparableValidator()(value: used)
@@ -549,10 +540,9 @@ public class Users {
     }
     /**
         The GetAccountBatchArg struct
-
-        - parameter accountIds: List of user account identifiers.  Should not contain any duplicate account IDs.
     */
     public class GetAccountBatchArg: CustomStringConvertible {
+        /// List of user account identifiers.  Should not contain any duplicate account IDs.
         public let accountIds : Array<String>
         public init(accountIds: Array<String>) {
             arrayValidator(minItems: 1, itemValidator: stringValidator(minLength: 40, maxLength: 40))(value: accountIds)

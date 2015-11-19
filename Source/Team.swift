@@ -8,16 +8,15 @@ import Foundation
 public class Team {
     /**
         Information about a group.
-
-        - parameter groupName: Undocumented
-        - parameter groupId: Undocumented
-        - parameter groupExternalId: External ID of group. This is an arbitrary ID that an admin can attach to a group.
-        - parameter memberCount: The number of members in the group.
     */
     public class GroupSummary: CustomStringConvertible {
+        /// Undocumented
         public let groupName : String
+        /// Undocumented
         public let groupId : String
+        /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
         public let groupExternalId : String?
+        /// The number of members in the group.
         public let memberCount : UInt32
         public init(groupName: String, groupId: String, memberCount: UInt32, groupExternalId: String? = nil) {
             stringValidator()(value: groupName)

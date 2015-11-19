@@ -8,12 +8,11 @@ import Foundation
 public class Files {
     /**
         Metadata for a file or folder.
-
-        - parameter name: The last component of the path (including extension). This never contains a slash.
-        - parameter pathLower: The lowercased full path in the user's Dropbox. This always starts with a slash.
     */
     public class Metadata: CustomStringConvertible {
+        /// The last component of the path (including extension). This never contains a slash.
         public let name : String
+        /// The lowercased full path in the user's Dropbox. This always starts with a slash.
         public let pathLower : String
         public init(name: String, pathLower: String) {
             stringValidator()(value: name)
@@ -73,12 +72,11 @@ public class Files {
     }
     /**
         Dimensions for a photo or video.
-
-        - parameter height: Height of the photo/video.
-        - parameter width: Width of the photo/video.
     */
     public class Dimensions: CustomStringConvertible {
+        /// Height of the photo/video.
         public let height : UInt64
+        /// Width of the photo/video.
         public let width : UInt64
         public init(height: UInt64, width: UInt64) {
             comparableValidator()(value: height)
@@ -112,12 +110,11 @@ public class Files {
     }
     /**
         GPS coordinates for a photo or video.
-
-        - parameter latitude: Latitude of the GPS coordinates.
-        - parameter longitude: Longitude of the GPS coordinates.
     */
     public class GpsCoordinates: CustomStringConvertible {
+        /// Latitude of the GPS coordinates.
         public let latitude : Double
+        /// Longitude of the GPS coordinates.
         public let longitude : Double
         public init(latitude: Double, longitude: Double) {
             comparableValidator()(value: latitude)
@@ -151,14 +148,13 @@ public class Files {
     }
     /**
         Metadata for a photo or video.
-
-        - parameter dimensions: Dimension of the photo/video.
-        - parameter location: The GPS coordinate of the photo/video.
-        - parameter timeTaken: The timestamp when the photo/video is taken.
     */
     public class MediaMetadata: CustomStringConvertible {
+        /// Dimension of the photo/video.
         public let dimensions : Files.Dimensions?
+        /// The GPS coordinate of the photo/video.
         public let location : Files.GpsCoordinates?
+        /// The timestamp when the photo/video is taken.
         public let timeTaken : NSDate?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil) {
             self.dimensions = dimensions
@@ -211,7 +207,6 @@ public class Files {
     }
     /**
         Metadata for a photo.
-
     */
     public class PhotoMetadata: Files.MediaMetadata {
         public override var description : String {
@@ -242,10 +237,9 @@ public class Files {
     }
     /**
         Metadata for a video.
-
-        - parameter duration: The duration of the video in milliseconds.
     */
     public class VideoMetadata: Files.MediaMetadata {
+        /// The duration of the video in milliseconds.
         public let duration : UInt64?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil, duration: UInt64? = nil) {
             nullableValidator(comparableValidator())(value: duration)
@@ -330,24 +324,23 @@ public class Files {
     }
     /**
         The FileMetadata struct
-
-        - parameter id: A unique identifier for the file.
-        - parameter clientModified: For files, this is the modification time set by the desktop client when the file was
-        added to Dropbox. Since this time is not verified (the Dropbox server stores whatever the desktop client sends
-        up), this should only be used for display purposes (such as sorting) and not, for example, to determine if a
-        file has changed or not.
-        - parameter serverModified: The last time the file was modified on Dropbox.
-        - parameter rev: A unique identifier for the current revision of a file. This field is the same rev as elsewhere
-        in the API and can be used to detect changes and avoid conflicts.
-        - parameter size: The file size in bytes.
-        - parameter mediaInfo: Additional information if the file is a photo or video.
     */
     public class FileMetadata: Files.Metadata {
+        /// A unique identifier for the file.
         public let id : String?
+        /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
+        /// this time is not verified (the Dropbox server stores whatever the desktop client sends up), this should only
+        /// be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
+        /// not.
         public let clientModified : NSDate
+        /// The last time the file was modified on Dropbox.
         public let serverModified : NSDate
+        /// A unique identifier for the current revision of a file. This field is the same rev as elsewhere in the API
+        /// and can be used to detect changes and avoid conflicts.
         public let rev : String
+        /// The file size in bytes.
         public let size : UInt64
+        /// Additional information if the file is a photo or video.
         public let mediaInfo : Files.MediaInfo?
         public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil, mediaInfo: Files.MediaInfo? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
@@ -399,10 +392,9 @@ public class Files {
     }
     /**
         The FolderMetadata struct
-
-        - parameter id: A unique identifier for the folder.
     */
     public class FolderMetadata: Files.Metadata {
+        /// A unique identifier for the folder.
         public let id : String?
         public init(name: String, pathLower: String, id: String? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
@@ -437,7 +429,6 @@ public class Files {
     }
     /**
         Indicates that there used to be a file or folder at this path, but it no longer exists.
-
     */
     public class DeletedMetadata: Files.Metadata {
         public override var description : String {
@@ -501,12 +492,11 @@ public class Files {
     }
     /**
         The GetMetadataArg struct
-
-        - parameter path: The path of a file or folder on Dropbox
-        - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
     */
     public class GetMetadataArg: CustomStringConvertible {
+        /// The path of a file or folder on Dropbox
         public let path : String
+        /// If true, :field:'FileMetadata.media_info' is set for photo and video.
         public let includeMediaInfo : Bool
         public init(path: String, includeMediaInfo: Bool = false) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -539,14 +529,13 @@ public class Files {
     }
     /**
         The ListFolderLongpollArg struct
-
-        - parameter cursor: A cursor as returned by listFolder or listFolderContinue
-        - parameter timeout: A timeout in seconds. The request will block for at most this length of time, plus up to 90
-        seconds of random jitter added to avoid the thundering herd problem. Care should be taken when using this
-        parameter, as some network infrastructure does not support long timeouts.
     */
     public class ListFolderLongpollArg: CustomStringConvertible {
+        /// A cursor as returned by listFolder or listFolderContinue
         public let cursor : String
+        /// A timeout in seconds. The request will block for at most this length of time, plus up to 90 seconds of
+        /// random jitter added to avoid the thundering herd problem. Care should be taken when using this parameter, as
+        /// some network infrastructure does not support long timeouts.
         public let timeout : UInt64
         public init(cursor: String, timeout: UInt64 = 30) {
             stringValidator()(value: cursor)
@@ -580,13 +569,11 @@ public class Files {
     }
     /**
         The ListFolderLongpollResult struct
-
-        - parameter changes: Indicates whether new changes are available. If true, call listFolder to retrieve the
-        changes.
-        - parameter backoff: If present, backoff for at least this many seconds before calling listFolderLongpoll again.
     */
     public class ListFolderLongpollResult: CustomStringConvertible {
+        /// Indicates whether new changes are available. If true, call listFolder to retrieve the changes.
         public let changes : Bool
+        /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
         public let backoff : UInt64?
         public init(changes: Bool, backoff: UInt64? = nil) {
             self.changes = changes
@@ -663,15 +650,14 @@ public class Files {
     }
     /**
         The ListFolderArg struct
-
-        - parameter path: The path to the folder you want to see the contents of.
-        - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
-        response will contain contents of all subfolders.
-        - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
     */
     public class ListFolderArg: CustomStringConvertible {
+        /// The path to the folder you want to see the contents of.
         public let path : String
+        /// If true, the list folder operation will be applied recursively to all subfolders and the response will
+        /// contain contents of all subfolders.
         public let recursive : Bool
+        /// If true, :field:'FileMetadata.media_info' is set for photo and video.
         public let includeMediaInfo : Bool
         public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false) {
             stringValidator(pattern: "(/.*)?")(value: path)
@@ -707,16 +693,13 @@ public class Files {
     }
     /**
         The ListFolderResult struct
-
-        - parameter entries: The files and (direct) subfolders in the folder.
-        - parameter cursor: Pass the cursor into listFolderContinue to see what's changed in the folder since your
-        previous query.
-        - parameter hasMore: If true, then there are more entries available. Pass the cursor to listFolderContinue to
-        retrieve the rest.
     */
     public class ListFolderResult: CustomStringConvertible {
+        /// The files and (direct) subfolders in the folder.
         public let entries : Array<Files.Metadata>
+        /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
         public let cursor : String
+        /// If true, then there are more entries available. Pass the cursor to listFolderContinue to retrieve the rest.
         public let hasMore : Bool
         public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
@@ -797,10 +780,9 @@ public class Files {
     }
     /**
         The ListFolderContinueArg struct
-
-        - parameter cursor: The cursor returned by your last call to listFolder or listFolderContinue.
     */
     public class ListFolderContinueArg: CustomStringConvertible {
+        /// The cursor returned by your last call to listFolder or listFolderContinue.
         public let cursor : String
         public init(cursor: String) {
             stringValidator()(value: cursor)
@@ -882,11 +864,9 @@ public class Files {
     }
     /**
         The ListFolderGetLatestCursorResult struct
-
-        - parameter cursor: Pass the cursor into listFolderContinue to see what's changed in the folder since your
-        previous query.
     */
     public class ListFolderGetLatestCursorResult: CustomStringConvertible {
+        /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
         public let cursor : String
         public init(cursor: String) {
             stringValidator()(value: cursor)
@@ -961,12 +941,11 @@ public class Files {
     }
     /**
         The DownloadArg struct
-
-        - parameter path: The path of the file to download.
-        - parameter rev: Deprecated. Please specify revision in :field:'path' instead
     */
     public class DownloadArg: CustomStringConvertible {
+        /// The path of the file to download.
         public let path : String
+        /// Deprecated. Please specify revision in :field:'path' instead
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -1000,12 +979,11 @@ public class Files {
     }
     /**
         The UploadWriteFailed struct
-
-        - parameter reason: The reason why the file couldn't be saved.
-        - parameter uploadSessionId: The upload session ID; this may be used to retry the commit.
     */
     public class UploadWriteFailed: CustomStringConvertible {
+        /// The reason why the file couldn't be saved.
         public let reason : Files.WriteError
+        /// The upload session ID; this may be used to retry the commit.
         public let uploadSessionId : String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
@@ -1086,10 +1064,9 @@ public class Files {
     }
     /**
         The UploadSessionOffsetError struct
-
-        - parameter correctOffset: The offset up to which data has been collected.
     */
     public class UploadSessionOffsetError: CustomStringConvertible {
+        /// The offset up to which data has been collected.
         public let correctOffset : UInt64
         public init(correctOffset: UInt64) {
             comparableValidator()(value: correctOffset)
@@ -1248,11 +1225,9 @@ public class Files {
     }
     /**
         The UploadSessionStartResult struct
-
-        - parameter sessionId: A unique identifier for the upload session. Pass this to uploadSessionAppend and
-        uploadSessionFinish.
     */
     public class UploadSessionStartResult: CustomStringConvertible {
+        /// A unique identifier for the upload session. Pass this to uploadSessionAppend and uploadSessionFinish.
         public let sessionId : String
         public init(sessionId: String) {
             stringValidator()(value: sessionId)
@@ -1282,13 +1257,12 @@ public class Files {
     }
     /**
         The UploadSessionCursor struct
-
-        - parameter sessionId: The upload session ID (returned by uploadSessionStart).
-        - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
-        lost or duplicated in the event of a network error.
     */
     public class UploadSessionCursor: CustomStringConvertible {
+        /// The upload session ID (returned by uploadSessionStart).
         public let sessionId : String
+        /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
+        /// duplicated in the event of a network error.
         public let offset : UInt64
         public init(sessionId: String, offset: UInt64) {
             stringValidator()(value: sessionId)
@@ -1388,24 +1362,22 @@ public class Files {
     }
     /**
         The CommitInfo struct
-
-        - parameter path: Path in the user's Dropbox to save the file.
-        - parameter mode: Selects what to do if the file already exists.
-        - parameter autorename: If there's a conflict, as determined by mode, have the Dropbox server try to autorename
-        the file to avoid conflict.
-        - parameter clientModified: The value to store as the clientModified timestamp. Dropbox automatically records
-        the time at which the file was written to the Dropbox servers. It can also record an additional timestamp,
-        provided by Dropbox desktop clients, mobile clients, and API apps of when the file was actually created or
-        modified.
-        - parameter mute: Normally, users are made aware of any file modifications in their Dropbox account via
-        notifications in the client software. If true, this tells the clients that this modification shouldn't result in
-        a user notification.
     */
     public class CommitInfo: CustomStringConvertible {
+        /// Path in the user's Dropbox to save the file.
         public let path : String
+        /// Selects what to do if the file already exists.
         public let mode : Files.WriteMode
+        /// If there's a conflict, as determined by mode, have the Dropbox server try to autorename the file to avoid
+        /// conflict.
         public let autorename : Bool
+        /// The value to store as the clientModified timestamp. Dropbox automatically records the time at which the file
+        /// was written to the Dropbox servers. It can also record an additional timestamp, provided by Dropbox desktop
+        /// clients, mobile clients, and API apps of when the file was actually created or modified.
         public let clientModified : NSDate?
+        /// Normally, users are made aware of any file modifications in their Dropbox account via notifications in the
+        /// client software. If true, this tells the clients that this modification shouldn't result in a user
+        /// notification.
         public let mute : Bool
         public init(path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false) {
             stringValidator(pattern: "/.*")(value: path)
@@ -1447,12 +1419,11 @@ public class Files {
     }
     /**
         The UploadSessionFinishArg struct
-
-        - parameter cursor: Contains the upload session ID and the offset.
-        - parameter commit: Contains the path and other optional modifiers for the commit.
     */
     public class UploadSessionFinishArg: CustomStringConvertible {
+        /// Contains the upload session ID and the offset.
         public let cursor : Files.UploadSessionCursor
+        /// Contains the path and other optional modifiers for the commit.
         public let commit : Files.CommitInfo
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
             self.cursor = cursor
@@ -1541,20 +1512,19 @@ public class Files {
     }
     /**
         The SearchArg struct
-
-        - parameter path: The path in the user's Dropbox to search. Should probably be a folder.
-        - parameter query: The string to search for. The search string is split on spaces into multiple tokens. For file
-        name searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
-        car").
-        - parameter start: The starting index within the search results (used for paging).
-        - parameter maxResults: The maximum number of search results to return.
-        - parameter mode: The search mode (filename, filename_and_content, or deleted_filename).
     */
     public class SearchArg: CustomStringConvertible {
+        /// The path in the user's Dropbox to search. Should probably be a folder.
         public let path : String
+        /// The string to search for. The search string is split on spaces into multiple tokens. For file name
+        /// searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
+        /// car").
         public let query : String
+        /// The starting index within the search results (used for paging).
         public let start : UInt64
+        /// The maximum number of search results to return.
         public let maxResults : UInt64
+        /// The search mode (filename, filename_and_content, or deleted_filename).
         public let mode : Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) {
             stringValidator(pattern: "(/.*)?")(value: path)
@@ -1656,12 +1626,11 @@ public class Files {
     }
     /**
         The SearchMatch struct
-
-        - parameter matchType: The type of the match.
-        - parameter metadata: The metadata for the matched file or folder.
     */
     public class SearchMatch: CustomStringConvertible {
+        /// The type of the match.
         public let matchType : Files.SearchMatchType
+        /// The metadata for the matched file or folder.
         public let metadata : Files.Metadata
         public init(matchType: Files.SearchMatchType, metadata: Files.Metadata) {
             self.matchType = matchType
@@ -1693,16 +1662,14 @@ public class Files {
     }
     /**
         The SearchResult struct
-
-        - parameter matches: A list (possibly empty) of matches for the query.
-        - parameter more: Used for paging. If true, indicates there is another page of results available that can be
-        fetched by calling search again.
-        - parameter start: Used for paging. Value to set the start argument to when calling search to fetch the next
-        page of results.
     */
     public class SearchResult: CustomStringConvertible {
+        /// A list (possibly empty) of matches for the query.
         public let matches : Array<Files.SearchMatch>
+        /// Used for paging. If true, indicates there is another page of results available that can be fetched by
+        /// calling search again.
         public let more : Bool
+        /// Used for paging. Value to set the start argument to when calling search to fetch the next page of results.
         public let start : UInt64
         public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64) {
             self.matches = matches
@@ -2013,10 +1980,9 @@ public class Files {
     }
     /**
         The CreateFolderArg struct
-
-        - parameter path: Path in the user's Dropbox to create.
     */
     public class CreateFolderArg: CustomStringConvertible {
+        /// Path in the user's Dropbox to create.
         public let path : String
         public init(path: String) {
             stringValidator(pattern: "/.*")(value: path)
@@ -2081,10 +2047,9 @@ public class Files {
     }
     /**
         The DeleteArg struct
-
-        - parameter path: Path in the user's Dropbox to delete.
     */
     public class DeleteArg: CustomStringConvertible {
+        /// Path in the user's Dropbox to delete.
         public let path : String
         public init(path: String) {
             stringValidator(pattern: "/.*")(value: path)
@@ -2164,12 +2129,11 @@ public class Files {
     }
     /**
         The RelocationArg struct
-
-        - parameter fromPath: Path in the user's Dropbox to be copied or moved.
-        - parameter toPath: Path in the user's Dropbox that is the destination.
     */
     public class RelocationArg: CustomStringConvertible {
+        /// Path in the user's Dropbox to be copied or moved.
         public let fromPath : String
+        /// Path in the user's Dropbox that is the destination.
         public let toPath : String
         public init(fromPath: String, toPath: String) {
             stringValidator(pattern: "/.*")(value: fromPath)
@@ -2412,15 +2376,14 @@ public class Files {
     }
     /**
         The ThumbnailArg struct
-
-        - parameter path: The path to the image file you want to thumbnail.
-        - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-        should be preferred, while png is  better for screenshots and digital arts.
-        - parameter size: The size for the thumbnail image.
     */
     public class ThumbnailArg: CustomStringConvertible {
+        /// The path to the image file you want to thumbnail.
         public let path : String
+        /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
+        /// preferred, while png is  better for screenshots and digital arts.
         public let format : Files.ThumbnailFormat
+        /// The size for the thumbnail image.
         public let size : Files.ThumbnailSize
         public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -2524,12 +2487,11 @@ public class Files {
     }
     /**
         The PreviewArg struct
-
-        - parameter path: The path of the file to preview.
-        - parameter rev: Deprecated. Please specify revision in :field:'path' instead
     */
     public class PreviewArg: CustomStringConvertible {
+        /// The path of the file to preview.
         public let path : String
+        /// Deprecated. Please specify revision in :field:'path' instead
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -2631,12 +2593,11 @@ public class Files {
     }
     /**
         The ListRevisionsArg struct
-
-        - parameter path: The path to the file you want to see the revisions of.
-        - parameter limit: The maximum number of revision entries returned.
     */
     public class ListRevisionsArg: CustomStringConvertible {
+        /// The path to the file you want to see the revisions of.
         public let path : String
+        /// The maximum number of revision entries returned.
         public let limit : UInt64
         public init(path: String, limit: UInt64 = 10) {
             stringValidator(pattern: "/.*")(value: path)
@@ -2712,12 +2673,11 @@ public class Files {
     }
     /**
         The ListRevisionsResult struct
-
-        - parameter isDeleted: If the file is deleted.
-        - parameter entries: The revisions for the file. Only non-delete revisions will show up here.
     */
     public class ListRevisionsResult: CustomStringConvertible {
+        /// If the file is deleted.
         public let isDeleted : Bool
+        /// The revisions for the file. Only non-delete revisions will show up here.
         public let entries : Array<Files.FileMetadata>
         public init(isDeleted: Bool, entries: Array<Files.FileMetadata>) {
             self.isDeleted = isDeleted
@@ -2749,12 +2709,11 @@ public class Files {
     }
     /**
         The RestoreArg struct
-
-        - parameter path: The path to the file you want to restore.
-        - parameter rev: The revision to restore for the file.
     */
     public class RestoreArg: CustomStringConvertible {
+        /// The path to the file you want to restore.
         public let path : String
+        /// The revision to restore for the file.
         public let rev : String
         public init(path: String, rev: String) {
             stringValidator(pattern: "/.*")(value: path)
