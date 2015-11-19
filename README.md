@@ -22,7 +22,7 @@ pod setup
   platform :ios, '8.0'
   use_frameworks!
 
-  pod 'SwiftyDropbox', :git => 'git@github.com:dropbox/SwiftyDropbox.git', :tag => '0.8'
+  pod 'SwiftyDropbox', :git => 'git@github.com:dropbox/SwiftyDropbox.git', :tag => '1.0'
 ```
 1. From the project directory, install the SwiftyDropbox SDK with:
 ```
