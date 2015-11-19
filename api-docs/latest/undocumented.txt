@@ -3,7 +3,6 @@ Async.swift
 	public class LaunchResultBaseSerializer: JSONSerializer
 	public var description : String
 	public class LaunchEmptyResultSerializer: JSONSerializer
-	public let asyncJobId : String
 	public init(asyncJobId: String)
 	public var description : String
 	public class PollArgSerializer: JSONSerializer
@@ -23,45 +22,28 @@ DropboxClient.swift
 	public convenience init(accessToken: DropboxAccessToken)
 	public init(accessToken: DropboxAccessToken, manager: Manager, baseHosts: [String : String])
 Files.swift
-	public let name : String
-	public let pathLower : String
 	public init(name: String, pathLower: String)
 	public var description : String
 	public class MetadataSerializer: JSONSerializer
-	public let height : UInt64
-	public let width : UInt64
 	public init(height: UInt64, width: UInt64)
 	public var description : String
 	public class DimensionsSerializer: JSONSerializer
-	public let latitude : Double
-	public let longitude : Double
 	public init(latitude: Double, longitude: Double)
 	public var description : String
 	public class GpsCoordinatesSerializer: JSONSerializer
-	public let dimensions : Files.Dimensions?
-	public let location : Files.GpsCoordinates?
-	public let timeTaken : NSDate?
 	public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil)
 	public var description : String
 	public class MediaMetadataSerializer: JSONSerializer
 	public override var description : String
 	public class PhotoMetadataSerializer: JSONSerializer
-	public let duration : UInt64?
 	public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil, duration: UInt64? = nil)
 	public override var description : String
 	public class VideoMetadataSerializer: JSONSerializer
 	public var description : String
 	public class MediaInfoSerializer: JSONSerializer
-	public let id : String?
-	public let clientModified : NSDate
-	public let serverModified : NSDate
-	public let rev : String
-	public let size : UInt64
-	public let mediaInfo : Files.MediaInfo?
 	public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil, mediaInfo: Files.MediaInfo? = nil)
 	public override var description : String
 	public class FileMetadataSerializer: JSONSerializer
-	public let id : String?
 	public init(name: String, pathLower: String, id: String? = nil)
 	public override var description : String
 	public class FolderMetadataSerializer: JSONSerializer
@@ -70,40 +52,27 @@ Files.swift
 	case Path(Files.LookupError)
 	public var description : String
 	public class GetMetadataErrorSerializer: JSONSerializer
-	public let path : String
-	public let includeMediaInfo : Bool
 	public init(path: String, includeMediaInfo: Bool = false)
 	public var description : String
 	public class GetMetadataArgSerializer: JSONSerializer
-	public let cursor : String
-	public let timeout : UInt64
 	public init(cursor: String, timeout: UInt64 = 30)
 	public var description : String
 	public class ListFolderLongpollArgSerializer: JSONSerializer
-	public let changes : Bool
-	public let backoff : UInt64?
 	public init(changes: Bool, backoff: UInt64? = nil)
 	public var description : String
 	public class ListFolderLongpollResultSerializer: JSONSerializer
 	case Other
 	public var description : String
 	public class ListFolderLongpollErrorSerializer: JSONSerializer
-	public let path : String
-	public let recursive : Bool
-	public let includeMediaInfo : Bool
 	public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false)
 	public var description : String
 	public class ListFolderArgSerializer: JSONSerializer
-	public let entries : Array<Files.Metadata>
-	public let cursor : String
-	public let hasMore : Bool
 	public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool)
 	public var description : String
 	public class ListFolderResultSerializer: JSONSerializer
 	case Path(Files.LookupError)
 	public var description : String
 	public class ListFolderErrorSerializer: JSONSerializer
-	public let cursor : String
 	public init(cursor: String)
 	public var description : String
 	public class ListFolderContinueArgSerializer: JSONSerializer
@@ -111,26 +80,20 @@ Files.swift
 	case Other
 	public var description : String
 	public class ListFolderContinueErrorSerializer: JSONSerializer
-	public let cursor : String
 	public init(cursor: String)
 	public var description : String
 	public class ListFolderGetLatestCursorResultSerializer: JSONSerializer
 	case Path(Files.LookupError)
 	public var description : String
 	public class DownloadErrorSerializer: JSONSerializer
-	public let path : String
-	public let rev : String?
 	public init(path: String, rev: String? = nil)
 	public var description : String
 	public class DownloadArgSerializer: JSONSerializer
-	public let reason : Files.WriteError
-	public let uploadSessionId : String
 	public init(reason: Files.WriteError, uploadSessionId: String)
 	public var description : String
 	public class UploadWriteFailedSerializer: JSONSerializer
 	public var description : String
 	public class UploadErrorSerializer: JSONSerializer
-	public let correctOffset : UInt64
 	public init(correctOffset: UInt64)
 	public var description : String
 	public class UploadSessionOffsetErrorSerializer: JSONSerializer
@@ -138,50 +101,30 @@ Files.swift
 	public class UploadSessionLookupErrorSerializer: JSONSerializer
 	public var description : String
 	public class UploadSessionFinishErrorSerializer: JSONSerializer
-	public let sessionId : String
 	public init(sessionId: String)
 	public var description : String
 	public class UploadSessionStartResultSerializer: JSONSerializer
-	public let sessionId : String
-	public let offset : UInt64
 	public init(sessionId: String, offset: UInt64)
 	public var description : String
 	public class UploadSessionCursorSerializer: JSONSerializer
 	public var description : String
 	public class WriteModeSerializer: JSONSerializer
-	public let path : String
-	public let mode : Files.WriteMode
-	public let autorename : Bool
-	public let clientModified : NSDate?
-	public let mute : Bool
 	public init(path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false)
 	public var description : String
 	public class CommitInfoSerializer: JSONSerializer
-	public let cursor : Files.UploadSessionCursor
-	public let commit : Files.CommitInfo
 	public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo)
 	public var description : String
 	public class UploadSessionFinishArgSerializer: JSONSerializer
 	public var description : String
 	public class SearchModeSerializer: JSONSerializer
-	public let path : String
-	public let query : String
-	public let start : UInt64
-	public let maxResults : UInt64
-	public let mode : Files.SearchMode
 	public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename)
 	public var description : String
 	public class SearchArgSerializer: JSONSerializer
 	public var description : String
 	public class SearchMatchTypeSerializer: JSONSerializer
-	public let matchType : Files.SearchMatchType
-	public let metadata : Files.Metadata
 	public init(matchType: Files.SearchMatchType, metadata: Files.Metadata)
 	public var description : String
 	public class SearchMatchSerializer: JSONSerializer
-	public let matches : Array<Files.SearchMatch>
-	public let more : Bool
-	public let start : UInt64
 	public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64)
 	public var description : String
 	public class SearchResultSerializer: JSONSerializer
@@ -199,14 +142,12 @@ Files.swift
 	case Other
 	public var description : String
 	public class WriteConflictErrorSerializer: JSONSerializer
-	public let path : String
 	public init(path: String)
 	public var description : String
 	public class CreateFolderArgSerializer: JSONSerializer
 	case Path(Files.WriteError)
 	public var description : String
 	public class CreateFolderErrorSerializer: JSONSerializer
-	public let path : String
 	public init(path: String)
 	public var description : String
 	public class DeleteArgSerializer: JSONSerializer
@@ -215,8 +156,6 @@ Files.swift
 	case Other
 	public var description : String
 	public class DeleteErrorSerializer: JSONSerializer
-	public let fromPath : String
-	public let toPath : String
 	public init(fromPath: String, toPath: String)
 	public var description : String
 	public class RelocationArgSerializer: JSONSerializer
@@ -231,23 +170,16 @@ Files.swift
 	case Png
 	public var description : String
 	public class ThumbnailFormatSerializer: JSONSerializer
-	public let path : String
-	public let format : Files.ThumbnailFormat
-	public let size : Files.ThumbnailSize
 	public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64)
 	public var description : String
 	public class ThumbnailArgSerializer: JSONSerializer
 	public var description : String
 	public class ThumbnailErrorSerializer: JSONSerializer
-	public let path : String
-	public let rev : String?
 	public init(path: String, rev: String? = nil)
 	public var description : String
 	public class PreviewArgSerializer: JSONSerializer
 	public var description : String
 	public class PreviewErrorSerializer: JSONSerializer
-	public let path : String
-	public let limit : UInt64
 	public init(path: String, limit: UInt64 = 10)
 	public var description : String
 	public class ListRevisionsArgSerializer: JSONSerializer
@@ -255,13 +187,9 @@ Files.swift
 	case Other
 	public var description : String
 	public class ListRevisionsErrorSerializer: JSONSerializer
-	public let isDeleted : Bool
-	public let entries : Array<Files.FileMetadata>
 	public init(isDeleted: Bool, entries: Array<Files.FileMetadata>)
 	public var description : String
 	public class ListRevisionsResultSerializer: JSONSerializer
-	public let path : String
-	public let rev : String
 	public init(path: String, rev: String)
 	public var description : String
 	public class RestoreArgSerializer: JSONSerializer
@@ -273,23 +201,17 @@ FilesRoutes.swift
 Sharing.swift
 	public var description : String
 	public class VisibilitySerializer: JSONSerializer
-	public let url : String
-	public let visibility : Sharing.Visibility
-	public let expires : NSDate?
 	public init(url: String, visibility: Sharing.Visibility, expires: NSDate? = nil)
 	public var description : String
 	public class LinkMetadataSerializer: JSONSerializer
-	public let path : String
 	public init(url: String, visibility: Sharing.Visibility, path: String, expires: NSDate? = nil)
 	public override var description : String
 	public class PathLinkMetadataSerializer: JSONSerializer
 	public override var description : String
 	public class CollectionLinkMetadataSerializer: JSONSerializer
-	public let path : String?
 	public init(path: String? = nil)
 	public var description : String
 	public class GetSharedLinksArgSerializer: JSONSerializer
-	public let links : Array<Sharing.LinkMetadata>
 	public init(links: Array<Sharing.LinkMetadata>)
 	public var description : String
 	public class GetSharedLinksResultSerializer: JSONSerializer
@@ -299,9 +221,6 @@ Sharing.swift
 	public class GetSharedLinksErrorSerializer: JSONSerializer
 	public var description : String
 	public class PendingUploadModeSerializer: JSONSerializer
-	public let path : String
-	public let shortUrl : Bool
-	public let pendingUpload : Sharing.PendingUploadMode?
 	public init(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil)
 	public var description : String
 	public class CreateSharedLinkArgSerializer: JSONSerializer
@@ -309,7 +228,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class CreateSharedLinkErrorSerializer: JSONSerializer
-	public let url : String
 	public init(url: String)
 	public var description : String
 	public class RevokeSharedLinkArgSerializer: JSONSerializer
@@ -318,9 +236,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class AccessLevelSerializer: JSONSerializer
-	public let memberPolicy : Sharing.MemberPolicy?
-	public let aclUpdatePolicy : Sharing.AclUpdatePolicy
-	public let sharedLinkPolicy : Sharing.SharedLinkPolicy
 	public init(aclUpdatePolicy: Sharing.AclUpdatePolicy, sharedLinkPolicy: Sharing.SharedLinkPolicy, memberPolicy: Sharing.MemberPolicy? = nil)
 	public var description : String
 	public class FolderPolicySerializer: JSONSerializer
@@ -332,73 +247,47 @@ Sharing.swift
 	public class AclUpdatePolicySerializer: JSONSerializer
 	public var description : String
 	public class SharedLinkPolicySerializer: JSONSerializer
-	public let accessType : Sharing.AccessLevel
 	public init(accessType: Sharing.AccessLevel)
 	public var description : String
 	public class MembershipInfoSerializer: JSONSerializer
-	public let accountId : String
-	public let sameTeam : Bool
-	public let teamMemberId : String?
 	public init(accountId: String, sameTeam: Bool, teamMemberId: String? = nil)
 	public var description : String
 	public class UserInfoSerializer: JSONSerializer
-	public let user : Sharing.UserInfo
 	public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo)
 	public override var description : String
 	public class UserMembershipInfoSerializer: JSONSerializer
 	case Other
 	public var description : String
 	public class InviteeInfoSerializer: JSONSerializer
-	public let invitee : Sharing.InviteeInfo
 	public init(accessType: Sharing.AccessLevel, invitee: Sharing.InviteeInfo)
 	public override var description : String
 	public class InviteeMembershipInfoSerializer: JSONSerializer
-	public let sameTeam : Bool
 	public init(groupName: String, groupId: String, memberCount: UInt32, sameTeam: Bool, groupExternalId: String? = nil)
 	public override var description : String
 	public class GroupInfoSerializer: JSONSerializer
-	public let group : Sharing.GroupInfo
 	public init(accessType: Sharing.AccessLevel, group: Sharing.GroupInfo)
 	public override var description : String
 	public class GroupMembershipInfoSerializer: JSONSerializer
-	public let pathLower : String?
-	public let name : String
-	public let id : String
-	public let accessType : Sharing.AccessLevel
-	public let isTeamFolder : Bool
-	public let policy : Sharing.FolderPolicy
 	public init(name: String, id: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, pathLower: String? = nil)
 	public var description : String
 	public class SharedFolderMetadataSerializer: JSONSerializer
 	public override var description : String
 	public class BasicSharedFolderMetadataSerializer: JSONSerializer
-	public let membership : Array<Sharing.UserMembershipInfo>
-	public let groups : Array<Sharing.GroupMembershipInfo>
-	public let invitees : Array<Sharing.InviteeMembershipInfo>
 	public init(name: String, id: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, membership: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, invitees: Array<Sharing.InviteeMembershipInfo>, pathLower: String? = nil)
 	public override var description : String
 	public class FullSharedFolderMetadataSerializer: JSONSerializer
 	case Other
 	public var description : String
 	public class SharedFolderAccessErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let includeMembership : Bool
 	public init(sharedFolderId: String, includeMembership: Bool = true)
 	public var description : String
 	public class GetMetadataArgsSerializer: JSONSerializer
-	public let includeMembership : Bool
 	public init(includeMembership: Bool = false)
 	public var description : String
 	public class ListFoldersArgsSerializer: JSONSerializer
-	public let entries : Array<Sharing.SharedFolderMetadata>
 	public init(entries: Array<Sharing.SharedFolderMetadata>)
 	public var description : String
 	public class ListFoldersResultSerializer: JSONSerializer
-	public let path : String
-	public let memberPolicy : Sharing.MemberPolicy
-	public let aclUpdatePolicy : Sharing.AclUpdatePolicy
-	public let sharedLinkPolicy : Sharing.SharedLinkPolicy
-	public let forceAsync : Bool
 	public init(path: String, memberPolicy: Sharing.MemberPolicy = .Anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .Owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .Anyone, forceAsync: Bool = false)
 	public var description : String
 	public class ShareFolderArgSerializer: JSONSerializer
@@ -408,10 +297,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class SharePathErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let memberPolicy : Sharing.MemberPolicy?
-	public let aclUpdatePolicy : Sharing.AclUpdatePolicy?
-	public let sharedLinkPolicy : Sharing.SharedLinkPolicy?
 	public init(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil)
 	public var description : String
 	public class UpdateFolderPolicyArgSerializer: JSONSerializer
@@ -419,8 +304,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class UpdateFolderPolicyErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let leaveACopy : Bool
 	public init(sharedFolderId: String, leaveACopy: Bool)
 	public var description : String
 	public class UnshareFolderArgSerializer: JSONSerializer
@@ -428,8 +311,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class UnshareFolderErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let toDropboxId : String
 	public init(sharedFolderId: String, toDropboxId: String)
 	public var description : String
 	public class TransferFolderArgSerializer: JSONSerializer
@@ -439,7 +320,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class TransferFolderErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
 	public init(sharedFolderId: String)
 	public var description : String
 	public class UnmountFolderArgSerializer: JSONSerializer
@@ -447,7 +327,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class UnmountFolderErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
 	public init(sharedFolderId: String)
 	public var description : String
 	public class MountFolderArgSerializer: JSONSerializer
@@ -455,15 +334,9 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class MountFolderErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let members : Array<Sharing.AddMember>
-	public let quiet : Bool
-	public let customMessage : String?
 	public init(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil)
 	public var description : String
 	public class AddFolderMemberArgSerializer: JSONSerializer
-	public let member : Sharing.MemberSelector
-	public let accessLevel : Sharing.AccessLevel
 	public init(member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel = .Viewer)
 	public var description : String
 	public class AddMemberSerializer: JSONSerializer
@@ -492,9 +365,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class JobErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let member : Sharing.MemberSelector
-	public let leaveACopy : Bool
 	public init(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool)
 	public var description : String
 	public class RemoveFolderMemberArgSerializer: JSONSerializer
@@ -502,9 +372,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class RemoveFolderMemberErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
-	public let member : Sharing.MemberSelector
-	public let accessLevel : Sharing.AccessLevel
 	public init(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel)
 	public var description : String
 	public class UpdateFolderMemberArgSerializer: JSONSerializer
@@ -512,7 +379,6 @@ Sharing.swift
 	case Other
 	public var description : String
 	public class UpdateFolderMemberErrorSerializer: JSONSerializer
-	public let sharedFolderId : String
 	public init(sharedFolderId: String)
 	public var description : String
 	public class RelinquishFolderMembershipArgSerializer: JSONSerializer
@@ -523,15 +389,10 @@ Sharing.swift
 SharingRoutes.swift
 	public let client : BabelClient
 Team.swift
-	public let groupName : String
-	public let groupId : String
-	public let groupExternalId : String?
-	public let memberCount : UInt32
 	public init(groupName: String, groupId: String, memberCount: UInt32, groupExternalId: String? = nil)
 	public var description : String
 	public class GroupSummarySerializer: JSONSerializer
 Users.swift
-	public let accountId : String
 	public init(accountId: String)
 	public var description : String
 	public class GetAccountArgSerializer: JSONSerializer
@@ -540,55 +401,33 @@ Users.swift
 	public class GetAccountErrorSerializer: JSONSerializer
 	public var description : String
 	public class AccountTypeSerializer: JSONSerializer
-	public let accountId : String
-	public let name : Users.Name
 	public init(accountId: String, name: Users.Name)
 	public var description : String
 	public class AccountSerializer: JSONSerializer
-	public let isTeammate : Bool
 	public init(accountId: String, name: Users.Name, isTeammate: Bool)
 	public override var description : String
 	public class BasicAccountSerializer: JSONSerializer
-	public let email : String
-	public let country : String?
-	public let locale : String
-	public let referralLink : String
-	public let team : Users.Team?
-	public let isPaired : Bool
-	public let accountType : Users.AccountType
 	public init(accountId: String, name: Users.Name, email: String, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil)
 	public override var description : String
 	public class FullAccountSerializer: JSONSerializer
-	public let id : String
-	public let name : String
 	public init(id: String, name: String)
 	public var description : String
 	public class TeamSerializer: JSONSerializer
-	public let givenName : String
-	public let surname : String
-	public let familiarName : String
-	public let displayName : String
 	public init(givenName: String, surname: String, familiarName: String, displayName: String)
 	public var description : String
 	public class NameSerializer: JSONSerializer
-	public let used : UInt64
-	public let allocation : Users.SpaceAllocation
 	public init(used: UInt64, allocation: Users.SpaceAllocation)
 	public var description : String
 	public class SpaceUsageSerializer: JSONSerializer
 	case Other
 	public var description : String
 	public class SpaceAllocationSerializer: JSONSerializer
-	public let allocated : UInt64
 	public init(allocated: UInt64)
 	public var description : String
 	public class IndividualSpaceAllocationSerializer: JSONSerializer
-	public let used : UInt64
-	public let allocated : UInt64
 	public init(used: UInt64, allocated: UInt64)
 	public var description : String
 	public class TeamSpaceAllocationSerializer: JSONSerializer
-	public let accountIds : Array<String>
 	public init(accountIds: Array<String>)
 	public var description : String
 	public class GetAccountBatchArgSerializer: JSONSerializer

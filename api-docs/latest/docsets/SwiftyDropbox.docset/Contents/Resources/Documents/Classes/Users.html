@@ -121,6 +121,7 @@
                       <div class="abstract">
                         <p>The GetAccountArg struct</p>
 
+                        <a href="../Classes/Users/GetAccountArg.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -129,26 +130,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GetAccountArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>accountId</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>A user&rsquo;s account identifier.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -224,6 +205,7 @@
                       <div class="abstract">
                         <p>The amount of detail revealed about an account depends on the user being queried and the user making the query.</p>
 
+                        <a href="../Classes/Users/Account.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -232,39 +214,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Account</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>accountId</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s unique Dropbox ID.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Details of a user&rsquo;s name.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -284,6 +233,7 @@
                       <div class="abstract">
                         <p>Basic information about any account.</p>
 
+                        <a href="../Classes/Users/BasicAccount.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -292,26 +242,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">BasicAccount</span><span class="p">:</span> <span class="kt">Users</span><span class="o">.</span><span class="kt">Account</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isTeammate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Whether this user is a teammate of the current user. If this account is the current user&rsquo;s account, then this will be true.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -331,6 +261,7 @@
                       <div class="abstract">
                         <p>Detailed information about the current user&rsquo;s account.</p>
 
+                        <a href="../Classes/Users/FullAccount.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -339,104 +270,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">FullAccount</span><span class="p">:</span> <span class="kt">Users</span><span class="o">.</span><span class="kt">Account</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>email</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s e-mail address.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>country</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s two-letter country code, if available. Country codes are based on ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1">http://en.wikipedia.org/wiki/ISO_3166-1</a>.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>locale</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The language that the user specified. Locale tags will be IETF language tags <a href="http://en.wikipedia.org/wiki/IETF_language_tag">http://en.wikipedia.org/wiki/IETF_language_tag</a>.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>referralLink</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s referral link <a href="https://www.dropbox.com/referrals">https://www.dropbox.com/referrals</a>.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>team</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>If this account is a member of a team, information about that team.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isPaired</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Whether the user has a personal and work account. If the current account is personal, then team will always be null, but isPaired will indicate if a work account is linked.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>accountType</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>What type of account this user has.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -456,6 +289,7 @@
                       <div class="abstract">
                         <p>Information about a team.</p>
 
+                        <a href="../Classes/Users/Team.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -464,39 +298,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Team</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>id</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The team&rsquo;s unique ID.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The name of the team.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -516,6 +317,7 @@
                       <div class="abstract">
                         <p>Representations for a person&rsquo;s name to assist with internationalization.</p>
 
+                        <a href="../Classes/Users/Name.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -524,65 +326,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Name</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>givenName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Also known as a first name.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>surname</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Also known as a last name or family name.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>familiarName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Locale-dependent name. In the US, a person&rsquo;s familiar name is their givenName, but elsewhere, it could be any combination of a person&rsquo;s givenName and surname.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>displayName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>A name that can be used directly to represent the name of a user&rsquo;s Dropbox account.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -602,6 +345,7 @@
                       <div class="abstract">
                         <p>Information about a user&rsquo;s space usage and quota.</p>
 
+                        <a href="../Classes/Users/SpaceUsage.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -610,39 +354,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SpaceUsage</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>used</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s total space usage (bytes).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>allocation</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s space allocation.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -690,6 +401,7 @@
                       <div class="abstract">
                         <p>The IndividualSpaceAllocation struct</p>
 
+                        <a href="../Classes/Users/IndividualSpaceAllocation.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -698,26 +410,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">IndividualSpaceAllocation</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>allocated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The total space allocated to the user&rsquo;s account (bytes).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -737,6 +429,7 @@
                       <div class="abstract">
                         <p>The TeamSpaceAllocation struct</p>
 
+                        <a href="../Classes/Users/TeamSpaceAllocation.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -745,39 +438,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">TeamSpaceAllocation</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>used</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The total space currently used by the user&rsquo;s team (bytes).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>allocated</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The total space allocated to the user&rsquo;s team (bytes).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -797,6 +457,7 @@
                       <div class="abstract">
                         <p>The GetAccountBatchArg struct</p>
 
+                        <a href="../Classes/Users/GetAccountBatchArg.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -805,26 +466,6 @@
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GetAccountBatchArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>accountIds</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>List of user account identifiers.  Should not contain any duplicate account IDs.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                       </div>
                     </section>
                   </div>
@@ -862,7 +503,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-16)</p>
+          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-19)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
