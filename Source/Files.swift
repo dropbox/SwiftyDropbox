@@ -299,7 +299,7 @@ public class Files {
                     d[".tag"] = .Str("pending")
                     return .Dictionary(d)
                 case .Metadata(let arg):
-                    var d = Serialization.getFields(Files.MediaMetadataSerializer().serialize(arg))
+                    var d = ["metadata": Files.MediaMetadataSerializer().serialize(arg)]
                     d[".tag"] = .Str("metadata")
                     return .Dictionary(d)
             }
@@ -312,7 +312,7 @@ public class Files {
                         case "pending":
                             return MediaInfo.Pending
                         case "metadata":
-                            let v = Files.MediaMetadataSerializer().deserialize(json)
+                            let v = Files.MediaMetadataSerializer().deserialize(d["metadata"] ?? .Null)
                             return MediaInfo.Metadata(v)
                         default:
                             fatalError("Unknown tag \(tag)")
