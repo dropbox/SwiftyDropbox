@@ -95,7 +95,7 @@ public class Users {
         */
         case Pro
         /**
-            The Dropbox for Business account type.
+            The Dropbox Business account type.
         */
         case Business
         public var description : String {

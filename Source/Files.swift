@@ -14,11 +14,15 @@ public class Files {
         public let name : String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash.
         public let pathLower : String
-        public init(name: String, pathLower: String) {
+        /// Set if this file or folder is contained in a shared folder.
+        public let parentSharedFolderId : String?
+        public init(name: String, pathLower: String, parentSharedFolderId: String? = nil) {
             stringValidator()(value: name)
             self.name = name
             stringValidator()(value: pathLower)
             self.pathLower = pathLower
+            nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(value: parentSharedFolderId)
+            self.parentSharedFolderId = parentSharedFolderId
         }
         public var description : String {
             return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
@@ -30,6 +34,7 @@ public class Files {
             var output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             ]
             switch value {
                 case let file as Files.FileMetadata:
@@ -342,7 +347,7 @@ public class Files {
         public let size : UInt64
         /// Additional information if the file is a photo or video.
         public let mediaInfo : Files.MediaInfo?
-        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, id: String? = nil, mediaInfo: Files.MediaInfo? = nil) {
+        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, parentSharedFolderId: String? = nil, id: String? = nil, mediaInfo: Files.MediaInfo? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
             self.id = id
             self.clientModified = clientModified
@@ -352,7 +357,7 @@ public class Files {
             comparableValidator()(value: size)
             self.size = size
             self.mediaInfo = mediaInfo
-            super.init(name: name, pathLower: pathLower)
+            super.init(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
@@ -368,6 +373,7 @@ public class Files {
             "server_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.serverModified),
             "rev": Serialization._StringSerializer.serialize(value.rev),
             "size": Serialization._UInt64Serializer.serialize(value.size),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
             "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
             ]
@@ -382,9 +388,10 @@ public class Files {
                     let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .Null)
                     let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
                     let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .Null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
                     let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
                     let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .Null)
-                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, id: id, mediaInfo: mediaInfo)
+                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, parentSharedFolderId: parentSharedFolderId, id: id, mediaInfo: mediaInfo)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -396,10 +403,14 @@ public class Files {
     public class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
         public let id : String?
-        public init(name: String, pathLower: String, id: String? = nil) {
+        /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
+        public let sharedFolderId : String?
+        public init(name: String, pathLower: String, parentSharedFolderId: String? = nil, id: String? = nil, sharedFolderId: String? = nil) {
             nullableValidator(stringValidator(minLength: 1))(value: id)
             self.id = id
-            super.init(name: name, pathLower: pathLower)
+            nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(value: sharedFolderId)
+            self.sharedFolderId = sharedFolderId
+            super.init(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
@@ -411,7 +422,9 @@ public class Files {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
+            "shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.sharedFolderId),
             ]
             return .Dictionary(output)
         }
@@ -420,8 +433,10 @@ public class Files {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
                     let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
-                    return FolderMetadata(name: name, pathLower: pathLower, id: id)
+                    let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
+                    return FolderMetadata(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId, id: id, sharedFolderId: sharedFolderId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -441,6 +456,7 @@ public class Files {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             ]
             return .Dictionary(output)
         }
@@ -449,7 +465,8 @@ public class Files {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
-                    return DeletedMetadata(name: name, pathLower: pathLower)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    return DeletedMetadata(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -659,11 +676,14 @@ public class Files {
         public let recursive : Bool
         /// If true, :field:'FileMetadata.media_info' is set for photo and video.
         public let includeMediaInfo : Bool
-        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false) {
+        /// If true, the results will include entries for files and folders that used to exist but were deleted.
+        public let includeDeleted : Bool
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false) {
             stringValidator(pattern: "(/.*)?")(value: path)
             self.path = path
             self.recursive = recursive
             self.includeMediaInfo = includeMediaInfo
+            self.includeDeleted = includeDeleted
         }
         public var description : String {
             return "\(prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -676,6 +696,7 @@ public class Files {
             "path": Serialization._StringSerializer.serialize(value.path),
             "recursive": Serialization._BoolSerializer.serialize(value.recursive),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
+            "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
             ]
             return .Dictionary(output)
         }
@@ -685,7 +706,8 @@ public class Files {
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Null)
                     let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1524,7 +1546,8 @@ public class Files {
         public let start : UInt64
         /// The maximum number of search results to return.
         public let maxResults : UInt64
-        /// The search mode (filename, filename_and_content, or deleted_filename).
+        /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is
+        /// only available for Dropbox Business accounts.
         public let mode : Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) {
             stringValidator(pattern: "(/.*)?")(value: path)

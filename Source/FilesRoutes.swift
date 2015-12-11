@@ -20,7 +20,9 @@ public class FilesRoutes {
     /**
         A longpoll endpoint to wait for changes on an account. In conjunction with listFolder, this call gives you a
         low-latency way to monitor an account for file changes. The connection will block until there are changes
-        available or a timeout occurs.
+        available or a timeout occurs. This endpoint is useful mostly for client-side apps. If you're looking for
+        server-side notifications, check out our webhooks documentation
+        https://www.dropbox.com/developers/reference/webhooks.
 
         - parameter cursor: A cursor as returned by listFolder or listFolderContinue
         - parameter timeout: A timeout in seconds. The request will block for at most this length of time, plus up to 90
@@ -41,12 +43,14 @@ public class FilesRoutes {
         - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
         response will contain contents of all subfolders.
         - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
+        - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
+        but were deleted.
 
          - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
         or a `Files.ListFolderError` object on failure.
     */
-    public func listFolder(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
-        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
+    public func listFolder(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false) -> BabelRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted)
         return BabelRpcRequest(client: self.client, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /**
@@ -71,12 +75,14 @@ public class FilesRoutes {
         - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
         response will contain contents of all subfolders.
         - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
+        - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
+        but were deleted.
 
          - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
         object on success or a `Files.ListFolderError` object on failure.
     */
-    public func listFolderGetLatestCursor(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
-        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo)
+    public func listFolderGetLatestCursor(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false) -> BabelRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+        let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted)
         return BabelRpcRequest(client: self.client, host: "meta", route: "/files/list_folder/get_latest_cursor", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /**
@@ -97,7 +103,7 @@ public class FilesRoutes {
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
         with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-        the data to a file in Dropbox.
+        the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
 
         - parameter body: The file to upload, as an NSData object
 
@@ -110,7 +116,7 @@ public class FilesRoutes {
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
         with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-        the data to a file in Dropbox.
+        the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
 
         - parameter body: The file to upload, as an NSURL object
 
@@ -123,7 +129,7 @@ public class FilesRoutes {
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
         with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-        the data to a file in Dropbox.
+        the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
 
         - parameter body: The file to upload, as an NSInputStream object
 
@@ -134,7 +140,7 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Stream(body))
     }
     /**
-        Append more data to an upload session.
+        Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
 
         - parameter sessionId: The upload session ID (returned by uploadSessionStart).
         - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -149,7 +155,7 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Data(body))
     }
     /**
-        Append more data to an upload session.
+        Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
 
         - parameter sessionId: The upload session ID (returned by uploadSessionStart).
         - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -164,7 +170,7 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .File(body))
     }
     /**
-        Append more data to an upload session.
+        Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
 
         - parameter sessionId: The upload session ID (returned by uploadSessionStart).
         - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -179,7 +185,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Stream(body))
     }
     /**
-        Finish an upload session and save the uploaded data to the given file path.
+        Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+        more than 150 MB of file contents.
 
         - parameter cursor: Contains the upload session ID and the offset.
         - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -193,7 +200,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Data(body))
     }
     /**
-        Finish an upload session and save the uploaded data to the given file path.
+        Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+        more than 150 MB of file contents.
 
         - parameter cursor: Contains the upload session ID and the offset.
         - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -207,7 +215,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .File(body))
     }
     /**
-        Finish an upload session and save the uploaded data to the given file path.
+        Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+        more than 150 MB of file contents.
 
         - parameter cursor: Contains the upload session ID and the offset.
         - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -221,7 +230,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Stream(body))
     }
     /**
-        Create a new file with the contents provided in the request.
+        Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+        MB. Instead, create an upload session with uploadSessionStart.
 
         - parameter path: Path in the user's Dropbox to save the file.
         - parameter mode: Selects what to do if the file already exists.
@@ -244,7 +254,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Data(body))
     }
     /**
-        Create a new file with the contents provided in the request.
+        Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+        MB. Instead, create an upload session with uploadSessionStart.
 
         - parameter path: Path in the user's Dropbox to save the file.
         - parameter mode: Selects what to do if the file already exists.
@@ -267,7 +278,8 @@ public class FilesRoutes {
         return BabelUploadRequest(client: self.client, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .File(body))
     }
     /**
-        Create a new file with the contents provided in the request.
+        Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+        MB. Instead, create an upload session with uploadSessionStart.
 
         - parameter path: Path in the user's Dropbox to save the file.
         - parameter mode: Selects what to do if the file already exists.
@@ -298,7 +310,8 @@ public class FilesRoutes {
         car").
         - parameter start: The starting index within the search results (used for paging).
         - parameter maxResults: The maximum number of search results to return.
-        - parameter mode: The search mode (filename, filename_and_content, or deleted_filename).
+        - parameter mode: The search mode (filename, filename_and_content, or deleted_filename). Note that searching
+        file content is only available for Dropbox Business accounts.
 
          - returns: Through the response callback, the caller will receive a `Files.SearchResult` object on success or a
         `Files.SearchError` object on failure.
@@ -332,7 +345,8 @@ public class FilesRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.DeleteErrorSerializer())
     }
     /**
-        Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
+        Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40). Note: This
+        endpoint is only available for Dropbox Business apps.
 
         - parameter path: Path in the user's Dropbox to delete.
 

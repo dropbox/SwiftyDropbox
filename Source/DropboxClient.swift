@@ -6,12 +6,13 @@ import Alamofire
 /// The client for the API. Call routes using the namespaces inside this object.
 public class DropboxClient : BabelClient {
 	let accessToken : DropboxAccessToken
+	static var version = "2.0.0"
 
 	/// Shared instance for convenience
 	public static var sharedClient : DropboxClient!
 
 	public override func additionalHeaders(noauth : Bool) -> [String: String] {
-		var headers = ["User-Agent": "OfficialDropboxSwiftSDKv2/1.0.2"]
+		var headers = ["User-Agent": "OfficialDropboxSwiftSDKv2/\(DropboxClient.version)"]
 		if (!noauth) {
 			headers["Authorization"] = "Bearer \(self.accessToken)"
 		}
