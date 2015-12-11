@@ -678,7 +678,7 @@ remove, or change the privileges of members.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The information about a non-<a href="../Classes/Dropbox.html">Dropbox</a> user invited to join a shared folder.</p>
+                        <p>The information about a user invited to become a member a shared folder.</p>
 
                         <a href="../Classes/Sharing/InviteeInfo.html" class="slightly-smaller">See more</a>
                       </div>
@@ -706,7 +706,7 @@ remove, or change the privileges of members.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The information about a non-<a href="../Classes/Dropbox.html">Dropbox</a> member invited to join a shared folder.</p>
+                        <p>The information about a user invited to become a member of a shared folder.</p>
 
                         <a href="../Classes/Sharing/InviteeMembershipInfo.html" class="slightly-smaller">See more</a>
                       </div>
@@ -791,7 +791,7 @@ shared folder.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The base type for shared folder metadata.</p>
+                        <p>The metadata which includes basic information about the shared folder.</p>
 
                         <a href="../Classes/Sharing/SharedFolderMetadata.html" class="slightly-smaller">See more</a>
                       </div>
@@ -800,61 +800,6 @@ shared folder.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SharedFolderMetadata</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing25BasicSharedFolderMetadata"></a>
-                    <a name="//apple_ref/swift/Class/BasicSharedFolderMetadata" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing25BasicSharedFolderMetadata">BasicSharedFolderMetadata</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The metadata which includes basic information about the shared folder.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">BasicSharedFolderMetadata</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedFolderMetadata</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing24FullSharedFolderMetadata"></a>
-                    <a name="//apple_ref/swift/Class/FullSharedFolderMetadata" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing24FullSharedFolderMetadata">FullSharedFolderMetadata</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The full metadata for the shared folder which includes user and group membership.</p>
-
-                        <a href="../Classes/Sharing/FullSharedFolderMetadata.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">FullSharedFolderMetadata</span><span class="p">:</span> <span class="kt">Sharing</span><span class="o">.</span><span class="kt">SharedFolderMetadata</span></code></pre>
 
                         </div>
                       </div>
@@ -892,6 +837,91 @@ shared folder.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing17ListFoldersResult"></a>
+                    <a name="//apple_ref/swift/Class/ListFoldersResult" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing17ListFoldersResult">ListFoldersResult</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Result for listFolders. Unmounted shared folders can be identified by the absence of pathLower in
+SharedFolderMetadata.</p>
+
+                        <a href="../Classes/Sharing/ListFoldersResult.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFoldersResult</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing22ListFoldersContinueArg"></a>
+                    <a name="//apple_ref/swift/Class/ListFoldersContinueArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing22ListFoldersContinueArg">ListFoldersContinueArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The ListFoldersContinueArg struct</p>
+
+                        <a href="../Classes/Sharing/ListFoldersContinueArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFoldersContinueArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing24ListFoldersContinueError"></a>
+                    <a name="//apple_ref/swift/Enum/ListFoldersContinueError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing24ListFoldersContinueError">ListFoldersContinueError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The ListFoldersContinueError union</p>
+
+                        <a href="../Classes/Sharing/ListFoldersContinueError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ListFoldersContinueError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:CC13SwiftyDropbox7Sharing15GetMetadataArgs"></a>
                     <a name="//apple_ref/swift/Class/GetMetadataArgs" class="dashAnchor"></a>
                     <a class="token" href="#/s:CC13SwiftyDropbox7Sharing15GetMetadataArgs">GetMetadataArgs</a>
@@ -920,9 +950,9 @@ shared folder.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing15ListFoldersArgs"></a>
-                    <a name="//apple_ref/swift/Class/ListFoldersArgs" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing15ListFoldersArgs">ListFoldersArgs</a>
+                    <a name="/s:CC13SwiftyDropbox7Sharing21ListFolderMembersArgs"></a>
+                    <a name="//apple_ref/swift/Class/ListFolderMembersArgs" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing21ListFolderMembersArgs">ListFolderMembersArgs</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -930,15 +960,15 @@ shared folder.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The ListFoldersArgs struct</p>
+                        <p>The ListFolderMembersArgs struct</p>
 
-                        <a href="../Classes/Sharing/ListFoldersArgs.html" class="slightly-smaller">See more</a>
+                        <a href="../Classes/Sharing/ListFolderMembersArgs.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFoldersArgs</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFolderMembersArgs</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
                       </div>
@@ -948,9 +978,9 @@ shared folder.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing17ListFoldersResult"></a>
-                    <a name="//apple_ref/swift/Class/ListFoldersResult" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing17ListFoldersResult">ListFoldersResult</a>
+                    <a name="/s:CC13SwiftyDropbox7Sharing19SharedFolderMembers"></a>
+                    <a name="//apple_ref/swift/Class/SharedFolderMembers" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing19SharedFolderMembers">SharedFolderMembers</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -958,16 +988,71 @@ shared folder.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Result for listFolders. Unmounted shared folders can be identified by the absence of pathLower in
-SharedFolderMetadata.</p>
+                        <p>Shared folder user and group membership.</p>
 
-                        <a href="../Classes/Sharing/ListFoldersResult.html" class="slightly-smaller">See more</a>
+                        <a href="../Classes/Sharing/SharedFolderMembers.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFoldersResult</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SharedFolderMembers</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing28ListFolderMembersContinueArg"></a>
+                    <a name="//apple_ref/swift/Class/ListFolderMembersContinueArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing28ListFolderMembersContinueArg">ListFolderMembersContinueArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The ListFolderMembersContinueArg struct</p>
+
+                        <a href="../Classes/Sharing/ListFolderMembersContinueArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ListFolderMembersContinueArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing30ListFolderMembersContinueError"></a>
+                    <a name="//apple_ref/swift/Enum/ListFolderMembersContinueError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing30ListFolderMembersContinueError">ListFolderMembersContinueError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The ListFolderMembersContinueError union</p>
+
+                        <a href="../Classes/Sharing/ListFolderMembersContinueError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ListFolderMembersContinueError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
                       </div>
@@ -1052,424 +1137,6 @@ SharedFolderMetadata.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">SharePathError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing21UpdateFolderPolicyArg"></a>
-                    <a name="//apple_ref/swift/Class/UpdateFolderPolicyArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing21UpdateFolderPolicyArg">UpdateFolderPolicyArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>If any of the policy&rsquo;s are unset, then they retain their current setting.</p>
-
-                        <a href="../Classes/Sharing/UpdateFolderPolicyArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UpdateFolderPolicyArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing23UpdateFolderPolicyError"></a>
-                    <a name="//apple_ref/swift/Enum/UpdateFolderPolicyError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing23UpdateFolderPolicyError">UpdateFolderPolicyError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The UpdateFolderPolicyError union</p>
-
-                        <a href="../Classes/Sharing/UpdateFolderPolicyError.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UpdateFolderPolicyError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing16UnshareFolderArg"></a>
-                    <a name="//apple_ref/swift/Class/UnshareFolderArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing16UnshareFolderArg">UnshareFolderArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The UnshareFolderArg struct</p>
-
-                        <a href="../Classes/Sharing/UnshareFolderArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnshareFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing18UnshareFolderError"></a>
-                    <a name="//apple_ref/swift/Enum/UnshareFolderError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing18UnshareFolderError">UnshareFolderError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The UnshareFolderError union</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UnshareFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing17TransferFolderArg"></a>
-                    <a name="//apple_ref/swift/Class/TransferFolderArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing17TransferFolderArg">TransferFolderArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The TransferFolderArg struct</p>
-
-                        <a href="../Classes/Sharing/TransferFolderArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">TransferFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing19TransferFolderError"></a>
-                    <a name="//apple_ref/swift/Enum/TransferFolderError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing19TransferFolderError">TransferFolderError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The TransferFolderError union</p>
-
-                        <a href="../Classes/Sharing/TransferFolderError.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TransferFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing16UnmountFolderArg"></a>
-                    <a name="//apple_ref/swift/Class/UnmountFolderArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing16UnmountFolderArg">UnmountFolderArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The UnmountFolderArg struct</p>
-
-                        <a href="../Classes/Sharing/UnmountFolderArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnmountFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing18UnmountFolderError"></a>
-                    <a name="//apple_ref/swift/Enum/UnmountFolderError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing18UnmountFolderError">UnmountFolderError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The UnmountFolderError union</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UnmountFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing14MountFolderArg"></a>
-                    <a name="//apple_ref/swift/Class/MountFolderArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing14MountFolderArg">MountFolderArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The MountFolderArg struct</p>
-
-                        <a href="../Classes/Sharing/MountFolderArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">MountFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing16MountFolderError"></a>
-                    <a name="//apple_ref/swift/Enum/MountFolderError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing16MountFolderError">MountFolderError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The MountFolderError union</p>
-
-                        <a href="../Classes/Sharing/MountFolderError.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">MountFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing18AddFolderMemberArg"></a>
-                    <a name="//apple_ref/swift/Class/AddFolderMemberArg" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing18AddFolderMemberArg">AddFolderMemberArg</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The AddFolderMemberArg struct</p>
-
-                        <a href="../Classes/Sharing/AddFolderMemberArg.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AddFolderMemberArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:CC13SwiftyDropbox7Sharing9AddMember"></a>
-                    <a name="//apple_ref/swift/Class/AddMember" class="dashAnchor"></a>
-                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing9AddMember">AddMember</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The member and type of access the member should have when added to a shared folder.</p>
-
-                        <a href="../Classes/Sharing/AddMember.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AddMember</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing14MemberSelector"></a>
-                    <a name="//apple_ref/swift/Enum/MemberSelector" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing14MemberSelector">MemberSelector</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Includes different ways to identify a member to add to a shared folder.</p>
-
-                        <a href="../Classes/Sharing/MemberSelector.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">MemberSelector</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing20AddFolderMemberError"></a>
-                    <a name="//apple_ref/swift/Enum/AddFolderMemberError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing20AddFolderMemberError">AddFolderMemberError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The AddFolderMemberError union</p>
-
-                        <a href="../Classes/Sharing/AddFolderMemberError.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AddFolderMemberError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:OC13SwiftyDropbox7Sharing22AddMemberSelectorError"></a>
-                    <a name="//apple_ref/swift/Enum/AddMemberSelectorError" class="dashAnchor"></a>
-                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing22AddMemberSelectorError">AddMemberSelectorError</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The AddMemberSelectorError union</p>
-
-                        <a href="../Classes/Sharing/AddMemberSelectorError.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AddMemberSelectorError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
 
                         </div>
                       </div>
@@ -1617,6 +1284,313 @@ SharedFolderMetadata.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing16UnshareFolderArg"></a>
+                    <a name="//apple_ref/swift/Class/UnshareFolderArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing16UnshareFolderArg">UnshareFolderArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The UnshareFolderArg struct</p>
+
+                        <a href="../Classes/Sharing/UnshareFolderArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnshareFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing18UnshareFolderError"></a>
+                    <a name="//apple_ref/swift/Enum/UnshareFolderError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing18UnshareFolderError">UnshareFolderError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The UnshareFolderError union</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UnshareFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing17TransferFolderArg"></a>
+                    <a name="//apple_ref/swift/Class/TransferFolderArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing17TransferFolderArg">TransferFolderArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The TransferFolderArg struct</p>
+
+                        <a href="../Classes/Sharing/TransferFolderArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">TransferFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing19TransferFolderError"></a>
+                    <a name="//apple_ref/swift/Enum/TransferFolderError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing19TransferFolderError">TransferFolderError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The TransferFolderError union</p>
+
+                        <a href="../Classes/Sharing/TransferFolderError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">TransferFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing21UpdateFolderPolicyArg"></a>
+                    <a name="//apple_ref/swift/Class/UpdateFolderPolicyArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing21UpdateFolderPolicyArg">UpdateFolderPolicyArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If any of the policy&rsquo;s are unset, then they retain their current setting.</p>
+
+                        <a href="../Classes/Sharing/UpdateFolderPolicyArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UpdateFolderPolicyArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing23UpdateFolderPolicyError"></a>
+                    <a name="//apple_ref/swift/Enum/UpdateFolderPolicyError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing23UpdateFolderPolicyError">UpdateFolderPolicyError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The UpdateFolderPolicyError union</p>
+
+                        <a href="../Classes/Sharing/UpdateFolderPolicyError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UpdateFolderPolicyError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing18AddFolderMemberArg"></a>
+                    <a name="//apple_ref/swift/Class/AddFolderMemberArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing18AddFolderMemberArg">AddFolderMemberArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The AddFolderMemberArg struct</p>
+
+                        <a href="../Classes/Sharing/AddFolderMemberArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AddFolderMemberArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing9AddMember"></a>
+                    <a name="//apple_ref/swift/Class/AddMember" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing9AddMember">AddMember</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The member and type of access the member should have when added to a shared folder.</p>
+
+                        <a href="../Classes/Sharing/AddMember.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AddMember</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing14MemberSelector"></a>
+                    <a name="//apple_ref/swift/Enum/MemberSelector" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing14MemberSelector">MemberSelector</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Includes different ways to identify a member of a shared folder.</p>
+
+                        <a href="../Classes/Sharing/MemberSelector.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">MemberSelector</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing20AddFolderMemberError"></a>
+                    <a name="//apple_ref/swift/Enum/AddFolderMemberError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing20AddFolderMemberError">AddFolderMemberError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The AddFolderMemberError union</p>
+
+                        <a href="../Classes/Sharing/AddFolderMemberError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AddFolderMemberError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing22AddMemberSelectorError"></a>
+                    <a name="//apple_ref/swift/Enum/AddMemberSelectorError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing22AddMemberSelectorError">AddMemberSelectorError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The AddMemberSelectorError union</p>
+
+                        <a href="../Classes/Sharing/AddMemberSelectorError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AddMemberSelectorError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:CC13SwiftyDropbox7Sharing21RemoveFolderMemberArg"></a>
                     <a name="//apple_ref/swift/Class/RemoveFolderMemberArg" class="dashAnchor"></a>
                     <a class="token" href="#/s:CC13SwiftyDropbox7Sharing21RemoveFolderMemberArg">RemoveFolderMemberArg</a>
@@ -1657,7 +1631,6 @@ SharedFolderMetadata.</p>
                       <div class="abstract">
                         <p>The RemoveFolderMemberError union</p>
 
-                        <a href="../Classes/Sharing/RemoveFolderMemberError.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -1729,6 +1702,117 @@ SharedFolderMetadata.</p>
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing14MountFolderArg"></a>
+                    <a name="//apple_ref/swift/Class/MountFolderArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing14MountFolderArg">MountFolderArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The MountFolderArg struct</p>
+
+                        <a href="../Classes/Sharing/MountFolderArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">MountFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing16MountFolderError"></a>
+                    <a name="//apple_ref/swift/Enum/MountFolderError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing16MountFolderError">MountFolderError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The MountFolderError union</p>
+
+                        <a href="../Classes/Sharing/MountFolderError.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">MountFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:CC13SwiftyDropbox7Sharing16UnmountFolderArg"></a>
+                    <a name="//apple_ref/swift/Class/UnmountFolderArg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:CC13SwiftyDropbox7Sharing16UnmountFolderArg">UnmountFolderArg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The UnmountFolderArg struct</p>
+
+                        <a href="../Classes/Sharing/UnmountFolderArg.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">UnmountFolderArg</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:OC13SwiftyDropbox7Sharing18UnmountFolderError"></a>
+                    <a name="//apple_ref/swift/Enum/UnmountFolderError" class="dashAnchor"></a>
+                    <a class="token" href="#/s:OC13SwiftyDropbox7Sharing18UnmountFolderError">UnmountFolderError</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The UnmountFolderError union</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">UnmountFolderError</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:CC13SwiftyDropbox7Sharing29RelinquishFolderMembershipArg"></a>
                     <a name="//apple_ref/swift/Class/RelinquishFolderMembershipArg" class="dashAnchor"></a>
                     <a class="token" href="#/s:CC13SwiftyDropbox7Sharing29RelinquishFolderMembershipArg">RelinquishFolderMembershipArg</a>
@@ -1787,8 +1871,8 @@ SharedFolderMetadata.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-23)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

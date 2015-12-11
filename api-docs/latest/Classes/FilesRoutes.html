@@ -165,7 +165,7 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.Metadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.GetMetadataError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/Metadata.html">Files.Metadata</a></code> object on success or a <code><a href="../Classes/Files.html#/s:OC13SwiftyDropbox5Files16GetMetadataError">Files.GetMetadataError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -186,7 +186,9 @@
                       <div class="abstract">
                         <p>A longpoll endpoint to wait for changes on an account. In conjunction with listFolder, this call gives you a
 low-latency way to monitor an account for file changes. The connection will block until there are changes
-available or a timeout occurs.</p>
+available or a timeout occurs. This endpoint is useful mostly for client-side apps. If you&rsquo;re looking for
+server-side notifications, check out our webhooks documentation
+<a href="https://www.dropbox.com/developers/reference/webhooks">https://www.dropbox.com/developers/reference/webhooks</a>.</p>
 
                       </div>
                       <div class="declaration">
@@ -232,7 +234,7 @@ available or a timeout occurs.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.ListFolderLongpollResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ListFolderLongpollError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/ListFolderLongpollResult.html">Files.ListFolderLongpollResult</a></code> object on success or a <code><a href="../Classes/Files/ListFolderLongpollError.html">Files.ListFolderLongpollError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -241,9 +243,9 @@ available or a timeout occurs.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC13SwiftyDropbox11FilesRoutes10listFolderFS0_FT4pathSS9recursiveSb16includeMediaInfoSb_GCS_15BabelRpcRequestCCS_5Files26ListFolderResultSerializerCS2_25ListFolderErrorSerializer_"></a>
-                    <a name="//apple_ref/swift/Method/listFolder(path:recursive:includeMediaInfo:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC13SwiftyDropbox11FilesRoutes10listFolderFS0_FT4pathSS9recursiveSb16includeMediaInfoSb_GCS_15BabelRpcRequestCCS_5Files26ListFolderResultSerializerCS2_25ListFolderErrorSerializer_">listFolder(path:recursive:includeMediaInfo:)</a>
+                    <a name="/s:FC13SwiftyDropbox11FilesRoutes10listFolderFS0_FT4pathSS9recursiveSb16includeMediaInfoSb14includeDeletedSb_GCS_15BabelRpcRequestCCS_5Files26ListFolderResultSerializerCS2_25ListFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/listFolder(path:recursive:includeMediaInfo:includeDeleted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox11FilesRoutes10listFolderFS0_FT4pathSS9recursiveSb16includeMediaInfoSb14includeDeletedSb_GCS_15BabelRpcRequestCCS_5Files26ListFolderResultSerializerCS2_25ListFolderErrorSerializer_">listFolder(path:recursive:includeMediaInfo:includeDeleted:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -258,7 +260,7 @@ available or a timeout occurs.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listFolder</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">recursive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeMediaInfo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderResultSerializer</span><span class="p">,</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listFolder</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">recursive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeMediaInfo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeDeleted</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderResultSerializer</span><span class="p">,</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -305,12 +307,25 @@ available or a timeout occurs.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>includeDeleted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, the results will include entries for files and folders that used to exist but were deleted.</p>
+
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.ListFolderResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ListFolderError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/ListFolderResult.html">Files.ListFolderResult</a></code> object on success or a <code><a href="../Classes/Files/ListFolderError.html">Files.ListFolderError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -363,7 +378,7 @@ the folder.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.ListFolderResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ListFolderContinueError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/ListFolderResult.html">Files.ListFolderResult</a></code> object on success or a <code><a href="../Classes/Files/ListFolderContinueError.html">Files.ListFolderContinueError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -372,9 +387,9 @@ the folder.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC13SwiftyDropbox11FilesRoutes25listFolderGetLatestCursorFS0_FT4pathSS9recursiveSb16includeMediaInfoSb_GCS_15BabelRpcRequestCCS_5Files41ListFolderGetLatestCursorResultSerializerCS2_25ListFolderErrorSerializer_"></a>
-                    <a name="//apple_ref/swift/Method/listFolderGetLatestCursor(path:recursive:includeMediaInfo:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC13SwiftyDropbox11FilesRoutes25listFolderGetLatestCursorFS0_FT4pathSS9recursiveSb16includeMediaInfoSb_GCS_15BabelRpcRequestCCS_5Files41ListFolderGetLatestCursorResultSerializerCS2_25ListFolderErrorSerializer_">listFolderGetLatestCursor(path:recursive:includeMediaInfo:)</a>
+                    <a name="/s:FC13SwiftyDropbox11FilesRoutes25listFolderGetLatestCursorFS0_FT4pathSS9recursiveSb16includeMediaInfoSb14includeDeletedSb_GCS_15BabelRpcRequestCCS_5Files41ListFolderGetLatestCursorResultSerializerCS2_25ListFolderErrorSerializer_"></a>
+                    <a name="//apple_ref/swift/Method/listFolderGetLatestCursor(path:recursive:includeMediaInfo:includeDeleted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC13SwiftyDropbox11FilesRoutes25listFolderGetLatestCursorFS0_FT4pathSS9recursiveSb16includeMediaInfoSb14includeDeletedSb_GCS_15BabelRpcRequestCCS_5Files41ListFolderGetLatestCursorResultSerializerCS2_25ListFolderErrorSerializer_">listFolderGetLatestCursor(path:recursive:includeMediaInfo:includeDeleted:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -384,14 +399,14 @@ the folder.</p>
                       <div class="abstract">
                         <p>A way to quickly get a cursor for the folder&rsquo;s state. Unlike listFolder, listFolderGetLatestCursor doesn&rsquo;t
 return any entries. This endpoint is for app which only needs to know about new files and modifications and
-doesn&rsquo;t need to know about files that already exist in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
+doesn&rsquo;t need to know about files that already exist in Dropbox.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listFolderGetLatestCursor</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">recursive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeMediaInfo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderGetLatestCursorResultSerializer</span><span class="p">,</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">listFolderGetLatestCursor</span><span class="p">(</span><span class="n">path</span> <span class="nv">path</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">recursive</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeMediaInfo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">includeDeleted</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">BabelRpcRequest</span><span class="o">&lt;</span><span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderGetLatestCursorResultSerializer</span><span class="p">,</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">ListFolderErrorSerializer</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -438,12 +453,25 @@ doesn&rsquo;t need to know about files that already exist in <a href="../Classes
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>includeDeleted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, the results will include entries for files and folders that used to exist but were deleted.</p>
+
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.ListFolderGetLatestCursorResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ListFolderError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/ListFolderGetLatestCursorResult.html">Files.ListFolderGetLatestCursorResult</a></code> object on success or a <code><a href="../Classes/Files/ListFolderError.html">Files.ListFolderError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -462,7 +490,7 @@ doesn&rsquo;t need to know about files that already exist in <a href="../Classes
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Download a file from a user&rsquo;s <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
+                        <p>Download a file from a user&rsquo;s Dropbox.</p>
 
                       </div>
                       <div class="declaration">
@@ -521,7 +549,7 @@ doesn&rsquo;t need to know about files that already exist in <a href="../Classes
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.DownloadError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/DownloadError.html">Files.DownloadError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -542,7 +570,7 @@ doesn&rsquo;t need to know about files that already exist in <a href="../Classes
                       <div class="abstract">
                         <p>Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
 with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
+the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -575,7 +603,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.UploadSessionStartResult</code> object on success or a <code>Void</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/UploadSessionStartResult.html">Files.UploadSessionStartResult</a></code> object on success or a <code>Void</code> object on failure.</p>
 
                       </div>
                     </section>
@@ -596,7 +624,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       <div class="abstract">
                         <p>Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
 with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
+the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -629,7 +657,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.UploadSessionStartResult</code> object on success or a <code>Void</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/UploadSessionStartResult.html">Files.UploadSessionStartResult</a></code> object on success or a <code>Void</code> object on failure.</p>
 
                       </div>
                     </section>
@@ -650,7 +678,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       <div class="abstract">
                         <p>Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
 with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
-the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
+the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -683,7 +711,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.UploadSessionStartResult</code> object on success or a <code>Void</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/UploadSessionStartResult.html">Files.UploadSessionStartResult</a></code> object on success or a <code>Void</code> object on failure.</p>
 
                       </div>
                     </section>
@@ -702,7 +730,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Append more data to an upload session.</p>
+                        <p>Append more data to an upload session. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -761,7 +789,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionLookupError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files/UploadSessionLookupError.html">Files.UploadSessionLookupError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -780,7 +808,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Append more data to an upload session.</p>
+                        <p>Append more data to an upload session. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -839,7 +867,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionLookupError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files/UploadSessionLookupError.html">Files.UploadSessionLookupError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -858,7 +886,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Append more data to an upload session.</p>
+                        <p>Append more data to an upload session. A single request should not upload more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -917,7 +945,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionLookupError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files/UploadSessionLookupError.html">Files.UploadSessionLookupError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -936,7 +964,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Finish an upload session and save the uploaded data to the given file path.</p>
+                        <p>Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -995,7 +1024,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionFinishError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadSessionFinishError.html">Files.UploadSessionFinishError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1014,7 +1043,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Finish an upload session and save the uploaded data to the given file path.</p>
+                        <p>Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -1073,7 +1103,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionFinishError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadSessionFinishError.html">Files.UploadSessionFinishError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1092,7 +1122,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Finish an upload session and save the uploaded data to the given file path.</p>
+                        <p>Finish an upload session and save the uploaded data to the given file path. A single request should not upload
+more than 150 MB of file contents.</p>
 
                       </div>
                       <div class="declaration">
@@ -1151,7 +1182,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadSessionFinishError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadSessionFinishError.html">Files.UploadSessionFinishError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1170,7 +1201,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Create a new file with the contents provided in the request.</p>
+                        <p>Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+MB. Instead, create an upload session with uploadSessionStart.</p>
 
                       </div>
                       <div class="declaration">
@@ -1268,7 +1300,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadError.html">Files.UploadError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1287,7 +1319,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Create a new file with the contents provided in the request.</p>
+                        <p>Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+MB. Instead, create an upload session with uploadSessionStart.</p>
 
                       </div>
                       <div class="declaration">
@@ -1385,7 +1418,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadError.html">Files.UploadError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1404,7 +1437,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Create a new file with the contents provided in the request.</p>
+                        <p>Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
+MB. Instead, create an upload session with uploadSessionStart.</p>
 
                       </div>
                       <div class="declaration">
@@ -1502,7 +1536,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.UploadError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/UploadError.html">Files.UploadError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1596,7 +1630,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The search mode (filename, filename_and_content, or deleted_filename).</p>
+                                  <p>The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is only available for Dropbox Business accounts.</p>
 
                                 </div>
                               </td>
@@ -1606,7 +1640,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.SearchResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.SearchError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/SearchResult.html">Files.SearchResult</a></code> object on success or a <code><a href="../Classes/Files/SearchError.html">Files.SearchError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1658,7 +1692,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FolderMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.CreateFolderError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FolderMetadata.html">Files.FolderMetadata</a></code> object on success or a <code><a href="../Classes/Files.html#/s:OC13SwiftyDropbox5Files17CreateFolderError">Files.CreateFolderError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1710,7 +1744,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.Metadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.DeleteError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/Metadata.html">Files.Metadata</a></code> object on success or a <code><a href="../Classes/Files.html#/s:OC13SwiftyDropbox5Files11DeleteError">Files.DeleteError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1729,7 +1763,8 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Permanently delete the file or folder at a given path (see <a href="https://www.dropbox.com/en/help/40">https://www.dropbox.com/en/help/40</a>).</p>
+                        <p>Permanently delete the file or folder at a given path (see <a href="https://www.dropbox.com/en/help/40">https://www.dropbox.com/en/help/40</a>). Note: This
+endpoint is only available for Dropbox Business apps.</p>
 
                       </div>
                       <div class="declaration">
@@ -1762,7 +1797,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.DeleteError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code>Void</code> object on success or a <code><a href="../Classes/Files.html#/s:OC13SwiftyDropbox5Files11DeleteError">Files.DeleteError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1781,7 +1816,7 @@ the data to a file in <a href="../Classes/Dropbox.html">Dropbox</a>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Copy a file or folder to a different location in the user&rsquo;s <a href="../Classes/Dropbox.html">Dropbox</a>. If the source path is a folder all its
+                        <p>Copy a file or folder to a different location in the user&rsquo;s Dropbox. If the source path is a folder all its
 contents will be copied.</p>
 
                       </div>
@@ -1828,7 +1863,7 @@ contents will be copied.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.Metadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.RelocationError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/Metadata.html">Files.Metadata</a></code> object on success or a <code><a href="../Classes/Files/RelocationError.html">Files.RelocationError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1847,7 +1882,7 @@ contents will be copied.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Move a file or folder to a different location in the user&rsquo;s <a href="../Classes/Dropbox.html">Dropbox</a>. If the source path is a folder all its
+                        <p>Move a file or folder to a different location in the user&rsquo;s Dropbox. If the source path is a folder all its
 contents will be moved.</p>
 
                       </div>
@@ -1894,7 +1929,7 @@ contents will be moved.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.Metadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.RelocationError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/Metadata.html">Files.Metadata</a></code> object on success or a <code><a href="../Classes/Files/RelocationError.html">Files.RelocationError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -1986,7 +2021,7 @@ jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won&
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ThumbnailError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/ThumbnailError.html">Files.ThumbnailError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -2065,7 +2100,7 @@ jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won&
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.PreviewError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/PreviewError.html">Files.PreviewError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -2130,7 +2165,7 @@ jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won&
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.ListRevisionsResult</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.ListRevisionsError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/ListRevisionsResult.html">Files.ListRevisionsResult</a></code> object on success or a <code><a href="../Classes/Files.html#/s:OC13SwiftyDropbox5Files18ListRevisionsError">Files.ListRevisionsError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -2195,7 +2230,7 @@ jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won&
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files.html">Files</a>.FileMetadata</code> object on success or a <code><a href="../Classes/Files.html">Files</a>.RestoreError</code> object on failure.</p>
+                        <p>Through the response callback, the caller will receive a <code><a href="../Classes/Files/FileMetadata.html">Files.FileMetadata</a></code> object on success or a <code><a href="../Classes/Files/RestoreError.html">Files.RestoreError</a></code> object on failure.</p>
 
                       </div>
                     </section>
@@ -2206,8 +2241,8 @@ jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won&
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-23)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

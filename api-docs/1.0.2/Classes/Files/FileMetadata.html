@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>FileMetadata Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/FileMetadata" class="dashAnchor"></a>
+    <a title="FileMetadata Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">SwiftyDropbox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">SwiftyDropbox Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        FileMetadata Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Routes.html">Routes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/FilesRoutes.html">FilesRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/SharingRoutes.html">SharingRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/UsersRoutes.html">UsersRoutes</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Data Types.html">Data Types</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/Async.html">Async</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files.html">Files</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing.html">Sharing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team.html">Team</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users.html">Users</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxAuthManager.html">DropboxAuthManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/DropboxAuthResult.html">DropboxAuthResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxAccessToken.html">DropboxAccessToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/OAuth2Error.html">OAuth2Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Client Classes.html">Client Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/Dropbox.html">Dropbox</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxClient.html">DropboxClient</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>FileMetadata</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">FileMetadata</span><span class="p">:</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">Metadata</span></code></pre>
+
+                </div>
+              </div>
+            <p>The FileMetadata struct</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata2idGSqSS_"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata2idGSqSS_">id</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A unique identifier for the file.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">id</span> <span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata14clientModifiedCSo6NSDate"></a>
+                    <a name="//apple_ref/swift/Property/clientModified" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata14clientModifiedCSo6NSDate">clientModified</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>For files, this is the modification time set by the desktop client when the file was added to <a href="../../Classes/Dropbox.html">Dropbox</a>. Since
+this time is not verified (the <a href="../../Classes/Dropbox.html">Dropbox</a> server stores whatever the desktop client sends up), this should only
+be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
+not.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">clientModified</span> <span class="p">:</span> <span class="kt">NSDate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata14serverModifiedCSo6NSDate"></a>
+                    <a name="//apple_ref/swift/Property/serverModified" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata14serverModifiedCSo6NSDate">serverModified</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The last time the file was modified on <a href="../../Classes/Dropbox.html">Dropbox</a>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">serverModified</span> <span class="p">:</span> <span class="kt">NSDate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata3revSS"></a>
+                    <a name="//apple_ref/swift/Property/rev" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata3revSS">rev</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A unique identifier for the current revision of a file. This field is the same rev as elsewhere in the API
+and can be used to detect changes and avoid conflicts.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">rev</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata4sizeVSs6UInt64"></a>
+                    <a name="//apple_ref/swift/Property/size" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata4sizeVSs6UInt64">size</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The file size in bytes.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">size</span> <span class="p">:</span> <span class="kt">UInt64</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox5Files12FileMetadata9mediaInfoGSqOS0_9MediaInfo_"></a>
+                    <a name="//apple_ref/swift/Property/mediaInfo" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox5Files12FileMetadata9mediaInfoGSqOS0_9MediaInfo_">mediaInfo</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Additional information if the file is a photo or video.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">mediaInfo</span> <span class="p">:</span> <span class="kt">Files</span><span class="o">.</span><span class="kt">MediaInfo</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2015 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2015-11-23)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.4.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
