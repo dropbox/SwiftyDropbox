@@ -219,6 +219,36 @@ public class DropboxAuthManager {
         self.init(appKey: appKey, host: "www.dropbox.com")
     }
     
+    private func conformsToAppScheme() -> Bool {
+        let appScheme = "db-\(self.appKey)"
+        
+        let urlTypes = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleURLTypes") as? [ [String: AnyObject] ] ?? []
+        
+        for urlType in urlTypes {
+            let schemes = urlType["CFBundleURLSchemes"] as? [String] ?? []
+            for scheme in schemes {
+                print(scheme)
+                if scheme == appScheme {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    private func hasApplicationQueriesScheme() -> Bool {
+        
+        let queriesSchemes = NSBundle.mainBundle().objectForInfoDictionaryKey("LSApplicationQueriesSchemes") as? [String] ?? []
+        
+        for scheme in queriesSchemes {
+            if scheme == "dbapi-2" {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
     private func authURL() -> NSURL {
         let components = NSURLComponents()
         components.scheme = "https"
@@ -264,6 +294,25 @@ public class DropboxAuthManager {
     ///
     /// parameter controller: The controller to present from
     public func authorizeFromController(controller: UIViewController) {
+        if !self.conformsToAppScheme() {
+            let message = "DropboxSDK: unable to link; app isn't registered for correct URL scheme (db-\(self.appKey))"
+            let alertController = UIAlertController(
+                title: "SwiftyDropbox Error",
+                message: message,
+                preferredStyle: UIAlertControllerStyle.Alert)
+            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
+            return
+        }
+        if !self.hasApplicationQueriesScheme() {
+            let message = "DropboxSDK: unable to link; app isn't registered to query for URL scheme dbapi-2. Add a dbapi-2 entry to LSApplicationQueriesSchemes"
+            
+            let alertController = UIAlertController(
+                title: "SwiftyDropbox Error",
+                message: message,
+                preferredStyle: UIAlertControllerStyle.Alert)
+            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
+            return
+        }
         if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
             let nonce = NSUUID().UUIDString
             NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
