@@ -1,0 +1,448 @@
+Async.swift
+	public var description : String
+	public class LaunchResultBaseSerializer: JSONSerializer
+	public var description : String
+	public class LaunchEmptyResultSerializer: JSONSerializer
+	public init(asyncJobId: String)
+	public var description : String
+	public class PollArgSerializer: JSONSerializer
+	public var description : String
+	public class PollResultBaseSerializer: JSONSerializer
+	public var description : String
+	public class PollEmptyResultSerializer: JSONSerializer
+	public var description : String
+	public class PollErrorSerializer: JSONSerializer
+Auth.swift
+	public init(accessToken: String, uid: String)
+	public var description : String
+	public init(appKey: String, host: String)
+	public class DropboxConnectController : UIViewController, WKNavigationDelegate
+DropboxClient.swift
+	public override func additionalHeaders(noauth : Bool) -> [String: String]
+	public convenience init(accessToken: DropboxAccessToken)
+	public init(accessToken: DropboxAccessToken, manager: Manager, baseHosts: [String : String])
+Files.swift
+	public init(name: String, pathLower: String, parentSharedFolderId: String? = nil)
+	public var description : String
+	public class MetadataSerializer: JSONSerializer
+	public init(height: UInt64, width: UInt64)
+	public var description : String
+	public class DimensionsSerializer: JSONSerializer
+	public init(latitude: Double, longitude: Double)
+	public var description : String
+	public class GpsCoordinatesSerializer: JSONSerializer
+	public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil)
+	public var description : String
+	public class MediaMetadataSerializer: JSONSerializer
+	public override var description : String
+	public class PhotoMetadataSerializer: JSONSerializer
+	public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: NSDate? = nil, duration: UInt64? = nil)
+	public override var description : String
+	public class VideoMetadataSerializer: JSONSerializer
+	public var description : String
+	public class MediaInfoSerializer: JSONSerializer
+	public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, parentSharedFolderId: String? = nil, id: String? = nil, mediaInfo: Files.MediaInfo? = nil)
+	public override var description : String
+	public class FileMetadataSerializer: JSONSerializer
+	public init(name: String, pathLower: String, parentSharedFolderId: String? = nil, id: String? = nil, sharedFolderId: String? = nil)
+	public override var description : String
+	public class FolderMetadataSerializer: JSONSerializer
+	public override var description : String
+	public class DeletedMetadataSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	public var description : String
+	public class GetMetadataErrorSerializer: JSONSerializer
+	public init(path: String, includeMediaInfo: Bool = false)
+	public var description : String
+	public class GetMetadataArgSerializer: JSONSerializer
+	public init(cursor: String, timeout: UInt64 = 30)
+	public var description : String
+	public class ListFolderLongpollArgSerializer: JSONSerializer
+	public init(changes: Bool, backoff: UInt64? = nil)
+	public var description : String
+	public class ListFolderLongpollResultSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class ListFolderLongpollErrorSerializer: JSONSerializer
+	public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false)
+	public var description : String
+	public class ListFolderArgSerializer: JSONSerializer
+	public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool)
+	public var description : String
+	public class ListFolderResultSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	public var description : String
+	public class ListFolderErrorSerializer: JSONSerializer
+	public init(cursor: String)
+	public var description : String
+	public class ListFolderContinueArgSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	case Other
+	public var description : String
+	public class ListFolderContinueErrorSerializer: JSONSerializer
+	public init(cursor: String)
+	public var description : String
+	public class ListFolderGetLatestCursorResultSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	public var description : String
+	public class DownloadErrorSerializer: JSONSerializer
+	public init(path: String, rev: String? = nil)
+	public var description : String
+	public class DownloadArgSerializer: JSONSerializer
+	public init(reason: Files.WriteError, uploadSessionId: String)
+	public var description : String
+	public class UploadWriteFailedSerializer: JSONSerializer
+	public var description : String
+	public class UploadErrorSerializer: JSONSerializer
+	public init(correctOffset: UInt64)
+	public var description : String
+	public class UploadSessionOffsetErrorSerializer: JSONSerializer
+	public var description : String
+	public class UploadSessionLookupErrorSerializer: JSONSerializer
+	public var description : String
+	public class UploadSessionFinishErrorSerializer: JSONSerializer
+	public init(sessionId: String)
+	public var description : String
+	public class UploadSessionStartResultSerializer: JSONSerializer
+	public init(sessionId: String, offset: UInt64)
+	public var description : String
+	public class UploadSessionCursorSerializer: JSONSerializer
+	public var description : String
+	public class WriteModeSerializer: JSONSerializer
+	public init(path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false)
+	public var description : String
+	public class CommitInfoSerializer: JSONSerializer
+	public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo)
+	public var description : String
+	public class UploadSessionFinishArgSerializer: JSONSerializer
+	public var description : String
+	public class SearchModeSerializer: JSONSerializer
+	public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename)
+	public var description : String
+	public class SearchArgSerializer: JSONSerializer
+	public var description : String
+	public class SearchMatchTypeSerializer: JSONSerializer
+	public init(matchType: Files.SearchMatchType, metadata: Files.Metadata)
+	public var description : String
+	public class SearchMatchSerializer: JSONSerializer
+	public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64)
+	public var description : String
+	public class SearchResultSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	public var description : String
+	public class SearchErrorSerializer: JSONSerializer
+	case MalformedPath(String?)
+	case Other
+	public var description : String
+	public class LookupErrorSerializer: JSONSerializer
+	case MalformedPath(String?)
+	case Other
+	public var description : String
+	public class WriteErrorSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class WriteConflictErrorSerializer: JSONSerializer
+	public init(path: String)
+	public var description : String
+	public class CreateFolderArgSerializer: JSONSerializer
+	case Path(Files.WriteError)
+	public var description : String
+	public class CreateFolderErrorSerializer: JSONSerializer
+	public init(path: String)
+	public var description : String
+	public class DeleteArgSerializer: JSONSerializer
+	case PathLookup(Files.LookupError)
+	case PathWrite(Files.WriteError)
+	case Other
+	public var description : String
+	public class DeleteErrorSerializer: JSONSerializer
+	public init(fromPath: String, toPath: String)
+	public var description : String
+	public class RelocationArgSerializer: JSONSerializer
+	case FromLookup(Files.LookupError)
+	case FromWrite(Files.WriteError)
+	case To(Files.WriteError)
+	public var description : String
+	public class RelocationErrorSerializer: JSONSerializer
+	public var description : String
+	public class ThumbnailSizeSerializer: JSONSerializer
+	case Jpeg
+	case Png
+	public var description : String
+	public class ThumbnailFormatSerializer: JSONSerializer
+	public init(path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64)
+	public var description : String
+	public class ThumbnailArgSerializer: JSONSerializer
+	public var description : String
+	public class ThumbnailErrorSerializer: JSONSerializer
+	public init(path: String, rev: String? = nil)
+	public var description : String
+	public class PreviewArgSerializer: JSONSerializer
+	public var description : String
+	public class PreviewErrorSerializer: JSONSerializer
+	public init(path: String, limit: UInt64 = 10)
+	public var description : String
+	public class ListRevisionsArgSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	case Other
+	public var description : String
+	public class ListRevisionsErrorSerializer: JSONSerializer
+	public init(isDeleted: Bool, entries: Array<Files.FileMetadata>)
+	public var description : String
+	public class ListRevisionsResultSerializer: JSONSerializer
+	public init(path: String, rev: String)
+	public var description : String
+	public class RestoreArgSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class RestoreErrorSerializer: JSONSerializer
+FilesRoutes.swift
+	public let client : BabelClient
+Sharing.swift
+	public var description : String
+	public class VisibilitySerializer: JSONSerializer
+	public init(url: String, visibility: Sharing.Visibility, expires: NSDate? = nil)
+	public var description : String
+	public class LinkMetadataSerializer: JSONSerializer
+	public init(url: String, visibility: Sharing.Visibility, path: String, expires: NSDate? = nil)
+	public override var description : String
+	public class PathLinkMetadataSerializer: JSONSerializer
+	public override var description : String
+	public class CollectionLinkMetadataSerializer: JSONSerializer
+	public init(path: String? = nil)
+	public var description : String
+	public class GetSharedLinksArgSerializer: JSONSerializer
+	public init(links: Array<Sharing.LinkMetadata>)
+	public var description : String
+	public class GetSharedLinksResultSerializer: JSONSerializer
+	case Path(String?)
+	case Other
+	public var description : String
+	public class GetSharedLinksErrorSerializer: JSONSerializer
+	public var description : String
+	public class PendingUploadModeSerializer: JSONSerializer
+	public init(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil)
+	public var description : String
+	public class CreateSharedLinkArgSerializer: JSONSerializer
+	case Path(Files.LookupError)
+	case Other
+	public var description : String
+	public class CreateSharedLinkErrorSerializer: JSONSerializer
+	public init(url: String)
+	public var description : String
+	public class RevokeSharedLinkArgSerializer: JSONSerializer
+	public var description : String
+	public class RevokeSharedLinkErrorSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class AccessLevelSerializer: JSONSerializer
+	public init(aclUpdatePolicy: Sharing.AclUpdatePolicy, sharedLinkPolicy: Sharing.SharedLinkPolicy, memberPolicy: Sharing.MemberPolicy? = nil)
+	public var description : String
+	public class FolderPolicySerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class MemberPolicySerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class AclUpdatePolicySerializer: JSONSerializer
+	public var description : String
+	public class SharedLinkPolicySerializer: JSONSerializer
+	public init(accessType: Sharing.AccessLevel)
+	public var description : String
+	public class MembershipInfoSerializer: JSONSerializer
+	public init(accountId: String, sameTeam: Bool, teamMemberId: String? = nil)
+	public var description : String
+	public class UserInfoSerializer: JSONSerializer
+	public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo)
+	public override var description : String
+	public class UserMembershipInfoSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class InviteeInfoSerializer: JSONSerializer
+	public init(accessType: Sharing.AccessLevel, invitee: Sharing.InviteeInfo)
+	public override var description : String
+	public class InviteeMembershipInfoSerializer: JSONSerializer
+	public init(groupName: String, groupId: String, memberCount: UInt32, sameTeam: Bool, groupExternalId: String? = nil)
+	public override var description : String
+	public class GroupInfoSerializer: JSONSerializer
+	public init(accessType: Sharing.AccessLevel, group: Sharing.GroupInfo)
+	public override var description : String
+	public class GroupMembershipInfoSerializer: JSONSerializer
+	public init(name: String, sharedFolderId: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, pathLower: String? = nil)
+	public var description : String
+	public class SharedFolderMetadataSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class SharedFolderAccessErrorSerializer: JSONSerializer
+	public init(entries: Array<Sharing.SharedFolderMetadata>, cursor: String? = nil)
+	public var description : String
+	public class ListFoldersResultSerializer: JSONSerializer
+	public init(cursor: String)
+	public var description : String
+	public class ListFoldersContinueArgSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class ListFoldersContinueErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String)
+	public var description : String
+	public class GetMetadataArgsSerializer: JSONSerializer
+	public init(sharedFolderId: String)
+	public var description : String
+	public class ListFolderMembersArgsSerializer: JSONSerializer
+	public init(users: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, invitees: Array<Sharing.InviteeMembershipInfo>, cursor: String? = nil)
+	public var description : String
+	public class SharedFolderMembersSerializer: JSONSerializer
+	public init(cursor: String)
+	public var description : String
+	public class ListFolderMembersContinueArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class ListFolderMembersContinueErrorSerializer: JSONSerializer
+	public init(path: String, memberPolicy: Sharing.MemberPolicy = .Anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .Owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .Anyone, forceAsync: Bool = false)
+	public var description : String
+	public class ShareFolderArgSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class ShareFolderErrorSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class SharePathErrorSerializer: JSONSerializer
+	case Failed(Sharing.ShareFolderError)
+	public var description : String
+	public class ShareFolderJobStatusSerializer: JSONSerializer
+	case Complete(Sharing.SharedFolderMetadata)
+	public var description : String
+	public class ShareFolderLaunchSerializer: JSONSerializer
+	public var description : String
+	public class JobStatusSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class SharedFolderMemberErrorSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case MemberError(Sharing.SharedFolderMemberError)
+	case Other
+	public var description : String
+	public class JobErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, leaveACopy: Bool)
+	public var description : String
+	public class UnshareFolderArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class UnshareFolderErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, toDropboxId: String)
+	public var description : String
+	public class TransferFolderArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class TransferFolderErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil)
+	public var description : String
+	public class UpdateFolderPolicyArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class UpdateFolderPolicyErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil)
+	public var description : String
+	public class AddFolderMemberArgSerializer: JSONSerializer
+	public init(member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel = .Viewer)
+	public var description : String
+	public class AddMemberSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class MemberSelectorSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class AddFolderMemberErrorSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class AddMemberSelectorErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool)
+	public var description : String
+	public class RemoveFolderMemberArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class RemoveFolderMemberErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel)
+	public var description : String
+	public class UpdateFolderMemberArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case MemberError(Sharing.SharedFolderMemberError)
+	case Other
+	public var description : String
+	public class UpdateFolderMemberErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String)
+	public var description : String
+	public class MountFolderArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class MountFolderErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String)
+	public var description : String
+	public class UnmountFolderArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class UnmountFolderErrorSerializer: JSONSerializer
+	public init(sharedFolderId: String)
+	public var description : String
+	public class RelinquishFolderMembershipArgSerializer: JSONSerializer
+	case AccessError(Sharing.SharedFolderAccessError)
+	case Other
+	public var description : String
+	public class RelinquishFolderMembershipErrorSerializer: JSONSerializer
+SharingRoutes.swift
+	public let client : BabelClient
+Team.swift
+	public init(groupName: String, groupId: String, memberCount: UInt32, groupExternalId: String? = nil)
+	public var description : String
+	public class GroupSummarySerializer: JSONSerializer
+Users.swift
+	public init(accountId: String)
+	public var description : String
+	public class GetAccountArgSerializer: JSONSerializer
+	case Unknown
+	public var description : String
+	public class GetAccountErrorSerializer: JSONSerializer
+	public var description : String
+	public class AccountTypeSerializer: JSONSerializer
+	public init(accountId: String, name: Users.Name)
+	public var description : String
+	public class AccountSerializer: JSONSerializer
+	public init(accountId: String, name: Users.Name, isTeammate: Bool)
+	public override var description : String
+	public class BasicAccountSerializer: JSONSerializer
+	public init(accountId: String, name: Users.Name, email: String, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil)
+	public override var description : String
+	public class FullAccountSerializer: JSONSerializer
+	public init(id: String, name: String)
+	public var description : String
+	public class TeamSerializer: JSONSerializer
+	public init(givenName: String, surname: String, familiarName: String, displayName: String)
+	public var description : String
+	public class NameSerializer: JSONSerializer
+	public init(used: UInt64, allocation: Users.SpaceAllocation)
+	public var description : String
+	public class SpaceUsageSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class SpaceAllocationSerializer: JSONSerializer
+	public init(allocated: UInt64)
+	public var description : String
+	public class IndividualSpaceAllocationSerializer: JSONSerializer
+	public init(used: UInt64, allocated: UInt64)
+	public var description : String
+	public class TeamSpaceAllocationSerializer: JSONSerializer
+	public init(accountIds: Array<String>)
+	public var description : String
+	public class GetAccountBatchArgSerializer: JSONSerializer
+	case Other
+	public var description : String
+	public class GetAccountBatchErrorSerializer: JSONSerializer
+UsersRoutes.swift
+	public let client : BabelClient
