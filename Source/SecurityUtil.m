@@ -608,7 +608,7 @@ static NSMutableArray * volatile sRootCerts = NULL;
                 }
                 
                 CFDataRef rawCert = CFDataCreate(kCFAllocatorDefault, [derCert bytes], [derCert length]);
-                if(rawCert == NULL) {
+                if (rawCert == NULL) {
                     continue;
                 }
                 SecCertificateRef cert = SecCertificateCreateWithData (kCFAllocatorDefault, rawCert);
