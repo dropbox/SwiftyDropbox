@@ -174,11 +174,10 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
             headers[header] = val
         }
         
-        let request = client.manager.request(.POST, url, parameters: [:], headers: headers, encoding: ParameterEncoding.Custom {(convertible, _) in
-                let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
-                mutableRequest.HTTPBody = dumpJSON(params)
-                return (mutableRequest, nil)
-            })
+        let mutableURLRequest = URLRequest(.POST, url, headers: headers)
+        mutableURLRequest.HTTPBody = dumpJSON(params)
+        let request = client.manager.request(mutableURLRequest)
+
         super.init(request: request,
             responseSerializer: responseSerializer,
             errorSerializer: errorSerializer)
@@ -343,4 +342,24 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         }
         return self
     }
+}
+
+// MARK: - Convenience
+
+func URLRequest(
+    method: Alamofire.Method,
+    _ URLString: Alamofire.URLStringConvertible,
+    headers: [String: String]? = nil)
+    -> NSMutableURLRequest
+{
+    let mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URLString.URLString)!)
+    mutableURLRequest.HTTPMethod = method.rawValue
+
+    if let headers = headers {
+        for (headerField, headerValue) in headers {
+            mutableURLRequest.setValue(headerValue, forHTTPHeaderField: headerField)
+        }
+    }
+
+    return mutableURLRequest
 }
