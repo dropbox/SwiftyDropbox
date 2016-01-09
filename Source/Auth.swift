@@ -1,8 +1,7 @@
-import UIKit
+
+
 import WebKit
-
 import Security
-
 import Foundation
 
 
@@ -293,46 +292,56 @@ public class DropboxAuthManager {
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
     /// parameter controller: The controller to present from
-    public func authorizeFromController(controller: UIViewController) {
+    public func authorizeFromController(controller: PlatformSpecificController) {
         if !self.conformsToAppScheme() {
             let message = "DropboxSDK: unable to link; app isn't registered for correct URL scheme (db-\(self.appKey))"
-            let alertController = UIAlertController(
-                title: "SwiftyDropbox Error",
-                message: message,
-                preferredStyle: UIAlertControllerStyle.Alert)
-            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
+            controller.presentErrorMessage(message, completion: { fatalError(message) } )
+            
             return
         }
+
+        //LSApplicationQueriesSchemes only for iOS/WatchOS/tvOS
+#if os(iOS) || os(watchOS) || os(tvOS)
         if !self.hasApplicationQueriesScheme() {
             let message = "DropboxSDK: unable to link; app isn't registered to query for URL scheme dbapi-2. Add a dbapi-2 entry to LSApplicationQueriesSchemes"
+            controller.presentErrorMessage(message, completion: { fatalError(message) } )
             
-            let alertController = UIAlertController(
-                title: "SwiftyDropbox Error",
-                message: message,
-                preferredStyle: UIAlertControllerStyle.Alert)
-            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
-        if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
+#endif
+        
+        //Get platform specific app
+#if os(OSX)
+        let application = NSApp
+#else
+        let application = UIApplication.sharedApplication()
+#endif
+        
+        if application.canOpenURL(dAuthURL(nil)) {
             let nonce = NSUUID().UUIDString
             NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
             NSUserDefaults.standardUserDefaults().synchronize()
             
-            UIApplication.sharedApplication().openURL(dAuthURL(nonce))
+            application.openURL(dAuthURL(nonce))
         } else {
             let web = DropboxConnectController(
                 URL: self.authURL(),
                 tryIntercept: { url in
                     if self.canHandleURL(url) {
-                        UIApplication.sharedApplication().openURL(url)
+                        application.openURL(url)
                         return true
                     } else {
                         return false
                     }
                 }
             )
-            let navigationController = UINavigationController(rootViewController: web)
-            controller.presentViewController(navigationController, animated: true, completion: nil)
+            
+#if os(iOS) || os(watchOS) || os(tvOS)
+    let controller = UINavigationController(rootViewController: web)
+#else
+    let controller = web
+#endif
+            controller.presentViewControllerModally(controller, animated: true, completion: nil)
         }
     }
     
@@ -487,22 +496,37 @@ public class DropboxAuthManager {
     }
 }
 
+/**
+*  That's the only legal trick to subclass *ViewController easily without huge '#if os' madness
+*/
 
-public class DropboxConnectController : UIViewController, WKNavigationDelegate {
+#if os(iOS) || os(watchOS) || os(tvOS)
+    
+public class DropboxConnectMultiController:UIVewController {}
+
+#else
+
+public class DropboxConnectMultiController:NSViewController {}
+    
+#endif
+
+public class DropboxConnectController: DropboxConnectMultiController, WKNavigationDelegate {
+
     var webView : WKWebView!
     
     var onWillDismiss: ((didCancel: Bool) -> Void)?
     var tryIntercept: ((url: NSURL) -> Bool)?
     
+#if os(iOS) || os(watchOS) || os(tvOS)
     var cancelButton: UIBarButtonItem?
-    
+#endif
     
     public init() {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil, bundle: nil)!
     }
     
     public init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool)) {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil, bundle: nil)!
         self.startURL = URL
         self.tryIntercept = tryIntercept
     }
@@ -519,14 +543,30 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         
         self.webView.navigationDelegate = self
         
+#if os(iOS) || os(watchOS) || os(tvOS)
         self.view.backgroundColor = UIColor.whiteColor()
         
         self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancel:")
         self.navigationItem.rightBarButtonItem = self.cancelButton
+#endif
     }
-    
+
+#if os(iOS) || os(watchOS) || os(tvOS)
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        tryLoadURL()
+    }
+#else
+    
+    public override func viewWillAppear() {
+        super.viewWillAppear()
+        tryLoadURL()
+    }
+    
+#endif
+    
+    func tryLoadURL() -> Void {
         if !webView.canGoBack {
             if nil != startURL {
                 loadURL(startURL!)
@@ -551,7 +591,8 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     
     public var startURL: NSURL? {
         didSet(oldURL) {
-            if nil != startURL && nil == oldURL && isViewLoaded() {
+            
+            if nil != startURL && nil == oldURL && self.viewLoaded {
                 loadURL(startURL!)
             }
         }
@@ -561,9 +602,11 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         webView.loadRequest(NSURLRequest(URL: url))
     }
     
+#if os(iOS) || os(watchOS) || os(tvOS)
     func showHideBackButton(show: Bool) {
         navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: "goBack:") : nil
     }
+#endif
     
     func goBack(sender: AnyObject?) {
         webView.goBack()
@@ -581,7 +624,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         webView.stopLoading()
         
         self.onWillDismiss?(didCancel: asCancel)
-        presentingViewController?.dismissViewControllerAnimated(animated, completion: nil)
+        self.dismissCurrentViewController(animated, completion: nil)
     }
     
 }

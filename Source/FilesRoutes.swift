@@ -1,3 +1,7 @@
+#if os(OSX)
+import Cocoa
+#endif
+
 /// Routes for the files namespace
 public class FilesRoutes {
     public let client : BabelClient
