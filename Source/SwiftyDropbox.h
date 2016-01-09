@@ -1,6 +1,5 @@
 
 #import <Foundation/Foundation.h>
-#import "SecurityUtil.h"
 
 //! Project version number for SwiftyDropbox.
 FOUNDATION_EXPORT double SwiftyDropboxVersionNumber;
