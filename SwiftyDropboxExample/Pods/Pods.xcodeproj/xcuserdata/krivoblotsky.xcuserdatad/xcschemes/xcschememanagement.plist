@@ -9,7 +9,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SwiftyDropbox.xcscheme</key>
+		<key>Pods-SwiftyDropboxTests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1472CBAA5BC1DC57FB479428DFF7C475</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>432ECC54282C84882B482CCB4CF227FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D4171356C7D093DA81335ABEE61A66C3</key>
+		<key>57CFC4DF5A94826729A3A532FC59EE52</key>
 		<dict>
 			<key>primary</key>
 			<true/>

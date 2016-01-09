@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1336B3091908B41E8F17C4A4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95C27BCF6E4E1DB1E3ACD0C0 /* Pods.framework */; };
 		A728119D1C406F7600C144E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A728119C1C406F7600C144E9 /* AppDelegate.swift */; };
 		A728119F1C406F7600C144E9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A728119E1C406F7600C144E9 /* ViewController.swift */; };
 		A72811A11C406F7600C144E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A72811A01C406F7600C144E9 /* Assets.xcassets */; };
@@ -30,7 +31,6 @@
 		A72811E01C407D9D00C144E9 /* PlatformSpecificExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811DF1C407D9D00C144E9 /* PlatformSpecificExtensions.swift */; };
 		A72811E51C409E5C00C144E9 /* ArrayToCountTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811E41C409E5C00C144E9 /* ArrayToCountTransformer.swift */; };
 		A72811EB1C40A3EF00C144E9 /* DropBoxEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811EA1C40A3EF00C144E9 /* DropBoxEntry.swift */; };
-		E194F326BF8EE6A831CE0B97 /* Pods_SwiftyDropbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A08CCA7EBC70AF93084D1400 /* Pods_SwiftyDropbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,9 +44,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		90053DADBC3E799691D249C7 /* Pods-SwiftyDropbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyDropbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftyDropbox/Pods-SwiftyDropbox.debug.xcconfig"; sourceTree = "<group>"; };
-		9E03575E067EEFB4F824184E /* Pods-SwiftyDropbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyDropbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftyDropbox/Pods-SwiftyDropbox.release.xcconfig"; sourceTree = "<group>"; };
-		A08CCA7EBC70AF93084D1400 /* Pods_SwiftyDropbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftyDropbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C395849A5615E83E0E4C6BF /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		8F884AC961F35B4EC7A8AACB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		95C27BCF6E4E1DB1E3ACD0C0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A72811991C406F7600C144E9 /* SwiftyDropbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyDropbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A728119C1C406F7600C144E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A728119E1C406F7600C144E9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E194F326BF8EE6A831CE0B97 /* Pods_SwiftyDropbox.framework in Frameworks */,
+				1336B3091908B41E8F17C4A4 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,11 +97,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		19A6EE8A546FBCA5F96A4A70 /* Pods */ = {
+		0BB5E70D2EBA768460ABD113 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				90053DADBC3E799691D249C7 /* Pods-SwiftyDropbox.debug.xcconfig */,
-				9E03575E067EEFB4F824184E /* Pods-SwiftyDropbox.release.xcconfig */,
+				8F884AC961F35B4EC7A8AACB /* Pods.debug.xcconfig */,
+				7C395849A5615E83E0E4C6BF /* Pods.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -109,7 +109,7 @@
 		2589A0348FCF49BEEF4359FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A08CCA7EBC70AF93084D1400 /* Pods_SwiftyDropbox.framework */,
+				95C27BCF6E4E1DB1E3ACD0C0 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -117,11 +117,12 @@
 		A72811901C406F7600C144E9 = {
 			isa = PBXGroup;
 			children = (
+				A72811B91C406F9F00C144E9 /* Source */,
 				A728119B1C406F7600C144E9 /* SwiftyDropbox */,
 				A72811AD1C406F7700C144E9 /* SwiftyDropboxTests */,
 				A728119A1C406F7600C144E9 /* Products */,
-				19A6EE8A546FBCA5F96A4A70 /* Pods */,
 				2589A0348FCF49BEEF4359FD /* Frameworks */,
+				0BB5E70D2EBA768460ABD113 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,7 +138,6 @@
 		A728119B1C406F7600C144E9 /* SwiftyDropbox */ = {
 			isa = PBXGroup;
 			children = (
-				A72811B91C406F9F00C144E9 /* Source */,
 				A728119C1C406F7600C144E9 /* AppDelegate.swift */,
 				A728119E1C406F7600C144E9 /* ViewController.swift */,
 				A72811EA1C40A3EF00C144E9 /* DropBoxEntry.swift */,
@@ -181,7 +181,7 @@
 				A72811DF1C407D9D00C144E9 /* PlatformSpecificExtensions.swift */,
 			);
 			name = Source;
-			path = ../../Source;
+			path = ../Source;
 			sourceTree = "<group>";
 		};
 		A72811E31C409E4C00C144E9 /* Transformers */ = {
@@ -303,7 +303,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftyDropbox/Pods-SwiftyDropbox-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		256AFDB19D82ED8C603062C5 /* Embed Pods Frameworks */ = {
@@ -318,7 +318,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftyDropbox/Pods-SwiftyDropbox-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FACFF8EBEB00B773C77A99E3 /* Check Pods Manifest.lock */ = {
@@ -478,7 +478,7 @@
 		};
 		A72811B41C406F7700C144E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90053DADBC3E799691D249C7 /* Pods-SwiftyDropbox.debug.xcconfig */;
+			baseConfigurationReference = 8F884AC961F35B4EC7A8AACB /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -492,7 +492,7 @@
 		};
 		A72811B51C406F7700C144E9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E03575E067EEFB4F824184E /* Pods-SwiftyDropbox.release.xcconfig */;
+			baseConfigurationReference = 7C395849A5615E83E0E4C6BF /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;

@@ -125,7 +125,7 @@ public protocol PlatformSpecificController
     
 #else
     
-    extension NSViewController:PlatformSpecificController
+    extension UIViewController:PlatformSpecificController
     {
         /**
          See: protocol PlatformSpecificController
@@ -136,15 +136,15 @@ public protocol PlatformSpecificController
                 title: "SwiftyDropbox Error",
                 message: message,
                 preferredStyle: UIAlertControllerStyle.Alert)
-            controller.presentViewController(alertController, animated: true, completion: completion )
+            self.presentViewController(alertController, animated: true, completion: completion )
         }
         
-        func dismissCurrentViewController(animated:Bool, completion: (() -> Void)?)
+        public func dismissCurrentViewController(animated:Bool, completion: (() -> Void)?)
         {
-            presentingViewController?.dismissViewControllerAnimated(animated, completion)
+            presentingViewController?.dismissViewControllerAnimated(animated, completion: completion)
         }
         
-        func presentViewControllerModally(
+        public func presentViewControllerModally(
             controller:UIViewController,
             animated:Bool,
             completion: (() -> Void)?)

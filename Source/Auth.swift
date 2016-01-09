@@ -1,5 +1,4 @@
 
-
 import WebKit
 import Security
 import Foundation
@@ -336,6 +335,7 @@ public class DropboxAuthManager {
                 }
             )
             
+
 #if os(iOS) || os(watchOS) || os(tvOS)
     let controller = UINavigationController(rootViewController: web)
 #else
@@ -502,7 +502,7 @@ public class DropboxAuthManager {
 
 #if os(iOS) || os(watchOS) || os(tvOS)
     
-public class DropboxConnectMultiController:UIVewController {}
+public class DropboxConnectMultiController:UIViewController {}
 
 #else
 
@@ -522,11 +522,20 @@ public class DropboxConnectController: DropboxConnectMultiController, WKNavigati
 #endif
     
     public init() {
-        super.init(nibName: nil, bundle: nil)!
+#if os(iOS) || os(watchOS) || os(tvOS)
+    super.init(nibName: nil, bundle: nil)
+#else
+    super.init(nibName: nil, bundle: nil)!
+#endif
+
     }
     
     public init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool)) {
-        super.init(nibName: nil, bundle: nil)!
+#if os(iOS) || os(watchOS) || os(tvOS)
+    super.init(nibName: nil, bundle: nil)
+#else
+    super.init(nibName: nil, bundle: nil)!
+#endif
         self.startURL = URL
         self.tryIntercept = tryIntercept
     }
@@ -546,6 +555,9 @@ public class DropboxConnectController: DropboxConnectMultiController, WKNavigati
         super.viewDidLoad()
         self.title = "Link to Dropbox"
         self.webView = WKWebView(frame: self.view.bounds)
+#if os(OSX)
+        self.webView.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
+#endif
         self.view.addSubview(self.webView)
         
         self.webView.navigationDelegate = self
@@ -599,7 +611,13 @@ public class DropboxConnectController: DropboxConnectMultiController, WKNavigati
     public var startURL: NSURL? {
         didSet(oldURL) {
             
-            if nil != startURL && nil == oldURL && self.viewLoaded {
+        #if os(OSX)
+            let viewDidLoad = self.viewLoaded
+        #else
+            let viewDidLoad = self.isViewLoaded()
+        #endif
+            
+            if nil != startURL && nil == oldURL && viewDidLoad {
                 loadURL(startURL!)
             }
         }
