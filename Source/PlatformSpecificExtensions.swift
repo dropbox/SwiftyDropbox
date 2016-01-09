@@ -69,7 +69,7 @@ public protocol PlatformSpecificController
          */
         public func canOpenURL(url:NSURL) -> Bool
         {
-            return true
+            return false
         }
         
         /**

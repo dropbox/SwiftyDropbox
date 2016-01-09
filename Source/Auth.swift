@@ -321,7 +321,7 @@ public class DropboxAuthManager {
             let nonce = NSUUID().UUIDString
             NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
             NSUserDefaults.standardUserDefaults().synchronize()
-            
+                        
             application.openURL(dAuthURL(nonce))
         } else {
             let web = DropboxConnectController(
@@ -534,6 +534,13 @@ public class DropboxConnectController: DropboxConnectMultiController, WKNavigati
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+#if os(OSX)
+    public override func loadView() {
+        self.view = NSView()
+        self.view.frame = NSRect(x: 0, y: 0, width: 500, height: 400)
+    }
+#endif
     
     override public func viewDidLoad() {
         super.viewDidLoad()

@@ -28,6 +28,8 @@
 		A72811DA1C406F9F00C144E9 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811CA1C406F9F00C144E9 /* Users.swift */; };
 		A72811DB1C406F9F00C144E9 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811CB1C406F9F00C144E9 /* UsersRoutes.swift */; };
 		A72811E01C407D9D00C144E9 /* PlatformSpecificExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811DF1C407D9D00C144E9 /* PlatformSpecificExtensions.swift */; };
+		A72811E51C409E5C00C144E9 /* ArrayToCountTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811E41C409E5C00C144E9 /* ArrayToCountTransformer.swift */; };
+		A72811EB1C40A3EF00C144E9 /* DropBoxEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72811EA1C40A3EF00C144E9 /* DropBoxEntry.swift */; };
 		E194F326BF8EE6A831CE0B97 /* Pods_SwiftyDropbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A08CCA7EBC70AF93084D1400 /* Pods_SwiftyDropbox.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,6 +74,8 @@
 		A72811CA1C406F9F00C144E9 /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		A72811CB1C406F9F00C144E9 /* UsersRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersRoutes.swift; sourceTree = "<group>"; };
 		A72811DF1C407D9D00C144E9 /* PlatformSpecificExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlatformSpecificExtensions.swift; sourceTree = "<group>"; };
+		A72811E41C409E5C00C144E9 /* ArrayToCountTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayToCountTransformer.swift; sourceTree = "<group>"; };
+		A72811EA1C40A3EF00C144E9 /* DropBoxEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropBoxEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,8 @@
 				A72811B91C406F9F00C144E9 /* Source */,
 				A728119C1C406F7600C144E9 /* AppDelegate.swift */,
 				A728119E1C406F7600C144E9 /* ViewController.swift */,
+				A72811EA1C40A3EF00C144E9 /* DropBoxEntry.swift */,
+				A72811E31C409E4C00C144E9 /* Transformers */,
 				A72811A01C406F7600C144E9 /* Assets.xcassets */,
 				A72811A21C406F7700C144E9 /* Main.storyboard */,
 				A72811A51C406F7700C144E9 /* Info.plist */,
@@ -176,6 +182,14 @@
 			);
 			name = Source;
 			path = ../../Source;
+			sourceTree = "<group>";
+		};
+		A72811E31C409E4C00C144E9 /* Transformers */ = {
+			isa = PBXGroup;
+			children = (
+				A72811E41C409E5C00C144E9 /* ArrayToCountTransformer.swift */,
+			);
+			path = Transformers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,12 +345,14 @@
 			files = (
 				A728119F1C406F7600C144E9 /* ViewController.swift in Sources */,
 				A72811D01C406F9F00C144E9 /* Client.swift in Sources */,
+				A72811EB1C40A3EF00C144E9 /* DropBoxEntry.swift in Sources */,
 				A72811CF1C406F9F00C144E9 /* BabelValidators.swift in Sources */,
 				A72811D91C406F9F00C144E9 /* Team.swift in Sources */,
 				A72811D41C406F9F00C144E9 /* FilesRoutes.swift in Sources */,
 				A72811D11C406F9F00C144E9 /* DropboxClient.swift in Sources */,
 				A72811E01C407D9D00C144E9 /* PlatformSpecificExtensions.swift in Sources */,
 				A72811CC1C406F9F00C144E9 /* Async.swift in Sources */,
+				A72811E51C409E5C00C144E9 /* ArrayToCountTransformer.swift in Sources */,
 				A72811DB1C406F9F00C144E9 /* UsersRoutes.swift in Sources */,
 				A72811CE1C406F9F00C144E9 /* BabelSerializers.swift in Sources */,
 				A72811DA1C406F9F00C144E9 /* Users.swift in Sources */,
