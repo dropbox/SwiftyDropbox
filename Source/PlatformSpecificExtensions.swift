@@ -17,6 +17,13 @@ import Foundation
 public protocol PlatformSpecificController
 {
     /**
+     Represents the status of view loading. Actually its a wrapper on isViewLoaded()
+     
+     - returns: Bool
+     */
+    func viewActuallyLoaded() -> Bool
+    
+    /**
      Presents an error message for user
      
      - parameter message:    String
@@ -94,12 +101,14 @@ public protocol PlatformSpecificController
     }
     
     //NSViewController extensions
-    //
+    //See PlatformSpecificController protocol for documentation
     extension NSViewController:PlatformSpecificController
     {
-        /**
-         See: protocol PlatformSpecificController
-         */
+        public func viewActuallyLoaded() -> Bool
+        {
+            return self.viewLoaded
+        }
+        
         public func presentErrorMessage(message: String, completion: () -> Void)
         {
             let error = NSError(domain: "", code: 123, userInfo: [NSLocalizedDescriptionKey:message])
@@ -125,11 +134,15 @@ public protocol PlatformSpecificController
     
 #else
     
+    //NSViewController extensions
+    //See PlatformSpecificController protocol for documentation
     extension UIViewController:PlatformSpecificController
     {
-        /**
-         See: protocol PlatformSpecificController
-         */
+        public func viewActuallyLoaded() -> Bool
+        {
+            return self.isViewLoaded()
+        }
+        
         public func presentErrorMessage(message: String, completion: () -> Void)
         {
             let alertController = UIAlertController(

@@ -1,11 +1,9 @@
-
 #if os(iOS) || os(watchOS) || os(tvOS)
     import UIKit
 #else
     import AppKit
 #endif
 
-import WebKit
 import Security
 import Foundation
 
@@ -342,11 +340,11 @@ public class DropboxAuthManager {
             
 
 #if os(iOS) || os(watchOS) || os(tvOS)
-    let controller = UINavigationController(rootViewController: web)
+    let loginController = UINavigationController(rootViewController: web)
 #else
-    let controller = web
+    let loginController = web
 #endif
-            controller.presentViewControllerModally(controller, animated: true, completion: nil)
+            controller.presentViewControllerModally(loginController, animated: true, completion: nil)
         }
     }
     
@@ -499,162 +497,4 @@ public class DropboxAuthManager {
     public func getFirstAccessToken() -> DropboxAccessToken? {
         return self.getAllAccessTokens().values.first
     }
-}
-
-/**
-*  That's the only legal trick to subclass *ViewController easily without huge '#if os' madness
-*/
-
-#if os(iOS) || os(watchOS) || os(tvOS)
-    
-public class DropboxConnectMultiController:UIViewController {}
-
-#else
-
-public class DropboxConnectMultiController:NSViewController {}
-    
-#endif
-
-public class DropboxConnectController: DropboxConnectMultiController, WKNavigationDelegate {
-
-    var webView : WKWebView!
-    
-    var onWillDismiss: ((didCancel: Bool) -> Void)?
-    var tryIntercept: ((url: NSURL) -> Bool)?
-    
-#if os(iOS) || os(watchOS) || os(tvOS)
-    var cancelButton: UIBarButtonItem?
-#endif
-    
-    public init() {
-#if os(iOS) || os(watchOS) || os(tvOS)
-    super.init(nibName: nil, bundle: nil)
-#else
-    super.init(nibName: nil, bundle: nil)!
-#endif
-
-    }
-    
-    public init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool)) {
-#if os(iOS) || os(watchOS) || os(tvOS)
-    super.init(nibName: nil, bundle: nil)
-#else
-    super.init(nibName: nil, bundle: nil)!
-#endif
-        self.startURL = URL
-        self.tryIntercept = tryIntercept
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-#if os(OSX)
-    public override func loadView() {
-        self.view = NSView()
-        self.view.frame = NSRect(x: 0, y: 0, width: 500, height: 400)
-    }
-#endif
-    
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        self.title = "Link to Dropbox"
-        self.webView = WKWebView(frame: self.view.bounds)
-#if os(OSX)
-        self.webView.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
-#endif
-        self.view.addSubview(self.webView)
-        
-        self.webView.navigationDelegate = self
-        
-#if os(iOS) || os(watchOS) || os(tvOS)
-        self.view.backgroundColor = UIColor.whiteColor()
-        
-        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancel:")
-        self.navigationItem.rightBarButtonItem = self.cancelButton
-#endif
-    }
-
-#if os(iOS) || os(watchOS) || os(tvOS)
-    public override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        tryLoadURL()
-    }
-#else
-    
-    public override func viewWillAppear() {
-        super.viewWillAppear()
-        tryLoadURL()
-    }
-    
-#endif
-    
-    func tryLoadURL() -> Void {
-        if !webView.canGoBack {
-            if nil != startURL {
-                loadURL(startURL!)
-            }
-            else {
-                webView.loadHTMLString("There is no `startURL`", baseURL: nil)
-            }
-        }
-    }
-    
-    public func webView(webView: WKWebView,
-        decidePolicyForNavigationAction navigationAction: WKNavigationAction,
-        decisionHandler: (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.URL, callback = self.tryIntercept {
-            if callback(url: url) {
-                self.dismiss(true)
-                return decisionHandler(.Cancel)
-            }
-        }
-        return decisionHandler(.Allow)
-    }
-    
-    public var startURL: NSURL? {
-        didSet(oldURL) {
-            
-        #if os(OSX)
-            let viewDidLoad = self.viewLoaded
-        #else
-            let viewDidLoad = self.isViewLoaded()
-        #endif
-            
-            if nil != startURL && nil == oldURL && viewDidLoad {
-                loadURL(startURL!)
-            }
-        }
-    }
-    
-    public func loadURL(url: NSURL) {
-        webView.loadRequest(NSURLRequest(URL: url))
-    }
-    
-#if os(iOS) || os(watchOS) || os(tvOS)
-    func showHideBackButton(show: Bool) {
-        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: "goBack:") : nil
-    }
-#endif
-    
-    func goBack(sender: AnyObject?) {
-        webView.goBack()
-    }
-    
-    func cancel(sender: AnyObject?) {
-        dismiss(true, animated: (sender != nil))
-    }
-    
-    func dismiss(animated: Bool) {
-        dismiss(false, animated: animated)
-    }
-    
-    func dismiss(asCancel: Bool, animated: Bool) {
-        webView.stopLoading()
-        
-        self.onWillDismiss?(didCancel: asCancel)
-        self.dismissCurrentViewController(animated, completion: nil)
-    }
-    
 }
