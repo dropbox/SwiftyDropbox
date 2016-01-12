@@ -101,6 +101,19 @@ public class FilesRoutes {
         return BabelDownloadRequest(client: self.client, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination)
     }
     /**
+     Retrieve the data of a file from a user's Dropbox.
+     
+     - parameter path: The path of the file to download.
+     - parameter rev: Deprecated. Please specify revision in :field:'path' instead
+     
+     - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
+     `Files.DownloadError` object on failure.
+     */
+    public func retrieveDataOfFileAtPath(path path: String, rev: String? = nil) -> BabelDataRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+        let request = Files.DownloadArg(path: path, rev: rev)
+        return BabelDataRequest(client: self.client, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer())
+    }
+    /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
         with the given data.  You can then use uploadSessionAppend to add more data and uploadSessionFinish to save all
         the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.

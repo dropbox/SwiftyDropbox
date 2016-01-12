@@ -344,3 +344,62 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         return self
     }
 }
+
+public class BabelDataRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
+    init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
+        
+        let url = "\(client.baseHosts[host]!)\(route)"
+        var headers = [String : String]()
+        
+        if let data = dumpJSON(params) {
+            let value = asciiEscape(utf8Decode(data))
+            headers["Dropbox-Api-Arg"] = value
+        }
+        
+        let noauth = (host == "notify")
+        for (header, val) in client.additionalHeaders(noauth) {
+            headers[header] = val
+        }
+        
+        
+        let request = client.manager.request(.POST, url, parameters: [:], encoding: ParameterEncoding.JSON, headers: headers)
+        
+        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+        
+        request.resume()
+    }
+    
+    /// Called as the download progresses
+    ///
+    /// :param: closure
+    ///         a callback taking three arguments (`bytesRead`, `totalBytesRead`, `totalBytesExpectedToRead`)
+    /// :returns: The request, for chaining purposes.
+    public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
+        self.request.progress(closure)
+        return self
+    }
+    
+    /// Called when a request completes.
+    ///
+    /// :param: completionHandler
+    ///         A callback taking two arguments (`response`, `error`) which handles the result of the call appropriately.
+    /// :returns: The request, for chaining purposes.
+    public func response(completionHandler: ( (RType.ValueType, NSData?)?, CallError<EType.ValueType>?) -> Void) -> Self {
+        
+        self.request.validate()
+            .response {
+                (request, response, dataObj, error) -> Void in
+                if error != nil {
+                    let data = dataObj!
+                    completionHandler(nil, self.handleResponseError(response, data: data, error: error))
+                } else {
+                    let result = response!.allHeaderFields["Dropbox-Api-Result"] as! String
+                    let resultData = result.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+                    let resultObject = self.responseSerializer.deserialize(parseJSON(resultData))
+                    
+                    completionHandler( (resultObject, dataObj), nil)
+                }
+        }
+        return self
+    }
+}
