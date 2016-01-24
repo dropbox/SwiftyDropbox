@@ -6,7 +6,7 @@
 //  Copyright © 2016 Home. All rights reserved.
 //
 
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     import UIKit
 #else
     import AppKit
@@ -19,7 +19,7 @@ import Foundation
 *  That's the only legal trick to subclass *ViewController easily without huge '#if os' madness
 */
 
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     
 internal class DropboxConnectMultiBaseController:UIViewController {}
     
@@ -41,7 +41,7 @@ internal class DropboxConnectBaseController: DropboxConnectMultiBaseController, 
     //Constructors
     
     init() {
-        #if os(iOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(tvOS)
         super.init(nibName: nil, bundle: nil)
         #else
         super.init(nibName: nil, bundle: nil)!
@@ -49,7 +49,7 @@ internal class DropboxConnectBaseController: DropboxConnectMultiBaseController, 
     }
     
     init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool)) {
-        #if os(iOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(tvOS)
             super.init(nibName: nil, bundle: nil)
         #else
             super.init(nibName: nil, bundle: nil)!
@@ -137,7 +137,7 @@ internal class DropboxConnectBaseController: DropboxConnectMultiBaseController, 
     }
 }
 
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
 
 //iOS
 internal class DropboxConnectController: DropboxConnectBaseController {

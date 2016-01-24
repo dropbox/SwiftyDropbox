@@ -1,4 +1,4 @@
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     import UIKit
 #else
     import AppKit
@@ -188,6 +188,12 @@ class Keychain {
         return SecItemDelete(query) == noErr
     }
 }
+
+private class SafariAuth
+{
+    
+}
+
 /// Manages access token storage and authentication
 ///
 /// Use the `DropboxAuthManager` to authenticate users through OAuth2, save access tokens, and retrieve access tokens.
@@ -302,8 +308,8 @@ public class DropboxAuthManager {
             return
         }
 
-        //LSApplicationQueriesSchemes only for iOS/WatchOS/tvOS
-#if os(iOS) || os(watchOS) || os(tvOS)
+        //LSApplicationQueriesSchemes only for iOS/tvOS
+#if os(iOS) || os(tvOS)
         if !self.hasApplicationQueriesScheme() {
             let message = "DropboxSDK: unable to link; app isn't registered to query for URL scheme dbapi-2. Add a dbapi-2 entry to LSApplicationQueriesSchemes"
             controller.presentErrorMessage(message, completion: { fatalError(message) } )
@@ -319,33 +325,82 @@ public class DropboxAuthManager {
         let application = UIApplication.sharedApplication()
 #endif
         
+        //Use direct auth
         if application.canOpenURL(dAuthURL(nil)) {
-            let nonce = NSUUID().UUIDString
-            NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
-            NSUserDefaults.standardUserDefaults().synchronize()
-                        
-            application.openURL(dAuthURL(nonce))
-        } else {
-            let web = DropboxConnectController(
-                URL: self.authURL(),
-                tryIntercept: { url in
-                    if self.canHandleURL(url) {
-                        application.openURL(url)
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-            )
             
+            self.directAuth({ (nonce) -> Void in
+                
+                application.openURL(self.dAuthURL(nonce))
+            })
+            
+        //Use Browser Auth
+        } else if BrowserAuth.available() {
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-    let loginController = UINavigationController(rootViewController: web)
-#else
-    let loginController = web
-#endif
-            controller.presentViewControllerModally(loginController, animated: true, completion: nil)
+            self.browserAuth(self.authURL(), redirectHandler: { (url) -> Void in
+                
+                guard let redirectURL = url else { return }
+                
+                application.openURL(redirectURL)
+            })
+            
+        //Use Web View Auth
+        } else {
+            
+            self.webViewAuth(self.authURL(), controller: controller, redirectHandler: { (url) -> Bool in
+                
+                if self.canHandleURL(url) {
+                    application.openURL(url)
+                    return true
+                } else {
+                    return false
+                }
+            })
+            
         }
+    }
+    
+    private func directAuth(nonceHandler:(nonce: String) -> Void)
+    {
+        let nonce = NSUUID().UUIDString
+        NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        nonceHandler(nonce:nonce)
+    }
+    
+    private var browserAuthentificator:BrowserAuth?
+    private func browserAuth(url:NSURL, redirectHandler:(url: NSURL?) -> Void)
+    {
+        //Create browser auth
+        let browser = BrowserAuth(
+            url: url,
+            handler: { [unowned self] (url) -> Void in
+            
+            //Check for auth url
+            redirectHandler(url:url)
+            
+            //Release the browser
+            self.browserAuthentificator = nil
+        })
+        
+        //Keep the reference
+        self.browserAuthentificator = browser
+        self.browserAuthentificator?.authentificate()
+    }
+    
+    private func webViewAuth(url:NSURL, controller:PlatformSpecificController, redirectHandler:(url: NSURL) -> Bool)
+    {
+        let web = DropboxConnectController(
+            URL: url,
+            tryIntercept: redirectHandler
+        )
+        
+        #if os(iOS)
+            let loginController = UINavigationController(rootViewController: web)
+        #elseif os(OSX)
+            let loginController = web
+        #endif
+        controller.presentViewControllerModally(loginController, animated: true, completion: nil)
     }
     
     private func extractfromDAuthURL(url: NSURL) -> DropboxAuthResult {
