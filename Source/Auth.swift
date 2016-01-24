@@ -1,10 +1,11 @@
-import UIKit
-import WebKit
+#if os(iOS) || os(tvOS)
+    import UIKit
+#else
+    import AppKit
+#endif
 
 import Security
-
 import Foundation
-
 
 /// A Dropbox access token
 public class DropboxAccessToken : CustomStringConvertible {
@@ -187,6 +188,12 @@ class Keychain {
         return SecItemDelete(query) == noErr
     }
 }
+
+private class SafariAuth
+{
+    
+}
+
 /// Manages access token storage and authentication
 ///
 /// Use the `DropboxAuthManager` to authenticate users through OAuth2, save access tokens, and retrieve access tokens.
@@ -293,47 +300,107 @@ public class DropboxAuthManager {
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
     /// parameter controller: The controller to present from
-    public func authorizeFromController(controller: UIViewController) {
+    public func authorizeFromController(controller: PlatformSpecificController) {
         if !self.conformsToAppScheme() {
             let message = "DropboxSDK: unable to link; app isn't registered for correct URL scheme (db-\(self.appKey))"
-            let alertController = UIAlertController(
-                title: "SwiftyDropbox Error",
-                message: message,
-                preferredStyle: UIAlertControllerStyle.Alert)
-            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
+            controller.presentErrorMessage(message, completion: { fatalError(message) } )
+            
             return
         }
+
+        //LSApplicationQueriesSchemes only for iOS/tvOS
+#if os(iOS) || os(tvOS)
         if !self.hasApplicationQueriesScheme() {
             let message = "DropboxSDK: unable to link; app isn't registered to query for URL scheme dbapi-2. Add a dbapi-2 entry to LSApplicationQueriesSchemes"
+            controller.presentErrorMessage(message, completion: { fatalError(message) } )
             
-            let alertController = UIAlertController(
-                title: "SwiftyDropbox Error",
-                message: message,
-                preferredStyle: UIAlertControllerStyle.Alert)
-            controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
-        if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
-            let nonce = NSUUID().UUIDString
-            NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
-            NSUserDefaults.standardUserDefaults().synchronize()
+#endif
+        
+        //Get platform specific app
+#if os(OSX)
+        let application = NSApp
+#else
+        let application = UIApplication.sharedApplication()
+#endif
+        
+        //Use direct auth
+        if application.canOpenURL(dAuthURL(nil)) {
             
-            UIApplication.sharedApplication().openURL(dAuthURL(nonce))
+            self.directAuth({ (nonce) -> Void in
+                
+                application.openURL(self.dAuthURL(nonce))
+            })
+            
+        //Use Browser Auth
+        } else if BrowserAuth.available() {
+
+            self.browserAuth(self.authURL(), redirectHandler: { (url) -> Void in
+                
+                guard let redirectURL = url else { return }
+                
+                application.openURL(redirectURL)
+            })
+            
+        //Use Web View Auth
         } else {
-            let web = DropboxConnectController(
-                URL: self.authURL(),
-                tryIntercept: { url in
-                    if self.canHandleURL(url) {
-                        UIApplication.sharedApplication().openURL(url)
-                        return true
-                    } else {
-                        return false
-                    }
+            
+            self.webViewAuth(self.authURL(), controller: controller, redirectHandler: { (url) -> Bool in
+                
+                if self.canHandleURL(url) {
+                    application.openURL(url)
+                    return true
+                } else {
+                    return false
                 }
-            )
-            let navigationController = UINavigationController(rootViewController: web)
-            controller.presentViewController(navigationController, animated: true, completion: nil)
+            })
+            
         }
+    }
+    
+    private func directAuth(nonceHandler:(nonce: String) -> Void)
+    {
+        let nonce = NSUUID().UUIDString
+        NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        nonceHandler(nonce:nonce)
+    }
+    
+    private var browserAuthentificator:BrowserAuth?
+    private func browserAuth(url:NSURL, redirectHandler:(url: NSURL?) -> Void)
+    {
+        //Create browser auth
+        let browser = BrowserAuth(
+            url: url,
+            handler: { [unowned self] (url) -> Void in
+            
+            //Check for auth url
+            redirectHandler(url:url)
+            
+            //Release the browser
+            self.browserAuthentificator = nil
+        })
+        
+        //Keep the reference
+        self.browserAuthentificator = browser
+        self.browserAuthentificator?.authentificate()
+    }
+    
+    private func webViewAuth(url:NSURL, controller:PlatformSpecificController, redirectHandler:(url: NSURL) -> Bool)
+    {
+        let web = DropboxConnectController(
+            URL: url,
+            tryIntercept: redirectHandler
+        )
+        
+        #if os(iOS)
+            let loginController = UINavigationController(rootViewController: web)
+        #elseif os(OSX)
+            let loginController = web
+        #endif
+        controller.presentViewControllerModally(loginController, animated: true, completion: nil)
     }
     
     private func extractfromDAuthURL(url: NSURL) -> DropboxAuthResult {
@@ -485,103 +552,4 @@ public class DropboxAuthManager {
     public func getFirstAccessToken() -> DropboxAccessToken? {
         return self.getAllAccessTokens().values.first
     }
-}
-
-
-public class DropboxConnectController : UIViewController, WKNavigationDelegate {
-    var webView : WKWebView!
-    
-    var onWillDismiss: ((didCancel: Bool) -> Void)?
-    var tryIntercept: ((url: NSURL) -> Bool)?
-    
-    var cancelButton: UIBarButtonItem?
-    
-    
-    public init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    public init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool)) {
-        super.init(nibName: nil, bundle: nil)
-        self.startURL = URL
-        self.tryIntercept = tryIntercept
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        self.title = "Link to Dropbox"
-        self.webView = WKWebView(frame: self.view.bounds)
-        self.view.addSubview(self.webView)
-        
-        self.webView.navigationDelegate = self
-        
-        self.view.backgroundColor = UIColor.whiteColor()
-        
-        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancel:")
-        self.navigationItem.rightBarButtonItem = self.cancelButton
-    }
-    
-    public override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        if !webView.canGoBack {
-            if nil != startURL {
-                loadURL(startURL!)
-            }
-            else {
-                webView.loadHTMLString("There is no `startURL`", baseURL: nil)
-            }
-        }
-    }
-    
-    public func webView(webView: WKWebView,
-        decidePolicyForNavigationAction navigationAction: WKNavigationAction,
-        decisionHandler: (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.URL, callback = self.tryIntercept {
-            if callback(url: url) {
-                self.dismiss(true)
-                return decisionHandler(.Cancel)
-            }
-        }
-        return decisionHandler(.Allow)
-    }
-    
-    public var startURL: NSURL? {
-        didSet(oldURL) {
-            if nil != startURL && nil == oldURL && isViewLoaded() {
-                loadURL(startURL!)
-            }
-        }
-    }
-    
-    public func loadURL(url: NSURL) {
-        webView.loadRequest(NSURLRequest(URL: url))
-    }
-    
-    func showHideBackButton(show: Bool) {
-        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: "goBack:") : nil
-    }
-    
-    func goBack(sender: AnyObject?) {
-        webView.goBack()
-    }
-    
-    func cancel(sender: AnyObject?) {
-        dismiss(true, animated: (sender != nil))
-    }
-    
-    func dismiss(animated: Bool) {
-        dismiss(false, animated: animated)
-    }
-    
-    func dismiss(asCancel: Bool, animated: Bool) {
-        webView.stopLoading()
-        
-        self.onWillDismiss?(didCancel: asCancel)
-        presentingViewController?.dismissViewControllerAnimated(animated, completion: nil)
-    }
-    
 }

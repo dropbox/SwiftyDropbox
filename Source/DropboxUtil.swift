@@ -6,6 +6,12 @@
 //
 //
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+import UIKit
+#else
+import AppKit
+#endif
+
 import Foundation
 import Alamofire
 
@@ -70,11 +76,20 @@ public class Dropbox {
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
     /// - parameter controller: The controller to present from
+    
+#if os(iOS) || os(watchOS) || os(tvOS)
     public static func authorizeFromController(controller: UIViewController) {
         precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
         precondition(Dropbox.authorizedClient == nil, "Client is already authorized")
         DropboxAuthManager.sharedAuthManager.authorizeFromController(controller)
     }
+#else
+    public static func authorizeFromController(controller: NSViewController) {
+        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
+        precondition(Dropbox.authorizedClient == nil, "Client is already authorized")
+        DropboxAuthManager.sharedAuthManager.authorizeFromController(controller)
+    }
+#endif
 
     /// Handle a redirect and automatically initialize the client and save the token.
     public static func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
