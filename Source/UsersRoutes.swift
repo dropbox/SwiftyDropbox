@@ -17,6 +17,18 @@ public class UsersRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/users/get_account", params: Users.GetAccountArgSerializer().serialize(request), responseSerializer: Users.BasicAccountSerializer(), errorSerializer: Users.GetAccountErrorSerializer())
     }
     /**
+        Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+
+        - parameter accountIds: List of user account identifiers.  Should not contain any duplicate account IDs.
+
+         - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
+        success or a `Users.GetAccountBatchError` object on failure.
+    */
+    public func getAccountBatch(accountIds accountIds: Array<String>) -> BabelRpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
+        let request = Users.GetAccountBatchArg(accountIds: accountIds)
+        return BabelRpcRequest(client: self.client, host: "meta", route: "/users/get_account_batch", params: Users.GetAccountBatchArgSerializer().serialize(request), responseSerializer: ArraySerializer(Users.BasicAccountSerializer()), errorSerializer: Users.GetAccountBatchErrorSerializer())
+    }
+    /**
         Get information about the current user's account.
 
 
@@ -35,17 +47,5 @@ public class UsersRoutes {
     */
     public func getSpaceUsage() -> BabelRpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/users/get_space_usage", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
-    }
-    /**
-        Get information about multiple user accounts.  At most 300 accounts may be queried per request.
-
-        - parameter accountIds: List of user account identifiers.  Should not contain any duplicate account IDs.
-
-         - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
-        success or a `Users.GetAccountBatchError` object on failure.
-    */
-    public func getAccountBatch(accountIds accountIds: Array<String>) -> BabelRpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
-        let request = Users.GetAccountBatchArg(accountIds: accountIds)
-        return BabelRpcRequest(client: self.client, host: "meta", route: "/users/get_account_batch", params: Users.GetAccountBatchArgSerializer().serialize(request), responseSerializer: ArraySerializer(Users.BasicAccountSerializer()), errorSerializer: Users.GetAccountBatchErrorSerializer())
     }
 }

@@ -16,6 +16,7 @@
       "name": "Data Types", 
       "children": [
         "Async", 
+        "Auth", 
         "Files", 
         "Sharing", 
         "Team", 

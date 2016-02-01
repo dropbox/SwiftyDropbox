@@ -35,7 +35,7 @@ public func stringValidator(minLength minLength : Int? = nil, maxLength : Int? =
     
     if let pat = pattern {
         // patterns much match entire input sequence
-        let re = try! NSRegularExpression(pattern: "\\A\(pat)\\z", options: NSRegularExpressionOptions())
+        let re = try! NSRegularExpression(pattern: "\\A(?:\(pat))\\z", options: NSRegularExpressionOptions())
         let matches = re.matchesInString(value, options: NSMatchingOptions(), range: NSMakeRange(0, length))
         _assertFunc(matches.count > 0, "\"\(value) must match pattern \"\(re.pattern)\"")
     }

@@ -7,78 +7,39 @@ import Foundation
 */
 public class Users {
     /**
-        The GetAccountArg struct
+        The amount of detail revealed about an account depends on the user being queried and the user making the query.
     */
-    public class GetAccountArg: CustomStringConvertible {
-        /// A user's account identifier.
+    public class Account: CustomStringConvertible {
+        /// The user's unique Dropbox ID.
         public let accountId : String
-        public init(accountId: String) {
+        /// Details of a user's name.
+        public let name : Users.Name
+        public init(accountId: String, name: Users.Name) {
             stringValidator(minLength: 40, maxLength: 40)(value: accountId)
             self.accountId = accountId
+            self.name = name
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(AccountSerializer().serialize(self)))"
         }
     }
-    public class GetAccountArgSerializer: JSONSerializer {
+    public class AccountSerializer: JSONSerializer {
         public init() { }
-        public func serialize(value: GetAccountArg) -> JSON {
+        public func serialize(value: Account) -> JSON {
             let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
+            "name": Users.NameSerializer().serialize(value.name),
             ]
             return .Dictionary(output)
         }
-        public func deserialize(json: JSON) -> GetAccountArg {
+        public func deserialize(json: JSON) -> Account {
             switch json {
                 case .Dictionary(let dict):
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
-                    return GetAccountArg(accountId: accountId)
+                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
+                    return Account(accountId: accountId, name: name)
                 default:
                     fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
-        The GetAccountError union
-    */
-    public enum GetAccountError: CustomStringConvertible {
-        /**
-            The specified accountId in GetAccountArg does not exist.
-        */
-        case NoAccount
-        case Unknown
-        public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
-        }
-    }
-    public class GetAccountErrorSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: GetAccountError) -> JSON {
-            switch value {
-                case .NoAccount:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("no_account")
-                    return .Dictionary(d)
-                case .Unknown:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("unknown")
-                    return .Dictionary(d)
-            }
-        }
-        public func deserialize(json: JSON) -> GetAccountError {
-            switch json {
-                case .Dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "no_account":
-                            return GetAccountError.NoAccount
-                        case "unknown":
-                            return GetAccountError.Unknown
-                        default:
-                            return GetAccountError.Unknown
-                    }
-                default:
-                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -140,43 +101,6 @@ public class Users {
         }
     }
     /**
-        The amount of detail revealed about an account depends on the user being queried and the user making the query.
-    */
-    public class Account: CustomStringConvertible {
-        /// The user's unique Dropbox ID.
-        public let accountId : String
-        /// Details of a user's name.
-        public let name : Users.Name
-        public init(accountId: String, name: Users.Name) {
-            stringValidator(minLength: 40, maxLength: 40)(value: accountId)
-            self.accountId = accountId
-            self.name = name
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(AccountSerializer().serialize(self)))"
-        }
-    }
-    public class AccountSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: Account) -> JSON {
-            let output = [ 
-            "account_id": Serialization._StringSerializer.serialize(value.accountId),
-            "name": Users.NameSerializer().serialize(value.name),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> Account {
-            switch json {
-                case .Dictionary(let dict):
-                    let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
-                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
-                    return Account(accountId: accountId, name: name)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
         Basic information about any account.
     */
     public class BasicAccount: Users.Account {
@@ -217,8 +141,11 @@ public class Users {
         Detailed information about the current user's account.
     */
     public class FullAccount: Users.Account {
-        /// The user's e-mail address.
+        /// The user's e-mail address. Do not rely on this without checking the emailVerified field. Even then, it's
+        /// possible that the user has since lost access to their e-mail.
         public let email : String
+        /// Whether the user has verified their e-mail address.
+        public let emailVerified : Bool
         /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
         /// http://en.wikipedia.org/wiki/ISO_3166-1.
         public let country : String?
@@ -234,9 +161,10 @@ public class Users {
         public let isPaired : Bool
         /// What type of account this user has.
         public let accountType : Users.AccountType
-        public init(accountId: String, name: Users.Name, email: String, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil) {
+        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil) {
             stringValidator()(value: email)
             self.email = email
+            self.emailVerified = emailVerified
             nullableValidator(stringValidator(minLength: 2, maxLength: 2))(value: country)
             self.country = country
             stringValidator(minLength: 2)(value: locale)
@@ -259,6 +187,7 @@ public class Users {
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
             "email": Serialization._StringSerializer.serialize(value.email),
+            "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
             "locale": Serialization._StringSerializer.serialize(value.locale),
             "referral_link": Serialization._StringSerializer.serialize(value.referralLink),
             "is_paired": Serialization._BoolSerializer.serialize(value.isPaired),
@@ -274,265 +203,46 @@ public class Users {
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
                     let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
                     let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .Null)
+                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .Null)
                     let locale = Serialization._StringSerializer.deserialize(dict["locale"] ?? .Null)
                     let referralLink = Serialization._StringSerializer.deserialize(dict["referral_link"] ?? .Null)
                     let isPaired = Serialization._BoolSerializer.deserialize(dict["is_paired"] ?? .Null)
                     let accountType = Users.AccountTypeSerializer().deserialize(dict["account_type"] ?? .Null)
                     let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
                     let team = NullableSerializer(Users.TeamSerializer()).deserialize(dict["team"] ?? .Null)
-                    return FullAccount(accountId: accountId, name: name, email: email, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
+                    return FullAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
                 default:
                     fatalError("Type error deserializing")
             }
         }
     }
     /**
-        Information about a team.
+        The GetAccountArg struct
     */
-    public class Team: CustomStringConvertible {
-        /// The team's unique ID.
-        public let id : String
-        /// The name of the team.
-        public let name : String
-        public init(id: String, name: String) {
-            stringValidator()(value: id)
-            self.id = id
-            stringValidator()(value: name)
-            self.name = name
+    public class GetAccountArg: CustomStringConvertible {
+        /// A user's account identifier.
+        public let accountId : String
+        public init(accountId: String) {
+            stringValidator(minLength: 40, maxLength: 40)(value: accountId)
+            self.accountId = accountId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(TeamSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(GetAccountArgSerializer().serialize(self)))"
         }
     }
-    public class TeamSerializer: JSONSerializer {
+    public class GetAccountArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(value: Team) -> JSON {
+        public func serialize(value: GetAccountArg) -> JSON {
             let output = [ 
-            "id": Serialization._StringSerializer.serialize(value.id),
-            "name": Serialization._StringSerializer.serialize(value.name),
+            "account_id": Serialization._StringSerializer.serialize(value.accountId),
             ]
             return .Dictionary(output)
         }
-        public func deserialize(json: JSON) -> Team {
+        public func deserialize(json: JSON) -> GetAccountArg {
             switch json {
                 case .Dictionary(let dict):
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    return Team(id: id, name: name)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
-        Representations for a person's name to assist with internationalization.
-    */
-    public class Name: CustomStringConvertible {
-        /// Also known as a first name.
-        public let givenName : String
-        /// Also known as a last name or family name.
-        public let surname : String
-        /// Locale-dependent name. In the US, a person's familiar name is their givenName, but elsewhere, it could be
-        /// any combination of a person's givenName and surname.
-        public let familiarName : String
-        /// A name that can be used directly to represent the name of a user's Dropbox account.
-        public let displayName : String
-        public init(givenName: String, surname: String, familiarName: String, displayName: String) {
-            stringValidator()(value: givenName)
-            self.givenName = givenName
-            stringValidator()(value: surname)
-            self.surname = surname
-            stringValidator()(value: familiarName)
-            self.familiarName = familiarName
-            stringValidator()(value: displayName)
-            self.displayName = displayName
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(NameSerializer().serialize(self)))"
-        }
-    }
-    public class NameSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: Name) -> JSON {
-            let output = [ 
-            "given_name": Serialization._StringSerializer.serialize(value.givenName),
-            "surname": Serialization._StringSerializer.serialize(value.surname),
-            "familiar_name": Serialization._StringSerializer.serialize(value.familiarName),
-            "display_name": Serialization._StringSerializer.serialize(value.displayName),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> Name {
-            switch json {
-                case .Dictionary(let dict):
-                    let givenName = Serialization._StringSerializer.deserialize(dict["given_name"] ?? .Null)
-                    let surname = Serialization._StringSerializer.deserialize(dict["surname"] ?? .Null)
-                    let familiarName = Serialization._StringSerializer.deserialize(dict["familiar_name"] ?? .Null)
-                    let displayName = Serialization._StringSerializer.deserialize(dict["display_name"] ?? .Null)
-                    return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
-        Information about a user's space usage and quota.
-    */
-    public class SpaceUsage: CustomStringConvertible {
-        /// The user's total space usage (bytes).
-        public let used : UInt64
-        /// The user's space allocation.
-        public let allocation : Users.SpaceAllocation
-        public init(used: UInt64, allocation: Users.SpaceAllocation) {
-            comparableValidator()(value: used)
-            self.used = used
-            self.allocation = allocation
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
-        }
-    }
-    public class SpaceUsageSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: SpaceUsage) -> JSON {
-            let output = [ 
-            "used": Serialization._UInt64Serializer.serialize(value.used),
-            "allocation": Users.SpaceAllocationSerializer().serialize(value.allocation),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> SpaceUsage {
-            switch json {
-                case .Dictionary(let dict):
-                    let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .Null)
-                    let allocation = Users.SpaceAllocationSerializer().deserialize(dict["allocation"] ?? .Null)
-                    return SpaceUsage(used: used, allocation: allocation)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
-        Space is allocated differently based on the type of account.
-    */
-    public enum SpaceAllocation: CustomStringConvertible {
-        /**
-            The user's space allocation applies only to their individual account.
-        */
-        case Individual(Users.IndividualSpaceAllocation)
-        /**
-            The user shares space with other members of their team.
-        */
-        case Team(Users.TeamSpaceAllocation)
-        case Other
-        public var description : String {
-            return "\(prepareJSONForSerialization(SpaceAllocationSerializer().serialize(self)))"
-        }
-    }
-    public class SpaceAllocationSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: SpaceAllocation) -> JSON {
-            switch value {
-                case .Individual(let arg):
-                    var d = Serialization.getFields(Users.IndividualSpaceAllocationSerializer().serialize(arg))
-                    d[".tag"] = .Str("individual")
-                    return .Dictionary(d)
-                case .Team(let arg):
-                    var d = Serialization.getFields(Users.TeamSpaceAllocationSerializer().serialize(arg))
-                    d[".tag"] = .Str("team")
-                    return .Dictionary(d)
-                case .Other:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("other")
-                    return .Dictionary(d)
-            }
-        }
-        public func deserialize(json: JSON) -> SpaceAllocation {
-            switch json {
-                case .Dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "individual":
-                            let v = Users.IndividualSpaceAllocationSerializer().deserialize(json)
-                            return SpaceAllocation.Individual(v)
-                        case "team":
-                            let v = Users.TeamSpaceAllocationSerializer().deserialize(json)
-                            return SpaceAllocation.Team(v)
-                        case "other":
-                            return SpaceAllocation.Other
-                        default:
-                            return SpaceAllocation.Other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-    /**
-        The IndividualSpaceAllocation struct
-    */
-    public class IndividualSpaceAllocation: CustomStringConvertible {
-        /// The total space allocated to the user's account (bytes).
-        public let allocated : UInt64
-        public init(allocated: UInt64) {
-            comparableValidator()(value: allocated)
-            self.allocated = allocated
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(IndividualSpaceAllocationSerializer().serialize(self)))"
-        }
-    }
-    public class IndividualSpaceAllocationSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: IndividualSpaceAllocation) -> JSON {
-            let output = [ 
-            "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> IndividualSpaceAllocation {
-            switch json {
-                case .Dictionary(let dict):
-                    let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
-                    return IndividualSpaceAllocation(allocated: allocated)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-    /**
-        The TeamSpaceAllocation struct
-    */
-    public class TeamSpaceAllocation: CustomStringConvertible {
-        /// The total space currently used by the user's team (bytes).
-        public let used : UInt64
-        /// The total space allocated to the user's team (bytes).
-        public let allocated : UInt64
-        public init(used: UInt64, allocated: UInt64) {
-            comparableValidator()(value: used)
-            self.used = used
-            comparableValidator()(value: allocated)
-            self.allocated = allocated
-        }
-        public var description : String {
-            return "\(prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
-        }
-    }
-    public class TeamSpaceAllocationSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: TeamSpaceAllocation) -> JSON {
-            let output = [ 
-            "used": Serialization._UInt64Serializer.serialize(value.used),
-            "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> TeamSpaceAllocation {
-            switch json {
-                case .Dictionary(let dict):
-                    let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .Null)
-                    let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
-                    return TeamSpaceAllocation(used: used, allocated: allocated)
+                    let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
+                    return GetAccountArg(accountId: accountId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -612,6 +322,302 @@ public class Users {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+    /**
+        The GetAccountError union
+    */
+    public enum GetAccountError: CustomStringConvertible {
+        /**
+            The specified accountId in GetAccountArg does not exist.
+        */
+        case NoAccount
+        case Unknown
+        public var description : String {
+            return "\(prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
+        }
+    }
+    public class GetAccountErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GetAccountError) -> JSON {
+            switch value {
+                case .NoAccount:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_account")
+                    return .Dictionary(d)
+                case .Unknown:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("unknown")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> GetAccountError {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "no_account":
+                            return GetAccountError.NoAccount
+                        case "unknown":
+                            return GetAccountError.Unknown
+                        default:
+                            return GetAccountError.Unknown
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+    /**
+        The IndividualSpaceAllocation struct
+    */
+    public class IndividualSpaceAllocation: CustomStringConvertible {
+        /// The total space allocated to the user's account (bytes).
+        public let allocated : UInt64
+        public init(allocated: UInt64) {
+            comparableValidator()(value: allocated)
+            self.allocated = allocated
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(IndividualSpaceAllocationSerializer().serialize(self)))"
+        }
+    }
+    public class IndividualSpaceAllocationSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: IndividualSpaceAllocation) -> JSON {
+            let output = [ 
+            "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> IndividualSpaceAllocation {
+            switch json {
+                case .Dictionary(let dict):
+                    let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
+                    return IndividualSpaceAllocation(allocated: allocated)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        Representations for a person's name to assist with internationalization.
+    */
+    public class Name: CustomStringConvertible {
+        /// Also known as a first name.
+        public let givenName : String
+        /// Also known as a last name or family name.
+        public let surname : String
+        /// Locale-dependent name. In the US, a person's familiar name is their givenName, but elsewhere, it could be
+        /// any combination of a person's givenName and surname.
+        public let familiarName : String
+        /// A name that can be used directly to represent the name of a user's Dropbox account.
+        public let displayName : String
+        public init(givenName: String, surname: String, familiarName: String, displayName: String) {
+            stringValidator()(value: givenName)
+            self.givenName = givenName
+            stringValidator()(value: surname)
+            self.surname = surname
+            stringValidator()(value: familiarName)
+            self.familiarName = familiarName
+            stringValidator()(value: displayName)
+            self.displayName = displayName
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(NameSerializer().serialize(self)))"
+        }
+    }
+    public class NameSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: Name) -> JSON {
+            let output = [ 
+            "given_name": Serialization._StringSerializer.serialize(value.givenName),
+            "surname": Serialization._StringSerializer.serialize(value.surname),
+            "familiar_name": Serialization._StringSerializer.serialize(value.familiarName),
+            "display_name": Serialization._StringSerializer.serialize(value.displayName),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> Name {
+            switch json {
+                case .Dictionary(let dict):
+                    let givenName = Serialization._StringSerializer.deserialize(dict["given_name"] ?? .Null)
+                    let surname = Serialization._StringSerializer.deserialize(dict["surname"] ?? .Null)
+                    let familiarName = Serialization._StringSerializer.deserialize(dict["familiar_name"] ?? .Null)
+                    let displayName = Serialization._StringSerializer.deserialize(dict["display_name"] ?? .Null)
+                    return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        Space is allocated differently based on the type of account.
+    */
+    public enum SpaceAllocation: CustomStringConvertible {
+        /**
+            The user's space allocation applies only to their individual account.
+        */
+        case Individual(Users.IndividualSpaceAllocation)
+        /**
+            The user shares space with other members of their team.
+        */
+        case Team(Users.TeamSpaceAllocation)
+        case Other
+        public var description : String {
+            return "\(prepareJSONForSerialization(SpaceAllocationSerializer().serialize(self)))"
+        }
+    }
+    public class SpaceAllocationSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: SpaceAllocation) -> JSON {
+            switch value {
+                case .Individual(let arg):
+                    var d = Serialization.getFields(Users.IndividualSpaceAllocationSerializer().serialize(arg))
+                    d[".tag"] = .Str("individual")
+                    return .Dictionary(d)
+                case .Team(let arg):
+                    var d = Serialization.getFields(Users.TeamSpaceAllocationSerializer().serialize(arg))
+                    d[".tag"] = .Str("team")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> SpaceAllocation {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "individual":
+                            let v = Users.IndividualSpaceAllocationSerializer().deserialize(json)
+                            return SpaceAllocation.Individual(v)
+                        case "team":
+                            let v = Users.TeamSpaceAllocationSerializer().deserialize(json)
+                            return SpaceAllocation.Team(v)
+                        case "other":
+                            return SpaceAllocation.Other
+                        default:
+                            return SpaceAllocation.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+    /**
+        Information about a user's space usage and quota.
+    */
+    public class SpaceUsage: CustomStringConvertible {
+        /// The user's total space usage (bytes).
+        public let used : UInt64
+        /// The user's space allocation.
+        public let allocation : Users.SpaceAllocation
+        public init(used: UInt64, allocation: Users.SpaceAllocation) {
+            comparableValidator()(value: used)
+            self.used = used
+            self.allocation = allocation
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
+        }
+    }
+    public class SpaceUsageSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: SpaceUsage) -> JSON {
+            let output = [ 
+            "used": Serialization._UInt64Serializer.serialize(value.used),
+            "allocation": Users.SpaceAllocationSerializer().serialize(value.allocation),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> SpaceUsage {
+            switch json {
+                case .Dictionary(let dict):
+                    let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .Null)
+                    let allocation = Users.SpaceAllocationSerializer().deserialize(dict["allocation"] ?? .Null)
+                    return SpaceUsage(used: used, allocation: allocation)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        Information about a team.
+    */
+    public class Team: CustomStringConvertible {
+        /// The team's unique ID.
+        public let id : String
+        /// The name of the team.
+        public let name : String
+        public init(id: String, name: String) {
+            stringValidator()(value: id)
+            self.id = id
+            stringValidator()(value: name)
+            self.name = name
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(TeamSerializer().serialize(self)))"
+        }
+    }
+    public class TeamSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: Team) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> Team {
+            switch json {
+                case .Dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
+                    return Team(id: id, name: name)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        The TeamSpaceAllocation struct
+    */
+    public class TeamSpaceAllocation: CustomStringConvertible {
+        /// The total space currently used by the user's team (bytes).
+        public let used : UInt64
+        /// The total space allocated to the user's team (bytes).
+        public let allocated : UInt64
+        public init(used: UInt64, allocated: UInt64) {
+            comparableValidator()(value: used)
+            self.used = used
+            comparableValidator()(value: allocated)
+            self.allocated = allocated
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
+        }
+    }
+    public class TeamSpaceAllocationSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: TeamSpaceAllocation) -> JSON {
+            let output = [ 
+            "used": Serialization._UInt64Serializer.serialize(value.used),
+            "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> TeamSpaceAllocation {
+            switch json {
+                case .Dictionary(let dict):
+                    let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .Null)
+                    let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .Null)
+                    return TeamSpaceAllocation(used: used, allocated: allocated)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }

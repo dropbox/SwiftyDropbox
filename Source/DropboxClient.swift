@@ -6,7 +6,7 @@ import Alamofire
 /// The client for the API. Call routes using the namespaces inside this object.
 public class DropboxClient : BabelClient {
 	let accessToken : DropboxAccessToken
-	static var version = "2.0.3"
+	static var version = "3.0.0"
 
 	/// Shared instance for convenience
 	public static var sharedClient : DropboxClient!
