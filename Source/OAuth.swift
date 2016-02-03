@@ -1,5 +1,7 @@
 import UIKit
+#if os(iOS)
 import WebKit
+#endif
 
 import Security
 
@@ -290,6 +292,7 @@ public class DropboxAuthManager {
         return false
     }
     
+    #if os(iOS)
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
     /// parameter controller: The controller to present from
@@ -335,6 +338,7 @@ public class DropboxAuthManager {
             controller.presentViewController(navigationController, animated: true, completion: nil)
         }
     }
+    #endif
     
     private func extractfromDAuthURL(url: NSURL) -> DropboxAuthResult {
         switch url.path ?? "" {
@@ -487,7 +491,7 @@ public class DropboxAuthManager {
     }
 }
 
-
+#if os(iOS)
 public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     var webView : WKWebView!
     
@@ -585,3 +589,4 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     }
     
 }
+#endif
