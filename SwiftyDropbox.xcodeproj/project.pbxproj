@@ -24,6 +24,8 @@
 		C9CE23681CADA94800C58749 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23581CADA94800C58749 /* Team.swift */; };
 		C9CE23691CADA94800C58749 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23591CADA94800C58749 /* Users.swift */; };
 		C9CE236A1CADA94800C58749 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE235A1CADA94800C58749 /* UsersRoutes.swift */; };
+		C9CE236D1CADA96400C58749 /* SecurityUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE236B1CADA96400C58749 /* SecurityUtil.h */; };
+		C9CE236E1CADA96400C58749 /* SecurityUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C9CE236C1CADA96400C58749 /* SecurityUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,9 @@
 		C9CE23581CADA94800C58749 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		C9CE23591CADA94800C58749 /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		C9CE235A1CADA94800C58749 /* UsersRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersRoutes.swift; sourceTree = "<group>"; };
+		C9CE236B1CADA96400C58749 /* SecurityUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecurityUtil.h; sourceTree = "<group>"; };
+		C9CE236C1CADA96400C58749 /* SecurityUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecurityUtil.m; sourceTree = "<group>"; };
+		C9CE236F1CADA9B600C58749 /* SwiftyDropbox-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftyDropbox-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +84,9 @@
 			isa = PBXGroup;
 			children = (
 				C9CE23431CADA88700C58749 /* SwiftyDropbox.h */,
+				C9CE236B1CADA96400C58749 /* SecurityUtil.h */,
+				C9CE236C1CADA96400C58749 /* SecurityUtil.m */,
+				C9CE236F1CADA9B600C58749 /* SwiftyDropbox-Bridging-Header.h */,
 				C9CE234B1CADA94800C58749 /* Async.swift */,
 				C9CE234C1CADA94800C58749 /* Auth.swift */,
 				C9CE234D1CADA94800C58749 /* BabelSerializers.swift */,
@@ -107,6 +115,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CE236D1CADA96400C58749 /* SecurityUtil.h in Headers */,
 				C9CE23441CADA88700C58749 /* SwiftyDropbox.h in Headers */,
 				C9CE23671CADA94800C58749 /* SwiftyDropbox.h in Headers */,
 			);
@@ -194,6 +203,7 @@
 				C9CE235E1CADA94800C58749 /* BabelValidators.swift in Sources */,
 				C9CE236A1CADA94800C58749 /* UsersRoutes.swift in Sources */,
 				C9CE23641CADA94800C58749 /* OAuth.swift in Sources */,
+				C9CE236E1CADA96400C58749 /* SecurityUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +316,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.robertnash.SwiftyDropbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftyDropbox/SwiftyDropbox-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -325,6 +336,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.robertnash.SwiftyDropbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftyDropbox/SwiftyDropbox-Bridging-Header.h";
 			};
 			name = Release;
 		};
