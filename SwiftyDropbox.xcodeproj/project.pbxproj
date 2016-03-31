@@ -84,9 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				C9CE23431CADA88700C58749 /* SwiftyDropbox.h */,
-				C9CE236B1CADA96400C58749 /* SecurityUtil.h */,
-				C9CE236C1CADA96400C58749 /* SecurityUtil.m */,
-				C9CE236F1CADA9B600C58749 /* SwiftyDropbox-Bridging-Header.h */,
 				C9CE234B1CADA94800C58749 /* Async.swift */,
 				C9CE234C1CADA94800C58749 /* Auth.swift */,
 				C9CE234D1CADA94800C58749 /* BabelSerializers.swift */,
@@ -103,9 +100,20 @@
 				C9CE23581CADA94800C58749 /* Team.swift */,
 				C9CE23591CADA94800C58749 /* Users.swift */,
 				C9CE235A1CADA94800C58749 /* UsersRoutes.swift */,
+				C9CE23701CADAA5700C58749 /* Objective-C */,
 				C9CE23451CADA88700C58749 /* Info.plist */,
 			);
 			path = SwiftyDropbox;
+			sourceTree = "<group>";
+		};
+		C9CE23701CADAA5700C58749 /* Objective-C */ = {
+			isa = PBXGroup;
+			children = (
+				C9CE236B1CADA96400C58749 /* SecurityUtil.h */,
+				C9CE236C1CADA96400C58749 /* SecurityUtil.m */,
+				C9CE236F1CADA9B600C58749 /* SwiftyDropbox-Bridging-Header.h */,
+			);
+			name = "Objective-C";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
