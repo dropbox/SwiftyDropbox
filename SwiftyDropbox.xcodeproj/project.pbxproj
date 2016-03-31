@@ -20,7 +20,6 @@
 		C9CE23641CADA94800C58749 /* OAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23541CADA94800C58749 /* OAuth.swift */; };
 		C9CE23651CADA94800C58749 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23551CADA94800C58749 /* Sharing.swift */; };
 		C9CE23661CADA94800C58749 /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23561CADA94800C58749 /* SharingRoutes.swift */; };
-		C9CE23671CADA94800C58749 /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = C9CE23571CADA94800C58749 /* SwiftyDropbox.h */; };
 		C9CE23681CADA94800C58749 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23581CADA94800C58749 /* Team.swift */; };
 		C9CE23691CADA94800C58749 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE23591CADA94800C58749 /* Users.swift */; };
 		C9CE236A1CADA94800C58749 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE235A1CADA94800C58749 /* UsersRoutes.swift */; };
@@ -44,7 +43,6 @@
 		C9CE23541CADA94800C58749 /* OAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth.swift; sourceTree = "<group>"; };
 		C9CE23551CADA94800C58749 /* Sharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sharing.swift; sourceTree = "<group>"; };
 		C9CE23561CADA94800C58749 /* SharingRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingRoutes.swift; sourceTree = "<group>"; };
-		C9CE23571CADA94800C58749 /* SwiftyDropbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox.h; sourceTree = "<group>"; };
 		C9CE23581CADA94800C58749 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		C9CE23591CADA94800C58749 /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		C9CE235A1CADA94800C58749 /* UsersRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersRoutes.swift; sourceTree = "<group>"; };
@@ -96,7 +94,6 @@
 				C9CE23541CADA94800C58749 /* OAuth.swift */,
 				C9CE23551CADA94800C58749 /* Sharing.swift */,
 				C9CE23561CADA94800C58749 /* SharingRoutes.swift */,
-				C9CE23571CADA94800C58749 /* SwiftyDropbox.h */,
 				C9CE23581CADA94800C58749 /* Team.swift */,
 				C9CE23591CADA94800C58749 /* Users.swift */,
 				C9CE235A1CADA94800C58749 /* UsersRoutes.swift */,
@@ -125,7 +122,6 @@
 			files = (
 				C9CE236D1CADA96400C58749 /* SecurityUtil.h in Headers */,
 				C9CE23441CADA88700C58749 /* SwiftyDropbox.h in Headers */,
-				C9CE23671CADA94800C58749 /* SwiftyDropbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
