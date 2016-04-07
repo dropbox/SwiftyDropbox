@@ -29,7 +29,8 @@ public class DropboxClient : BabelClient {
     }
     
     public convenience init(accessToken: DropboxAccessToken) {
-        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.nitridium.studioMusicPlayerDL.backgroundTask")
+        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(NSBundle.mainBundle().bundleIdentifier ?? "").backgroundTask")
+        configuration.discretionary = true
         let manager = Manager(configuration: configuration, serverTrustPolicyManager: DropboxServerTrustPolicyManager())
         manager.startRequestsImmediately = false
         self.init(accessToken: accessToken,
