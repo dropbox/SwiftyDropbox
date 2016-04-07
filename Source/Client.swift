@@ -121,8 +121,10 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
             self.request = request
     }
     
-
-    
+    public func cancel() {
+        self.request.cancel()
+    }
+  
     func handleResponseError(response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> CallError<EType.ValueType> {
         let requestId = response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
         if let code = response?.statusCode {
