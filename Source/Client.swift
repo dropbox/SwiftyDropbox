@@ -179,6 +179,7 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
                 mutableRequest.HTTPBody = dumpJSON(params)
                 return (mutableRequest, nil)
             })
+        request.task.priority = NSURLSessionTaskPriorityHigh
         super.init(request: request,
             responseSerializer: responseSerializer,
             errorSerializer: errorSerializer)
