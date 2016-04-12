@@ -11,7 +11,7 @@ To get started with SwiftyDropbox, we recommend you add it to your project using
     sudo gem install cocoapods
     ```
 
-1. If you've never used Cocoapods before, run:
+1. If you've never used CocoaPods before, run:
     ```
     pod setup
     ```
