@@ -240,14 +240,15 @@ public class DropboxAuthManager {
         
         let queriesSchemes = NSBundle.mainBundle().objectForInfoDictionaryKey("LSApplicationQueriesSchemes") as? [String] ?? []
 
-        var countSchemes = 0
+        var foundApi2 = false
+        var foundApi8Emm = false
         for scheme in queriesSchemes {
             if scheme == "dbapi-2" {
-                countSchemes++
+                foundApi2 = true
             } else if scheme == "dbapi-8-emm" {
-                countSchemes++
+                foundApi8Emm = true
             }
-            if countSchemes >= 2 {
+            if foundApi2 && foundApi8Emm {
                 return true
             }
         }
