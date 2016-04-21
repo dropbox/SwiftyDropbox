@@ -236,7 +236,7 @@ public class DropboxAuthManager {
         return false
     }
     
-    private func hasApplicationQueriesScheme() -> Bool {
+    private func hasApplicationQueriesSchemes() -> Bool {
         
         let queriesSchemes = NSBundle.mainBundle().objectForInfoDictionaryKey("LSApplicationQueriesSchemes") as? [String] ?? []
 
@@ -324,7 +324,7 @@ public class DropboxAuthManager {
             controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
-        if !self.hasApplicationQueriesScheme() {
+        if !self.hasApplicationQueriesSchemes() {
             let message = "DropboxSDK: unable to link; app isn't registered to query for URL schemes dbapi-2 and dbapi-8-emm. Add a dbapi-2 entry and a dbapi-8-emm entry to LSApplicationQueriesSchemes"
             
             let alertController = UIAlertController(
