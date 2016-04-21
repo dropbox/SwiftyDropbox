@@ -239,9 +239,16 @@ public class DropboxAuthManager {
     private func hasApplicationQueriesScheme() -> Bool {
         
         let queriesSchemes = NSBundle.mainBundle().objectForInfoDictionaryKey("LSApplicationQueriesSchemes") as? [String] ?? []
-        
+
+        var foundApi2 = false
+        var foundApi8Emm = false
         for scheme in queriesSchemes {
             if scheme == "dbapi-2" {
+                foundApi2 = true
+            } else if scheme == "dbapi-8-emm" {
+                foundApi8Emm = true
+            }
+            if foundApi2 && foundApi8Emm {
                 return true
             }
         }
@@ -263,10 +270,24 @@ public class DropboxAuthManager {
         ]
         return components.URL!
     }
-    
-    private func dAuthURL(nonce: String?) -> NSURL {
+
+    private func dAuthScheme() -> String? {
+        if canOpenDAuthScheme("dbapi-2") {
+            return "dbapi-2"
+        } else if canOpenDAuthScheme("dbapi-8-emm") {
+            return "dbapi-8-emm"
+        } else {
+            return nil
+        }
+    }
+
+    private func canOpenDAuthScheme(scheme: String) -> Bool {
+        return UIApplication.sharedApplication().canOpenURL(dAuthURL(scheme, nonce: nil))
+    }
+
+    private func dAuthURL(scheme: String, nonce: String?) -> NSURL {
         let components = NSURLComponents()
-        components.scheme =  "dbapi-2"
+        components.scheme =  scheme
         components.host = "1"
         components.path = "/connect"
         
@@ -304,7 +325,7 @@ public class DropboxAuthManager {
             return
         }
         if !self.hasApplicationQueriesScheme() {
-            let message = "DropboxSDK: unable to link; app isn't registered to query for URL scheme dbapi-2. Add a dbapi-2 entry to LSApplicationQueriesSchemes"
+            let message = "DropboxSDK: unable to link; app isn't registered to query for URL schemes dbapi-2 and dbapi-8-emm. Add a dbapi-2 entry and a dbapi-8-emm entry to LSApplicationQueriesSchemes"
             
             let alertController = UIAlertController(
                 title: "SwiftyDropbox Error",
@@ -313,12 +334,12 @@ public class DropboxAuthManager {
             controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
-        if UIApplication.sharedApplication().canOpenURL(dAuthURL(nil)) {
+        if let scheme = dAuthScheme() {
             let nonce = NSUUID().UUIDString
             NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
             NSUserDefaults.standardUserDefaults().synchronize()
             
-            UIApplication.sharedApplication().openURL(dAuthURL(nonce))
+            UIApplication.sharedApplication().openURL(dAuthURL(scheme, nonce: nonce))
         } else {
             let web = DropboxConnectController(
                 URL: self.authURL(),
