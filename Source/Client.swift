@@ -295,7 +295,7 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
             headers[header] = val
         }
         
-        weak var _self : BabelDownloadRequest<RType, EType>!
+        var _self : BabelDownloadRequest<RType, EType>!
         
         let dest : (NSURL, NSHTTPURLResponse) -> NSURL = { url, resp in
             let ret = destination(url, resp)
