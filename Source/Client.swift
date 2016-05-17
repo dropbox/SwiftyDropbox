@@ -8,14 +8,16 @@ public class Box<T> {
 
 public class BabelClient {
     var manager : Manager
+    var backgroundManager : Manager
     var baseHosts : [String : String]
     
     func additionalHeaders(noauth: Bool) -> [String: String] {
         return [:]
     }
     
-    init(manager: Manager, baseHosts : [String : String]) {
+    init(manager: Manager, backgroundManager: Manager, baseHosts : [String : String]) {
         self.manager = manager
+        self.backgroundManager = backgroundManager
         self.baseHosts = baseHosts
     }
 }
@@ -124,7 +126,7 @@ public class BabelRequest<RType : JSONSerializer, EType : JSONSerializer> {
     public func cancel() {
         self.request.cancel()
     }
-  
+    
     func handleResponseError(response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> CallError<EType.ValueType> {
         let requestId = response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
         if let code = response?.statusCode {
@@ -176,11 +178,12 @@ public class BabelRpcRequest<RType : JSONSerializer, EType : JSONSerializer> : B
             headers[header] = val
         }
         
-        let request = client.manager.request(.POST, url, parameters: ["": ""], headers: headers, encoding: ParameterEncoding.Custom {(convertible, _) in
+        let request = client.backgroundManager.request(.POST, url, parameters: [:], headers: headers,
+                                                       encoding: ParameterEncoding.Custom {(convertible, _) in
                 let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
                 mutableRequest.HTTPBody = dumpJSON(params)
                 return (mutableRequest, nil)
-            })
+        })
         super.init(request: request,
             responseSerializer: responseSerializer,
             errorSerializer: errorSerializer)
@@ -239,7 +242,7 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
             case let .Data(data):
                 request = client.manager.upload(.POST, url, headers: headers, data: data)
             case let .File(file):
-                request = client.manager.upload(.POST, url, headers: headers, file: file)
+                request = client.backgroundManager.upload(.POST, url, headers: headers, file: file)
             case let .Stream(stream):
                 request = client.manager.upload(.POST, url, headers: headers, stream: stream)
             }
@@ -282,10 +285,12 @@ public class BabelUploadRequest<RType : JSONSerializer, EType : JSONSerializer> 
 
 public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer> : BabelRequest<RType, EType> {
     var urlPath : NSURL?
-    init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType, destination: (NSURL, NSHTTPURLResponse) -> NSURL) {
+    var errorMessage : NSData
+    init(client: BabelClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) {
         let url = "\(client.baseHosts[host]!)\(route)"
         var headers = [String : String]()
         urlPath = nil
+        errorMessage = NSData()
 
         if let data = dumpJSON(params) {
             let value = asciiEscape(utf8Decode(data))
@@ -296,19 +301,42 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
         for (header, val) in client.additionalHeaders(noauth) {
             headers[header] = val
         }
-        
+
         weak var _self : BabelDownloadRequest<RType, EType>!
         
         let dest : (NSURL, NSHTTPURLResponse) -> NSURL = { url, resp in
-            let ret = destination(url, resp)
-            _self.urlPath = ret
-            return ret
+            var finalUrl = destination(url, resp)
+
+            if 200 ... 299 ~= resp.statusCode {
+                if NSFileManager.defaultManager().fileExistsAtPath(finalUrl.path!) {
+                    if overwrite {
+                        do {
+                            try NSFileManager.defaultManager().removeItemAtURL(finalUrl)
+                        } catch let error as NSError {
+                            print("Error: \(error)")
+                        }
+                    } else {
+                        print("Error: File already exists at \(finalUrl.path!)")
+                    }
+                }
+            }
+            else {
+                _self.errorMessage = NSData(contentsOfURL: url)!
+                // Alamofire will "move" the file to the temporary location where it already resides, 
+                // and where it will soon be automatically deleted
+                finalUrl = url
+            }
+
+            _self.urlPath = finalUrl
+
+            return finalUrl
         }
         
-        let request = client.manager.download(.POST, url, headers: headers, destination: dest)
+        let request = client.backgroundManager.download(.POST, url, headers: headers, destination: dest)
 
         super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
         _self = self
+
         request.resume()
     }
     
@@ -328,13 +356,11 @@ public class BabelDownloadRequest<RType : JSONSerializer, EType : JSONSerializer
     ///         A callback taking two arguments (`response`, `error`) which handles the result of the call appropriately.
     /// :returns: The request, for chaining purposes.
     public func response(completionHandler: ( (RType.ValueType, NSURL)?, CallError<EType.ValueType>?) -> Void) -> Self {
-        
         self.request.validate()
             .response {
-            (request, response, dataObj, error) -> Void in
+            (request, response, data, error) -> Void in
             if error != nil {
-                let data = self.urlPath.flatMap { NSData(contentsOfURL: $0) }
-                completionHandler(nil, self.handleResponseError(response, data: data, error: error))
+                completionHandler(nil, self.handleResponseError(response, data: self.errorMessage, error: error))
             } else {
                 let result = response!.allHeaderFields["Dropbox-Api-Result"] as! String
                 let resultData = result.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
