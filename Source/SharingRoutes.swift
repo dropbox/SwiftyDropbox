@@ -108,13 +108,16 @@ public class SharingRoutes {
         - parameter linkPassword: If the shared link has a password, this parameter can be used.
         - parameter destination: A closure used to compute the destination, given the temporary file location and the
         response
+        - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+        conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+        NSError will be thrown).
 
          - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
         success or a `Sharing.GetSharedLinkFileError` object on failure.
     */
-    public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> BabelDownloadRequest<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
         let request = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
-        return BabelDownloadRequest(client: self.client, host: "content", route: "/sharing/get_shared_link_file", params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(), destination: destination)
+        return BabelDownloadRequest(client: self.client, host: "content", route: "/sharing/get_shared_link_file", params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Get the shared link's metadata.
@@ -151,13 +154,12 @@ public class SharingRoutes {
         Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.
 
         - parameter sharedFolderId: The ID for the shared folder.
-        - parameter actions: Member actions to query.
 
          - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
         success or a `Sharing.SharedFolderAccessError` object on failure.
     */
-    public func listFolderMembers(sharedFolderId sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil) -> BabelRpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
-        let request = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions)
+    public func listFolderMembers(sharedFolderId sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) -> BabelRpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
+        let request = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit)
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folder_members", params: Sharing.ListFolderMembersArgsSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMembersSerializer(), errorSerializer: Sharing.SharedFolderAccessErrorSerializer())
     }
     /**
@@ -179,19 +181,23 @@ public class SharingRoutes {
         this endpoint. Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible
         changes.
 
+        - parameter limit: The maximum number of results to return per request.
+        - parameter actions: Folder actions to query.
 
          - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
         success or a `Void` object on failure.
     */
-    public func listFolders() -> BabelRpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
-        return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folders", params: Serialization._VoidSerializer.serialize(), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+    public func listFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> BabelRpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+        let request = Sharing.ListFoldersArgs(limit: limit, actions: actions)
+        return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folders", params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /**
-        Once a cursor has been retrieved from listFolders, use this to paginate through all shared folders. Apps must
-        have full Dropbox access to use this endpoint. Warning: This endpoint is in beta and is subject to minor but
-        possibly backwards-incompatible changes.
+        Once a cursor has been retrieved from listFolders, use this to paginate through all shared folders. The cursor
+        must come from a previous call to listFolders or listFoldersContinue. Apps must have full Dropbox access to use
+        this endpoint. Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible
+        changes.
 
-        - parameter cursor: The cursor returned by your last call to listFolders or listFoldersContinue.
+        - parameter cursor: The cursor returned by the previous API call specified in the endpoint description.
 
          - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
         success or a `Sharing.ListFoldersContinueError` object on failure.
@@ -201,18 +207,48 @@ public class SharingRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folders/continue", params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
     }
     /**
+        Return the list of all shared folders the current user can mount or unmount. Apps must have full Dropbox access
+        to use this endpoint.
+
+        - parameter limit: The maximum number of results to return per request.
+        - parameter actions: Folder actions to query.
+
+         - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
+        success or a `Void` object on failure.
+    */
+    public func listMountableFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> BabelRpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+        let request = Sharing.ListFoldersArgs(limit: limit, actions: actions)
+        return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_mountable_folders", params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+    }
+    /**
+        Once a cursor has been retrieved from listMountableFolders, use this to paginate through all mountable shared
+        folders. The cursor must come from a previous call to listMountableFolders or listMountableFoldersContinue. Apps
+        must have full Dropbox access to use this endpoint.
+
+        - parameter cursor: The cursor returned by the previous API call specified in the endpoint description.
+
+         - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
+        success or a `Sharing.ListFoldersContinueError` object on failure.
+    */
+    public func listMountableFoldersContinue(cursor cursor: String) -> BabelRpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
+        let request = Sharing.ListFoldersContinueArg(cursor: cursor)
+        return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_mountable_folders/continue", params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
+    }
+    /**
         List shared links of this user. If no path is given or the path is empty, returns a list of all shared links for
         the current user. If a non-empty path is given, returns a list of all shared links that allow access to the
-        given path - direct links to the given path and links to parent folders of the given path.
+        given path - direct links to the given path and links to parent folders of the given path. Links to parent
+        folders can be suppressed by setting direct_only to true.
 
         - parameter path: See listSharedLinks description.
         - parameter cursor: The cursor returned by your last call to listSharedLinks.
+        - parameter directOnly: See listSharedLinks description.
 
          - returns: Through the response callback, the caller will receive a `Sharing.ListSharedLinksResult` object on
         success or a `Sharing.ListSharedLinksError` object on failure.
     */
-    public func listSharedLinks(path: String? = nil, cursor: String? = nil) -> BabelRpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
-        let request = Sharing.ListSharedLinksArg(path: path, cursor: cursor)
+    public func listSharedLinks(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) -> BabelRpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
+        let request = Sharing.ListSharedLinksArg(path: path, cursor: cursor, directOnly: directOnly)
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/list_shared_links", params: Sharing.ListSharedLinksArgSerializer().serialize(request), responseSerializer: Sharing.ListSharedLinksResultSerializer(), errorSerializer: Sharing.ListSharedLinksErrorSerializer())
     }
     /**
@@ -301,9 +337,11 @@ public class SharingRoutes {
         beta and is subject to minor but possibly backwards-incompatible changes.
 
         - parameter path: The path to the folder to share. If it does not exist, then a new one is created.
-        - parameter memberPolicy: Who can be a member of this shared folder.
+        - parameter memberPolicy: Who can be a member of this shared folder. Only applicable if the current user is on a
+        team.
         - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
         - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
+        The current user must be on a team to set this policy to members in SharedLinkPolicy.
         - parameter forceAsync: Whether to force the share to happen asynchronously.
 
          - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
@@ -314,9 +352,9 @@ public class SharingRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/share_folder", params: Sharing.ShareFolderArgSerializer().serialize(request), responseSerializer: Sharing.ShareFolderLaunchSerializer(), errorSerializer: Sharing.ShareFolderErrorSerializer())
     }
     /**
-        Transfer ownership of a shared folder to a member of the shared folder. Apps must have full Dropbox access to
-        use this endpoint. Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible
-        changes.
+        Transfer ownership of a shared folder to a member of the shared folder. User must have owner in AccessLevel
+        access to the shared folder to perform a transfer. Apps must have full Dropbox access to use this endpoint.
+        Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.
 
         - parameter sharedFolderId: The ID for the shared folder.
         - parameter toDropboxId: A account or team member ID to transfer ownership to.
@@ -355,7 +393,7 @@ public class SharingRoutes {
          - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
         or a `Sharing.UnshareFolderError` object on failure.
     */
-    public func unshareFolder(sharedFolderId sharedFolderId: String, leaveACopy: Bool) -> BabelRpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
+    public func unshareFolder(sharedFolderId sharedFolderId: String, leaveACopy: Bool = false) -> BabelRpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
         let request = Sharing.UnshareFolderArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/unshare_folder", params: Sharing.UnshareFolderArgSerializer().serialize(request), responseSerializer: Async.LaunchEmptyResultSerializer(), errorSerializer: Sharing.UnshareFolderErrorSerializer())
     }
@@ -377,14 +415,16 @@ public class SharingRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/sharing/update_folder_member", params: Sharing.UpdateFolderMemberArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.UpdateFolderMemberErrorSerializer())
     }
     /**
-        Update the sharing policies for a shared folder. Apps must have full Dropbox access to use this endpoint.
-        Warning: This endpoint is in beta and is subject to minor but possibly backwards-incompatible changes.
+        Update the sharing policies for a shared folder. User must have owner in AccessLevel access to the shared folder
+        to update its policies. Apps must have full Dropbox access to use this endpoint. Warning: This endpoint is in
+        beta and is subject to minor but possibly backwards-incompatible changes.
 
         - parameter sharedFolderId: The ID for the shared folder.
-        - parameter memberPolicy: Who can be a member of this shared folder. Only set this if the current user is on a
+        - parameter memberPolicy: Who can be a member of this shared folder. Only applicable if the current user is on a
         team.
         - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
         - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
+        The current user must be on a team to set this policy to members in SharedLinkPolicy.
 
          - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
         success or a `Sharing.UpdateFolderPolicyError` object on failure.

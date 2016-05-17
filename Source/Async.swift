@@ -53,6 +53,11 @@ public class Async {
     */
     public enum LaunchEmptyResult: CustomStringConvertible {
         /**
+            This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+            the status of the asynchronous job.
+        */
+        case AsyncJobId(String)
+        /**
             The job finished synchronously and successfully.
         */
         case Complete
@@ -64,6 +69,10 @@ public class Async {
         public init() { }
         public func serialize(value: LaunchEmptyResult) -> JSON {
             switch value {
+                case .AsyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .Str("async_job_id")
+                    return .Dictionary(d)
                 case .Complete:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("complete")
@@ -75,6 +84,9 @@ public class Async {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .Null)
+                            return LaunchEmptyResult.AsyncJobId(v)
                         case "complete":
                             return LaunchEmptyResult.Complete
                         default:
@@ -162,6 +174,10 @@ public class Async {
     */
     public enum PollEmptyResult: CustomStringConvertible {
         /**
+            The asynchronous job is still in progress.
+        */
+        case InProgress
+        /**
             The asynchronous job has completed successfully.
         */
         case Complete
@@ -173,6 +189,10 @@ public class Async {
         public init() { }
         public func serialize(value: PollEmptyResult) -> JSON {
             switch value {
+                case .InProgress:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("in_progress")
+                    return .Dictionary(d)
                 case .Complete:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("complete")
@@ -184,6 +204,8 @@ public class Async {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "in_progress":
+                            return PollEmptyResult.InProgress
                         case "complete":
                             return PollEmptyResult.Complete
                         default:

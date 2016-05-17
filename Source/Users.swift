@@ -14,10 +14,22 @@ public class Users {
         public let accountId : String
         /// Details of a user's name.
         public let name : Users.Name
-        public init(accountId: String, name: Users.Name) {
+        /// The user's e-mail address. Do not rely on this without checking the emailVerified field. Even then, it's
+        /// possible that the user has since lost access to their e-mail.
+        public let email : String
+        /// Whether the user has verified their e-mail address.
+        public let emailVerified : Bool
+        /// URL for the photo representing the user, if one is set.
+        public let profilePhotoUrl : String?
+        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, profilePhotoUrl: String? = nil) {
             stringValidator(minLength: 40, maxLength: 40)(value: accountId)
             self.accountId = accountId
             self.name = name
+            stringValidator()(value: email)
+            self.email = email
+            self.emailVerified = emailVerified
+            nullableValidator(stringValidator())(value: profilePhotoUrl)
+            self.profilePhotoUrl = profilePhotoUrl
         }
         public var description : String {
             return "\(prepareJSONForSerialization(AccountSerializer().serialize(self)))"
@@ -29,6 +41,9 @@ public class Users {
             let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
+            "email": Serialization._StringSerializer.serialize(value.email),
+            "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
+            "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
             ]
             return .Dictionary(output)
         }
@@ -37,7 +52,10 @@ public class Users {
                 case .Dictionary(let dict):
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
                     let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
-                    return Account(accountId: accountId, name: name)
+                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .Null)
+                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .Null)
+                    let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .Null)
+                    return Account(accountId: accountId, name: name, email: email, emailVerified: emailVerified, profilePhotoUrl: profilePhotoUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -107,9 +125,14 @@ public class Users {
         /// Whether this user is a teammate of the current user. If this account is the current user's account, then
         /// this will be true.
         public let isTeammate : Bool
-        public init(accountId: String, name: Users.Name, isTeammate: Bool) {
+        /// The user's unique team member id. This field will only be present if the user is part of a team and
+        /// isTeammate is true.
+        public let teamMemberId : String?
+        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, isTeammate: Bool, profilePhotoUrl: String? = nil, teamMemberId: String? = nil) {
             self.isTeammate = isTeammate
-            super.init(accountId: accountId, name: name)
+            nullableValidator(stringValidator())(value: teamMemberId)
+            self.teamMemberId = teamMemberId
+            super.init(accountId: accountId, name: name, email: email, emailVerified: emailVerified, profilePhotoUrl: profilePhotoUrl)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(BasicAccountSerializer().serialize(self)))"
@@ -121,7 +144,11 @@ public class Users {
             let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
+            "email": Serialization._StringSerializer.serialize(value.email),
+            "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
             "is_teammate": Serialization._BoolSerializer.serialize(value.isTeammate),
+            "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
+            "team_member_id": NullableSerializer(Serialization._StringSerializer).serialize(value.teamMemberId),
             ]
             return .Dictionary(output)
         }
@@ -130,8 +157,12 @@ public class Users {
                 case .Dictionary(let dict):
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .Null)
                     let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
+                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .Null)
+                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .Null)
                     let isTeammate = Serialization._BoolSerializer.deserialize(dict["is_teammate"] ?? .Null)
-                    return BasicAccount(accountId: accountId, name: name, isTeammate: isTeammate)
+                    let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .Null)
+                    let teamMemberId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_member_id"] ?? .Null)
+                    return BasicAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, isTeammate: isTeammate, profilePhotoUrl: profilePhotoUrl, teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -141,11 +172,6 @@ public class Users {
         Detailed information about the current user's account.
     */
     public class FullAccount: Users.Account {
-        /// The user's e-mail address. Do not rely on this without checking the emailVerified field. Even then, it's
-        /// possible that the user has since lost access to their e-mail.
-        public let email : String
-        /// Whether the user has verified their e-mail address.
-        public let emailVerified : Bool
         /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
         /// http://en.wikipedia.org/wiki/ISO_3166-1.
         public let country : String?
@@ -156,15 +182,14 @@ public class Users {
         public let referralLink : String
         /// If this account is a member of a team, information about that team.
         public let team : Users.Team?
+        /// This account's unique team member id. This field will only be present if team is present.
+        public let teamMemberId : String?
         /// Whether the user has a personal and work account. If the current account is personal, then team will always
         /// be null, but isPaired will indicate if a work account is linked.
         public let isPaired : Bool
         /// What type of account this user has.
         public let accountType : Users.AccountType
-        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, country: String? = nil, team: Users.Team? = nil) {
-            stringValidator()(value: email)
-            self.email = email
-            self.emailVerified = emailVerified
+        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, locale: String, referralLink: String, isPaired: Bool, accountType: Users.AccountType, profilePhotoUrl: String? = nil, country: String? = nil, team: Users.Team? = nil, teamMemberId: String? = nil) {
             nullableValidator(stringValidator(minLength: 2, maxLength: 2))(value: country)
             self.country = country
             stringValidator(minLength: 2)(value: locale)
@@ -172,9 +197,11 @@ public class Users {
             stringValidator()(value: referralLink)
             self.referralLink = referralLink
             self.team = team
+            nullableValidator(stringValidator())(value: teamMemberId)
+            self.teamMemberId = teamMemberId
             self.isPaired = isPaired
             self.accountType = accountType
-            super.init(accountId: accountId, name: name)
+            super.init(accountId: accountId, name: name, email: email, emailVerified: emailVerified, profilePhotoUrl: profilePhotoUrl)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(FullAccountSerializer().serialize(self)))"
@@ -192,8 +219,10 @@ public class Users {
             "referral_link": Serialization._StringSerializer.serialize(value.referralLink),
             "is_paired": Serialization._BoolSerializer.serialize(value.isPaired),
             "account_type": Users.AccountTypeSerializer().serialize(value.accountType),
+            "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
             "country": NullableSerializer(Serialization._StringSerializer).serialize(value.country),
             "team": NullableSerializer(Users.TeamSerializer()).serialize(value.team),
+            "team_member_id": NullableSerializer(Serialization._StringSerializer).serialize(value.teamMemberId),
             ]
             return .Dictionary(output)
         }
@@ -208,9 +237,11 @@ public class Users {
                     let referralLink = Serialization._StringSerializer.deserialize(dict["referral_link"] ?? .Null)
                     let isPaired = Serialization._BoolSerializer.deserialize(dict["is_paired"] ?? .Null)
                     let accountType = Users.AccountTypeSerializer().deserialize(dict["account_type"] ?? .Null)
+                    let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .Null)
                     let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
                     let team = NullableSerializer(Users.TeamSerializer()).deserialize(dict["team"] ?? .Null)
-                    return FullAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, country: country, team: team)
+                    let teamMemberId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_member_id"] ?? .Null)
+                    return FullAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, profilePhotoUrl: profilePhotoUrl, country: country, team: team, teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
             }

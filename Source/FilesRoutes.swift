@@ -31,7 +31,9 @@ public class FilesRoutes {
         return BabelRpcRequest(client: self.client, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.CreateFolderErrorSerializer())
     }
     /**
-        Delete the file or folder at a given path. If the path is a folder, all its contents will be deleted too.
+        Delete the file or folder at a given path. If the path is a folder, all its contents will be deleted too. A
+        successful response indicates that the file or folder was deleted. The returned metadata will be the
+        corresponding FileMetadata or FolderMetadata for the item at time of deletion, and not a DeletedMetadata object.
 
         - parameter path: Path in the user's Dropbox to delete.
 
@@ -46,22 +48,25 @@ public class FilesRoutes {
         Download a file from a user's Dropbox.
 
         - parameter path: The path of the file to download.
-        - parameter rev: Deprecated. Please specify revision in :field:'path' instead
+        - parameter rev: Deprecated. Please specify revision in path instead
         - parameter destination: A closure used to compute the destination, given the temporary file location and the
         response
+        - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+        conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+        NSError will be thrown).
 
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.DownloadError` object on failure.
     */
-    public func download(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    public func download(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
-        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination)
+        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
-        Returns the metadata for a file or folder.
+        Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
 
-        - parameter path: The path of a file or folder on Dropbox
-        - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
+        - parameter path: The path of a file or folder on Dropbox.
+        - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video.
 
          - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
         `Files.GetMetadataError` object on failure.
@@ -75,16 +80,19 @@ public class FilesRoutes {
         .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf
 
         - parameter path: The path of the file to preview.
-        - parameter rev: Deprecated. Please specify revision in :field:'path' instead
+        - parameter rev: Deprecated. Please specify revision in path instead
         - parameter destination: A closure used to compute the destination, given the temporary file location and the
         response
+        - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+        conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+        NSError will be thrown).
 
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.PreviewError` object on failure.
     */
-    public func getPreview(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    public func getPreview(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let request = Files.PreviewArg(path: path, rev: rev)
-        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer(), destination: destination)
+        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Get a thumbnail for an image. This method currently supports files with the following file extensions: jpg,
@@ -96,13 +104,16 @@ public class FilesRoutes {
         - parameter size: The size for the thumbnail image.
         - parameter destination: A closure used to compute the destination, given the temporary file location and the
         response
+        - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+        conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+        NSError will be thrown).
 
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.ThumbnailError` object on failure.
     */
-    public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> BabelDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
-        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer(), destination: destination)
+        return BabelDownloadRequest(client: self.client, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Returns the contents of a folder.
@@ -110,7 +121,7 @@ public class FilesRoutes {
         - parameter path: The path to the folder you want to see the contents of.
         - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
         response will contain contents of all subfolders.
-        - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
+        - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video.
         - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
         but were deleted.
 
@@ -142,7 +153,7 @@ public class FilesRoutes {
         - parameter path: The path to the folder you want to see the contents of.
         - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
         response will contain contents of all subfolders.
-        - parameter includeMediaInfo: If true, :field:'FileMetadata.media_info' is set for photo and video.
+        - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video.
         - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
         but were deleted.
 
@@ -160,7 +171,8 @@ public class FilesRoutes {
         server-side notifications, check out our webhooks documentation
         https://www.dropbox.com/developers/reference/webhooks.
 
-        - parameter cursor: A cursor as returned by listFolder or listFolderContinue
+        - parameter cursor: A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting
+        includeMediaInfo in ListFolderArg to true are not supported.
         - parameter timeout: A timeout in seconds. The request will block for at most this length of time, plus up to 90
         seconds of random jitter added to avoid the thundering herd problem. Care should be taken when using this
         parameter, as some network infrastructure does not support long timeouts.

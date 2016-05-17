@@ -56,4 +56,59 @@ public class Team {
             }
         }
     }
+    /**
+        The group type determines how a group is created and managed.
+    */
+    public enum GroupType: CustomStringConvertible {
+        /**
+            A group to which team members are automatically added. Applicable to team folders
+            https://www.dropbox.com/help/986 only.
+        */
+        case Team
+        /**
+            A group is created and managed by a user.
+        */
+        case UserManaged
+        case Other
+        public var description : String {
+            return "\(prepareJSONForSerialization(GroupTypeSerializer().serialize(self)))"
+        }
+    }
+    public class GroupTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GroupType) -> JSON {
+            switch value {
+                case .Team:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team")
+                    return .Dictionary(d)
+                case .UserManaged:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("user_managed")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> GroupType {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "team":
+                            return GroupType.Team
+                        case "user_managed":
+                            return GroupType.UserManaged
+                        case "other":
+                            return GroupType.Other
+                        default:
+                            return GroupType.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
 }

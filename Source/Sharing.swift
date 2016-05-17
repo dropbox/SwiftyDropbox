@@ -183,17 +183,13 @@ public class Sharing {
         */
         case AccessError(Sharing.SharedFolderAccessError)
         /**
-            The current account's e-mail address is unverified.
+            The current user's e-mail address is unverified.
         */
         case EmailUnverified
         /**
             members in AddFolderMemberArg contains a bad invitation recipient.
         */
         case BadMember(Sharing.AddMemberSelectorError)
-        /**
-            The current account does not have permission to perform this action.
-        */
-        case NoPermission
         /**
             Your team policy does not allow sharing outside of the team.
         */
@@ -215,6 +211,14 @@ public class Sharing {
             member. This action can only be performed by users that have upgraded to a Pro or Business plan.
         */
         case InsufficientPlan
+        /**
+            This action cannot be performed on a team shared folder.
+        */
+        case TeamFolder
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(AddFolderMemberErrorSerializer().serialize(self)))"
@@ -236,10 +240,6 @@ public class Sharing {
                     var d = ["bad_member": Sharing.AddMemberSelectorErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("bad_member")
                     return .Dictionary(d)
-                case .NoPermission:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("no_permission")
-                    return .Dictionary(d)
                 case .CantShareOutsideTeam:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("cant_share_outside_team")
@@ -260,6 +260,14 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("insufficient_plan")
                     return .Dictionary(d)
+                case .TeamFolder:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_folder")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -279,8 +287,6 @@ public class Sharing {
                         case "bad_member":
                             let v = Sharing.AddMemberSelectorErrorSerializer().deserialize(d["bad_member"] ?? .Null)
                             return AddFolderMemberError.BadMember(v)
-                        case "no_permission":
-                            return AddFolderMemberError.NoPermission
                         case "cant_share_outside_team":
                             return AddFolderMemberError.CantShareOutsideTeam
                         case "too_many_members":
@@ -293,6 +299,10 @@ public class Sharing {
                             return AddFolderMemberError.RateLimit
                         case "insufficient_plan":
                             return AddFolderMemberError.InsufficientPlan
+                        case "team_folder":
+                            return AddFolderMemberError.TeamFolder
+                        case "no_permission":
+                            return AddFolderMemberError.NoPermission
                         case "other":
                             return AddFolderMemberError.Other
                         default:
@@ -361,7 +371,7 @@ public class Sharing {
         */
         case GroupDeleted
         /**
-            Sharing to a group that is not on the current account's team.
+            Sharing to a group that is not on the current user's team.
         */
         case GroupNotOnTeam
         case Other
@@ -893,6 +903,18 @@ public class Sharing {
         */
         case EditContents
         /**
+            Invite a user or group to join the folder with read and write permission.
+        */
+        case InviteEditor
+        /**
+            Invite a user or group to join the folder with read permission.
+        */
+        case InviteViewer
+        /**
+            Relinquish one's own membership in the folder.
+        */
+        case RelinquishMembership
+        /**
             Unmount the folder.
         */
         case Unmount
@@ -917,6 +939,18 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("edit_contents")
                     return .Dictionary(d)
+                case .InviteEditor:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("invite_editor")
+                    return .Dictionary(d)
+                case .InviteViewer:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("invite_viewer")
+                    return .Dictionary(d)
+                case .RelinquishMembership:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("relinquish_membership")
+                    return .Dictionary(d)
                 case .Unmount:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("unmount")
@@ -940,6 +974,12 @@ public class Sharing {
                             return FolderAction.ChangeOptions
                         case "edit_contents":
                             return FolderAction.EditContents
+                        case "invite_editor":
+                            return FolderAction.InviteEditor
+                        case "invite_viewer":
+                            return FolderAction.InviteViewer
+                        case "relinquish_membership":
+                            return FolderAction.RelinquishMembership
                         case "unmount":
                             return FolderAction.Unmount
                         case "unshare":
@@ -1002,7 +1042,8 @@ public class Sharing {
         public let action : Sharing.FolderAction
         /// True if the user is allowed to take the action.
         public let allow : Bool
-        /// The reason why the user is denied the permission. Not present if the action is allowed
+        /// The reason why the user is denied the permission. Not present if the action is allowed, or if no reason is
+        /// available.
         public let reason : Sharing.PermissionDeniedReason?
         public init(action: Sharing.FolderAction, allow: Bool, reason: Sharing.PermissionDeniedReason? = nil) {
             self.action = action
@@ -1039,14 +1080,20 @@ public class Sharing {
         A set of policies governing membership and privileges for a shared folder.
     */
     public class FolderPolicy: CustomStringConvertible {
-        /// Who can be a member of this shared folder. Only set if the user is a member of a team.
+        /// Who can be a member of this shared folder, as set on the folder itself. The effective policy may differ from
+        /// this value if the team-wide policy is more restrictive. Present only if the folder is owned by a team.
         public let memberPolicy : Sharing.MemberPolicy?
+        /// Who can be a member of this shared folder, taking into account both the folder and the team-wide policy.
+        /// This value may differ from that of member_policy if the team-wide policy is more restrictive than the folder
+        /// policy. Present only if the folder is owned by a team.
+        public let resolvedMemberPolicy : Sharing.MemberPolicy?
         /// Who can add and remove members from this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy
         /// Who links can be shared with.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy
-        public init(aclUpdatePolicy: Sharing.AclUpdatePolicy, sharedLinkPolicy: Sharing.SharedLinkPolicy, memberPolicy: Sharing.MemberPolicy? = nil) {
+        public init(aclUpdatePolicy: Sharing.AclUpdatePolicy, sharedLinkPolicy: Sharing.SharedLinkPolicy, memberPolicy: Sharing.MemberPolicy? = nil, resolvedMemberPolicy: Sharing.MemberPolicy? = nil) {
             self.memberPolicy = memberPolicy
+            self.resolvedMemberPolicy = resolvedMemberPolicy
             self.aclUpdatePolicy = aclUpdatePolicy
             self.sharedLinkPolicy = sharedLinkPolicy
         }
@@ -1061,6 +1108,7 @@ public class Sharing {
             "acl_update_policy": Sharing.AclUpdatePolicySerializer().serialize(value.aclUpdatePolicy),
             "shared_link_policy": Sharing.SharedLinkPolicySerializer().serialize(value.sharedLinkPolicy),
             "member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.memberPolicy),
+            "resolved_member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.resolvedMemberPolicy),
             ]
             return .Dictionary(output)
         }
@@ -1070,7 +1118,8 @@ public class Sharing {
                     let aclUpdatePolicy = Sharing.AclUpdatePolicySerializer().deserialize(dict["acl_update_policy"] ?? .Null)
                     let sharedLinkPolicy = Sharing.SharedLinkPolicySerializer().deserialize(dict["shared_link_policy"] ?? .Null)
                     let memberPolicy = NullableSerializer(Sharing.MemberPolicySerializer()).deserialize(dict["member_policy"] ?? .Null)
-                    return FolderPolicy(aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, memberPolicy: memberPolicy)
+                    let resolvedMemberPolicy = NullableSerializer(Sharing.MemberPolicySerializer()).deserialize(dict["resolved_member_policy"] ?? .Null)
+                    return FolderPolicy(aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, memberPolicy: memberPolicy, resolvedMemberPolicy: resolvedMemberPolicy)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1175,6 +1224,18 @@ public class Sharing {
     */
     public enum GetSharedLinkFileError: CustomStringConvertible {
         /**
+            The shared link wasn't found
+        */
+        case SharedLinkNotFound
+        /**
+            The caller is not allowed to access this shared link
+        */
+        case SharedLinkAccessDenied
+        /**
+            An unspecified error
+        */
+        case Other
+        /**
             Directories cannot be retrieved by this endpoint.
         */
         case SharedLinkIsDirectory
@@ -1186,6 +1247,18 @@ public class Sharing {
         public init() { }
         public func serialize(value: GetSharedLinkFileError) -> JSON {
             switch value {
+                case .SharedLinkNotFound:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_not_found")
+                    return .Dictionary(d)
+                case .SharedLinkAccessDenied:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_access_denied")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
                 case .SharedLinkIsDirectory:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("shared_link_is_directory")
@@ -1197,6 +1270,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "shared_link_not_found":
+                            return GetSharedLinkFileError.SharedLinkNotFound
+                        case "shared_link_access_denied":
+                            return GetSharedLinkFileError.SharedLinkAccessDenied
+                        case "other":
+                            return GetSharedLinkFileError.Other
                         case "shared_link_is_directory":
                             return GetSharedLinkFileError.SharedLinkIsDirectory
                         default:
@@ -1362,9 +1441,12 @@ public class Sharing {
         shared folder.
     */
     public class GroupInfo: Team.GroupSummary {
+        /// The type of group.
+        public let groupType : Team.GroupType
         /// If the group is owned by the current user's team.
         public let sameTeam : Bool
-        public init(groupName: String, groupId: String, memberCount: UInt32, sameTeam: Bool, groupExternalId: String? = nil) {
+        public init(groupName: String, groupId: String, memberCount: UInt32, groupType: Team.GroupType, sameTeam: Bool, groupExternalId: String? = nil) {
+            self.groupType = groupType
             self.sameTeam = sameTeam
             super.init(groupName: groupName, groupId: groupId, memberCount: memberCount, groupExternalId: groupExternalId)
         }
@@ -1379,6 +1461,7 @@ public class Sharing {
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "member_count": Serialization._UInt32Serializer.serialize(value.memberCount),
+            "group_type": Team.GroupTypeSerializer().serialize(value.groupType),
             "same_team": Serialization._BoolSerializer.serialize(value.sameTeam),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
             ]
@@ -1390,9 +1473,10 @@ public class Sharing {
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
                     let groupId = Serialization._StringSerializer.deserialize(dict["group_id"] ?? .Null)
                     let memberCount = Serialization._UInt32Serializer.deserialize(dict["member_count"] ?? .Null)
+                    let groupType = Team.GroupTypeSerializer().deserialize(dict["group_type"] ?? .Null)
                     let sameTeam = Serialization._BoolSerializer.deserialize(dict["same_team"] ?? .Null)
                     let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    return GroupInfo(groupName: groupName, groupId: groupId, memberCount: memberCount, sameTeam: sameTeam, groupExternalId: groupExternalId)
+                    return GroupInfo(groupName: groupName, groupId: groupId, memberCount: memberCount, groupType: groupType, sameTeam: sameTeam, groupExternalId: groupExternalId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1407,9 +1491,16 @@ public class Sharing {
         /// The permissions that requesting user has on this member. The set of permissions corresponds to the
         /// MemberActions in the request.
         public let permissions : Array<Sharing.MemberPermission>?
-        public init(accessType: Sharing.AccessLevel, permissions: Array<Sharing.MemberPermission>? = nil) {
+        /// Suggested name initials for a member.
+        public let initials : String?
+        /// True if the member's access to the file is inherited from a parent folder.
+        public let isInherited : Bool
+        public init(accessType: Sharing.AccessLevel, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
             self.accessType = accessType
             self.permissions = permissions
+            nullableValidator(stringValidator())(value: initials)
+            self.initials = initials
+            self.isInherited = isInherited
         }
         public var description : String {
             return "\(prepareJSONForSerialization(MembershipInfoSerializer().serialize(self)))"
@@ -1421,6 +1512,8 @@ public class Sharing {
             let output = [ 
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
             ]
             return .Dictionary(output)
         }
@@ -1429,7 +1522,9 @@ public class Sharing {
                 case .Dictionary(let dict):
                     let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
-                    return MembershipInfo(accessType: accessType, permissions: permissions)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .Null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .Null)
+                    return MembershipInfo(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1441,9 +1536,9 @@ public class Sharing {
     public class GroupMembershipInfo: Sharing.MembershipInfo {
         /// The information about the membership group.
         public let group : Sharing.GroupInfo
-        public init(accessType: Sharing.AccessLevel, group: Sharing.GroupInfo, permissions: Array<Sharing.MemberPermission>? = nil) {
+        public init(accessType: Sharing.AccessLevel, group: Sharing.GroupInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
             self.group = group
-            super.init(accessType: accessType, permissions: permissions)
+            super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(GroupMembershipInfoSerializer().serialize(self)))"
@@ -1456,6 +1551,8 @@ public class Sharing {
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "group": Sharing.GroupInfoSerializer().serialize(value.group),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
             ]
             return .Dictionary(output)
         }
@@ -1465,7 +1562,9 @@ public class Sharing {
                     let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
                     let group = Sharing.GroupInfoSerializer().deserialize(dict["group"] ?? .Null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
-                    return GroupMembershipInfo(accessType: accessType, group: group, permissions: permissions)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .Null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .Null)
+                    return GroupMembershipInfo(accessType: accessType, group: group, permissions: permissions, initials: initials, isInherited: isInherited)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1522,9 +1621,9 @@ public class Sharing {
     public class InviteeMembershipInfo: Sharing.MembershipInfo {
         /// The information for the invited user.
         public let invitee : Sharing.InviteeInfo
-        public init(accessType: Sharing.AccessLevel, invitee: Sharing.InviteeInfo, permissions: Array<Sharing.MemberPermission>? = nil) {
+        public init(accessType: Sharing.AccessLevel, invitee: Sharing.InviteeInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
             self.invitee = invitee
-            super.init(accessType: accessType, permissions: permissions)
+            super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(InviteeMembershipInfoSerializer().serialize(self)))"
@@ -1537,6 +1636,8 @@ public class Sharing {
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "invitee": Sharing.InviteeInfoSerializer().serialize(value.invitee),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
             ]
             return .Dictionary(output)
         }
@@ -1546,18 +1647,26 @@ public class Sharing {
                     let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
                     let invitee = Sharing.InviteeInfoSerializer().deserialize(dict["invitee"] ?? .Null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
-                    return InviteeMembershipInfo(accessType: accessType, invitee: invitee, permissions: permissions)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .Null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .Null)
+                    return InviteeMembershipInfo(accessType: accessType, invitee: invitee, permissions: permissions, initials: initials, isInherited: isInherited)
                 default:
                     fatalError("Type error deserializing")
             }
         }
     }
     /**
-        The JobError union
+        Error occurred while performing an asynchronous job from unshareFolder or removeFolderMember.
     */
     public enum JobError: CustomStringConvertible {
-        case AccessError(Sharing.SharedFolderAccessError)
-        case MemberError(Sharing.SharedFolderMemberError)
+        /**
+            Error occurred while performing unshareFolder action.
+        */
+        case UnshareFolderError(Sharing.UnshareFolderError)
+        /**
+            Error occurred while performing removeFolderMember action.
+        */
+        case RemoveFolderMemberError(Sharing.RemoveFolderMemberError)
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(JobErrorSerializer().serialize(self)))"
@@ -1567,13 +1676,13 @@ public class Sharing {
         public init() { }
         public func serialize(value: JobError) -> JSON {
             switch value {
-                case .AccessError(let arg):
-                    var d = ["access_error": Sharing.SharedFolderAccessErrorSerializer().serialize(arg)]
-                    d[".tag"] = .Str("access_error")
+                case .UnshareFolderError(let arg):
+                    var d = ["unshare_folder_error": Sharing.UnshareFolderErrorSerializer().serialize(arg)]
+                    d[".tag"] = .Str("unshare_folder_error")
                     return .Dictionary(d)
-                case .MemberError(let arg):
-                    var d = ["member_error": Sharing.SharedFolderMemberErrorSerializer().serialize(arg)]
-                    d[".tag"] = .Str("member_error")
+                case .RemoveFolderMemberError(let arg):
+                    var d = ["remove_folder_member_error": Sharing.RemoveFolderMemberErrorSerializer().serialize(arg)]
+                    d[".tag"] = .Str("remove_folder_member_error")
                     return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
@@ -1586,12 +1695,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "access_error":
-                            let v = Sharing.SharedFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .Null)
-                            return JobError.AccessError(v)
-                        case "member_error":
-                            let v = Sharing.SharedFolderMemberErrorSerializer().deserialize(d["member_error"] ?? .Null)
-                            return JobError.MemberError(v)
+                        case "unshare_folder_error":
+                            let v = Sharing.UnshareFolderErrorSerializer().deserialize(d["unshare_folder_error"] ?? .Null)
+                            return JobError.UnshareFolderError(v)
+                        case "remove_folder_member_error":
+                            let v = Sharing.RemoveFolderMemberErrorSerializer().deserialize(d["remove_folder_member_error"] ?? .Null)
+                            return JobError.RemoveFolderMemberError(v)
                         case "other":
                             return JobError.Other
                         default:
@@ -1606,6 +1715,10 @@ public class Sharing {
         The JobStatus union
     */
     public enum JobStatus: CustomStringConvertible {
+        /**
+            The asynchronous job is still in progress.
+        */
+        case InProgress
         /**
             The asynchronous job has finished.
         */
@@ -1622,6 +1735,10 @@ public class Sharing {
         public init() { }
         public func serialize(value: JobStatus) -> JSON {
             switch value {
+                case .InProgress:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("in_progress")
+                    return .Dictionary(d)
                 case .Complete:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("complete")
@@ -1637,6 +1754,8 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "in_progress":
+                            return JobStatus.InProgress
                         case "complete":
                             return JobStatus.Complete
                         case "failed":
@@ -1702,19 +1821,54 @@ public class Sharing {
         }
     }
     /**
-        The ListFolderMembersArgs struct
+        The ListFolderMembersCursorArg struct
     */
-    public class ListFolderMembersArgs: CustomStringConvertible {
-        /// The ID for the shared folder.
-        public let sharedFolderId : String
+    public class ListFolderMembersCursorArg: CustomStringConvertible {
         /// Member actions to query.
         public let actions : Array<Sharing.MemberAction>?
-        public init(sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil) {
-            stringValidator(pattern: "[-_0-9a-zA-Z:]+")(value: sharedFolderId)
-            self.sharedFolderId = sharedFolderId
+        /// The maximum number of results that include members, groups and invitees to return per request.
+        public let limit : UInt32
+        public init(actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) {
             self.actions = actions
+            comparableValidator(minValue: 1, maxValue: 1000)(value: limit)
+            self.limit = limit
         }
         public var description : String {
+            return "\(prepareJSONForSerialization(ListFolderMembersCursorArgSerializer().serialize(self)))"
+        }
+    }
+    public class ListFolderMembersCursorArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: ListFolderMembersCursorArg) -> JSON {
+            let output = [ 
+            "actions": NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).serialize(value.actions),
+            "limit": Serialization._UInt32Serializer.serialize(value.limit),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> ListFolderMembersCursorArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let actions = NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).deserialize(dict["actions"] ?? .Null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
+                    return ListFolderMembersCursorArg(actions: actions, limit: limit)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        The ListFolderMembersArgs struct
+    */
+    public class ListFolderMembersArgs: Sharing.ListFolderMembersCursorArg {
+        /// The ID for the shared folder.
+        public let sharedFolderId : String
+        public init(sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) {
+            stringValidator(pattern: "[-_0-9a-zA-Z:]+")(value: sharedFolderId)
+            self.sharedFolderId = sharedFolderId
+            super.init(actions: actions, limit: limit)
+        }
+        public override var description : String {
             return "\(prepareJSONForSerialization(ListFolderMembersArgsSerializer().serialize(self)))"
         }
     }
@@ -1724,6 +1878,7 @@ public class Sharing {
             let output = [ 
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "actions": NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).serialize(value.actions),
+            "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
             return .Dictionary(output)
         }
@@ -1732,7 +1887,8 @@ public class Sharing {
                 case .Dictionary(let dict):
                     let sharedFolderId = Serialization._StringSerializer.deserialize(dict["shared_folder_id"] ?? .Null)
                     let actions = NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).deserialize(dict["actions"] ?? .Null)
-                    return ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
+                    return ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1823,10 +1979,47 @@ public class Sharing {
         }
     }
     /**
+        The ListFoldersArgs struct
+    */
+    public class ListFoldersArgs: CustomStringConvertible {
+        /// The maximum number of results to return per request.
+        public let limit : UInt32
+        /// Folder actions to query.
+        public let actions : Array<Sharing.FolderAction>?
+        public init(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) {
+            comparableValidator(minValue: 1, maxValue: 1000)(value: limit)
+            self.limit = limit
+            self.actions = actions
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(ListFoldersArgsSerializer().serialize(self)))"
+        }
+    }
+    public class ListFoldersArgsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: ListFoldersArgs) -> JSON {
+            let output = [ 
+            "limit": Serialization._UInt32Serializer.serialize(value.limit),
+            "actions": NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).serialize(value.actions),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> ListFoldersArgs {
+            switch json {
+                case .Dictionary(let dict):
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
+                    let actions = NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).deserialize(dict["actions"] ?? .Null)
+                    return ListFoldersArgs(limit: limit, actions: actions)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
         The ListFoldersContinueArg struct
     */
     public class ListFoldersContinueArg: CustomStringConvertible {
-        /// The cursor returned by your last call to listFolders or listFoldersContinue.
+        /// The cursor returned by the previous API call specified in the endpoint description.
         public let cursor : String
         public init(cursor: String) {
             stringValidator()(value: cursor)
@@ -1899,14 +2092,15 @@ public class Sharing {
         }
     }
     /**
-        Result for listFolders. Unmounted shared folders can be identified by the absence of pathLower in
-        SharedFolderMetadata.
+        Result for listFolders or listMountableFolders, depending on which endpoint was requested. Unmounted shared
+        folders can be identified by the absence of pathLower in SharedFolderMetadata.
     */
     public class ListFoldersResult: CustomStringConvertible {
         /// List of all shared folders the authenticated user has access to.
         public let entries : Array<Sharing.SharedFolderMetadata>
-        /// Present if there are additional shared folders that have not been returned yet. Pass the cursor into
-        /// listFoldersContinue to list additional folders.
+        /// Present if there are additional shared folders that have not been returned yet. Pass the cursor into the
+        /// corresponding continue endpoint (either listFoldersContinue or listMountableFoldersContinue) to list
+        /// additional folders.
         public let cursor : String?
         public init(entries: Array<Sharing.SharedFolderMetadata>, cursor: String? = nil) {
             self.entries = entries
@@ -1945,11 +2139,14 @@ public class Sharing {
         public let path : String?
         /// The cursor returned by your last call to listSharedLinks.
         public let cursor : String?
-        public init(path: String? = nil, cursor: String? = nil) {
+        /// See listSharedLinks description.
+        public let directOnly : Bool?
+        public init(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) {
             nullableValidator(stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})"))(value: path)
             self.path = path
             nullableValidator(stringValidator())(value: cursor)
             self.cursor = cursor
+            self.directOnly = directOnly
         }
         public var description : String {
             return "\(prepareJSONForSerialization(ListSharedLinksArgSerializer().serialize(self)))"
@@ -1961,6 +2158,7 @@ public class Sharing {
             let output = [ 
             "path": NullableSerializer(Serialization._StringSerializer).serialize(value.path),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
+            "direct_only": NullableSerializer(Serialization._BoolSerializer).serialize(value.directOnly),
             ]
             return .Dictionary(output)
         }
@@ -1969,7 +2167,8 @@ public class Sharing {
                 case .Dictionary(let dict):
                     let path = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path"] ?? .Null)
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
-                    return ListSharedLinksArg(path: path, cursor: cursor)
+                    let directOnly = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["direct_only"] ?? .Null)
+                    return ListSharedLinksArg(path: path, cursor: cursor, directOnly: directOnly)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2076,9 +2275,17 @@ public class Sharing {
     */
     public enum MemberAction: CustomStringConvertible {
         /**
+            Make the member an editor of the folder.
+        */
+        case MakeEditor
+        /**
             Make the member an owner of the folder.
         */
         case MakeOwner
+        /**
+            Make the member a viewer of the folder.
+        */
+        case MakeViewer
         /**
             Remove the member from the folder.
         */
@@ -2092,9 +2299,17 @@ public class Sharing {
         public init() { }
         public func serialize(value: MemberAction) -> JSON {
             switch value {
+                case .MakeEditor:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("make_editor")
+                    return .Dictionary(d)
                 case .MakeOwner:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("make_owner")
+                    return .Dictionary(d)
+                case .MakeViewer:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("make_viewer")
                     return .Dictionary(d)
                 case .Remove:
                     var d = [String : JSON]()
@@ -2111,8 +2326,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "make_editor":
+                            return MemberAction.MakeEditor
                         case "make_owner":
                             return MemberAction.MakeOwner
+                        case "make_viewer":
+                            return MemberAction.MakeViewer
                         case "remove":
                             return MemberAction.Remove
                         case "other":
@@ -2318,6 +2537,18 @@ public class Sharing {
     */
     public enum ModifySharedLinkSettingsError: CustomStringConvertible {
         /**
+            The shared link wasn't found
+        */
+        case SharedLinkNotFound
+        /**
+            The caller is not allowed to access this shared link
+        */
+        case SharedLinkAccessDenied
+        /**
+            An unspecified error
+        */
+        case Other
+        /**
             There is an error with the given settings
         */
         case SettingsError(Sharing.SharedLinkSettingsError)
@@ -2333,6 +2564,18 @@ public class Sharing {
         public init() { }
         public func serialize(value: ModifySharedLinkSettingsError) -> JSON {
             switch value {
+                case .SharedLinkNotFound:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_not_found")
+                    return .Dictionary(d)
+                case .SharedLinkAccessDenied:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_access_denied")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
                 case .SettingsError(let arg):
                     var d = ["settings_error": Sharing.SharedLinkSettingsErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("settings_error")
@@ -2348,6 +2591,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "shared_link_not_found":
+                            return ModifySharedLinkSettingsError.SharedLinkNotFound
+                        case "shared_link_access_denied":
+                            return ModifySharedLinkSettingsError.SharedLinkAccessDenied
+                        case "other":
+                            return ModifySharedLinkSettingsError.Other
                         case "settings_error":
                             let v = Sharing.SharedLinkSettingsErrorSerializer().deserialize(d["settings_error"] ?? .Null)
                             return ModifySharedLinkSettingsError.SettingsError(v)
@@ -2410,6 +2659,15 @@ public class Sharing {
             The shared folder is already mounted.
         */
         case AlreadyMounted
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
+        /**
+            The shared folder is not mountable. One example where this can occur is when the shared folder belongs
+            within a team folder in the user's Dropbox.
+        */
+        case NotMountable
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(MountFolderErrorSerializer().serialize(self)))"
@@ -2435,6 +2693,14 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("already_mounted")
                     return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
+                case .NotMountable:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("not_mountable")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -2455,6 +2721,10 @@ public class Sharing {
                             return MountFolderError.InsufficientQuota
                         case "already_mounted":
                             return MountFolderError.AlreadyMounted
+                        case "no_permission":
+                            return MountFolderError.NoPermission
+                        case "not_mountable":
+                            return MountFolderError.NotMountable
                         case "other":
                             return MountFolderError.Other
                         default:
@@ -2684,7 +2954,7 @@ public class Sharing {
         case AccessError(Sharing.SharedFolderAccessError)
         /**
             The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
-            folders. Try unsharing or transfering ownership first.
+            folders. Try unsharing or transferring ownership first.
         */
         case FolderOwner
         /**
@@ -2696,6 +2966,14 @@ public class Sharing {
             shared via groups.
         */
         case GroupAccess
+        /**
+            This action cannot be performed on a team shared folder.
+        */
+        case TeamFolder
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(RelinquishFolderMembershipErrorSerializer().serialize(self)))"
@@ -2721,6 +2999,14 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("group_access")
                     return .Dictionary(d)
+                case .TeamFolder:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_folder")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -2741,6 +3027,10 @@ public class Sharing {
                             return RelinquishFolderMembershipError.Mounted
                         case "group_access":
                             return RelinquishFolderMembershipError.GroupAccess
+                        case "team_folder":
+                            return RelinquishFolderMembershipError.TeamFolder
+                        case "no_permission":
+                            return RelinquishFolderMembershipError.NoPermission
                         case "other":
                             return RelinquishFolderMembershipError.Other
                         default:
@@ -2809,6 +3099,14 @@ public class Sharing {
             The target user has access to the shared folder via a group.
         */
         case GroupAccess
+        /**
+            This action cannot be performed on a team shared folder.
+        */
+        case TeamFolder
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(RemoveFolderMemberErrorSerializer().serialize(self)))"
@@ -2834,6 +3132,14 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("group_access")
                     return .Dictionary(d)
+                case .TeamFolder:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_folder")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -2855,6 +3161,10 @@ public class Sharing {
                             return RemoveFolderMemberError.FolderOwner
                         case "group_access":
                             return RemoveFolderMemberError.GroupAccess
+                        case "team_folder":
+                            return RemoveFolderMemberError.TeamFolder
+                        case "no_permission":
+                            return RemoveFolderMemberError.NoPermission
                         case "other":
                             return RemoveFolderMemberError.Other
                         default:
@@ -2931,6 +3241,18 @@ public class Sharing {
     */
     public enum ResolvedVisibility: CustomStringConvertible {
         /**
+            Anyone who has received the link can access it. No login required.
+        */
+        case Public
+        /**
+            Only members of the same team can access the link. Login is required.
+        */
+        case TeamOnly
+        /**
+            A link-specific password is required to access the link. Login is not required.
+        */
+        case Password
+        /**
             Only members of the same team who have the link-specific password can access the link. Login is required.
         */
         case TeamAndPassword
@@ -2950,6 +3272,18 @@ public class Sharing {
         public init() { }
         public func serialize(value: ResolvedVisibility) -> JSON {
             switch value {
+                case .Public:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("public")
+                    return .Dictionary(d)
+                case .TeamOnly:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_only")
+                    return .Dictionary(d)
+                case .Password:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("password")
+                    return .Dictionary(d)
                 case .TeamAndPassword:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("team_and_password")
@@ -2969,6 +3303,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "public":
+                            return ResolvedVisibility.Public
+                        case "team_only":
+                            return ResolvedVisibility.TeamOnly
+                        case "password":
+                            return ResolvedVisibility.Password
                         case "team_and_password":
                             return ResolvedVisibility.TeamAndPassword
                         case "shared_folder_only":
@@ -3020,6 +3360,18 @@ public class Sharing {
     */
     public enum RevokeSharedLinkError: CustomStringConvertible {
         /**
+            The shared link wasn't found
+        */
+        case SharedLinkNotFound
+        /**
+            The caller is not allowed to access this shared link
+        */
+        case SharedLinkAccessDenied
+        /**
+            An unspecified error
+        */
+        case Other
+        /**
             Shared link is malformed.
         */
         case SharedLinkMalformed
@@ -3031,6 +3383,18 @@ public class Sharing {
         public init() { }
         public func serialize(value: RevokeSharedLinkError) -> JSON {
             switch value {
+                case .SharedLinkNotFound:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_not_found")
+                    return .Dictionary(d)
+                case .SharedLinkAccessDenied:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("shared_link_access_denied")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
                 case .SharedLinkMalformed:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("shared_link_malformed")
@@ -3042,6 +3406,12 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "shared_link_not_found":
+                            return RevokeSharedLinkError.SharedLinkNotFound
+                        case "shared_link_access_denied":
+                            return RevokeSharedLinkError.SharedLinkAccessDenied
+                        case "other":
+                            return RevokeSharedLinkError.Other
                         case "shared_link_malformed":
                             return RevokeSharedLinkError.SharedLinkMalformed
                         default:
@@ -3058,11 +3428,12 @@ public class Sharing {
     public class ShareFolderArg: CustomStringConvertible {
         /// The path to the folder to share. If it does not exist, then a new one is created.
         public let path : String
-        /// Who can be a member of this shared folder.
+        /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
         public let memberPolicy : Sharing.MemberPolicy
         /// Who can add and remove members of this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy
-        /// The policy to apply to shared links created for content inside this shared folder.
+        /// The policy to apply to shared links created for content inside this shared folder.  The current user must be
+        /// on a team to set this policy to members in SharedLinkPolicy.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy
         /// Whether to force the share to happen asynchronously.
         public let forceAsync : Bool
@@ -3109,7 +3480,7 @@ public class Sharing {
     */
     public enum ShareFolderError: CustomStringConvertible {
         /**
-            The current account's e-mail address is unverified.
+            The current user's e-mail address is unverified.
         */
         case EmailUnverified
         /**
@@ -3121,11 +3492,11 @@ public class Sharing {
         */
         case TeamPolicyDisallowsMemberPolicy
         /**
-            The current account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
+            The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         */
         case DisallowedSharedLinkPolicy
         /**
-            The current account does not have permission to perform this action.
+            The current user does not have permission to perform this action.
         */
         case NoPermission
         case Other
@@ -3194,6 +3565,10 @@ public class Sharing {
     */
     public enum ShareFolderJobStatus: CustomStringConvertible {
         /**
+            The asynchronous job is still in progress.
+        */
+        case InProgress
+        /**
             The share job has finished. The value is the metadata for the folder.
         */
         case Complete(Sharing.SharedFolderMetadata)
@@ -3206,6 +3581,10 @@ public class Sharing {
         public init() { }
         public func serialize(value: ShareFolderJobStatus) -> JSON {
             switch value {
+                case .InProgress:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("in_progress")
+                    return .Dictionary(d)
                 case .Complete(let arg):
                     var d = Serialization.getFields(Sharing.SharedFolderMetadataSerializer().serialize(arg))
                     d[".tag"] = .Str("complete")
@@ -3221,6 +3600,8 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "in_progress":
+                            return ShareFolderJobStatus.InProgress
                         case "complete":
                             let v = Sharing.SharedFolderMetadataSerializer().deserialize(json)
                             return ShareFolderJobStatus.Complete(v)
@@ -3239,6 +3620,11 @@ public class Sharing {
         The ShareFolderLaunch union
     */
     public enum ShareFolderLaunch: CustomStringConvertible {
+        /**
+            This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+            the status of the asynchronous job.
+        */
+        case AsyncJobId(String)
         case Complete(Sharing.SharedFolderMetadata)
         public var description : String {
             return "\(prepareJSONForSerialization(ShareFolderLaunchSerializer().serialize(self)))"
@@ -3248,6 +3634,10 @@ public class Sharing {
         public init() { }
         public func serialize(value: ShareFolderLaunch) -> JSON {
             switch value {
+                case .AsyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .Str("async_job_id")
+                    return .Dictionary(d)
                 case .Complete(let arg):
                     var d = Serialization.getFields(Sharing.SharedFolderMetadataSerializer().serialize(arg))
                     d[".tag"] = .Str("complete")
@@ -3259,6 +3649,9 @@ public class Sharing {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .Null)
+                            return ShareFolderLaunch.AsyncJobId(v)
                         case "complete":
                             let v = Sharing.SharedFolderMetadataSerializer().deserialize(json)
                             return ShareFolderLaunch.Complete(v)
@@ -3387,17 +3780,9 @@ public class Sharing {
         */
         case NotAMember
         /**
-            The current user does not have sufficient privileges to perform the desired action.
-        */
-        case NoPermission
-        /**
-            The current account's e-mail address is unverified.
+            The current user's e-mail address is unverified.
         */
         case EmailUnverified
-        /**
-            The current user cannot perform this action on a team shared folder.
-        */
-        case TeamFolder
         /**
             The shared folder is unmounted.
         */
@@ -3419,17 +3804,9 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("not_a_member")
                     return .Dictionary(d)
-                case .NoPermission:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("no_permission")
-                    return .Dictionary(d)
                 case .EmailUnverified:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("email_unverified")
-                    return .Dictionary(d)
-                case .TeamFolder:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("team_folder")
                     return .Dictionary(d)
                 case .Unmounted:
                     var d = [String : JSON]()
@@ -3450,12 +3827,8 @@ public class Sharing {
                             return SharedFolderAccessError.InvalidId
                         case "not_a_member":
                             return SharedFolderAccessError.NotAMember
-                        case "no_permission":
-                            return SharedFolderAccessError.NoPermission
                         case "email_unverified":
                             return SharedFolderAccessError.EmailUnverified
-                        case "team_folder":
-                            return SharedFolderAccessError.TeamFolder
                         case "unmounted":
                             return SharedFolderAccessError.Unmounted
                         case "other":
@@ -3572,15 +3945,9 @@ public class Sharing {
         }
     }
     /**
-        The metadata which includes basic information about the shared folder.
+        Properties of the shared folder.
     */
-    public class SharedFolderMetadata: CustomStringConvertible {
-        /// The lower-cased full path of this shared folder. Absent for unmounted folders.
-        public let pathLower : String?
-        /// The name of the this shared folder.
-        public let name : String
-        /// The ID of the shared folder.
-        public let sharedFolderId : String
+    public class SharedFolderMetadataBase: CustomStringConvertible {
         /// The current user's access level for this shared folder.
         public let accessType : Sharing.AccessLevel
         /// Whether this folder is a team folder https://www.dropbox.com/en/help/986.
@@ -3588,21 +3955,74 @@ public class Sharing {
         /// Policies governing this shared folder.
         public let policy : Sharing.FolderPolicy
         /// Actions the current user may perform on the folder and its contents. The set of permissions corresponds to
-        /// the MemberActions in the request.
+        /// the FolderActions in the request.
         public let permissions : Array<Sharing.FolderPermission>?
-        public init(name: String, sharedFolderId: String, accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, pathLower: String? = nil, permissions: Array<Sharing.FolderPermission>? = nil) {
+        /// The team that owns the folder. This field is not present if the folder is not owned by a team.
+        public let ownerTeam : Users.Team?
+        /// The ID of the parent shared folder. This field is present only if the folder is contained within another
+        /// shared folder.
+        public let parentSharedFolderId : String?
+        public init(accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, permissions: Array<Sharing.FolderPermission>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil) {
+            self.accessType = accessType
+            self.isTeamFolder = isTeamFolder
+            self.policy = policy
+            self.permissions = permissions
+            self.ownerTeam = ownerTeam
+            nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(value: parentSharedFolderId)
+            self.parentSharedFolderId = parentSharedFolderId
+        }
+        public var description : String {
+            return "\(prepareJSONForSerialization(SharedFolderMetadataBaseSerializer().serialize(self)))"
+        }
+    }
+    public class SharedFolderMetadataBaseSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: SharedFolderMetadataBase) -> JSON {
+            let output = [ 
+            "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
+            "is_team_folder": Serialization._BoolSerializer.serialize(value.isTeamFolder),
+            "policy": Sharing.FolderPolicySerializer().serialize(value.policy),
+            "permissions": NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).serialize(value.permissions),
+            "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> SharedFolderMetadataBase {
+            switch json {
+                case .Dictionary(let dict):
+                    let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
+                    let isTeamFolder = Serialization._BoolSerializer.deserialize(dict["is_team_folder"] ?? .Null)
+                    let policy = Sharing.FolderPolicySerializer().deserialize(dict["policy"] ?? .Null)
+                    let permissions = NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
+                    let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .Null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    return SharedFolderMetadataBase(accessType: accessType, isTeamFolder: isTeamFolder, policy: policy, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+    /**
+        The metadata which includes basic information about the shared folder.
+    */
+    public class SharedFolderMetadata: Sharing.SharedFolderMetadataBase {
+        /// The lower-cased full path of this shared folder. Absent for unmounted folders.
+        public let pathLower : String?
+        /// The name of the this shared folder.
+        public let name : String
+        /// The ID of the shared folder.
+        public let sharedFolderId : String
+        public init(accessType: Sharing.AccessLevel, isTeamFolder: Bool, policy: Sharing.FolderPolicy, name: String, sharedFolderId: String, permissions: Array<Sharing.FolderPermission>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil) {
             nullableValidator(stringValidator())(value: pathLower)
             self.pathLower = pathLower
             stringValidator()(value: name)
             self.name = name
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(value: sharedFolderId)
             self.sharedFolderId = sharedFolderId
-            self.accessType = accessType
-            self.isTeamFolder = isTeamFolder
-            self.policy = policy
-            self.permissions = permissions
+            super.init(accessType: accessType, isTeamFolder: isTeamFolder, policy: policy, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId)
         }
-        public var description : String {
+        public override var description : String {
             return "\(prepareJSONForSerialization(SharedFolderMetadataSerializer().serialize(self)))"
         }
     }
@@ -3610,27 +4030,31 @@ public class Sharing {
         public init() { }
         public func serialize(value: SharedFolderMetadata) -> JSON {
             let output = [ 
-            "name": Serialization._StringSerializer.serialize(value.name),
-            "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "is_team_folder": Serialization._BoolSerializer.serialize(value.isTeamFolder),
             "policy": Sharing.FolderPolicySerializer().serialize(value.policy),
-            "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "permissions": NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).serialize(value.permissions),
+            "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
+            "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             ]
             return .Dictionary(output)
         }
         public func deserialize(json: JSON) -> SharedFolderMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let sharedFolderId = Serialization._StringSerializer.deserialize(dict["shared_folder_id"] ?? .Null)
                     let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
                     let isTeamFolder = Serialization._BoolSerializer.deserialize(dict["is_team_folder"] ?? .Null)
                     let policy = Sharing.FolderPolicySerializer().deserialize(dict["policy"] ?? .Null)
-                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
+                    let sharedFolderId = Serialization._StringSerializer.deserialize(dict["shared_folder_id"] ?? .Null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
-                    return SharedFolderMetadata(name: name, sharedFolderId: sharedFolderId, accessType: accessType, isTeamFolder: isTeamFolder, policy: policy, pathLower: pathLower, permissions: permissions)
+                    let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .Null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
+                    return SharedFolderMetadata(accessType: accessType, isTeamFolder: isTeamFolder, policy: policy, name: name, sharedFolderId: sharedFolderId, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3962,10 +4386,6 @@ public class Sharing {
     public enum TransferFolderError: CustomStringConvertible {
         case AccessError(Sharing.SharedFolderAccessError)
         /**
-            The current account does not have permission to perform this action.
-        */
-        case NoPermission
-        /**
             toDropboxId in TransferFolderArg is invalid.
         */
         case InvalidDropboxId
@@ -3974,13 +4394,21 @@ public class Sharing {
         */
         case NewOwnerNotAMember
         /**
-            The new desginated owner does not have the shared folder mounted.
+            The new designated owner does not have the shared folder mounted.
         */
         case NewOwnerUnmounted
         /**
             The new designated owner's e-mail address is unverified.
         */
         case NewOwnerEmailUnverified
+        /**
+            This action cannot be performed on a team shared folder.
+        */
+        case TeamFolder
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(TransferFolderErrorSerializer().serialize(self)))"
@@ -3993,10 +4421,6 @@ public class Sharing {
                 case .AccessError(let arg):
                     var d = ["access_error": Sharing.SharedFolderAccessErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("access_error")
-                    return .Dictionary(d)
-                case .NoPermission:
-                    var d = [String : JSON]()
-                    d[".tag"] = .Str("no_permission")
                     return .Dictionary(d)
                 case .InvalidDropboxId:
                     var d = [String : JSON]()
@@ -4014,6 +4438,14 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("new_owner_email_unverified")
                     return .Dictionary(d)
+                case .TeamFolder:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_folder")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -4028,8 +4460,6 @@ public class Sharing {
                         case "access_error":
                             let v = Sharing.SharedFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .Null)
                             return TransferFolderError.AccessError(v)
-                        case "no_permission":
-                            return TransferFolderError.NoPermission
                         case "invalid_dropbox_id":
                             return TransferFolderError.InvalidDropboxId
                         case "new_owner_not_a_member":
@@ -4038,6 +4468,10 @@ public class Sharing {
                             return TransferFolderError.NewOwnerUnmounted
                         case "new_owner_email_unverified":
                             return TransferFolderError.NewOwnerEmailUnverified
+                        case "team_folder":
+                            return TransferFolderError.TeamFolder
+                        case "no_permission":
+                            return TransferFolderError.NoPermission
                         case "other":
                             return TransferFolderError.Other
                         default:
@@ -4085,6 +4519,15 @@ public class Sharing {
     */
     public enum UnmountFolderError: CustomStringConvertible {
         case AccessError(Sharing.SharedFolderAccessError)
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
+        /**
+            The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent
+            folder is also a shared folder that resides in the current user's Dropbox.
+        */
+        case NotUnmountable
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(UnmountFolderErrorSerializer().serialize(self)))"
@@ -4097,6 +4540,14 @@ public class Sharing {
                 case .AccessError(let arg):
                     var d = ["access_error": Sharing.SharedFolderAccessErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("access_error")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
+                case .NotUnmountable:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("not_unmountable")
                     return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
@@ -4112,6 +4563,10 @@ public class Sharing {
                         case "access_error":
                             let v = Sharing.SharedFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .Null)
                             return UnmountFolderError.AccessError(v)
+                        case "no_permission":
+                            return UnmountFolderError.NoPermission
+                        case "not_unmountable":
+                            return UnmountFolderError.NotUnmountable
                         case "other":
                             return UnmountFolderError.Other
                         default:
@@ -4131,7 +4586,7 @@ public class Sharing {
         /// If true, members of this shared folder will get a copy of this folder after it's unshared. Otherwise, it
         /// will be removed from their Dropbox. The current user, who is an owner, will always retain their copy.
         public let leaveACopy : Bool
-        public init(sharedFolderId: String, leaveACopy: Bool) {
+        public init(sharedFolderId: String, leaveACopy: Bool = false) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(value: sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.leaveACopy = leaveACopy
@@ -4165,6 +4620,14 @@ public class Sharing {
     */
     public enum UnshareFolderError: CustomStringConvertible {
         case AccessError(Sharing.SharedFolderAccessError)
+        /**
+            This action cannot be performed on a team shared folder.
+        */
+        case TeamFolder
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(UnshareFolderErrorSerializer().serialize(self)))"
@@ -4177,6 +4640,14 @@ public class Sharing {
                 case .AccessError(let arg):
                     var d = ["access_error": Sharing.SharedFolderAccessErrorSerializer().serialize(arg)]
                     d[".tag"] = .Str("access_error")
+                    return .Dictionary(d)
+                case .TeamFolder:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("team_folder")
+                    return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
                     return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
@@ -4192,6 +4663,10 @@ public class Sharing {
                         case "access_error":
                             let v = Sharing.SharedFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .Null)
                             return UnshareFolderError.AccessError(v)
+                        case "team_folder":
+                            return UnshareFolderError.TeamFolder
+                        case "no_permission":
+                            return UnshareFolderError.NoPermission
                         case "other":
                             return UnshareFolderError.Other
                         default:
@@ -4255,6 +4730,10 @@ public class Sharing {
             editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business plan.
         */
         case InsufficientPlan
+        /**
+            The current user does not have permission to perform this action.
+        */
+        case NoPermission
         case Other
         public var description : String {
             return "\(prepareJSONForSerialization(UpdateFolderMemberErrorSerializer().serialize(self)))"
@@ -4276,6 +4755,10 @@ public class Sharing {
                     var d = [String : JSON]()
                     d[".tag"] = .Str("insufficient_plan")
                     return .Dictionary(d)
+                case .NoPermission:
+                    var d = [String : JSON]()
+                    d[".tag"] = .Str("no_permission")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String : JSON]()
                     d[".tag"] = .Str("other")
@@ -4295,6 +4778,8 @@ public class Sharing {
                             return UpdateFolderMemberError.MemberError(v)
                         case "insufficient_plan":
                             return UpdateFolderMemberError.InsufficientPlan
+                        case "no_permission":
+                            return UpdateFolderMemberError.NoPermission
                         case "other":
                             return UpdateFolderMemberError.Other
                         default:
@@ -4311,11 +4796,12 @@ public class Sharing {
     public class UpdateFolderPolicyArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId : String
-        /// Who can be a member of this shared folder. Only set this if the current user is on a team.
+        /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
         public let memberPolicy : Sharing.MemberPolicy?
         /// Who can add and remove members of this shared folder.
         public let aclUpdatePolicy : Sharing.AclUpdatePolicy?
-        /// The policy to apply to shared links created for content inside this shared folder.
+        /// The policy to apply to shared links created for content inside this shared folder. The current user must be
+        /// on a team to set this policy to members in SharedLinkPolicy.
         public let sharedLinkPolicy : Sharing.SharedLinkPolicy?
         public init(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(value: sharedFolderId)
@@ -4425,7 +4911,7 @@ public class Sharing {
         }
     }
     /**
-        Basic information about a user. Use usersAccount and usersAccountBatch` to obtain more detailed information.
+        Basic information about a user. Use usersAccount and usersAccountBatch to obtain more detailed information.
     */
     public class UserInfo: CustomStringConvertible {
         /// The account ID of the user.
@@ -4473,9 +4959,9 @@ public class Sharing {
     public class UserMembershipInfo: Sharing.MembershipInfo {
         /// The account information for the membership user.
         public let user : Sharing.UserInfo
-        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil) {
+        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
             self.user = user
-            super.init(accessType: accessType, permissions: permissions)
+            super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
             return "\(prepareJSONForSerialization(UserMembershipInfoSerializer().serialize(self)))"
@@ -4488,6 +4974,8 @@ public class Sharing {
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "user": Sharing.UserInfoSerializer().serialize(value.user),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
             ]
             return .Dictionary(output)
         }
@@ -4497,7 +4985,9 @@ public class Sharing {
                     let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .Null)
                     let user = Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .Null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .Null)
-                    return UserMembershipInfo(accessType: accessType, user: user, permissions: permissions)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .Null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .Null)
+                    return UserMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited)
                 default:
                     fatalError("Type error deserializing")
             }
