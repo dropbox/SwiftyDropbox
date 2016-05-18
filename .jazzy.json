@@ -17,6 +17,7 @@
       "children": [
         "Async", 
         "Auth", 
+        "Common", 
         "Files", 
         "Sharing", 
         "Team", 
