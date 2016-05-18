@@ -195,7 +195,7 @@ class Reachability {
     /// This method uses `SCNetworkReachabilityCreateWithAddress` to create a reference to monitor the example host
     /// defined by our zeroed `zeroAddress` struct. From this reference, we can extract status flags regarding the
     /// reachability of this host, using `SCNetworkReachabilityGetFlags`.
-)
+
     class func connectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
