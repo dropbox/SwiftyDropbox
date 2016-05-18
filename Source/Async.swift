@@ -18,7 +18,7 @@ public class Async {
         */
         case AsyncJobId(String)
         public var description : String {
-            return "\(prepareJSONForSerialization(LaunchResultBaseSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(LaunchResultBaseSerializer().serialize(self)))"
         }
     }
     public class LaunchResultBaseSerializer: JSONSerializer {
@@ -62,7 +62,7 @@ public class Async {
         */
         case Complete
         public var description : String {
-            return "\(prepareJSONForSerialization(LaunchEmptyResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(LaunchEmptyResultSerializer().serialize(self)))"
         }
     }
     public class LaunchEmptyResultSerializer: JSONSerializer {
@@ -108,7 +108,7 @@ public class Async {
             self.asyncJobId = asyncJobId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(PollArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PollArgSerializer().serialize(self)))"
         }
     }
     public class PollArgSerializer: JSONSerializer {
@@ -140,7 +140,7 @@ public class Async {
         */
         case InProgress
         public var description : String {
-            return "\(prepareJSONForSerialization(PollResultBaseSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PollResultBaseSerializer().serialize(self)))"
         }
     }
     public class PollResultBaseSerializer: JSONSerializer {
@@ -182,7 +182,7 @@ public class Async {
         */
         case Complete
         public var description : String {
-            return "\(prepareJSONForSerialization(PollEmptyResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PollEmptyResultSerializer().serialize(self)))"
         }
     }
     public class PollEmptyResultSerializer: JSONSerializer {
@@ -234,7 +234,7 @@ public class Async {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(PollErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PollErrorSerializer().serialize(self)))"
         }
     }
     public class PollErrorSerializer: JSONSerializer {

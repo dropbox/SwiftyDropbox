@@ -25,7 +25,7 @@ public class Sharing {
         case Viewer
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(AccessLevelSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AccessLevelSerializer().serialize(self)))"
         }
     }
     public class AccessLevelSerializer: JSONSerializer {
@@ -86,7 +86,7 @@ public class Sharing {
         case Editors
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(AclUpdatePolicySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AclUpdatePolicySerializer().serialize(self)))"
         }
     }
     public class AclUpdatePolicySerializer: JSONSerializer {
@@ -147,7 +147,7 @@ public class Sharing {
             self.customMessage = customMessage
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(AddFolderMemberArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AddFolderMemberArgSerializer().serialize(self)))"
         }
     }
     public class AddFolderMemberArgSerializer: JSONSerializer {
@@ -221,7 +221,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(AddFolderMemberErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AddFolderMemberErrorSerializer().serialize(self)))"
         }
     }
     public class AddFolderMemberErrorSerializer: JSONSerializer {
@@ -326,7 +326,7 @@ public class Sharing {
             self.accessLevel = accessLevel
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(AddMemberSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AddMemberSerializer().serialize(self)))"
         }
     }
     public class AddMemberSerializer: JSONSerializer {
@@ -376,7 +376,7 @@ public class Sharing {
         case GroupNotOnTeam
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(AddMemberSelectorErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AddMemberSelectorErrorSerializer().serialize(self)))"
         }
     }
     public class AddMemberSelectorErrorSerializer: JSONSerializer {
@@ -454,7 +454,7 @@ public class Sharing {
             self.expires = expires
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(LinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(LinkMetadataSerializer().serialize(self)))"
         }
     }
     public class LinkMetadataSerializer: JSONSerializer {
@@ -505,7 +505,7 @@ public class Sharing {
     */
     public class CollectionLinkMetadata: Sharing.LinkMetadata {
         public override var description : String {
-            return "\(prepareJSONForSerialization(CollectionLinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CollectionLinkMetadataSerializer().serialize(self)))"
         }
     }
     public class CollectionLinkMetadataSerializer: JSONSerializer {
@@ -548,7 +548,7 @@ public class Sharing {
             self.pendingUpload = pendingUpload
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateSharedLinkArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateSharedLinkArgSerializer().serialize(self)))"
         }
     }
     public class CreateSharedLinkArgSerializer: JSONSerializer {
@@ -580,7 +580,7 @@ public class Sharing {
         case Path(Files.LookupError)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateSharedLinkErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateSharedLinkErrorSerializer().serialize(self)))"
         }
     }
     public class CreateSharedLinkErrorSerializer: JSONSerializer {
@@ -629,7 +629,7 @@ public class Sharing {
             self.settings = settings
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateSharedLinkWithSettingsArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateSharedLinkWithSettingsArgSerializer().serialize(self)))"
         }
     }
     public class CreateSharedLinkWithSettingsArgSerializer: JSONSerializer {
@@ -674,7 +674,7 @@ public class Sharing {
         */
         case AccessDenied
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateSharedLinkWithSettingsErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateSharedLinkWithSettingsErrorSerializer().serialize(self)))"
         }
     }
     public class CreateSharedLinkWithSettingsErrorSerializer: JSONSerializer {
@@ -766,7 +766,7 @@ public class Sharing {
             self.contentOwnerTeamInfo = contentOwnerTeamInfo
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkMetadataSerializer().serialize(self)))"
         }
     }
     public class SharedLinkMetadataSerializer: JSONSerializer {
@@ -847,7 +847,7 @@ public class Sharing {
             super.init(url: url, name: name, linkPermissions: linkPermissions, id: id, expires: expires, pathLower: pathLower, teamMemberInfo: teamMemberInfo, contentOwnerTeamInfo: contentOwnerTeamInfo)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FileLinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FileLinkMetadataSerializer().serialize(self)))"
         }
     }
     public class FileLinkMetadataSerializer: JSONSerializer {
@@ -924,7 +924,7 @@ public class Sharing {
         case Unshare
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(FolderActionSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderActionSerializer().serialize(self)))"
         }
     }
     public class FolderActionSerializer: JSONSerializer {
@@ -999,7 +999,7 @@ public class Sharing {
     */
     public class FolderLinkMetadata: Sharing.SharedLinkMetadata {
         public override var description : String {
-            return "\(prepareJSONForSerialization(FolderLinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderLinkMetadataSerializer().serialize(self)))"
         }
     }
     public class FolderLinkMetadataSerializer: JSONSerializer {
@@ -1051,7 +1051,7 @@ public class Sharing {
             self.reason = reason
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(FolderPermissionSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderPermissionSerializer().serialize(self)))"
         }
     }
     public class FolderPermissionSerializer: JSONSerializer {
@@ -1098,7 +1098,7 @@ public class Sharing {
             self.sharedLinkPolicy = sharedLinkPolicy
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(FolderPolicySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderPolicySerializer().serialize(self)))"
         }
     }
     public class FolderPolicySerializer: JSONSerializer {
@@ -1139,7 +1139,7 @@ public class Sharing {
             self.actions = actions
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetMetadataArgsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgsSerializer().serialize(self)))"
         }
     }
     public class GetMetadataArgsSerializer: JSONSerializer {
@@ -1179,7 +1179,7 @@ public class Sharing {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkErrorSerializer().serialize(self)))"
         }
     }
     public class SharedLinkErrorSerializer: JSONSerializer {
@@ -1240,7 +1240,7 @@ public class Sharing {
         */
         case SharedLinkIsDirectory
         public var description : String {
-            return "\(prepareJSONForSerialization(GetSharedLinkFileErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetSharedLinkFileErrorSerializer().serialize(self)))"
         }
     }
     public class GetSharedLinkFileErrorSerializer: JSONSerializer {
@@ -1306,7 +1306,7 @@ public class Sharing {
             self.linkPassword = linkPassword
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetSharedLinkMetadataArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetSharedLinkMetadataArgSerializer().serialize(self)))"
         }
     }
     public class GetSharedLinkMetadataArgSerializer: JSONSerializer {
@@ -1342,7 +1342,7 @@ public class Sharing {
             self.path = path
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetSharedLinksArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetSharedLinksArgSerializer().serialize(self)))"
         }
     }
     public class GetSharedLinksArgSerializer: JSONSerializer {
@@ -1370,7 +1370,7 @@ public class Sharing {
         case Path(String?)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(GetSharedLinksErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetSharedLinksErrorSerializer().serialize(self)))"
         }
     }
     public class GetSharedLinksErrorSerializer: JSONSerializer {
@@ -1415,7 +1415,7 @@ public class Sharing {
             self.links = links
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetSharedLinksResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetSharedLinksResultSerializer().serialize(self)))"
         }
     }
     public class GetSharedLinksResultSerializer: JSONSerializer {
@@ -1451,7 +1451,7 @@ public class Sharing {
             super.init(groupName: groupName, groupId: groupId, memberCount: memberCount, groupExternalId: groupExternalId)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(GroupInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupInfoSerializer().serialize(self)))"
         }
     }
     public class GroupInfoSerializer: JSONSerializer {
@@ -1503,7 +1503,7 @@ public class Sharing {
             self.isInherited = isInherited
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(MembershipInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MembershipInfoSerializer().serialize(self)))"
         }
     }
     public class MembershipInfoSerializer: JSONSerializer {
@@ -1541,7 +1541,7 @@ public class Sharing {
             super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(GroupMembershipInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupMembershipInfoSerializer().serialize(self)))"
         }
     }
     public class GroupMembershipInfoSerializer: JSONSerializer {
@@ -1580,7 +1580,7 @@ public class Sharing {
         case Email(String)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(InviteeInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(InviteeInfoSerializer().serialize(self)))"
         }
     }
     public class InviteeInfoSerializer: JSONSerializer {
@@ -1626,7 +1626,7 @@ public class Sharing {
             super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(InviteeMembershipInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(InviteeMembershipInfoSerializer().serialize(self)))"
         }
     }
     public class InviteeMembershipInfoSerializer: JSONSerializer {
@@ -1669,7 +1669,7 @@ public class Sharing {
         case RemoveFolderMemberError(Sharing.RemoveFolderMemberError)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(JobErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(JobErrorSerializer().serialize(self)))"
         }
     }
     public class JobErrorSerializer: JSONSerializer {
@@ -1728,7 +1728,7 @@ public class Sharing {
         */
         case Failed(Sharing.JobError)
         public var description : String {
-            return "\(prepareJSONForSerialization(JobStatusSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(JobStatusSerializer().serialize(self)))"
         }
     }
     public class JobStatusSerializer: JSONSerializer {
@@ -1793,7 +1793,7 @@ public class Sharing {
             self.revokeFailureReason = revokeFailureReason
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(LinkPermissionsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(LinkPermissionsSerializer().serialize(self)))"
         }
     }
     public class LinkPermissionsSerializer: JSONSerializer {
@@ -1834,7 +1834,7 @@ public class Sharing {
             self.limit = limit
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderMembersCursorArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderMembersCursorArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderMembersCursorArgSerializer: JSONSerializer {
@@ -1869,7 +1869,7 @@ public class Sharing {
             super.init(actions: actions, limit: limit)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(ListFolderMembersArgsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderMembersArgsSerializer().serialize(self)))"
         }
     }
     public class ListFolderMembersArgsSerializer: JSONSerializer {
@@ -1905,7 +1905,7 @@ public class Sharing {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderMembersContinueArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderMembersContinueArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderMembersContinueArgSerializer: JSONSerializer {
@@ -1937,7 +1937,7 @@ public class Sharing {
         case InvalidCursor
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderMembersContinueErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderMembersContinueErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderMembersContinueErrorSerializer: JSONSerializer {
@@ -1992,7 +1992,7 @@ public class Sharing {
             self.actions = actions
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFoldersArgsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFoldersArgsSerializer().serialize(self)))"
         }
     }
     public class ListFoldersArgsSerializer: JSONSerializer {
@@ -2026,7 +2026,7 @@ public class Sharing {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFoldersContinueArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFoldersContinueArgSerializer().serialize(self)))"
         }
     }
     public class ListFoldersContinueArgSerializer: JSONSerializer {
@@ -2057,7 +2057,7 @@ public class Sharing {
         case InvalidCursor
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFoldersContinueErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFoldersContinueErrorSerializer().serialize(self)))"
         }
     }
     public class ListFoldersContinueErrorSerializer: JSONSerializer {
@@ -2108,7 +2108,7 @@ public class Sharing {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFoldersResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFoldersResultSerializer().serialize(self)))"
         }
     }
     public class ListFoldersResultSerializer: JSONSerializer {
@@ -2149,7 +2149,7 @@ public class Sharing {
             self.directOnly = directOnly
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListSharedLinksArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListSharedLinksArgSerializer().serialize(self)))"
         }
     }
     public class ListSharedLinksArgSerializer: JSONSerializer {
@@ -2185,7 +2185,7 @@ public class Sharing {
         case Reset
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListSharedLinksErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListSharedLinksErrorSerializer().serialize(self)))"
         }
     }
     public class ListSharedLinksErrorSerializer: JSONSerializer {
@@ -2245,7 +2245,7 @@ public class Sharing {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListSharedLinksResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListSharedLinksResultSerializer().serialize(self)))"
         }
     }
     public class ListSharedLinksResultSerializer: JSONSerializer {
@@ -2292,7 +2292,7 @@ public class Sharing {
         case Remove
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(MemberActionSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberActionSerializer().serialize(self)))"
         }
     }
     public class MemberActionSerializer: JSONSerializer {
@@ -2360,7 +2360,7 @@ public class Sharing {
             self.reason = reason
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(MemberPermissionSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberPermissionSerializer().serialize(self)))"
         }
     }
     public class MemberPermissionSerializer: JSONSerializer {
@@ -2399,7 +2399,7 @@ public class Sharing {
         case Anyone
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(MemberPolicySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberPolicySerializer().serialize(self)))"
         }
     }
     public class MemberPolicySerializer: JSONSerializer {
@@ -2453,7 +2453,7 @@ public class Sharing {
         case Email(String)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(MemberSelectorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberSelectorSerializer().serialize(self)))"
         }
     }
     public class MemberSelectorSerializer: JSONSerializer {
@@ -2509,7 +2509,7 @@ public class Sharing {
             self.settings = settings
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ModifySharedLinkSettingsArgsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ModifySharedLinkSettingsArgsSerializer().serialize(self)))"
         }
     }
     public class ModifySharedLinkSettingsArgsSerializer: JSONSerializer {
@@ -2557,7 +2557,7 @@ public class Sharing {
         */
         case EmailNotVerified
         public var description : String {
-            return "\(prepareJSONForSerialization(ModifySharedLinkSettingsErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ModifySharedLinkSettingsErrorSerializer().serialize(self)))"
         }
     }
     public class ModifySharedLinkSettingsErrorSerializer: JSONSerializer {
@@ -2621,7 +2621,7 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(MountFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MountFolderArgSerializer().serialize(self)))"
         }
     }
     public class MountFolderArgSerializer: JSONSerializer {
@@ -2670,7 +2670,7 @@ public class Sharing {
         case NotMountable
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(MountFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MountFolderErrorSerializer().serialize(self)))"
         }
     }
     public class MountFolderErrorSerializer: JSONSerializer {
@@ -2747,7 +2747,7 @@ public class Sharing {
             super.init(url: url, visibility: visibility, expires: expires)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(PathLinkMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PathLinkMetadataSerializer().serialize(self)))"
         }
     }
     public class PathLinkMetadataSerializer: JSONSerializer {
@@ -2787,7 +2787,7 @@ public class Sharing {
         */
         case Folder
         public var description : String {
-            return "\(prepareJSONForSerialization(PendingUploadModeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PendingUploadModeSerializer().serialize(self)))"
         }
     }
     public class PendingUploadModeSerializer: JSONSerializer {
@@ -2851,7 +2851,7 @@ public class Sharing {
         case TargetNotActive
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(PermissionDeniedReasonSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PermissionDeniedReasonSerializer().serialize(self)))"
         }
     }
     public class PermissionDeniedReasonSerializer: JSONSerializer {
@@ -2926,7 +2926,7 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(RelinquishFolderMembershipArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RelinquishFolderMembershipArgSerializer().serialize(self)))"
         }
     }
     public class RelinquishFolderMembershipArgSerializer: JSONSerializer {
@@ -2976,7 +2976,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(RelinquishFolderMembershipErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RelinquishFolderMembershipErrorSerializer().serialize(self)))"
         }
     }
     public class RelinquishFolderMembershipErrorSerializer: JSONSerializer {
@@ -3059,7 +3059,7 @@ public class Sharing {
             self.leaveACopy = leaveACopy
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(RemoveFolderMemberArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RemoveFolderMemberArgSerializer().serialize(self)))"
         }
     }
     public class RemoveFolderMemberArgSerializer: JSONSerializer {
@@ -3109,7 +3109,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(RemoveFolderMemberErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RemoveFolderMemberErrorSerializer().serialize(self)))"
         }
     }
     public class RemoveFolderMemberErrorSerializer: JSONSerializer {
@@ -3194,7 +3194,7 @@ public class Sharing {
         */
         case Password
         public var description : String {
-            return "\(prepareJSONForSerialization(RequestedVisibilitySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RequestedVisibilitySerializer().serialize(self)))"
         }
     }
     public class RequestedVisibilitySerializer: JSONSerializer {
@@ -3265,7 +3265,7 @@ public class Sharing {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ResolvedVisibilitySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ResolvedVisibilitySerializer().serialize(self)))"
         }
     }
     public class ResolvedVisibilitySerializer: JSONSerializer {
@@ -3334,7 +3334,7 @@ public class Sharing {
             self.url = url
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(RevokeSharedLinkArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RevokeSharedLinkArgSerializer().serialize(self)))"
         }
     }
     public class RevokeSharedLinkArgSerializer: JSONSerializer {
@@ -3376,7 +3376,7 @@ public class Sharing {
         */
         case SharedLinkMalformed
         public var description : String {
-            return "\(prepareJSONForSerialization(RevokeSharedLinkErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RevokeSharedLinkErrorSerializer().serialize(self)))"
         }
     }
     public class RevokeSharedLinkErrorSerializer: JSONSerializer {
@@ -3446,7 +3446,7 @@ public class Sharing {
             self.forceAsync = forceAsync
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ShareFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderArgSerializer().serialize(self)))"
         }
     }
     public class ShareFolderArgSerializer: JSONSerializer {
@@ -3501,7 +3501,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ShareFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderErrorSerializer().serialize(self)))"
         }
     }
     public class ShareFolderErrorSerializer: JSONSerializer {
@@ -3574,7 +3574,7 @@ public class Sharing {
         case Complete(Sharing.SharedFolderMetadata)
         case Failed(Sharing.ShareFolderError)
         public var description : String {
-            return "\(prepareJSONForSerialization(ShareFolderJobStatusSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderJobStatusSerializer().serialize(self)))"
         }
     }
     public class ShareFolderJobStatusSerializer: JSONSerializer {
@@ -3627,7 +3627,7 @@ public class Sharing {
         case AsyncJobId(String)
         case Complete(Sharing.SharedFolderMetadata)
         public var description : String {
-            return "\(prepareJSONForSerialization(ShareFolderLaunchSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderLaunchSerializer().serialize(self)))"
         }
     }
     public class ShareFolderLaunchSerializer: JSONSerializer {
@@ -3697,7 +3697,7 @@ public class Sharing {
         case InvalidPath
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharePathErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharePathErrorSerializer().serialize(self)))"
         }
     }
     public class SharePathErrorSerializer: JSONSerializer {
@@ -3789,7 +3789,7 @@ public class Sharing {
         case Unmounted
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedFolderAccessErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderAccessErrorSerializer().serialize(self)))"
         }
     }
     public class SharedFolderAccessErrorSerializer: JSONSerializer {
@@ -3855,7 +3855,7 @@ public class Sharing {
         case NotAMember
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedFolderMemberErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMemberErrorSerializer().serialize(self)))"
         }
     }
     public class SharedFolderMemberErrorSerializer: JSONSerializer {
@@ -3917,7 +3917,7 @@ public class Sharing {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedFolderMembersSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMembersSerializer().serialize(self)))"
         }
     }
     public class SharedFolderMembersSerializer: JSONSerializer {
@@ -3972,7 +3972,7 @@ public class Sharing {
             self.parentSharedFolderId = parentSharedFolderId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedFolderMetadataBaseSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataBaseSerializer().serialize(self)))"
         }
     }
     public class SharedFolderMetadataBaseSerializer: JSONSerializer {
@@ -4023,7 +4023,7 @@ public class Sharing {
             super.init(accessType: accessType, isTeamFolder: isTeamFolder, policy: policy, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(SharedFolderMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataSerializer().serialize(self)))"
         }
     }
     public class SharedFolderMetadataSerializer: JSONSerializer {
@@ -4089,7 +4089,7 @@ public class Sharing {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkAccessFailureReasonSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkAccessFailureReasonSerializer().serialize(self)))"
         }
     }
     public class SharedLinkAccessFailureReasonSerializer: JSONSerializer {
@@ -4164,7 +4164,7 @@ public class Sharing {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkPolicySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkPolicySerializer().serialize(self)))"
         }
     }
     public class SharedLinkPolicySerializer: JSONSerializer {
@@ -4222,7 +4222,7 @@ public class Sharing {
             self.expires = expires
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkSettingsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkSettingsSerializer().serialize(self)))"
         }
     }
     public class SharedLinkSettingsSerializer: JSONSerializer {
@@ -4264,7 +4264,7 @@ public class Sharing {
         */
         case NotAuthorized
         public var description : String {
-            return "\(prepareJSONForSerialization(SharedLinkSettingsErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkSettingsErrorSerializer().serialize(self)))"
         }
     }
     public class SharedLinkSettingsErrorSerializer: JSONSerializer {
@@ -4317,7 +4317,7 @@ public class Sharing {
             self.memberId = memberId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(TeamMemberInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberInfoSerializer().serialize(self)))"
         }
     }
     public class TeamMemberInfoSerializer: JSONSerializer {
@@ -4357,7 +4357,7 @@ public class Sharing {
             self.toDropboxId = toDropboxId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(TransferFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TransferFolderArgSerializer().serialize(self)))"
         }
     }
     public class TransferFolderArgSerializer: JSONSerializer {
@@ -4411,7 +4411,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(TransferFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TransferFolderErrorSerializer().serialize(self)))"
         }
     }
     public class TransferFolderErrorSerializer: JSONSerializer {
@@ -4493,7 +4493,7 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UnmountFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UnmountFolderArgSerializer().serialize(self)))"
         }
     }
     public class UnmountFolderArgSerializer: JSONSerializer {
@@ -4530,7 +4530,7 @@ public class Sharing {
         case NotUnmountable
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UnmountFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UnmountFolderErrorSerializer().serialize(self)))"
         }
     }
     public class UnmountFolderErrorSerializer: JSONSerializer {
@@ -4592,7 +4592,7 @@ public class Sharing {
             self.leaveACopy = leaveACopy
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UnshareFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UnshareFolderArgSerializer().serialize(self)))"
         }
     }
     public class UnshareFolderArgSerializer: JSONSerializer {
@@ -4630,7 +4630,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UnshareFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UnshareFolderErrorSerializer().serialize(self)))"
         }
     }
     public class UnshareFolderErrorSerializer: JSONSerializer {
@@ -4694,7 +4694,7 @@ public class Sharing {
             self.accessLevel = accessLevel
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UpdateFolderMemberArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFolderMemberArgSerializer().serialize(self)))"
         }
     }
     public class UpdateFolderMemberArgSerializer: JSONSerializer {
@@ -4736,7 +4736,7 @@ public class Sharing {
         case NoPermission
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UpdateFolderMemberErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFolderMemberErrorSerializer().serialize(self)))"
         }
     }
     public class UpdateFolderMemberErrorSerializer: JSONSerializer {
@@ -4811,7 +4811,7 @@ public class Sharing {
             self.sharedLinkPolicy = sharedLinkPolicy
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UpdateFolderPolicyArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFolderPolicyArgSerializer().serialize(self)))"
         }
     }
     public class UpdateFolderPolicyArgSerializer: JSONSerializer {
@@ -4857,7 +4857,7 @@ public class Sharing {
         case DisallowedSharedLinkPolicy
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UpdateFolderPolicyErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFolderPolicyErrorSerializer().serialize(self)))"
         }
     }
     public class UpdateFolderPolicyErrorSerializer: JSONSerializer {
@@ -4928,7 +4928,7 @@ public class Sharing {
             self.teamMemberId = teamMemberId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UserInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UserInfoSerializer().serialize(self)))"
         }
     }
     public class UserInfoSerializer: JSONSerializer {
@@ -4964,7 +4964,7 @@ public class Sharing {
             super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(UserMembershipInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UserMembershipInfoSerializer().serialize(self)))"
         }
     }
     public class UserMembershipInfoSerializer: JSONSerializer {
@@ -5023,7 +5023,7 @@ public class Sharing {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(VisibilitySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(VisibilitySerializer().serialize(self)))"
         }
     }
     public class VisibilitySerializer: JSONSerializer {

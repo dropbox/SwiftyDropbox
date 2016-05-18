@@ -32,7 +32,7 @@ public class Users {
             self.profilePhotoUrl = profilePhotoUrl
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(AccountSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AccountSerializer().serialize(self)))"
         }
     }
     public class AccountSerializer: JSONSerializer {
@@ -78,7 +78,7 @@ public class Users {
         */
         case Business
         public var description : String {
-            return "\(prepareJSONForSerialization(AccountTypeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AccountTypeSerializer().serialize(self)))"
         }
     }
     public class AccountTypeSerializer: JSONSerializer {
@@ -135,7 +135,7 @@ public class Users {
             super.init(accountId: accountId, name: name, email: email, emailVerified: emailVerified, profilePhotoUrl: profilePhotoUrl)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(BasicAccountSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(BasicAccountSerializer().serialize(self)))"
         }
     }
     public class BasicAccountSerializer: JSONSerializer {
@@ -204,7 +204,7 @@ public class Users {
             super.init(accountId: accountId, name: name, email: email, emailVerified: emailVerified, profilePhotoUrl: profilePhotoUrl)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FullAccountSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FullAccountSerializer().serialize(self)))"
         }
     }
     public class FullAccountSerializer: JSONSerializer {
@@ -258,7 +258,7 @@ public class Users {
             self.accountId = accountId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetAccountArgSerializer().serialize(self)))"
         }
     }
     public class GetAccountArgSerializer: JSONSerializer {
@@ -290,7 +290,7 @@ public class Users {
             self.accountIds = accountIds
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountBatchArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetAccountBatchArgSerializer().serialize(self)))"
         }
     }
     public class GetAccountBatchArgSerializer: JSONSerializer {
@@ -321,7 +321,7 @@ public class Users {
         case NoAccount(String)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountBatchErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetAccountBatchErrorSerializer().serialize(self)))"
         }
     }
     public class GetAccountBatchErrorSerializer: JSONSerializer {
@@ -366,7 +366,7 @@ public class Users {
         case NoAccount
         case Unknown
         public var description : String {
-            return "\(prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
         }
     }
     public class GetAccountErrorSerializer: JSONSerializer {
@@ -411,7 +411,7 @@ public class Users {
             self.allocated = allocated
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(IndividualSpaceAllocationSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(IndividualSpaceAllocationSerializer().serialize(self)))"
         }
     }
     public class IndividualSpaceAllocationSerializer: JSONSerializer {
@@ -456,7 +456,7 @@ public class Users {
             self.displayName = displayName
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(NameSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(NameSerializer().serialize(self)))"
         }
     }
     public class NameSerializer: JSONSerializer {
@@ -497,7 +497,7 @@ public class Users {
         case Team(Users.TeamSpaceAllocation)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SpaceAllocationSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SpaceAllocationSerializer().serialize(self)))"
         }
     }
     public class SpaceAllocationSerializer: JSONSerializer {
@@ -553,7 +553,7 @@ public class Users {
             self.allocation = allocation
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
         }
     }
     public class SpaceUsageSerializer: JSONSerializer {
@@ -591,7 +591,7 @@ public class Users {
             self.name = name
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(TeamSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamSerializer().serialize(self)))"
         }
     }
     public class TeamSerializer: JSONSerializer {
@@ -629,7 +629,7 @@ public class Users {
             self.allocated = allocated
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
         }
     }
     public class TeamSpaceAllocationSerializer: JSONSerializer {

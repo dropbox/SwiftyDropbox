@@ -23,7 +23,7 @@ public class Auth {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(AuthErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(AuthErrorSerializer().serialize(self)))"
         }
     }
     public class AuthErrorSerializer: JSONSerializer {

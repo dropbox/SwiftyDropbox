@@ -29,7 +29,7 @@ public class Team {
             self.memberCount = memberCount
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GroupSummarySerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupSummarySerializer().serialize(self)))"
         }
     }
     public class GroupSummarySerializer: JSONSerializer {
@@ -71,7 +71,7 @@ public class Team {
         case UserManaged
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(GroupTypeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupTypeSerializer().serialize(self)))"
         }
     }
     public class GroupTypeSerializer: JSONSerializer {

@@ -34,7 +34,7 @@ public class Files {
             self.mute = mute
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
         }
     }
     public class CommitInfoSerializer: JSONSerializer {
@@ -74,7 +74,7 @@ public class Files {
             self.path = path
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
         }
     }
     public class CreateFolderArgSerializer: JSONSerializer {
@@ -101,7 +101,7 @@ public class Files {
     public enum CreateFolderError: CustomStringConvertible {
         case Path(Files.WriteError)
         public var description : String {
-            return "\(prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
         }
     }
     public class CreateFolderErrorSerializer: JSONSerializer {
@@ -141,7 +141,7 @@ public class Files {
             self.path = path
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
         }
     }
     public class DeleteArgSerializer: JSONSerializer {
@@ -170,7 +170,7 @@ public class Files {
         case PathWrite(Files.WriteError)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
         }
     }
     public class DeleteErrorSerializer: JSONSerializer {
@@ -238,7 +238,7 @@ public class Files {
             self.parentSharedFolderId = parentSharedFolderId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
         }
     }
     public class MetadataSerializer: JSONSerializer {
@@ -294,7 +294,7 @@ public class Files {
     */
     public class DeletedMetadata: Files.Metadata {
         public override var description : String {
-            return "\(prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
     }
     public class DeletedMetadataSerializer: JSONSerializer {
@@ -336,7 +336,7 @@ public class Files {
             self.width = width
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
         }
     }
     public class DimensionsSerializer: JSONSerializer {
@@ -374,7 +374,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
         }
     }
     public class DownloadArgSerializer: JSONSerializer {
@@ -407,7 +407,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
         }
     }
     public class DownloadErrorSerializer: JSONSerializer {
@@ -478,7 +478,7 @@ public class Files {
             super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
         }
     }
     public class FileMetadataSerializer: JSONSerializer {
@@ -529,7 +529,7 @@ public class Files {
             self.readOnly = readOnly
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
         }
     }
     public class SharingInfoSerializer: JSONSerializer {
@@ -566,7 +566,7 @@ public class Files {
             super.init(readOnly: readOnly)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
         }
     }
     public class FileSharingInfoSerializer: JSONSerializer {
@@ -610,7 +610,7 @@ public class Files {
             super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
         }
     }
     public class FolderMetadataSerializer: JSONSerializer {
@@ -659,7 +659,7 @@ public class Files {
             super.init(readOnly: readOnly)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
         }
     }
     public class FolderSharingInfoSerializer: JSONSerializer {
@@ -698,7 +698,7 @@ public class Files {
             self.includeMediaInfo = includeMediaInfo
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
         }
     }
     public class GetMetadataArgSerializer: JSONSerializer {
@@ -727,7 +727,7 @@ public class Files {
     public enum GetMetadataError: CustomStringConvertible {
         case Path(Files.LookupError)
         public var description : String {
-            return "\(prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
         }
     }
     public class GetMetadataErrorSerializer: JSONSerializer {
@@ -771,7 +771,7 @@ public class Files {
             self.longitude = longitude
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
         }
     }
     public class GpsCoordinatesSerializer: JSONSerializer {
@@ -815,7 +815,7 @@ public class Files {
             self.includeDeleted = includeDeleted
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderArgSerializer: JSONSerializer {
@@ -853,7 +853,7 @@ public class Files {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderContinueArgSerializer: JSONSerializer {
@@ -885,7 +885,7 @@ public class Files {
         case Reset
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderContinueErrorSerializer: JSONSerializer {
@@ -936,7 +936,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderErrorSerializer: JSONSerializer {
@@ -982,7 +982,7 @@ public class Files {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
@@ -1021,7 +1021,7 @@ public class Files {
             self.timeout = timeout
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollArgSerializer: JSONSerializer {
@@ -1054,7 +1054,7 @@ public class Files {
         case Reset
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollErrorSerializer: JSONSerializer {
@@ -1102,7 +1102,7 @@ public class Files {
             self.backoff = backoff
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollResultSerializer: JSONSerializer {
@@ -1142,7 +1142,7 @@ public class Files {
             self.hasMore = hasMore
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderResultSerializer: JSONSerializer {
@@ -1182,7 +1182,7 @@ public class Files {
             self.limit = limit
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsArgSerializer: JSONSerializer {
@@ -1212,7 +1212,7 @@ public class Files {
         case Path(Files.LookupError)
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsErrorSerializer: JSONSerializer {
@@ -1260,7 +1260,7 @@ public class Files {
             self.entries = entries
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsResultSerializer: JSONSerializer {
@@ -1307,7 +1307,7 @@ public class Files {
         case RestrictedContent
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
         }
     }
     public class LookupErrorSerializer: JSONSerializer {
@@ -1379,7 +1379,7 @@ public class Files {
         */
         case Metadata(Files.MediaMetadata)
         public var description : String {
-            return "\(prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
         }
     }
     public class MediaInfoSerializer: JSONSerializer {
@@ -1430,7 +1430,7 @@ public class Files {
             self.timeTaken = timeTaken
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
         }
     }
     public class MediaMetadataSerializer: JSONSerializer {
@@ -1478,7 +1478,7 @@ public class Files {
     */
     public class PhotoMetadata: Files.MediaMetadata {
         public override var description : String {
-            return "\(prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
         }
     }
     public class PhotoMetadataSerializer: JSONSerializer {
@@ -1518,7 +1518,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
         }
     }
     public class PreviewArgSerializer: JSONSerializer {
@@ -1562,7 +1562,7 @@ public class Files {
         */
         case UnsupportedContent
         public var description : String {
-            return "\(prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
         }
     }
     public class PreviewErrorSerializer: JSONSerializer {
@@ -1624,7 +1624,7 @@ public class Files {
             self.toPath = toPath
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
         }
     }
     public class RelocationArgSerializer: JSONSerializer {
@@ -1675,7 +1675,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
         }
     }
     public class RelocationErrorSerializer: JSONSerializer {
@@ -1763,7 +1763,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
         }
     }
     public class RestoreArgSerializer: JSONSerializer {
@@ -1804,7 +1804,7 @@ public class Files {
         case InvalidRevision
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
         }
     }
     public class RestoreErrorSerializer: JSONSerializer {
@@ -1881,7 +1881,7 @@ public class Files {
             self.mode = mode
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
         }
     }
     public class SearchArgSerializer: JSONSerializer {
@@ -1920,7 +1920,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
         }
     }
     public class SearchErrorSerializer: JSONSerializer {
@@ -1968,7 +1968,7 @@ public class Files {
             self.metadata = metadata
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
         }
     }
     public class SearchMatchSerializer: JSONSerializer {
@@ -2008,7 +2008,7 @@ public class Files {
         */
         case Both
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
         }
     }
     public class SearchMatchTypeSerializer: JSONSerializer {
@@ -2065,7 +2065,7 @@ public class Files {
         */
         case DeletedFilename
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
         }
     }
     public class SearchModeSerializer: JSONSerializer {
@@ -2123,7 +2123,7 @@ public class Files {
             self.start = start
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
         }
     }
     public class SearchResultSerializer: JSONSerializer {
@@ -2166,7 +2166,7 @@ public class Files {
             self.size = size
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
         }
     }
     public class ThumbnailArgSerializer: JSONSerializer {
@@ -2212,7 +2212,7 @@ public class Files {
         */
         case ConversionError
         public var description : String {
-            return "\(prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
         }
     }
     public class ThumbnailErrorSerializer: JSONSerializer {
@@ -2266,7 +2266,7 @@ public class Files {
         case Jpeg
         case Png
         public var description : String {
-            return "\(prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
         }
     }
     public class ThumbnailFormatSerializer: JSONSerializer {
@@ -2325,7 +2325,7 @@ public class Files {
         */
         case W1024h768
         public var description : String {
-            return "\(prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
     }
     public class ThumbnailSizeSerializer: JSONSerializer {
@@ -2390,7 +2390,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
         }
     }
     public class UploadErrorSerializer: JSONSerializer {
@@ -2441,7 +2441,7 @@ public class Files {
             self.offset = offset
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionCursorSerializer: JSONSerializer {
@@ -2477,7 +2477,7 @@ public class Files {
             self.commit = commit
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
         }
     }
     public class UploadSessionFinishArgSerializer: JSONSerializer {
@@ -2517,7 +2517,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionFinishErrorSerializer: JSONSerializer {
@@ -2582,7 +2582,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionLookupErrorSerializer: JSONSerializer {
@@ -2640,7 +2640,7 @@ public class Files {
             self.correctOffset = correctOffset
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionOffsetErrorSerializer: JSONSerializer {
@@ -2672,7 +2672,7 @@ public class Files {
             self.sessionId = sessionId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
         }
     }
     public class UploadSessionStartResultSerializer: JSONSerializer {
@@ -2707,7 +2707,7 @@ public class Files {
             self.uploadSessionId = uploadSessionId
         }
         public var description : String {
-            return "\(prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
         }
     }
     public class UploadWriteFailedSerializer: JSONSerializer {
@@ -2742,7 +2742,7 @@ public class Files {
             super.init(dimensions: dimensions, location: location, timeTaken: timeTaken)
         }
         public override var description : String {
-            return "\(prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
         }
     }
     public class VideoMetadataSerializer: JSONSerializer {
@@ -2787,7 +2787,7 @@ public class Files {
         case FileAncestor
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
         }
     }
     public class WriteConflictErrorSerializer: JSONSerializer {
@@ -2856,7 +2856,7 @@ public class Files {
         case DisallowedName
         case Other
         public var description : String {
-            return "\(prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
         }
     }
     public class WriteErrorSerializer: JSONSerializer {
@@ -2941,7 +2941,7 @@ public class Files {
         */
         case Update(String)
         public var description : String {
-            return "\(prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
         }
     }
     public class WriteModeSerializer: JSONSerializer {

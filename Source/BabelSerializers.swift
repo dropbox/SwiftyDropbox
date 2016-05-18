@@ -10,71 +10,72 @@ public enum JSON {
     case Null
 }
 
-func objectToJSON(json : AnyObject) -> JSON {
-    
-    switch json {
-    case _ as NSNull:
-        return .Null
-    case let num as NSNumber:
-        return .Number(num)
-    case let str as String:
-        return .Str(str)
-    case let dict as [String : AnyObject]:
-        var ret = [String : JSON]()
-        for (k, v) in dict {
-            ret[k] = objectToJSON(v)
-        }
-        return .Dictionary(ret)
-    case let array as [AnyObject]:
-        return .Array(array.map(objectToJSON))
-    default:
-        fatalError("Unknown type trying to parse JSON.")
-    }
-}
+public class SerializeUtil {
+    public class func objectToJSON(json : AnyObject) -> JSON {
 
-func prepareJSONForSerialization(json: JSON) -> AnyObject {
-    switch json {
-    case .Array(let array):
-        return array.map(prepareJSONForSerialization)
-    case .Dictionary(let dict):
-        var ret = [String : AnyObject]()
-        for (k, v) in dict {
-            // kind of a hack...
-            switch v {
-            case .Null:
-                continue
-            default:
-                ret[k] = prepareJSONForSerialization(v)
+        switch json {
+        case _ as NSNull:
+            return .Null
+        case let num as NSNumber:
+            return .Number(num)
+        case let str as String:
+            return .Str(str)
+        case let dict as [String : AnyObject]:
+            var ret = [String : JSON]()
+            for (k, v) in dict {
+                ret[k] = objectToJSON(v)
+            }
+            return .Dictionary(ret)
+        case let array as [AnyObject]:
+            return .Array(array.map(objectToJSON))
+        default:
+            fatalError("Unknown type trying to parse JSON.")
+        }
+    }
+
+    public class func prepareJSONForSerialization(json: JSON) -> AnyObject {
+        switch json {
+        case .Array(let array):
+            return array.map(prepareJSONForSerialization)
+        case .Dictionary(let dict):
+            var ret = [String : AnyObject]()
+            for (k, v) in dict {
+                // kind of a hack...
+                switch v {
+                case .Null:
+                    continue
+                default:
+                    ret[k] = prepareJSONForSerialization(v)
+                }
+            }
+            return ret
+        case .Number(let n):
+            return n
+        case .Str(let s):
+            return s
+        case .Null:
+            return NSNull()
+        }
+    }
+
+    public class func dumpJSON(json: JSON) -> NSData? {
+        switch json {
+        case .Null:
+            return "null".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        default:
+            let obj : AnyObject = prepareJSONForSerialization(json)
+            if NSJSONSerialization.isValidJSONObject(obj) {
+                return try! NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions())
+            } else {
+                fatalError("Invalid JSON toplevel type")
             }
         }
-        return ret
-    case .Number(let n):
-        return n
-    case .Str(let s):
-        return s
-    case .Null:
-        return NSNull()
     }
-}
 
-func dumpJSON(json: JSON) -> NSData? {
-    switch json {
-    case .Null:
-        return "null".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-    default:
-        let obj : AnyObject = prepareJSONForSerialization(json)
-        if NSJSONSerialization.isValidJSONObject(obj) {
-            return try! NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions())
-        } else {
-            fatalError("Invalid JSON toplevel type")
-        }
+    public class func parseJSON(data: NSData) -> JSON {
+        let obj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+        return objectToJSON(obj)
     }
-}
-
-func parseJSON(data: NSData) -> JSON {
-    let obj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
-    return objectToJSON(obj)
-    
 }
 
 
