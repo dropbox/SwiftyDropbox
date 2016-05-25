@@ -4,23 +4,20 @@
 import Foundation
 import Alamofire
 
-public class DropboxClient: DropboxTransportClient {
+public class DropboxClientCommon {
     /// Shared instance for convenience
     public static var sharedClient: DropboxClient!
     /// Routes within the files namespace. See FilesRoutes for details.
     public var files: FilesRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
     public var sharing: SharingRoutes!
-    /// Routes within the team namespace. See TeamRoutes for details.
-    public var team: TeamRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
     public var users: UsersRoutes!
 
-    public override init(accessToken: DropboxAccessToken, selectUser: String? = nil, baseHosts: [String: String]? = nil, userAgent: String? = nil) {
+    public init(accessToken: DropboxAccessToken, selectUser: String? = nil, baseHosts: [String: String]? = nil, userAgent: String? = nil) {
         super.init(accessToken: accessToken, selectUser: selectUser, baseHosts: baseHosts, userAgent: userAgent)
-        self.files = FilesRoutes(client: self)
-        self.sharing = SharingRoutes(client: self)
-        self.team = TeamRoutes(client: self)
-        self.users = UsersRoutes(client: self)
+        self.files = FilesRoutes(client: transportClient)
+        self.sharing = SharingRoutes(client: transportClient)
+        self.users = UsersRoutes(client: transportClient)
     }
 }
