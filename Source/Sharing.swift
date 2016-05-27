@@ -5081,4 +5081,196 @@ public class Sharing {
             }
         }
     }
+
+    // Stone Route Objects
+
+    static let addFolderMember = Route(
+        name: "add_folder_member",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let checkJobStatus = Route(
+        name: "check_job_status",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let checkShareJobStatus = Route(
+        name: "check_share_job_status",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let createSharedLink = Route(
+        name: "create_shared_link",
+        namespace: "sharing",
+        deprecated: true,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let createSharedLinkWithSettings = Route(
+        name: "create_shared_link_with_settings",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getFolderMetadata = Route(
+        name: "get_folder_metadata",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getSharedLinkFile = Route(
+        name: "get_shared_link_file",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let getSharedLinkMetadata = Route(
+        name: "get_shared_link_metadata",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getSharedLinks = Route(
+        name: "get_shared_links",
+        namespace: "sharing",
+        deprecated: true,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolderMembers = Route(
+        name: "list_folder_members",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolderMembersContinue = Route(
+        name: "list_folder_members/continue",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolders = Route(
+        name: "list_folders",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFoldersContinue = Route(
+        name: "list_folders/continue",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listMountableFolders = Route(
+        name: "list_mountable_folders",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listMountableFoldersContinue = Route(
+        name: "list_mountable_folders/continue",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listSharedLinks = Route(
+        name: "list_shared_links",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let modifySharedLinkSettings = Route(
+        name: "modify_shared_link_settings",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let mountFolder = Route(
+        name: "mount_folder",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let relinquishFolderMembership = Route(
+        name: "relinquish_folder_membership",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let removeFolderMember = Route(
+        name: "remove_folder_member",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let revokeSharedLink = Route(
+        name: "revoke_shared_link",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let shareFolder = Route(
+        name: "share_folder",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let transferFolder = Route(
+        name: "transfer_folder",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let unmountFolder = Route(
+        name: "unmount_folder",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let unshareFolder = Route(
+        name: "unshare_folder",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let updateFolderMember = Route(
+        name: "update_folder_member",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let updateFolderPolicy = Route(
+        name: "update_folder_policy",
+        namespace: "sharing",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
 }

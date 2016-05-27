@@ -2982,4 +2982,147 @@ public class Files {
             }
         }
     }
+
+    // Stone Route Objects
+
+    static let copy = Route(
+        name: "copy",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let createFolder = Route(
+        name: "create_folder",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let delete = Route(
+        name: "delete",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let download = Route(
+        name: "download",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let getMetadata = Route(
+        name: "get_metadata",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getPreview = Route(
+        name: "get_preview",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let getThumbnail = Route(
+        name: "get_thumbnail",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let listFolder = Route(
+        name: "list_folder",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolderContinue = Route(
+        name: "list_folder/continue",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolderGetLatestCursor = Route(
+        name: "list_folder/get_latest_cursor",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let listFolderLongpoll = Route(
+        name: "list_folder/longpoll",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "notify",
+                "style": nil]
+    )
+    static let listRevisions = Route(
+        name: "list_revisions",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let move = Route(
+        name: "move",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let permanentlyDelete = Route(
+        name: "permanently_delete",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let restore = Route(
+        name: "restore",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let search = Route(
+        name: "search",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let upload = Route(
+        name: "upload",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
+    static let uploadSessionAppend = Route(
+        name: "upload_session/append",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
+    static let uploadSessionFinish = Route(
+        name: "upload_session/finish",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
+    static let uploadSessionStart = Route(
+        name: "upload_session/start",
+        namespace: "files",
+        deprecated: false,
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
 }

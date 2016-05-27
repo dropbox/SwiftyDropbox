@@ -24,7 +24,7 @@ public class SharingRoutes {
     */
     public func addFolderMember(sharedFolderId sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil) -> DropboxRpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
         let request = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/add_folder_member", params: Sharing.AddFolderMemberArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.AddFolderMemberErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.addFolderMember, params: Sharing.AddFolderMemberArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.AddFolderMemberErrorSerializer())
     }
     /**
         Returns the status of an asynchronous job. Apps must have full Dropbox access to use this endpoint. Warning:
@@ -38,7 +38,7 @@ public class SharingRoutes {
     */
     public func checkJobStatus(asyncJobId asyncJobId: String) -> DropboxRpcRequest<Sharing.JobStatusSerializer, Async.PollErrorSerializer> {
         let request = Async.PollArg(asyncJobId: asyncJobId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/check_job_status", params: Async.PollArgSerializer().serialize(request), responseSerializer: Sharing.JobStatusSerializer(), errorSerializer: Async.PollErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.checkJobStatus, params: Async.PollArgSerializer().serialize(request), responseSerializer: Sharing.JobStatusSerializer(), errorSerializer: Async.PollErrorSerializer())
     }
     /**
         Returns the status of an asynchronous job for sharing a folder. Apps must have full Dropbox access to use this
@@ -52,7 +52,7 @@ public class SharingRoutes {
     */
     public func checkShareJobStatus(asyncJobId asyncJobId: String) -> DropboxRpcRequest<Sharing.ShareFolderJobStatusSerializer, Async.PollErrorSerializer> {
         let request = Async.PollArg(asyncJobId: asyncJobId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/check_share_job_status", params: Async.PollArgSerializer().serialize(request), responseSerializer: Sharing.ShareFolderJobStatusSerializer(), errorSerializer: Async.PollErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.checkShareJobStatus, params: Async.PollArgSerializer().serialize(request), responseSerializer: Sharing.ShareFolderJobStatusSerializer(), errorSerializer: Async.PollErrorSerializer())
     }
     /**
         Create a shared link. If a shared link already exists for the given path, that link is returned. Note that in
@@ -71,7 +71,7 @@ public class SharingRoutes {
     */
     public func createSharedLink(path path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) -> DropboxRpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer> {
         let request = Sharing.CreateSharedLinkArg(path: path, shortUrl: shortUrl, pendingUpload: pendingUpload)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/create_shared_link", params: Sharing.CreateSharedLinkArgSerializer().serialize(request), responseSerializer: Sharing.PathLinkMetadataSerializer(), errorSerializer: Sharing.CreateSharedLinkErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.createSharedLink, params: Sharing.CreateSharedLinkArgSerializer().serialize(request), responseSerializer: Sharing.PathLinkMetadataSerializer(), errorSerializer: Sharing.CreateSharedLinkErrorSerializer())
     }
     /**
         Create a shared link with custom settings. If no settings are given then the default visibility is public in
@@ -86,7 +86,7 @@ public class SharingRoutes {
     */
     public func createSharedLinkWithSettings(path path: String, settings: Sharing.SharedLinkSettings? = nil) -> DropboxRpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.CreateSharedLinkWithSettingsErrorSerializer> {
         let request = Sharing.CreateSharedLinkWithSettingsArg(path: path, settings: settings)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/create_shared_link_with_settings", params: Sharing.CreateSharedLinkWithSettingsArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.CreateSharedLinkWithSettingsErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.createSharedLinkWithSettings, params: Sharing.CreateSharedLinkWithSettingsArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.CreateSharedLinkWithSettingsErrorSerializer())
     }
     /**
         Returns shared folder metadata by its folder ID. Apps must have full Dropbox access to use this endpoint.
@@ -100,7 +100,7 @@ public class SharingRoutes {
     */
     public func getFolderMetadata(sharedFolderId sharedFolderId: String, actions: Array<Sharing.FolderAction>? = nil) -> DropboxRpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.SharedFolderAccessErrorSerializer> {
         let request = Sharing.GetMetadataArgs(sharedFolderId: sharedFolderId, actions: actions)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/get_folder_metadata", params: Sharing.GetMetadataArgsSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.SharedFolderAccessErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.getFolderMetadata, params: Sharing.GetMetadataArgsSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.SharedFolderAccessErrorSerializer())
     }
     /**
         Download the shared link's file from a user's Dropbox.
@@ -120,7 +120,7 @@ public class SharingRoutes {
     */
     public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> DropboxDownloadRequest<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
         let request = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
-        return DropboxDownloadRequest(client: self.client, host: "content", route: "/sharing/get_shared_link_file", params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(), destination: destination, overwrite: overwrite)
+        return DropboxDownloadRequest(client: self.client, route: Sharing.getSharedLinkFile, params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Get the shared link's metadata.
@@ -135,7 +135,7 @@ public class SharingRoutes {
     */
     public func getSharedLinkMetadata(url url: String, path: String? = nil, linkPassword: String? = nil) -> DropboxRpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer> {
         let request = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/get_shared_link_metadata", params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.SharedLinkErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.getSharedLinkMetadata, params: Sharing.GetSharedLinkMetadataArgSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.SharedLinkErrorSerializer())
     }
     /**
         Returns a list of LinkMetadata objects for this user, including collection links. If no path is given or the
@@ -150,7 +150,7 @@ public class SharingRoutes {
     */
     public func getSharedLinks(path: String? = nil) -> DropboxRpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer> {
         let request = Sharing.GetSharedLinksArg(path: path)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/get_shared_links", params: Sharing.GetSharedLinksArgSerializer().serialize(request), responseSerializer: Sharing.GetSharedLinksResultSerializer(), errorSerializer: Sharing.GetSharedLinksErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.getSharedLinks, params: Sharing.GetSharedLinksArgSerializer().serialize(request), responseSerializer: Sharing.GetSharedLinksResultSerializer(), errorSerializer: Sharing.GetSharedLinksErrorSerializer())
     }
     /**
         Returns shared folder membership by its folder ID. Apps must have full Dropbox access to use this endpoint.
@@ -163,7 +163,7 @@ public class SharingRoutes {
     */
     public func listFolderMembers(sharedFolderId sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) -> DropboxRpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
         let request = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folder_members", params: Sharing.ListFolderMembersArgsSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMembersSerializer(), errorSerializer: Sharing.SharedFolderAccessErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.listFolderMembers, params: Sharing.ListFolderMembersArgsSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMembersSerializer(), errorSerializer: Sharing.SharedFolderAccessErrorSerializer())
     }
     /**
         Once a cursor has been retrieved from listFolderMembers, use this to paginate through all shared folder members.
@@ -177,7 +177,7 @@ public class SharingRoutes {
     */
     public func listFolderMembersContinue(cursor cursor: String) -> DropboxRpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.ListFolderMembersContinueErrorSerializer> {
         let request = Sharing.ListFolderMembersContinueArg(cursor: cursor)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folder_members/continue", params: Sharing.ListFolderMembersContinueArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMembersSerializer(), errorSerializer: Sharing.ListFolderMembersContinueErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.listFolderMembersContinue, params: Sharing.ListFolderMembersContinueArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMembersSerializer(), errorSerializer: Sharing.ListFolderMembersContinueErrorSerializer())
     }
     /**
         Return the list of all shared folders the current user has access to. Apps must have full Dropbox access to use
@@ -192,7 +192,7 @@ public class SharingRoutes {
     */
     public func listFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> DropboxRpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
         let request = Sharing.ListFoldersArgs(limit: limit, actions: actions)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folders", params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+        return DropboxRpcRequest(client: self.client, route: Sharing.listFolders, params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /**
         Once a cursor has been retrieved from listFolders, use this to paginate through all shared folders. The cursor
@@ -207,7 +207,7 @@ public class SharingRoutes {
     */
     public func listFoldersContinue(cursor cursor: String) -> DropboxRpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
         let request = Sharing.ListFoldersContinueArg(cursor: cursor)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_folders/continue", params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.listFoldersContinue, params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
     }
     /**
         Return the list of all shared folders the current user can mount or unmount. Apps must have full Dropbox access
@@ -221,7 +221,7 @@ public class SharingRoutes {
     */
     public func listMountableFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> DropboxRpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
         let request = Sharing.ListFoldersArgs(limit: limit, actions: actions)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_mountable_folders", params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
+        return DropboxRpcRequest(client: self.client, route: Sharing.listMountableFolders, params: Sharing.ListFoldersArgsSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /**
         Once a cursor has been retrieved from listMountableFolders, use this to paginate through all mountable shared
@@ -235,7 +235,7 @@ public class SharingRoutes {
     */
     public func listMountableFoldersContinue(cursor cursor: String) -> DropboxRpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
         let request = Sharing.ListFoldersContinueArg(cursor: cursor)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_mountable_folders/continue", params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.listMountableFoldersContinue, params: Sharing.ListFoldersContinueArgSerializer().serialize(request), responseSerializer: Sharing.ListFoldersResultSerializer(), errorSerializer: Sharing.ListFoldersContinueErrorSerializer())
     }
     /**
         List shared links of this user. If no path is given or the path is empty, returns a list of all shared links for
@@ -252,7 +252,7 @@ public class SharingRoutes {
     */
     public func listSharedLinks(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) -> DropboxRpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
         let request = Sharing.ListSharedLinksArg(path: path, cursor: cursor, directOnly: directOnly)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/list_shared_links", params: Sharing.ListSharedLinksArgSerializer().serialize(request), responseSerializer: Sharing.ListSharedLinksResultSerializer(), errorSerializer: Sharing.ListSharedLinksErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.listSharedLinks, params: Sharing.ListSharedLinksArgSerializer().serialize(request), responseSerializer: Sharing.ListSharedLinksResultSerializer(), errorSerializer: Sharing.ListSharedLinksErrorSerializer())
     }
     /**
         Modify the shared link's settings. If the requested visibility conflict with the shared links policy of the team
@@ -268,7 +268,7 @@ public class SharingRoutes {
     */
     public func modifySharedLinkSettings(url url: String, settings: Sharing.SharedLinkSettings) -> DropboxRpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.ModifySharedLinkSettingsErrorSerializer> {
         let request = Sharing.ModifySharedLinkSettingsArgs(url: url, settings: settings)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/modify_shared_link_settings", params: Sharing.ModifySharedLinkSettingsArgsSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.ModifySharedLinkSettingsErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.modifySharedLinkSettings, params: Sharing.ModifySharedLinkSettingsArgsSerializer().serialize(request), responseSerializer: Sharing.SharedLinkMetadataSerializer(), errorSerializer: Sharing.ModifySharedLinkSettingsErrorSerializer())
     }
     /**
         The current user mounts the designated folder. Mount a shared folder for a user after they have been added as a
@@ -283,7 +283,7 @@ public class SharingRoutes {
     */
     public func mountFolder(sharedFolderId sharedFolderId: String) -> DropboxRpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer> {
         let request = Sharing.MountFolderArg(sharedFolderId: sharedFolderId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/mount_folder", params: Sharing.MountFolderArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.MountFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.mountFolder, params: Sharing.MountFolderArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.MountFolderErrorSerializer())
     }
     /**
         The current user relinquishes their membership in the designated shared folder and will no longer have access to
@@ -298,7 +298,7 @@ public class SharingRoutes {
     */
     public func relinquishFolderMembership(sharedFolderId sharedFolderId: String) -> DropboxRpcRequest<VoidSerializer, Sharing.RelinquishFolderMembershipErrorSerializer> {
         let request = Sharing.RelinquishFolderMembershipArg(sharedFolderId: sharedFolderId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/relinquish_folder_membership", params: Sharing.RelinquishFolderMembershipArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.RelinquishFolderMembershipErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.relinquishFolderMembership, params: Sharing.RelinquishFolderMembershipArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.RelinquishFolderMembershipErrorSerializer())
     }
     /**
         Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another member. Apps
@@ -316,7 +316,7 @@ public class SharingRoutes {
     */
     public func removeFolderMember(sharedFolderId sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) -> DropboxRpcRequest<Async.LaunchEmptyResultSerializer, Sharing.RemoveFolderMemberErrorSerializer> {
         let request = Sharing.RemoveFolderMemberArg(sharedFolderId: sharedFolderId, member: member, leaveACopy: leaveACopy)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/remove_folder_member", params: Sharing.RemoveFolderMemberArgSerializer().serialize(request), responseSerializer: Async.LaunchEmptyResultSerializer(), errorSerializer: Sharing.RemoveFolderMemberErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.removeFolderMember, params: Sharing.RemoveFolderMemberArgSerializer().serialize(request), responseSerializer: Async.LaunchEmptyResultSerializer(), errorSerializer: Sharing.RemoveFolderMemberErrorSerializer())
     }
     /**
         Revoke a shared link. Note that even after revoking a shared link to a file, the file may be accessible if there
@@ -330,7 +330,7 @@ public class SharingRoutes {
     */
     public func revokeSharedLink(url url: String) -> DropboxRpcRequest<VoidSerializer, Sharing.RevokeSharedLinkErrorSerializer> {
         let request = Sharing.RevokeSharedLinkArg(url: url)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/revoke_shared_link", params: Sharing.RevokeSharedLinkArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.RevokeSharedLinkErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.revokeSharedLink, params: Sharing.RevokeSharedLinkArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.RevokeSharedLinkErrorSerializer())
     }
     /**
         Share a folder with collaborators. Most sharing will be completed synchronously. Large folders will be completed
@@ -352,7 +352,7 @@ public class SharingRoutes {
     */
     public func shareFolder(path path: String, memberPolicy: Sharing.MemberPolicy = .Anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .Owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .Anyone, forceAsync: Bool = false) -> DropboxRpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
         let request = Sharing.ShareFolderArg(path: path, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, forceAsync: forceAsync)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/share_folder", params: Sharing.ShareFolderArgSerializer().serialize(request), responseSerializer: Sharing.ShareFolderLaunchSerializer(), errorSerializer: Sharing.ShareFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.shareFolder, params: Sharing.ShareFolderArgSerializer().serialize(request), responseSerializer: Sharing.ShareFolderLaunchSerializer(), errorSerializer: Sharing.ShareFolderErrorSerializer())
     }
     /**
         Transfer ownership of a shared folder to a member of the shared folder. User must have owner in AccessLevel
@@ -367,7 +367,7 @@ public class SharingRoutes {
     */
     public func transferFolder(sharedFolderId sharedFolderId: String, toDropboxId: String) -> DropboxRpcRequest<VoidSerializer, Sharing.TransferFolderErrorSerializer> {
         let request = Sharing.TransferFolderArg(sharedFolderId: sharedFolderId, toDropboxId: toDropboxId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/transfer_folder", params: Sharing.TransferFolderArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.TransferFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.transferFolder, params: Sharing.TransferFolderArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.TransferFolderErrorSerializer())
     }
     /**
         The current user unmounts the designated folder. They can re-mount the folder at a later time using mountFolder.
@@ -381,7 +381,7 @@ public class SharingRoutes {
     */
     public func unmountFolder(sharedFolderId sharedFolderId: String) -> DropboxRpcRequest<VoidSerializer, Sharing.UnmountFolderErrorSerializer> {
         let request = Sharing.UnmountFolderArg(sharedFolderId: sharedFolderId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/unmount_folder", params: Sharing.UnmountFolderArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.UnmountFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.unmountFolder, params: Sharing.UnmountFolderArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.UnmountFolderErrorSerializer())
     }
     /**
         Allows a shared folder owner to unshare the folder. You'll need to call checkJobStatus to determine if the
@@ -398,7 +398,7 @@ public class SharingRoutes {
     */
     public func unshareFolder(sharedFolderId sharedFolderId: String, leaveACopy: Bool = false) -> DropboxRpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
         let request = Sharing.UnshareFolderArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/unshare_folder", params: Sharing.UnshareFolderArgSerializer().serialize(request), responseSerializer: Async.LaunchEmptyResultSerializer(), errorSerializer: Sharing.UnshareFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.unshareFolder, params: Sharing.UnshareFolderArgSerializer().serialize(request), responseSerializer: Async.LaunchEmptyResultSerializer(), errorSerializer: Sharing.UnshareFolderErrorSerializer())
     }
     /**
         Allows an owner or editor of a shared folder to update another member's permissions. Apps must have full Dropbox
@@ -415,7 +415,7 @@ public class SharingRoutes {
     */
     public func updateFolderMember(sharedFolderId sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> DropboxRpcRequest<VoidSerializer, Sharing.UpdateFolderMemberErrorSerializer> {
         let request = Sharing.UpdateFolderMemberArg(sharedFolderId: sharedFolderId, member: member, accessLevel: accessLevel)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/update_folder_member", params: Sharing.UpdateFolderMemberArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.UpdateFolderMemberErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.updateFolderMember, params: Sharing.UpdateFolderMemberArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Sharing.UpdateFolderMemberErrorSerializer())
     }
     /**
         Update the sharing policies for a shared folder. User must have owner in AccessLevel access to the shared folder
@@ -434,6 +434,6 @@ public class SharingRoutes {
     */
     public func updateFolderPolicy(sharedFolderId sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) -> DropboxRpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
         let request = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/sharing/update_folder_policy", params: Sharing.UpdateFolderPolicyArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.UpdateFolderPolicyErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Sharing.updateFolderPolicy, params: Sharing.UpdateFolderPolicyArgSerializer().serialize(request), responseSerializer: Sharing.SharedFolderMetadataSerializer(), errorSerializer: Sharing.UpdateFolderPolicyErrorSerializer())
     }
 }

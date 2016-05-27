@@ -19,7 +19,7 @@ public class FilesRoutes {
     */
     public func copy(fromPath fromPath: String, toPath: String) -> DropboxRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/copy", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.copy, params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
     /**
         Create a folder at a given path.
@@ -31,7 +31,7 @@ public class FilesRoutes {
     */
     public func createFolder(path path: String) -> DropboxRpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
         let request = Files.CreateFolderArg(path: path)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/create_folder", params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.CreateFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.createFolder, params: Files.CreateFolderArgSerializer().serialize(request), responseSerializer: Files.FolderMetadataSerializer(), errorSerializer: Files.CreateFolderErrorSerializer())
     }
     /**
         Delete the file or folder at a given path. If the path is a folder, all its contents will be deleted too. A
@@ -45,7 +45,7 @@ public class FilesRoutes {
     */
     public func delete(path path: String) -> DropboxRpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
         let request = Files.DeleteArg(path: path)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.DeleteErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.delete, params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.DeleteErrorSerializer())
     }
     /**
         Download a file from a user's Dropbox.
@@ -63,7 +63,7 @@ public class FilesRoutes {
     */
     public func download(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> DropboxDownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let request = Files.DownloadArg(path: path, rev: rev)
-        return DropboxDownloadRequest(client: self.client, host: "content", route: "/files/download", params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination, overwrite: overwrite)
+        return DropboxDownloadRequest(client: self.client, route: Files.download, params: Files.DownloadArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.DownloadErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
@@ -76,7 +76,7 @@ public class FilesRoutes {
     */
     public func getMetadata(path path: String, includeMediaInfo: Bool = false) -> DropboxRpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let request = Files.GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/get_metadata", params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.getMetadata, params: Files.GetMetadataArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.GetMetadataErrorSerializer())
     }
     /**
         Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
@@ -95,7 +95,7 @@ public class FilesRoutes {
     */
     public func getPreview(path path: String, rev: String? = nil, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> DropboxDownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let request = Files.PreviewArg(path: path, rev: rev)
-        return DropboxDownloadRequest(client: self.client, host: "content", route: "/files/get_preview", params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer(), destination: destination, overwrite: overwrite)
+        return DropboxDownloadRequest(client: self.client, route: Files.getPreview, params: Files.PreviewArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.PreviewErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Get a thumbnail for an image. This method currently supports files with the following file extensions: jpg,
@@ -116,7 +116,7 @@ public class FilesRoutes {
     */
     public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) -> DropboxDownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let request = Files.ThumbnailArg(path: path, format: format, size: size)
-        return DropboxDownloadRequest(client: self.client, host: "content", route: "/files/get_thumbnail", params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer(), destination: destination, overwrite: overwrite)
+        return DropboxDownloadRequest(client: self.client, route: Files.getThumbnail, params: Files.ThumbnailArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.ThumbnailErrorSerializer(), destination: destination, overwrite: overwrite)
     }
     /**
         Returns the contents of a folder.
@@ -133,7 +133,7 @@ public class FilesRoutes {
     */
     public func listFolder(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false) -> DropboxRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/list_folder", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.listFolder, params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /**
         Once a cursor has been retrieved from listFolder, use this to paginate through all files and retrieve updates to
@@ -146,7 +146,7 @@ public class FilesRoutes {
     */
     public func listFolderContinue(cursor cursor: String) -> DropboxRpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let request = Files.ListFolderContinueArg(cursor: cursor)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/list_folder/continue", params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.listFolderContinue, params: Files.ListFolderContinueArgSerializer().serialize(request), responseSerializer: Files.ListFolderResultSerializer(), errorSerializer: Files.ListFolderContinueErrorSerializer())
     }
     /**
         A way to quickly get a cursor for the folder's state. Unlike listFolder, listFolderGetLatestCursor doesn't
@@ -165,7 +165,7 @@ public class FilesRoutes {
     */
     public func listFolderGetLatestCursor(path path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false) -> DropboxRpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let request = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/list_folder/get_latest_cursor", params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.listFolderGetLatestCursor, params: Files.ListFolderArgSerializer().serialize(request), responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(), errorSerializer: Files.ListFolderErrorSerializer())
     }
     /**
         A longpoll endpoint to wait for changes on an account. In conjunction with listFolder, this call gives you a
@@ -185,7 +185,7 @@ public class FilesRoutes {
     */
     public func listFolderLongpoll(cursor cursor: String, timeout: UInt64 = 30) -> DropboxRpcRequest<Files.ListFolderLongpollResultSerializer, Files.ListFolderLongpollErrorSerializer> {
         let request = Files.ListFolderLongpollArg(cursor: cursor, timeout: timeout)
-        return DropboxRpcRequest(client: self.client, host: "notify", route: "/files/list_folder/longpoll", params: Files.ListFolderLongpollArgSerializer().serialize(request), responseSerializer: Files.ListFolderLongpollResultSerializer(), errorSerializer: Files.ListFolderLongpollErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.listFolderLongpoll, params: Files.ListFolderLongpollArgSerializer().serialize(request), responseSerializer: Files.ListFolderLongpollResultSerializer(), errorSerializer: Files.ListFolderLongpollErrorSerializer())
     }
     /**
         Return revisions of a file
@@ -198,7 +198,7 @@ public class FilesRoutes {
     */
     public func listRevisions(path path: String, limit: UInt64 = 10) -> DropboxRpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
         let request = Files.ListRevisionsArg(path: path, limit: limit)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/list_revisions", params: Files.ListRevisionsArgSerializer().serialize(request), responseSerializer: Files.ListRevisionsResultSerializer(), errorSerializer: Files.ListRevisionsErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.listRevisions, params: Files.ListRevisionsArgSerializer().serialize(request), responseSerializer: Files.ListRevisionsResultSerializer(), errorSerializer: Files.ListRevisionsErrorSerializer())
     }
     /**
         Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
@@ -212,7 +212,7 @@ public class FilesRoutes {
     */
     public func move(fromPath fromPath: String, toPath: String) -> DropboxRpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let request = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/move", params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.move, params: Files.RelocationArgSerializer().serialize(request), responseSerializer: Files.MetadataSerializer(), errorSerializer: Files.RelocationErrorSerializer())
     }
     /**
         Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40). Note: This
@@ -225,7 +225,7 @@ public class FilesRoutes {
     */
     public func permanentlyDelete(path path: String) -> DropboxRpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
         let request = Files.DeleteArg(path: path)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/permanently_delete", params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.DeleteErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.permanentlyDelete, params: Files.DeleteArgSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.DeleteErrorSerializer())
     }
     /**
         Restore a file to a specific revision
@@ -238,7 +238,7 @@ public class FilesRoutes {
     */
     public func restore(path path: String, rev: String) -> DropboxRpcRequest<Files.FileMetadataSerializer, Files.RestoreErrorSerializer> {
         let request = Files.RestoreArg(path: path, rev: rev)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/restore", params: Files.RestoreArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.RestoreErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.restore, params: Files.RestoreArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.RestoreErrorSerializer())
     }
     /**
         Searches for files and folders.
@@ -257,7 +257,7 @@ public class FilesRoutes {
     */
     public func search(path path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) -> DropboxRpcRequest<Files.SearchResultSerializer, Files.SearchErrorSerializer> {
         let request = Files.SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/files/search", params: Files.SearchArgSerializer().serialize(request), responseSerializer: Files.SearchResultSerializer(), errorSerializer: Files.SearchErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Files.search, params: Files.SearchArgSerializer().serialize(request), responseSerializer: Files.SearchResultSerializer(), errorSerializer: Files.SearchErrorSerializer())
     }
     /**
         Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
@@ -281,7 +281,7 @@ public class FilesRoutes {
     */
     public func upload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSData) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Data(body))
+        return DropboxUploadRequest(client: self.client, route: Files.upload, params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Data(body))
     }
     /**
         Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
@@ -305,7 +305,7 @@ public class FilesRoutes {
     */
     public func upload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSURL) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .File(body))
+        return DropboxUploadRequest(client: self.client, route: Files.upload, params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .File(body))
     }
     /**
         Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
@@ -329,7 +329,7 @@ public class FilesRoutes {
     */
     public func upload(path path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false, body: NSInputStream) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let request = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload", params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Stream(body))
+        return DropboxUploadRequest(client: self.client, route: Files.upload, params: Files.CommitInfoSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadErrorSerializer(), body: .Stream(body))
     }
     /**
         Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
@@ -344,7 +344,7 @@ public class FilesRoutes {
     */
     public func uploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSData) -> DropboxUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Data(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionAppend, params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Data(body))
     }
     /**
         Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
@@ -359,7 +359,7 @@ public class FilesRoutes {
     */
     public func uploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSURL) -> DropboxUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .File(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionAppend, params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .File(body))
     }
     /**
         Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
@@ -374,7 +374,7 @@ public class FilesRoutes {
     */
     public func uploadSessionAppend(sessionId sessionId: String, offset: UInt64, body: NSInputStream) -> DropboxUploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let request = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/append", params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Stream(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionAppend, params: Files.UploadSessionCursorSerializer().serialize(request), responseSerializer: Serialization._VoidSerializer, errorSerializer: Files.UploadSessionLookupErrorSerializer(), body: .Stream(body))
     }
     /**
         Finish an upload session and save the uploaded data to the given file path. A single request should not upload
@@ -389,7 +389,7 @@ public class FilesRoutes {
     */
     public func uploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSData) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Data(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionFinish, params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Data(body))
     }
     /**
         Finish an upload session and save the uploaded data to the given file path. A single request should not upload
@@ -404,7 +404,7 @@ public class FilesRoutes {
     */
     public func uploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSURL) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .File(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionFinish, params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .File(body))
     }
     /**
         Finish an upload session and save the uploaded data to the given file path. A single request should not upload
@@ -419,7 +419,7 @@ public class FilesRoutes {
     */
     public func uploadSessionFinish(cursor cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, body: NSInputStream) -> DropboxUploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let request = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/finish", params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Stream(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionFinish, params: Files.UploadSessionFinishArgSerializer().serialize(request), responseSerializer: Files.FileMetadataSerializer(), errorSerializer: Files.UploadSessionFinishErrorSerializer(), body: .Stream(body))
     }
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
@@ -432,7 +432,7 @@ public class FilesRoutes {
         success or a `Void` object on failure.
     */
     public func uploadSessionStart(body body: NSData) -> DropboxUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Data(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionStart, params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Data(body))
     }
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
@@ -445,7 +445,7 @@ public class FilesRoutes {
         success or a `Void` object on failure.
     */
     public func uploadSessionStart(body body: NSURL) -> DropboxUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .File(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionStart, params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .File(body))
     }
     /**
         Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
@@ -458,6 +458,6 @@ public class FilesRoutes {
         success or a `Void` object on failure.
     */
     public func uploadSessionStart(body body: NSInputStream) -> DropboxUploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
-        return DropboxUploadRequest(client: self.client, host: "content", route: "/files/upload_session/start", params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Stream(body))
+        return DropboxUploadRequest(client: self.client, route: Files.uploadSessionStart, params: Serialization._VoidSerializer.serialize(), responseSerializer: Files.UploadSessionStartResultSerializer(), errorSerializer: Serialization._VoidSerializer, body: .Stream(body))
     }
 }

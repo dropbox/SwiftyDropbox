@@ -652,4 +652,35 @@ public class Users {
             }
         }
     }
+
+    // Stone Route Objects
+
+    static let getAccount = Route(
+        name: "get_account",
+        namespace: "users",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getAccountBatch = Route(
+        name: "get_account_batch",
+        namespace: "users",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getCurrentAccount = Route(
+        name: "get_current_account",
+        namespace: "users",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
+    static let getSpaceUsage = Route(
+        name: "get_space_usage",
+        namespace: "users",
+        deprecated: false,
+        attrs: ["host": nil,
+                "style": nil]
+    )
 }

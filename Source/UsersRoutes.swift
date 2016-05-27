@@ -17,7 +17,7 @@ public class UsersRoutes {
     */
     public func getAccount(accountId accountId: String) -> DropboxRpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
         let request = Users.GetAccountArg(accountId: accountId)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/users/get_account", params: Users.GetAccountArgSerializer().serialize(request), responseSerializer: Users.BasicAccountSerializer(), errorSerializer: Users.GetAccountErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Users.getAccount, params: Users.GetAccountArgSerializer().serialize(request), responseSerializer: Users.BasicAccountSerializer(), errorSerializer: Users.GetAccountErrorSerializer())
     }
     /**
         Get information about multiple user accounts.  At most 300 accounts may be queried per request.
@@ -29,7 +29,7 @@ public class UsersRoutes {
     */
     public func getAccountBatch(accountIds accountIds: Array<String>) -> DropboxRpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
         let request = Users.GetAccountBatchArg(accountIds: accountIds)
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/users/get_account_batch", params: Users.GetAccountBatchArgSerializer().serialize(request), responseSerializer: ArraySerializer(Users.BasicAccountSerializer()), errorSerializer: Users.GetAccountBatchErrorSerializer())
+        return DropboxRpcRequest(client: self.client, route: Users.getAccountBatch, params: Users.GetAccountBatchArgSerializer().serialize(request), responseSerializer: ArraySerializer(Users.BasicAccountSerializer()), errorSerializer: Users.GetAccountBatchErrorSerializer())
     }
     /**
         Get information about the current user's account.
@@ -39,7 +39,7 @@ public class UsersRoutes {
         `Void` object on failure.
     */
     public func getCurrentAccount() -> DropboxRpcRequest<Users.FullAccountSerializer, VoidSerializer> {
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/users/get_current_account", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.FullAccountSerializer(), errorSerializer: Serialization._VoidSerializer)
+        return DropboxRpcRequest(client: self.client, route: Users.getCurrentAccount, params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.FullAccountSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
     /**
         Get the space usage information for the current user's account.
@@ -49,6 +49,6 @@ public class UsersRoutes {
         `Void` object on failure.
     */
     public func getSpaceUsage() -> DropboxRpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
-        return DropboxRpcRequest(client: self.client, host: "meta", route: "/users/get_space_usage", params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
+        return DropboxRpcRequest(client: self.client, route: Users.getSpaceUsage, params: Serialization._VoidSerializer.serialize(), responseSerializer: Users.SpaceUsageSerializer(), errorSerializer: Serialization._VoidSerializer)
     }
 }

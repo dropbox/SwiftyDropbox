@@ -34,7 +34,7 @@ public class DropboxTransportClient {
     
     public init(accessToken: DropboxAccessToken, selectUser: String?, baseHosts: [String: String]?, userAgent: String?) {
         let defaultBaseHosts = [
-            "meta": "https://api.dropbox.com/2",
+            "api": "https://api.dropbox.com/2",
             "content": "https://api-content.dropbox.com/2",
             "notify": "https://notify.dropboxapi.com/2",
         ]
@@ -196,8 +196,9 @@ public class DropboxRequest<RType: JSONSerializer, EType: JSONSerializer> {
 
 /// An "rpc-style" request
 public class DropboxRpcRequest<RType: JSONSerializer, EType: JSONSerializer>: DropboxRequest<RType, EType> {
-    init(client: DropboxTransportClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType) {
-        let url = "\(client.baseHosts[host]!)\(route)"
+    init(client: DropboxTransportClient, route: Route, params: JSON, responseSerializer: RType, errorSerializer: EType) {
+        let host = route.attrs["host"]! ?? "api"
+        let url = "\(client.baseHosts[host]!)/\(route.namespace)/\(route.name)"
         var headers = ["Content-Type": "application/json"]
         let noauth = (host == "notify")
         for (header, val) in client.additionalHeaders(noauth) {
@@ -240,44 +241,40 @@ public enum UploadBody {
 }
 
 public class DropboxUploadRequest<RType: JSONSerializer, EType: JSONSerializer>: DropboxRequest<RType, EType> {
+    init(client: DropboxTransportClient, route: Route, params: JSON, responseSerializer: RType, errorSerializer: EType, body: UploadBody) {
+        let host = route.attrs["host"]! ?? "api"
+        let url = "\(client.baseHosts[host]!)/\(route.namespace)/\(route.name)"
 
-    init(client: DropboxTransportClient,
-         host: String,
-         route: String,
-         params: JSON,
-         responseSerializer: RType, errorSerializer: EType,
-         body: UploadBody) {
-            let url = "\(client.baseHosts[host]!)\(route)"
-            var headers = [
-                "Content-Type": "application/octet-stream",
-            ]
-            let noauth = (host == "notify")
-            for (header, val) in client.additionalHeaders(noauth) {
-                headers[header] = val
-            }
-            
-            if let data = SerializeUtil.dumpJSON(params) {
-                let value = asciiEscape(utf8Decode(data))
-                headers["Dropbox-Api-Arg"] = value
-            }
-            
-            let request: Alamofire.Request
-            
-            switch body {
-            case let .Data(data):
-                request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, data: data)
-            case let .File(file):
-                request = DropboxTransportClient.backgroundManager.upload(.POST, url, headers: headers, file: file)
-            case let .Stream(stream):
-                request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, stream: stream)
-            }
-            super.init(request: request,
-                       responseSerializer: responseSerializer,
-                       errorSerializer: errorSerializer)
-            request.resume()
+        var headers = [
+            "Content-Type": "application/octet-stream",
+        ]
+        let noauth = (host == "notify")
+        for (header, val) in client.additionalHeaders(noauth) {
+            headers[header] = val
+        }
+        
+        if let data = SerializeUtil.dumpJSON(params) {
+            let value = asciiEscape(utf8Decode(data))
+            headers["Dropbox-Api-Arg"] = value
+        }
+        
+        let request: Alamofire.Request
+        
+        switch body {
+        case let .Data(data):
+            request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, data: data)
+        case let .File(file):
+            request = DropboxTransportClient.backgroundManager.upload(.POST, url, headers: headers, file: file)
+        case let .Stream(stream):
+            request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, stream: stream)
+        }
+        super.init(request: request,
+                   responseSerializer: responseSerializer,
+                   errorSerializer: errorSerializer)
+        request.resume()
     }
 
-    
+
     /// Called as the upload progresses.
     ///
     /// :param: closure
@@ -311,8 +308,11 @@ public class DropboxUploadRequest<RType: JSONSerializer, EType: JSONSerializer>:
 public class DropboxDownloadRequest<RType: JSONSerializer, EType: JSONSerializer>: DropboxRequest<RType, EType> {
     var urlPath: NSURL?
     var errorMessage: NSData
-    init(client: DropboxTransportClient, host: String, route: String, params: JSON, responseSerializer: RType, errorSerializer: EType, destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) {
-        let url = "\(client.baseHosts[host]!)\(route)"
+    init(client: DropboxTransportClient, route: Route, params: JSON, responseSerializer: RType, errorSerializer: EType,
+         destination: (NSURL, NSHTTPURLResponse) -> NSURL, overwrite: Bool = false) {
+        let host = route.attrs["host"]! ?? "api"
+        let url = "\(client.baseHosts[host]!)/\(route.namespace)/\(route.name)"
+
         var headers = [String: String]()
         urlPath = nil
         errorMessage = NSData()
