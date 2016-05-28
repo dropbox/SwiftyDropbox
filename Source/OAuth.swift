@@ -345,7 +345,7 @@ public class DropboxAuthManager {
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
     /// parameter controller: The controller to present from
-    public func authorizeFromController(controller: UIViewController) {
+    public func authorizeFromController(controller: UIViewController, onWillDismiss: (didCancel: Bool) -> Void = { _ in }) {
         if !Reachability.connectedToNetwork() {
             let message = "Try again once you have an internet connection"
             let alertController = UIAlertController(title: "No internet connection", message: message, preferredStyle: .Alert)
@@ -394,6 +394,7 @@ public class DropboxAuthManager {
                     }
                 }
             )
+            web.onWillDismiss = onWillDismiss
             let navigationController = UINavigationController(rootViewController: web)
             controller.presentViewController(navigationController, animated: true, completion: nil)
         }
