@@ -80,7 +80,7 @@ public class SerializeUtil {
 
 
 public protocol JSONSerializer {
-    typealias ValueType
+    associatedtype ValueType
     func serialize(_: ValueType) -> JSON
     func deserialize(_: JSON) -> ValueType
 }
