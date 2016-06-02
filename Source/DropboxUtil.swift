@@ -46,15 +46,28 @@ class DropboxServerTrustPolicyManager: ServerTrustPolicyManager {
 /// For information on the available API methods, see the documentation for DropboxClient
 public class Dropbox {
     /// An authorized client. This will be set to nil if unlinked.
-    public static var authorizedClient : DropboxClient?
+    public static var authorizedClient: DropboxClient?
+    
+    /// An authorized team client. This will be set to nil if unlinked.
+    public static var authorizedTeamClient: DropboxTeamClient?
 
-    /// Sets up access to the API
-    public static func setupWithAppKey(appKey : String) {
-        precondition(DropboxAuthManager.sharedAuthManager == nil, "Only call `Dropbox.initAppWithKey` once")
+    /// Sets up access to the Dropbox User API
+    public static func setupWithAppKey(appKey: String) {
+        precondition(DropboxAuthManager.sharedAuthManager == nil, "Only call `Dropbox.setupWithAppKey` or `Dropbox.setupWithTeamAppKey` once")
         DropboxAuthManager.sharedAuthManager = DropboxAuthManager(appKey: appKey)
 
         if let token = DropboxAuthManager.sharedAuthManager.getFirstAccessToken() {
             Dropbox.authorizedClient = DropboxClient(accessToken: token)
+        }
+    }
+    
+    /// Sets up access to the Dropbox Team API
+    public static func setupWithTeamAppKey(appKey: String) {
+        precondition(DropboxAuthManager.sharedAuthManager == nil, "Only call `Dropbox.setupWithAppKey` or `Dropbox.setupWithTeamAppKey` once")
+        DropboxAuthManager.sharedAuthManager = DropboxAuthManager(appKey: appKey)
+        
+        if let token = DropboxAuthManager.sharedAuthManager.getFirstAccessToken() {
+            Dropbox.authorizedTeamClient = DropboxTeamClient(accessToken: token)
         }
     }
 
@@ -62,15 +75,15 @@ public class Dropbox {
     ///
     /// - parameter controller: The controller to present from
     public static func authorizeFromController(controller: UIViewController) {
-        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
-        precondition(Dropbox.authorizedClient == nil, "Client is already authorized")
+        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithAppKey` or `Dropbox.setupWithTeamAppKey` before calling this method")
+        precondition(Dropbox.authorizedClient == nil && Dropbox.authorizedTeamClient == nil, "A Dropbox client is already authorized")
         DropboxAuthManager.sharedAuthManager.authorizeFromController(controller)
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
     public static func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
-        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
-        precondition(Dropbox.authorizedClient == nil, "Client is already authorized")
+        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithAppKey` before calling this method")
+        precondition(Dropbox.authorizedClient == nil, "Dropbox user client is already authorized")
         if let result =  DropboxAuthManager.sharedAuthManager.handleRedirectURL(url) {
             switch result {
             case .Success(let token):
@@ -83,17 +96,35 @@ public class Dropbox {
             return nil
         }
     }
+    
+    /// Handle a redirect and automatically initialize the client and save the token.
+    public static func handleRedirectURLTeam(url: NSURL) -> DropboxAuthResult? {
+        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithTeamAppKey` before calling this method")
+        precondition(Dropbox.authorizedTeamClient == nil, "Dropbox team client is already authorized")
+        if let result =  DropboxAuthManager.sharedAuthManager.handleRedirectURL(url) {
+            switch result {
+            case .Success(let token):
+                Dropbox.authorizedTeamClient = DropboxTeamClient(accessToken: token)
+                return result
+            case .Error:
+                return result
+            }
+        } else {
+            return nil
+        }
+    }
 
     /// Unlink the user.
     public static func unlinkClient() {
-        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
-        if Dropbox.authorizedClient == nil {
+        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithAppKey` before calling this method")
+        if Dropbox.authorizedClient == nil && Dropbox.authorizedTeamClient == nil {
             // already unlinked
             return
         }
 
         DropboxAuthManager.sharedAuthManager.clearStoredAccessTokens()
         Dropbox.authorizedClient = nil
+        Dropbox.authorizedTeamClient = nil
     }
 }
 
