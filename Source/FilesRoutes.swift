@@ -155,10 +155,24 @@ public class FilesRoutes {
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.DownloadError` object on failure.
     */
-    public func download(path path: String, rev: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequest<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    public func download(path path: String, rev: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let route = Files.download
         let serverArgs = Files.DownloadArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+    /**
+        Download a file from a user's Dropbox.
+
+        - parameter path: The path of the file to download.
+        - parameter rev: Deprecated. Please specify revision in path instead
+
+         - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
+        `Files.DownloadError` object on failure.
+    */
+    public func download(path path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+        let route = Files.download
+        let serverArgs = Files.DownloadArg(path: path, rev: rev)
+        return client.request(route, serverArgs: serverArgs)
     }
     /**
         Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
@@ -193,10 +207,25 @@ public class FilesRoutes {
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.PreviewError` object on failure.
     */
-    public func getPreview(path path: String, rev: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequest<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    public func getPreview(path path: String, rev: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let route = Files.getPreview
         let serverArgs = Files.PreviewArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+    /**
+        Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
+        .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf
+
+        - parameter path: The path of the file to preview.
+        - parameter rev: Deprecated. Please specify revision in path instead
+
+         - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
+        `Files.PreviewError` object on failure.
+    */
+    public func getPreview(path path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+        let route = Files.getPreview
+        let serverArgs = Files.PreviewArg(path: path, rev: rev)
+        return client.request(route, serverArgs: serverArgs)
     }
     /**
         Get a temporary link to stream content of a file. This link will expire in four hours and afterwards you will
@@ -229,10 +258,27 @@ public class FilesRoutes {
          - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
         `Files.ThumbnailError` object on failure.
     */
-    public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequest<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
         let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+    /**
+        Get a thumbnail for an image. This method currently supports files with the following file extensions: jpg,
+        jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
+
+        - parameter path: The path to the image file you want to thumbnail.
+        - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
+        should be preferred, while png is  better for screenshots and digital arts.
+        - parameter size: The size for the thumbnail image.
+
+         - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
+        `Files.ThumbnailError` object on failure.
+    */
+    public func getThumbnail(path path: String, format: Files.ThumbnailFormat = .Jpeg, size: Files.ThumbnailSize = .W64h64) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+        let route = Files.getThumbnail
+        let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
+        return client.request(route, serverArgs: serverArgs)
     }
     /**
         Returns the contents of a folder.

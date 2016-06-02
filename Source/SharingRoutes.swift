@@ -185,10 +185,26 @@ public class SharingRoutes {
          - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
         success or a `Sharing.GetSharedLinkFileError` object on failure.
     */
-    public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequest<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil, overwrite: Bool = false, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
         let route = Sharing.getSharedLinkFile
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+    /**
+        Download the shared link's file from a user's Dropbox.
+
+        - parameter url: URL of the shared link.
+        - parameter path: If the shared link is to a folder, this parameter can be used to retrieve the metadata for a
+        specific file or sub-folder in this folder. A relative path should be used.
+        - parameter linkPassword: If the shared link has a password, this parameter can be used.
+
+         - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
+        success or a `Sharing.GetSharedLinkFileError` object on failure.
+    */
+    public func getSharedLinkFile(url url: String, path: String? = nil, linkPassword: String? = nil) -> DownloadRequestMemory<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+        let route = Sharing.getSharedLinkFile
+        let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
+        return client.request(route, serverArgs: serverArgs)
     }
     /**
         Get the shared link's metadata.

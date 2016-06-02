@@ -101,8 +101,9 @@ def _get_client_args():
             ('upload', [('input', '.Stream(input)', 'NSInputStream', input_doc.format('NSInputStream')),]),
         ],
         'download': [
-            ('download', [('overwrite', 'overwrite', 'Bool = false', overwrite_doc),
+            ('download_file', [('overwrite', 'overwrite', 'Bool = false', overwrite_doc),
                 ('destination', 'destination', '(NSURL, NSHTTPURLResponse) -> NSURL', dest_doc)]),
+            ('download_memory', []),
         ],
     }
 
@@ -112,7 +113,8 @@ def _get_style_to_request():
     style_to_request = {
         'rpc': 'RpcRequest',
         'upload': 'UploadRequest',
-        'download': 'DownloadRequest',
+        'download_file': 'DownloadRequestFile',
+        'download_memory': 'DownloadRequestMemory',
     }
 
     return json.dumps(style_to_request)
