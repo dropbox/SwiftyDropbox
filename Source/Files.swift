@@ -34,7 +34,7 @@ public class Files {
             self.mute = mute
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
         }
     }
     public class CommitInfoSerializer: JSONSerializer {
@@ -74,7 +74,7 @@ public class Files {
             self.path = path
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
         }
     }
     public class CreateFolderArgSerializer: JSONSerializer {
@@ -101,7 +101,7 @@ public class Files {
     public enum CreateFolderError: CustomStringConvertible {
         case Path(Files.WriteError)
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
         }
     }
     public class CreateFolderErrorSerializer: JSONSerializer {
@@ -141,7 +141,7 @@ public class Files {
             self.path = path
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
         }
     }
     public class DeleteArgSerializer: JSONSerializer {
@@ -170,7 +170,7 @@ public class Files {
         case PathWrite(Files.WriteError)
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
         }
     }
     public class DeleteErrorSerializer: JSONSerializer {
@@ -220,25 +220,21 @@ public class Files {
         public let name : String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash.
         public let pathLower : String
-        /// The cased path to be used for display purposes only. In rare instances the casing will not correctly match
-        /// the user's filesystem, but this behavior will match the path provided in the Core API v1. Changes to the
-        /// casing of paths won't be returned by listFolderContinue
-        public let pathDisplay : String
-        /// Deprecated. Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo
-        /// instead.
+        /// Deprecated. Please use :field:'FileSharingInfo.parent_shared_folder_id' or
+        /// :field:'FolderSharingInfo.parent_shared_folder_id' instead.
         public let parentSharedFolderId : String?
-        public init(name: String, pathLower: String, pathDisplay: String, parentSharedFolderId: String? = nil) {
+        public let tag : String?
+        public init(name: String, pathLower: String, parentSharedFolderId: String? = nil, tag: String? = nil) {
             stringValidator()(value: name)
             self.name = name
             stringValidator()(value: pathLower)
             self.pathLower = pathLower
-            stringValidator()(value: pathDisplay)
-            self.pathDisplay = pathDisplay
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(value: parentSharedFolderId)
+            self.tag = tag
             self.parentSharedFolderId = parentSharedFolderId
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
         }
     }
     public class MetadataSerializer: JSONSerializer {
@@ -247,7 +243,6 @@ public class Files {
             var output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
-            "path_display": Serialization._StringSerializer.serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             ]
             switch value {
@@ -294,7 +289,7 @@ public class Files {
     */
     public class DeletedMetadata: Files.Metadata {
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
     }
     public class DeletedMetadataSerializer: JSONSerializer {
@@ -303,7 +298,6 @@ public class Files {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
-            "path_display": Serialization._StringSerializer.serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             ]
             return .Dictionary(output)
@@ -313,9 +307,8 @@ public class Files {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = Serialization._StringSerializer.deserialize(dict["path_display"] ?? .Null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
-                    return DeletedMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+                    return DeletedMetadata(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -336,7 +329,7 @@ public class Files {
             self.width = width
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
         }
     }
     public class DimensionsSerializer: JSONSerializer {
@@ -365,7 +358,7 @@ public class Files {
     public class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
         public let path : String
-        /// Deprecated. Please specify revision in path instead
+        /// Deprecated. Please specify revision in :field:'path' instead
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -374,7 +367,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
         }
     }
     public class DownloadArgSerializer: JSONSerializer {
@@ -407,7 +400,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
         }
     }
     public class DownloadErrorSerializer: JSONSerializer {
@@ -447,7 +440,7 @@ public class Files {
     */
     public class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
-        public let id : String
+        public let id : String?
         /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
         /// this time is not verified (the Dropbox server stores whatever the desktop client sends up), this should only
         /// be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
@@ -464,8 +457,9 @@ public class Files {
         public let mediaInfo : Files.MediaInfo?
         /// Set if this file is contained in a shared folder.
         public let sharingInfo : Files.FileSharingInfo?
-        public init(name: String, pathLower: String, pathDisplay: String, id: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil) {
-            stringValidator(minLength: 1)(value: id)
+        
+        public init(name: String, pathLower: String, clientModified: NSDate, serverModified: NSDate, rev: String, size: UInt64, parentSharedFolderId: String? = nil, id: String? = nil, mediaInfo: Files.MediaInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil , tag: String? = nil) {
+            nullableValidator(stringValidator(minLength: 1))(value: id)
             self.id = id
             self.clientModified = clientModified
             self.serverModified = serverModified
@@ -475,10 +469,10 @@ public class Files {
             self.size = size
             self.mediaInfo = mediaInfo
             self.sharingInfo = sharingInfo
-            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+            super.init(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId, tag: tag)
         }
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
         }
     }
     public class FileMetadataSerializer: JSONSerializer {
@@ -487,13 +481,12 @@ public class Files {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
-            "path_display": Serialization._StringSerializer.serialize(value.pathDisplay),
-            "id": Serialization._StringSerializer.serialize(value.id),
             "client_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.clientModified),
             "server_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.serverModified),
             "rev": Serialization._StringSerializer.serialize(value.rev),
             "size": Serialization._UInt64Serializer.serialize(value.size),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
             "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
             "sharing_info": NullableSerializer(Files.FileSharingInfoSerializer()).serialize(value.sharingInfo),
             ]
@@ -504,16 +497,17 @@ public class Files {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = Serialization._StringSerializer.deserialize(dict["path_display"] ?? .Null)
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
                     let clientModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["client_modified"] ?? .Null)
                     let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .Null)
                     let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
                     let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .Null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
                     let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .Null)
                     let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .Null)
-                    return FileMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, sharingInfo: sharingInfo)
+                    
+                    let tag = Serialization._StringSerializer.deserialize(dict[".tag"] ?? .Null)
+                    return FileMetadata(name: name, pathLower: pathLower, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, parentSharedFolderId: parentSharedFolderId, id: id, mediaInfo: mediaInfo, sharingInfo: sharingInfo, tag: tag)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -529,7 +523,7 @@ public class Files {
             self.readOnly = readOnly
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
         }
     }
     public class SharingInfoSerializer: JSONSerializer {
@@ -566,7 +560,7 @@ public class Files {
             super.init(readOnly: readOnly)
         }
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
         }
     }
     public class FileSharingInfoSerializer: JSONSerializer {
@@ -596,21 +590,21 @@ public class Files {
     */
     public class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
-        public let id : String
-        /// Deprecated. Please use sharingInfo instead.
+        public let id : String?
+        /// Deprecated. Please use :field:'sharing_info' instead.
         public let sharedFolderId : String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
         public let sharingInfo : Files.FolderSharingInfo?
-        public init(name: String, pathLower: String, pathDisplay: String, id: String, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil) {
-            stringValidator(minLength: 1)(value: id)
+        public init(name: String, pathLower: String, parentSharedFolderId: String? = nil, id: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, tag :String? = nil) {
+            nullableValidator(stringValidator(minLength: 1))(value: id)
             self.id = id
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(value: sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.sharingInfo = sharingInfo
-            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+            super.init(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId, tag: tag)
         }
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
         }
     }
     public class FolderMetadataSerializer: JSONSerializer {
@@ -619,9 +613,8 @@ public class Files {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": Serialization._StringSerializer.serialize(value.pathLower),
-            "path_display": Serialization._StringSerializer.serialize(value.pathDisplay),
-            "id": Serialization._StringSerializer.serialize(value.id),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "id": NullableSerializer(Serialization._StringSerializer).serialize(value.id),
             "shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.sharedFolderId),
             "sharing_info": NullableSerializer(Files.FolderSharingInfoSerializer()).serialize(value.sharingInfo),
             ]
@@ -632,12 +625,12 @@ public class Files {
                 case .Dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
                     let pathLower = Serialization._StringSerializer.deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = Serialization._StringSerializer.deserialize(dict["path_display"] ?? .Null)
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    let id = NullableSerializer(Serialization._StringSerializer).deserialize(dict["id"] ?? .Null)
                     let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
                     let sharingInfo = NullableSerializer(Files.FolderSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .Null)
-                    return FolderMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, id: id, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, sharingInfo: sharingInfo)
+                    let tag = Serialization._StringSerializer.deserialize(dict[".tag"] ?? .Null)
+                    return FolderMetadata(name: name, pathLower: pathLower, parentSharedFolderId: parentSharedFolderId, id: id, sharedFolderId: sharedFolderId, sharingInfo: sharingInfo, tag: tag)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -659,7 +652,7 @@ public class Files {
             super.init(readOnly: readOnly)
         }
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
         }
     }
     public class FolderSharingInfoSerializer: JSONSerializer {
@@ -688,9 +681,9 @@ public class Files {
         The GetMetadataArg struct
     */
     public class GetMetadataArg: CustomStringConvertible {
-        /// The path of a file or folder on Dropbox.
+        /// The path of a file or folder on Dropbox
         public let path : String
-        /// If true, mediaInfo in FileMetadata is set for photo and video.
+        /// If true, :field:'FileMetadata.media_info' is set for photo and video.
         public let includeMediaInfo : Bool
         public init(path: String, includeMediaInfo: Bool = false) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -698,7 +691,7 @@ public class Files {
             self.includeMediaInfo = includeMediaInfo
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
         }
     }
     public class GetMetadataArgSerializer: JSONSerializer {
@@ -727,7 +720,7 @@ public class Files {
     public enum GetMetadataError: CustomStringConvertible {
         case Path(Files.LookupError)
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
         }
     }
     public class GetMetadataErrorSerializer: JSONSerializer {
@@ -771,7 +764,7 @@ public class Files {
             self.longitude = longitude
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
         }
     }
     public class GpsCoordinatesSerializer: JSONSerializer {
@@ -803,7 +796,7 @@ public class Files {
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
         /// contain contents of all subfolders.
         public let recursive : Bool
-        /// If true, mediaInfo in FileMetadata is set for photo and video.
+        /// If true, :field:'FileMetadata.media_info' is set for photo and video.
         public let includeMediaInfo : Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
         public let includeDeleted : Bool
@@ -815,7 +808,7 @@ public class Files {
             self.includeDeleted = includeDeleted
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderArgSerializer: JSONSerializer {
@@ -853,7 +846,7 @@ public class Files {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderContinueArgSerializer: JSONSerializer {
@@ -885,7 +878,7 @@ public class Files {
         case Reset
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderContinueErrorSerializer: JSONSerializer {
@@ -936,7 +929,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderErrorSerializer: JSONSerializer {
@@ -982,7 +975,7 @@ public class Files {
             self.cursor = cursor
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
@@ -1007,8 +1000,7 @@ public class Files {
         The ListFolderLongpollArg struct
     */
     public class ListFolderLongpollArg: CustomStringConvertible {
-        /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
-        /// ListFolderArg to true are not supported.
+        /// A cursor as returned by listFolder or listFolderContinue
         public let cursor : String
         /// A timeout in seconds. The request will block for at most this length of time, plus up to 90 seconds of
         /// random jitter added to avoid the thundering herd problem. Care should be taken when using this parameter, as
@@ -1021,7 +1013,7 @@ public class Files {
             self.timeout = timeout
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollArgSerializer: JSONSerializer {
@@ -1054,7 +1046,7 @@ public class Files {
         case Reset
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollErrorSerializer: JSONSerializer {
@@ -1102,7 +1094,7 @@ public class Files {
             self.backoff = backoff
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderLongpollResultSerializer: JSONSerializer {
@@ -1142,7 +1134,7 @@ public class Files {
             self.hasMore = hasMore
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
         }
     }
     public class ListFolderResultSerializer: JSONSerializer {
@@ -1182,7 +1174,7 @@ public class Files {
             self.limit = limit
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsArgSerializer: JSONSerializer {
@@ -1212,7 +1204,7 @@ public class Files {
         case Path(Files.LookupError)
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsErrorSerializer: JSONSerializer {
@@ -1260,7 +1252,7 @@ public class Files {
             self.entries = entries
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
         }
     }
     public class ListRevisionsResultSerializer: JSONSerializer {
@@ -1307,7 +1299,7 @@ public class Files {
         case RestrictedContent
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
         }
     }
     public class LookupErrorSerializer: JSONSerializer {
@@ -1379,7 +1371,7 @@ public class Files {
         */
         case Metadata(Files.MediaMetadata)
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
         }
     }
     public class MediaInfoSerializer: JSONSerializer {
@@ -1430,7 +1422,7 @@ public class Files {
             self.timeTaken = timeTaken
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
         }
     }
     public class MediaMetadataSerializer: JSONSerializer {
@@ -1478,7 +1470,7 @@ public class Files {
     */
     public class PhotoMetadata: Files.MediaMetadata {
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
         }
     }
     public class PhotoMetadataSerializer: JSONSerializer {
@@ -1509,7 +1501,7 @@ public class Files {
     public class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
         public let path : String
-        /// Deprecated. Please specify revision in path instead
+        /// Deprecated. Please specify revision in :field:'path' instead
         public let rev : String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "((/|id:).*)|(rev:[0-9a-f]{9,})")(value: path)
@@ -1518,7 +1510,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
         }
     }
     public class PreviewArgSerializer: JSONSerializer {
@@ -1562,7 +1554,7 @@ public class Files {
         */
         case UnsupportedContent
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
         }
     }
     public class PreviewErrorSerializer: JSONSerializer {
@@ -1624,7 +1616,7 @@ public class Files {
             self.toPath = toPath
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
         }
     }
     public class RelocationArgSerializer: JSONSerializer {
@@ -1675,7 +1667,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
         }
     }
     public class RelocationErrorSerializer: JSONSerializer {
@@ -1763,7 +1755,7 @@ public class Files {
             self.rev = rev
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
         }
     }
     public class RestoreArgSerializer: JSONSerializer {
@@ -1804,7 +1796,7 @@ public class Files {
         case InvalidRevision
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
         }
     }
     public class RestoreErrorSerializer: JSONSerializer {
@@ -1881,7 +1873,7 @@ public class Files {
             self.mode = mode
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
         }
     }
     public class SearchArgSerializer: JSONSerializer {
@@ -1920,7 +1912,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
         }
     }
     public class SearchErrorSerializer: JSONSerializer {
@@ -1968,7 +1960,7 @@ public class Files {
             self.metadata = metadata
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
         }
     }
     public class SearchMatchSerializer: JSONSerializer {
@@ -2008,7 +2000,7 @@ public class Files {
         */
         case Both
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
         }
     }
     public class SearchMatchTypeSerializer: JSONSerializer {
@@ -2065,7 +2057,7 @@ public class Files {
         */
         case DeletedFilename
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
         }
     }
     public class SearchModeSerializer: JSONSerializer {
@@ -2123,7 +2115,7 @@ public class Files {
             self.start = start
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
         }
     }
     public class SearchResultSerializer: JSONSerializer {
@@ -2166,7 +2158,7 @@ public class Files {
             self.size = size
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
         }
     }
     public class ThumbnailArgSerializer: JSONSerializer {
@@ -2212,7 +2204,7 @@ public class Files {
         */
         case ConversionError
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
         }
     }
     public class ThumbnailErrorSerializer: JSONSerializer {
@@ -2266,7 +2258,7 @@ public class Files {
         case Jpeg
         case Png
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
         }
     }
     public class ThumbnailFormatSerializer: JSONSerializer {
@@ -2325,7 +2317,7 @@ public class Files {
         */
         case W1024h768
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
     }
     public class ThumbnailSizeSerializer: JSONSerializer {
@@ -2390,7 +2382,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
         }
     }
     public class UploadErrorSerializer: JSONSerializer {
@@ -2441,7 +2433,7 @@ public class Files {
             self.offset = offset
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionCursorSerializer: JSONSerializer {
@@ -2477,7 +2469,7 @@ public class Files {
             self.commit = commit
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
         }
     }
     public class UploadSessionFinishArgSerializer: JSONSerializer {
@@ -2517,7 +2509,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionFinishErrorSerializer: JSONSerializer {
@@ -2582,7 +2574,7 @@ public class Files {
         */
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionLookupErrorSerializer: JSONSerializer {
@@ -2640,7 +2632,7 @@ public class Files {
             self.correctOffset = correctOffset
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
         }
     }
     public class UploadSessionOffsetErrorSerializer: JSONSerializer {
@@ -2672,7 +2664,7 @@ public class Files {
             self.sessionId = sessionId
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
         }
     }
     public class UploadSessionStartResultSerializer: JSONSerializer {
@@ -2707,7 +2699,7 @@ public class Files {
             self.uploadSessionId = uploadSessionId
         }
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
         }
     }
     public class UploadWriteFailedSerializer: JSONSerializer {
@@ -2742,7 +2734,7 @@ public class Files {
             super.init(dimensions: dimensions, location: location, timeTaken: timeTaken)
         }
         public override var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
         }
     }
     public class VideoMetadataSerializer: JSONSerializer {
@@ -2787,7 +2779,7 @@ public class Files {
         case FileAncestor
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
         }
     }
     public class WriteConflictErrorSerializer: JSONSerializer {
@@ -2856,7 +2848,7 @@ public class Files {
         case DisallowedName
         case Other
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
         }
     }
     public class WriteErrorSerializer: JSONSerializer {
@@ -2941,7 +2933,7 @@ public class Files {
         */
         case Update(String)
         public var description : String {
-            return "\(SerializeUtil.prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
+            return "\(prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
         }
     }
     public class WriteModeSerializer: JSONSerializer {
@@ -2982,147 +2974,4 @@ public class Files {
             }
         }
     }
-
-    // Stone Route Objects
-
-    static let copy = Route(
-        name: "copy",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let createFolder = Route(
-        name: "create_folder",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let delete = Route(
-        name: "delete",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let download = Route(
-        name: "download",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "download"]
-    )
-    static let getMetadata = Route(
-        name: "get_metadata",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let getPreview = Route(
-        name: "get_preview",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "download"]
-    )
-    static let getThumbnail = Route(
-        name: "get_thumbnail",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "download"]
-    )
-    static let listFolder = Route(
-        name: "list_folder",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let listFolderContinue = Route(
-        name: "list_folder/continue",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let listFolderGetLatestCursor = Route(
-        name: "list_folder/get_latest_cursor",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let listFolderLongpoll = Route(
-        name: "list_folder/longpoll",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "notify",
-                "style": nil]
-    )
-    static let listRevisions = Route(
-        name: "list_revisions",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let move = Route(
-        name: "move",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let permanentlyDelete = Route(
-        name: "permanently_delete",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let restore = Route(
-        name: "restore",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let search = Route(
-        name: "search",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": nil,
-                "style": nil]
-    )
-    static let upload = Route(
-        name: "upload",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
-    static let uploadSessionAppend = Route(
-        name: "upload_session/append",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
-    static let uploadSessionFinish = Route(
-        name: "upload_session/finish",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
-    static let uploadSessionStart = Route(
-        name: "upload_session/start",
-        namespace: "files",
-        deprecated: false,
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
 }
