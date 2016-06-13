@@ -1,2 +1,8 @@
 .DS_Store
 .arcconfig
+
+## user-specific settings
+xcuserdata/
+
+## project dependencies
+Pods/
