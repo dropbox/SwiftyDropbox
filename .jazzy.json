@@ -7,8 +7,10 @@
     {
       "name": "Routes", 
       "children": [
+        "AuthRoutes", 
         "FilesRoutes", 
         "SharingRoutes", 
+        "TeamRoutes", 
         "UsersRoutes"
       ]
     }, 
@@ -19,8 +21,11 @@
         "Auth", 
         "Common", 
         "Files", 
+        "Properties", 
         "Sharing", 
         "Team", 
+        "TeamCommon", 
+        "TeamPolicies", 
         "Users"
       ]
     }, 
@@ -44,8 +49,8 @@
   "author_url": "https://dropbox.com/developers", 
   "hide_documentation_coverage": true, 
   "excluded_files": [
-    "Source/BabelSerializers.swift", 
-    "Source/BabelValidators.swift", 
+    "Source/StoneSerializers.swift", 
+    "Source/StoneValidators.swift", 
     "Source/Client.swift"
   ]
 }

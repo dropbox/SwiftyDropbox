@@ -11,7 +11,7 @@ public enum JSON {
 }
 
 public class SerializeUtil {
-    public class func objectToJSON(json : AnyObject) -> JSON {
+    public class func objectToJSON(json: AnyObject) -> JSON {
 
         switch json {
         case _ as NSNull:
@@ -20,8 +20,8 @@ public class SerializeUtil {
             return .Number(num)
         case let str as String:
             return .Str(str)
-        case let dict as [String : AnyObject]:
-            var ret = [String : JSON]()
+        case let dict as [String: AnyObject]:
+            var ret = [String: JSON]()
             for (k, v) in dict {
                 ret[k] = objectToJSON(v)
             }
@@ -38,7 +38,7 @@ public class SerializeUtil {
         case .Array(let array):
             return array.map(prepareJSONForSerialization)
         case .Dictionary(let dict):
-            var ret = [String : AnyObject]()
+            var ret = [String: AnyObject]()
             for (k, v) in dict {
                 // kind of a hack...
                 switch v {
@@ -63,7 +63,7 @@ public class SerializeUtil {
         case .Null:
             return "null".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         default:
-            let obj : AnyObject = prepareJSONForSerialization(json)
+            let obj: AnyObject = prepareJSONForSerialization(json)
             if NSJSONSerialization.isValidJSONObject(obj) {
                 return try! NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions())
             } else {
@@ -85,7 +85,7 @@ public protocol JSONSerializer {
     func deserialize(_: JSON) -> ValueType
 }
 
-public class VoidSerializer : JSONSerializer {
+public class VoidSerializer: JSONSerializer {
     public func serialize(value: Void) -> JSON {
         return .Null
     }
@@ -102,19 +102,19 @@ public class VoidSerializer : JSONSerializer {
 }
 
 
-public class ArraySerializer<T : JSONSerializer> : JSONSerializer {
+public class ArraySerializer<T: JSONSerializer>: JSONSerializer {
     
-    var elementSerializer : T
+    var elementSerializer: T
     
     init(_ elementSerializer: T) {
         self.elementSerializer = elementSerializer
     }
     
-    public func serialize(arr : Array<T.ValueType>) -> JSON {
+    public func serialize(arr: Array<T.ValueType>) -> JSON {
         return .Array(arr.map { self.elementSerializer.serialize($0) } )
     }
     
-    public func deserialize(json : JSON) -> Array<T.ValueType> {
+    public func deserialize(json: JSON) -> Array<T.ValueType> {
         switch json {
         case .Array(let arr):
             return arr.map { self.elementSerializer.deserialize($0) }
@@ -124,8 +124,8 @@ public class ArraySerializer<T : JSONSerializer> : JSONSerializer {
     }
 }
 
-public class StringSerializer : JSONSerializer {
-    public func serialize(value : String) -> JSON {
+public class StringSerializer: JSONSerializer {
+    public func serialize(value: String) -> JSON {
         return .Str(value)
     }
     
@@ -139,9 +139,9 @@ public class StringSerializer : JSONSerializer {
     }
 }
 
-public class NSDateSerializer : JSONSerializer {
+public class NSDateSerializer: JSONSerializer {
     
-    var dateFormatter : NSDateFormatter
+    var dateFormatter: NSDateFormatter
     
     private func convertFormat(format: String) -> String? {
         func symbolForToken(token: String) -> String {
@@ -252,11 +252,11 @@ public class NSDateSerializer : JSONSerializer {
     }
 }
 
-public class BoolSerializer : JSONSerializer {
-    public func serialize(value : Bool) -> JSON {
+public class BoolSerializer: JSONSerializer {
+    public func serialize(value: Bool) -> JSON {
         return .Number(NSNumber(bool: value))
     }
-    public func deserialize(json : JSON) -> Bool {
+    public func deserialize(json: JSON) -> Bool {
         switch json {
         case .Number(let b):
             return b.boolValue
@@ -266,12 +266,12 @@ public class BoolSerializer : JSONSerializer {
     }
 }
 
-public class UInt64Serializer : JSONSerializer {
-    public func serialize(value : UInt64) -> JSON {
+public class UInt64Serializer: JSONSerializer {
+    public func serialize(value: UInt64) -> JSON {
         return .Number(NSNumber(unsignedLongLong: value))
     }
     
-    public func deserialize(json : JSON) -> UInt64 {
+    public func deserialize(json: JSON) -> UInt64 {
         switch json {
         case .Number(let n):
             return n.unsignedLongLongValue
@@ -281,12 +281,12 @@ public class UInt64Serializer : JSONSerializer {
     }
 }
 
-public class Int64Serializer : JSONSerializer {
-    public func serialize(value : Int64) -> JSON {
+public class Int64Serializer: JSONSerializer {
+    public func serialize(value: Int64) -> JSON {
         return .Number(NSNumber(longLong: value))
     }
     
-    public func deserialize(json : JSON) -> Int64 {
+    public func deserialize(json: JSON) -> Int64 {
         switch json {
         case .Number(let n):
             return n.longLongValue
@@ -296,12 +296,12 @@ public class Int64Serializer : JSONSerializer {
     }
 }
 
-public class Int32Serializer : JSONSerializer {
-    public func serialize(value : Int32) -> JSON {
+public class Int32Serializer: JSONSerializer {
+    public func serialize(value: Int32) -> JSON {
         return .Number(NSNumber(int: value))
     }
     
-    public func deserialize(json : JSON) -> Int32 {
+    public func deserialize(json: JSON) -> Int32 {
         switch json {
         case .Number(let n):
             return n.intValue
@@ -310,12 +310,12 @@ public class Int32Serializer : JSONSerializer {
         }
     }
 }
-public class UInt32Serializer : JSONSerializer {
-    public func serialize(value : UInt32) -> JSON {
+public class UInt32Serializer: JSONSerializer {
+    public func serialize(value: UInt32) -> JSON {
         return .Number(NSNumber(unsignedInt: value))
     }
     
-    public func deserialize(json : JSON) -> UInt32 {
+    public func deserialize(json: JSON) -> UInt32 {
         switch json {
         case .Number(let n):
             return n.unsignedIntValue
@@ -325,8 +325,8 @@ public class UInt32Serializer : JSONSerializer {
     }
 }
 
-public class NSDataSerializer : JSONSerializer {
-    public func serialize(value : NSData) -> JSON {
+public class NSDataSerializer: JSONSerializer {
+    public func serialize(value: NSData) -> JSON {
         return .Str(value.base64EncodedStringWithOptions([]))
     }
     
@@ -340,7 +340,7 @@ public class NSDataSerializer : JSONSerializer {
     }
 }
 
-public class DoubleSerializer : JSONSerializer {
+public class DoubleSerializer: JSONSerializer {
     public func serialize(value: Double) -> JSON {
         return .Number(NSNumber(double: value))
     }
@@ -356,15 +356,15 @@ public class DoubleSerializer : JSONSerializer {
 }
 
 
-public class NullableSerializer<T : JSONSerializer> : JSONSerializer {
+public class NullableSerializer<T: JSONSerializer>: JSONSerializer {
     
-    var internalSerializer : T
+    var internalSerializer: T
     
-    init(_ serializer : T) {
+    init(_ serializer: T) {
         self.internalSerializer = serializer
     }
     
-    public func serialize(value : Optional<T.ValueType>) -> JSON {
+    public func serialize(value: Optional<T.ValueType>) -> JSON {
         if let v = value {
             return internalSerializer.serialize(v)
         } else {
@@ -394,7 +394,7 @@ struct Serialization {
     static var _NSDataSerializer = NSDataSerializer()
     static var _DoubleSerializer = DoubleSerializer()
 
-    static func getFields(json : JSON) -> [String : JSON] {
+    static func getFields(json: JSON) -> [String: JSON] {
         switch json {
             case .Dictionary(let dict):
                 return dict
@@ -403,7 +403,7 @@ struct Serialization {
         }
     }
 
-    static func getTag(d: [String : JSON]) -> String {
+    static func getTag(d: [String: JSON]) -> String {
         return _StringSerializer.deserialize(d[".tag"]!)
     }
 

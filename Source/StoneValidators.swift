@@ -9,7 +9,7 @@ public func setAssertFunc( assertFunc: (Bool, String) -> Void) {
 }
 
 
-public func arrayValidator<T>(minItems minItems : Int? = nil, maxItems : Int? = nil, itemValidator: T -> Void)(value : Array<T>) -> Void {
+public func arrayValidator<T>(minItems minItems: Int? = nil, maxItems: Int? = nil, itemValidator: T -> Void)(value: Array<T>) -> Void {
     if let min = minItems {
         _assertFunc(value.count >= min, "\(value) must have at least \(min) items")
     }
@@ -24,7 +24,7 @@ public func arrayValidator<T>(minItems minItems : Int? = nil, maxItems : Int? = 
     
 }
 
-public func stringValidator(minLength minLength : Int? = nil, maxLength : Int? = nil, pattern: String? = nil)(value: String) -> Void {
+public func stringValidator(minLength minLength: Int? = nil, maxLength: Int? = nil, pattern: String? = nil)(value: String) -> Void {
     let length = value.characters.count
     if let min = minLength {
         _assertFunc(length >= min, "\"\(value)\" must be at least \(min) characters")
@@ -41,7 +41,7 @@ public func stringValidator(minLength minLength : Int? = nil, maxLength : Int? =
     }
 }
 
-public func comparableValidator<T: Comparable>(minValue minValue : T? = nil, maxValue : T? = nil)(value: T) -> Void {
+public func comparableValidator<T: Comparable>(minValue minValue: T? = nil, maxValue: T? = nil)(value: T) -> Void {
     if let min = minValue {
         _assertFunc(min <= value, "\(value) must be at least \(min)")
     }
@@ -51,13 +51,13 @@ public func comparableValidator<T: Comparable>(minValue minValue : T? = nil, max
     }
 }
 
-public func nullableValidator<T>(internalValidator : (T) -> Void)(value : T?) -> Void {
+public func nullableValidator<T>(internalValidator: (T) -> Void)(value: T?) -> Void {
     if let v = value {
         internalValidator(v)
     }
 }
 
-public func binaryValidator(minLength minLength : Int?, maxLength: Int?)(value: NSData) -> Void {
+public func binaryValidator(minLength minLength: Int?, maxLength: Int?)(value: NSData) -> Void {
     let length = value.length
     if let min = minLength {
         _assertFunc(length >= min, "\"\(value)\" must be at least \(min) bytes")

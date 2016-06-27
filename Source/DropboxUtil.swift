@@ -1,11 +1,3 @@
-//
-//  DropboxClient.swift
-//  Pods
-//
-//  Created by Ryan Pearl on 5/20/15.
-//
-//
-
 import Foundation
 import Alamofire
 
@@ -63,7 +55,6 @@ public class Dropbox {
 
         if let token = DropboxAuthManager.sharedAuthManager.getFirstAccessToken() {
             Dropbox.authorizedClient = DropboxClient(accessToken: token)
-            DropboxClient.sharedClient = Dropbox.authorizedClient
         }
     }
 
@@ -84,7 +75,6 @@ public class Dropbox {
             switch result {
             case .Success(let token):
                 Dropbox.authorizedClient = DropboxClient(accessToken: token)
-                DropboxClient.sharedClient = Dropbox.authorizedClient
                 return result
             case .Error:
                 return result
@@ -104,7 +94,6 @@ public class Dropbox {
 
         DropboxAuthManager.sharedAuthManager.clearStoredAccessTokens()
         Dropbox.authorizedClient = nil
-        DropboxClient.sharedClient = nil
     }
 }
 
