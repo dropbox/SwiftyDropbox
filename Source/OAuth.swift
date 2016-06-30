@@ -590,7 +590,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancel:")
+        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(DropboxConnectController.cancel(_:)))
         self.navigationItem.rightBarButtonItem = self.cancelButton
     }
     
@@ -618,7 +618,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         return decisionHandler(.Allow)
     }
     
-    public func webView(webView: WKWebView!, didFinishNavigation navigation: WKNavigation!) {
+    public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
         indicator.stopAnimating()
         indicator.removeFromSuperview()
     }
@@ -636,7 +636,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     }
     
     func showHideBackButton(show: Bool) {
-        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: "goBack:") : nil
+        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: #selector(DropboxConnectController.goBack(_:))) : nil
     }
     
     func goBack(sender: AnyObject?) {
