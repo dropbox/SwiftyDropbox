@@ -21,7 +21,10 @@ To get started with SwiftyDropbox, we recommend you add it to your project using
     ```ruby
       platform :ios, '8.0'
       use_frameworks!
-      pod 'SwiftyDropbox', '~> 3.0.0'
+
+      target '<YOUR_PROJECT_NAME>' do
+        pod 'SwiftyDropbox'
+      end
     ```
 
 1. From the project directory, install the SwiftyDropbox SDK with:
