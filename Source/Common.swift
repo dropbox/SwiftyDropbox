@@ -4,8 +4,6 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the common namespace
-*/
+/// Datatypes and serializers for the common namespace
 public class Common {
 }

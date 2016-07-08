@@ -4,13 +4,9 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the users namespace
-*/
+/// Datatypes and serializers for the users namespace
 public class Users {
-    /**
-        The amount of detail revealed about an account depends on the user being queried and the user making the query.
-    */
+    /// The amount of detail revealed about an account depends on the user being queried and the user making the query.
     public class Account: CustomStringConvertible {
         /// The user's unique Dropbox ID.
         public let accountId: String
@@ -68,21 +64,14 @@ public class Users {
             }
         }
     }
-    /**
-        What type of account this user has.
-    */
+
+    /// What type of account this user has.
     public enum AccountType: CustomStringConvertible {
-        /**
-            The basic account type.
-        */
+        /// The basic account type.
         case Basic
-        /**
-            The Dropbox Pro account type.
-        */
+        /// The Dropbox Pro account type.
         case Pro
-        /**
-            The Dropbox Business account type.
-        */
+        /// The Dropbox Business account type.
         case Business
 
         public var description: String {
@@ -126,9 +115,8 @@ public class Users {
             }
         }
     }
-    /**
-        Basic information about any account.
-    */
+
+    /// Basic information about any account.
     public class BasicAccount: Users.Account {
         /// Whether this user is a teammate of the current user. If this account is the current user's account, then
         /// this will be true.
@@ -178,9 +166,8 @@ public class Users {
             }
         }
     }
-    /**
-        Detailed information about the current user's account.
-    */
+
+    /// Detailed information about the current user's account.
     public class FullAccount: Users.Account {
         /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
         /// http://en.wikipedia.org/wiki/ISO_3166-1.
@@ -259,9 +246,8 @@ public class Users {
             }
         }
     }
-    /**
-        Information about a team.
-    */
+
+    /// Information about a team.
     public class Team: CustomStringConvertible {
         /// The team's unique ID.
         public let id: String
@@ -297,9 +283,8 @@ public class Users {
             }
         }
     }
-    /**
-        Detailed information about a team.
-    */
+
+    /// Detailed information about a team.
     public class FullTeam: Users.Team {
         /// Team policies governing sharing.
         public let sharingPolicies: TeamPolicies.TeamSharingPolicies
@@ -333,9 +318,8 @@ public class Users {
             }
         }
     }
-    /**
-        The GetAccountArg struct
-    */
+
+    /// The GetAccountArg struct
     public class GetAccountArg: CustomStringConvertible {
         /// A user's account identifier.
         public let accountId: String
@@ -365,9 +349,8 @@ public class Users {
             }
         }
     }
-    /**
-        The GetAccountBatchArg struct
-    */
+
+    /// The GetAccountBatchArg struct
     public class GetAccountBatchArg: CustomStringConvertible {
         /// List of user account identifiers.  Should not contain any duplicate account IDs.
         public let accountIds: Array<String>
@@ -397,14 +380,12 @@ public class Users {
             }
         }
     }
-    /**
-        The GetAccountBatchError union
-    */
+
+    /// The GetAccountBatchError union
     public enum GetAccountBatchError: CustomStringConvertible {
-        /**
-            The value is an account ID specified in accountIds in GetAccountBatchArg that does not exist.
-        */
+        /// The value is an account ID specified in accountIds in GetAccountBatchArg that does not exist.
         case NoAccount(String)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -443,14 +424,12 @@ public class Users {
             }
         }
     }
-    /**
-        The GetAccountError union
-    */
+
+    /// The GetAccountError union
     public enum GetAccountError: CustomStringConvertible {
-        /**
-            The specified accountId in GetAccountArg does not exist.
-        */
+        /// The specified accountId in GetAccountArg does not exist.
         case NoAccount
+        /// (undocumented)
         case Unknown
 
         public var description: String {
@@ -488,9 +467,8 @@ public class Users {
             }
         }
     }
-    /**
-        The IndividualSpaceAllocation struct
-    */
+
+    /// The IndividualSpaceAllocation struct
     public class IndividualSpaceAllocation: CustomStringConvertible {
         /// The total space allocated to the user's account (bytes).
         public let allocated: UInt64
@@ -520,9 +498,8 @@ public class Users {
             }
         }
     }
-    /**
-        Representations for a person's name to assist with internationalization.
-    */
+
+    /// Representations for a person's name to assist with internationalization.
     public class Name: CustomStringConvertible {
         /// Also known as a first name.
         public let givenName: String
@@ -571,18 +548,14 @@ public class Users {
             }
         }
     }
-    /**
-        Space is allocated differently based on the type of account.
-    */
+
+    /// Space is allocated differently based on the type of account.
     public enum SpaceAllocation: CustomStringConvertible {
-        /**
-            The user's space allocation applies only to their individual account.
-        */
+        /// The user's space allocation applies only to their individual account.
         case Individual(Users.IndividualSpaceAllocation)
-        /**
-            The user shares space with other members of their team.
-        */
+        /// The user shares space with other members of their team.
         case Team(Users.TeamSpaceAllocation)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -628,9 +601,8 @@ public class Users {
             }
         }
     }
-    /**
-        Information about a user's space usage and quota.
-    */
+
+    /// Information about a user's space usage and quota.
     public class SpaceUsage: CustomStringConvertible {
         /// The user's total space usage (bytes).
         public let used: UInt64
@@ -665,9 +637,8 @@ public class Users {
             }
         }
     }
-    /**
-        The TeamSpaceAllocation struct
-    */
+
+    /// The TeamSpaceAllocation struct
     public class TeamSpaceAllocation: CustomStringConvertible {
         /// The total space currently used by the user's team (bytes).
         public let used: UInt64
@@ -703,6 +674,7 @@ public class Users {
             }
         }
     }
+
 
     /// Stone Route Objects
 

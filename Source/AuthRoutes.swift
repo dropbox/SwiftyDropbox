@@ -8,15 +8,15 @@ public class AuthRoutes {
     init(client: DropboxTransportClient) {
         self.client = client
     }
-    /**
-        Disables the access token used to authenticate the call.
 
-
-         - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
-        on failure.
-    */
+    /// Disables the access token used to authenticate the call.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
+    /// on failure.
     public func tokenRevoke() -> RpcRequest<VoidSerializer, VoidSerializer> {
         let route = Auth.tokenRevoke
         return client.request(route)
     }
+
 }

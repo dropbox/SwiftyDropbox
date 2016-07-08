@@ -4,31 +4,20 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the sharing namespace
-*/
+/// Datatypes and serializers for the sharing namespace
 public class Sharing {
-    /**
-        Defines the access levels for collaborators.
-    */
+    /// Defines the access levels for collaborators.
     public enum AccessLevel: CustomStringConvertible {
-        /**
-            The collaborator is the owner of the shared folder. Owners can view and edit the shared folder as well as
-            set the folder's policies using updateFolderPolicy.
-        */
+        /// The collaborator is the owner of the shared folder. Owners can view and edit the shared folder as well as
+        /// set the folder's policies using updateFolderPolicy.
         case Owner
-        /**
-            The collaborator can both view and edit the shared folder.
-        */
+        /// The collaborator can both view and edit the shared folder.
         case Editor
-        /**
-            The collaborator can only view the shared folder.
-        */
+        /// The collaborator can only view the shared folder.
         case Viewer
-        /**
-            The collaborator can only view the shared folder and does not have any access to comments.
-        */
+        /// The collaborator can only view the shared folder and does not have any access to comments.
         case ViewerNoComment
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -84,19 +73,15 @@ public class Sharing {
             }
         }
     }
-    /**
-        Policy governing who can change a shared folder's access control list (ACL). In other words, who can add,
-        remove, or change the privileges of members.
-    */
+
+    /// Policy governing who can change a shared folder's access control list (ACL). In other words, who can add,
+    /// remove, or change the privileges of members.
     public enum AclUpdatePolicy: CustomStringConvertible {
-        /**
-            Only the owner can update the ACL.
-        */
+        /// Only the owner can update the ACL.
         case Owner
-        /**
-            Any editor can update the ACL. This may be further restricted to editors on the same team.
-        */
+        /// Any editor can update the ACL. This may be further restricted to editors on the same team.
         case Editors
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -140,9 +125,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for addFileMember.
-    */
+
+    /// Arguments for addFileMember.
     public class AddFileMemberArgs: CustomStringConvertible {
         /// File to which to add members.
         public let file: String
@@ -199,20 +183,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        Errors for addFileMember.
-    */
+
+    /// Errors for addFileMember.
     public enum AddFileMemberError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
-        /**
-            The user has reached the rate limit for invitations.
-        */
+        /// The user has reached the rate limit for invitations.
         case RateLimit
-        /**
-            The custom message did not pass comment permissions checks.
-        */
+        /// The custom message did not pass comment permissions checks.
         case InvalidComment
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -270,9 +252,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The AddFolderMemberArg struct
-    */
+
+    /// The AddFolderMemberArg struct
     public class AddFolderMemberArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -318,51 +299,31 @@ public class Sharing {
             }
         }
     }
-    /**
-        The AddFolderMemberError union
-    */
+
+    /// The AddFolderMemberError union
     public enum AddFolderMemberError: CustomStringConvertible {
-        /**
-            Unable to access shared folder.
-        */
+        /// Unable to access shared folder.
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            The current user's e-mail address is unverified.
-        */
+        /// The current user's e-mail address is unverified.
         case EmailUnverified
-        /**
-            members in AddFolderMemberArg contains a bad invitation recipient.
-        */
+        /// members in AddFolderMemberArg contains a bad invitation recipient.
         case BadMember(Sharing.AddMemberSelectorError)
-        /**
-            Your team policy does not allow sharing outside of the team.
-        */
+        /// Your team policy does not allow sharing outside of the team.
         case CantShareOutsideTeam
-        /**
-            The value is the member limit that was reached.
-        */
+        /// The value is the member limit that was reached.
         case TooManyMembers(UInt64)
-        /**
-            The value is the pending invite limit that was reached.
-        */
+        /// The value is the pending invite limit that was reached.
         case TooManyPendingInvites(UInt64)
-        /**
-            The user has reached the rate limit for invitations.
-        */
+        /// The user has reached the rate limit for invitations.
         case RateLimit
-        /**
-            The current user's account doesn't support this action. An example of this is when adding a read-only
-            member. This action can only be performed by users that have upgraded to a Pro or Business plan.
-        */
+        /// The current user's account doesn't support this action. An example of this is when adding a read-only
+        /// member. This action can only be performed by users that have upgraded to a Pro or Business plan.
         case InsufficientPlan
-        /**
-            This action cannot be performed on a team shared folder.
-        */
+        /// This action cannot be performed on a team shared folder.
         case TeamFolder
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -458,9 +419,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The member and type of access the member should have when added to a shared folder.
-    */
+
+    /// The member and type of access the member should have when added to a shared folder.
     public class AddMember: CustomStringConvertible {
         /// The member to add to the shared folder.
         public let member: Sharing.MemberSelector
@@ -494,31 +454,21 @@ public class Sharing {
             }
         }
     }
-    /**
-        The AddMemberSelectorError union
-    */
+
+    /// The AddMemberSelectorError union
     public enum AddMemberSelectorError: CustomStringConvertible {
-        /**
-            The value is the ID that could not be identified.
-        */
+        /// The value is the ID that could not be identified.
         case InvalidDropboxId(String)
-        /**
-            The value is the e-email address that is malformed.
-        */
+        /// The value is the e-email address that is malformed.
         case InvalidEmail(String)
-        /**
-            The value is the ID of the Dropbox user with an unverified e-mail address.  Invite unverified users by
-            e-mail address instead of by their Dropbox ID.
-        */
+        /// The value is the ID of the Dropbox user with an unverified e-mail address.  Invite unverified users by
+        /// e-mail address instead of by their Dropbox ID.
         case UnverifiedDropboxId(String)
-        /**
-            At least one of the specified groups in members in AddFolderMemberArg is deleted.
-        */
+        /// At least one of the specified groups in members in AddFolderMemberArg is deleted.
         case GroupDeleted
-        /**
-            Sharing to a group that is not on the current user's team.
-        */
+        /// Sharing to a group that is not on the current user's team.
         case GroupNotOnTeam
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -583,9 +533,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
-    */
+
+    /// Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
     public class LinkMetadata: CustomStringConvertible {
         /// URL of the shared link.
         public let url: String
@@ -646,9 +595,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Metadata for a collection-based shared link.
-    */
+
+    /// Metadata for a collection-based shared link.
     public class CollectionLinkMetadata: Sharing.LinkMetadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CollectionLinkMetadataSerializer().serialize(self)))"
@@ -676,9 +624,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The CreateSharedLinkArg struct
-    */
+
+    /// The CreateSharedLinkArg struct
     public class CreateSharedLinkArg: CustomStringConvertible {
         /// The path to share.
         public let path: String
@@ -719,11 +666,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        The CreateSharedLinkError union
-    */
+
+    /// The CreateSharedLinkError union
     public enum CreateSharedLinkError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -762,9 +710,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The CreateSharedLinkWithSettingsArg struct
-    */
+
+    /// The CreateSharedLinkWithSettingsArg struct
     public class CreateSharedLinkWithSettingsArg: CustomStringConvertible {
         /// The path to be shared by the shared link
         public let path: String
@@ -799,26 +746,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        The CreateSharedLinkWithSettingsError union
-    */
+
+    /// The CreateSharedLinkWithSettingsError union
     public enum CreateSharedLinkWithSettingsError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            User's email should be verified
-        */
+        /// User's email should be verified
         case EmailNotVerified
-        /**
-            The shared link already exists
-        */
+        /// The shared link already exists
         case SharedLinkAlreadyExists
-        /**
-            There is an error with the given settings
-        */
+        /// There is an error with the given settings
         case SettingsError(Sharing.SharedLinkSettingsError)
-        /**
-            Access to the requested path is forbidden
-        */
+        /// Access to the requested path is forbidden
         case AccessDenied
 
         public var description: String {
@@ -876,26 +815,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        Sharing actions that may be taken on files.
-    */
+
+    /// Sharing actions that may be taken on files.
     public enum FileAction: CustomStringConvertible {
-        /**
-            Change or edit contents of the file.
-        */
+        /// Change or edit contents of the file.
         case EditContents
-        /**
-            Add a member with view permissions.
-        */
+        /// Add a member with view permissions.
         case InviteViewer
-        /**
-            Stop sharing this file.
-        */
+        /// Stop sharing this file.
         case Unshare
-        /**
-            Relinquish one's own membership to the file.
-        */
+        /// Relinquish one's own membership to the file.
         case RelinquishMembership
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -951,22 +882,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The FileErrorResult union
-    */
+
+    /// The FileErrorResult union
     public enum FileErrorResult: CustomStringConvertible {
-        /**
-            File specified by id was not found.
-        */
+        /// File specified by id was not found.
         case FileNotFoundError(String)
-        /**
-            User does not have permission to take the specified action on the file.
-        */
+        /// User does not have permission to take the specified action on the file.
         case InvalidFileActionError(String)
-        /**
-            User does not have permission to access file specified by file.Id.
-        */
+        /// User does not have permission to access file specified by file.Id.
         case PermissionDeniedError(String)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1019,9 +944,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The metadata of a shared link
-    */
+
+    /// The metadata of a shared link
     public class SharedLinkMetadata: CustomStringConvertible {
         /// URL of the shared link.
         public let url: String
@@ -1113,9 +1037,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The metadata of a file shared link
-    */
+
+    /// The metadata of a file shared link
     public class FileLinkMetadata: Sharing.SharedLinkMetadata {
         /// The modification time set by the desktop client when the file was added to Dropbox. Since this time is not
         /// verified (the Dropbox server stores whatever the desktop client sends up), this should only be used for
@@ -1181,21 +1104,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The FileMemberActionError union
-    */
+
+    /// The FileMemberActionError union
     public enum FileMemberActionError: CustomStringConvertible {
-        /**
-            Specified member was not found.
-        */
+        /// Specified member was not found.
         case InvalidMember
-        /**
-            User does not have permission to perform this action on this member.
-        */
+        /// User does not have permission to perform this action on this member.
         case NoPermission
-        /**
-            Unknown error when applying action to member.
-        */
+        /// Unknown error when applying action to member.
         case Other
 
         public var description: String {
@@ -1239,18 +1155,13 @@ public class Sharing {
             }
         }
     }
-    /**
-        The FileMemberActionIndividualResult union
-    */
+
+    /// The FileMemberActionIndividualResult union
     public enum FileMemberActionIndividualResult: CustomStringConvertible {
-        /**
-            Member was successfully removed from this file. If AccessLevel is given, the member still has access via a
-            parent shared folder.
-        */
+        /// Member was successfully removed from this file. If AccessLevel is given, the member still has access via a
+        /// parent shared folder.
         case Success(Sharing.AccessLevel?)
-        /**
-            User was not able to remove this member.
-        */
+        /// User was not able to remove this member.
         case MemberError(Sharing.FileMemberActionError)
 
         public var description: String {
@@ -1290,9 +1201,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Per-member result for removeFileMember2 or addFileMember.
-    */
+
+    /// Per-member result for removeFileMember2 or addFileMember.
     public class FileMemberActionResult: CustomStringConvertible {
         /// One of specified input members.
         public let member: Sharing.MemberSelector
@@ -1326,18 +1236,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The FileMemberRemoveActionResult union
-    */
+
+    /// The FileMemberRemoveActionResult union
     public enum FileMemberRemoveActionResult: CustomStringConvertible {
-        /**
-            Member was successfully removed from this file.
-        */
+        /// Member was successfully removed from this file.
         case Success(Sharing.MemberAccessLevelResult)
-        /**
-            User was not able to remove this member.
-        */
+        /// User was not able to remove this member.
         case MemberError(Sharing.FileMemberActionError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1383,9 +1289,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Whether the user is allowed to take the sharing action on the file.
-    */
+
+    /// Whether the user is allowed to take the sharing action on the file.
     public class FilePermission: CustomStringConvertible {
         /// The action that the user may wish to take on the file.
         public let action: Sharing.FileAction
@@ -1424,42 +1329,26 @@ public class Sharing {
             }
         }
     }
-    /**
-        Actions that may be taken on shared folders.
-    */
+
+    /// Actions that may be taken on shared folders.
     public enum FolderAction: CustomStringConvertible {
-        /**
-            Change folder options, such as who can be invited to join the folder.
-        */
+        /// Change folder options, such as who can be invited to join the folder.
         case ChangeOptions
-        /**
-            Change or edit contents of the folder.
-        */
+        /// Change or edit contents of the folder.
         case EditContents
-        /**
-            Invite a user or group to join the folder with read and write permission.
-        */
+        /// Invite a user or group to join the folder with read and write permission.
         case InviteEditor
-        /**
-            Invite a user or group to join the folder with read permission.
-        */
+        /// Invite a user or group to join the folder with read permission.
         case InviteViewer
-        /**
-            Relinquish one's own membership in the folder.
-        */
+        /// Relinquish one's own membership in the folder.
         case RelinquishMembership
-        /**
-            Unmount the folder.
-        */
+        /// Unmount the folder.
         case Unmount
-        /**
-            Stop sharing this folder.
-        */
+        /// Stop sharing this folder.
         case Unshare
-        /**
-            Keep a copy of the contents upon leaving or being kicked from the folder.
-        */
+        /// Keep a copy of the contents upon leaving or being kicked from the folder.
         case LeaveACopy
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1539,9 +1428,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The metadata of a folder shared link
-    */
+
+    /// The metadata of a folder shared link
     public class FolderLinkMetadata: Sharing.SharedLinkMetadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderLinkMetadataSerializer().serialize(self)))"
@@ -1579,9 +1467,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Whether the user is allowed to take the action on the shared folder.
-    */
+
+    /// Whether the user is allowed to take the action on the shared folder.
     public class FolderPermission: CustomStringConvertible {
         /// The action that the user may wish to take on the folder.
         public let action: Sharing.FolderAction
@@ -1621,9 +1508,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        A set of policies governing membership and privileges for a shared folder.
-    */
+
+    /// A set of policies governing membership and privileges for a shared folder.
     public class FolderPolicy: CustomStringConvertible {
         /// Who can be a member of this shared folder, as set on the folder itself. The effective policy may differ from
         /// this value if the team-wide policy is more restrictive. Present only if the folder is owned by a team.
@@ -1670,9 +1556,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments of getFileMetadata
-    */
+
+    /// Arguments of getFileMetadata
     public class GetFileMetadataArg: CustomStringConvertible {
         /// The file to query.
         public let file: String
@@ -1707,9 +1592,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments of getFileMetadataBatch
-    */
+
+    /// Arguments of getFileMetadataBatch
     public class GetFileMetadataBatchArg: CustomStringConvertible {
         /// The files to query.
         public let files: Array<String>
@@ -1744,9 +1628,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Per file results of getFileMetadataBatch
-    */
+
+    /// Per file results of getFileMetadataBatch
     public class GetFileMetadataBatchResult: CustomStringConvertible {
         /// This is the input file identifier corresponding to one of files in GetFileMetadataBatchArg.
         public let file: String
@@ -1781,12 +1664,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error result for getFileMetadata.
-    */
+
+    /// Error result for getFileMetadata.
     public enum GetFileMetadataError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1832,18 +1717,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetFileMetadataIndividualResult union
-    */
+
+    /// The GetFileMetadataIndividualResult union
     public enum GetFileMetadataIndividualResult: CustomStringConvertible {
-        /**
-            The result for this file if it was successful.
-        */
+        /// The result for this file if it was successful.
         case Metadata(Sharing.SharedFileMetadata)
-        /**
-            The result for this file if it was an error.
-        */
+        /// The result for this file if it was an error.
         case AccessError(Sharing.SharingFileAccessError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1889,9 +1770,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetMetadataArgs struct
-    */
+
+    /// The GetMetadataArgs struct
     public class GetMetadataArgs: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -1927,21 +1807,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharedLinkError union
-    */
+
+    /// The SharedLinkError union
     public enum SharedLinkError: CustomStringConvertible {
-        /**
-            The shared link wasn't found
-        */
+        /// The shared link wasn't found
         case SharedLinkNotFound
-        /**
-            The caller is not allowed to access this shared link
-        */
+        /// The caller is not allowed to access this shared link
         case SharedLinkAccessDenied
-        /**
-            An unspecified error
-        */
+        /// An unspecified error
         case Other
 
         public var description: String {
@@ -1985,25 +1858,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetSharedLinkFileError union
-    */
+
+    /// The GetSharedLinkFileError union
     public enum GetSharedLinkFileError: CustomStringConvertible {
-        /**
-            The shared link wasn't found
-        */
+        /// The shared link wasn't found
         case SharedLinkNotFound
-        /**
-            The caller is not allowed to access this shared link
-        */
+        /// The caller is not allowed to access this shared link
         case SharedLinkAccessDenied
-        /**
-            An unspecified error
-        */
+        /// An unspecified error
         case Other
-        /**
-            Directories cannot be retrieved by this endpoint.
-        */
+        /// Directories cannot be retrieved by this endpoint.
         case SharedLinkIsDirectory
 
         public var description: String {
@@ -2053,9 +1917,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetSharedLinkMetadataArg struct
-    */
+
+    /// The GetSharedLinkMetadataArg struct
     public class GetSharedLinkMetadataArg: CustomStringConvertible {
         /// URL of the shared link.
         public let url: String
@@ -2098,9 +1961,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetSharedLinksArg struct
-    */
+
+    /// The GetSharedLinksArg struct
     public class GetSharedLinksArg: CustomStringConvertible {
         /// See getSharedLinks description.
         public let path: String?
@@ -2130,11 +1992,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetSharedLinksError union
-    */
+
+    /// The GetSharedLinksError union
     public enum GetSharedLinksError: CustomStringConvertible {
+        /// (undocumented)
         case Path(String?)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2173,9 +2036,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The GetSharedLinksResult struct
-    */
+
+    /// The GetSharedLinksResult struct
     public class GetSharedLinksResult: CustomStringConvertible {
         /// Shared links applicable to the path argument.
         public let links: Array<Sharing.LinkMetadata>
@@ -2204,10 +2066,9 @@ public class Sharing {
             }
         }
     }
-    /**
-        The information about a group. Groups is a way to manage a list of users  who need same access permission to the
-        shared folder.
-    */
+
+    /// The information about a group. Groups is a way to manage a list of users  who need same access permission to the
+    /// shared folder.
     public class GroupInfo: TeamCommon.GroupSummary {
         /// The type of group.
         public let groupType: TeamCommon.GroupType
@@ -2255,9 +2116,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The information about a member of the shared content.
-    */
+
+    /// The information about a member of the shared content.
     public class MembershipInfo: CustomStringConvertible {
         /// The access type for this member.
         public let accessType: Sharing.AccessLevel
@@ -2303,9 +2163,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The information about a group member of the shared content.
-    */
+
+    /// The information about a group member of the shared content.
     public class GroupMembershipInfo: Sharing.MembershipInfo {
         /// The information about the membership group.
         public let group: Sharing.GroupInfo
@@ -2343,14 +2202,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        Information about the recipient of a shared content invitation.
-    */
+
+    /// Information about the recipient of a shared content invitation.
     public enum InviteeInfo: CustomStringConvertible {
-        /**
-            E-mail address of invited user.
-        */
+        /// E-mail address of invited user.
         case Email(String)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2389,9 +2246,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Information about an invited member of a shared content.
-    */
+
+    /// Information about an invited member of a shared content.
     public class InviteeMembershipInfo: Sharing.MembershipInfo {
         /// Recipient of the invitation.
         public let invitee: Sharing.InviteeInfo
@@ -2434,22 +2290,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error occurred while performing an asynchronous job from unshareFolder or removeFolderMember.
-    */
+
+    /// Error occurred while performing an asynchronous job from unshareFolder or removeFolderMember.
     public enum JobError: CustomStringConvertible {
-        /**
-            Error occurred while performing unshareFolder action.
-        */
+        /// Error occurred while performing unshareFolder action.
         case UnshareFolderError(Sharing.UnshareFolderError)
-        /**
-            Error occurred while performing removeFolderMember action.
-        */
+        /// Error occurred while performing removeFolderMember action.
         case RemoveFolderMemberError(Sharing.RemoveFolderMemberError)
-        /**
-            Error occurred while performing relinquishFolderMembership action.
-        */
+        /// Error occurred while performing relinquishFolderMembership action.
         case RelinquishFolderMembershipError(Sharing.RelinquishFolderMembershipError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2502,21 +2352,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The JobStatus union
-    */
+
+    /// The JobStatus union
     public enum JobStatus: CustomStringConvertible {
-        /**
-            The asynchronous job is still in progress.
-        */
+        /// The asynchronous job is still in progress.
         case InProgress
-        /**
-            The asynchronous job has finished.
-        */
+        /// The asynchronous job has finished.
         case Complete
-        /**
-            The asynchronous job returned an error.
-        */
+        /// The asynchronous job returned an error.
         case Failed(Sharing.JobError)
 
         public var description: String {
@@ -2561,9 +2404,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The LinkPermissions struct
-    */
+
+    /// The LinkPermissions struct
     public class LinkPermissions: CustomStringConvertible {
         /// The current visibility of the link after considering the shared links policies of the the team (in case the
         /// link's owner is part of a team) and the shared folder (in case the linked file is part of a shared folder).
@@ -2612,9 +2454,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for listFileMembers.
-    */
+
+    /// Arguments for listFileMembers.
     public class ListFileMembersArg: CustomStringConvertible {
         /// The file for which you want to see members.
         public let file: String
@@ -2660,9 +2501,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for listFileMembersBatch.
-    */
+
+    /// Arguments for listFileMembersBatch.
     public class ListFileMembersBatchArg: CustomStringConvertible {
         /// Files for which to return members.
         public let files: Array<String>
@@ -2698,9 +2538,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Per-file result for listFileMembersBatch.
-    */
+
+    /// Per-file result for listFileMembersBatch.
     public class ListFileMembersBatchResult: CustomStringConvertible {
         /// This is the input file identifier, whether an ID or a path.
         public let file: String
@@ -2735,9 +2574,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for listFileMembersContinue.
-    */
+
+    /// Arguments for listFileMembersContinue.
     public class ListFileMembersContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFileMembers, listFileMembersContinue, or listFileMembersBatch.
         public let cursor: String
@@ -2767,16 +2605,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error for listFileMembersContinue.
-    */
+
+    /// Error for listFileMembersContinue.
     public enum ListFileMembersContinueError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
-        /**
-            cursor in ListFileMembersContinueArg is invalid.
-        */
+        /// cursor in ListFileMembersContinueArg is invalid.
         case InvalidCursor
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2828,9 +2666,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFileMembersCountResult struct
-    */
+
+    /// The ListFileMembersCountResult struct
     public class ListFileMembersCountResult: CustomStringConvertible {
         /// A list of members on this file.
         public let members: Sharing.SharedFileMembers
@@ -2865,12 +2702,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error for listFileMembers.
-    */
+
+    /// Error for listFileMembers.
     public enum ListFileMembersError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2916,18 +2755,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFileMembersIndividualResult union
-    */
+
+    /// The ListFileMembersIndividualResult union
     public enum ListFileMembersIndividualResult: CustomStringConvertible {
-        /**
-            The results of the query for this file if it was successful
-        */
+        /// The results of the query for this file if it was successful
         case Result(Sharing.ListFileMembersCountResult)
-        /**
-            The result of the query for this file if it was an error.
-        */
+        /// The result of the query for this file if it was an error.
         case AccessError(Sharing.SharingFileAccessError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2973,9 +2808,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for listReceivedFiles.
-    */
+
+    /// Arguments for listReceivedFiles.
     public class ListFilesArg: CustomStringConvertible {
         /// Number of files to return max per query. Defaults to 100 if no limit is specified.
         public let limit: UInt32
@@ -3010,9 +2844,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for listReceivedFilesContinue.
-    */
+
+    /// Arguments for listReceivedFilesContinue.
     public class ListFilesContinueArg: CustomStringConvertible {
         /// Cursor in cursor in ListFilesResult
         public let cursor: String
@@ -3042,18 +2875,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error results for listReceivedFilesContinue.
-    */
+
+    /// Error results for listReceivedFilesContinue.
     public enum ListFilesContinueError: CustomStringConvertible {
-        /**
-            User account had a problem.
-        */
+        /// User account had a problem.
         case UserError(Sharing.SharingUserError)
-        /**
-            cursor in ListFilesContinueArg is invalid.
-        */
+        /// cursor in ListFilesContinueArg is invalid.
         case InvalidCursor
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3098,9 +2927,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Success results for listReceivedFiles.
-    */
+
+    /// Success results for listReceivedFiles.
     public class ListFilesResult: CustomStringConvertible {
         /// Information about the files shared with current user.
         public let entries: Array<Sharing.SharedFileMetadata>
@@ -3135,9 +2963,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFolderMembersCursorArg struct
-    */
+
+    /// The ListFolderMembersCursorArg struct
     public class ListFolderMembersCursorArg: CustomStringConvertible {
         /// This is a list indicating whether each returned member will include a boolean value allow in
         /// MemberPermission that describes whether the current user can perform the MemberAction on the member.
@@ -3173,9 +3000,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFolderMembersArgs struct
-    */
+
+    /// The ListFolderMembersArgs struct
     public class ListFolderMembersArgs: Sharing.ListFolderMembersCursorArg {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -3210,9 +3036,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFolderMembersContinueArg struct
-    */
+
+    /// The ListFolderMembersContinueArg struct
     public class ListFolderMembersContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolderMembers or listFolderMembersContinue.
         public let cursor: String
@@ -3242,15 +3067,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFolderMembersContinueError union
-    */
+
+    /// The ListFolderMembersContinueError union
     public enum ListFolderMembersContinueError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            cursor in ListFolderMembersContinueArg is invalid.
-        */
+        /// cursor in ListFolderMembersContinueArg is invalid.
         case InvalidCursor
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3295,9 +3119,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFoldersArgs struct
-    */
+
+    /// The ListFoldersArgs struct
     public class ListFoldersArgs: CustomStringConvertible {
         /// The maximum number of results to return per request.
         public let limit: UInt32
@@ -3333,9 +3156,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFoldersContinueArg struct
-    */
+
+    /// The ListFoldersContinueArg struct
     public class ListFoldersContinueArg: CustomStringConvertible {
         /// The cursor returned by the previous API call specified in the endpoint description.
         public let cursor: String
@@ -3365,14 +3187,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListFoldersContinueError union
-    */
+
+    /// The ListFoldersContinueError union
     public enum ListFoldersContinueError: CustomStringConvertible {
-        /**
-            cursor in ListFoldersContinueArg is invalid.
-        */
+        /// cursor in ListFoldersContinueArg is invalid.
         case InvalidCursor
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3410,10 +3230,9 @@ public class Sharing {
             }
         }
     }
-    /**
-        Result for listFolders or listMountableFolders, depending on which endpoint was requested. Unmounted shared
-        folders can be identified by the absence of pathLower in SharedFolderMetadata.
-    */
+
+    /// Result for listFolders or listMountableFolders, depending on which endpoint was requested. Unmounted shared
+    /// folders can be identified by the absence of pathLower in SharedFolderMetadata.
     public class ListFoldersResult: CustomStringConvertible {
         /// List of all shared folders the authenticated user has access to.
         public let entries: Array<Sharing.SharedFolderMetadata>
@@ -3450,9 +3269,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListSharedLinksArg struct
-    */
+
+    /// The ListSharedLinksArg struct
     public class ListSharedLinksArg: CustomStringConvertible {
         /// See listSharedLinks description.
         public let path: String?
@@ -3493,15 +3311,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListSharedLinksError union
-    */
+
+    /// The ListSharedLinksError union
     public enum ListSharedLinksError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            Indicates that the cursor has been invalidated. Call listSharedLinks to obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call listSharedLinks to obtain a new cursor.
         case Reset
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3546,9 +3363,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ListSharedLinksResult struct
-    */
+
+    /// The ListSharedLinksResult struct
     public class ListSharedLinksResult: CustomStringConvertible {
         /// Shared links applicable to the path argument.
         public let links: Array<Sharing.SharedLinkMetadata>
@@ -3590,9 +3406,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Contains information about a member's access level to content after an operation.
-    */
+
+    /// Contains information about a member's access level to content after an operation.
     public class MemberAccessLevelResult: CustomStringConvertible {
         /// The member still has this level of access to the content through a parent folder.
         public let accessLevel: Sharing.AccessLevel?
@@ -3627,30 +3442,20 @@ public class Sharing {
             }
         }
     }
-    /**
-        Actions that may be taken on members of a shared folder.
-    */
+
+    /// Actions that may be taken on members of a shared folder.
     public enum MemberAction: CustomStringConvertible {
-        /**
-            Allow the member to keep a copy of the folder when removing.
-        */
+        /// Allow the member to keep a copy of the folder when removing.
         case LeaveACopy
-        /**
-            Make the member an editor of the folder.
-        */
+        /// Make the member an editor of the folder.
         case MakeEditor
-        /**
-            Make the member an owner of the folder.
-        */
+        /// Make the member an owner of the folder.
         case MakeOwner
-        /**
-            Make the member a viewer of the folder.
-        */
+        /// Make the member a viewer of the folder.
         case MakeViewer
-        /**
-            Remove the member from the folder.
-        */
+        /// Remove the member from the folder.
         case Remove
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3712,9 +3517,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Whether the user is allowed to take the action on the associated member.
-    */
+
+    /// Whether the user is allowed to take the action on the associated member.
     public class MemberPermission: CustomStringConvertible {
         /// The action that the user may wish to take on the member.
         public let action: Sharing.MemberAction
@@ -3753,18 +3557,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Policy governing who can be a member of a shared folder. Only applicable to folders owned by a user on a team.
-    */
+
+    /// Policy governing who can be a member of a shared folder. Only applicable to folders owned by a user on a team.
     public enum MemberPolicy: CustomStringConvertible {
-        /**
-            Only a teammate can become a member.
-        */
+        /// Only a teammate can become a member.
         case Team
-        /**
-            Anyone can become a member.
-        */
+        /// Anyone can become a member.
         case Anyone
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3808,18 +3608,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Includes different ways to identify a member of a shared folder.
-    */
+
+    /// Includes different ways to identify a member of a shared folder.
     public enum MemberSelector: CustomStringConvertible {
-        /**
-            Dropbox account, team member, or group ID of member.
-        */
+        /// Dropbox account, team member, or group ID of member.
         case DropboxId(String)
-        /**
-            E-mail address of member.
-        */
+        /// E-mail address of member.
         case Email(String)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3865,9 +3661,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ModifySharedLinkSettingsArgs struct
-    */
+
+    /// The ModifySharedLinkSettingsArgs struct
     public class ModifySharedLinkSettingsArgs: CustomStringConvertible {
         /// URL of the shared link to change its settings
         public let url: String
@@ -3907,29 +3702,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ModifySharedLinkSettingsError union
-    */
+
+    /// The ModifySharedLinkSettingsError union
     public enum ModifySharedLinkSettingsError: CustomStringConvertible {
-        /**
-            The shared link wasn't found
-        */
+        /// The shared link wasn't found
         case SharedLinkNotFound
-        /**
-            The caller is not allowed to access this shared link
-        */
+        /// The caller is not allowed to access this shared link
         case SharedLinkAccessDenied
-        /**
-            An unspecified error
-        */
+        /// An unspecified error
         case Other
-        /**
-            There is an error with the given settings
-        */
+        /// There is an error with the given settings
         case SettingsError(Sharing.SharedLinkSettingsError)
-        /**
-            The caller's email should be verified
-        */
+        /// The caller's email should be verified
         case EmailNotVerified
 
         public var description: String {
@@ -3986,9 +3770,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The MountFolderArg struct
-    */
+
+    /// The MountFolderArg struct
     public class MountFolderArg: CustomStringConvertible {
         /// The ID of the shared folder to mount.
         public let sharedFolderId: String
@@ -4018,32 +3801,23 @@ public class Sharing {
             }
         }
     }
-    /**
-        The MountFolderError union
-    */
+
+    /// The MountFolderError union
     public enum MountFolderError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            Mounting would cause a shared folder to be inside another, which is disallowed.
-        */
+        /// Mounting would cause a shared folder to be inside another, which is disallowed.
         case InsideSharedFolder
-        /**
-            The current user does not have enough space to mount the shared folder.
-        */
+        /// The current user does not have enough space to mount the shared folder.
         case InsufficientQuota
-        /**
-            The shared folder is already mounted.
-        */
+        /// The shared folder is already mounted.
         case AlreadyMounted
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
-        /**
-            The shared folder is not mountable. One example where this can occur is when the shared folder belongs
-            within a team folder in the user's Dropbox.
-        */
+        /// The shared folder is not mountable. One example where this can occur is when the shared folder belongs
+        /// within a team folder in the user's Dropbox.
         case NotMountable
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4112,9 +3886,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Metadata for a path-based shared link.
-    */
+
+    /// Metadata for a path-based shared link.
     public class PathLinkMetadata: Sharing.LinkMetadata {
         /// Path in user's Dropbox.
         public let path: String
@@ -4151,17 +3924,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        Flag to indicate pending upload default (for linking to not-yet-existing paths).
-    */
+
+    /// Flag to indicate pending upload default (for linking to not-yet-existing paths).
     public enum PendingUploadMode: CustomStringConvertible {
-        /**
-            Assume pending uploads are files.
-        */
+        /// Assume pending uploads are files.
         case File
-        /**
-            Assume pending uploads are folders.
-        */
+        /// Assume pending uploads are folders.
         case Folder
 
         public var description: String {
@@ -4199,34 +3967,22 @@ public class Sharing {
             }
         }
     }
-    /**
-        Possible reasons the user is denied a permission.
-    */
+
+    /// Possible reasons the user is denied a permission.
     public enum PermissionDeniedReason: CustomStringConvertible {
-        /**
-            User is not on the same team as the folder owner.
-        */
+        /// User is not on the same team as the folder owner.
         case UserNotSameTeamAsOwner
-        /**
-            User is prohibited by the owner from taking the action.
-        */
+        /// User is prohibited by the owner from taking the action.
         case UserNotAllowedByOwner
-        /**
-            Target is indirectly a member of the folder, for example by being part of a group.
-        */
+        /// Target is indirectly a member of the folder, for example by being part of a group.
         case TargetIsIndirectMember
-        /**
-            Target is the owner of the folder.
-        */
+        /// Target is the owner of the folder.
         case TargetIsOwner
-        /**
-            Target is the user itself.
-        */
+        /// Target is the user itself.
         case TargetIsSelf
-        /**
-            Target is not an active member of the team.
-        */
+        /// Target is not an active member of the team.
         case TargetNotActive
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4294,9 +4050,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RelinquishFileMembershipArg struct
-    */
+
+    /// The RelinquishFileMembershipArg struct
     public class RelinquishFileMembershipArg: CustomStringConvertible {
         /// The path or id for the file.
         public let file: String
@@ -4326,20 +4081,17 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RelinquishFileMembershipError union
-    */
+
+    /// The RelinquishFileMembershipError union
     public enum RelinquishFileMembershipError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
-        /**
-            The current user has access to the shared file via a group.  You can't relinquish membership to a file
-            shared via groups.
-        */
+        /// The current user has access to the shared file via a group.  You can't relinquish membership to a file
+        /// shared via groups.
         case GroupAccess
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4390,9 +4142,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RelinquishFolderMembershipArg struct
-    */
+
+    /// The RelinquishFolderMembershipArg struct
     public class RelinquishFolderMembershipArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -4427,33 +4178,24 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RelinquishFolderMembershipError union
-    */
+
+    /// The RelinquishFolderMembershipError union
     public enum RelinquishFolderMembershipError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
-            folders. Try unsharing or transferring ownership first.
-        */
+        /// The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
+        /// folders. Try unsharing or transferring ownership first.
         case FolderOwner
-        /**
-            The shared folder is currently mounted.  Unmount the shared folder before relinquishing membership.
-        */
+        /// The shared folder is currently mounted.  Unmount the shared folder before relinquishing membership.
         case Mounted
-        /**
-            The current user has access to the shared folder via a group.  You can't relinquish membership to folders
-            shared via groups.
-        */
+        /// The current user has access to the shared folder via a group.  You can't relinquish membership to folders
+        /// shared via groups.
         case GroupAccess
-        /**
-            This action cannot be performed on a team shared folder.
-        */
+        /// This action cannot be performed on a team shared folder.
         case TeamFolder
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4522,9 +4264,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for removeFileMember2.
-    */
+
+    /// Arguments for removeFileMember2.
     public class RemoveFileMemberArg: CustomStringConvertible {
         /// File from which to remove members.
         public let file: String
@@ -4560,16 +4301,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        Errors for removeFileMember2.
-    */
+
+    /// Errors for removeFileMember2.
     public enum RemoveFileMemberError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
-        /**
-            This member does not have explicit access to the file and therefore cannot be removed.
-        */
+        /// This member does not have explicit access to the file and therefore cannot be removed.
         case NoExplicitAccess
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4621,9 +4362,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RemoveFolderMemberArg struct
-    */
+
+    /// The RemoveFolderMemberArg struct
     public class RemoveFolderMemberArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -4664,29 +4404,23 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RemoveFolderMemberError union
-    */
+
+    /// The RemoveFolderMemberError union
     public enum RemoveFolderMemberError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
+        /// (undocumented)
         case MemberError(Sharing.SharedFolderMemberError)
-        /**
-            The target user is the owner of the shared folder. You can't remove this user until ownership has been
-            transferred to another member.
-        */
+        /// The target user is the owner of the shared folder. You can't remove this user until ownership has been
+        /// transferred to another member.
         case FolderOwner
-        /**
-            The target user has access to the shared folder via a group.
-        */
+        /// The target user has access to the shared folder via a group.
         case GroupAccess
-        /**
-            This action cannot be performed on a team shared folder.
-        */
+        /// This action cannot be performed on a team shared folder.
         case TeamFolder
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4756,19 +4490,15 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RemoveMemberJobStatus union
-    */
+
+    /// The RemoveMemberJobStatus union
     public enum RemoveMemberJobStatus: CustomStringConvertible {
-        /**
-            The asynchronous job is still in progress.
-        */
+        /// The asynchronous job is still in progress.
         case InProgress
-        /**
-            Removing the folder member has finished. The value is information about whether the member has another form
-            of access.
-        */
+        /// Removing the folder member has finished. The value is information about whether the member has another form
+        /// of access.
         case Complete(Sharing.MemberAccessLevelResult)
+        /// (undocumented)
         case Failed(Sharing.RemoveFolderMemberError)
 
         public var description: String {
@@ -4814,23 +4544,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The access permission that can be requested by the caller for the shared link. Note that the final resolved
-        visibility of the shared link takes into account other aspects, such as team and shared folder settings. Check
-        the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
-    */
+
+    /// The access permission that can be requested by the caller for the shared link. Note that the final resolved
+    /// visibility of the shared link takes into account other aspects, such as team and shared folder settings. Check
+    /// the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
     public enum RequestedVisibility: CustomStringConvertible {
-        /**
-            Anyone who has received the link can access it. No login required.
-        */
+        /// Anyone who has received the link can access it. No login required.
         case Public_
-        /**
-            Only members of the same team can access the link. Login is required.
-        */
+        /// Only members of the same team can access the link. Login is required.
         case TeamOnly
-        /**
-            A link-specific password is required to access the link. Login is not required.
-        */
+        /// A link-specific password is required to access the link. Login is not required.
         case Password
 
         public var description: String {
@@ -4874,35 +4597,22 @@ public class Sharing {
             }
         }
     }
-    /**
-        The actual access permissions values of shared links after taking into account user preferences and the team and
-        shared folder settings. Check the RequestedVisibility for more info on the possible visibility values that can
-        be set by the shared link's owner.
-    */
+
+    /// The actual access permissions values of shared links after taking into account user preferences and the team and
+    /// shared folder settings. Check the RequestedVisibility for more info on the possible visibility values that can
+    /// be set by the shared link's owner.
     public enum ResolvedVisibility: CustomStringConvertible {
-        /**
-            Anyone who has received the link can access it. No login required.
-        */
+        /// Anyone who has received the link can access it. No login required.
         case Public_
-        /**
-            Only members of the same team can access the link. Login is required.
-        */
+        /// Only members of the same team can access the link. Login is required.
         case TeamOnly
-        /**
-            A link-specific password is required to access the link. Login is not required.
-        */
+        /// A link-specific password is required to access the link. Login is not required.
         case Password
-        /**
-            Only members of the same team who have the link-specific password can access the link. Login is required.
-        */
+        /// Only members of the same team who have the link-specific password can access the link. Login is required.
         case TeamAndPassword
-        /**
-            Only members of the shared folder containing the linked file can access the link. Login is required.
-        */
+        /// Only members of the shared folder containing the linked file can access the link. Login is required.
         case SharedFolderOnly
-        /**
-            An unknown restriction is in place.
-        */
+        /// An unknown restriction is in place.
         case Other
 
         public var description: String {
@@ -4964,9 +4674,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RevokeSharedLinkArg struct
-    */
+
+    /// The RevokeSharedLinkArg struct
     public class RevokeSharedLinkArg: CustomStringConvertible {
         /// URL of the shared link.
         public let url: String
@@ -4996,25 +4705,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The RevokeSharedLinkError union
-    */
+
+    /// The RevokeSharedLinkError union
     public enum RevokeSharedLinkError: CustomStringConvertible {
-        /**
-            The shared link wasn't found
-        */
+        /// The shared link wasn't found
         case SharedLinkNotFound
-        /**
-            The caller is not allowed to access this shared link
-        */
+        /// The caller is not allowed to access this shared link
         case SharedLinkAccessDenied
-        /**
-            An unspecified error
-        */
+        /// An unspecified error
         case Other
-        /**
-            Shared link is malformed.
-        */
+        /// Shared link is malformed.
         case SharedLinkMalformed
 
         public var description: String {
@@ -5064,9 +4764,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ShareFolderArg struct
-    */
+
+    /// The ShareFolderArg struct
     public class ShareFolderArg: CustomStringConvertible {
         /// The path to the folder to share. If it does not exist, then a new one is created.
         public let path: String
@@ -5117,26 +4816,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ShareFolderErrorBase union
-    */
+
+    /// The ShareFolderErrorBase union
     public enum ShareFolderErrorBase: CustomStringConvertible {
-        /**
-            The current user's e-mail address is unverified.
-        */
+        /// The current user's e-mail address is unverified.
         case EmailUnverified
-        /**
-            path in ShareFolderArg is invalid.
-        */
+        /// path in ShareFolderArg is invalid.
         case BadPath(Sharing.SharePathError)
-        /**
-            Team policy is more restrictive than memberPolicy in ShareFolderArg.
-        */
+        /// Team policy is more restrictive than memberPolicy in ShareFolderArg.
         case TeamPolicyDisallowsMemberPolicy
-        /**
-            The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
-        */
+        /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -5193,30 +4884,20 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ShareFolderError union
-    */
+
+    /// The ShareFolderError union
     public enum ShareFolderError: CustomStringConvertible {
-        /**
-            The current user's e-mail address is unverified.
-        */
+        /// The current user's e-mail address is unverified.
         case EmailUnverified
-        /**
-            path in ShareFolderArg is invalid.
-        */
+        /// path in ShareFolderArg is invalid.
         case BadPath(Sharing.SharePathError)
-        /**
-            Team policy is more restrictive than memberPolicy in ShareFolderArg.
-        */
+        /// Team policy is more restrictive than memberPolicy in ShareFolderArg.
         case TeamPolicyDisallowsMemberPolicy
-        /**
-            The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
-        */
+        /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
+        /// (undocumented)
         case Other
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
 
         public var description: String {
@@ -5279,18 +4960,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ShareFolderJobStatus union
-    */
+
+    /// The ShareFolderJobStatus union
     public enum ShareFolderJobStatus: CustomStringConvertible {
-        /**
-            The asynchronous job is still in progress.
-        */
+        /// The asynchronous job is still in progress.
         case InProgress
-        /**
-            The share job has finished. The value is the metadata for the folder.
-        */
+        /// The share job has finished. The value is the metadata for the folder.
         case Complete(Sharing.SharedFolderMetadata)
+        /// (undocumented)
         case Failed(Sharing.ShareFolderError)
 
         public var description: String {
@@ -5336,15 +5013,13 @@ public class Sharing {
             }
         }
     }
-    /**
-        The ShareFolderLaunch union
-    */
+
+    /// The ShareFolderLaunch union
     public enum ShareFolderLaunch: CustomStringConvertible {
-        /**
-            This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-            the status of the asynchronous job.
-        */
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
         case AsyncJobId(String)
+        /// (undocumented)
         case Complete(Sharing.SharedFolderMetadata)
 
         public var description: String {
@@ -5384,54 +5059,32 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharePathError union
-    */
+
+    /// The SharePathError union
     public enum SharePathError: CustomStringConvertible {
-        /**
-            A file is at the specified path.
-        */
+        /// A file is at the specified path.
         case IsFile
-        /**
-            We do not support sharing a folder inside a shared folder.
-        */
+        /// We do not support sharing a folder inside a shared folder.
         case InsideSharedFolder
-        /**
-            We do not support shared folders that contain shared folders.
-        */
+        /// We do not support shared folders that contain shared folders.
         case ContainsSharedFolder
-        /**
-            We do not support sharing an app folder.
-        */
+        /// We do not support sharing an app folder.
         case IsAppFolder
-        /**
-            We do not support sharing a folder inside an app folder.
-        */
+        /// We do not support sharing a folder inside an app folder.
         case InsideAppFolder
-        /**
-            A public folder can't be shared this way. Use a public link instead.
-        */
+        /// A public folder can't be shared this way. Use a public link instead.
         case IsPublicFolder
-        /**
-            A folder inside a public folder can't be shared this way. Use a public link instead.
-        */
+        /// A folder inside a public folder can't be shared this way. Use a public link instead.
         case InsidePublicFolder
-        /**
-            Folder is already shared. Contains metadata about the existing shared folder.
-        */
+        /// Folder is already shared. Contains metadata about the existing shared folder.
         case AlreadyShared(Sharing.SharedFolderMetadata)
-        /**
-            Path is not valid.
-        */
+        /// Path is not valid.
         case InvalidPath
-        /**
-            We do not support sharing a Mac OS X package.
-        */
+        /// We do not support sharing a Mac OS X package.
         case IsOsxPackage
-        /**
-            We do not support sharing a folder inside a Mac OS X package.
-        */
+        /// We do not support sharing a folder inside a Mac OS X package.
         case InsideOsxPackage
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -5530,10 +5183,9 @@ public class Sharing {
             }
         }
     }
-    /**
-        Shared file user, group, and invitee membership. Used for the results of listFileMembers and
-        listFileMembersContinue, and used as part of the results for listFileMembersBatch.
-    */
+
+    /// Shared file user, group, and invitee membership. Used for the results of listFileMembers and
+    /// listFileMembersContinue, and used as part of the results for listFileMembersBatch.
     public class SharedFileMembers: CustomStringConvertible {
         /// The list of user members of the shared file.
         public let users: Array<Sharing.UserMembershipInfo>
@@ -5579,9 +5231,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Properties of the shared file.
-    */
+
+    /// Properties of the shared file.
     public class SharedFileMetadata: CustomStringConvertible {
         /// Policies governing this shared file.
         public let policy: Sharing.FolderPolicy
@@ -5660,26 +5311,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        There is an error accessing the shared folder.
-    */
+
+    /// There is an error accessing the shared folder.
     public enum SharedFolderAccessError: CustomStringConvertible {
-        /**
-            This shared folder ID is invalid.
-        */
+        /// This shared folder ID is invalid.
         case InvalidId
-        /**
-            The user is not a member of the shared folder thus cannot access it.
-        */
+        /// The user is not a member of the shared folder thus cannot access it.
         case NotAMember
-        /**
-            The current user's e-mail address is unverified.
-        */
+        /// The current user's e-mail address is unverified.
         case EmailUnverified
-        /**
-            The shared folder is unmounted.
-        */
+        /// The shared folder is unmounted.
         case Unmounted
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -5735,18 +5378,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharedFolderMemberError union
-    */
+
+    /// The SharedFolderMemberError union
     public enum SharedFolderMemberError: CustomStringConvertible {
-        /**
-            The target dropbox_id is invalid.
-        */
+        /// The target dropbox_id is invalid.
         case InvalidDropboxId
-        /**
-            The target dropbox_id is not a member of the shared folder.
-        */
+        /// The target dropbox_id is not a member of the shared folder.
         case NotAMember
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -5790,9 +5429,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Shared folder user and group membership.
-    */
+
+    /// Shared folder user and group membership.
     public class SharedFolderMembers: CustomStringConvertible {
         /// The list of user members of the shared folder.
         public let users: Array<Sharing.UserMembershipInfo>
@@ -5838,9 +5476,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Properties of the shared folder.
-    */
+
+    /// Properties of the shared folder.
     public class SharedFolderMetadataBase: CustomStringConvertible {
         /// The current user's access level for this shared folder.
         public let accessType: Sharing.AccessLevel
@@ -5891,9 +5528,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The metadata which includes basic information about the shared folder.
-    */
+
+    /// The metadata which includes basic information about the shared folder.
     public class SharedFolderMetadata: Sharing.SharedFolderMetadataBase {
         /// The lower-cased full path of this shared folder. Absent for unmounted folders.
         public let pathLower: String?
@@ -5957,33 +5593,20 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharedLinkAccessFailureReason union
-    */
+
+    /// The SharedLinkAccessFailureReason union
     public enum SharedLinkAccessFailureReason: CustomStringConvertible {
-        /**
-            User is not logged in.
-        */
+        /// User is not logged in.
         case LoginRequired
-        /**
-            User's email is not verified.
-        */
+        /// User's email is not verified.
         case EmailVerifyRequired
-        /**
-            The link is password protected.
-        */
+        /// The link is password protected.
         case PasswordRequired
-        /**
-            Access is allowed for team members only.
-        */
+        /// Access is allowed for team members only.
         case TeamOnly
-        /**
-            Access is allowed for the shared link's owner only.
-        */
+        /// Access is allowed for the shared link's owner only.
         case OwnerOnly
-        /**
-            An unknown accessibility failure.
-        */
+        /// An unknown accessibility failure.
         case Other
 
         public var description: String {
@@ -6045,21 +5668,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Policy governing who can view shared links.
-    */
+
+    /// Policy governing who can view shared links.
     public enum SharedLinkPolicy: CustomStringConvertible {
-        /**
-            Links can be shared with anyone.
-        */
+        /// Links can be shared with anyone.
         case Anyone
-        /**
-            Links can only be shared among members of the shared folder.
-        */
+        /// Links can only be shared among members of the shared folder.
         case Members
-        /**
-            An unknown shared link policy.
-        */
+        /// An unknown shared link policy.
         case Other
 
         public var description: String {
@@ -6103,9 +5719,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharedLinkSettings struct
-    */
+
+    /// The SharedLinkSettings struct
     public class SharedLinkSettings: CustomStringConvertible {
         /// The requested access for this shared link.
         public let requestedVisibility: Sharing.RequestedVisibility?
@@ -6146,21 +5761,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The SharedLinkSettingsError union
-    */
+
+    /// The SharedLinkSettingsError union
     public enum SharedLinkSettingsError: CustomStringConvertible {
-        /**
-            The given settings are invalid (for example, all attributes of the SharedLinkSettings are empty, the
-            requested visibility is password in RequestedVisibility but the linkPassword in SharedLinkSettings is
-            missing, expires in SharedLinkSettings is set to the past, etc.)
-        */
+        /// The given settings are invalid (for example, all attributes of the SharedLinkSettings are empty, the
+        /// requested visibility is password in RequestedVisibility but the linkPassword in SharedLinkSettings is
+        /// missing, expires in SharedLinkSettings is set to the past, etc.)
         case InvalidSettings
-        /**
-            User is not allowed to modify the settings of this link. Note that basic users can only set public_ in
-            RequestedVisibility as the requestedVisibility in SharedLinkSettings and cannot set expires in
-            SharedLinkSettings
-        */
+        /// User is not allowed to modify the settings of this link. Note that basic users can only set public_ in
+        /// RequestedVisibility as the requestedVisibility in SharedLinkSettings and cannot set expires in
+        /// SharedLinkSettings
         case NotAuthorized
 
         public var description: String {
@@ -6198,30 +5808,20 @@ public class Sharing {
             }
         }
     }
-    /**
-        User could not access this file.
-    */
+
+    /// User could not access this file.
     public enum SharingFileAccessError: CustomStringConvertible {
-        /**
-            Current user does not have sufficient privileges to perform the desired action.
-        */
+        /// Current user does not have sufficient privileges to perform the desired action.
         case NoPermission
-        /**
-            File specified was not found.
-        */
+        /// File specified was not found.
         case InvalidFile
-        /**
-            A folder can't be shared this way. Use folder sharing or a shared link instead.
-        */
+        /// A folder can't be shared this way. Use folder sharing or a shared link instead.
         case IsFolder
-        /**
-            A file inside a public folder can't be shared this way. Use a public link instead.
-        */
+        /// A file inside a public folder can't be shared this way. Use a public link instead.
         case InsidePublicFolder
-        /**
-            A Mac OS X package can't be shared this way. Use a shared link instead.
-        */
+        /// A Mac OS X package can't be shared this way. Use a shared link instead.
         case InsideOsxPackage
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6283,14 +5883,12 @@ public class Sharing {
             }
         }
     }
-    /**
-        User account had a problem preventing this action.
-    */
+
+    /// User account had a problem preventing this action.
     public enum SharingUserError: CustomStringConvertible {
-        /**
-            The current user must verify the account e-mail address before performing this action.
-        */
+        /// The current user must verify the account e-mail address before performing this action.
         case EmailUnverified
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6328,9 +5926,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Information about a team member.
-    */
+
+    /// Information about a team member.
     public class TeamMemberInfo: CustomStringConvertible {
         /// Information about the member's team
         public let teamInfo: Users.Team
@@ -6372,9 +5969,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The TransferFolderArg struct
-    */
+
+    /// The TransferFolderArg struct
     public class TransferFolderArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -6410,35 +6006,24 @@ public class Sharing {
             }
         }
     }
-    /**
-        The TransferFolderError union
-    */
+
+    /// The TransferFolderError union
     public enum TransferFolderError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            toDropboxId in TransferFolderArg is invalid.
-        */
+        /// toDropboxId in TransferFolderArg is invalid.
         case InvalidDropboxId
-        /**
-            The new designated owner is not currently a member of the shared folder.
-        */
+        /// The new designated owner is not currently a member of the shared folder.
         case NewOwnerNotAMember
-        /**
-            The new designated owner has not added the folder to their Dropbox.
-        */
+        /// The new designated owner has not added the folder to their Dropbox.
         case NewOwnerUnmounted
-        /**
-            The new designated owner's e-mail address is unverified.
-        */
+        /// The new designated owner's e-mail address is unverified.
         case NewOwnerEmailUnverified
-        /**
-            This action cannot be performed on a team shared folder.
-        */
+        /// This action cannot be performed on a team shared folder.
         case TeamFolder
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6513,9 +6098,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UnmountFolderArg struct
-    */
+
+    /// The UnmountFolderArg struct
     public class UnmountFolderArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -6545,20 +6129,17 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UnmountFolderError union
-    */
+
+    /// The UnmountFolderError union
     public enum UnmountFolderError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
-        /**
-            The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent
-            folder is also a shared folder that resides in the current user's Dropbox.
-        */
+        /// The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent
+        /// folder is also a shared folder that resides in the current user's Dropbox.
         case NotUnmountable
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6609,9 +6190,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Arguments for unshareFile.
-    */
+
+    /// Arguments for unshareFile.
     public class UnshareFileArg: CustomStringConvertible {
         /// The file to unshare.
         public let file: String
@@ -6641,12 +6221,14 @@ public class Sharing {
             }
         }
     }
-    /**
-        Error result for unshareFile.
-    */
+
+    /// Error result for unshareFile.
     public enum UnshareFileError: CustomStringConvertible {
+        /// (undocumented)
         case UserError(Sharing.SharingUserError)
+        /// (undocumented)
         case AccessError(Sharing.SharingFileAccessError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6692,9 +6274,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UnshareFolderArg struct
-    */
+
+    /// The UnshareFolderArg struct
     public class UnshareFolderArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -6730,19 +6311,16 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UnshareFolderError union
-    */
+
+    /// The UnshareFolderError union
     public enum UnshareFolderError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            This action cannot be performed on a team shared folder.
-        */
+        /// This action cannot be performed on a team shared folder.
         case TeamFolder
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6793,9 +6371,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UpdateFolderMemberArg struct
-    */
+
+    /// The UpdateFolderMemberArg struct
     public class UpdateFolderMemberArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -6835,26 +6412,22 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UpdateFolderMemberError union
-    */
+
+    /// The UpdateFolderMemberError union
     public enum UpdateFolderMemberError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
+        /// (undocumented)
         case MemberError(Sharing.SharedFolderMemberError)
-        /**
-            If updating the access type required the member to be added to the shared folder and there was an error when
-            adding the member.
-        */
+        /// If updating the access type required the member to be added to the shared folder and there was an error when
+        /// adding the member.
         case NoExplicitAccess(Sharing.AddFolderMemberError)
-        /**
-            The current user's account doesn't support this action. An example of this is when downgrading a member from
-            editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business plan.
-        */
+        /// The current user's account doesn't support this action. An example of this is when downgrading a member from
+        /// editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business plan.
         case InsufficientPlan
-        /**
-            The current user does not have permission to perform this action.
-        */
+        /// The current user does not have permission to perform this action.
         case NoPermission
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -6919,9 +6492,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        If any of the policy's are unset, then they retain their current setting.
-    */
+
+    /// If any of the policy's are unset, then they retain their current setting.
     public class UpdateFolderPolicyArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
@@ -6967,23 +6539,18 @@ public class Sharing {
             }
         }
     }
-    /**
-        The UpdateFolderPolicyError union
-    */
+
+    /// The UpdateFolderPolicyError union
     public enum UpdateFolderPolicyError: CustomStringConvertible {
+        /// (undocumented)
         case AccessError(Sharing.SharedFolderAccessError)
-        /**
-            memberPolicy in UpdateFolderPolicyArg was set even though user is not on a team.
-        */
+        /// memberPolicy in UpdateFolderPolicyArg was set even though user is not on a team.
         case NotOnTeam
-        /**
-            Team policy is more restrictive than memberPolicy in ShareFolderArg.
-        */
+        /// Team policy is more restrictive than memberPolicy in ShareFolderArg.
         case TeamPolicyDisallowsMemberPolicy
-        /**
-            The current account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
-        */
+        /// The current account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -7040,9 +6607,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        Basic information about a user. Use usersAccount and usersAccountBatch to obtain more detailed information.
-    */
+
+    /// Basic information about a user. Use usersAccount and usersAccountBatch to obtain more detailed information.
     public class UserInfo: CustomStringConvertible {
         /// The account ID of the user.
         public let accountId: String
@@ -7083,9 +6649,8 @@ public class Sharing {
             }
         }
     }
-    /**
-        The information about a user member of the shared content.
-    */
+
+    /// The information about a user member of the shared content.
     public class UserMembershipInfo: Sharing.MembershipInfo {
         /// The account information for the membership user.
         public let user: Sharing.UserInfo
@@ -7123,34 +6688,21 @@ public class Sharing {
             }
         }
     }
-    /**
-        Who can access a shared link. The most open visibility is public_. The default depends on many aspects, such as
-        team and user preferences and shared folder settings.
-    */
+
+    /// Who can access a shared link. The most open visibility is public_. The default depends on many aspects, such as
+    /// team and user preferences and shared folder settings.
     public enum Visibility: CustomStringConvertible {
-        /**
-            Anyone who has received the link can access it. No login required.
-        */
+        /// Anyone who has received the link can access it. No login required.
         case Public_
-        /**
-            Only members of the same team can access the link. Login is required.
-        */
+        /// Only members of the same team can access the link. Login is required.
         case TeamOnly
-        /**
-            A link-specific password is required to access the link. Login is not required.
-        */
+        /// A link-specific password is required to access the link. Login is not required.
         case Password
-        /**
-            Only members of the same team who have the link-specific password can access the link.
-        */
+        /// Only members of the same team who have the link-specific password can access the link.
         case TeamAndPassword
-        /**
-            Only members of the shared folder containing the linked file can access the link. Login is required.
-        */
+        /// Only members of the shared folder containing the linked file can access the link. Login is required.
         case SharedFolderOnly
-        /**
-            An unknown restriction is in place.
-        */
+        /// An unknown restriction is in place.
         case Other
 
         public var description: String {
@@ -7212,6 +6764,7 @@ public class Sharing {
             }
         }
     }
+
 
     /// Stone Route Objects
 

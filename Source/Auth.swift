@@ -4,29 +4,17 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the auth namespace
-*/
+/// Datatypes and serializers for the auth namespace
 public class Auth {
-    /**
-        Errors occurred during authentication.
-    */
+    /// Errors occurred during authentication.
     public enum AuthError: CustomStringConvertible {
-        /**
-            The access token is invalid.
-        */
+        /// The access token is invalid.
         case InvalidAccessToken
-        /**
-            The user specified in 'Dropbox-API-Select-User' is no longer on the team.
-        */
+        /// The user specified in 'Dropbox-API-Select-User' is no longer on the team.
         case InvalidSelectUser
-        /**
-            The user specified in 'Dropbox-API-Select-Admin' is not a Dropbox Business team admin.
-        */
+        /// The user specified in 'Dropbox-API-Select-Admin' is not a Dropbox Business team admin.
         case InvalidSelectAdmin
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -76,6 +64,7 @@ public class Auth {
             }
         }
     }
+
 
     /// Stone Route Objects
 

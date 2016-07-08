@@ -4,26 +4,17 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the files namespace
-*/
+/// Datatypes and serializers for the files namespace
 public class Files {
-    /**
-        The PropertiesError union
-    */
+    /// The PropertiesError union
     public enum PropertiesError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case Path(Files.LookupError)
 
         public var description: String {
@@ -75,30 +66,20 @@ public class Files {
             }
         }
     }
-    /**
-        The InvalidPropertyGroupError union
-    */
+
+    /// The InvalidPropertyGroupError union
     public enum InvalidPropertyGroupError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            A field value in this property group is too large.
-        */
+        /// A field value in this property group is too large.
         case PropertyFieldTooLarge
-        /**
-            The property group specified does not conform to the property template.
-        */
+        /// The property group specified does not conform to the property template.
         case DoesNotFitTemplate
 
         public var description: String {
@@ -162,34 +143,22 @@ public class Files {
             }
         }
     }
-    /**
-        The AddPropertiesError union
-    */
+
+    /// The AddPropertiesError union
     public enum AddPropertiesError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            A field value in this property group is too large.
-        */
+        /// A field value in this property group is too large.
         case PropertyFieldTooLarge
-        /**
-            The property group specified does not conform to the property template.
-        */
+        /// The property group specified does not conform to the property template.
         case DoesNotFitTemplate
-        /**
-            This property group already exists for this file.
-        */
+        /// This property group already exists for this file.
         case PropertyGroupAlreadyExists
 
         public var description: String {
@@ -259,9 +228,8 @@ public class Files {
             }
         }
     }
-    /**
-        The GetMetadataArg struct
-    */
+
+    /// The GetMetadataArg struct
     public class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
         public let path: String
@@ -308,9 +276,8 @@ public class Files {
             }
         }
     }
-    /**
-        The AlphaGetMetadataArg struct
-    */
+
+    /// The AlphaGetMetadataArg struct
     public class AlphaGetMetadataArg: Files.GetMetadataArg {
         /// If true, propertyGroups in FileMetadata is set for files with custom properties.
         public let includePropertyTemplates: Array<String>?
@@ -349,10 +316,10 @@ public class Files {
             }
         }
     }
-    /**
-        The GetMetadataError union
-    */
+
+    /// The GetMetadataError union
     public enum GetMetadataError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
 
         public var description: String {
@@ -385,11 +352,12 @@ public class Files {
             }
         }
     }
-    /**
-        The AlphaGetMetadataError union
-    */
+
+    /// The AlphaGetMetadataError union
     public enum AlphaGetMetadataError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case PropertiesError(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -429,9 +397,8 @@ public class Files {
             }
         }
     }
-    /**
-        The CommitInfo struct
-    */
+
+    /// The CommitInfo struct
     public class CommitInfo: CustomStringConvertible {
         /// Path in the user's Dropbox to save the file.
         public let path: String
@@ -486,9 +453,8 @@ public class Files {
             }
         }
     }
-    /**
-        The CommitInfoWithProperties struct
-    */
+
+    /// The CommitInfoWithProperties struct
     public class CommitInfoWithProperties: Files.CommitInfo {
         /// List of custom properties to add to file.
         public let propertyGroups: Array<Properties.PropertyGroup>?
@@ -528,9 +494,8 @@ public class Files {
             }
         }
     }
-    /**
-        The CreateFolderArg struct
-    */
+
+    /// The CreateFolderArg struct
     public class CreateFolderArg: CustomStringConvertible {
         /// Path in the user's Dropbox to create.
         public let path: String
@@ -560,10 +525,10 @@ public class Files {
             }
         }
     }
-    /**
-        The CreateFolderError union
-    */
+
+    /// The CreateFolderError union
     public enum CreateFolderError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.WriteError)
 
         public var description: String {
@@ -596,9 +561,8 @@ public class Files {
             }
         }
     }
-    /**
-        The DeleteArg struct
-    */
+
+    /// The DeleteArg struct
     public class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
         public let path: String
@@ -628,12 +592,14 @@ public class Files {
             }
         }
     }
-    /**
-        The DeleteError union
-    */
+
+    /// The DeleteError union
     public enum DeleteError: CustomStringConvertible {
+        /// (undocumented)
         case PathLookup(Files.LookupError)
+        /// (undocumented)
         case PathWrite(Files.WriteError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -679,9 +645,8 @@ public class Files {
             }
         }
     }
-    /**
-        Metadata for a file or folder.
-    */
+
+    /// Metadata for a file or folder.
     public class Metadata: CustomStringConvertible {
         /// The last component of the path (including extension). This never contains a slash.
         public let name: String
@@ -758,9 +723,8 @@ public class Files {
             }
         }
     }
-    /**
-        Indicates that there used to be a file or folder at this path, but it no longer exists.
-    */
+
+    /// Indicates that there used to be a file or folder at this path, but it no longer exists.
     public class DeletedMetadata: Files.Metadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
@@ -790,9 +754,8 @@ public class Files {
             }
         }
     }
-    /**
-        Dimensions for a photo or video.
-    */
+
+    /// Dimensions for a photo or video.
     public class Dimensions: CustomStringConvertible {
         /// Height of the photo/video.
         public let height: UInt64
@@ -828,9 +791,8 @@ public class Files {
             }
         }
     }
-    /**
-        The DownloadArg struct
-    */
+
+    /// The DownloadArg struct
     public class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
         public let path: String
@@ -866,14 +828,12 @@ public class Files {
             }
         }
     }
-    /**
-        The DownloadError union
-    */
+
+    /// The DownloadError union
     public enum DownloadError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -912,9 +872,8 @@ public class Files {
             }
         }
     }
-    /**
-        The FileMetadata struct
-    */
+
+    /// The FileMetadata struct
     public class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
         public let id: String
@@ -1002,9 +961,8 @@ public class Files {
             }
         }
     }
-    /**
-        Sharing info for a file or folder.
-    */
+
+    /// Sharing info for a file or folder.
     public class SharingInfo: CustomStringConvertible {
         /// True if the file or folder is inside a read-only shared folder.
         public let readOnly: Bool
@@ -1033,9 +991,8 @@ public class Files {
             }
         }
     }
-    /**
-        Sharing info for a file which is contained by a shared folder.
-    */
+
+    /// Sharing info for a file which is contained by a shared folder.
     public class FileSharingInfo: Files.SharingInfo {
         /// ID of shared folder that holds this file.
         public let parentSharedFolderId: String
@@ -1074,9 +1031,8 @@ public class Files {
             }
         }
     }
-    /**
-        The FolderMetadata struct
-    */
+
+    /// The FolderMetadata struct
     public class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
         public let id: String
@@ -1131,9 +1087,8 @@ public class Files {
             }
         }
     }
-    /**
-        Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
-    */
+
+    /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
     public class FolderSharingInfo: Files.SharingInfo {
         /// Set if the folder is contained by a shared folder.
         public let parentSharedFolderId: String?
@@ -1172,9 +1127,8 @@ public class Files {
             }
         }
     }
-    /**
-        The GetCopyReferenceArg struct
-    */
+
+    /// The GetCopyReferenceArg struct
     public class GetCopyReferenceArg: CustomStringConvertible {
         /// The path to the file or folder you want to get a copy reference to.
         public let path: String
@@ -1204,11 +1158,12 @@ public class Files {
             }
         }
     }
-    /**
-        The GetCopyReferenceError union
-    */
+
+    /// The GetCopyReferenceError union
     public enum GetCopyReferenceError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1247,9 +1202,8 @@ public class Files {
             }
         }
     }
-    /**
-        The GetCopyReferenceResult struct
-    */
+
+    /// The GetCopyReferenceResult struct
     public class GetCopyReferenceResult: CustomStringConvertible {
         /// Metadata of the file or folder.
         public let metadata: Files.Metadata
@@ -1290,9 +1244,8 @@ public class Files {
             }
         }
     }
-    /**
-        The GetTemporaryLinkArg struct
-    */
+
+    /// The GetTemporaryLinkArg struct
     public class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
         public let path: String
@@ -1322,11 +1275,12 @@ public class Files {
             }
         }
     }
-    /**
-        The GetTemporaryLinkError union
-    */
+
+    /// The GetTemporaryLinkError union
     public enum GetTemporaryLinkError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1365,9 +1319,8 @@ public class Files {
             }
         }
     }
-    /**
-        The GetTemporaryLinkResult struct
-    */
+
+    /// The GetTemporaryLinkResult struct
     public class GetTemporaryLinkResult: CustomStringConvertible {
         /// Metadata of the file.
         public let metadata: Files.FileMetadata
@@ -1402,9 +1355,8 @@ public class Files {
             }
         }
     }
-    /**
-        GPS coordinates for a photo or video.
-    */
+
+    /// GPS coordinates for a photo or video.
     public class GpsCoordinates: CustomStringConvertible {
         /// Latitude of the GPS coordinates.
         public let latitude: Double
@@ -1440,9 +1392,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderArg struct
-    */
+
+    /// The ListFolderArg struct
     public class ListFolderArg: CustomStringConvertible {
         /// The path to the folder you want to see the contents of.
         public let path: String
@@ -1494,9 +1445,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderContinueArg struct
-    */
+
+    /// The ListFolderContinueArg struct
     public class ListFolderContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
         public let cursor: String
@@ -1526,15 +1476,14 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderContinueError union
-    */
+
+    /// The ListFolderContinueError union
     public enum ListFolderContinueError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1579,14 +1528,12 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderError union
-    */
+
+    /// The ListFolderError union
     public enum ListFolderError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1625,9 +1572,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderGetLatestCursorResult struct
-    */
+
+    /// The ListFolderGetLatestCursorResult struct
     public class ListFolderGetLatestCursorResult: CustomStringConvertible {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
         public let cursor: String
@@ -1657,9 +1603,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderLongpollArg struct
-    */
+
+    /// The ListFolderLongpollArg struct
     public class ListFolderLongpollArg: CustomStringConvertible {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
@@ -1698,14 +1643,12 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderLongpollError union
-    */
+
+    /// The ListFolderLongpollError union
     public enum ListFolderLongpollError: CustomStringConvertible {
-        /**
-            Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1743,9 +1686,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderLongpollResult struct
-    */
+
+    /// The ListFolderLongpollResult struct
     public class ListFolderLongpollResult: CustomStringConvertible {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
         public let changes: Bool
@@ -1780,9 +1722,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListFolderResult struct
-    */
+
+    /// The ListFolderResult struct
     public class ListFolderResult: CustomStringConvertible {
         /// The files and (direct) subfolders in the folder.
         public let entries: Array<Files.Metadata>
@@ -1822,9 +1763,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListRevisionsArg struct
-    */
+
+    /// The ListRevisionsArg struct
     public class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
         public let path: String
@@ -1860,11 +1800,12 @@ public class Files {
             }
         }
     }
-    /**
-        The ListRevisionsError union
-    */
+
+    /// The ListRevisionsError union
     public enum ListRevisionsError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1903,9 +1844,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ListRevisionsResult struct
-    */
+
+    /// The ListRevisionsResult struct
     public class ListRevisionsResult: CustomStringConvertible {
         /// If the file is deleted.
         public let isDeleted: Bool
@@ -1939,13 +1879,10 @@ public class Files {
             }
         }
     }
-    /**
-        The LookUpPropertiesError union
-    */
+
+    /// The LookUpPropertiesError union
     public enum LookUpPropertiesError: CustomStringConvertible {
-        /**
-            This property group does not exist for this file.
-        */
+        /// This property group does not exist for this file.
         case PropertyGroupNotFound
 
         public var description: String {
@@ -1977,28 +1914,21 @@ public class Files {
             }
         }
     }
-    /**
-        The LookupError union
-    */
+
+    /// The LookupError union
     public enum LookupError: CustomStringConvertible {
+        /// (undocumented)
         case MalformedPath(String?)
-        /**
-            There is nothing at the given path.
-        */
+        /// There is nothing at the given path.
         case NotFound
-        /**
-            We were expecting a file, but the given path refers to something that isn't a file.
-        */
+        /// We were expecting a file, but the given path refers to something that isn't a file.
         case NotFile
-        /**
-            We were expecting a folder, but the given path refers to something that isn't a folder.
-        */
+        /// We were expecting a folder, but the given path refers to something that isn't a folder.
         case NotFolder
-        /**
-            The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
-            restrictions due to copyright claims.
-        */
+        /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
+        /// restrictions due to copyright claims.
         case RestrictedContent
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2061,17 +1991,12 @@ public class Files {
             }
         }
     }
-    /**
-        The MediaInfo union
-    */
+
+    /// The MediaInfo union
     public enum MediaInfo: CustomStringConvertible {
-        /**
-            Indicate the photo/video is still under processing and metadata is not available yet.
-        */
+        /// Indicate the photo/video is still under processing and metadata is not available yet.
         case Pending
-        /**
-            The metadata for the photo/video.
-        */
+        /// The metadata for the photo/video.
         case Metadata(Files.MediaMetadata)
 
         public var description: String {
@@ -2110,9 +2035,8 @@ public class Files {
             }
         }
     }
-    /**
-        Metadata for a photo or video.
-    */
+
+    /// Metadata for a photo or video.
     public class MediaMetadata: CustomStringConvertible {
         /// Dimension of the photo/video.
         public let dimensions: Files.Dimensions?
@@ -2169,9 +2093,8 @@ public class Files {
             }
         }
     }
-    /**
-        Metadata for a photo.
-    */
+
+    /// Metadata for a photo.
     public class PhotoMetadata: Files.MediaMetadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
@@ -2199,9 +2122,8 @@ public class Files {
             }
         }
     }
-    /**
-        The PreviewArg struct
-    */
+
+    /// The PreviewArg struct
     public class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
         public let path: String
@@ -2237,25 +2159,16 @@ public class Files {
             }
         }
     }
-    /**
-        The PreviewError union
-    */
+
+    /// The PreviewError union
     public enum PreviewError: CustomStringConvertible {
-        /**
-            An error occurs when downloading metadata for the file.
-        */
+        /// An error occurs when downloading metadata for the file.
         case Path(Files.LookupError)
-        /**
-            This preview generation is still in progress and the file is not ready  for preview yet.
-        */
+        /// This preview generation is still in progress and the file is not ready  for preview yet.
         case InProgress
-        /**
-            The file extension is not supported preview generation.
-        */
+        /// The file extension is not supported preview generation.
         case UnsupportedExtension
-        /**
-            The file content is not supported for preview generation.
-        */
+        /// The file content is not supported for preview generation.
         case UnsupportedContent
 
         public var description: String {
@@ -2306,9 +2219,8 @@ public class Files {
             }
         }
     }
-    /**
-        The PropertyGroupUpdate struct
-    */
+
+    /// The PropertyGroupUpdate struct
     public class PropertyGroupUpdate: CustomStringConvertible {
         /// A unique identifier for a property template.
         public let templateId: String
@@ -2350,9 +2262,8 @@ public class Files {
             }
         }
     }
-    /**
-        The PropertyGroupWithPath struct
-    */
+
+    /// The PropertyGroupWithPath struct
     public class PropertyGroupWithPath: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
@@ -2387,9 +2298,8 @@ public class Files {
             }
         }
     }
-    /**
-        The RelocationArg struct
-    */
+
+    /// The RelocationArg struct
     public class RelocationArg: CustomStringConvertible {
         /// Path in the user's Dropbox to be copied or moved.
         public let fromPath: String
@@ -2425,32 +2335,24 @@ public class Files {
             }
         }
     }
-    /**
-        The RelocationError union
-    */
+
+    /// The RelocationError union
     public enum RelocationError: CustomStringConvertible {
+        /// (undocumented)
         case FromLookup(Files.LookupError)
+        /// (undocumented)
         case FromWrite(Files.WriteError)
+        /// (undocumented)
         case To(Files.WriteError)
-        /**
-            Shared folders can't be copied.
-        */
+        /// Shared folders can't be copied.
         case CantCopySharedFolder
-        /**
-            Your move operation would result in nested shared folders.  This is not allowed.
-        */
+        /// Your move operation would result in nested shared folders.  This is not allowed.
         case CantNestSharedFolder
-        /**
-            You cannot move a folder into itself.
-        */
+        /// You cannot move a folder into itself.
         case CantMoveFolderIntoItself
-        /**
-            The operation would involve more than 10,000 files and folders.
-        */
+        /// The operation would involve more than 10,000 files and folders.
         case TooManyFiles
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2527,9 +2429,8 @@ public class Files {
             }
         }
     }
-    /**
-        The RemovePropertiesArg struct
-    */
+
+    /// The RemovePropertiesArg struct
     public class RemovePropertiesArg: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
@@ -2565,23 +2466,18 @@ public class Files {
             }
         }
     }
-    /**
-        The RemovePropertiesError union
-    */
+
+    /// The RemovePropertiesError union
     public enum RemovePropertiesError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case Path(Files.LookupError)
+        /// (undocumented)
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -2640,9 +2536,8 @@ public class Files {
             }
         }
     }
-    /**
-        The RestoreArg struct
-    */
+
+    /// The RestoreArg struct
     public class RestoreArg: CustomStringConvertible {
         /// The path to the file you want to restore.
         public let path: String
@@ -2678,22 +2573,16 @@ public class Files {
             }
         }
     }
-    /**
-        The RestoreError union
-    */
+
+    /// The RestoreError union
     public enum RestoreError: CustomStringConvertible {
-        /**
-            An error occurs when downloading metadata for the file.
-        */
+        /// An error occurs when downloading metadata for the file.
         case PathLookup(Files.LookupError)
-        /**
-            An error occurs when trying to restore the file to that path.
-        */
+        /// An error occurs when trying to restore the file to that path.
         case PathWrite(Files.WriteError)
-        /**
-            The revision is invalid. It may point to a different file.
-        */
+        /// The revision is invalid. It may point to a different file.
         case InvalidRevision
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2745,9 +2634,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveCopyReferenceArg struct
-    */
+
+    /// The SaveCopyReferenceArg struct
     public class SaveCopyReferenceArg: CustomStringConvertible {
         /// A copy reference returned by copyReferenceGet.
         public let copyReference: String
@@ -2783,28 +2671,21 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveCopyReferenceError union
-    */
+
+    /// The SaveCopyReferenceError union
     public enum SaveCopyReferenceError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.WriteError)
-        /**
-            The copy reference is invalid.
-        */
+        /// The copy reference is invalid.
         case InvalidCopyReference
-        /**
-            You don't have permission to save the given copy reference. Please make sure this app is same app which
-            created the copy reference and the source user is still linked to the app.
-        */
+        /// You don't have permission to save the given copy reference. Please make sure this app is same app which
+        /// created the copy reference and the source user is still linked to the app.
         case NoPermission
-        /**
-            The file referenced by the copy reference cannot be found.
-        */
+        /// The file referenced by the copy reference cannot be found.
         case NotFound
-        /**
-            The operation would involve more than 10,000 files and folders.
-        */
+        /// The operation would involve more than 10,000 files and folders.
         case TooManyFiles
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2867,9 +2748,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveCopyReferenceResult struct
-    */
+
+    /// The SaveCopyReferenceResult struct
     public class SaveCopyReferenceResult: CustomStringConvertible {
         /// The metadata of the saved file or folder in the user's Dropbox.
         public let metadata: Files.Metadata
@@ -2898,9 +2778,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveUrlArg struct
-    */
+
+    /// The SaveUrlArg struct
     public class SaveUrlArg: CustomStringConvertible {
         /// The path in Dropbox where the URL will be saved to.
         public let path: String
@@ -2936,23 +2815,18 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveUrlError union
-    */
+
+    /// The SaveUrlError union
     public enum SaveUrlError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.WriteError)
-        /**
-            Failed downloading the given URL.
-        */
+        /// Failed downloading the given URL.
         case DownloadFailed
-        /**
-            The given URL is invalid.
-        */
+        /// The given URL is invalid.
         case InvalidUrl
-        /**
-            The file where the URL is saved to no longer exists.
-        */
+        /// The file where the URL is saved to no longer exists.
         case NotFound
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -3009,18 +2883,14 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveUrlJobStatus union
-    */
+
+    /// The SaveUrlJobStatus union
     public enum SaveUrlJobStatus: CustomStringConvertible {
-        /**
-            The asynchronous job is still in progress.
-        */
+        /// The asynchronous job is still in progress.
         case InProgress
-        /**
-            Metadata of the file where the URL is saved to.
-        */
+        /// Metadata of the file where the URL is saved to.
         case Complete(Files.FileMetadata)
+        /// (undocumented)
         case Failed(Files.SaveUrlError)
 
         public var description: String {
@@ -3066,18 +2936,13 @@ public class Files {
             }
         }
     }
-    /**
-        The SaveUrlResult union
-    */
+
+    /// The SaveUrlResult union
     public enum SaveUrlResult: CustomStringConvertible {
-        /**
-            This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-            the status of the asynchronous job.
-        */
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
         case AsyncJobId(String)
-        /**
-            Metadata of the file where the URL is saved to.
-        */
+        /// Metadata of the file where the URL is saved to.
         case Complete(Files.FileMetadata)
 
         public var description: String {
@@ -3117,9 +2982,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SearchArg struct
-    */
+
+    /// The SearchArg struct
     public class SearchArg: CustomStringConvertible {
         /// The path in the user's Dropbox to search. Should probably be a folder.
         public let path: String
@@ -3175,14 +3039,12 @@ public class Files {
             }
         }
     }
-    /**
-        The SearchError union
-    */
+
+    /// The SearchError union
     public enum SearchError: CustomStringConvertible {
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3221,9 +3083,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SearchMatch struct
-    */
+
+    /// The SearchMatch struct
     public class SearchMatch: CustomStringConvertible {
         /// The type of the match.
         public let matchType: Files.SearchMatchType
@@ -3257,21 +3118,14 @@ public class Files {
             }
         }
     }
-    /**
-        Indicates what type of match was found for a given item.
-    */
+
+    /// Indicates what type of match was found for a given item.
     public enum SearchMatchType: CustomStringConvertible {
-        /**
-            This item was matched on its file or folder name.
-        */
+        /// This item was matched on its file or folder name.
         case Filename
-        /**
-            This item was matched based on its file contents.
-        */
+        /// This item was matched based on its file contents.
         case Content
-        /**
-            This item was matched based on both its contents and its file name.
-        */
+        /// This item was matched based on both its contents and its file name.
         case Both
 
         public var description: String {
@@ -3315,21 +3169,14 @@ public class Files {
             }
         }
     }
-    /**
-        The SearchMode union
-    */
+
+    /// The SearchMode union
     public enum SearchMode: CustomStringConvertible {
-        /**
-            Search file and folder names.
-        */
+        /// Search file and folder names.
         case Filename
-        /**
-            Search file and folder names as well as file contents.
-        */
+        /// Search file and folder names as well as file contents.
         case FilenameAndContent
-        /**
-            Search for deleted file and folder names.
-        */
+        /// Search for deleted file and folder names.
         case DeletedFilename
 
         public var description: String {
@@ -3373,9 +3220,8 @@ public class Files {
             }
         }
     }
-    /**
-        The SearchResult struct
-    */
+
+    /// The SearchResult struct
     public class SearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
         public let matches: Array<Files.SearchMatch>
@@ -3416,9 +3262,8 @@ public class Files {
             }
         }
     }
-    /**
-        The ThumbnailArg struct
-    */
+
+    /// The ThumbnailArg struct
     public class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
         public let path: String
@@ -3459,25 +3304,16 @@ public class Files {
             }
         }
     }
-    /**
-        The ThumbnailError union
-    */
+
+    /// The ThumbnailError union
     public enum ThumbnailError: CustomStringConvertible {
-        /**
-            An error occurs when downloading metadata for the image.
-        */
+        /// An error occurs when downloading metadata for the image.
         case Path(Files.LookupError)
-        /**
-            The file extension doesn't allow conversion to a thumbnail.
-        */
+        /// The file extension doesn't allow conversion to a thumbnail.
         case UnsupportedExtension
-        /**
-            The image cannot be converted to a thumbnail.
-        */
+        /// The image cannot be converted to a thumbnail.
         case UnsupportedImage
-        /**
-            An error occurs during thumbnail conversion.
-        */
+        /// An error occurs during thumbnail conversion.
         case ConversionError
 
         public var description: String {
@@ -3528,11 +3364,12 @@ public class Files {
             }
         }
     }
-    /**
-        The ThumbnailFormat union
-    */
+
+    /// The ThumbnailFormat union
     public enum ThumbnailFormat: CustomStringConvertible {
+        /// (undocumented)
         case Jpeg
+        /// (undocumented)
         case Png
 
         public var description: String {
@@ -3570,29 +3407,18 @@ public class Files {
             }
         }
     }
-    /**
-        The ThumbnailSize union
-    */
+
+    /// The ThumbnailSize union
     public enum ThumbnailSize: CustomStringConvertible {
-        /**
-            32 by 32 px.
-        */
+        /// 32 by 32 px.
         case W32h32
-        /**
-            64 by 64 px.
-        */
+        /// 64 by 64 px.
         case W64h64
-        /**
-            128 by 128 px.
-        */
+        /// 128 by 128 px.
         case W128h128
-        /**
-            640 by 480 px.
-        */
+        /// 640 by 480 px.
         case W640h480
-        /**
-            1024 by 768
-        */
+        /// 1024 by 768
         case W1024h768
 
         public var description: String {
@@ -3648,31 +3474,22 @@ public class Files {
             }
         }
     }
-    /**
-        The UpdatePropertiesError union
-    */
+
+    /// The UpdatePropertiesError union
     public enum UpdatePropertiesError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case Path(Files.LookupError)
-        /**
-            A field value in this property group is too large.
-        */
+        /// A field value in this property group is too large.
         case PropertyFieldTooLarge
-        /**
-            The property group specified does not conform to the property template.
-        */
+        /// The property group specified does not conform to the property template.
         case DoesNotFitTemplate
+        /// (undocumented)
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -3743,9 +3560,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UpdatePropertyGroupArg struct
-    */
+
+    /// The UpdatePropertyGroupArg struct
     public class UpdatePropertyGroupArg: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
@@ -3780,17 +3596,12 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadError union
-    */
+
+    /// The UploadError union
     public enum UploadError: CustomStringConvertible {
-        /**
-            Unable to save the uploaded contents to a file.
-        */
+        /// Unable to save the uploaded contents to a file.
         case Path(Files.UploadWriteFailed)
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3829,18 +3640,14 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadErrorWithProperties union
-    */
+
+    /// The UploadErrorWithProperties union
     public enum UploadErrorWithProperties: CustomStringConvertible {
-        /**
-            Unable to save the uploaded contents to a file.
-        */
+        /// Unable to save the uploaded contents to a file.
         case Path(Files.UploadWriteFailed)
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
+        /// (undocumented)
         case PropertiesError(Files.InvalidPropertyGroupError)
 
         public var description: String {
@@ -3886,9 +3693,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionAppendArg struct
-    */
+
+    /// The UploadSessionAppendArg struct
     public class UploadSessionAppendArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
@@ -3923,9 +3729,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionCursor struct
-    */
+
+    /// The UploadSessionCursor struct
     public class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
         public let sessionId: String
@@ -3962,9 +3767,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionFinishArg struct
-    */
+
+    /// The UploadSessionFinishArg struct
     public class UploadSessionFinishArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
@@ -3998,26 +3802,17 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionFinishError union
-    */
+
+    /// The UploadSessionFinishError union
     public enum UploadSessionFinishError: CustomStringConvertible {
-        /**
-            The session arguments are incorrect; the value explains the reason.
-        */
+        /// The session arguments are incorrect; the value explains the reason.
         case LookupFailed(Files.UploadSessionLookupError)
-        /**
-            Unable to save the uploaded contents to a file.
-        */
+        /// Unable to save the uploaded contents to a file.
         case Path(Files.WriteError)
-        /**
-            The batch request commits files into too many different shared folders. Please limit your batch request to
-            files contained in a single shared folder.
-        */
+        /// The batch request commits files into too many different shared folders. Please limit your batch request to
+        /// files contained in a single shared folder.
         case TooManySharedFolderTargets
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4069,31 +3864,20 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionLookupError union
-    */
+
+    /// The UploadSessionLookupError union
     public enum UploadSessionLookupError: CustomStringConvertible {
-        /**
-            The upload session id was not found.
-        */
+        /// The upload session id was not found.
         case NotFound
-        /**
-            The specified offset was incorrect. See the value for the correct offset. (This error may occur when a
-            previous request was received and processed successfully but the client did not receive the response, e.g.
-            due to a network error.)
-        */
+        /// The specified offset was incorrect. See the value for the correct offset. (This error may occur when a
+        /// previous request was received and processed successfully but the client did not receive the response, e.g.
+        /// due to a network error.)
         case IncorrectOffset(Files.UploadSessionOffsetError)
-        /**
-            You are attempting to append data to an upload session that has alread been closed (i.e. committed).
-        */
+        /// You are attempting to append data to an upload session that has alread been closed (i.e. committed).
         case Closed
-        /**
-            The session must be closed before calling upload_session/finish_batch.
-        */
+        /// The session must be closed before calling upload_session/finish_batch.
         case NotClosed
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4150,9 +3934,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionOffsetError struct
-    */
+
+    /// The UploadSessionOffsetError struct
     public class UploadSessionOffsetError: CustomStringConvertible {
         /// The offset up to which data has been collected.
         public let correctOffset: UInt64
@@ -4182,9 +3965,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionStartArg struct
-    */
+
+    /// The UploadSessionStartArg struct
     public class UploadSessionStartArg: CustomStringConvertible {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
@@ -4214,9 +3996,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadSessionStartResult struct
-    */
+
+    /// The UploadSessionStartResult struct
     public class UploadSessionStartResult: CustomStringConvertible {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
         public let sessionId: String
@@ -4246,9 +4027,8 @@ public class Files {
             }
         }
     }
-    /**
-        The UploadWriteFailed struct
-    */
+
+    /// The UploadWriteFailed struct
     public class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
         public let reason: Files.WriteError
@@ -4283,9 +4063,8 @@ public class Files {
             }
         }
     }
-    /**
-        Metadata for a video.
-    */
+
+    /// Metadata for a video.
     public class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
         public let duration: UInt64?
@@ -4322,22 +4101,16 @@ public class Files {
             }
         }
     }
-    /**
-        The WriteConflictError union
-    */
+
+    /// The WriteConflictError union
     public enum WriteConflictError: CustomStringConvertible {
-        /**
-            There's a file in the way.
-        */
+        /// There's a file in the way.
         case File
-        /**
-            There's a folder in the way.
-        */
+        /// There's a folder in the way.
         case Folder
-        /**
-            There's a file at an ancestor path, so we couldn't create the required parent folders.
-        */
+        /// There's a file at an ancestor path, so we couldn't create the required parent folders.
         case FileAncestor
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4387,27 +4160,20 @@ public class Files {
             }
         }
     }
-    /**
-        The WriteError union
-    */
+
+    /// The WriteError union
     public enum WriteError: CustomStringConvertible {
+        /// (undocumented)
         case MalformedPath(String?)
-        /**
-            Couldn't write to the target path because there was something in the way.
-        */
+        /// Couldn't write to the target path because there was something in the way.
         case Conflict(Files.WriteConflictError)
-        /**
-            The user doesn't have permissions to write to the target location.
-        */
+        /// The user doesn't have permissions to write to the target location.
         case NoWritePermission
-        /**
-            The user doesn't have enough available space (bytes) to write more data.
-        */
+        /// The user doesn't have enough available space (bytes) to write more data.
         case InsufficientSpace
-        /**
-            Dropbox will not save the file or folder because of its name.
-        */
+        /// Dropbox will not save the file or folder because of its name.
         case DisallowedName
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -4471,29 +4237,22 @@ public class Files {
             }
         }
     }
-    /**
-        Your intent when writing a file to some path. This is used to determine what constitutes a conflict and what the
-        autorename strategy is. In some situations, the conflict behavior is identical: (a) If the target path doesn't
-        contain anything, the file is always written; no conflict. (b) If the target path contains a folder, it's always
-        a conflict. (c) If the target path contains a file with identical contents, nothing gets written; no conflict.
-        The conflict checking differs in the case where there's a file at the target path with contents different from
-        the contents you're trying to write.
-    */
+
+    /// Your intent when writing a file to some path. This is used to determine what constitutes a conflict and what the
+    /// autorename strategy is. In some situations, the conflict behavior is identical: (a) If the target path doesn't
+    /// contain anything, the file is always written; no conflict. (b) If the target path contains a folder, it's always
+    /// a conflict. (c) If the target path contains a file with identical contents, nothing gets written; no conflict.
+    /// The conflict checking differs in the case where there's a file at the target path with contents different from
+    /// the contents you're trying to write.
     public enum WriteMode: CustomStringConvertible {
-        /**
-            Never overwrite the existing file. The autorename strategy is to append a number to the file name. For
-            example, "document.txt" might become "document (2).txt".
-        */
+        /// Never overwrite the existing file. The autorename strategy is to append a number to the file name. For
+        /// example, "document.txt" might become "document (2).txt".
         case Add
-        /**
-            Always overwrite the existing file. The autorename strategy is the same as it is for add.
-        */
+        /// Always overwrite the existing file. The autorename strategy is the same as it is for add.
         case Overwrite
-        /**
-            Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is to append the
-            string "conflicted copy" to the file name. For example, "document.txt" might become "document (conflicted
-            copy).txt" or "document (Panda's conflicted copy).txt".
-        */
+        /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is to append the
+        /// string "conflicted copy" to the file name. For example, "document.txt" might become "document (conflicted
+        /// copy).txt" or "document (Panda's conflicted copy).txt".
         case Update(String)
 
         public var description: String {
@@ -4538,6 +4297,7 @@ public class Files {
             }
         }
     }
+
 
     /// Stone Route Objects
 

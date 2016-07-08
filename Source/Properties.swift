@@ -4,13 +4,9 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the properties namespace
-*/
+/// Datatypes and serializers for the properties namespace
 public class Properties {
-    /**
-        The GetPropertyTemplateArg struct
-    */
+    /// The GetPropertyTemplateArg struct
     public class GetPropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by route properties/template/add.
         public let templateId: String
@@ -40,9 +36,8 @@ public class Properties {
             }
         }
     }
-    /**
-        Describes property templates that can be filled and associated with a file.
-    */
+
+    /// Describes property templates that can be filled and associated with a file.
     public class PropertyGroupTemplate: CustomStringConvertible {
         /// A display name for the property template. Property template names can be up to 256 bytes.
         public let name: String
@@ -84,9 +79,8 @@ public class Properties {
             }
         }
     }
-    /**
-        The Property template for the specified template.
-    */
+
+    /// The Property template for the specified template.
     public class GetPropertyTemplateResult: Properties.PropertyGroupTemplate {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetPropertyTemplateResultSerializer().serialize(self)))"
@@ -114,9 +108,8 @@ public class Properties {
             }
         }
     }
-    /**
-        The ListPropertyTemplateIds struct
-    */
+
+    /// The ListPropertyTemplateIds struct
     public class ListPropertyTemplateIds: CustomStringConvertible {
         /// List of identifiers for templates added by route properties/template/add.
         public let templateIds: Array<String>
@@ -146,21 +139,14 @@ public class Properties {
             }
         }
     }
-    /**
-        The PropertyTemplateError union
-    */
+
+    /// The PropertyTemplateError union
     public enum PropertyTemplateError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -205,37 +191,22 @@ public class Properties {
             }
         }
     }
-    /**
-        The ModifyPropertyTemplateError union
-    */
+
+    /// The ModifyPropertyTemplateError union
     public enum ModifyPropertyTemplateError: CustomStringConvertible {
-        /**
-            Property template does not exist for given identifier.
-        */
+        /// Property template does not exist for given identifier.
         case TemplateNotFound(String)
-        /**
-            You do not have the permissions to modify this property template.
-        */
+        /// You do not have the permissions to modify this property template.
         case RestrictedContent
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
-        /**
-            A property field name already exists in the template.
-        */
+        /// A property field name already exists in the template.
         case ConflictingPropertyNames
-        /**
-            There are too many properties in the changed template. The maximum number of properties per template is 32.
-        */
+        /// There are too many properties in the changed template. The maximum number of properties per template is 32.
         case TooManyProperties
-        /**
-            There are too many templates for the team.
-        */
+        /// There are too many templates for the team.
         case TooManyTemplates
-        /**
-            The template name, description or field names is too large.
-        */
+        /// The template name, description or field names is too large.
         case TemplateAttributeTooLarge
 
         public var description: String {
@@ -304,9 +275,8 @@ public class Properties {
             }
         }
     }
-    /**
-        The PropertyField struct
-    */
+
+    /// The PropertyField struct
     public class PropertyField: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
@@ -343,9 +313,8 @@ public class Properties {
             }
         }
     }
-    /**
-        Describe a single property field type which that can be part of a property template.
-    */
+
+    /// Describe a single property field type which that can be part of a property template.
     public class PropertyFieldTemplate: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
@@ -389,9 +358,8 @@ public class Properties {
             }
         }
     }
-    /**
-        Collection of custom properties in filled property templates.
-    */
+
+    /// Collection of custom properties in filled property templates.
     public class PropertyGroup: CustomStringConvertible {
         /// A unique identifier for a property template type.
         public let templateId: String
@@ -426,15 +394,13 @@ public class Properties {
             }
         }
     }
-    /**
-        Data type of the given property added. This endpoint is in beta and  only properties of type strings is
-        supported.
-    */
+
+    /// Data type of the given property added. This endpoint is in beta and  only properties of type strings is
+    /// supported.
     public enum PropertyType: CustomStringConvertible {
-        /**
-            The associated property will be of type string. Unicode is supported.
-        */
+        /// The associated property will be of type string. Unicode is supported.
         case String_
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -472,4 +438,5 @@ public class Properties {
             }
         }
     }
+
 }

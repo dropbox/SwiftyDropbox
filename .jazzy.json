@@ -1,7 +1,7 @@
 {
   "podspec": "SwiftyDropbox.podspec", 
   "skip_undocumented": true, 
-  "swift_version": 2, 
+  "swift_version": 2.2, 
   "author_name": "Dropbox, Inc.", 
   "custom_categories": [
     {
@@ -42,7 +42,8 @@
       "name": "Client Classes", 
       "children": [
         "Dropbox", 
-        "DropboxClient"
+        "DropboxClient", 
+        "DropboxTeamClient"
       ]
     }
   ], 
@@ -51,6 +52,6 @@
   "excluded_files": [
     "Source/StoneSerializers.swift", 
     "Source/StoneValidators.swift", 
-    "Source/Client.swift"
+    "Source/DropboxTransportClient.swift"
   ]
 }

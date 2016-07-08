@@ -4,13 +4,9 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the team namespace
-*/
+/// Datatypes and serializers for the team namespace
 public class Team {
-    /**
-        The DeviceSession struct
-    */
+    /// The DeviceSession struct
     public class DeviceSession: CustomStringConvertible {
         /// The session id
         public let sessionId: String
@@ -62,9 +58,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information on active web sessions
-    */
+
+    /// Information on active web sessions
     public class ActiveWebSession: Team.DeviceSession {
         /// Information on the hosting device
         public let userAgent: String
@@ -117,9 +112,8 @@ public class Team {
             }
         }
     }
-    /**
-        Arguments for adding property templates.
-    */
+
+    /// Arguments for adding property templates.
     public class AddPropertyTemplateArg: Properties.PropertyGroupTemplate {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertyTemplateArgSerializer().serialize(self)))"
@@ -147,9 +141,8 @@ public class Team {
             }
         }
     }
-    /**
-        The AddPropertyTemplateResult struct
-    */
+
+    /// The AddPropertyTemplateResult struct
     public class AddPropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
@@ -179,25 +172,16 @@ public class Team {
             }
         }
     }
-    /**
-        Describes which team-related admin permissions a user has.
-    */
+
+    /// Describes which team-related admin permissions a user has.
     public enum AdminTier: CustomStringConvertible {
-        /**
-            User is an administrator of the team - has all permissions.
-        */
+        /// User is an administrator of the team - has all permissions.
         case TeamAdmin
-        /**
-            User can do most user provisioning, de-provisioning and management.
-        */
+        /// User can do most user provisioning, de-provisioning and management.
         case UserManagementAdmin
-        /**
-            User can do a limited set of common support tasks for existing users.
-        */
+        /// User can do a limited set of common support tasks for existing users.
         case SupportAdmin
-        /**
-            User is not an admin of the team.
-        */
+        /// User is not an admin of the team.
         case MemberOnly
 
         public var description: String {
@@ -247,9 +231,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupCreateArg struct
-    */
+
+    /// The GroupCreateArg struct
     public class GroupCreateArg: CustomStringConvertible {
         /// Group name.
         public let groupName: String
@@ -285,9 +268,8 @@ public class Team {
             }
         }
     }
-    /**
-        The AlphaGroupCreateArg struct
-    */
+
+    /// The AlphaGroupCreateArg struct
     public class AlphaGroupCreateArg: Team.GroupCreateArg {
         /// Whether the team can be managed by selected users, or only by team admins
         public let groupManagementType: TeamCommon.GroupManagementType
@@ -321,9 +303,8 @@ public class Team {
             }
         }
     }
-    /**
-        Full description of a group.
-    */
+
+    /// Full description of a group.
     public class AlphaGroupFullInfo: TeamCommon.AlphaGroupSummary {
         /// List of group members.
         public let members: Array<Team.GroupMemberInfo>?
@@ -369,9 +350,8 @@ public class Team {
             }
         }
     }
-    /**
-        The IncludeMembersArg struct
-    */
+
+    /// The IncludeMembersArg struct
     public class IncludeMembersArg: CustomStringConvertible {
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
         /// members  to be returned in the response. This may take a long time for large groups.
@@ -401,9 +381,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupUpdateArgs struct
-    */
+
+    /// The GroupUpdateArgs struct
     public class GroupUpdateArgs: Team.IncludeMembersArg {
         /// Specify a group.
         public let group: Team.GroupSelector
@@ -448,9 +427,8 @@ public class Team {
             }
         }
     }
-    /**
-        The AlphaGroupUpdateArgs struct
-    */
+
+    /// The AlphaGroupUpdateArgs struct
     public class AlphaGroupUpdateArgs: Team.GroupUpdateArgs {
         /// Set new group management type, if provided.
         public let newGroupManagementType: TeamCommon.GroupManagementType?
@@ -488,18 +466,13 @@ public class Team {
             }
         }
     }
-    /**
-        The AlphaGroupsGetInfoItem union
-    */
+
+    /// The AlphaGroupsGetInfoItem union
     public enum AlphaGroupsGetInfoItem: CustomStringConvertible {
-        /**
-            An ID that was provided as a parameter to alphaGroupsGetInfo, and did not match a corresponding group. The
-            ID can be a group ID, or an external ID, depending on how the method was called.
-        */
+        /// An ID that was provided as a parameter to alphaGroupsGetInfo, and did not match a corresponding group. The
+        /// ID can be a group ID, or an external ID, depending on how the method was called.
         case IdNotFound(String)
-        /**
-            Info about a group.
-        */
+        /// Info about a group.
         case GroupInfo(Team.AlphaGroupFullInfo)
 
         public var description: String {
@@ -539,11 +512,10 @@ public class Team {
             }
         }
     }
-    /**
-        The AlphaGroupsListResult struct
-    */
+
+    /// The AlphaGroupsListResult struct
     public class AlphaGroupsListResult: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let groups: Array<TeamCommon.AlphaGroupSummary>
         /// Pass the cursor into alphaGroupsListContinue to obtain the additional groups.
         public let cursor: String
@@ -582,9 +554,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information on linked third party applications
-    */
+
+    /// Information on linked third party applications
     public class ApiApp: CustomStringConvertible {
         /// The application unique id
         public let appId: String
@@ -642,9 +613,8 @@ public class Team {
             }
         }
     }
-    /**
-        Base report structure.
-    */
+
+    /// Base report structure.
     public class BaseDfbReport: CustomStringConvertible {
         /// First date present in the results as 'YYYY-MM-DD' or None.
         public let startDate: String
@@ -674,9 +644,8 @@ public class Team {
             }
         }
     }
-    /**
-        Input arguments that can be provided for most reports.
-    */
+
+    /// Input arguments that can be provided for most reports.
     public class DateRange: CustomStringConvertible {
         /// Optional starting date (inclusive)
         public let startDate: NSDate?
@@ -710,13 +679,10 @@ public class Team {
             }
         }
     }
-    /**
-        Errors that can originate from problems in input arguments to reports.
-    */
+
+    /// Errors that can originate from problems in input arguments to reports.
     public enum DateRangeError: CustomStringConvertible {
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -748,9 +714,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information about linked Dropbox desktop client sessions
-    */
+
+    /// Information about linked Dropbox desktop client sessions
     public class DesktopClientSession: Team.DeviceSession {
         /// Name of the hosting desktop
         public let hostName: String
@@ -813,25 +778,16 @@ public class Team {
             }
         }
     }
-    /**
-        The DesktopPlatform union
-    */
+
+    /// The DesktopPlatform union
     public enum DesktopPlatform: CustomStringConvertible {
-        /**
-            Official Windows Dropbox desktop client
-        */
+        /// Official Windows Dropbox desktop client
         case Windows
-        /**
-            Official Mac Dropbox desktop client
-        */
+        /// Official Mac Dropbox desktop client
         case Mac
-        /**
-            Official Linux Dropbox desktop client
-        */
+        /// Official Linux Dropbox desktop client
         case Linux
-        /**
-            Official Dropbox desktop client for another platform
-        */
+        /// Official Dropbox desktop client for another platform
         case Other
 
         public var description: String {
@@ -881,9 +837,8 @@ public class Team {
             }
         }
     }
-    /**
-        The DeviceSessionArg struct
-    */
+
+    /// The DeviceSessionArg struct
     public class DeviceSessionArg: CustomStringConvertible {
         /// The session id
         public let sessionId: String
@@ -919,10 +874,9 @@ public class Team {
             }
         }
     }
-    /**
-        Each of the items is an array of values, one value per day. The value is the number of devices active within a
-        time window, ending with that day. If there is no data for a day, then the value will be None.
-    */
+
+    /// Each of the items is an array of values, one value per day. The value is the number of devices active within a
+    /// time window, ending with that day. If there is no data for a day, then the value will be None.
     public class DevicesActive: CustomStringConvertible {
         /// Array of number of linked windows (desktop) clients with activity.
         public let windows: Array<UInt64?>
@@ -988,10 +942,9 @@ public class Team {
             }
         }
     }
-    /**
-        Activity Report Result. Each of the items in the storage report is an array of values, one value per day. If
-        there is no data for a day, then the value will be None.
-    */
+
+    /// Activity Report Result. Each of the items in the storage report is an array of values, one value per day. If
+    /// there is no data for a day, then the value will be None.
     public class GetActivityReport: Team.BaseDfbReport {
         /// Array of total number of adds by team members.
         public let adds: Array<UInt64?>
@@ -1103,11 +1056,10 @@ public class Team {
             }
         }
     }
-    /**
-        Devices Report Result. Contains subsections for different time ranges of activity. Each of the items in each
-        subsection of the storage report is an array of values, one value per day. If there is no data for a day, then
-        the value will be None.
-    */
+
+    /// Devices Report Result. Contains subsections for different time ranges of activity. Each of the items in each
+    /// subsection of the storage report is an array of values, one value per day. If there is no data for a day, then
+    /// the value will be None.
     public class GetDevicesReport: Team.BaseDfbReport {
         /// Report of the number of devices active in the last day.
         public let active1Day: Team.DevicesActive
@@ -1149,10 +1101,9 @@ public class Team {
             }
         }
     }
-    /**
-        Membership Report Result. Each of the items in the storage report is an array of values, one value per day. If
-        there is no data for a day, then the value will be None.
-    */
+
+    /// Membership Report Result. Each of the items in the storage report is an array of values, one value per day. If
+    /// there is no data for a day, then the value will be None.
     public class GetMembershipReport: Team.BaseDfbReport {
         /// Team size, for each day.
         public let teamSize: Array<UInt64?>
@@ -1209,10 +1160,9 @@ public class Team {
             }
         }
     }
-    /**
-        Storage Report Result. Each of the items in the storage report is an array of values, one value per day. If
-        there is no data for a day, then the value will be None.
-    */
+
+    /// Storage Report Result. Each of the items in the storage report is an array of values, one value per day. If
+    /// there is no data for a day, then the value will be None.
     public class GetStorageReport: Team.BaseDfbReport {
         /// Sum of the shared, unshared, and datastore usages, for each day.
         public let totalUsage: Array<UInt64?>
@@ -1271,17 +1221,12 @@ public class Team {
             }
         }
     }
-    /**
-        Role of a user in group.
-    */
+
+    /// Role of a user in group.
     public enum GroupAccessType: CustomStringConvertible {
-        /**
-            User is a member of the group, but has no special permissions.
-        */
+        /// User is a member of the group, but has no special permissions.
         case Member
-        /**
-            User can rename the group, and add/remove members.
-        */
+        /// User can rename the group, and add/remove members.
         case Owner
 
         public var description: String {
@@ -1319,22 +1264,16 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupCreateError union
-    */
+
+    /// The GroupCreateError union
     public enum GroupCreateError: CustomStringConvertible {
-        /**
-            There is already an existing group with the requested name.
-        */
+        /// There is already an existing group with the requested name.
         case GroupNameAlreadyUsed
-        /**
-            Group name is empty or has invalid characters.
-        */
+        /// Group name is empty or has invalid characters.
         case GroupNameInvalid
-        /**
-            The new external ID is already being used by another group.
-        */
+        /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1384,14 +1323,12 @@ public class Team {
             }
         }
     }
-    /**
-        Error that can be raised when GroupSelector is used.
-    */
+
+    /// Error that can be raised when GroupSelector is used.
     public enum GroupSelectorError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -1429,18 +1366,14 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupDeleteError union
-    */
+
+    /// The GroupDeleteError union
     public enum GroupDeleteError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            This group has already been deleted.
-        */
+        /// This group has already been deleted.
         case GroupAlreadyDeleted
 
         public var description: String {
@@ -1484,9 +1417,8 @@ public class Team {
             }
         }
     }
-    /**
-        Full description of a group.
-    */
+
+    /// Full description of a group.
     public class GroupFullInfo: TeamCommon.GroupSummary {
         /// List of group members.
         public let members: Array<Team.GroupMemberInfo>?
@@ -1530,9 +1462,8 @@ public class Team {
             }
         }
     }
-    /**
-        Profile of group member, and role in group.
-    */
+
+    /// Profile of group member, and role in group.
     public class GroupMemberInfo: CustomStringConvertible {
         /// Profile of group member.
         public let profile: Team.MemberProfile
@@ -1566,9 +1497,8 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a group and a single user.
-    */
+
+    /// Argument for selecting a group and a single user.
     public class GroupMemberSelector: CustomStringConvertible {
         /// Specify a group.
         public let group: Team.GroupSelector
@@ -1602,19 +1532,15 @@ public class Team {
             }
         }
     }
-    /**
-        Error that can be raised when GroupMemberSelector is used, and the user is required to be a member of the
-        specified group.
-    */
+
+    /// Error that can be raised when GroupMemberSelector is used, and the user is required to be a member of the
+    /// specified group.
     public enum GroupMemberSelectorError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            The specified user is not a member of this group.
-        */
+        /// The specified user is not a member of this group.
         case MemberNotInGroup
 
         public var description: String {
@@ -1658,22 +1584,16 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMemberSetAccessTypeError union
-    */
+
+    /// The GroupMemberSetAccessTypeError union
     public enum GroupMemberSetAccessTypeError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            The specified user is not a member of this group.
-        */
+        /// The specified user is not a member of this group.
         case MemberNotInGroup
-        /**
-            A company managed group cannot be managed by a user.
-        */
+        /// A company managed group cannot be managed by a user.
         case UserCannotBeManagerOfCompanyManagedGroup
 
         public var description: String {
@@ -1723,9 +1643,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMembersAddArg struct
-    */
+
+    /// The GroupMembersAddArg struct
     public class GroupMembersAddArg: Team.IncludeMembersArg {
         /// Group to which users will be added.
         public let group: Team.GroupSelector
@@ -1762,41 +1681,27 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMembersAddError union
-    */
+
+    /// The GroupMembersAddError union
     public enum GroupMembersAddError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
-            group.
-        */
+        /// You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
+        /// group.
         case DuplicateUser
-        /**
-            Group is not in this team. You cannot add members to a group that is outside of your team.
-        */
+        /// Group is not in this team. You cannot add members to a group that is outside of your team.
         case GroupNotInTeam
-        /**
-            These members are not part of your team. Currently, you cannot add members to a group if they are not part
-            of your team, though this may change in a subsequent version. To add new members to your Dropbox Business
-            team, use the membersAdd endpoint.
-        */
+        /// These members are not part of your team. Currently, you cannot add members to a group if they are not part
+        /// of your team, though this may change in a subsequent version. To add new members to your Dropbox Business
+        /// team, use the membersAdd endpoint.
         case MembersNotInTeam(Array<String>)
-        /**
-            These users were not found in Dropbox.
-        */
+        /// These users were not found in Dropbox.
         case UsersNotFound(Array<String>)
-        /**
-            A suspended user cannot be added to a group as owner in GroupAccessType.
-        */
+        /// A suspended user cannot be added to a group as owner in GroupAccessType.
         case UserMustBeActiveToBeOwner
-        /**
-            A company-managed group cannot be managed by a user.
-        */
+        /// A company-managed group cannot be managed by a user.
         case UserCannotBeManagerOfCompanyManagedGroup(Array<String>)
 
         public var description: String {
@@ -1873,9 +1778,8 @@ public class Team {
             }
         }
     }
-    /**
-        Result returned by groupsMembersAdd and groupsMembersRemove.
-    */
+
+    /// Result returned by groupsMembersAdd and groupsMembersRemove.
     public class GroupMembersChangeResult: CustomStringConvertible {
         /// The group info after member change operation has been performed.
         public let groupInfo: Team.GroupFullInfo
@@ -1910,9 +1814,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMembersRemoveArg struct
-    */
+
+    /// The GroupMembersRemoveArg struct
     public class GroupMembersRemoveArg: Team.IncludeMembersArg {
         /// Group from which users will be removed.
         public let group: Team.GroupSelector
@@ -1949,19 +1852,15 @@ public class Team {
             }
         }
     }
-    /**
-        Error that can be raised when GroupMembersSelector is used, and the users are required to be members of the
-        specified group.
-    */
+
+    /// Error that can be raised when GroupMembersSelector is used, and the users are required to be members of the
+    /// specified group.
     public enum GroupMembersSelectorError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            At least one of the specified users is not a member of the group.
-        */
+        /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
 
         public var description: String {
@@ -2005,22 +1904,16 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMembersRemoveError union
-    */
+
+    /// The GroupMembersRemoveError union
     public enum GroupMembersRemoveError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            At least one of the specified users is not a member of the group.
-        */
+        /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
-        /**
-            Group is not in this team. You cannot remove members from a group that is outside of your team.
-        */
+        /// Group is not in this team. You cannot remove members from a group that is outside of your team.
         case GroupNotInTeam
 
         public var description: String {
@@ -2070,9 +1963,8 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a group and a list of users.
-    */
+
+    /// Argument for selecting a group and a list of users.
     public class GroupMembersSelector: CustomStringConvertible {
         /// Specify a group.
         public let group: Team.GroupSelector
@@ -2106,9 +1998,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupMembersSetAccessTypeArg struct
-    */
+
+    /// The GroupMembersSetAccessTypeArg struct
     public class GroupMembersSetAccessTypeArg: Team.GroupMemberSelector {
         /// New group access type the user will have.
         public let accessType: Team.GroupAccessType
@@ -2148,17 +2039,12 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a single group, either by group_id or by external group ID.
-    */
+
+    /// Argument for selecting a single group, either by group_id or by external group ID.
     public enum GroupSelector: CustomStringConvertible {
-        /**
-            Group ID.
-        */
+        /// Group ID.
         case GroupId(String)
-        /**
-            External ID of the group.
-        */
+        /// External ID of the group.
         case GroupExternalId(String)
 
         public var description: String {
@@ -2198,18 +2084,14 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupUpdateError union
-    */
+
+    /// The GroupUpdateError union
     public enum GroupUpdateError: CustomStringConvertible {
-        /**
-            No matching group found. No groups match the specified group ID.
-        */
+        /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
+        /// (undocumented)
         case Other
-        /**
-            The new external ID is already being used by another group.
-        */
+        /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
 
         public var description: String {
@@ -2253,14 +2135,12 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsGetInfoError union
-    */
+
+    /// The GroupsGetInfoError union
     public enum GroupsGetInfoError: CustomStringConvertible {
-        /**
-            The group is not on your team.
-        */
+        /// The group is not on your team.
         case GroupNotOnTeam
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -2298,18 +2178,13 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsGetInfoItem union
-    */
+
+    /// The GroupsGetInfoItem union
     public enum GroupsGetInfoItem: CustomStringConvertible {
-        /**
-            An ID that was provided as a parameter to groupsGetInfo, and did not match a corresponding group. The ID can
-            be a group ID, or an external ID, depending on how the method was called.
-        */
+        /// An ID that was provided as a parameter to groupsGetInfo, and did not match a corresponding group. The ID can
+        /// be a group ID, or an external ID, depending on how the method was called.
         case IdNotFound(String)
-        /**
-            Info about a group.
-        */
+        /// Info about a group.
         case GroupInfo(Team.GroupFullInfo)
 
         public var description: String {
@@ -2349,9 +2224,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsListArg struct
-    */
+
+    /// The GroupsListArg struct
     public class GroupsListArg: CustomStringConvertible {
         /// Number of results to return per call.
         public let limit: UInt32
@@ -2381,9 +2255,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsListContinueArg struct
-    */
+
+    /// The GroupsListContinueArg struct
     public class GroupsListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
@@ -2413,17 +2286,12 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsListContinueError union
-    */
+
+    /// The GroupsListContinueError union
     public enum GroupsListContinueError: CustomStringConvertible {
-        /**
-            The cursor is invalid.
-        */
+        /// The cursor is invalid.
         case InvalidCursor
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2461,11 +2329,10 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsListResult struct
-    */
+
+    /// The GroupsListResult struct
     public class GroupsListResult: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let groups: Array<TeamCommon.GroupSummary>
         /// Pass the cursor into groupsListContinue to obtain the additional groups.
         public let cursor: String
@@ -2504,9 +2371,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsMembersListArg struct
-    */
+
+    /// The GroupsMembersListArg struct
     public class GroupsMembersListArg: CustomStringConvertible {
         /// The group whose members are to be listed.
         public let group: Team.GroupSelector
@@ -2541,9 +2407,8 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsMembersListContinueArg struct
-    */
+
+    /// The GroupsMembersListContinueArg struct
     public class GroupsMembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
@@ -2573,17 +2438,12 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsMembersListContinueError union
-    */
+
+    /// The GroupsMembersListContinueError union
     public enum GroupsMembersListContinueError: CustomStringConvertible {
-        /**
-            The cursor is invalid.
-        */
+        /// The cursor is invalid.
         case InvalidCursor
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2621,11 +2481,10 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsMembersListResult struct
-    */
+
+    /// The GroupsMembersListResult struct
     public class GroupsMembersListResult: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let members: Array<Team.GroupMemberInfo>
         /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
         public let cursor: String
@@ -2664,26 +2523,17 @@ public class Team {
             }
         }
     }
-    /**
-        The GroupsPollError union
-    */
+
+    /// The GroupsPollError union
     public enum GroupsPollError: CustomStringConvertible {
-        /**
-            The job ID is invalid.
-        */
+        /// The job ID is invalid.
         case InvalidAsyncJobId
-        /**
-            Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
-            succeeded, and if not, try again. This should happen very rarely.
-        */
+        /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
+        /// succeeded, and if not, try again. This should happen very rarely.
         case InternalError
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
-        /**
-            You are not allowed to poll this job.
-        */
+        /// You are not allowed to poll this job.
         case AccessDenied
 
         public var description: String {
@@ -2733,17 +2583,12 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a list of groups, either by group_ids, or external group IDs.
-    */
+
+    /// Argument for selecting a list of groups, either by group_ids, or external group IDs.
     public enum GroupsSelector: CustomStringConvertible {
-        /**
-            List of group IDs.
-        */
+        /// List of group IDs.
         case GroupIds(Array<String>)
-        /**
-            List of external IDs of groups.
-        */
+        /// List of external IDs of groups.
         case GroupExternalIds(Array<String>)
 
         public var description: String {
@@ -2783,9 +2628,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMemberAppsArg struct
-    */
+
+    /// The ListMemberAppsArg struct
     public class ListMemberAppsArg: CustomStringConvertible {
         /// The team member id
         public let teamMemberId: String
@@ -2815,17 +2659,12 @@ public class Team {
             }
         }
     }
-    /**
-        Error returned by linkedAppsListMemberLinkedApps.
-    */
+
+    /// Error returned by linkedAppsListMemberLinkedApps.
     public enum ListMemberAppsError: CustomStringConvertible {
-        /**
-            Member not found.
-        */
+        /// Member not found.
         case MemberNotFound
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2863,9 +2702,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMemberAppsResult struct
-    */
+
+    /// The ListMemberAppsResult struct
     public class ListMemberAppsResult: CustomStringConvertible {
         /// List of third party applications linked by this team member
         public let linkedApiApps: Array<Team.ApiApp>
@@ -2894,9 +2732,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMemberDevicesArg struct
-    */
+
+    /// The ListMemberDevicesArg struct
     public class ListMemberDevicesArg: CustomStringConvertible {
         /// The team's member id
         public let teamMemberId: String
@@ -2941,17 +2778,12 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMemberDevicesError union
-    */
+
+    /// The ListMemberDevicesError union
     public enum ListMemberDevicesError: CustomStringConvertible {
-        /**
-            Member not found.
-        */
+        /// Member not found.
         case MemberNotFound
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2989,9 +2821,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMemberDevicesResult struct
-    */
+
+    /// The ListMemberDevicesResult struct
     public class ListMemberDevicesResult: CustomStringConvertible {
         /// List of web sessions made by this team member
         public let activeWebSessions: Array<Team.ActiveWebSession>?
@@ -3030,9 +2861,8 @@ public class Team {
             }
         }
     }
-    /**
-        Arguments for linkedAppsListMembersLinkedApps.
-    */
+
+    /// Arguments for linkedAppsListMembersLinkedApps.
     public class ListMembersAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed. Then, if the result
         /// of the call includes a cursor, the following requests should include the received cursors in order to
@@ -3064,18 +2894,13 @@ public class Team {
             }
         }
     }
-    /**
-        Error returned by linkedAppsListMembersLinkedApps
-    */
+
+    /// Error returned by linkedAppsListMembersLinkedApps
     public enum ListMembersAppsError: CustomStringConvertible {
-        /**
-            Indicates that the cursor has been invalidated. Call linkedAppsListMembersLinkedApps again with an empty
-            cursor to obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call linkedAppsListMembersLinkedApps again with an empty
+        /// cursor to obtain a new cursor.
         case Reset
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3113,9 +2938,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information returned by linkedAppsListMembersLinkedApps.
-    */
+
+    /// Information returned by linkedAppsListMembersLinkedApps.
     public class ListMembersAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
         public let apps: Array<Team.MemberLinkedApps>
@@ -3156,9 +2980,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMembersDevicesArg struct
-    */
+
+    /// The ListMembersDevicesArg struct
     public class ListMembersDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
@@ -3205,18 +3028,13 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMembersDevicesError union
-    */
+
+    /// The ListMembersDevicesError union
     public enum ListMembersDevicesError: CustomStringConvertible {
-        /**
-            Indicates that the cursor has been invalidated. Call devicesListMembersDevices again with an empty cursor to
-            obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call devicesListMembersDevices again with an empty cursor to
+        /// obtain a new cursor.
         case Reset
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3254,9 +3072,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListMembersDevicesResult struct
-    */
+
+    /// The ListMembersDevicesResult struct
     public class ListMembersDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
         public let devices: Array<Team.MemberDevices>
@@ -3297,9 +3114,8 @@ public class Team {
             }
         }
     }
-    /**
-        Arguments for linkedAppsListTeamLinkedApps.
-    */
+
+    /// Arguments for linkedAppsListTeamLinkedApps.
     public class ListTeamAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
@@ -3331,18 +3147,13 @@ public class Team {
             }
         }
     }
-    /**
-        Error returned by linkedAppsListTeamLinkedApps
-    */
+
+    /// Error returned by linkedAppsListTeamLinkedApps
     public enum ListTeamAppsError: CustomStringConvertible {
-        /**
-            Indicates that the cursor has been invalidated. Call linkedAppsListTeamLinkedApps again with an empty cursor
-            to obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call linkedAppsListTeamLinkedApps again with an empty cursor
+        /// to obtain a new cursor.
         case Reset
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3380,9 +3191,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information returned by linkedAppsListTeamLinkedApps.
-    */
+
+    /// Information returned by linkedAppsListTeamLinkedApps.
     public class ListTeamAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
         public let apps: Array<Team.MemberLinkedApps>
@@ -3423,9 +3233,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListTeamDevicesArg struct
-    */
+
+    /// The ListTeamDevicesArg struct
     public class ListTeamDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the result of the
         /// call includes a cursor, the following requests should include the received cursors in order to receive the
@@ -3472,18 +3281,13 @@ public class Team {
             }
         }
     }
-    /**
-        The ListTeamDevicesError union
-    */
+
+    /// The ListTeamDevicesError union
     public enum ListTeamDevicesError: CustomStringConvertible {
-        /**
-            Indicates that the cursor has been invalidated. Call devicesListTeamDevices again with an empty cursor to
-            obtain a new cursor.
-        */
+        /// Indicates that the cursor has been invalidated. Call devicesListTeamDevices again with an empty cursor to
+        /// obtain a new cursor.
         case Reset
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3521,9 +3325,8 @@ public class Team {
             }
         }
     }
-    /**
-        The ListTeamDevicesResult struct
-    */
+
+    /// The ListTeamDevicesResult struct
     public class ListTeamDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
         public let devices: Array<Team.MemberDevices>
@@ -3564,9 +3367,8 @@ public class Team {
             }
         }
     }
-    /**
-        Specify access type a member should have when joined to a group.
-    */
+
+    /// Specify access type a member should have when joined to a group.
     public class MemberAccess: CustomStringConvertible {
         /// Identity of a user.
         public let user: Team.UserSelectorArg
@@ -3600,11 +3402,10 @@ public class Team {
             }
         }
     }
-    /**
-        The MemberAddArg struct
-    */
+
+    /// The MemberAddArg struct
     public class MemberAddArg: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let memberEmail: String
         /// Member's first name.
         public let memberGivenName: String
@@ -3616,7 +3417,7 @@ public class Team {
         /// sent to the user. This may be useful for apps using single sign-on (SSO) flows for onboarding that want to
         /// handle announcements themselves.
         public let sendWelcomeEmail: Bool
-        /// Undocumented
+        /// (undocumented)
         public let role: Team.AdminTier
         public init(memberEmail: String, memberGivenName: String, memberSurname: String, memberExternalId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .MemberOnly) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
@@ -3662,49 +3463,30 @@ public class Team {
             }
         }
     }
-    /**
-        Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
-        a user was indeed added to the team - the other values explain the type of failure that occurred, and include
-        the email of the user for which the operation has failed.
-    */
+
+    /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
+    /// a user was indeed added to the team - the other values explain the type of failure that occurred, and include
+    /// the email of the user for which the operation has failed.
     public enum MemberAddResult: CustomStringConvertible {
-        /**
-            Describes a user that was successfully added to the team.
-        */
+        /// Describes a user that was successfully added to the team.
         case Success(Team.TeamMemberInfo)
-        /**
-            Team is already full. The organization has no available licenses.
-        */
+        /// Team is already full. The organization has no available licenses.
         case TeamLicenseLimit(String)
-        /**
-            Team is already full. The free team member limit has been reached.
-        */
+        /// Team is already full. The free team member limit has been reached.
         case FreeTeamMemberLimitReached(String)
-        /**
-            User is already on this team. The provided email address is associated with a user who is already a member
-            of or invited to the team.
-        */
+        /// User is already on this team. The provided email address is associated with a user who is already a member
+        /// of or invited to the team.
         case UserAlreadyOnTeam(String)
-        /**
-            User is already on another team. The provided email address is associated with a user that is already a
-            member or invited to another team.
-        */
+        /// User is already on another team. The provided email address is associated with a user that is already a
+        /// member or invited to another team.
         case UserOnAnotherTeam(String)
-        /**
-            User is already paired.
-        */
+        /// User is already paired.
         case UserAlreadyPaired(String)
-        /**
-            User migration has failed.
-        */
+        /// User migration has failed.
         case UserMigrationFailed(String)
-        /**
-            A user with the given external member ID already exists on the team.
-        */
+        /// A user with the given external member ID already exists on the team.
         case DuplicateExternalMemberId(String)
-        /**
-            User creation has failed.
-        */
+        /// User creation has failed.
         case UserCreationFailed(String)
 
         public var description: String {
@@ -3793,9 +3575,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information on devices of a team's member.
-    */
+
+    /// Information on devices of a team's member.
     public class MemberDevices: CustomStringConvertible {
         /// The member unique Id
         public let teamMemberId: String
@@ -3840,9 +3621,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information on linked applications of a team member.
-    */
+
+    /// Information on linked applications of a team member.
     public class MemberLinkedApps: CustomStringConvertible {
         /// The member unique Id
         public let teamMemberId: String
@@ -3877,9 +3657,8 @@ public class Team {
             }
         }
     }
-    /**
-        Basic member profile.
-    */
+
+    /// Basic member profile.
     public class MemberProfile: CustomStringConvertible {
         /// ID of user as a member of a team.
         public let teamMemberId: String
@@ -3949,13 +3728,10 @@ public class Team {
             }
         }
     }
-    /**
-        Error that can be returned whenever a struct derived from UserSelectorArg is used.
-    */
+
+    /// Error that can be returned whenever a struct derived from UserSelectorArg is used.
     public enum UserSelectorError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
 
         public var description: String {
@@ -3987,17 +3763,12 @@ public class Team {
             }
         }
     }
-    /**
-        The MemberSelectorError union
-    */
+
+    /// The MemberSelectorError union
     public enum MemberSelectorError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
 
         public var description: String {
@@ -4035,9 +3806,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersAddArg struct
-    */
+
+    /// The MembersAddArg struct
     public class MembersAddArg: CustomStringConvertible {
         /// Details of new members to be added to the team.
         public let newMembers: Array<Team.MemberAddArg>
@@ -4071,22 +3841,15 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersAddJobStatus union
-    */
+
+    /// The MembersAddJobStatus union
     public enum MembersAddJobStatus: CustomStringConvertible {
-        /**
-            The asynchronous job is still in progress.
-        */
+        /// The asynchronous job is still in progress.
         case InProgress
-        /**
-            The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
-            was provided to membersAdd, a corresponding item is returned in this list.
-        */
+        /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
+        /// was provided to membersAdd, a corresponding item is returned in this list.
         case Complete(Array<Team.MemberAddResult>)
-        /**
-            The asynchronous job returned an error. The string contains an error message.
-        */
+        /// The asynchronous job returned an error. The string contains an error message.
         case Failed(String)
 
         public var description: String {
@@ -4132,15 +3895,13 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersAddLaunch union
-    */
+
+    /// The MembersAddLaunch union
     public enum MembersAddLaunch: CustomStringConvertible {
-        /**
-            This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-            the status of the asynchronous job.
-        */
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
         case AsyncJobId(String)
+        /// (undocumented)
         case Complete(Array<Team.MemberAddResult>)
 
         public var description: String {
@@ -4180,9 +3941,8 @@ public class Team {
             }
         }
     }
-    /**
-        Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    */
+
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
     public class MembersDeactivateArg: CustomStringConvertible {
         /// Identity of user to remove/suspend.
         public let user: Team.UserSelectorArg
@@ -4216,21 +3976,14 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersDeactivateError union
-    */
+
+    /// The MembersDeactivateError union
     public enum MembersDeactivateError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4274,9 +4027,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersGetInfoArgs struct
-    */
+
+    /// The MembersGetInfoArgs struct
     public class MembersGetInfoArgs: CustomStringConvertible {
         /// List of team members.
         public let members: Array<Team.UserSelectorArg>
@@ -4305,13 +4057,10 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersGetInfoError union
-    */
+
+    /// The MembersGetInfoError union
     public enum MembersGetInfoError: CustomStringConvertible {
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4343,18 +4092,13 @@ public class Team {
             }
         }
     }
-    /**
-        Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfo.
-    */
+
+    /// Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfo.
     public enum MembersGetInfoItem: CustomStringConvertible {
-        /**
-            An ID that was provided as a parameter to membersGetInfo, and did not match a corresponding user. This might
-            be a team_member_id, an email, or an external ID, depending on how the method was called.
-        */
+        /// An ID that was provided as a parameter to membersGetInfo, and did not match a corresponding user. This might
+        /// be a team_member_id, an email, or an external ID, depending on how the method was called.
         case IdNotFound(String)
-        /**
-            Info about a team member.
-        */
+        /// Info about a team member.
         case MemberInfo(Team.TeamMemberInfo)
 
         public var description: String {
@@ -4394,9 +4138,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersListArg struct
-    */
+
+    /// The MembersListArg struct
     public class MembersListArg: CustomStringConvertible {
         /// Number of results to return per call.
         public let limit: UInt32
@@ -4426,9 +4169,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersListContinueArg struct
-    */
+
+    /// The MembersListContinueArg struct
     public class MembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of members.
         public let cursor: String
@@ -4458,17 +4200,12 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersListContinueError union
-    */
+
+    /// The MembersListContinueError union
     public enum MembersListContinueError: CustomStringConvertible {
-        /**
-            The cursor is invalid.
-        */
+        /// The cursor is invalid.
         case InvalidCursor
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4506,13 +4243,10 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersListError union
-    */
+
+    /// The MembersListError union
     public enum MembersListError: CustomStringConvertible {
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4544,9 +4278,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersListResult struct
-    */
+
+    /// The MembersListResult struct
     public class MembersListResult: CustomStringConvertible {
         /// List of team members.
         public let members: Array<Team.TeamMemberInfo>
@@ -4587,9 +4320,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersRemoveArg struct
-    */
+
+    /// The MembersRemoveArg struct
     public class MembersRemoveArg: Team.MembersDeactivateArg {
         /// If provided, files from the deleted member account will be transferred to this user.
         public let transferDestId: Team.UserSelectorArg?
@@ -4635,65 +4367,36 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersRemoveError union
-    */
+
+    /// The MembersRemoveError union
     public enum MembersRemoveError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
-        /**
-            The user is the last admin of the team, so it cannot be removed from it.
-        */
+        /// The user is the last admin of the team, so it cannot be removed from it.
         case RemoveLastAdmin
-        /**
-            Expected removed user and transfer_dest user to be different
-        */
+        /// Expected removed user and transfer_dest user to be different
         case RemovedAndTransferDestShouldDiffer
-        /**
-            Expected removed user and transfer_admin user to be different.
-        */
+        /// Expected removed user and transfer_admin user to be different.
         case RemovedAndTransferAdminShouldDiffer
-        /**
-            No matching user found for the argument transfer_dest_id.
-        */
+        /// No matching user found for the argument transfer_dest_id.
         case TransferDestUserNotFound
-        /**
-            The provided transfer_dest_id does not exist on this team.
-        */
+        /// The provided transfer_dest_id does not exist on this team.
         case TransferDestUserNotInTeam
-        /**
-            No matching user found for the argument transfer_admin_id.
-        */
+        /// No matching user found for the argument transfer_admin_id.
         case TransferAdminUserNotFound
-        /**
-            The provided transfer_admin_id does not exist on this team.
-        */
+        /// The provided transfer_admin_id does not exist on this team.
         case TransferAdminUserNotInTeam
-        /**
-            The transfer_admin_id argument must be provided when file transfer is requested.
-        */
+        /// The transfer_admin_id argument must be provided when file transfer is requested.
         case UnspecifiedTransferAdminId
-        /**
-            Specified transfer_admin user is not a team admin.
-        */
+        /// Specified transfer_admin user is not a team admin.
         case TransferAdminIsNotAdmin
-        /**
-            Cannot keep account and transfer the data to another user at the same time.
-        */
+        /// Cannot keep account and transfer the data to another user at the same time.
         case CannotKeepAccountAndTransfer
-        /**
-            Cannot keep account and delete the data at the same time.
-        */
+        /// Cannot keep account and delete the data at the same time.
         case CannotKeepAccountAndDeleteData
 
         public var description: String {
@@ -4803,21 +4506,14 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersSendWelcomeError union
-    */
+
+    /// The MembersSendWelcomeError union
     public enum MembersSendWelcomeError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4861,9 +4557,8 @@ public class Team {
             }
         }
     }
-    /**
-        Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    */
+
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
     public class MembersSetPermissionsArg: CustomStringConvertible {
         /// Identity of user whose role will be set.
         public let user: Team.UserSelectorArg
@@ -4897,33 +4592,20 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersSetPermissionsError union
-    */
+
+    /// The MembersSetPermissionsError union
     public enum MembersSetPermissionsError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            Cannot remove the admin setting of the last admin.
-        */
+        /// Cannot remove the admin setting of the last admin.
         case LastAdmin
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            Cannot remove/grant permissions.
-        */
+        /// Cannot remove/grant permissions.
         case CannotSetPermissions
-        /**
-            Team is full. The organization has no available licenses.
-        */
+        /// Team is full. The organization has no available licenses.
         case TeamLicenseLimit
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4985,9 +4667,8 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersSetPermissionsResult struct
-    */
+
+    /// The MembersSetPermissionsResult struct
     public class MembersSetPermissionsResult: CustomStringConvertible {
         /// The member ID of the user to which the change was applied.
         public let teamMemberId: String
@@ -5022,10 +4703,9 @@ public class Team {
             }
         }
     }
-    /**
-        Exactly one of team_member_id, email, or external_id must be provided to identify the user account. At least one
-        of new_email, new_external_id, new_given_name, and/or new_surname must be provided.
-    */
+
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account. At least one
+    /// of new_email, new_external_id, new_given_name, and/or new_surname must be provided.
     public class MembersSetProfileArg: CustomStringConvertible {
         /// Identity of user whose profile will be set.
         public let user: Team.UserSelectorArg
@@ -5078,45 +4758,26 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersSetProfileError union
-    */
+
+    /// The MembersSetProfileError union
     public enum MembersSetProfileError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            It is unsafe to use both external_id and new_external_id
-        */
+        /// It is unsafe to use both external_id and new_external_id
         case ExternalIdAndNewExternalIdUnsafe
-        /**
-            None of new_email, new_given_name, new_surname, or new_external_id are specified
-        */
+        /// None of new_email, new_given_name, new_surname, or new_external_id are specified
         case NoNewDataSpecified
-        /**
-            Email is already reserved for another user.
-        */
+        /// Email is already reserved for another user.
         case EmailReservedForOtherUser
-        /**
-            The external ID is already in use by another team member.
-        */
+        /// The external ID is already in use by another team member.
         case ExternalIdUsedByOtherUser
-        /**
-            Setting profile disallowed
-        */
+        /// Setting profile disallowed
         case SetProfileDisallowed
-        /**
-            Parameter new_email cannot be empty.
-        */
+        /// Parameter new_email cannot be empty.
         case ParamCannotBeEmpty
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -5196,33 +4857,20 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersSuspendError union
-    */
+
+    /// The MembersSuspendError union
     public enum MembersSuspendError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
-        /**
-            The user is not active, so it cannot be suspended.
-        */
+        /// The user is not active, so it cannot be suspended.
         case SuspendInactiveUser
-        /**
-            The user is the last admin of the team, so it cannot be suspended.
-        */
+        /// The user is the last admin of the team, so it cannot be suspended.
         case SuspendLastAdmin
-        /**
-            Team is full. The organization has no available licenses.
-        */
+        /// Team is full. The organization has no available licenses.
         case TeamLicenseLimit
 
         public var description: String {
@@ -5284,9 +4932,8 @@ public class Team {
             }
         }
     }
-    /**
-        Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    */
+
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
     public class MembersUnsuspendArg: CustomStringConvertible {
         /// Identity of user to unsuspend.
         public let user: Team.UserSelectorArg
@@ -5315,29 +4962,18 @@ public class Team {
             }
         }
     }
-    /**
-        The MembersUnsuspendError union
-    */
+
+    /// The MembersUnsuspendError union
     public enum MembersUnsuspendError: CustomStringConvertible {
-        /**
-            No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        */
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case UserNotFound
-        /**
-            The user is not a member of the team.
-        */
+        /// The user is not a member of the team.
         case UserNotInTeam
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
-        /**
-            The user is unsuspended, so it cannot be unsuspended again.
-        */
+        /// The user is unsuspended, so it cannot be unsuspended again.
         case UnsuspendNonSuspendedMember
-        /**
-            Team is full. The organization has no available licenses.
-        */
+        /// Team is full. The organization has no available licenses.
         case TeamLicenseLimit
 
         public var description: String {
@@ -5393,33 +5029,20 @@ public class Team {
             }
         }
     }
-    /**
-        The MobileClientPlatform union
-    */
+
+    /// The MobileClientPlatform union
     public enum MobileClientPlatform: CustomStringConvertible {
-        /**
-            Official Dropbox iPhone client
-        */
+        /// Official Dropbox iPhone client
         case Iphone
-        /**
-            Official Dropbox iPad client
-        */
+        /// Official Dropbox iPad client
         case Ipad
-        /**
-            Official Dropbox Android client
-        */
+        /// Official Dropbox Android client
         case Android
-        /**
-            Official Dropbox Windows phone client
-        */
+        /// Official Dropbox Windows phone client
         case WindowsPhone
-        /**
-            Official Dropbox Blackberry client
-        */
+        /// Official Dropbox Blackberry client
         case Blackberry
-        /**
-            Official Dropbox client for another platform
-        */
+        /// Official Dropbox client for another platform
         case Other
 
         public var description: String {
@@ -5481,9 +5104,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information about linked Dropbox mobile client sessions
-    */
+
+    /// Information about linked Dropbox mobile client sessions
     public class MobileClientSession: Team.DeviceSession {
         /// The device name
         public let deviceName: String
@@ -5547,9 +5169,8 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDesktopClientArg struct
-    */
+
+    /// The RevokeDesktopClientArg struct
     public class RevokeDesktopClientArg: Team.DeviceSessionArg {
         /// Whether to delete all files of the account (this is possible only if supported by the desktop client and
         /// will be made the next time the client access the account)
@@ -5584,21 +5205,14 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionArg union
-    */
+
+    /// The RevokeDeviceSessionArg union
     public enum RevokeDeviceSessionArg: CustomStringConvertible {
-        /**
-            End an active session
-        */
+        /// End an active session
         case WebSession(Team.DeviceSessionArg)
-        /**
-            Unlink a linked desktop device
-        */
+        /// Unlink a linked desktop device
         case DesktopClient(Team.RevokeDesktopClientArg)
-        /**
-            Unlink a linked mobile device
-        */
+        /// Unlink a linked mobile device
         case MobileClient(Team.DeviceSessionArg)
 
         public var description: String {
@@ -5645,11 +5259,10 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionBatchArg struct
-    */
+
+    /// The RevokeDeviceSessionBatchArg struct
     public class RevokeDeviceSessionBatchArg: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let revokeDevices: Array<Team.RevokeDeviceSessionArg>
         public init(revokeDevices: Array<Team.RevokeDeviceSessionArg>) {
             self.revokeDevices = revokeDevices
@@ -5676,13 +5289,10 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionBatchError union
-    */
+
+    /// The RevokeDeviceSessionBatchError union
     public enum RevokeDeviceSessionBatchError: CustomStringConvertible {
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Unspecified
 
         public var description: String {
@@ -5714,11 +5324,10 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionBatchResult struct
-    */
+
+    /// The RevokeDeviceSessionBatchResult struct
     public class RevokeDeviceSessionBatchResult: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>
         public init(revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>) {
             self.revokeDevicesStatus = revokeDevicesStatus
@@ -5745,21 +5354,14 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionError union
-    */
+
+    /// The RevokeDeviceSessionError union
     public enum RevokeDeviceSessionError: CustomStringConvertible {
-        /**
-            Device session not found.
-        */
+        /// Device session not found.
         case DeviceSessionNotFound
-        /**
-            Member not found.
-        */
+        /// Member not found.
         case MemberNotFound
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -5803,9 +5405,8 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeDeviceSessionStatus struct
-    */
+
+    /// The RevokeDeviceSessionStatus struct
     public class RevokeDeviceSessionStatus: CustomStringConvertible {
         /// Result of the revoking request
         public let success: Bool
@@ -5839,9 +5440,8 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeLinkedApiAppArg struct
-    */
+
+    /// The RevokeLinkedApiAppArg struct
     public class RevokeLinkedApiAppArg: CustomStringConvertible {
         /// The application's unique id
         public let appId: String
@@ -5882,11 +5482,10 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeLinkedApiAppBatchArg struct
-    */
+
+    /// The RevokeLinkedApiAppBatchArg struct
     public class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>
         public init(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) {
             self.revokeLinkedApp = revokeLinkedApp
@@ -5913,13 +5512,10 @@ public class Team {
             }
         }
     }
-    /**
-        Error returned by linkedAppsRevokeLinkedAppBatch.
-    */
+
+    /// Error returned by linkedAppsRevokeLinkedAppBatch.
     public enum RevokeLinkedAppBatchError: CustomStringConvertible {
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Unspecified
 
         public var description: String {
@@ -5951,11 +5547,10 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeLinkedAppBatchResult struct
-    */
+
+    /// The RevokeLinkedAppBatchResult struct
     public class RevokeLinkedAppBatchResult: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>
         public init(revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>) {
             self.revokeLinkedAppStatus = revokeLinkedAppStatus
@@ -5982,21 +5577,14 @@ public class Team {
             }
         }
     }
-    /**
-        Error returned by linkedAppsRevokeLinkedApp.
-    */
+
+    /// Error returned by linkedAppsRevokeLinkedApp.
     public enum RevokeLinkedAppError: CustomStringConvertible {
-        /**
-            Application not found.
-        */
+        /// Application not found.
         case AppNotFound
-        /**
-            Member not found.
-        */
+        /// Member not found.
         case MemberNotFound
-        /**
-            An unspecified error.
-        */
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -6040,9 +5628,8 @@ public class Team {
             }
         }
     }
-    /**
-        The RevokeLinkedAppStatus struct
-    */
+
+    /// The RevokeLinkedAppStatus struct
     public class RevokeLinkedAppStatus: CustomStringConvertible {
         /// Result of the revoking request
         public let success: Bool
@@ -6076,9 +5663,8 @@ public class Team {
             }
         }
     }
-    /**
-        Describes the number of users in a specific storage bucket.
-    */
+
+    /// Describes the number of users in a specific storage bucket.
     public class StorageBucket: CustomStringConvertible {
         /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up to 1 Giga.
         public let bucket: String
@@ -6114,9 +5700,8 @@ public class Team {
             }
         }
     }
-    /**
-        The TeamGetInfoResult struct
-    */
+
+    /// The TeamGetInfoResult struct
     public class TeamGetInfoResult: CustomStringConvertible {
         /// The name of the team.
         public let name: String
@@ -6126,7 +5711,7 @@ public class Team {
         public let numLicensedUsers: UInt32
         /// The number of accounts that have been invited or are already active members of the team.
         public let numProvisionedUsers: UInt32
-        /// Undocumented
+        /// (undocumented)
         public let policies: TeamPolicies.TeamMemberPolicies
         public init(name: String, teamId: String, numLicensedUsers: UInt32, numProvisionedUsers: UInt32, policies: TeamPolicies.TeamMemberPolicies) {
             stringValidator()(name)
@@ -6169,9 +5754,8 @@ public class Team {
             }
         }
     }
-    /**
-        Information about a team member.
-    */
+
+    /// Information about a team member.
     public class TeamMemberInfo: CustomStringConvertible {
         /// Profile of a user as a member of a team.
         public let profile: Team.TeamMemberProfile
@@ -6205,9 +5789,8 @@ public class Team {
             }
         }
     }
-    /**
-        Profile of a user as a member of a team.
-    */
+
+    /// Profile of a user as a member of a team.
     public class TeamMemberProfile: Team.MemberProfile {
         /// List of group IDs of groups that the user belongs to.
         public let groups: Array<String>
@@ -6254,22 +5837,15 @@ public class Team {
             }
         }
     }
-    /**
-        The user's status as a member of a specific team.
-    */
+
+    /// The user's status as a member of a specific team.
     public enum TeamMemberStatus: CustomStringConvertible {
-        /**
-            User has successfully joined the team.
-        */
+        /// User has successfully joined the team.
         case Active
-        /**
-            User has been invited to a team, but has not joined the team yet.
-        */
+        /// User has been invited to a team, but has not joined the team yet.
         case Invited
-        /**
-            User is no longer a member of the team, but the account can be un-suspended, re-establishing the user as a
-            team member.
-        */
+        /// User is no longer a member of the team, but the account can be un-suspended, re-establishing the user as a
+        /// team member.
         case Suspended
 
         public var description: String {
@@ -6313,17 +5889,12 @@ public class Team {
             }
         }
     }
-    /**
-        The TeamMembershipType union
-    */
+
+    /// The TeamMembershipType union
     public enum TeamMembershipType: CustomStringConvertible {
-        /**
-            User uses a license and has full access to team resources like the shared quota.
-        */
+        /// User uses a license and has full access to team resources like the shared quota.
         case Full
-        /**
-            User does not have access to the shared quota and team admins have restricted administrative control.
-        */
+        /// User does not have access to the shared quota and team admins have restricted administrative control.
         case Limited
 
         public var description: String {
@@ -6361,9 +5932,8 @@ public class Team {
             }
         }
     }
-    /**
-        The UpdatePropertyTemplateArg struct
-    */
+
+    /// The UpdatePropertyTemplateArg struct
     public class UpdatePropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
@@ -6411,9 +5981,8 @@ public class Team {
             }
         }
     }
-    /**
-        The UpdatePropertyTemplateResult struct
-    */
+
+    /// The UpdatePropertyTemplateResult struct
     public class UpdatePropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
@@ -6443,12 +6012,14 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a single user, either by team_member_id, external_id or email.
-    */
+
+    /// Argument for selecting a single user, either by team_member_id, external_id or email.
     public enum UserSelectorArg: CustomStringConvertible {
+        /// (undocumented)
         case TeamMemberId(String)
+        /// (undocumented)
         case ExternalId(String)
+        /// (undocumented)
         case Email(String)
 
         public var description: String {
@@ -6495,21 +6066,14 @@ public class Team {
             }
         }
     }
-    /**
-        Argument for selecting a list of users, either by team_member_ids, external_ids or emails.
-    */
+
+    /// Argument for selecting a list of users, either by team_member_ids, external_ids or emails.
     public enum UsersSelectorArg: CustomStringConvertible {
-        /**
-            List of member IDs.
-        */
+        /// List of member IDs.
         case TeamMemberIds(Array<String>)
-        /**
-            List of external user IDs.
-        */
+        /// List of external user IDs.
         case ExternalIds(Array<String>)
-        /**
-            List of email addresses.
-        */
+        /// List of email addresses.
         case Emails(Array<String>)
 
         public var description: String {
@@ -6556,6 +6120,7 @@ public class Team {
             }
         }
     }
+
 
     /// Stone Route Objects
 

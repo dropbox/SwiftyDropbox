@@ -4,26 +4,17 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the team_policies namespace
-*/
+/// Datatypes and serializers for the team_policies namespace
 public class TeamPolicies {
-    /**
-        The EmmState union
-    */
+    /// The EmmState union
     public enum EmmState: CustomStringConvertible {
-        /**
-            Emm token is disabled
-        */
+        /// Emm token is disabled
         case Disabled
-        /**
-            Emm token is optional
-        */
+        /// Emm token is optional
         case Optional
-        /**
-            Emm token is required
-        */
+        /// Emm token is required
         case Required
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -73,18 +64,14 @@ public class TeamPolicies {
             }
         }
     }
-    /**
-        Policy governing which shared folders a team member can join.
-    */
+
+    /// Policy governing which shared folders a team member can join.
     public enum SharedFolderJoinPolicy: CustomStringConvertible {
-        /**
-            Team members can only join folders shared by teammates.
-        */
+        /// Team members can only join folders shared by teammates.
         case FromTeamOnly
-        /**
-            Team members can join any shared folder, including those shared by users outside the team.
-        */
+        /// Team members can join any shared folder, including those shared by users outside the team.
         case FromAnyone
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -128,18 +115,14 @@ public class TeamPolicies {
             }
         }
     }
-    /**
-        Policy governing who can be a member of a folder shared by a team member.
-    */
+
+    /// Policy governing who can be a member of a folder shared by a team member.
     public enum SharedFolderMemberPolicy: CustomStringConvertible {
-        /**
-            Only a teammate can be a member of a folder shared by a team member.
-        */
+        /// Only a teammate can be a member of a folder shared by a team member.
         case Team
-        /**
-            Anyone can be a member of a folder shared by a team member.
-        */
+        /// Anyone can be a member of a folder shared by a team member.
         case Anyone
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -183,25 +166,19 @@ public class TeamPolicies {
             }
         }
     }
-    /**
-        Policy governing the visibility of newly created shared links.
-    */
+
+    /// Policy governing the visibility of newly created shared links.
     public enum SharedLinkCreatePolicy: CustomStringConvertible {
-        /**
-            By default, anyone can access newly created shared links. No login will be required to access the shared
-            links unless overridden.
-        */
+        /// By default, anyone can access newly created shared links. No login will be required to access the shared
+        /// links unless overridden.
         case DefaultPublic
-        /**
-            By default, only members of the same team can access newly created shared links. Login will be required to
-            access the shared links unless overridden.
-        */
+        /// By default, only members of the same team can access newly created shared links. Login will be required to
+        /// access the shared links unless overridden.
         case DefaultTeamOnly
-        /**
-            Only members of the same team can access newly created shared links. Login will be required to access the
-            shared links.
-        */
+        /// Only members of the same team can access newly created shared links. Login will be required to access the
+        /// shared links.
         case TeamOnly
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -251,9 +228,8 @@ public class TeamPolicies {
             }
         }
     }
-    /**
-        Policies governing team members.
-    */
+
+    /// Policies governing team members.
     public class TeamMemberPolicies: CustomStringConvertible {
         /// Policies governing sharing.
         public let sharing: TeamPolicies.TeamSharingPolicies
@@ -290,9 +266,8 @@ public class TeamPolicies {
             }
         }
     }
-    /**
-        Policies governing sharing within and outside of the team.
-    */
+
+    /// Policies governing sharing within and outside of the team.
     public class TeamSharingPolicies: CustomStringConvertible {
         /// Who can join folders shared by team members.
         public let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
@@ -331,4 +306,5 @@ public class TeamPolicies {
             }
         }
     }
+
 }

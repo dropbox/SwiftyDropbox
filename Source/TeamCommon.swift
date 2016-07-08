@@ -4,17 +4,13 @@
 
 import Foundation
 
-/**
-    Datatypes and serializers for the team_common namespace
-*/
+/// Datatypes and serializers for the team_common namespace
 public class TeamCommon {
-    /**
-        Information about a group.
-    */
+    /// Information about a group.
     public class GroupSummary: CustomStringConvertible {
-        /// Undocumented
+        /// (undocumented)
         public let groupName: String
-        /// Undocumented
+        /// (undocumented)
         public let groupId: String
         /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
         public let groupExternalId: String?
@@ -58,9 +54,8 @@ public class TeamCommon {
             }
         }
     }
-    /**
-        Information about a group.
-    */
+
+    /// Information about a group.
     public class AlphaGroupSummary: TeamCommon.GroupSummary {
         /// Who is allowed to manage the group.
         public let groupManagementType: TeamCommon.GroupManagementType
@@ -98,18 +93,14 @@ public class TeamCommon {
             }
         }
     }
-    /**
-        The group type determines how a group is managed.
-    */
+
+    /// The group type determines how a group is managed.
     public enum GroupManagementType: CustomStringConvertible {
-        /**
-            A group which is managed by team admins only.
-        */
+        /// A group which is managed by team admins only.
         case CompanyManaged
-        /**
-            A group which is managed by selected users.
-        */
+        /// A group which is managed by selected users.
         case UserManaged
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -153,19 +144,15 @@ public class TeamCommon {
             }
         }
     }
-    /**
-        The group type determines how a group is created and managed.
-    */
+
+    /// The group type determines how a group is created and managed.
     public enum GroupType: CustomStringConvertible {
-        /**
-            A group to which team members are automatically added. Applicable to team folders
-            https://www.dropbox.com/help/986 only.
-        */
+        /// A group to which team members are automatically added. Applicable to team folders
+        /// https://www.dropbox.com/help/986 only.
         case Team
-        /**
-            A group is created and managed by a user.
-        */
+        /// A group is created and managed by a user.
         case UserManaged
+        /// (undocumented)
         case Other
 
         public var description: String {
@@ -209,4 +196,5 @@ public class TeamCommon {
             }
         }
     }
+
 }
