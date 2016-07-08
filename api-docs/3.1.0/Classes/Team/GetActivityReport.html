@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>GetActivityReport Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/GetActivityReport" class="dashAnchor"></a>
+    <a title="GetActivityReport Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">SwiftyDropbox Docs</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">SwiftyDropbox Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        GetActivityReport Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Routes.html">Routes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/AuthRoutes.html">AuthRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/FilesRoutes.html">FilesRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/SharingRoutes.html">SharingRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamRoutes.html">TeamRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/UsersRoutes.html">UsersRoutes</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Data Types.html">Data Types</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/Async.html">Async</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Auth.html">Auth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Data Types.html#/s:C13SwiftyDropbox6Common">Common</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files.html">Files</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties.html">Properties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing.html">Sharing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team.html">Team</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamCommon.html">TeamCommon</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies.html">TeamPolicies</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users.html">Users</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxAuthManager.html">DropboxAuthManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/DropboxAuthResult.html">DropboxAuthResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxAccessToken.html">DropboxAccessToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/OAuth2Error.html">OAuth2Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Client Classes.html">Client Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/Dropbox.html">Dropbox</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Client Classes.html#/s:C13SwiftyDropbox13DropboxClient">DropboxClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Client Classes.html#/s:C13SwiftyDropbox17DropboxTeamClient">DropboxTeamClient</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Other Classes.html">Other Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox19DownloadRequestFile">DownloadRequestFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox21DownloadRequestMemory">DownloadRequestMemory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox7Request">Request</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox10RpcRequest">RpcRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox13UploadRequest">UploadRequest</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>GetActivityReport</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">GetActivityReport</span><span class="p">:</span> <span class="kt">Team</span><span class="o">.</span><span class="kt">BaseDfbReport</span></code></pre>
+
+                </div>
+              </div>
+            <p>Activity Report Result. Each of the items in the storage report is an array of values, one value per day. If
+there is no data for a day, then the value will be None.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport4addsGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/adds" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport4addsGSaGSqVs6UInt64__">adds</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of total number of adds by team members.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">adds</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport5editsGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/edits" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport5editsGSaGSqVs6UInt64__">edits</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of number of edits by team members. If the same user edits the same file multiple times this is
+counted as a single edit.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">edits</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport7deletesGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/deletes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport7deletesGSaGSqVs6UInt64__">deletes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of total number of deletes by team members.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">deletes</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport16activeUsers28DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeUsers28Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport16activeUsers28DayGSaGSqVs6UInt64__">activeUsers28Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of users who have been active in the last 28 days.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeUsers28Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport15activeUsers7DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeUsers7Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport15activeUsers7DayGSaGSqVs6UInt64__">activeUsers7Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of users who have been active in the last week.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeUsers7Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport15activeUsers1DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeUsers1Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport15activeUsers1DayGSaGSqVs6UInt64__">activeUsers1Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of users who have been active in the last day.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeUsers1Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport24activeSharedFolders28DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeSharedFolders28Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport24activeSharedFolders28DayGSaGSqVs6UInt64__">activeSharedFolders28Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of shared folders with some activity in the last 28 days.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeSharedFolders28Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport23activeSharedFolders7DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeSharedFolders7Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport23activeSharedFolders7DayGSaGSqVs6UInt64__">activeSharedFolders7Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of shared folders with some activity in the last week.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeSharedFolders7Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport23activeSharedFolders1DayGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/activeSharedFolders1Day" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport23activeSharedFolders1DayGSaGSqVs6UInt64__">activeSharedFolders1Day</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of shared folders with some activity in the last day.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">activeSharedFolders1Day</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport18sharedLinksCreatedGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/sharedLinksCreated" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport18sharedLinksCreatedGSaGSqVs6UInt64__">sharedLinksCreated</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of shared links created.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sharedLinksCreated</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport23sharedLinksViewedByTeamGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/sharedLinksViewedByTeam" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport23sharedLinksViewedByTeamGSaGSqVs6UInt64__">sharedLinksViewedByTeam</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of views by team users to shared links created by the team.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sharedLinksViewedByTeam</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport30sharedLinksViewedByOutsideUserGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/sharedLinksViewedByOutsideUser" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport30sharedLinksViewedByOutsideUserGSaGSqVs6UInt64__">sharedLinksViewedByOutsideUser</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of views by users outside of the team to shared links created by the team.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sharedLinksViewedByOutsideUser</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport30sharedLinksViewedByNotLoggedInGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/sharedLinksViewedByNotLoggedIn" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport30sharedLinksViewedByNotLoggedInGSaGSqVs6UInt64__">sharedLinksViewedByNotLoggedIn</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the number of views by non-logged-in users to shared links created by the team.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sharedLinksViewedByNotLoggedIn</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team17GetActivityReport22sharedLinksViewedTotalGSaGSqVs6UInt64__"></a>
+                    <a name="//apple_ref/swift/Property/sharedLinksViewedTotal" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team17GetActivityReport22sharedLinksViewedTotalGSaGSqVs6UInt64__">sharedLinksViewedTotal</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Array of the total number of views to shared links created by the team.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">sharedLinksViewedTotal</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">UInt64</span><span class="p">?</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Ryan Pearl</a>. All rights reserved. (Last updated: 2016-07-07)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.6.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
