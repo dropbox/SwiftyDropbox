@@ -89,6 +89,8 @@ public class Dropbox {
             case .Success(let token):
                 Dropbox.authorizedClient = DropboxClient(accessToken: token)
                 return result
+            case .Cancel:
+                return result
             case .Error:
                 return result
             }
@@ -105,6 +107,8 @@ public class Dropbox {
             switch result {
             case .Success(let token):
                 Dropbox.authorizedTeamClient = DropboxTeamClient(accessToken: token)
+                return result
+            case .Cancel:
                 return result
             case .Error:
                 return result

@@ -33,6 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 switch authResult {
                 case .Success:
                     print("Success! User is logged into Dropbox.")
+                case .Cancel:
+                    print("Authorization flow was manually canceled by user!")
                 case .Error(_, let description):
                     print("Error: \(description)")
                 }
@@ -42,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 switch authResult {
                 case .Success:
                     print("Success! User is logged into Dropbox.")
+                case .Cancel:
+                    print("Authorization flow was manually canceled by user!")
                 case .Error(_, let description):
                     print("Error: \(description)")
                 }
@@ -51,6 +55,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 switch authResult {
                 case .Success:
                     print("Success! User is logged into Dropbox.")
+                case .Cancel:
+                    print("Authorization flow was manually canceled by user!")
                 case .Error(_, let description):
                     print("Error: \(description)")
                 }
