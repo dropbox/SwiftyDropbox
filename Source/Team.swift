@@ -515,7 +515,7 @@ public class Team {
 
     /// The AlphaGroupsListResult struct
     public class AlphaGroupsListResult: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let groups: Array<TeamCommon.AlphaGroupSummary>
         /// Pass the cursor into alphaGroupsListContinue to obtain the additional groups.
         public let cursor: String
@@ -1273,7 +1273,7 @@ public class Team {
         case GroupNameInvalid
         /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1328,7 +1328,7 @@ public class Team {
     public enum GroupSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1371,7 +1371,7 @@ public class Team {
     public enum GroupDeleteError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// This group has already been deleted.
         case GroupAlreadyDeleted
@@ -1538,7 +1538,7 @@ public class Team {
     public enum GroupMemberSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// The specified user is not a member of this group.
         case MemberNotInGroup
@@ -1589,7 +1589,7 @@ public class Team {
     public enum GroupMemberSetAccessTypeError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// The specified user is not a member of this group.
         case MemberNotInGroup
@@ -1686,7 +1686,7 @@ public class Team {
     public enum GroupMembersAddError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
         /// group.
@@ -1858,7 +1858,7 @@ public class Team {
     public enum GroupMembersSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
@@ -1909,7 +1909,7 @@ public class Team {
     public enum GroupMembersRemoveError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
@@ -2089,7 +2089,7 @@ public class Team {
     public enum GroupUpdateError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (undocumented)
+        /// (no description)
         case Other
         /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
@@ -2140,7 +2140,7 @@ public class Team {
     public enum GroupsGetInfoError: CustomStringConvertible {
         /// The group is not on your team.
         case GroupNotOnTeam
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2332,7 +2332,7 @@ public class Team {
 
     /// The GroupsListResult struct
     public class GroupsListResult: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let groups: Array<TeamCommon.GroupSummary>
         /// Pass the cursor into groupsListContinue to obtain the additional groups.
         public let cursor: String
@@ -2484,7 +2484,7 @@ public class Team {
 
     /// The GroupsMembersListResult struct
     public class GroupsMembersListResult: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let members: Array<Team.GroupMemberInfo>
         /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
         public let cursor: String
@@ -3405,7 +3405,7 @@ public class Team {
 
     /// The MemberAddArg struct
     public class MemberAddArg: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let memberEmail: String
         /// Member's first name.
         public let memberGivenName: String
@@ -3417,7 +3417,7 @@ public class Team {
         /// sent to the user. This may be useful for apps using single sign-on (SSO) flows for onboarding that want to
         /// handle announcements themselves.
         public let sendWelcomeEmail: Bool
-        /// (undocumented)
+        /// (no description)
         public let role: Team.AdminTier
         public init(memberEmail: String, memberGivenName: String, memberSurname: String, memberExternalId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .MemberOnly) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
@@ -3901,7 +3901,7 @@ public class Team {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case AsyncJobId(String)
-        /// (undocumented)
+        /// (no description)
         case Complete(Array<Team.MemberAddResult>)
 
         public var description: String {
@@ -5262,7 +5262,7 @@ public class Team {
 
     /// The RevokeDeviceSessionBatchArg struct
     public class RevokeDeviceSessionBatchArg: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let revokeDevices: Array<Team.RevokeDeviceSessionArg>
         public init(revokeDevices: Array<Team.RevokeDeviceSessionArg>) {
             self.revokeDevices = revokeDevices
@@ -5327,7 +5327,7 @@ public class Team {
 
     /// The RevokeDeviceSessionBatchResult struct
     public class RevokeDeviceSessionBatchResult: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>
         public init(revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>) {
             self.revokeDevicesStatus = revokeDevicesStatus
@@ -5485,7 +5485,7 @@ public class Team {
 
     /// The RevokeLinkedApiAppBatchArg struct
     public class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>
         public init(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) {
             self.revokeLinkedApp = revokeLinkedApp
@@ -5550,7 +5550,7 @@ public class Team {
 
     /// The RevokeLinkedAppBatchResult struct
     public class RevokeLinkedAppBatchResult: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>
         public init(revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>) {
             self.revokeLinkedAppStatus = revokeLinkedAppStatus
@@ -5711,7 +5711,7 @@ public class Team {
         public let numLicensedUsers: UInt32
         /// The number of accounts that have been invited or are already active members of the team.
         public let numProvisionedUsers: UInt32
-        /// (undocumented)
+        /// (no description)
         public let policies: TeamPolicies.TeamMemberPolicies
         public init(name: String, teamId: String, numLicensedUsers: UInt32, numProvisionedUsers: UInt32, policies: TeamPolicies.TeamMemberPolicies) {
             stringValidator()(name)
@@ -6015,11 +6015,11 @@ public class Team {
 
     /// Argument for selecting a single user, either by team_member_id, external_id or email.
     public enum UserSelectorArg: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case TeamMemberId(String)
-        /// (undocumented)
+        /// (no description)
         case ExternalId(String)
-        /// (undocumented)
+        /// (no description)
         case Email(String)
 
         public var description: String {

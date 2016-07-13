@@ -14,7 +14,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
 
         public var description: String {
@@ -75,7 +75,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
@@ -152,7 +152,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
@@ -319,7 +319,7 @@ public class Files {
 
     /// The GetMetadataError union
     public enum GetMetadataError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
 
         public var description: String {
@@ -355,9 +355,9 @@ public class Files {
 
     /// The AlphaGetMetadataError union
     public enum AlphaGetMetadataError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case PropertiesError(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -528,7 +528,7 @@ public class Files {
 
     /// The CreateFolderError union
     public enum CreateFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.WriteError)
 
         public var description: String {
@@ -595,11 +595,11 @@ public class Files {
 
     /// The DeleteError union
     public enum DeleteError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case PathLookup(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case PathWrite(Files.WriteError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -831,7 +831,7 @@ public class Files {
 
     /// The DownloadError union
     public enum DownloadError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -1161,9 +1161,9 @@ public class Files {
 
     /// The GetCopyReferenceError union
     public enum GetCopyReferenceError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1278,9 +1278,9 @@ public class Files {
 
     /// The GetTemporaryLinkError union
     public enum GetTemporaryLinkError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1479,11 +1479,11 @@ public class Files {
 
     /// The ListFolderContinueError union
     public enum ListFolderContinueError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1531,7 +1531,7 @@ public class Files {
 
     /// The ListFolderError union
     public enum ListFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -1648,7 +1648,7 @@ public class Files {
     public enum ListFolderLongpollError: CustomStringConvertible {
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1803,9 +1803,9 @@ public class Files {
 
     /// The ListRevisionsError union
     public enum ListRevisionsError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1917,7 +1917,7 @@ public class Files {
 
     /// The LookupError union
     public enum LookupError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case MalformedPath(String?)
         /// There is nothing at the given path.
         case NotFound
@@ -1928,7 +1928,7 @@ public class Files {
         /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
         /// restrictions due to copyright claims.
         case RestrictedContent
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2338,11 +2338,11 @@ public class Files {
 
     /// The RelocationError union
     public enum RelocationError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case FromLookup(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case FromWrite(Files.WriteError)
-        /// (undocumented)
+        /// (no description)
         case To(Files.WriteError)
         /// Shared folders can't be copied.
         case CantCopySharedFolder
@@ -2475,9 +2475,9 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -2582,7 +2582,7 @@ public class Files {
         case PathWrite(Files.WriteError)
         /// The revision is invalid. It may point to a different file.
         case InvalidRevision
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2674,7 +2674,7 @@ public class Files {
 
     /// The SaveCopyReferenceError union
     public enum SaveCopyReferenceError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.WriteError)
         /// The copy reference is invalid.
         case InvalidCopyReference
@@ -2685,7 +2685,7 @@ public class Files {
         case NotFound
         /// The operation would involve more than 10,000 files and folders.
         case TooManyFiles
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2818,7 +2818,7 @@ public class Files {
 
     /// The SaveUrlError union
     public enum SaveUrlError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.WriteError)
         /// Failed downloading the given URL.
         case DownloadFailed
@@ -2826,7 +2826,7 @@ public class Files {
         case InvalidUrl
         /// The file where the URL is saved to no longer exists.
         case NotFound
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2890,7 +2890,7 @@ public class Files {
         case InProgress
         /// Metadata of the file where the URL is saved to.
         case Complete(Files.FileMetadata)
-        /// (undocumented)
+        /// (no description)
         case Failed(Files.SaveUrlError)
 
         public var description: String {
@@ -3042,7 +3042,7 @@ public class Files {
 
     /// The SearchError union
     public enum SearchError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -3367,9 +3367,9 @@ public class Files {
 
     /// The ThumbnailFormat union
     public enum ThumbnailFormat: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Jpeg
-        /// (undocumented)
+        /// (no description)
         case Png
 
         public var description: String {
@@ -3483,13 +3483,13 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
         /// The property group specified does not conform to the property template.
         case DoesNotFitTemplate
-        /// (undocumented)
+        /// (no description)
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -3647,7 +3647,7 @@ public class Files {
         case Path(Files.UploadWriteFailed)
         /// An unspecified error.
         case Other
-        /// (undocumented)
+        /// (no description)
         case PropertiesError(Files.InvalidPropertyGroupError)
 
         public var description: String {
@@ -4110,7 +4110,7 @@ public class Files {
         case Folder
         /// There's a file at an ancestor path, so we couldn't create the required parent folders.
         case FileAncestor
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4163,7 +4163,7 @@ public class Files {
 
     /// The WriteError union
     public enum WriteError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case MalformedPath(String?)
         /// Couldn't write to the target path because there was something in the way.
         case Conflict(Files.WriteConflictError)
@@ -4173,7 +4173,7 @@ public class Files {
         case InsufficientSpace
         /// Dropbox will not save the file or folder because of its name.
         case DisallowedName
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {

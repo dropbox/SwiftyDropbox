@@ -8,9 +8,9 @@ import Foundation
 public class TeamCommon {
     /// Information about a group.
     public class GroupSummary: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         public let groupName: String
-        /// (undocumented)
+        /// (no description)
         public let groupId: String
         /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
         public let groupExternalId: String?
@@ -100,7 +100,7 @@ public class TeamCommon {
         case CompanyManaged
         /// A group which is managed by selected users.
         case UserManaged
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -152,7 +152,7 @@ public class TeamCommon {
         case Team
         /// A group is created and managed by a user.
         case UserManaged
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {

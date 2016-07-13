@@ -385,7 +385,7 @@ public class Users {
     public enum GetAccountBatchError: CustomStringConvertible {
         /// The value is an account ID specified in accountIds in GetAccountBatchArg that does not exist.
         case NoAccount(String)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -429,7 +429,7 @@ public class Users {
     public enum GetAccountError: CustomStringConvertible {
         /// The specified accountId in GetAccountArg does not exist.
         case NoAccount
-        /// (undocumented)
+        /// (no description)
         case Unknown
 
         public var description: String {
@@ -555,7 +555,7 @@ public class Users {
         case Individual(Users.IndividualSpaceAllocation)
         /// The user shares space with other members of their team.
         case Team(Users.TeamSpaceAllocation)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {

@@ -14,7 +14,7 @@ public class TeamPolicies {
         case Optional
         /// Emm token is required
         case Required
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -71,7 +71,7 @@ public class TeamPolicies {
         case FromTeamOnly
         /// Team members can join any shared folder, including those shared by users outside the team.
         case FromAnyone
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -122,7 +122,7 @@ public class TeamPolicies {
         case Team
         /// Anyone can be a member of a folder shared by a team member.
         case Anyone
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -178,7 +178,7 @@ public class TeamPolicies {
         /// Only members of the same team can access newly created shared links. Login will be required to access the
         /// shared links.
         case TeamOnly
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {

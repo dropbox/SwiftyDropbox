@@ -17,7 +17,7 @@ public class Sharing {
         case Viewer
         /// The collaborator can only view the shared folder and does not have any access to comments.
         case ViewerNoComment
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -81,7 +81,7 @@ public class Sharing {
         case Owner
         /// Any editor can update the ACL. This may be further restricted to editors on the same team.
         case Editors
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -186,15 +186,15 @@ public class Sharing {
 
     /// Errors for addFileMember.
     public enum AddFileMemberError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
         /// The user has reached the rate limit for invitations.
         case RateLimit
         /// The custom message did not pass comment permissions checks.
         case InvalidComment
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -323,7 +323,7 @@ public class Sharing {
         case TeamFolder
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -468,7 +468,7 @@ public class Sharing {
         case GroupDeleted
         /// Sharing to a group that is not on the current user's team.
         case GroupNotOnTeam
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -669,9 +669,9 @@ public class Sharing {
 
     /// The CreateSharedLinkError union
     public enum CreateSharedLinkError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -749,7 +749,7 @@ public class Sharing {
 
     /// The CreateSharedLinkWithSettingsError union
     public enum CreateSharedLinkWithSettingsError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// User's email should be verified
         case EmailNotVerified
@@ -826,7 +826,7 @@ public class Sharing {
         case Unshare
         /// Relinquish one's own membership to the file.
         case RelinquishMembership
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -891,7 +891,7 @@ public class Sharing {
         case InvalidFileActionError(String)
         /// User does not have permission to access file specified by file.Id.
         case PermissionDeniedError(String)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1243,7 +1243,7 @@ public class Sharing {
         case Success(Sharing.MemberAccessLevelResult)
         /// User was not able to remove this member.
         case MemberError(Sharing.FileMemberActionError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1348,7 +1348,7 @@ public class Sharing {
         case Unshare
         /// Keep a copy of the contents upon leaving or being kicked from the folder.
         case LeaveACopy
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1667,11 +1667,11 @@ public class Sharing {
 
     /// Error result for getFileMetadata.
     public enum GetFileMetadataError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1724,7 +1724,7 @@ public class Sharing {
         case Metadata(Sharing.SharedFileMetadata)
         /// The result for this file if it was an error.
         case AccessError(Sharing.SharingFileAccessError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -1995,9 +1995,9 @@ public class Sharing {
 
     /// The GetSharedLinksError union
     public enum GetSharedLinksError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(String?)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2207,7 +2207,7 @@ public class Sharing {
     public enum InviteeInfo: CustomStringConvertible {
         /// E-mail address of invited user.
         case Email(String)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2299,7 +2299,7 @@ public class Sharing {
         case RemoveFolderMemberError(Sharing.RemoveFolderMemberError)
         /// Error occurred while performing relinquishFolderMembership action.
         case RelinquishFolderMembershipError(Sharing.RelinquishFolderMembershipError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2608,13 +2608,13 @@ public class Sharing {
 
     /// Error for listFileMembersContinue.
     public enum ListFileMembersContinueError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
         /// cursor in ListFileMembersContinueArg is invalid.
         case InvalidCursor
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2705,11 +2705,11 @@ public class Sharing {
 
     /// Error for listFileMembers.
     public enum ListFileMembersError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2762,7 +2762,7 @@ public class Sharing {
         case Result(Sharing.ListFileMembersCountResult)
         /// The result of the query for this file if it was an error.
         case AccessError(Sharing.SharingFileAccessError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -2882,7 +2882,7 @@ public class Sharing {
         case UserError(Sharing.SharingUserError)
         /// cursor in ListFilesContinueArg is invalid.
         case InvalidCursor
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3070,11 +3070,11 @@ public class Sharing {
 
     /// The ListFolderMembersContinueError union
     public enum ListFolderMembersContinueError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// cursor in ListFolderMembersContinueArg is invalid.
         case InvalidCursor
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3192,7 +3192,7 @@ public class Sharing {
     public enum ListFoldersContinueError: CustomStringConvertible {
         /// cursor in ListFoldersContinueArg is invalid.
         case InvalidCursor
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3314,11 +3314,11 @@ public class Sharing {
 
     /// The ListSharedLinksError union
     public enum ListSharedLinksError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case Path(Files.LookupError)
         /// Indicates that the cursor has been invalidated. Call listSharedLinks to obtain a new cursor.
         case Reset
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3455,7 +3455,7 @@ public class Sharing {
         case MakeViewer
         /// Remove the member from the folder.
         case Remove
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3564,7 +3564,7 @@ public class Sharing {
         case Team
         /// Anyone can become a member.
         case Anyone
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3615,7 +3615,7 @@ public class Sharing {
         case DropboxId(String)
         /// E-mail address of member.
         case Email(String)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3804,7 +3804,7 @@ public class Sharing {
 
     /// The MountFolderError union
     public enum MountFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// Mounting would cause a shared folder to be inside another, which is disallowed.
         case InsideSharedFolder
@@ -3817,7 +3817,7 @@ public class Sharing {
         /// The shared folder is not mountable. One example where this can occur is when the shared folder belongs
         /// within a team folder in the user's Dropbox.
         case NotMountable
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -3982,7 +3982,7 @@ public class Sharing {
         case TargetIsSelf
         /// Target is not an active member of the team.
         case TargetNotActive
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4084,14 +4084,14 @@ public class Sharing {
 
     /// The RelinquishFileMembershipError union
     public enum RelinquishFileMembershipError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
         /// The current user has access to the shared file via a group.  You can't relinquish membership to a file
         /// shared via groups.
         case GroupAccess
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4181,7 +4181,7 @@ public class Sharing {
 
     /// The RelinquishFolderMembershipError union
     public enum RelinquishFolderMembershipError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
         /// folders. Try unsharing or transferring ownership first.
@@ -4195,7 +4195,7 @@ public class Sharing {
         case TeamFolder
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4304,13 +4304,13 @@ public class Sharing {
 
     /// Errors for removeFileMember2.
     public enum RemoveFileMemberError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
         /// This member does not have explicit access to the file and therefore cannot be removed.
         case NoExplicitAccess
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4407,9 +4407,9 @@ public class Sharing {
 
     /// The RemoveFolderMemberError union
     public enum RemoveFolderMemberError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
-        /// (undocumented)
+        /// (no description)
         case MemberError(Sharing.SharedFolderMemberError)
         /// The target user is the owner of the shared folder. You can't remove this user until ownership has been
         /// transferred to another member.
@@ -4420,7 +4420,7 @@ public class Sharing {
         case TeamFolder
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4498,7 +4498,7 @@ public class Sharing {
         /// Removing the folder member has finished. The value is information about whether the member has another form
         /// of access.
         case Complete(Sharing.MemberAccessLevelResult)
-        /// (undocumented)
+        /// (no description)
         case Failed(Sharing.RemoveFolderMemberError)
 
         public var description: String {
@@ -4827,7 +4827,7 @@ public class Sharing {
         case TeamPolicyDisallowsMemberPolicy
         /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -4895,7 +4895,7 @@ public class Sharing {
         case TeamPolicyDisallowsMemberPolicy
         /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
-        /// (undocumented)
+        /// (no description)
         case Other
         /// The current user does not have permission to perform this action.
         case NoPermission
@@ -4967,7 +4967,7 @@ public class Sharing {
         case InProgress
         /// The share job has finished. The value is the metadata for the folder.
         case Complete(Sharing.SharedFolderMetadata)
-        /// (undocumented)
+        /// (no description)
         case Failed(Sharing.ShareFolderError)
 
         public var description: String {
@@ -5019,7 +5019,7 @@ public class Sharing {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case AsyncJobId(String)
-        /// (undocumented)
+        /// (no description)
         case Complete(Sharing.SharedFolderMetadata)
 
         public var description: String {
@@ -5084,7 +5084,7 @@ public class Sharing {
         case IsOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case InsideOsxPackage
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -5322,7 +5322,7 @@ public class Sharing {
         case EmailUnverified
         /// The shared folder is unmounted.
         case Unmounted
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -5385,7 +5385,7 @@ public class Sharing {
         case InvalidDropboxId
         /// The target dropbox_id is not a member of the shared folder.
         case NotAMember
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -5821,7 +5821,7 @@ public class Sharing {
         case InsidePublicFolder
         /// A Mac OS X package can't be shared this way. Use a shared link instead.
         case InsideOsxPackage
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -5888,7 +5888,7 @@ public class Sharing {
     public enum SharingUserError: CustomStringConvertible {
         /// The current user must verify the account e-mail address before performing this action.
         case EmailUnverified
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6009,7 +6009,7 @@ public class Sharing {
 
     /// The TransferFolderError union
     public enum TransferFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// toDropboxId in TransferFolderArg is invalid.
         case InvalidDropboxId
@@ -6023,7 +6023,7 @@ public class Sharing {
         case TeamFolder
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6132,14 +6132,14 @@ public class Sharing {
 
     /// The UnmountFolderError union
     public enum UnmountFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// The current user does not have permission to perform this action.
         case NoPermission
         /// The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent
         /// folder is also a shared folder that resides in the current user's Dropbox.
         case NotUnmountable
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6224,11 +6224,11 @@ public class Sharing {
 
     /// Error result for unshareFile.
     public enum UnshareFileError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case UserError(Sharing.SharingUserError)
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharingFileAccessError)
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6314,13 +6314,13 @@ public class Sharing {
 
     /// The UnshareFolderError union
     public enum UnshareFolderError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// This action cannot be performed on a team shared folder.
         case TeamFolder
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6415,9 +6415,9 @@ public class Sharing {
 
     /// The UpdateFolderMemberError union
     public enum UpdateFolderMemberError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
-        /// (undocumented)
+        /// (no description)
         case MemberError(Sharing.SharedFolderMemberError)
         /// If updating the access type required the member to be added to the shared folder and there was an error when
         /// adding the member.
@@ -6427,7 +6427,7 @@ public class Sharing {
         case InsufficientPlan
         /// The current user does not have permission to perform this action.
         case NoPermission
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
@@ -6542,7 +6542,7 @@ public class Sharing {
 
     /// The UpdateFolderPolicyError union
     public enum UpdateFolderPolicyError: CustomStringConvertible {
-        /// (undocumented)
+        /// (no description)
         case AccessError(Sharing.SharedFolderAccessError)
         /// memberPolicy in UpdateFolderPolicyArg was set even though user is not on a team.
         case NotOnTeam
@@ -6550,7 +6550,7 @@ public class Sharing {
         case TeamPolicyDisallowsMemberPolicy
         /// The current account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case DisallowedSharedLinkPolicy
-        /// (undocumented)
+        /// (no description)
         case Other
 
         public var description: String {
