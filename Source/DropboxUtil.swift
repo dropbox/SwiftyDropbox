@@ -78,6 +78,10 @@ public class Dropbox {
 
     /// Handle a redirect and automatically initialize the client and save the token.
     public static func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
+        guard ["http", "https"].contains(url.scheme) else {
+            print("Wrong URL scheme")
+            return
+        }
         precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.initAppWithKey` before calling this method")
         precondition(Dropbox.authorizedClient == nil, "Client is already authorized")
         if let result =  DropboxAuthManager.sharedAuthManager.handleRedirectURL(url) {
