@@ -400,7 +400,7 @@ public class Properties {
     public enum PropertyType: CustomStringConvertible {
         /// The associated property will be of type string. Unicode is supported.
         case String_
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {

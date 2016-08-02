@@ -385,7 +385,7 @@ public class Users {
     public enum GetAccountBatchError: CustomStringConvertible {
         /// The value is an account ID specified in accountIds in GetAccountBatchArg that does not exist.
         case NoAccount(String)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -429,8 +429,8 @@ public class Users {
     public enum GetAccountError: CustomStringConvertible {
         /// The specified accountId in GetAccountArg does not exist.
         case NoAccount
-        /// (no description)
-        case Unknown
+        /// An unspecified error.
+        case Other
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
@@ -444,9 +444,9 @@ public class Users {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("no_account")
                     return .Dictionary(d)
-                case .Unknown:
+                case .Other:
                     var d = [String: JSON]()
-                    d[".tag"] = .Str("unknown")
+                    d[".tag"] = .Str("other")
                     return .Dictionary(d)
             }
         }
@@ -457,10 +457,10 @@ public class Users {
                     switch tag {
                         case "no_account":
                             return GetAccountError.NoAccount
-                        case "unknown":
-                            return GetAccountError.Unknown
+                        case "other":
+                            return GetAccountError.Other
                         default:
-                            return GetAccountError.Unknown
+                            return GetAccountError.Other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -555,7 +555,7 @@ public class Users {
         case Individual(Users.IndividualSpaceAllocation)
         /// The user shares space with other members of their team.
         case Team(Users.TeamSpaceAllocation)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {

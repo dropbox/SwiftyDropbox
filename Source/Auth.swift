@@ -65,6 +65,93 @@ public class Auth {
         }
     }
 
+    /// Error occurred because the app is being rate limited.
+    public class RateLimitError: CustomStringConvertible {
+        /// The reason why the app is being rate limited.
+        public let reason: Auth.RateLimitReason
+        /// The number of seconds that the app should wait before making another request.
+        public let retryAfter: UInt64
+        public init(reason: Auth.RateLimitReason, retryAfter: UInt64 = 1) {
+            self.reason = reason
+            comparableValidator()(retryAfter)
+            self.retryAfter = retryAfter
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RateLimitErrorSerializer().serialize(self)))"
+        }
+    }
+    public class RateLimitErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: RateLimitError) -> JSON {
+            let output = [ 
+            "reason": Auth.RateLimitReasonSerializer().serialize(value.reason),
+            "retry_after": Serialization._UInt64Serializer.serialize(value.retryAfter),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> RateLimitError {
+            switch json {
+                case .Dictionary(let dict):
+                    let reason = Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .Null)
+                    let retryAfter = Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .Null)
+                    return RateLimitError(reason: reason, retryAfter: retryAfter)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The RateLimitReason union
+    public enum RateLimitReason: CustomStringConvertible {
+        /// You are making too many requests in the past few minutes.
+        case TooManyRequests
+        /// There are currently too many write operations happening in the user's Dropbox.
+        case TooManyWriteOperations
+        /// An unspecified error.
+        case Other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RateLimitReasonSerializer().serialize(self)))"
+        }
+    }
+    public class RateLimitReasonSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: RateLimitReason) -> JSON {
+            switch value {
+                case .TooManyRequests:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("too_many_requests")
+                    return .Dictionary(d)
+                case .TooManyWriteOperations:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("too_many_write_operations")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> RateLimitReason {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "too_many_requests":
+                            return RateLimitReason.TooManyRequests
+                        case "too_many_write_operations":
+                            return RateLimitReason.TooManyWriteOperations
+                        case "other":
+                            return RateLimitReason.Other
+                        default:
+                            return RateLimitReason.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
 
     /// Stone Route Objects
 

@@ -2,7 +2,7 @@ import Foundation
 import Alamofire
 
 public class DropboxTransportClient {
-    static let version = "3.1.0"
+    static let version = "3.2.0"
     
     static let manager: Manager = {
         let manager = Manager(serverTrustPolicyManager: DropboxServerTrustPolicyManager())

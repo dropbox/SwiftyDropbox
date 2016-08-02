@@ -407,14 +407,8 @@ class ViewController: UIViewController {
         let groupsUpdate = {
             tester.groupsUpdate(groupsDelete)
         }
-        let groupsMembersRemove = {
-            tester.groupsMembersRemove(groupsUpdate)
-        }
-        let groupsMembersSetAccessType = {
-            tester.groupsMembersSetAccessType(groupsMembersRemove)
-        }
         let groupsMembersList = {
-            tester.groupsMembersList(groupsMembersSetAccessType)
+            tester.groupsMembersList(groupsUpdate)
         }
         let groupsMembersAdd = {
             tester.groupsMembersAdd(groupsMembersList)

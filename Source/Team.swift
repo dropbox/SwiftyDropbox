@@ -232,329 +232,6 @@ public class Team {
         }
     }
 
-    /// The GroupCreateArg struct
-    public class GroupCreateArg: CustomStringConvertible {
-        /// Group name.
-        public let groupName: String
-        /// The creator of a team can associate an arbitrary external ID to the group.
-        public let groupExternalId: String?
-        public init(groupName: String, groupExternalId: String? = nil) {
-            stringValidator()(groupName)
-            self.groupName = groupName
-            nullableValidator(stringValidator())(groupExternalId)
-            self.groupExternalId = groupExternalId
-        }
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateArgSerializer().serialize(self)))"
-        }
-    }
-    public class GroupCreateArgSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: GroupCreateArg) -> JSON {
-            let output = [ 
-            "group_name": Serialization._StringSerializer.serialize(value.groupName),
-            "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> GroupCreateArg {
-            switch json {
-                case .Dictionary(let dict):
-                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
-                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    return GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The AlphaGroupCreateArg struct
-    public class AlphaGroupCreateArg: Team.GroupCreateArg {
-        /// Whether the team can be managed by selected users, or only by team admins
-        public let groupManagementType: TeamCommon.GroupManagementType
-        public init(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType = .CompanyManaged) {
-            self.groupManagementType = groupManagementType
-            super.init(groupName: groupName, groupExternalId: groupExternalId)
-        }
-        public override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AlphaGroupCreateArgSerializer().serialize(self)))"
-        }
-    }
-    public class AlphaGroupCreateArgSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: AlphaGroupCreateArg) -> JSON {
-            let output = [ 
-            "group_name": Serialization._StringSerializer.serialize(value.groupName),
-            "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
-            "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> AlphaGroupCreateArg {
-            switch json {
-                case .Dictionary(let dict):
-                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
-                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    let groupManagementType = TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .Null)
-                    return AlphaGroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// Full description of a group.
-    public class AlphaGroupFullInfo: TeamCommon.AlphaGroupSummary {
-        /// List of group members.
-        public let members: Array<Team.GroupMemberInfo>?
-        /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
-        public let created: UInt64
-        public init(groupName: String, groupId: String, groupManagementType: TeamCommon.GroupManagementType, created: UInt64, groupExternalId: String? = nil, memberCount: UInt32? = nil, members: Array<Team.GroupMemberInfo>? = nil) {
-            self.members = members
-            comparableValidator()(created)
-            self.created = created
-            super.init(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, groupExternalId: groupExternalId, memberCount: memberCount)
-        }
-        public override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AlphaGroupFullInfoSerializer().serialize(self)))"
-        }
-    }
-    public class AlphaGroupFullInfoSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: AlphaGroupFullInfo) -> JSON {
-            let output = [ 
-            "group_name": Serialization._StringSerializer.serialize(value.groupName),
-            "group_id": Serialization._StringSerializer.serialize(value.groupId),
-            "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
-            "created": Serialization._UInt64Serializer.serialize(value.created),
-            "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
-            "member_count": NullableSerializer(Serialization._UInt32Serializer).serialize(value.memberCount),
-            "members": NullableSerializer(ArraySerializer(Team.GroupMemberInfoSerializer())).serialize(value.members),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> AlphaGroupFullInfo {
-            switch json {
-                case .Dictionary(let dict):
-                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
-                    let groupId = Serialization._StringSerializer.deserialize(dict["group_id"] ?? .Null)
-                    let groupManagementType = TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .Null)
-                    let created = Serialization._UInt64Serializer.deserialize(dict["created"] ?? .Null)
-                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    let memberCount = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .Null)
-                    let members = NullableSerializer(ArraySerializer(Team.GroupMemberInfoSerializer())).deserialize(dict["members"] ?? .Null)
-                    return AlphaGroupFullInfo(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, created: created, groupExternalId: groupExternalId, memberCount: memberCount, members: members)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The IncludeMembersArg struct
-    public class IncludeMembersArg: CustomStringConvertible {
-        /// Whether to return the list of members in the group.  Note that the default value will cause all the group
-        /// members  to be returned in the response. This may take a long time for large groups.
-        public let returnMembers: Bool
-        public init(returnMembers: Bool = true) {
-            self.returnMembers = returnMembers
-        }
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(IncludeMembersArgSerializer().serialize(self)))"
-        }
-    }
-    public class IncludeMembersArgSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: IncludeMembersArg) -> JSON {
-            let output = [ 
-            "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> IncludeMembersArg {
-            switch json {
-                case .Dictionary(let dict):
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
-                    return IncludeMembersArg(returnMembers: returnMembers)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The GroupUpdateArgs struct
-    public class GroupUpdateArgs: Team.IncludeMembersArg {
-        /// Specify a group.
-        public let group: Team.GroupSelector
-        /// Optional argument. Set group name to this if provided.
-        public let newGroupName: String?
-        /// Optional argument. New group external ID. If the argument is None, the group's external_id won't be updated.
-        /// If the argument is empty string, the group's external id will be cleared.
-        public let newGroupExternalId: String?
-        public init(group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil) {
-            self.group = group
-            nullableValidator(stringValidator())(newGroupName)
-            self.newGroupName = newGroupName
-            nullableValidator(stringValidator())(newGroupExternalId)
-            self.newGroupExternalId = newGroupExternalId
-            super.init(returnMembers: returnMembers)
-        }
-        public override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateArgsSerializer().serialize(self)))"
-        }
-    }
-    public class GroupUpdateArgsSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: GroupUpdateArgs) -> JSON {
-            let output = [ 
-            "group": Team.GroupSelectorSerializer().serialize(value.group),
-            "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
-            "new_group_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupName),
-            "new_group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupExternalId),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> GroupUpdateArgs {
-            switch json {
-                case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
-                    let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .Null)
-                    let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .Null)
-                    return GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The AlphaGroupUpdateArgs struct
-    public class AlphaGroupUpdateArgs: Team.GroupUpdateArgs {
-        /// Set new group management type, if provided.
-        public let newGroupManagementType: TeamCommon.GroupManagementType?
-        public init(group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) {
-            self.newGroupManagementType = newGroupManagementType
-            super.init(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId)
-        }
-        public override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AlphaGroupUpdateArgsSerializer().serialize(self)))"
-        }
-    }
-    public class AlphaGroupUpdateArgsSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: AlphaGroupUpdateArgs) -> JSON {
-            let output = [ 
-            "group": Team.GroupSelectorSerializer().serialize(value.group),
-            "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
-            "new_group_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupName),
-            "new_group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupExternalId),
-            "new_group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.newGroupManagementType),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> AlphaGroupUpdateArgs {
-            switch json {
-                case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
-                    let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .Null)
-                    let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .Null)
-                    let newGroupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["new_group_management_type"] ?? .Null)
-                    return AlphaGroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The AlphaGroupsGetInfoItem union
-    public enum AlphaGroupsGetInfoItem: CustomStringConvertible {
-        /// An ID that was provided as a parameter to alphaGroupsGetInfo, and did not match a corresponding group. The
-        /// ID can be a group ID, or an external ID, depending on how the method was called.
-        case IdNotFound(String)
-        /// Info about a group.
-        case GroupInfo(Team.AlphaGroupFullInfo)
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AlphaGroupsGetInfoItemSerializer().serialize(self)))"
-        }
-    }
-    public class AlphaGroupsGetInfoItemSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: AlphaGroupsGetInfoItem) -> JSON {
-            switch value {
-                case .IdNotFound(let arg):
-                    var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
-                    d[".tag"] = .Str("id_not_found")
-                    return .Dictionary(d)
-                case .GroupInfo(let arg):
-                    var d = Serialization.getFields(Team.AlphaGroupFullInfoSerializer().serialize(arg))
-                    d[".tag"] = .Str("group_info")
-                    return .Dictionary(d)
-            }
-        }
-        public func deserialize(json: JSON) -> AlphaGroupsGetInfoItem {
-            switch json {
-                case .Dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "id_not_found":
-                            let v = Serialization._StringSerializer.deserialize(d["id_not_found"] ?? .Null)
-                            return AlphaGroupsGetInfoItem.IdNotFound(v)
-                        case "group_info":
-                            let v = Team.AlphaGroupFullInfoSerializer().deserialize(json)
-                            return AlphaGroupsGetInfoItem.GroupInfo(v)
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// The AlphaGroupsListResult struct
-    public class AlphaGroupsListResult: CustomStringConvertible {
-        /// (no description)
-        public let groups: Array<TeamCommon.AlphaGroupSummary>
-        /// Pass the cursor into alphaGroupsListContinue to obtain the additional groups.
-        public let cursor: String
-        /// Is true if there are additional groups that have not been returned yet. An additional call to
-        /// alphaGroupsListContinue can retrieve them.
-        public let hasMore: Bool
-        public init(groups: Array<TeamCommon.AlphaGroupSummary>, cursor: String, hasMore: Bool) {
-            self.groups = groups
-            stringValidator()(cursor)
-            self.cursor = cursor
-            self.hasMore = hasMore
-        }
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AlphaGroupsListResultSerializer().serialize(self)))"
-        }
-    }
-    public class AlphaGroupsListResultSerializer: JSONSerializer {
-        public init() { }
-        public func serialize(value: AlphaGroupsListResult) -> JSON {
-            let output = [ 
-            "groups": ArraySerializer(TeamCommon.AlphaGroupSummarySerializer()).serialize(value.groups),
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
-            ]
-            return .Dictionary(output)
-        }
-        public func deserialize(json: JSON) -> AlphaGroupsListResult {
-            switch json {
-                case .Dictionary(let dict):
-                    let groups = ArraySerializer(TeamCommon.AlphaGroupSummarySerializer()).deserialize(dict["groups"] ?? .Null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    return AlphaGroupsListResult(groups: groups, cursor: cursor, hasMore: hasMore)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
     /// Information on linked third party applications
     public class ApiApp: CustomStringConvertible {
         /// The application unique id
@@ -787,7 +464,7 @@ public class Team {
         case Mac
         /// Official Linux Dropbox desktop client
         case Linux
-        /// Official Dropbox desktop client for another platform
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1265,6 +942,48 @@ public class Team {
         }
     }
 
+    /// The GroupCreateArg struct
+    public class GroupCreateArg: CustomStringConvertible {
+        /// Group name.
+        public let groupName: String
+        /// The creator of a team can associate an arbitrary external ID to the group.
+        public let groupExternalId: String?
+        /// Whether the team can be managed by selected users, or only by team admins
+        public let groupManagementType: TeamCommon.GroupManagementType?
+        public init(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) {
+            stringValidator()(groupName)
+            self.groupName = groupName
+            nullableValidator(stringValidator())(groupExternalId)
+            self.groupExternalId = groupExternalId
+            self.groupManagementType = groupManagementType
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateArgSerializer().serialize(self)))"
+        }
+    }
+    public class GroupCreateArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GroupCreateArg) -> JSON {
+            let output = [ 
+            "group_name": Serialization._StringSerializer.serialize(value.groupName),
+            "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
+            "group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.groupManagementType),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> GroupCreateArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
+                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
+                    let groupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["group_management_type"] ?? .Null)
+                    return GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The GroupCreateError union
     public enum GroupCreateError: CustomStringConvertible {
         /// There is already an existing group with the requested name.
@@ -1273,7 +992,7 @@ public class Team {
         case GroupNameInvalid
         /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1328,7 +1047,7 @@ public class Team {
     public enum GroupSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1371,7 +1090,7 @@ public class Team {
     public enum GroupDeleteError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// This group has already been deleted.
         case GroupAlreadyDeleted
@@ -1424,11 +1143,11 @@ public class Team {
         public let members: Array<Team.GroupMemberInfo>?
         /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
         public let created: UInt64
-        public init(groupName: String, groupId: String, created: UInt64, groupExternalId: String? = nil, memberCount: UInt32? = nil, members: Array<Team.GroupMemberInfo>? = nil) {
+        public init(groupName: String, groupId: String, groupManagementType: TeamCommon.GroupManagementType, created: UInt64, groupExternalId: String? = nil, memberCount: UInt32? = nil, members: Array<Team.GroupMemberInfo>? = nil) {
             self.members = members
             comparableValidator()(created)
             self.created = created
-            super.init(groupName: groupName, groupId: groupId, groupExternalId: groupExternalId, memberCount: memberCount)
+            super.init(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, groupExternalId: groupExternalId, memberCount: memberCount)
         }
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupFullInfoSerializer().serialize(self)))"
@@ -1440,6 +1159,7 @@ public class Team {
             let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
+            "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
             "created": Serialization._UInt64Serializer.serialize(value.created),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
             "member_count": NullableSerializer(Serialization._UInt32Serializer).serialize(value.memberCount),
@@ -1452,11 +1172,12 @@ public class Team {
                 case .Dictionary(let dict):
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
                     let groupId = Serialization._StringSerializer.deserialize(dict["group_id"] ?? .Null)
+                    let groupManagementType = TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .Null)
                     let created = Serialization._UInt64Serializer.deserialize(dict["created"] ?? .Null)
                     let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
                     let memberCount = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .Null)
                     let members = NullableSerializer(ArraySerializer(Team.GroupMemberInfoSerializer())).deserialize(dict["members"] ?? .Null)
-                    return GroupFullInfo(groupName: groupName, groupId: groupId, created: created, groupExternalId: groupExternalId, memberCount: memberCount, members: members)
+                    return GroupFullInfo(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, created: created, groupExternalId: groupExternalId, memberCount: memberCount, members: members)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1538,7 +1259,7 @@ public class Team {
     public enum GroupMemberSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// The specified user is not a member of this group.
         case MemberNotInGroup
@@ -1589,7 +1310,7 @@ public class Team {
     public enum GroupMemberSetAccessTypeError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// The specified user is not a member of this group.
         case MemberNotInGroup
@@ -1644,6 +1365,37 @@ public class Team {
         }
     }
 
+    /// The IncludeMembersArg struct
+    public class IncludeMembersArg: CustomStringConvertible {
+        /// Whether to return the list of members in the group.  Note that the default value will cause all the group
+        /// members  to be returned in the response. This may take a long time for large groups.
+        public let returnMembers: Bool
+        public init(returnMembers: Bool = true) {
+            self.returnMembers = returnMembers
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IncludeMembersArgSerializer().serialize(self)))"
+        }
+    }
+    public class IncludeMembersArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: IncludeMembersArg) -> JSON {
+            let output = [ 
+            "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> IncludeMembersArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    return IncludeMembersArg(returnMembers: returnMembers)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The GroupMembersAddArg struct
     public class GroupMembersAddArg: Team.IncludeMembersArg {
         /// Group to which users will be added.
@@ -1686,7 +1438,7 @@ public class Team {
     public enum GroupMembersAddError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
         /// group.
@@ -1858,7 +1610,7 @@ public class Team {
     public enum GroupMembersSelectorError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
@@ -1909,7 +1661,7 @@ public class Team {
     public enum GroupMembersRemoveError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// At least one of the specified users is not a member of the group.
         case MemberNotInGroup
@@ -2085,11 +1837,62 @@ public class Team {
         }
     }
 
+    /// The GroupUpdateArgs struct
+    public class GroupUpdateArgs: Team.IncludeMembersArg {
+        /// Specify a group.
+        public let group: Team.GroupSelector
+        /// Optional argument. Set group name to this if provided.
+        public let newGroupName: String?
+        /// Optional argument. New group external ID. If the argument is None, the group's external_id won't be updated.
+        /// If the argument is empty string, the group's external id will be cleared.
+        public let newGroupExternalId: String?
+        /// Set new group management type, if provided.
+        public let newGroupManagementType: TeamCommon.GroupManagementType?
+        public init(group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) {
+            self.group = group
+            nullableValidator(stringValidator())(newGroupName)
+            self.newGroupName = newGroupName
+            nullableValidator(stringValidator())(newGroupExternalId)
+            self.newGroupExternalId = newGroupExternalId
+            self.newGroupManagementType = newGroupManagementType
+            super.init(returnMembers: returnMembers)
+        }
+        public override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateArgsSerializer().serialize(self)))"
+        }
+    }
+    public class GroupUpdateArgsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: GroupUpdateArgs) -> JSON {
+            let output = [ 
+            "group": Team.GroupSelectorSerializer().serialize(value.group),
+            "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
+            "new_group_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupName),
+            "new_group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupExternalId),
+            "new_group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.newGroupManagementType),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> GroupUpdateArgs {
+            switch json {
+                case .Dictionary(let dict):
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .Null)
+                    let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .Null)
+                    let newGroupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["new_group_management_type"] ?? .Null)
+                    return GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The GroupUpdateError union
     public enum GroupUpdateError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case GroupNotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
         /// The new external ID is already being used by another group.
         case ExternalIdAlreadyInUse
@@ -2140,7 +1943,7 @@ public class Team {
     public enum GroupsGetInfoError: CustomStringConvertible {
         /// The group is not on your team.
         case GroupNotOnTeam
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -3901,7 +3704,7 @@ public class Team {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case AsyncJobId(String)
-        /// (no description)
+        /// An unspecified error.
         case Complete(Array<Team.MemberAddResult>)
 
         public var description: String {
@@ -4143,9 +3946,12 @@ public class Team {
     public class MembersListArg: CustomStringConvertible {
         /// Number of results to return per call.
         public let limit: UInt32
-        public init(limit: UInt32 = 1000) {
+        /// Whether to return removed members.
+        public let includeRemoved: Bool
+        public init(limit: UInt32 = 1000, includeRemoved: Bool = false) {
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
+            self.includeRemoved = includeRemoved
         }
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListArgSerializer().serialize(self)))"
@@ -4156,6 +3962,7 @@ public class Team {
         public func serialize(value: MembersListArg) -> JSON {
             let output = [ 
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
+            "include_removed": Serialization._BoolSerializer.serialize(value.includeRemoved),
             ]
             return .Dictionary(output)
         }
@@ -4163,7 +3970,8 @@ public class Team {
             switch json {
                 case .Dictionary(let dict):
                     let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
-                    return MembersListArg(limit: limit)
+                    let includeRemoved = Serialization._BoolSerializer.deserialize(dict["include_removed"] ?? .Null)
+                    return MembersListArg(limit: limit, includeRemoved: includeRemoved)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4321,6 +4129,95 @@ public class Team {
         }
     }
 
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
+    public class MembersRecoverArg: CustomStringConvertible {
+        /// Identity of user to recover.
+        public let user: Team.UserSelectorArg
+        public init(user: Team.UserSelectorArg) {
+            self.user = user
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverArgSerializer().serialize(self)))"
+        }
+    }
+    public class MembersRecoverArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: MembersRecoverArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> MembersRecoverArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
+                    return MembersRecoverArg(user: user)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersRecoverError union
+    public enum MembersRecoverError: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case UserNotFound
+        /// The user is not recoverable.
+        case UserUnrecoverable
+        /// The user is not a member of the team.
+        case UserNotInTeam
+        /// An unspecified error.
+        case Other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverErrorSerializer().serialize(self)))"
+        }
+    }
+    public class MembersRecoverErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: MembersRecoverError) -> JSON {
+            switch value {
+                case .UserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("user_not_found")
+                    return .Dictionary(d)
+                case .UserUnrecoverable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("user_unrecoverable")
+                    return .Dictionary(d)
+                case .UserNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("user_not_in_team")
+                    return .Dictionary(d)
+                case .Other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("other")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> MembersRecoverError {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersRecoverError.UserNotFound
+                        case "user_unrecoverable":
+                            return MembersRecoverError.UserUnrecoverable
+                        case "user_not_in_team":
+                            return MembersRecoverError.UserNotInTeam
+                        case "other":
+                            return MembersRecoverError.Other
+                        default:
+                            return MembersRecoverError.Other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The MembersRemoveArg struct
     public class MembersRemoveArg: Team.MembersDeactivateArg {
         /// If provided, files from the deleted member account will be transferred to this user.
@@ -4398,6 +4295,8 @@ public class Team {
         case CannotKeepAccountAndTransfer
         /// Cannot keep account and delete the data at the same time.
         case CannotKeepAccountAndDeleteData
+        /// The email address of the user is too long to be disabled.
+        case EmailAddressTooLongToBeDisabled
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveErrorSerializer().serialize(self)))"
@@ -4463,6 +4362,10 @@ public class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("cannot_keep_account_and_delete_data")
                     return .Dictionary(d)
+                case .EmailAddressTooLongToBeDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("email_address_too_long_to_be_disabled")
+                    return .Dictionary(d)
             }
         }
         public func deserialize(json: JSON) -> MembersRemoveError {
@@ -4498,6 +4401,8 @@ public class Team {
                             return MembersRemoveError.CannotKeepAccountAndTransfer
                         case "cannot_keep_account_and_delete_data":
                             return MembersRemoveError.CannotKeepAccountAndDeleteData
+                        case "email_address_too_long_to_be_disabled":
+                            return MembersRemoveError.EmailAddressTooLongToBeDisabled
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -5042,7 +4947,7 @@ public class Team {
         case WindowsPhone
         /// Official Dropbox Blackberry client
         case Blackberry
-        /// Official Dropbox client for another platform
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -5164,6 +5069,36 @@ public class Team {
                     let osVersion = NullableSerializer(Serialization._StringSerializer).deserialize(dict["os_version"] ?? .Null)
                     let lastCarrier = NullableSerializer(Serialization._StringSerializer).deserialize(dict["last_carrier"] ?? .Null)
                     return MobileClientSession(sessionId: sessionId, deviceName: deviceName, clientType: clientType, ipAddress: ipAddress, country: country, created: created, updated: updated, clientVersion: clientVersion, osVersion: osVersion, lastCarrier: lastCarrier)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The RemovedStatus struct
+    public class RemovedStatus: CustomStringConvertible {
+        /// True if the removed team member is recoverable
+        public let isRecoverable: Bool
+        public init(isRecoverable: Bool) {
+            self.isRecoverable = isRecoverable
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RemovedStatusSerializer().serialize(self)))"
+        }
+    }
+    public class RemovedStatusSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: RemovedStatus) -> JSON {
+            let output = [ 
+            "is_recoverable": Serialization._BoolSerializer.serialize(value.isRecoverable),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> RemovedStatus {
+            switch json {
+                case .Dictionary(let dict):
+                    let isRecoverable = Serialization._BoolSerializer.deserialize(dict["is_recoverable"] ?? .Null)
+                    return RemovedStatus(isRecoverable: isRecoverable)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5293,7 +5228,7 @@ public class Team {
     /// The RevokeDeviceSessionBatchError union
     public enum RevokeDeviceSessionBatchError: CustomStringConvertible {
         /// An unspecified error.
-        case Unspecified
+        case Other
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchErrorSerializer().serialize(self)))"
@@ -5303,9 +5238,9 @@ public class Team {
         public init() { }
         public func serialize(value: RevokeDeviceSessionBatchError) -> JSON {
             switch value {
-                case .Unspecified:
+                case .Other:
                     var d = [String: JSON]()
-                    d[".tag"] = .Str("unspecified")
+                    d[".tag"] = .Str("other")
                     return .Dictionary(d)
             }
         }
@@ -5314,10 +5249,10 @@ public class Team {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "unspecified":
-                            return RevokeDeviceSessionBatchError.Unspecified
+                        case "other":
+                            return RevokeDeviceSessionBatchError.Other
                         default:
-                            return RevokeDeviceSessionBatchError.Unspecified
+                            return RevokeDeviceSessionBatchError.Other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -5516,7 +5451,7 @@ public class Team {
     /// Error returned by linkedAppsRevokeLinkedAppBatch.
     public enum RevokeLinkedAppBatchError: CustomStringConvertible {
         /// An unspecified error.
-        case Unspecified
+        case Other
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppBatchErrorSerializer().serialize(self)))"
@@ -5526,9 +5461,9 @@ public class Team {
         public init() { }
         public func serialize(value: RevokeLinkedAppBatchError) -> JSON {
             switch value {
-                case .Unspecified:
+                case .Other:
                     var d = [String: JSON]()
-                    d[".tag"] = .Str("unspecified")
+                    d[".tag"] = .Str("other")
                     return .Dictionary(d)
             }
         }
@@ -5537,10 +5472,10 @@ public class Team {
                 case .Dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "unspecified":
-                            return RevokeLinkedAppBatchError.Unspecified
+                        case "other":
+                            return RevokeLinkedAppBatchError.Other
                         default:
-                            return RevokeLinkedAppBatchError.Unspecified
+                            return RevokeLinkedAppBatchError.Other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -5847,6 +5782,9 @@ public class Team {
         /// User is no longer a member of the team, but the account can be un-suspended, re-establishing the user as a
         /// team member.
         case Suspended
+        /// User is no longer a member of the team. Removed users are only listed when include_removed is true in
+        /// members/list.
+        case Removed(Team.RemovedStatus)
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberStatusSerializer().serialize(self)))"
@@ -5868,6 +5806,10 @@ public class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("suspended")
                     return .Dictionary(d)
+                case .Removed(let arg):
+                    var d = Serialization.getFields(Team.RemovedStatusSerializer().serialize(arg))
+                    d[".tag"] = .Str("removed")
+                    return .Dictionary(d)
             }
         }
         public func deserialize(json: JSON) -> TeamMemberStatus {
@@ -5881,6 +5823,9 @@ public class Team {
                             return TeamMemberStatus.Invited
                         case "suspended":
                             return TeamMemberStatus.Suspended
+                        case "removed":
+                            let v = Team.RemovedStatusSerializer().deserialize(json)
+                            return TeamMemberStatus.Removed(v)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -6015,11 +5960,11 @@ public class Team {
 
     /// Argument for selecting a single user, either by team_member_id, external_id or email.
     public enum UserSelectorArg: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case TeamMemberId(String)
-        /// (no description)
+        /// An unspecified error.
         case ExternalId(String)
-        /// (no description)
+        /// An unspecified error.
         case Email(String)
 
         public var description: String {
@@ -6128,8 +6073,8 @@ public class Team {
         name: "alpha/groups/create",
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.AlphaGroupCreateArgSerializer(),
-        responseSerializer: Team.AlphaGroupFullInfoSerializer(),
+        argSerializer: Team.GroupCreateArgSerializer(),
+        responseSerializer: Team.GroupFullInfoSerializer(),
         errorSerializer: Team.GroupCreateErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
@@ -6139,7 +6084,7 @@ public class Team {
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsSelectorSerializer(),
-        responseSerializer: ArraySerializer(Team.AlphaGroupsGetInfoItemSerializer()),
+        responseSerializer: ArraySerializer(Team.GroupsGetInfoItemSerializer()),
         errorSerializer: Team.GroupsGetInfoErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
@@ -6149,7 +6094,7 @@ public class Team {
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsListArgSerializer(),
-        responseSerializer: Team.AlphaGroupsListResultSerializer(),
+        responseSerializer: Team.GroupsListResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
         attrs: ["host": "api",
                 "style": "rpc"]
@@ -6159,7 +6104,7 @@ public class Team {
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsListContinueArgSerializer(),
-        responseSerializer: Team.AlphaGroupsListResultSerializer(),
+        responseSerializer: Team.GroupsListResultSerializer(),
         errorSerializer: Team.GroupsListContinueErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
@@ -6168,8 +6113,8 @@ public class Team {
         name: "alpha/groups/update",
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.AlphaGroupUpdateArgsSerializer(),
-        responseSerializer: Team.AlphaGroupFullInfoSerializer(),
+        argSerializer: Team.GroupUpdateArgsSerializer(),
+        responseSerializer: Team.GroupFullInfoSerializer(),
         errorSerializer: Team.GroupUpdateErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
@@ -6451,6 +6396,16 @@ public class Team {
         argSerializer: Team.MembersListContinueArgSerializer(),
         responseSerializer: Team.MembersListResultSerializer(),
         errorSerializer: Team.MembersListContinueErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let membersRecover = Route(
+        name: "members/recover",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersRecoverArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Team.MembersRecoverErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )

@@ -730,6 +730,40 @@ public class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .Stream(input))
     }
 
+    /// This route helps you commit many files at once into a user's Dropbox. Use uploadSessionStart and
+    /// uploadSessionAppendV2 to upload file contents. We recommend uploading many files in parallel to increase
+    /// throughput. Once the file contents have been uploaded, rather than calling uploadSessionFinish, use this route
+    /// to finish all your upload sessions in a single request. close in UploadSessionStartArg or close in
+    /// UploadSessionAppendArg needs to be true for last uploadSessionStart or uploadSessionAppendV2 call. This route
+    /// will return job_id immediately and do the async commit job in background. We have another route
+    /// uploadSessionFinishBatchCheck to check the job status. For the same account, this route should be executed
+    /// serially. That means you should not start next job before current job finishes. Also we only allow up to 1000
+    /// entries in a single request
+    ///
+    /// - parameter entries: Commit information for each file in the batch.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// or a `Void` object on failure.
+    public func uploadSessionFinishBatch(entries entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+        let route = Files.uploadSessionFinishBatch
+        let serverArgs = Files.UploadSessionFinishBatchArg(entries: entries)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for uploadSessionFinishBatch. If success, it returns list of result
+    /// for each entry
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionFinishBatchJobStatus`
+    /// object on success or a `Async.PollError` object on failure.
+    public func uploadSessionFinishBatchCheck(asyncJobId asyncJobId: String) -> RpcRequest<Files.UploadSessionFinishBatchJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.uploadSessionFinishBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
     /// with the given data.  You can then use uploadSessionAppendV2 to add more data and uploadSessionFinish to save
     /// all the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.

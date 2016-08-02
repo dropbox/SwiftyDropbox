@@ -14,7 +14,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
 
         public var description: String {
@@ -75,7 +75,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
@@ -152,7 +152,7 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
@@ -319,7 +319,7 @@ public class Files {
 
     /// The GetMetadataError union
     public enum GetMetadataError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
 
         public var description: String {
@@ -355,9 +355,9 @@ public class Files {
 
     /// The AlphaGetMetadataError union
     public enum AlphaGetMetadataError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case PropertiesError(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -416,7 +416,7 @@ public class Files {
         /// notification.
         public let mute: Bool
         public init(path: String, mode: Files.WriteMode = .Add, autorename: Bool = false, clientModified: NSDate? = nil, mute: Bool = false) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.mode = mode
             self.autorename = autorename
@@ -500,7 +500,7 @@ public class Files {
         /// Path in the user's Dropbox to create.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
         public var description: String {
@@ -528,7 +528,7 @@ public class Files {
 
     /// The CreateFolderError union
     public enum CreateFolderError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.WriteError)
 
         public var description: String {
@@ -567,7 +567,7 @@ public class Files {
         /// Path in the user's Dropbox to delete.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
         public var description: String {
@@ -595,11 +595,11 @@ public class Files {
 
     /// The DeleteError union
     public enum DeleteError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case PathLookup(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case PathWrite(Files.WriteError)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -831,7 +831,7 @@ public class Files {
 
     /// The DownloadError union
     public enum DownloadError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -1161,9 +1161,9 @@ public class Files {
 
     /// The GetCopyReferenceError union
     public enum GetCopyReferenceError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1278,9 +1278,9 @@ public class Files {
 
     /// The GetTemporaryLinkError union
     public enum GetTemporaryLinkError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1408,7 +1408,7 @@ public class Files {
         /// members.
         public let includeHasExplicitSharedMembers: Bool
         public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)?")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)?|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.recursive = recursive
             self.includeMediaInfo = includeMediaInfo
@@ -1479,11 +1479,11 @@ public class Files {
 
     /// The ListFolderContinueError union
     public enum ListFolderContinueError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1531,7 +1531,7 @@ public class Files {
 
     /// The ListFolderError union
     public enum ListFolderError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -1648,7 +1648,7 @@ public class Files {
     public enum ListFolderLongpollError: CustomStringConvertible {
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case Reset
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1771,7 +1771,7 @@ public class Files {
         /// The maximum number of revision entries returned.
         public let limit: UInt64
         public init(path: String, limit: UInt64 = 10) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             comparableValidator(minValue: 1, maxValue: 100)(limit)
             self.limit = limit
@@ -1803,9 +1803,9 @@ public class Files {
 
     /// The ListRevisionsError union
     public enum ListRevisionsError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -1917,7 +1917,7 @@ public class Files {
 
     /// The LookupError union
     public enum LookupError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case MalformedPath(String?)
         /// There is nothing at the given path.
         case NotFound
@@ -1928,7 +1928,7 @@ public class Files {
         /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
         /// restrictions due to copyright claims.
         case RestrictedContent
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2270,7 +2270,7 @@ public class Files {
         /// Filled custom property templates associated with a file.
         public let propertyGroups: Array<Properties.PropertyGroup>
         public init(path: String, propertyGroups: Array<Properties.PropertyGroup>) {
-            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*")(path)
+            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.propertyGroups = propertyGroups
         }
@@ -2306,9 +2306,9 @@ public class Files {
         /// Path in the user's Dropbox that is the destination.
         public let toPath: String
         public init(fromPath: String, toPath: String) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(fromPath)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(fromPath)
             self.fromPath = fromPath
-            stringValidator(pattern: "/(.|[\\r\\n])*")(toPath)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(toPath)
             self.toPath = toPath
         }
         public var description: String {
@@ -2338,11 +2338,11 @@ public class Files {
 
     /// The RelocationError union
     public enum RelocationError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case FromLookup(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case FromWrite(Files.WriteError)
-        /// (no description)
+        /// An unspecified error.
         case To(Files.WriteError)
         /// Shared folders can't be copied.
         case CantCopySharedFolder
@@ -2437,7 +2437,7 @@ public class Files {
         /// A list of identifiers for a property template created by route properties/template/add.
         public let propertyTemplateIds: Array<String>
         public init(path: String, propertyTemplateIds: Array<String>) {
-            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*")(path)
+            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*"))(propertyTemplateIds)
             self.propertyTemplateIds = propertyTemplateIds
@@ -2475,9 +2475,9 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
-        /// (no description)
+        /// An unspecified error.
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -2544,7 +2544,7 @@ public class Files {
         /// The revision to restore for the file.
         public let rev: String
         public init(path: String, rev: String) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             stringValidator(minLength: 9, pattern: "[0-9a-f]+")(rev)
             self.rev = rev
@@ -2582,7 +2582,7 @@ public class Files {
         case PathWrite(Files.WriteError)
         /// The revision is invalid. It may point to a different file.
         case InvalidRevision
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2674,7 +2674,7 @@ public class Files {
 
     /// The SaveCopyReferenceError union
     public enum SaveCopyReferenceError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.WriteError)
         /// The copy reference is invalid.
         case InvalidCopyReference
@@ -2685,7 +2685,7 @@ public class Files {
         case NotFound
         /// The operation would involve more than 10,000 files and folders.
         case TooManyFiles
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2818,7 +2818,7 @@ public class Files {
 
     /// The SaveUrlError union
     public enum SaveUrlError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.WriteError)
         /// Failed downloading the given URL.
         case DownloadFailed
@@ -2826,7 +2826,7 @@ public class Files {
         case InvalidUrl
         /// The file where the URL is saved to no longer exists.
         case NotFound
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -2890,7 +2890,7 @@ public class Files {
         case InProgress
         /// Metadata of the file where the URL is saved to.
         case Complete(Files.FileMetadata)
-        /// (no description)
+        /// An unspecified error.
         case Failed(Files.SaveUrlError)
 
         public var description: String {
@@ -2999,7 +2999,7 @@ public class Files {
         /// only available for Dropbox Business accounts.
         public let mode: Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .Filename) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)?")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)?|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             stringValidator()(query)
             self.query = query
@@ -3042,7 +3042,7 @@ public class Files {
 
     /// The SearchError union
     public enum SearchError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// An unspecified error.
         case Other
@@ -3367,9 +3367,9 @@ public class Files {
 
     /// The ThumbnailFormat union
     public enum ThumbnailFormat: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case Jpeg
-        /// (no description)
+        /// An unspecified error.
         case Png
 
         public var description: String {
@@ -3483,13 +3483,13 @@ public class Files {
         case RestrictedContent
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case Path(Files.LookupError)
         /// A field value in this property group is too large.
         case PropertyFieldTooLarge
         /// The property group specified does not conform to the property template.
         case DoesNotFitTemplate
-        /// (no description)
+        /// An unspecified error.
         case PropertyGroupLookup(Files.LookUpPropertiesError)
 
         public var description: String {
@@ -3568,7 +3568,7 @@ public class Files {
         /// Filled custom property templates associated with a file.
         public let updatePropertyGroups: Array<Files.PropertyGroupUpdate>
         public init(path: String, updatePropertyGroups: Array<Files.PropertyGroupUpdate>) {
-            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*")(path)
+            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.updatePropertyGroups = updatePropertyGroups
         }
@@ -3647,7 +3647,7 @@ public class Files {
         case Path(Files.UploadWriteFailed)
         /// An unspecified error.
         case Other
-        /// (no description)
+        /// An unspecified error.
         case PropertiesError(Files.InvalidPropertyGroupError)
 
         public var description: String {
@@ -3799,6 +3799,155 @@ public class Files {
                     return UploadSessionFinishArg(cursor: cursor, commit: commit)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionFinishBatchArg struct
+    public class UploadSessionFinishBatchArg: CustomStringConvertible {
+        /// Commit information for each file in the batch.
+        public let entries: Array<Files.UploadSessionFinishArg>
+        public init(entries: Array<Files.UploadSessionFinishArg>) {
+            self.entries = entries
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchArgSerializer().serialize(self)))"
+        }
+    }
+    public class UploadSessionFinishBatchArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: UploadSessionFinishBatchArg) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.UploadSessionFinishArgSerializer()).serialize(value.entries),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> UploadSessionFinishBatchArg {
+            switch json {
+                case .Dictionary(let dict):
+                    let entries = ArraySerializer(Files.UploadSessionFinishArgSerializer()).deserialize(dict["entries"] ?? .Null)
+                    return UploadSessionFinishBatchArg(entries: entries)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionFinishBatchJobStatus union
+    public enum UploadSessionFinishBatchJobStatus: CustomStringConvertible {
+        /// The asynchronous job is still in progress.
+        case InProgress
+        /// The uploadSessionFinishBatch has finished.
+        case Complete(Files.UploadSessionFinishBatchResult)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchJobStatusSerializer().serialize(self)))"
+        }
+    }
+    public class UploadSessionFinishBatchJobStatusSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: UploadSessionFinishBatchJobStatus) -> JSON {
+            switch value {
+                case .InProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("in_progress")
+                    return .Dictionary(d)
+                case .Complete(let arg):
+                    var d = Serialization.getFields(Files.UploadSessionFinishBatchResultSerializer().serialize(arg))
+                    d[".tag"] = .Str("complete")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> UploadSessionFinishBatchJobStatus {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "in_progress":
+                            return UploadSessionFinishBatchJobStatus.InProgress
+                        case "complete":
+                            let v = Files.UploadSessionFinishBatchResultSerializer().deserialize(json)
+                            return UploadSessionFinishBatchJobStatus.Complete(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The UploadSessionFinishBatchResult struct
+    public class UploadSessionFinishBatchResult: CustomStringConvertible {
+        /// Commit result for each file in the batch.
+        public let entries: Array<Files.UploadSessionFinishBatchResultEntry>
+        public init(entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
+            self.entries = entries
+        }
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultSerializer().serialize(self)))"
+        }
+    }
+    public class UploadSessionFinishBatchResultSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: UploadSessionFinishBatchResult) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).serialize(value.entries),
+            ]
+            return .Dictionary(output)
+        }
+        public func deserialize(json: JSON) -> UploadSessionFinishBatchResult {
+            switch json {
+                case .Dictionary(let dict):
+                    let entries = ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .Null)
+                    return UploadSessionFinishBatchResult(entries: entries)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionFinishBatchResultEntry union
+    public enum UploadSessionFinishBatchResultEntry: CustomStringConvertible {
+        /// An unspecified error.
+        case Success(Files.FileMetadata)
+        /// An unspecified error.
+        case Failure(Files.UploadSessionFinishError)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultEntrySerializer().serialize(self)))"
+        }
+    }
+    public class UploadSessionFinishBatchResultEntrySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(value: UploadSessionFinishBatchResultEntry) -> JSON {
+            switch value {
+                case .Success(let arg):
+                    var d = Serialization.getFields(Files.FileMetadataSerializer().serialize(arg))
+                    d[".tag"] = .Str("success")
+                    return .Dictionary(d)
+                case .Failure(let arg):
+                    var d = ["failure": Files.UploadSessionFinishErrorSerializer().serialize(arg)]
+                    d[".tag"] = .Str("failure")
+                    return .Dictionary(d)
+            }
+        }
+        public func deserialize(json: JSON) -> UploadSessionFinishBatchResultEntry {
+            switch json {
+                case .Dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Files.FileMetadataSerializer().deserialize(json)
+                            return UploadSessionFinishBatchResultEntry.Success(v)
+                        case "failure":
+                            let v = Files.UploadSessionFinishErrorSerializer().deserialize(d["failure"] ?? .Null)
+                            return UploadSessionFinishBatchResultEntry.Failure(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -4110,7 +4259,7 @@ public class Files {
         case Folder
         /// There's a file at an ancestor path, so we couldn't create the required parent folders.
         case FileAncestor
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4163,7 +4312,7 @@ public class Files {
 
     /// The WriteError union
     public enum WriteError: CustomStringConvertible {
-        /// (no description)
+        /// An unspecified error.
         case MalformedPath(String?)
         /// Couldn't write to the target path because there was something in the way.
         case Conflict(Files.WriteConflictError)
@@ -4173,7 +4322,7 @@ public class Files {
         case InsufficientSpace
         /// Dropbox will not save the file or folder because of its name.
         case DisallowedName
-        /// (no description)
+        /// An unspecified error.
         case Other
 
         public var description: String {
@@ -4630,6 +4779,26 @@ public class Files {
         errorSerializer: Files.UploadSessionFinishErrorSerializer(),
         attrs: ["host": "content",
                 "style": "upload"]
+    )
+    static let uploadSessionFinishBatch = Route(
+        name: "upload_session/finish_batch",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
+        responseSerializer: Async.LaunchEmptyResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let uploadSessionFinishBatchCheck = Route(
+        name: "upload_session/finish_batch/check",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.UploadSessionFinishBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
     )
     static let uploadSessionStart = Route(
         name: "upload_session/start",

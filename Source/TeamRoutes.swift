@@ -11,13 +11,15 @@ public class TeamRoutes {
 
     /// Creates a new, empty group, with a requested name. Permission : Team member management
     ///
+    /// - parameter groupName: Group name.
+    /// - parameter groupExternalId: The creator of a team can associate an arbitrary external ID to the group.
     /// - parameter groupManagementType: Whether the team can be managed by selected users, or only by team admins
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AlphaGroupFullInfo` object on success
-    /// or a `Team.GroupCreateError` object on failure.
-    public func alphaGroupsCreate(groupName groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType = .CompanyManaged) -> RpcRequest<Team.AlphaGroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
+    /// `Team.GroupCreateError` object on failure.
+    public func alphaGroupsCreate(groupName groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
         let route = Team.alphaGroupsCreate
-        let serverArgs = Team.AlphaGroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
+        let serverArgs = Team.GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -25,9 +27,9 @@ public class TeamRoutes {
     ///
     /// - parameter groupsSelector: Argument for selecting a list of groups, either by group_ids, or external group IDs.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.AlphaGroupsGetInfoItem>` object
-    /// on success or a `Team.GroupsGetInfoError` object on failure.
-    public func alphaGroupsGetInfo(groupsSelector groupsSelector: Team.GroupsSelector) -> RpcRequest<ArraySerializer<Team.AlphaGroupsGetInfoItemSerializer>, Team.GroupsGetInfoErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
+    /// success or a `Team.GroupsGetInfoError` object on failure.
+    public func alphaGroupsGetInfo(groupsSelector groupsSelector: Team.GroupsSelector) -> RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupsGetInfoErrorSerializer> {
         let route = Team.alphaGroupsGetInfo
         let serverArgs = groupsSelector
         return client.request(route, serverArgs: serverArgs)
@@ -37,9 +39,9 @@ public class TeamRoutes {
     ///
     /// - parameter limit: Number of results to return per call.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AlphaGroupsListResult` object on
-    /// success or a `Void` object on failure.
-    public func alphaGroupsList(limit: UInt32 = 1000) -> RpcRequest<Team.AlphaGroupsListResultSerializer, VoidSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success
+    /// or a `Void` object on failure.
+    public func alphaGroupsList(limit: UInt32 = 1000) -> RpcRequest<Team.GroupsListResultSerializer, VoidSerializer> {
         let route = Team.alphaGroupsList
         let serverArgs = Team.GroupsListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -50,9 +52,9 @@ public class TeamRoutes {
     ///
     /// - parameter cursor: Indicates from what point to get the next set of groups.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AlphaGroupsListResult` object on
-    /// success or a `Team.GroupsListContinueError` object on failure.
-    public func alphaGroupsListContinue(cursor cursor: String) -> RpcRequest<Team.AlphaGroupsListResultSerializer, Team.GroupsListContinueErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success
+    /// or a `Team.GroupsListContinueError` object on failure.
+    public func alphaGroupsListContinue(cursor cursor: String) -> RpcRequest<Team.GroupsListResultSerializer, Team.GroupsListContinueErrorSerializer> {
         let route = Team.alphaGroupsListContinue
         let serverArgs = Team.GroupsListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -60,13 +62,17 @@ public class TeamRoutes {
 
     /// Updates a group's name, external ID or management type. Permission : Team member management
     ///
+    /// - parameter group: Specify a group.
+    /// - parameter newGroupName: Optional argument. Set group name to this if provided.
+    /// - parameter newGroupExternalId: Optional argument. New group external ID. If the argument is None, the group's
+    /// external_id won't be updated. If the argument is empty string, the group's external id will be cleared.
     /// - parameter newGroupManagementType: Set new group management type, if provided.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AlphaGroupFullInfo` object on success
-    /// or a `Team.GroupUpdateError` object on failure.
-    public func alphaGroupsUpdate(group group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.AlphaGroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
+    /// `Team.GroupUpdateError` object on failure.
+    public func alphaGroupsUpdate(group group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
         let route = Team.alphaGroupsUpdate
-        let serverArgs = Team.AlphaGroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
+        let serverArgs = Team.GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -157,12 +163,13 @@ public class TeamRoutes {
     ///
     /// - parameter groupName: Group name.
     /// - parameter groupExternalId: The creator of a team can associate an arbitrary external ID to the group.
+    /// - parameter groupManagementType: Whether the team can be managed by selected users, or only by team admins
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupCreateError` object on failure.
-    public func groupsCreate(groupName groupName: String, groupExternalId: String? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
+    public func groupsCreate(groupName groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
         let route = Team.groupsCreate
-        let serverArgs = Team.GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId)
+        let serverArgs = Team.GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -274,8 +281,9 @@ public class TeamRoutes {
     }
 
     /// Removes members from a group. The members are removed immediately. However the revoking of group-owned resources
-    /// may take additional time. Use the groupsJobStatusGet to determine whether this process has completed. Permission
-    /// : Team member management
+    /// may take additional time. Use the groupsJobStatusGet to determine whether this process has completed. This
+    /// method permits removing the only owner of a group, even in cases where this is not possible via the web client.
+    /// Permission : Team member management
     ///
     /// - parameter group: Group from which users will be removed.
     /// - parameter users: List of users to be removed from the group.
@@ -308,12 +316,13 @@ public class TeamRoutes {
     /// - parameter newGroupName: Optional argument. Set group name to this if provided.
     /// - parameter newGroupExternalId: Optional argument. New group external ID. If the argument is None, the group's
     /// external_id won't be updated. If the argument is empty string, the group's external id will be cleared.
+    /// - parameter newGroupManagementType: Set new group management type, if provided.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupUpdateError` object on failure.
-    public func groupsUpdate(group group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
+    public func groupsUpdate(group group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
         let route = Team.groupsUpdate
-        let serverArgs = Team.GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId)
+        let serverArgs = Team.GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -434,12 +443,13 @@ public class TeamRoutes {
     /// Lists members of a team. Permission : Team information
     ///
     /// - parameter limit: Number of results to return per call.
+    /// - parameter includeRemoved: Whether to return removed members.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
     /// or a `Team.MembersListError` object on failure.
-    public func membersList(limit: UInt32 = 1000) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer> {
+    public func membersList(limit: UInt32 = 1000, includeRemoved: Bool = false) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer> {
         let route = Team.membersList
-        let serverArgs = Team.MembersListArg(limit: limit)
+        let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -453,6 +463,19 @@ public class TeamRoutes {
     public func membersListContinue(cursor cursor: String) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListContinueErrorSerializer> {
         let route = Team.membersListContinue
         let serverArgs = Team.MembersListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id, email, or
+    /// external_id must be provided to identify the user account.
+    ///
+    /// - parameter user: Identity of user to recover.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Team.MembersRecoverError` object on failure.
+    public func membersRecover(user user: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersRecoverErrorSerializer> {
+        let route = Team.membersRecover
+        let serverArgs = Team.MembersRecoverArg(user: user)
         return client.request(route, serverArgs: serverArgs)
     }
 

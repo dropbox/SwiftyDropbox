@@ -45,6 +45,20 @@ public class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Changes a member's access on a shared file.
+    ///
+    /// - parameter file: File for which we are changing a member's access.
+    /// - parameter member: The member whose access we are changing.
+    /// - parameter accessLevel: The new access level for the member.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionResult` object on
+    /// success or a `Sharing.FileMemberActionError` object on failure.
+    public func changeFileMemberAccess(file file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
+        let route = Sharing.changeFileMemberAccess
+        let serverArgs = Sharing.ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Returns the status of an asynchronous job. Apps must have full Dropbox access to use this endpoint.
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method

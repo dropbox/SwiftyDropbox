@@ -924,39 +924,6 @@ public class TeamTests {
         }
     }
 
-    func groupsMembersSetAccessType(nextTest: (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let groupSelector = Team.GroupSelector.GroupExternalId(TestTeamData.groupExternalId)
-        let userSelectorArg = Team.UserSelectorArg.TeamMemberId(self.teamMemberId!)
-        let accessType = Team.GroupAccessType.Owner
-
-        tester.team.groupsMembersSetAccessType(group: groupSelector, user: userSelectorArg, accessType: accessType).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(callError))
-            }
-        }
-    }
-
-    func groupsMembersRemove(nextTest: (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let groupSelector = Team.GroupSelector.GroupExternalId(TestTeamData.groupExternalId)
-        let userSelectorArg = Team.UserSelectorArg.TeamMemberId(self.teamMemberId!)
-
-        tester.team.groupsMembersRemove(group: groupSelector, users: [userSelectorArg]).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(callError))
-            }
-        }
-    }
-
     func groupsUpdate(nextTest: (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.GroupExternalId(TestTeamData.groupExternalId)
