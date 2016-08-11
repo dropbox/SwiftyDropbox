@@ -1,14 +1,16 @@
 {
   "podspec": "SwiftyDropbox.podspec", 
   "skip_undocumented": true, 
-  "swift_version": 2, 
+  "swift_version": 2.2, 
   "author_name": "Dropbox, Inc.", 
   "custom_categories": [
     {
       "name": "Routes", 
       "children": [
+        "AuthRoutes", 
         "FilesRoutes", 
         "SharingRoutes", 
+        "TeamRoutes", 
         "UsersRoutes"
       ]
     }, 
@@ -17,9 +19,13 @@
       "children": [
         "Async", 
         "Auth", 
+        "Common", 
         "Files", 
+        "Properties", 
         "Sharing", 
         "Team", 
+        "TeamCommon", 
+        "TeamPolicies", 
         "Users"
       ]
     }, 
@@ -36,15 +42,16 @@
       "name": "Client Classes", 
       "children": [
         "Dropbox", 
-        "DropboxClient"
+        "DropboxClient", 
+        "DropboxTeamClient"
       ]
     }
   ], 
   "author_url": "https://dropbox.com/developers", 
   "hide_documentation_coverage": true, 
   "excluded_files": [
-    "Source/BabelSerializers.swift", 
-    "Source/BabelValidators.swift", 
-    "Source/Client.swift"
+    "Source/StoneSerializers.swift", 
+    "Source/StoneValidators.swift", 
+    "Source/DropboxTransportClient.swift"
   ]
 }

@@ -4,6 +4,7 @@ import WebKit
 import Security
 
 import Foundation
+import SystemConfiguration
 
 
 /// A Dropbox access token
@@ -72,6 +73,9 @@ public enum DropboxAuthResult {
     
     /// The authorization failed. Includes an `OAuth2Error` and a descriptive message.
     case Error(OAuth2Error, String)
+
+    /// The authorization was manually canceled by the user.
+    case Cancel
 }
 
 class Keychain {
@@ -187,6 +191,36 @@ class Keychain {
         return SecItemDelete(query) == noErr
     }
 }
+
+class Reachability {
+    /// From http://stackoverflow.com/questions/25623272/how-to-use-scnetworkreachability-in-swift/25623647#25623647.
+    ///
+    /// This method uses `SCNetworkReachabilityCreateWithAddress` to create a reference to monitor the example host
+    /// defined by our zeroed `zeroAddress` struct. From this reference, we can extract status flags regarding the
+    /// reachability of this host, using `SCNetworkReachabilityGetFlags`.
+
+    class func connectedToNetwork() -> Bool {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+
+        guard let defaultRouteReachability = withUnsafePointer(&zeroAddress, {
+            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+        }) else {
+            return false
+        }
+
+        var flags : SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+
+        let isReachable = flags.contains(.Reachable)
+        let needsConnection = flags.contains(.ConnectionRequired)
+        return (isReachable && !needsConnection)
+    }
+}
+
 /// Manages access token storage and authentication
 ///
 /// Use the `DropboxAuthManager` to authenticate users through OAuth2, save access tokens, and retrieve access tokens.
@@ -210,11 +244,10 @@ public class DropboxAuthManager {
         self.dauthRedirectURL = NSURL(string: "db-\(self.appKey)://1/connect")!
     }
     
-    /** 
-        Create an instance
-
-        parameter appKey: The app key from the developer console that identifies this app.
-    */
+    ///
+    /// Create an instance
+    /// parameter appKey: The app key from the developer console that identifies this app.
+    ///
     convenience public init(appKey: String) {
         self.init(appKey: appKey, host: "www.dropbox.com")
     }
@@ -304,19 +337,33 @@ public class DropboxAuthManager {
     
     private func canHandleURL(url: NSURL) -> Bool {
         for known in [self.redirectURL, self.dauthRedirectURL] {
-            if (url.scheme == known.scheme &&  url.host == known.host && url.path == known.path) {
+            if (url.scheme == known.scheme && url.host == known.host && url.path == known.path) {
                 return true
             }
         }
         return false
     }
     
+    ///
     /// Present the OAuth2 authorization request page by presenting a web view controller modally
     ///
-    /// parameter controller: The controller to present from
+    /// - parameter controller: The controller to present from
+    ///
     public func authorizeFromController(controller: UIViewController) {
+        if !Reachability.connectedToNetwork() {
+            let message = "Try again once you have an internet connection"
+            let alertController = UIAlertController(title: "No internet connection", message: message, preferredStyle: .Alert)
+
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "Retry", style: .Default) { (_) in
+                self.authorizeFromController(controller)
+            })
+            controller.presentViewController(alertController, animated: false, completion: nil)
+            return
+        }
+
         if !self.conformsToAppScheme() {
-            let message = "DropboxSDK: unable to link; app isn't registered for correct URL scheme (db-\(self.appKey))"
+            let message = "DropboxSDK: unable to link; app isn't registered for correct URL scheme (db-\(self.appKey)). Add this scheme to your project Info.plist file, under \"URL types\" > \"URL Schemes\"."
             let alertController = UIAlertController(
                 title: "SwiftyDropbox Error",
                 message: message,
@@ -324,6 +371,7 @@ public class DropboxAuthManager {
             controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
+
         if !self.hasApplicationQueriesSchemes() {
             let message = "DropboxSDK: unable to link; app isn't registered to query for URL schemes dbapi-2 and dbapi-8-emm. Add a dbapi-2 entry and a dbapi-8-emm entry to LSApplicationQueriesSchemes"
             
@@ -334,6 +382,7 @@ public class DropboxAuthManager {
             controller.presentViewController(alertController, animated: true, completion: { fatalError(message) } )
             return
         }
+
         if let scheme = dAuthScheme() {
             let nonce = NSUUID().UUIDString
             NSUserDefaults.standardUserDefaults().setObject(nonce, forKey: kDBLinkNonce)
@@ -401,20 +450,25 @@ public class DropboxAuthManager {
         }
     }
     
-    /**
-        Try to handle a redirect back into the application
-
-        - parameter url: The URL to attempt to handle
-
-        - returns `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
-    */
+    ///
+    /// Try to handle a redirect back into the application
+    ///
+    /// - parameter url: The URL to attempt to handle
+    ///
+    /// - returns `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxAuthResult`.
+    ///
     public func handleRedirectURL(url: NSURL) -> DropboxAuthResult? {
-        
+        // check if url is a cancel url
+        if url.host == "2" && url.path == "/cancel" {
+            return .Cancel
+        }
+
         if !self.canHandleURL(url) {
             return nil
         }
         
         let result : DropboxAuthResult
+
         if url.host == "1" { // dauth
             result = extractfromDAuthURL(url)
         } else {
@@ -430,11 +484,11 @@ public class DropboxAuthManager {
         }
     }
     
-    /**
-        Retrieve all stored access tokens
-
-        - returns: a dictionary mapping users to their access tokens
-    */
+    ///
+    /// Retrieve all stored access tokens
+    ///
+    /// - returns: a dictionary mapping users to their access tokens
+    ///
     public func getAllAccessTokens() -> [String : DropboxAccessToken] {
         let users = Keychain.getAll()
         var ret = [String : DropboxAccessToken]()
@@ -446,22 +500,22 @@ public class DropboxAuthManager {
         return ret
     }
     
-    /**
-        Check if there are any stored access tokens
-
-        -returns: Whether there are stored access tokens
-    */
+    ///
+    /// Check if there are any stored access tokens
+    ///
+    /// - returns: Whether there are stored access tokens
+    ///
     public func hasStoredAccessTokens() -> Bool {
         return self.getAllAccessTokens().count != 0
     }
     
-    /**
-        Retrieve the access token for a particular user
-
-        - parameter user: The user whose token to retrieve
-
-        - returns: An access token if present, otherwise `nil`.
-    */
+    ///
+    /// Retrieve the access token for a particular user
+    ///
+    /// - parameter user: The user whose token to retrieve
+    ///
+    /// - returns: An access token if present, otherwise `nil`.
+    ///
     public func getAccessToken(user: String) -> DropboxAccessToken? {
         if let accessToken = Keychain.get(user) {
             return DropboxAccessToken(accessToken: accessToken, uid: user)
@@ -469,40 +523,43 @@ public class DropboxAuthManager {
             return nil
         }
     }
-    /**
-        Delete a specific access token
 
-        - parameter token: The access token to delete
-
-        - returns: whether the operation succeeded
-    */
+    ///
+    /// Delete a specific access token
+    ///
+    /// - parameter token: The access token to delete
+    ///
+    /// - returns: whether the operation succeeded
+    ///
     public func clearStoredAccessToken(token: DropboxAccessToken) -> Bool {
         return Keychain.delete(token.uid)
     }
-    /**
-        Delete all stored access tokens
 
-        - returns: whether the operation succeeded
-    */
+    ///
+    /// Delete all stored access tokens
+    ///
+    /// - returns: whether the operation succeeded
+    ///
     public func clearStoredAccessTokens() -> Bool {
         return Keychain.clear()
     }
-    /**
-        Save an access token
 
-        - parameter token: The access token to save
-
-        - returns: whether the operation succeeded
-    */
+    ///
+    /// Save an access token
+    ///
+    /// - parameter token: The access token to save
+    ///
+    /// - returns: whether the operation succeeded
+    ///
     public func storeAccessToken(token: DropboxAccessToken) -> Bool {
         return Keychain.set(token.uid, value: token.accessToken)
     }
 
-    /**
-        Utility function to return an arbitrary access token
-    
-        - returns: the "first" access token found, if any (otherwise `nil`)
-    */
+    ///
+    /// Utility function to return an arbitrary access token
+    ///
+    /// - returns: the "first" access token found, if any (otherwise `nil`)
+    ///
     public func getFirstAccessToken() -> DropboxAccessToken? {
         return self.getAllAccessTokens().values.first
     }
@@ -517,6 +574,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     
     var cancelButton: UIBarButtonItem?
     
+    var indicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
     
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -536,13 +594,18 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         super.viewDidLoad()
         self.title = "Link to Dropbox"
         self.webView = WKWebView(frame: self.view.bounds)
+
+        indicator.center = view.center
+        self.webView.addSubview(indicator)
+        indicator.startAnimating()
+
         self.view.addSubview(self.webView)
         
         self.webView.navigationDelegate = self
         
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancel:")
+        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(DropboxConnectController.cancel(_:)))
         self.navigationItem.rightBarButtonItem = self.cancelButton
     }
     
@@ -570,6 +633,11 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
         return decisionHandler(.Allow)
     }
     
+    public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+        indicator.stopAnimating()
+        indicator.removeFromSuperview()
+    }
+
     public var startURL: NSURL? {
         didSet(oldURL) {
             if nil != startURL && nil == oldURL && isViewLoaded() {
@@ -583,7 +651,7 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     }
     
     func showHideBackButton(show: Bool) {
-        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: "goBack:") : nil
+        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .Rewind, target: self, action: #selector(DropboxConnectController.goBack(_:))) : nil
     }
     
     func goBack(sender: AnyObject?) {
@@ -592,6 +660,9 @@ public class DropboxConnectController : UIViewController, WKNavigationDelegate {
     
     func cancel(sender: AnyObject?) {
         dismiss(true, animated: (sender != nil))
+
+        let cancelUrl = NSURL(string: "db-\(DropboxAuthManager.sharedAuthManager.appKey)://2/cancel")!
+        UIApplication.sharedApplication().openURL(cancelUrl)
     }
     
     func dismiss(animated: Bool) {
