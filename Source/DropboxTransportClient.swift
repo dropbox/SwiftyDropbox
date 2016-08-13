@@ -217,8 +217,9 @@ public class Box<T> {
 public enum CallError<EType>: CustomStringConvertible {
     case InternalServerError(Int, String?, String?)
     case BadInputError(String?, String?)
-    case RateLimitError
+    case RateLimitError(Auth.RateLimitError, String?)
     case HTTPError(Int?, String?, String?)
+    case AuthError(Auth.AuthError, String?)
     case RouteError(Box<EType>, String?)
     case OSError(ErrorType?)
     
@@ -244,8 +245,13 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case .RateLimitError:
-            return "Rate limited"
+        case let .AuthError(error, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "API auth error - \(error)"
+            return ret
         case let .HTTPError(code, message, requestId):
             var ret = ""
             if let r = requestId {
@@ -265,6 +271,13 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += "[request-id \(r)] "
             }
             ret += "API route error - \(box.unboxed)"
+            return ret
+        case let .RateLimitError(error, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "API rate limit error - \(error)"
             return ret
         case let .OSError(err):
             if let e = err {
@@ -347,13 +360,27 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                     message = utf8Decode(d)
                 }
                 return .BadInputError(message, requestId)
-            case 429:
-                 return .RateLimitError
+            case 401:
+                let json = SerializeUtil.parseJSON(data!)
+                switch json {
+                case .Dictionary(let d):
+                    return .AuthError(Auth.AuthErrorSerializer().deserialize(d["error"]!), requestId)
+                default:
+                    fatalError("Failed to parse error type")
+                }
             case 403, 404, 409:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .Dictionary(let d):
                     return .RouteError(Box(self.errorSerializer.deserialize(d["error"]!)), requestId)
+                default:
+                    fatalError("Failed to parse error type")
+                }
+            case 429:
+                let json = SerializeUtil.parseJSON(data!)
+                switch json {
+                case .Dictionary(let d):
+                    return .RateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
