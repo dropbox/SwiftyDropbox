@@ -389,6 +389,8 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
             default:
                 return .HTTPError(code, "An error occurred.", requestId)
             }
+        } else if response == nil {
+            return .OSError(error)
         } else {
             var message = ""
             if let d = data {
