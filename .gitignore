@@ -6,3 +6,4 @@ xcuserdata/
 
 ## project dependencies
 Pods/
+Carthage/*
