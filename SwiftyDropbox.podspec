@@ -9,5 +9,5 @@ Pod::Spec.new do |s|
   s.source_files = "Source/*.{h,m,swift}"
   s.requires_arc = true
   s.ios.deployment_target = "8.0"
-  s.dependency "Alamofire", "~> 3.3.1"
+  s.dependency "Alamofire", "~> 3.5.0"
 end
