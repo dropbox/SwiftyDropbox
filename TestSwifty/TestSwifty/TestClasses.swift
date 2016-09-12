@@ -283,7 +283,7 @@ public class FilesTests {
         TestFormat.printSubTestBegin(#function)
         tester.files.download(path: TestData.testFilePath + "_does_not_exist", overwrite: false, destination: TestData.destinationException).response { response, error in
             assert(error != nil, "This call should have errored!")
-            assert(!NSFileManager.defaultManager().fileExistsAtPath(TestData.destURLException.path!))
+            assert(!NSFileManager.defaultManager().fileExistsAtPath(TestData.destURLException!.path!))
             TestFormat.printOffset("Error properly detected")
             TestFormat.printSubTestEnd(#function)
             nextTest()
@@ -305,7 +305,7 @@ public class FilesTests {
 
     func uploadFile(nextTest: (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.upload(path: TestData.testFilePath + "_from_file", input: TestData.destURL).response { response, error in
+        tester.files.upload(path: TestData.testFilePath + "_from_file", input: TestData.destURL!).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
