@@ -3278,7 +3278,7 @@ public class Team {
         /// Team is already full. The free team member limit has been reached.
         case FreeTeamMemberLimitReached(String)
         /// User is already on this team. The provided email address is associated with a user who is already a member
-        /// of or invited to the team.
+        /// of (including in recoverable state) or invited to the team.
         case UserAlreadyOnTeam(String)
         /// User is already on another team. The provided email address is associated with a user that is already a
         /// member or invited to another team.
@@ -3287,7 +3287,7 @@ public class Team {
         case UserAlreadyPaired(String)
         /// User migration has failed.
         case UserMigrationFailed(String)
-        /// A user with the given external member ID already exists on the team.
+        /// A user with the given external member ID already exists on the team (including in recoverable state).
         case DuplicateExternalMemberId(String)
         /// User creation has failed.
         case UserCreationFailed(String)

@@ -885,8 +885,10 @@ public class Sharing {
         case Unshare
         /// Relinquish one's own membership to the file.
         case RelinquishMembership
-        /// Create a shared link to the file.
+        /// This action is deprecated. Use create_link instead.
         case ShareLink
+        /// Create a shared link to the file.
+        case CreateLink
         /// An unspecified error.
         case Other
 
@@ -922,6 +924,10 @@ public class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("share_link")
                     return .Dictionary(d)
+                case .CreateLink:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("create_link")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String: JSON]()
                     d[".tag"] = .Str("other")
@@ -945,6 +951,8 @@ public class Sharing {
                             return FileAction.RelinquishMembership
                         case "share_link":
                             return FileAction.ShareLink
+                        case "create_link":
+                            return FileAction.CreateLink
                         case "other":
                             return FileAction.Other
                         default:
@@ -1184,6 +1192,8 @@ public class Sharing {
         case InvalidMember
         /// User does not have permission to perform this action on this member.
         case NoPermission
+        /// Specified file was invalid or user does not have access.
+        case AccessError(Sharing.SharingFileAccessError)
         /// An unspecified error.
         case Other
 
@@ -1203,6 +1213,10 @@ public class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("no_permission")
                     return .Dictionary(d)
+                case .AccessError(let arg):
+                    var d = ["access_error": Sharing.SharingFileAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .Str("access_error")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String: JSON]()
                     d[".tag"] = .Str("other")
@@ -1218,6 +1232,9 @@ public class Sharing {
                             return FileMemberActionError.InvalidMember
                         case "no_permission":
                             return FileMemberActionError.NoPermission
+                        case "access_error":
+                            let v = Sharing.SharingFileAccessErrorSerializer().deserialize(d["access_error"] ?? .Null)
+                            return FileMemberActionError.AccessError(v)
                         case "other":
                             return FileMemberActionError.Other
                         default:
@@ -1423,8 +1440,10 @@ public class Sharing {
         case Unshare
         /// Keep a copy of the contents upon leaving or being kicked from the folder.
         case LeaveACopy
-        /// Create a shared link for folder.
+        /// This action is deprecated. Use create_link instead.
         case ShareLink
+        /// Create a shared link for folder.
+        case CreateLink
         /// An unspecified error.
         case Other
 
@@ -1476,6 +1495,10 @@ public class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .Str("share_link")
                     return .Dictionary(d)
+                case .CreateLink:
+                    var d = [String: JSON]()
+                    d[".tag"] = .Str("create_link")
+                    return .Dictionary(d)
                 case .Other:
                     var d = [String: JSON]()
                     d[".tag"] = .Str("other")
@@ -1507,6 +1530,8 @@ public class Sharing {
                             return FolderAction.LeaveACopy
                         case "share_link":
                             return FolderAction.ShareLink
+                        case "create_link":
+                            return FolderAction.CreateLink
                         case "other":
                             return FolderAction.Other
                         default:
@@ -5457,7 +5482,11 @@ public class Sharing {
         public let name: String
         /// The ID of the file.
         public let id: String
-        public init(policy: Sharing.FolderPolicy, previewUrl: String, name: String, id: String, permissions: Array<Sharing.FilePermission>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, pathDisplay: String? = nil) {
+        /// Timestamp indicating when the current user was invited to this shared file. If the user was not invited to
+        /// the shared file, the timestamp will indicate when the user was invited to the parent shared folder. This
+        /// value may be absent.
+        public let timeInvited: NSDate?
+        public init(policy: Sharing.FolderPolicy, previewUrl: String, name: String, id: String, permissions: Array<Sharing.FilePermission>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, pathDisplay: String? = nil, timeInvited: NSDate? = nil) {
             self.policy = policy
             self.permissions = permissions
             self.ownerTeam = ownerTeam
@@ -5473,6 +5502,7 @@ public class Sharing {
             self.name = name
             stringValidator(minLength: 1, pattern: "id:.*")(id)
             self.id = id
+            self.timeInvited = timeInvited
         }
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFileMetadataSerializer().serialize(self)))"
@@ -5491,6 +5521,7 @@ public class Sharing {
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
+            "time_invited": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeInvited),
             ]
             return .Dictionary(output)
         }
@@ -5506,7 +5537,8 @@ public class Sharing {
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
                     let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .Null)
-                    return SharedFileMetadata(policy: policy, previewUrl: previewUrl, name: name, id: id, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, pathDisplay: pathDisplay)
+                    let timeInvited = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_invited"] ?? .Null)
+                    return SharedFileMetadata(policy: policy, previewUrl: previewUrl, name: name, id: id, permissions: permissions, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, pathDisplay: pathDisplay, timeInvited: timeInvited)
                 default:
                     fatalError("Type error deserializing")
             }

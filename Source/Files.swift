@@ -279,7 +279,8 @@ public class Files {
 
     /// The AlphaGetMetadataArg struct
     public class AlphaGetMetadataArg: Files.GetMetadataArg {
-        /// If true, propertyGroups in FileMetadata is set for files with custom properties.
+        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
+        /// properties.
         public let includePropertyTemplates: Array<String>?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
@@ -1094,11 +1095,19 @@ public class Files {
         public let parentSharedFolderId: String?
         /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
         public let sharedFolderId: String?
-        public init(readOnly: Bool, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil) {
+        /// Specifies that the folder can only be traversed and the user can only see a limited subset of the contents
+        /// of this folder because they don't have read access to this folder. They do, however, have access to some sub
+        /// folder.
+        public let traverseOnly: Bool
+        /// Specifies that the folder cannot be accessed by the user
+        public let noAccess: Bool
+        public init(readOnly: Bool, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, traverseOnly: Bool = false, noAccess: Bool = false) {
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(sharedFolderId)
             self.sharedFolderId = sharedFolderId
+            self.traverseOnly = traverseOnly
+            self.noAccess = noAccess
             super.init(readOnly: readOnly)
         }
         public override var description: String {
@@ -1112,6 +1121,8 @@ public class Files {
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.sharedFolderId),
+            "traverse_only": Serialization._BoolSerializer.serialize(value.traverseOnly),
+            "no_access": Serialization._BoolSerializer.serialize(value.noAccess),
             ]
             return .Dictionary(output)
         }
@@ -1121,7 +1132,9 @@ public class Files {
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .Null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
                     let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
-                    return FolderSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId)
+                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .Null)
+                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .Null)
+                    return FolderSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, traverseOnly: traverseOnly, noAccess: noAccess)
                 default:
                     fatalError("Type error deserializing")
             }

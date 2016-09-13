@@ -12,8 +12,8 @@ public class FilesRoutes {
     /// Returns the metadata for a file or folder. This is an alpha endpoint compatible with the properties API. Note:
     /// Metadata for the root folder is unsupported.
     ///
-    /// - parameter includePropertyTemplates: If true, propertyGroups in FileMetadata is set for files with custom
-    /// properties.
+    /// - parameter includePropertyTemplates: If set to a valid list of template IDs, propertyGroups in FileMetadata is
+    /// set for files with custom properties.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.AlphaGetMetadataError` object on failure.

@@ -510,7 +510,9 @@ public class Users {
         public let familiarName: String
         /// A name that can be used directly to represent the name of a user's Dropbox account.
         public let displayName: String
-        public init(givenName: String, surname: String, familiarName: String, displayName: String) {
+        /// An abbreviated form of the person's name. Their initials in most locales.
+        public let abbreviatedName: String
+        public init(givenName: String, surname: String, familiarName: String, displayName: String, abbreviatedName: String) {
             stringValidator()(givenName)
             self.givenName = givenName
             stringValidator()(surname)
@@ -519,6 +521,8 @@ public class Users {
             self.familiarName = familiarName
             stringValidator()(displayName)
             self.displayName = displayName
+            stringValidator()(abbreviatedName)
+            self.abbreviatedName = abbreviatedName
         }
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(NameSerializer().serialize(self)))"
@@ -532,6 +536,7 @@ public class Users {
             "surname": Serialization._StringSerializer.serialize(value.surname),
             "familiar_name": Serialization._StringSerializer.serialize(value.familiarName),
             "display_name": Serialization._StringSerializer.serialize(value.displayName),
+            "abbreviated_name": Serialization._StringSerializer.serialize(value.abbreviatedName),
             ]
             return .Dictionary(output)
         }
@@ -542,7 +547,8 @@ public class Users {
                     let surname = Serialization._StringSerializer.deserialize(dict["surname"] ?? .Null)
                     let familiarName = Serialization._StringSerializer.deserialize(dict["familiar_name"] ?? .Null)
                     let displayName = Serialization._StringSerializer.deserialize(dict["display_name"] ?? .Null)
-                    return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName)
+                    let abbreviatedName = Serialization._StringSerializer.deserialize(dict["abbreviated_name"] ?? .Null)
+                    return Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName, abbreviatedName: abbreviatedName)
                 default:
                     fatalError("Type error deserializing")
             }
