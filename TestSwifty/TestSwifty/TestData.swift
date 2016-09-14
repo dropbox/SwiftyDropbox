@@ -25,10 +25,10 @@ public class TestData {
 
     static let destURLException = directoryURL.URLByAppendingPathComponent(testFileName + "_does_not_exist")
     static let destination: (NSURL, NSHTTPURLResponse) -> NSURL = { temporaryURL, response in
-        return destURL
+        return destURL!
     }
     static let destinationException: (NSURL, NSHTTPURLResponse) -> NSURL = { temporaryURL, response in
-        return destURLException
+        return destURLException!
     }
 
 

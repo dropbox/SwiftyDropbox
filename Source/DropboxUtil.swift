@@ -5,36 +5,36 @@ class DropboxServerTrustPolicyManager: ServerTrustPolicyManager {
     init() {
         super.init(policies: [String : ServerTrustPolicy]())
     }
-        
+
     override func serverTrustPolicyForHost(host: String) -> ServerTrustPolicy? {
         let trustPolicy = ServerTrustPolicy.CustomEvaluation {(serverTrust, host) in
             let policy = SecPolicyCreateSSL(true,  host as CFString)
             SecTrustSetPolicies(serverTrust, [policy])
-            
+
             let certificates = SecurityUtil.rootCertificates()
             SecTrustSetAnchorCertificates(serverTrust, certificates)
             SecTrustSetAnchorCertificatesOnly(serverTrust, true)
-            
+
             var isValid = false
-            var result = SecTrustResultType(kSecTrustResultInvalid)
+            var result = SecTrustResultType.Invalid
             let status = SecTrustEvaluate(serverTrust, &result)
-            
+
             if status == errSecSuccess {
-                let unspecified = SecTrustResultType(kSecTrustResultUnspecified)
-                let proceed = SecTrustResultType(kSecTrustResultProceed)
-                
+                let unspecified = SecTrustResultType.Unspecified
+                let proceed = SecTrustResultType.Proceed
+
                 isValid = result == unspecified || result == proceed
             }
-            
+
             if (isValid) {
                 let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
                 isValid = !SecurityUtil.isRevokedCertificate(certificate)
             }
-            
+
             return isValid
 
         }
-        
+
         return trustPolicy
     }
 }
@@ -47,7 +47,7 @@ class DropboxServerTrustPolicyManager: ServerTrustPolicyManager {
 public class Dropbox {
     /// An authorized client. This will be set to nil if unlinked.
     public static var authorizedClient: DropboxClient?
-    
+
     /// An authorized team client. This will be set to nil if unlinked.
     public static var authorizedTeamClient: DropboxTeamClient?
 
@@ -60,12 +60,12 @@ public class Dropbox {
             Dropbox.authorizedClient = DropboxClient(accessToken: token)
         }
     }
-    
+
     /// Sets up access to the Dropbox Team API
     public static func setupWithTeamAppKey(appKey: String) {
         precondition(DropboxAuthManager.sharedAuthManager == nil, "Only call `Dropbox.setupWithAppKey` or `Dropbox.setupWithTeamAppKey` once")
         DropboxAuthManager.sharedAuthManager = DropboxAuthManager(appKey: appKey)
-        
+
         if let token = DropboxAuthManager.sharedAuthManager.getFirstAccessToken() {
             Dropbox.authorizedTeamClient = DropboxTeamClient(accessToken: token)
         }
@@ -98,7 +98,7 @@ public class Dropbox {
             return nil
         }
     }
-    
+
     /// Handle a redirect and automatically initialize the client and save the token.
     public static func handleRedirectURLTeam(url: NSURL) -> DropboxAuthResult? {
         precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithTeamAppKey` before calling this method")
@@ -131,4 +131,3 @@ public class Dropbox {
         Dropbox.authorizedTeamClient = nil
     }
 }
-
