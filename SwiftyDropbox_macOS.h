@@ -1,0 +1,1 @@
+../../../SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox_macOS/SwiftyDropbox_macOS.h
