@@ -1,20 +1,32 @@
+///
+/// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
+///
+
 import Foundation
 import AppKit
 import WebKit
 
-extension Dropbox {
-    public static func authorizeFromController(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: (NSURL -> Void), browserAuth: Bool = false) {
-        precondition(DropboxAuthManager.sharedAuthManager != nil, "Call `Dropbox.setupWithAppKey` or `Dropbox.setupWithTeamAppKey` before calling this method")
-        precondition(Dropbox.authorizedClient == nil && Dropbox.authorizedTeamClient == nil, "A Dropbox client is already authorized")
-        DropboxAuthManager.sharedAuthManager.authorizeFromSharedApplication(DesktopSharedApplication(sharedWorkspace: sharedWorkspace, controller: controller, openURL: openURL), browserAuth: browserAuth)
+extension DropboxClientsManager {
+    public static func authorizeFromController(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
+        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
+        precondition(DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil, "A Dropbox client is already authorized")
+        DropboxOAuthManager.sharedAuthManager.authorizeFromSharedApplication(DesktopSharedApplication(sharedWorkspace: sharedWorkspace, controller: controller, openURL: openURL), browserAuth: browserAuth)
     }
 
-    public static func setupWithAppKey(appKey: String) {
-        setupWithAppKey(appKey, sharedAuthManager: DropboxAuthManager(appKey: appKey))
+    public static func setupWithAppKeyDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
+        setupWithOAuthManager(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient)
     }
-
-    public static func setupWithTeamAppKey(appKey: String) {
-        setupWithTeamAppKey(appKey, sharedAuthManager: DropboxAuthManager(appKey: appKey))
+    
+    public static func setupWithAppKeyMultiUserDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil, tokenUid: String?) {
+        setupWithOAuthManagerMultiUser(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
+    }
+    
+    public static func setupWithTeamAppKeyDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
+        setupWithOAuthManagerTeam(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient)
+    }
+    
+    public static func setupWithTeamAppKeyMultiUserDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil, tokenUid: String?) {
+        setupWithOAuthManagerMultiUserTeam(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
     }
 }
 
@@ -22,30 +34,30 @@ extension Dropbox {
 public class DesktopSharedApplication: SharedApplication {
     let sharedWorkspace: NSWorkspace
     let controller: NSViewController
-    let openURL: (NSURL -> Void)
+    let openURL: ((URL) -> Void)
 
-    public init(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: (NSURL -> Void)) {
+    public init(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: @escaping ((URL) -> Void)) {
         self.sharedWorkspace = sharedWorkspace
         self.controller = controller
         self.openURL = openURL
     }
 
-    public func presentErrorMessage(message: String, title: String) {
+    public func presentErrorMessage(_ message: String, title: String) {
         let error = NSError(domain: "", code: 123, userInfo: [NSLocalizedDescriptionKey:message])
         controller.presentError(error)
         fatalError(message)
     }
 
-    public func presentErrorMessageWithHandlers(message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>) {
+    public func presentErrorMessageWithHandlers(_ message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>) {
         presentErrorMessage(message, title: title)
     }
 
     // no platform-specific auth methods for OS X
-    public func presentPlatformSpecificAuth(authURL: NSURL) -> Bool {
+    public func presentPlatformSpecificAuth(_ authURL: URL) -> Bool {
         return false
     }
 
-    public func presentWebViewAuth(authURL: NSURL, tryIntercept: (NSURL -> Bool), cancelHandler: (() -> Void)) {
+    public func presentWebViewAuth(_ authURL: URL, tryIntercept: @escaping ((URL) -> Bool), cancelHandler: @escaping (() -> Void)) {
         let web = DropboxConnectController(
             URL: authURL,
             tryIntercept: tryIntercept,
@@ -55,15 +67,15 @@ public class DesktopSharedApplication: SharedApplication {
         self.controller.presentViewControllerAsModalWindow(navigationController)
     }
 
-    public func presentBrowserAuth(authURL: NSURL) {
+    public func presentBrowserAuth(_ authURL: URL) {
         self.presentExternalApp(authURL)
     }
 
-    public func presentExternalApp(url: NSURL) {
+    public func presentExternalApp(_ url: URL) {
         self.openURL(url)
     }
 
-    public func canPresentExternalApp(url: NSURL) -> Bool {
+    public func canPresentExternalApp(_ url: URL) -> Bool {
         return true
     }
 }
@@ -72,7 +84,7 @@ public class DesktopSharedApplication: SharedApplication {
 public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNavigationDelegate {
     var webView: WKWebView!
 
-    var tryIntercept: ((url: NSURL) -> Bool)?
+    var tryIntercept: ((_ url: URL) -> Bool)?
 
     var cancelHandler: (() -> Void) = {}
 
@@ -82,7 +94,7 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
         super.init(nibName: nil, bundle: nil)!
     }
 
-    public init(URL: NSURL, tryIntercept: ((url: NSURL) -> Bool), cancelHandler: (() -> Void)) {
+    public init(URL: URL, tryIntercept: @escaping ((_ url: URL) -> Bool), cancelHandler: @escaping (() -> Void)) {
         super.init(nibName: nil, bundle: nil)!
         self.startURL = URL
         self.tryIntercept = tryIntercept
@@ -103,12 +115,12 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
             (NSHeight(self.webView.bounds) - NSHeight(indicator.frame)) / 2
         ))
         self.webView.addSubview(indicator)
-        indicator.style = .SpinningStyle
+        indicator.style = .spinningStyle
         indicator.startAnimation(self)
 
         self.view.addSubview(self.webView)
         self.webView.navigationDelegate = self
-        self.webView.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
+        self.webView.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
 
         self.view.window?.delegate = self
     }
@@ -117,39 +129,37 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
         super.viewWillAppear()
         if !webView.canGoBack {
             if startURL != nil {
-                loadURL(startURL!)
+                loadURL(url: startURL!)
             } else {
                 webView.loadHTMLString("There is no `startURL`", baseURL: nil)
             }
         }
     }
-
-    public func windowShouldClose(sender: AnyObject) -> Bool {
+    
+    public func windowShouldClose(_ sender: Any) -> Bool {
         self.cancelHandler()
         return true
     }
 
-    public func webView(webView: WKWebView,
-                        decidePolicyForNavigationAction navigationAction: WKNavigationAction,
-                                                        decisionHandler: (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.URL, callback = self.tryIntercept {
-            if callback(url: url) {
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Swift.Void) {
+        if let url = navigationAction.request.url, let callback = self.tryIntercept {
+            if callback(url) {
                 self.dismiss(true)
-                return decisionHandler(.Cancel)
+                return decisionHandler(.cancel)
             }
         }
-        return decisionHandler(.Allow)
+        return decisionHandler(.allow)
     }
 
-    public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         indicator.stopAnimation(self)
         indicator.removeFromSuperview()
     }
 
-    public var startURL: NSURL? {
+    public var startURL: URL? {
         didSet(oldURL) {
-            if nil != startURL && nil == oldURL && self.viewLoaded {
-                loadURL(startURL!)
+            if nil != startURL && nil == oldURL && self.isViewLoaded {
+                loadURL(url: startURL!)
             }
         }
     }
@@ -159,8 +169,8 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
         self.view.frame = NSRect(x: 0, y: 0, width: 800, height: 600)
     }
 
-    public func loadURL(url: NSURL) {
-        webView.loadRequest(NSURLRequest(URL: url))
+    public func loadURL(url: URL) {
+        webView.load(URLRequest(url: url as URL) as URLRequest)
     }
 
     func goBack(sender: AnyObject?) {
@@ -168,11 +178,11 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
     }
 
     func dismiss(animated: Bool) {
-        dismiss(false, animated: animated)
+        dismiss(asCancel: false, animated: animated)
     }
 
     func dismiss(asCancel: Bool, animated: Bool) {
         webView.stopLoading()
-        self.dismissController(nil)
+        self.dismiss(nil)
     }
 }

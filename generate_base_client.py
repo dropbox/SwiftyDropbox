@@ -52,7 +52,7 @@ def main():
     if args.stone:
         stone_path = args.stone
 
-    dropbox_pkg_path = os.path.abspath('../SwiftyDropbox/Source')
+    dropbox_pkg_path = os.path.abspath('../SwiftyDropbox/Source/Source/PlatformNeutral')
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
 
@@ -96,13 +96,13 @@ def _get_client_args():
 
     client_args = {
         'upload': [
-            ('upload', [('input', '.Data(input)', 'NSData', input_doc.format('NSData')),]),
-            ('upload', [('input', '.File(input)', 'NSURL', input_doc.format('NSURL')),]),
-            ('upload', [('input', '.Stream(input)', 'NSInputStream', input_doc.format('NSInputStream')),]),
+            ('upload', [('input', '.data(input)', 'Data', input_doc.format('Data')),]),
+            ('upload', [('input', '.file(input)', 'URL', input_doc.format('URL')),]),
+            ('upload', [('input', '.stream(input)', 'InputStream', input_doc.format('InputStream')),]),
         ],
         'download': [
             ('download_file', [('overwrite', 'overwrite', 'Bool = false', overwrite_doc),
-                ('destination', 'destination', '(NSURL, NSHTTPURLResponse) -> NSURL', dest_doc)]),
+                ('destination', 'destination', '@escaping (URL, HTTPURLResponse) -> URL', dest_doc)]),
             ('download_memory', []),
         ],
     }

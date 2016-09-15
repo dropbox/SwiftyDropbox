@@ -1,8 +1,10 @@
+## macOS
 .DS_Store
 .arcconfig
 
-## user-specific settings
+## Xcode
 xcuserdata/
+build/
 
 ## CocoaPods
 Pods/

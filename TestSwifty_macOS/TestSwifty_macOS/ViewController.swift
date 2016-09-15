@@ -9,65 +9,56 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear() {
-//        checkButtons()
     }
 
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
+    @IBAction func oauthLinkButtonPressed(_ sender: AnyObject) {
+        if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
+            DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)})
         }
     }
 
-    @IBAction func oauthLinkButtonPressed(sender: AnyObject) {
-        if Dropbox.authorizedClient == nil && Dropbox.authorizedTeamClient == nil {
-            Dropbox.authorizeFromController(NSWorkspace.sharedWorkspace(), controller: self, openURL: {(url: NSURL) -> Void in NSWorkspace.sharedWorkspace().openURL(url)})
-        }
+    @IBAction func oauthLinkBrowserButtonPressed(_ sender: AnyObject) {
+        DropboxClientsManager.unlinkClient()
+        DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)}, browserAuth: true)
     }
 
-    @IBAction func oauthLinkBrowserButtonPressed(sender: AnyObject) {
-        Dropbox.unlinkClient()
-        Dropbox.authorizeFromController(NSWorkspace.sharedWorkspace(), controller: self, openURL: {(url: NSURL) -> Void in NSWorkspace.sharedWorkspace().openURL(url)}, browserAuth: true)
-    }
-
-    @IBAction func oauthUnlinkButtonPressed(sender: AnyObject) {
-        Dropbox.unlinkClient()
+    @IBAction func oauthUnlinkButtonPressed(_ sender: AnyObject) {
+        DropboxClientsManager.unlinkClient()
         checkButtons()
     }
     
-    @IBAction func runApiTestsButtonPressed(sender: AnyObject) {
-        if Dropbox.authorizedClient != nil || Dropbox.authorizedTeamClient != nil {
+    @IBAction func runApiTestsButtonPressed(_ sender: AnyObject) {
+        if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
             let unlink = {
-                Dropbox.unlinkClient()
+                DropboxClientsManager.unlinkClient()
                 self.checkButtons()
             }
             
             switch(appPermission) {
-            case .FullDropbox:
+            case .fullDropbox:
                 testAllUserEndpoints(nextTest: unlink)
-            case .TeamMemberFileAccess:
+            case .teamMemberFileAccess:
                 testTeamMemberFileAcessActions(unlink)
-            case .TeamMemberManagement:
+            case .teamMemberManagement:
                 testTeamMemberManagementActions(unlink)
             }
         }
     }
 
     func checkButtons() {
-        if Dropbox.authorizedClient != nil || Dropbox.authorizedTeamClient != nil {
-            oauthLinkButton.hidden = true
-            oauthLinkBrowserButton.hidden = true
-            oauthUnlinkButton.hidden = false
-            runApiTestsButton.hidden = false
+        if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
+            oauthLinkButton.isHidden = true
+            oauthLinkBrowserButton.isHidden = true
+            oauthUnlinkButton.isHidden = false
+            runApiTestsButton.isHidden = false
         } else {
-            oauthLinkButton.hidden = false
-            oauthLinkBrowserButton.hidden = false
-            oauthUnlinkButton.hidden = true
-            runApiTestsButton.hidden = true
+            oauthLinkButton.isHidden = false
+            oauthLinkBrowserButton.isHidden = false
+            oauthUnlinkButton.isHidden = true
+            runApiTestsButton.isHidden = true
         }
     }
     
@@ -90,7 +81,7 @@ class ViewController: NSViewController {
      
      1.) Fill in user-specific data in `TestData` and `TestTeamData` in TestData.swift
      2.) For each of the above apps, you will need to add a user-specific app key. For each test run, you
-     will need to call `Dropbox.setupWithAppKey` (or `Dropbox.setupWithTeamAppKey`) and supply the
+     will need to call `DropboxClientsManager.setupWithAppKey` (or `DropboxClientsManager.setupWithTeamAppKey`) and supply the
      appropriate app key value, in AppDelegate.swift
      3.) Depending on which app you are currently testing, you will need to toggle the `appPermission` variable
      in AppDelegate.swift to the appropriate value.
@@ -104,7 +95,7 @@ class ViewController: NSViewController {
      */
     
     // Test user app with 'Full Dropbox' permission
-    func testAllUserEndpoints(asMember: Bool = false, nextTest: (() -> Void)? = nil) {
+    func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
         let tester = DropboxTester()
         
         let end = {
@@ -131,7 +122,7 @@ class ViewController: NSViewController {
     }
     
     // Test business app with 'Team member file access' permission
-    func testTeamMemberFileAcessActions(nextTest: (() -> Void)? = nil) {
+    func testTeamMemberFileAcessActions(_ nextTest: (() -> Void)? = nil) {
         let tester = DropboxTeamTester()
         
         let end = {
@@ -152,7 +143,7 @@ class ViewController: NSViewController {
     }
     
     // Test business app with 'Team member management' permission
-    func testTeamMemberManagementActions(nextTest: (() -> Void)? = nil) {
+    func testTeamMemberManagementActions(_ nextTest: (() -> Void)? = nil) {
         let tester = DropboxTeamTester()
         
         let end = {
@@ -169,7 +160,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testFilesActions(dropboxTester: DropboxTester, nextTest: (() -> Void), asMember: Bool = false) {
+    func testFilesActions(_ dropboxTester: DropboxTester, nextTest: @escaping (() -> Void), asMember: Bool = false) {
         let tester = FilesTests(tester: dropboxTester)
         
         let end = {
@@ -240,7 +231,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testSharingActions(dropboxTester: DropboxTester, nextTest: (() -> Void)) {
+    func testSharingActions(_ dropboxTester: DropboxTester, nextTest: @escaping (() -> Void)) {
         let tester = SharingTests(tester: dropboxTester)
         
         let end = {
@@ -297,7 +288,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testUserActions(dropboxTester: DropboxTester, nextTest: (() -> Void)) {
+    func testUserActions(_ dropboxTester: DropboxTester, nextTest: @escaping (() -> Void)) {
         let tester = UserTests(tester: dropboxTester)
         
         let end = {
@@ -324,7 +315,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testAuthActions(dropboxTester: DropboxTester, nextTest: (() -> Void)) {
+    func testAuthActions(_ dropboxTester: DropboxTester, nextTest: @escaping (() -> Void)) {
         let tester = AuthTests(tester: dropboxTester)
         
         let end = {
@@ -342,7 +333,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testTeamMemberFileAcessActions(dropboxTester: DropboxTeamTester, nextTest: (() -> Void)) {
+    func testTeamMemberFileAcessActions(_ dropboxTester: DropboxTeamTester, nextTest: @escaping (() -> Void)) {
         let tester = TeamTests(tester: dropboxTester)
         
         let end = {
@@ -387,7 +378,7 @@ class ViewController: NSViewController {
         start()
     }
     
-    func testTeamMemberManagementActions(dropboxTester: DropboxTeamTester, nextTest: (() -> Void)) {
+    func testTeamMemberManagementActions(_ dropboxTester: DropboxTeamTester, nextTest: @escaping (() -> Void)) {
         let tester = TeamTests(tester: dropboxTester)
         
         let end = {

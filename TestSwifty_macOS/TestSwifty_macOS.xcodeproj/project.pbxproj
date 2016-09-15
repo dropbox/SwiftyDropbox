@@ -63,12 +63,12 @@
 			isa = PBXGroup;
 			children = (
 				F23913111D88CDE80019B8F0 /* AppDelegate.swift */,
-				F23913121D88CDE80019B8F0 /* Assets.xcassets */,
-				F23913131D88CDE80019B8F0 /* Main.storyboard */,
-				F23913151D88CDE80019B8F0 /* Info.plist */,
+				F23913181D88CDE80019B8F0 /* ViewController.swift */,
 				F23913161D88CDE80019B8F0 /* TestClasses.swift */,
 				F23913171D88CDE80019B8F0 /* TestData.swift */,
-				F23913181D88CDE80019B8F0 /* ViewController.swift */,
+				F23913131D88CDE80019B8F0 /* Main.storyboard */,
+				F23913121D88CDE80019B8F0 /* Assets.xcassets */,
+				F23913151D88CDE80019B8F0 /* Info.plist */,
 			);
 			path = TestSwifty_macOS;
 			sourceTree = "<group>";
@@ -332,9 +332,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = TestSwifty_macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwifty-macOS";
 				PRODUCT_NAME = TestSwifty_macOS;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -347,9 +348,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = TestSwifty_macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwifty-macOS";
 				PRODUCT_NAME = TestSwifty_macOS;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

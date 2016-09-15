@@ -1,7 +1,7 @@
 import Foundation
 import SwiftyDropbox
 
-public class TestData {
+open class TestData {
     // to avoid name collisions in the event of leftover test state from failure
     static let testId = String(arc4random_uniform(1000))
 
@@ -18,17 +18,17 @@ public class TestData {
 
     static let testData = "testing data example"
 
-    static let fileData = testData.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-    static let fileManager = NSFileManager.defaultManager()
-    static let directoryURL = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
-    static let destURL = directoryURL.URLByAppendingPathComponent(testFileName)
+    static let fileData = testData.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+    static let fileManager = FileManager.default
+    static let directoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    static let destURL = directoryURL.appendingPathComponent(testFileName)
 
-    static let destURLException = directoryURL.URLByAppendingPathComponent(testFileName + "_does_not_exist")
-    static let destination: (NSURL, NSHTTPURLResponse) -> NSURL = { temporaryURL, response in
-        return destURL!
+    static let destURLException = directoryURL.appendingPathComponent(testFileName + "_does_not_exist")
+    static let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
+        return destURL
     }
-    static let destinationException: (NSURL, NSHTTPURLResponse) -> NSURL = { temporaryURL, response in
-        return destURLException!
+    static let destinationException: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
+        return destURLException
     }
 
 
@@ -44,7 +44,7 @@ public class TestData {
     static let accountId3Email = "<ACCOUNT_ID3_EMAIL>"
 }
 
-public class TestTeamData {
+open class TestTeamData {
     // to avoid name collisions in the event of leftover test state from failure
     static let testId = String(arc4random_uniform(1000))
 

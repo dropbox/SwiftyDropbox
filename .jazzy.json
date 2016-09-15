@@ -1,8 +1,6 @@
 {
-  "podspec": "SwiftyDropbox.podspec", 
   "skip_undocumented": true, 
-  "swift_version": 2.2, 
-  "author_name": "Dropbox, Inc.", 
+  "author": "Dropbox, Inc.", 
   "custom_categories": [
     {
       "name": "Routes", 
@@ -41,17 +39,17 @@
     {
       "name": "Client Classes", 
       "children": [
-        "Dropbox", 
         "DropboxClient", 
-        "DropboxTeamClient"
+        "DropboxTeamClient", 
+        "DropboxClientsManager"
       ]
     }
   ], 
   "author_url": "https://dropbox.com/developers", 
-  "hide_documentation_coverage": true, 
-  "excluded_files": [
+  "exclude": [
     "Source/StoneSerializers.swift", 
     "Source/StoneValidators.swift", 
     "Source/DropboxTransportClient.swift"
-  ]
+  ], 
+  "hide_documentation_coverage": true
 }

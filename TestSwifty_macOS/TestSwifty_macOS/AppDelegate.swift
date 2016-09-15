@@ -2,71 +2,71 @@ import Cocoa
 import SwiftyDropbox
 
 public enum AppPermission {
-    case FullDropbox
-    case TeamMemberFileAccess
-    case TeamMemberManagement
+    case fullDropbox
+    case teamMemberFileAccess
+    case teamMemberManagement
 }
 
-let appPermission = AppPermission.FullDropbox
+let appPermission = AppPermission.fullDropbox
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     var viewController: ViewController? = nil;
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         switch(appPermission) {
-        case .FullDropbox:
-          Dropbox.setupWithAppKey("<FULL_DROPBOX_APP_KEY>")
-        case .TeamMemberFileAccess:
-          Dropbox.setupWithTeamAppKey("<TEAM_MEMBER_FILE_ACCESS_APP_KEY>")
-        case .TeamMemberManagement:
-          Dropbox.setupWithTeamAppKey("<TEAM_MEMBER_MANAGEMENT_APP_KEY>")
+        case .fullDropbox:
+            DropboxClientsManager.setupWithAppKeyDesktop("<FULL_DROPBOX_APP_KEY>")
+        case .teamMemberFileAccess:
+            DropboxClientsManager.setupWithTeamAppKeyDesktop("<TEAM_MEMBER_FILE_ACCESS_APP_KEY>")
+        case .teamMemberManagement:
+            DropboxClientsManager.setupWithTeamAppKeyDesktop("<TEAM_MEMBER_MANAGEMENT_APP_KEY>")
         }
-        NSAppleEventManager.sharedAppleEventManager().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+        NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
     }
     
-    func applicationDidBecomeActive(notification: NSNotification) {
-        NSApp.activateIgnoringOtherApps(true)
-        viewController = NSApplication.sharedApplication().mainWindow?.contentViewController as? ViewController
+    func applicationDidBecomeActive(_ notification: Notification) {
+        NSApp.activate(ignoringOtherApps: true)
+        viewController = NSApplication.shared().mainWindow?.contentViewController as? ViewController
         viewController?.checkButtons()
     }
 
-    func handleGetURLEvent(event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
-        if let aeEventDescriptor = event?.paramDescriptorForKeyword(AEKeyword(keyDirectObject)) {
+    func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
+        if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
             if let urlStr = aeEventDescriptor.stringValue {
-                let url = NSURL(string: urlStr)!
+                let url = URL(string: urlStr)!
                 
                 switch(appPermission) {
-                case .FullDropbox:
-                    if let authResult = Dropbox.handleRedirectURL(url) {
+                case .fullDropbox:
+                    if let authResult = DropboxClientsManager.handleRedirectURL(url) {
                         switch authResult {
-                        case .Success:
+                        case .success:
                             print("Success! User is logged into Dropbox.")
-                        case .Cancel:
+                        case .cancel:
                             print("Authorization flow was manually canceled by user!")
-                        case .Error(_, let description):
+                        case .error(_, let description):
                             print("Error: \(description)")
                         }
                     }
-                case .TeamMemberFileAccess:
-                    if let authResult = Dropbox.handleRedirectURLTeam(url) {
+                case .teamMemberFileAccess:
+                    if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
                         switch authResult {
-                        case .Success:
+                        case .success:
                             print("Success! User is logged into Dropbox.")
-                        case .Cancel:
+                        case .cancel:
                             print("Authorization flow was manually canceled by user!")
-                        case .Error(_, let description):
+                        case .error(_, let description):
                             print("Error: \(description)")
                         }
                     }
-                case .TeamMemberManagement:
-                    if let authResult = Dropbox.handleRedirectURLTeam(url) {
+                case .teamMemberManagement:
+                    if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
                         switch authResult {
-                        case .Success:
+                        case .success:
                             print("Success! User is logged into Dropbox.")
-                        case .Cancel:
+                        case .cancel:
                             print("Authorization flow was manually canceled by user!")
-                        case .Error(_, let description):
+                        case .error(_, let description):
                             print("Error: \(description)")
                         }
                     }
@@ -76,7 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         viewController!.checkButtons()
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
 }

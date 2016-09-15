@@ -1,63 +1,55 @@
+///
+/// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
+///
+
 import Foundation
 import Alamofire
 
 public class DropboxTransportClient {
-    static let version = "3.2.0"
-
-    static let manager: Manager = {
-        let manager = Manager(serverTrustPolicyManager: DropboxServerTrustPolicyManager())
-        manager.startRequestsImmediately = false
-        return manager
-    }()
-    static let backgroundManager: Manager = {
-        let backgroundConfig = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.dropbox.SwiftyDropbox")
-        let backgroundManager = Manager(configuration: backgroundConfig, serverTrustPolicyManager: DropboxServerTrustPolicyManager())
-        backgroundManager.startRequestsImmediately = false
-        return backgroundManager
-    }()
-
-    var accessToken: DropboxAccessToken
-    var selectUser: String?
+    static let version = "4.0.0"
+  
+    public let backgroundManager: SessionManager
+    public var accessToken: String
+    public var selectUser: String?
     var baseHosts: [String: String]
     var userAgent: String
 
-    func additionalHeaders(noauth: Bool) -> [String: String] {
-        var headers = ["User-Agent": self.userAgent]
-        if self.selectUser != nil {
-            headers["Dropbox-Api-Select-User"] = self.selectUser
-        }
-        if (!noauth) {
-            headers["Authorization"] = "Bearer \(self.accessToken)"
-        }
-        return headers
+    public convenience init(accessToken: String, selectUser: String? = nil) {
+        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
     }
 
-    public convenience init(accessToken: DropboxAccessToken, selectUser: String? = nil) {
+    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?) {
+        let backgroundConfig = URLSessionConfiguration.background(withIdentifier: "com.dropbox.SwiftyDropbox_" + NSUUID().uuidString)
+        let backgroundManager = SessionManager(configuration: backgroundConfig)
+        backgroundManager.startRequestsImmediately = false
+        
         let defaultBaseHosts = [
             "api": "https://api.dropbox.com/2",
             "content": "https://api-content.dropbox.com/2",
             "notify": "https://notify.dropboxapi.com/2",
             ]
-
+        
         let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(DropboxTransportClient.version)"
-
-        self.init(accessToken: accessToken, selectUser: selectUser, baseHosts: defaultBaseHosts, userAgent: defaultUserAgent)
-    }
-
-    public init(accessToken: DropboxAccessToken, selectUser: String?, baseHosts: [String: String], userAgent: String) {
+      
+        self.backgroundManager = backgroundManager
         self.accessToken = accessToken
         self.selectUser = selectUser
-        self.baseHosts = baseHosts
-        self.userAgent = userAgent
+        self.baseHosts = baseHosts ?? defaultBaseHosts
+        if let userAgent = userAgent {
+            let customUserAgent = "\(userAgent)/\(defaultUserAgent)"
+            self.userAgent = customUserAgent
+        } else {
+            self.userAgent = defaultUserAgent
+        }
     }
 
-    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(route: Route<ASerial, RSerial, ESerial>,
+    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType? = nil) -> RpcRequest<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
         let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
         let routeStyle: RouteStyle = RouteStyle(rawValue: route.attrs["style"]!!)!
 
-        var rawJsonRequest: NSData?
+        var rawJsonRequest: Data?
         rawJsonRequest = nil
 
         if let serverArgs = serverArgs {
@@ -70,22 +62,31 @@ public class DropboxTransportClient {
         }
 
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
-
-        let encoding = ParameterEncoding.Custom { convertible, _ in
-            let mutableRequest = convertible.URLRequest.copy() as! NSMutableURLRequest
-            mutableRequest.HTTPBody = rawJsonRequest
-            return (mutableRequest, nil)
-        }
-
-        let request = DropboxTransportClient.backgroundManager.request(.POST, url, parameters: [:], headers: headers, encoding: encoding)
+      
+        let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
+        let request = Alamofire.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
         let rpcRequestObj = RpcRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 
         request.resume()
 
         return rpcRequestObj
     }
+  
+    struct SwiftyArgEncoding: ParameterEncoding {
+        private let rawJsonRequest: Data
+      
+        init(rawJsonRequest: Data) {
+            self.rawJsonRequest = rawJsonRequest
+        }
+      
+        func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+            var urlRequest = urlRequest.urlRequest
+            urlRequest!.httpBody = rawJsonRequest
+            return urlRequest!
+        }
+    }
 
-    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(route: Route<ASerial, RSerial, ESerial>,
+    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType, input: UploadBody) -> UploadRequest<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
         let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
@@ -96,15 +97,15 @@ public class DropboxTransportClient {
 
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
-        let request: Alamofire.Request
+        let request: Alamofire.UploadRequest
 
         switch input {
-        case let .Data(data):
-            request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, data: data)
-        case let .File(file):
-            request = DropboxTransportClient.backgroundManager.upload(.POST, url, headers: headers, file: file)
-        case let .Stream(stream):
-            request = DropboxTransportClient.manager.upload(.POST, url, headers: headers, stream: stream)
+        case let .data(data):
+            request = Alamofire.upload(data, to: url, method: .post, headers: headers)
+        case let .file(file):
+            request = self.backgroundManager.upload(file, to: url, method: .post, headers: headers)
+        case let .stream(stream):
+            request = Alamofire.upload(stream, to: url, method: .post, headers: headers)
         }
         let uploadRequestObj = UploadRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
         request.resume()
@@ -112,8 +113,8 @@ public class DropboxTransportClient {
         return uploadRequestObj
     }
 
-    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(route: Route<ASerial, RSerial, ESerial>,
-                        serverArgs: ASerial.ValueType, overwrite: Bool, destination: (NSURL, NSHTTPURLResponse) -> NSURL) -> DownloadRequestFile<RSerial, ESerial> {
+    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(_ route: Route<ASerial, RSerial, ESerial>,
+                        serverArgs: ASerial.ValueType, overwrite: Bool, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
         let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
         let routeStyle: RouteStyle = RouteStyle(rawValue: route.attrs["style"]!!)!
@@ -124,24 +125,24 @@ public class DropboxTransportClient {
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
         weak var _self: DownloadRequestFile<RSerial, ESerial>!
-
-        let dest: (NSURL, NSHTTPURLResponse) -> NSURL = { url, resp in
+      
+        let destinationWrapper: DownloadRequest.DownloadFileDestination = { url, resp in
             var finalUrl = destination(url, resp)
 
             if 200 ... 299 ~= resp.statusCode {
-                if NSFileManager.defaultManager().fileExistsAtPath(finalUrl.path!) {
+                if FileManager.default.fileExists(atPath: finalUrl.path) {
                     if overwrite {
                         do {
-                            try NSFileManager.defaultManager().removeItemAtURL(finalUrl)
+                            try FileManager.default.removeItem(at: finalUrl)
                         } catch let error as NSError {
                             print("Error: \(error)")
                         }
                     } else {
-                        print("Error: File already exists at \(finalUrl.path!)")
+                        print("Error: File already exists at \(finalUrl.path)")
                     }
                 }
             } else {
-                _self.errorMessage = NSData(contentsOfURL: url)!
+                _self.errorMessage = try! Data(contentsOf: url)
                 // Alamofire will "move" the file to the temporary location where it already resides,
                 // and where it will soon be automatically deleted
                 finalUrl = url
@@ -149,10 +150,10 @@ public class DropboxTransportClient {
 
             _self.urlPath = finalUrl
 
-            return finalUrl
+            return (finalUrl, [])
         }
 
-        let request = DropboxTransportClient.backgroundManager.download(.POST, url, headers: headers, destination: dest)
+        let request = self.backgroundManager.download(url, method: .post, headers: headers, to: destinationWrapper)
 
         let downloadRequestObj = DownloadRequestFile(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
         _self = downloadRequestObj
@@ -162,7 +163,7 @@ public class DropboxTransportClient {
         return downloadRequestObj
     }
 
-    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(route: Route<ASerial, RSerial, ESerial>,
+    public func request<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType) -> DownloadRequestMemory<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
         let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
@@ -173,7 +174,7 @@ public class DropboxTransportClient {
 
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
-        let request = DropboxTransportClient.backgroundManager.request(.POST, url, headers: headers)
+        let request = self.backgroundManager.request(url, method: .post, headers: headers)
 
         let downloadRequestObj = DownloadRequestMemory(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 
@@ -182,12 +183,15 @@ public class DropboxTransportClient {
         return downloadRequestObj
     }
 
-    private func getHeaders(routeStyle: RouteStyle, jsonRequest: NSData?, host: String) -> [String: String] {
-        var headers = [String: String]()
+    fileprivate func getHeaders(_ routeStyle: RouteStyle, jsonRequest: Data?, host: String) -> HTTPHeaders {
+        var headers = ["User-Agent": self.userAgent]
         let noauth = (host == "notify")
 
-        for (header, val) in self.additionalHeaders(noauth) {
-            headers[header] = val
+        if (!noauth) {
+            headers["Authorization"] = "Bearer \(self.accessToken)"
+            if let selectUser = self.selectUser {
+                headers["Dropbox-Api-Select-User"] = selectUser
+            }
         }
 
         if (routeStyle == RouteStyle.Rpc) {
@@ -214,17 +218,17 @@ public class Box<T> {
 }
 
 public enum CallError<EType>: CustomStringConvertible {
-    case InternalServerError(Int, String?, String?)
-    case BadInputError(String?, String?)
-    case RateLimitError(Auth.RateLimitError, String?)
-    case HTTPError(Int?, String?, String?)
-    case AuthError(Auth.AuthError, String?)
-    case RouteError(Box<EType>, String?)
-    case OSError(ErrorType?)
+    case internalServerError(Int, String?, String?)
+    case badInputError(String?, String?)
+    case rateLimitError(Auth.RateLimitError, String?)
+    case httpError(Int?, String?, String?)
+    case authError(Auth.AuthError, String?)
+    case routeError(Box<EType>, String?)
+    case clientError(Error?)
 
     public var description: String {
         switch self {
-        case let .InternalServerError(code, message, requestId):
+        case let .internalServerError(code, message, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -234,7 +238,7 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .BadInputError(message, requestId):
+        case let .badInputError(message, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -244,14 +248,14 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .AuthError(error, requestId):
+        case let .authError(error, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API auth error - \(error)"
             return ret
-        case let .HTTPError(code, message, requestId):
+        case let .httpError(code, message, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -264,21 +268,21 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .RouteError(box, requestId):
+        case let .routeError(box, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API route error - \(box.unboxed)"
             return ret
-        case let .RateLimitError(error, requestId):
+        case let .rateLimitError(error, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API rate limit error - \(error)"
             return ret
-        case let .OSError(err):
+        case let .clientError(err):
             if let e = err {
                 return "\(e)"
             }
@@ -287,16 +291,16 @@ public enum CallError<EType>: CustomStringConvertible {
     }
 }
 
-func utf8Decode(data: NSData) -> String {
-    return NSString(data: data, encoding: NSUTF8StringEncoding)! as String
+func utf8Decode(_ data: Data) -> String {
+    return NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
 }
 
-func asciiEscape(s: String) -> String {
+func asciiEscape(_ s: String) -> String {
     var out: String = ""
 
     for char in s.unicodeScalars {
         var esc = "\(char)"
-        if !char.isASCII() {
+        if !char.isASCII {
             esc = NSString(format:"\\u%04x", char.value) as String
         } else {
             esc = "\(char)"
@@ -315,35 +319,24 @@ public enum RouteStyle: String {
 }
 
 public enum UploadBody {
-    case Data(NSData)
-    case File(NSURL)
-    case Stream(NSInputStream)
+    case data(Data)
+    case file(URL)
+    case stream(InputStream)
 }
 
 /// These objects are constructed by the SDK; users of the SDK do not need to create them manually.
 ///
 /// Pass in a closure to the `response` method to handle a response or error.
 public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
-    let request: Alamofire.Request
     let responseSerializer: RSerial
     let errorSerializer: ESerial
 
-    init(request: Alamofire.Request, responseSerializer: RSerial, errorSerializer: ESerial) {
+    init(responseSerializer: RSerial, errorSerializer: ESerial) {
         self.errorSerializer = errorSerializer
         self.responseSerializer = responseSerializer
-        self.request = request
     }
 
-    public func progress(closure: ((Int64, Int64, Int64) -> Void)? = nil) -> Self {
-        self.request.progress(closure)
-        return self
-    }
-
-    public func cancel() {
-        self.request.cancel()
-    }
-
-    func handleResponseError(response: NSHTTPURLResponse?, data: NSData?, error: ErrorType?) -> CallError<ESerial.ValueType> {
+    func handleResponseError(_ response: HTTPURLResponse?, data: Data?, error: Error?) -> CallError<ESerial.ValueType> {
         let requestId = response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
         if let code = response?.statusCode {
             switch code {
@@ -352,68 +345,73 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 if let d = data {
                     message = utf8Decode(d)
                 }
-                return .InternalServerError(code, message, requestId)
+                return .internalServerError(code, message, requestId)
             case 400:
                 var message = ""
                 if let d = data {
                     message = utf8Decode(d)
                 }
-                return .BadInputError(message, requestId)
+                return .badInputError(message, requestId)
             case 401:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
-                case .Dictionary(let d):
-                    return .AuthError(Auth.AuthErrorSerializer().deserialize(d["error"]!), requestId)
+                case .dictionary(let d):
+                    return .authError(Auth.AuthErrorSerializer().deserialize(d["error"]!), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
             case 403, 404, 409:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
-                case .Dictionary(let d):
-                    return .RouteError(Box(self.errorSerializer.deserialize(d["error"]!)), requestId)
+                case .dictionary(let d):
+                    return .routeError(Box(self.errorSerializer.deserialize(d["error"]!)), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
             case 429:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
-                case .Dictionary(let d):
-                    return .RateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), requestId)
+                case .dictionary(let d):
+                    return .rateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
             case 200:
-                return .OSError(error)
+                return .clientError(error)
             default:
-                return .HTTPError(code, "An error occurred.", requestId)
+                return .httpError(code, "An error occurred.", requestId)
             }
         } else if response == nil {
-            return .OSError(error)
+            return .clientError(error)
         } else {
             var message = ""
             if let d = data {
                 message = utf8Decode(d)
             }
-            return .HTTPError(nil, message, requestId)
+            return .httpError(nil, message, requestId)
         }
     }
 }
 
 /// An "rpc-style" request
 public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    public override init(request: Alamofire.Request, responseSerializer: RSerial, errorSerializer: ESerial) {
-        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    let request: Alamofire.DataRequest
+
+    public init(request: Alamofire.DataRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
+        self.request = request
+        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    }
+  
+    public func cancel() {
+        self.request.cancel()
     }
 
-    public func response(completionHandler: (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
-        self.request.validate().response {
-            (request, response, dataObj, error) -> Void in
-            let data = dataObj!
-            if error != nil {
-                completionHandler(nil, self.handleResponseError(response, data: data, error: error))
+    public func response(_ completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+        self.request.validate().response { response in
+            if let error = response.error {
+                completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
             } else {
-                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(data)), nil)
+                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }
         }
         return self
@@ -422,18 +420,30 @@ public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Reque
 
 /// An "upload-style" request
 public class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    public override init(request: Alamofire.Request, responseSerializer: RSerial, errorSerializer: ESerial) {
-        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    let request: Alamofire.UploadRequest
+
+    public init(request: Alamofire.UploadRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
+        self.request = request
+        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    }
+  
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        self.request.uploadProgress { progressData in
+            progressHandler(progressData)
+        }
+        return self
+    }
+  
+    public func cancel() {
+        self.request.cancel()
     }
 
-    public func response(completionHandler: (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
-        self.request.validate().response {
-            (request, response, dataObj, error) -> Void in
-            let data = dataObj!
-            if error != nil {
-                completionHandler(nil, self.handleResponseError(response, data: data, error: error))
+    public func response(_ completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+        self.request.validate().response { response in
+            if let error = response.error {
+                completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
             } else {
-                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(data)), nil)
+                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }
         }
         return self
@@ -443,25 +453,37 @@ public class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Re
 
 /// A "download-style" request to a file
 public class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    public var urlPath: NSURL?
-    public var errorMessage: NSData
+    let request: Alamofire.DownloadRequest
+    public var urlPath: URL?
+    public var errorMessage: Data
 
-    public override init(request: Alamofire.Request, responseSerializer: RSerial, errorSerializer: ESerial) {
+    public init(request: Alamofire.DownloadRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
+        self.request = request
         urlPath = nil
-        errorMessage = NSData()
-        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+        errorMessage = Data()
+        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    }
+  
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        self.request.downloadProgress { progressData in
+            progressHandler(progressData)
+        }
+        return self
+    }
+  
+    public func cancel() {
+        self.request.cancel()
     }
 
-    public func response(completionHandler: ((RSerial.ValueType, NSURL)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
-        self.request.validate()
-            .response {
-            (request, response, data, error) -> Void in
-            if error != nil {
-                completionHandler(nil, self.handleResponseError(response, data: self.errorMessage, error: error))
+    public func response(_ completionHandler: @escaping ((RSerial.ValueType, URL)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+        self.request.validate().response { response in
+            if let error = response.error {
+                completionHandler(nil, self.handleResponseError(response.response, data: self.errorMessage, error: error))
             } else {
-                let result = response!.allHeaderFields["Dropbox-Api-Result"] as! String
-                let resultData = result.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-                let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData))
+                let headerFields: [AnyHashable : Any] = response.response!.allHeaderFields
+                let result = caseInsensitiveLookup(lookupKey: "Dropbox-Api-Result", dictionary: headerFields)!
+                let resultData = result.data(using: .utf8, allowLossyConversion: false)
+                let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
 
                 completionHandler((resultObject, self.urlPath!), nil)
             }
@@ -472,24 +494,47 @@ public class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerialize
 
 /// A "download-style" request to memory
 public class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    public override init(request: Alamofire.Request, responseSerializer: RSerial, errorSerializer: ESerial) {
-        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+    let request: Alamofire.DataRequest
+
+    public init(request: Alamofire.DataRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
+        self.request = request
+        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
-
-    public func response(completionHandler: ((RSerial.ValueType, NSData)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
-        self.request.validate()
-            .response {
-                (request, response, data, error) -> Void in
-                if error != nil {
-                    completionHandler(nil, self.handleResponseError(response, data: data, error: error))
-                } else {
-                    let result = response!.allHeaderFields["Dropbox-Api-Result"] as! String
-                    let resultData = result.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-                    let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData))
-
-                    completionHandler((resultObject, data!), nil)
-                }
+  
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        self.request.downloadProgress { progressData in
+            progressHandler(progressData)
         }
         return self
     }
+  
+    public func cancel() {
+        self.request.cancel()
+    }
+
+    public func response(_ completionHandler: @escaping ((RSerial.ValueType, Data)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+        self.request.validate().response { response in
+            if let error = response.error {
+                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
+            } else {
+                let headerFields: [AnyHashable : Any] = response.response!.allHeaderFields
+                let result = caseInsensitiveLookup(lookupKey: "Dropbox-Api-Result", dictionary: headerFields)!
+                let resultData = result.data(using: .utf8, allowLossyConversion: false)
+                let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
+                
+                completionHandler((resultObject, response.data!), nil)
+            }
+        }
+        return self
+    }
+}
+
+func caseInsensitiveLookup(lookupKey: String, dictionary: [AnyHashable : Any]) -> String? {
+    for key in dictionary.keys {
+        let keyString = key as! String
+        if (keyString.lowercased() == lookupKey.lowercased()) {
+            return dictionary[key] as? String;
+        }
+    }
+    return nil;
 }
