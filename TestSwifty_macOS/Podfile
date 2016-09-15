@@ -1,0 +1,5 @@
+use_frameworks!
+
+target "TestSwifty_macOS" do
+    pod 'SwiftyDropbox', :path => '../'
+end

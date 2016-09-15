@@ -62,6 +62,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
+        
+        let mainController = self.window!.rootViewController as! ViewController
+        mainController.checkButtons()
 
         return false
     }

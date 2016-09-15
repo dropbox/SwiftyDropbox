@@ -4,5 +4,8 @@
 ## user-specific settings
 xcuserdata/
 
-## project dependencies
+## CocoaPods
 Pods/
+
+## Carthage
+Carthage/
