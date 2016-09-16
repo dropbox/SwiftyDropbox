@@ -10,6 +10,14 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 - macOS 10.11+
 - Xcode 8.0+
 
+### Swift 3 Keychain bug
+
+SwiftyDropbox currently supports Swift 3. However, there appears to be a bug with the Keychain in the iOS simulator environment where data is not persistently saved to the Keychain.
+
+As a temporary workaround, in the Project Navigator, select **your project** > **Capabilities** > **Keychain Sharing** > **ON**.
+
+You can read more about the bug [here](https://forums.developer.apple.com/message/170381#170381).
+
 ## Get Started
 
 ### Register your application
@@ -52,6 +60,18 @@ Then, run the following command to install the dependency:
 $ pod install
 ```
 
+**Note**: If you are encountering `Use Legacy Swift Language Version` warnings after running `pod install`, then add the following to the end of your Podfile:
+
+```ruby
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['SWIFT_VERSION'] = '3.0'
+    end
+  end
+end
+```
+
 Once your project is integrated with the Dropbox Swift SDK, you can pull SDK updates using the following command:
 
 ```bash
@@ -71,7 +91,7 @@ brew install carthage
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.0
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.2
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -112,6 +132,27 @@ Finally, you can also integrate the Dropbox Swift SDK into your project manually
 Drag the `Source/SwiftyDropbox.xcodeproj` project into your project as a subproject.
 
 Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add `SwiftyDropbox.framework`.
+
+
+## Swift 2.3
+
+SwiftyDropbox currently supports only Swift 3+. However, we have a Swift 2.3 compatible branch, if necessary. To access it, you can either pull the `swift_2_3` branch from the repo, or using one of the following distribution channels: 
+
+#### CocoaPods
+```ruby
+use_frameworks!
+
+target '<YOUR_PROJECT_NAME>' do
+    pod 'SwiftyDropbox', :git => 'https://github.com/dropbox/SwiftyDropbox', :branch => 'swift_2_3'
+end
+```
+
+#### Carthage
+```
+# SwiftyDropbox
+github "https://github.com/dropbox/SwiftyDropbox" ~> 3.4.0
+```
+
 
 ## Configure your project
 
