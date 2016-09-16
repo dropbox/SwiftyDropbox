@@ -395,7 +395,7 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
 
 /// An "rpc-style" request
 public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    let request: Alamofire.DataRequest
+    public let request: Alamofire.DataRequest
 
     public init(request: Alamofire.DataRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
         self.request = request
@@ -420,7 +420,7 @@ public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Reque
 
 /// An "upload-style" request
 public class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    let request: Alamofire.UploadRequest
+    public let request: Alamofire.UploadRequest
 
     public init(request: Alamofire.UploadRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
         self.request = request
@@ -453,7 +453,7 @@ public class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Re
 
 /// A "download-style" request to a file
 public class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    let request: Alamofire.DownloadRequest
+    public let request: Alamofire.DownloadRequest
     public var urlPath: URL?
     public var errorMessage: Data
 
@@ -494,7 +494,7 @@ public class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerialize
 
 /// A "download-style" request to memory
 public class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    let request: Alamofire.DataRequest
+    public let request: Alamofire.DataRequest
 
     public init(request: Alamofire.DataRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
         self.request = request

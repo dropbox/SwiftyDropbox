@@ -20,7 +20,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(LaunchResultBaseSerializer().serialize(self)))"
         }
     }
-    open class LaunchResultBaseSerializer: JSONSerializer {
+    public class LaunchResultBaseSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: LaunchResultBase) -> JSON {
             switch value {
@@ -60,7 +60,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(LaunchEmptyResultSerializer().serialize(self)))"
         }
     }
-    open class LaunchEmptyResultSerializer: JSONSerializer {
+    public class LaunchEmptyResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: LaunchEmptyResult) -> JSON {
             switch value {
@@ -94,7 +94,7 @@ public class Async {
     }
 
     /// Arguments for methods that poll the status of an asynchronous job.
-    open class PollArg: CustomStringConvertible {
+    public class PollArg: CustomStringConvertible {
         /// Id of the asynchronous job. This is the value of a response returned from the method that launched the job.
         public let asyncJobId: String
         public init(asyncJobId: String) {
@@ -105,7 +105,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollArgSerializer().serialize(self)))"
         }
     }
-    open class PollArgSerializer: JSONSerializer {
+    public class PollArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PollArg) -> JSON {
             let output = [ 
@@ -135,7 +135,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollResultBaseSerializer().serialize(self)))"
         }
     }
-    open class PollResultBaseSerializer: JSONSerializer {
+    public class PollResultBaseSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PollResultBase) -> JSON {
             switch value {
@@ -173,7 +173,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollEmptyResultSerializer().serialize(self)))"
         }
     }
-    open class PollEmptyResultSerializer: JSONSerializer {
+    public class PollEmptyResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PollEmptyResult) -> JSON {
             switch value {
@@ -219,7 +219,7 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollErrorSerializer().serialize(self)))"
         }
     }
-    open class PollErrorSerializer: JSONSerializer {
+    public class PollErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PollError) -> JSON {
             switch value {

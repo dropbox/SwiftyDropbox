@@ -23,7 +23,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(EmmStateSerializer().serialize(self)))"
         }
     }
-    open class EmmStateSerializer: JSONSerializer {
+    public class EmmStateSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: EmmState) -> JSON {
             switch value {
@@ -80,7 +80,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderJoinPolicySerializer().serialize(self)))"
         }
     }
-    open class SharedFolderJoinPolicySerializer: JSONSerializer {
+    public class SharedFolderJoinPolicySerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SharedFolderJoinPolicy) -> JSON {
             switch value {
@@ -131,7 +131,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMemberPolicySerializer().serialize(self)))"
         }
     }
-    open class SharedFolderMemberPolicySerializer: JSONSerializer {
+    public class SharedFolderMemberPolicySerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SharedFolderMemberPolicy) -> JSON {
             switch value {
@@ -187,7 +187,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkCreatePolicySerializer().serialize(self)))"
         }
     }
-    open class SharedLinkCreatePolicySerializer: JSONSerializer {
+    public class SharedLinkCreatePolicySerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SharedLinkCreatePolicy) -> JSON {
             switch value {
@@ -232,7 +232,7 @@ public class TeamPolicies {
     }
 
     /// Policies governing team members.
-    open class TeamMemberPolicies: CustomStringConvertible {
+    public class TeamMemberPolicies: CustomStringConvertible {
         /// Policies governing sharing.
         public let sharing: TeamPolicies.TeamSharingPolicies
         /// This describes the Enterprise Mobility Management (EMM) state for this team. This information can be used to
@@ -248,7 +248,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberPoliciesSerializer().serialize(self)))"
         }
     }
-    open class TeamMemberPoliciesSerializer: JSONSerializer {
+    public class TeamMemberPoliciesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamMemberPolicies) -> JSON {
             let output = [ 
@@ -270,7 +270,7 @@ public class TeamPolicies {
     }
 
     /// Policies governing sharing within and outside of the team.
-    open class TeamSharingPolicies: CustomStringConvertible {
+    public class TeamSharingPolicies: CustomStringConvertible {
         /// Who can join folders shared by team members.
         public let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
         /// Which shared folders team members can join.
@@ -286,7 +286,7 @@ public class TeamPolicies {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSharingPoliciesSerializer().serialize(self)))"
         }
     }
-    open class TeamSharingPoliciesSerializer: JSONSerializer {
+    public class TeamSharingPoliciesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamSharingPolicies) -> JSON {
             let output = [ 

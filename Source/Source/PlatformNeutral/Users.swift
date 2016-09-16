@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the users namespace
 public class Users {
     /// The amount of detail revealed about an account depends on the user being queried and the user making the query.
-    open class Account: CustomStringConvertible {
+    public class Account: CustomStringConvertible {
         /// The user's unique Dropbox ID.
         public let accountId: String
         /// Details of a user's name.
@@ -38,7 +38,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(AccountSerializer().serialize(self)))"
         }
     }
-    open class AccountSerializer: JSONSerializer {
+    public class AccountSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: Account) -> JSON {
             let output = [ 
@@ -80,7 +80,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(AccountTypeSerializer().serialize(self)))"
         }
     }
-    open class AccountTypeSerializer: JSONSerializer {
+    public class AccountTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AccountType) -> JSON {
             switch value {
@@ -119,7 +119,7 @@ public class Users {
     }
 
     /// Basic information about any account.
-    open class BasicAccount: Users.Account {
+    public class BasicAccount: Users.Account {
         /// Whether this user is a teammate of the current user. If this account is the current user's account, then
         /// this will be true.
         public let isTeammate: Bool
@@ -136,7 +136,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(BasicAccountSerializer().serialize(self)))"
         }
     }
-    open class BasicAccountSerializer: JSONSerializer {
+    public class BasicAccountSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: BasicAccount) -> JSON {
             let output = [ 
@@ -170,7 +170,7 @@ public class Users {
     }
 
     /// Detailed information about the current user's account.
-    open class FullAccount: Users.Account {
+    public class FullAccount: Users.Account {
         /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
         /// http://en.wikipedia.org/wiki/ISO_3166-1.
         public let country: String?
@@ -206,7 +206,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(FullAccountSerializer().serialize(self)))"
         }
     }
-    open class FullAccountSerializer: JSONSerializer {
+    public class FullAccountSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FullAccount) -> JSON {
             let output = [ 
@@ -250,7 +250,7 @@ public class Users {
     }
 
     /// Information about a team.
-    open class Team: CustomStringConvertible {
+    public class Team: CustomStringConvertible {
         /// The team's unique ID.
         public let id: String
         /// The name of the team.
@@ -265,7 +265,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSerializer().serialize(self)))"
         }
     }
-    open class TeamSerializer: JSONSerializer {
+    public class TeamSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: Team) -> JSON {
             let output = [ 
@@ -287,7 +287,7 @@ public class Users {
     }
 
     /// Detailed information about a team.
-    open class FullTeam: Users.Team {
+    public class FullTeam: Users.Team {
         /// Team policies governing sharing.
         public let sharingPolicies: TeamPolicies.TeamSharingPolicies
         public init(id: String, name: String, sharingPolicies: TeamPolicies.TeamSharingPolicies) {
@@ -298,7 +298,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(FullTeamSerializer().serialize(self)))"
         }
     }
-    open class FullTeamSerializer: JSONSerializer {
+    public class FullTeamSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FullTeam) -> JSON {
             let output = [ 
@@ -322,7 +322,7 @@ public class Users {
     }
 
     /// The GetAccountArg struct
-    open class GetAccountArg: CustomStringConvertible {
+    public class GetAccountArg: CustomStringConvertible {
         /// A user's account identifier.
         public let accountId: String
         public init(accountId: String) {
@@ -333,7 +333,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(GetAccountArgSerializer().serialize(self)))"
         }
     }
-    open class GetAccountArgSerializer: JSONSerializer {
+    public class GetAccountArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetAccountArg) -> JSON {
             let output = [ 
@@ -353,7 +353,7 @@ public class Users {
     }
 
     /// The GetAccountBatchArg struct
-    open class GetAccountBatchArg: CustomStringConvertible {
+    public class GetAccountBatchArg: CustomStringConvertible {
         /// List of user account identifiers.  Should not contain any duplicate account IDs.
         public let accountIds: Array<String>
         public init(accountIds: Array<String>) {
@@ -364,7 +364,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(GetAccountBatchArgSerializer().serialize(self)))"
         }
     }
-    open class GetAccountBatchArgSerializer: JSONSerializer {
+    public class GetAccountBatchArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetAccountBatchArg) -> JSON {
             let output = [ 
@@ -394,7 +394,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(GetAccountBatchErrorSerializer().serialize(self)))"
         }
     }
-    open class GetAccountBatchErrorSerializer: JSONSerializer {
+    public class GetAccountBatchErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetAccountBatchError) -> JSON {
             switch value {
@@ -438,7 +438,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(GetAccountErrorSerializer().serialize(self)))"
         }
     }
-    open class GetAccountErrorSerializer: JSONSerializer {
+    public class GetAccountErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetAccountError) -> JSON {
             switch value {
@@ -471,7 +471,7 @@ public class Users {
     }
 
     /// The IndividualSpaceAllocation struct
-    open class IndividualSpaceAllocation: CustomStringConvertible {
+    public class IndividualSpaceAllocation: CustomStringConvertible {
         /// The total space allocated to the user's account (bytes).
         public let allocated: UInt64
         public init(allocated: UInt64) {
@@ -482,7 +482,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(IndividualSpaceAllocationSerializer().serialize(self)))"
         }
     }
-    open class IndividualSpaceAllocationSerializer: JSONSerializer {
+    public class IndividualSpaceAllocationSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: IndividualSpaceAllocation) -> JSON {
             let output = [ 
@@ -502,7 +502,7 @@ public class Users {
     }
 
     /// Representations for a person's name to assist with internationalization.
-    open class Name: CustomStringConvertible {
+    public class Name: CustomStringConvertible {
         /// Also known as a first name.
         public let givenName: String
         /// Also known as a last name or family name.
@@ -530,7 +530,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(NameSerializer().serialize(self)))"
         }
     }
-    open class NameSerializer: JSONSerializer {
+    public class NameSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: Name) -> JSON {
             let output = [ 
@@ -570,7 +570,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(SpaceAllocationSerializer().serialize(self)))"
         }
     }
-    open class SpaceAllocationSerializer: JSONSerializer {
+    public class SpaceAllocationSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SpaceAllocation) -> JSON {
             switch value {
@@ -611,7 +611,7 @@ public class Users {
     }
 
     /// Information about a user's space usage and quota.
-    open class SpaceUsage: CustomStringConvertible {
+    public class SpaceUsage: CustomStringConvertible {
         /// The user's total space usage (bytes).
         public let used: UInt64
         /// The user's space allocation.
@@ -625,7 +625,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(SpaceUsageSerializer().serialize(self)))"
         }
     }
-    open class SpaceUsageSerializer: JSONSerializer {
+    public class SpaceUsageSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SpaceUsage) -> JSON {
             let output = [ 
@@ -647,7 +647,7 @@ public class Users {
     }
 
     /// The TeamSpaceAllocation struct
-    open class TeamSpaceAllocation: CustomStringConvertible {
+    public class TeamSpaceAllocation: CustomStringConvertible {
         /// The total space currently used by the user's team (bytes).
         public let used: UInt64
         /// The total space allocated to the user's team (bytes).
@@ -662,7 +662,7 @@ public class Users {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
         }
     }
-    open class TeamSpaceAllocationSerializer: JSONSerializer {
+    public class TeamSpaceAllocationSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamSpaceAllocation) -> JSON {
             let output = [ 

@@ -21,7 +21,7 @@ public class TeamCommon {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupManagementTypeSerializer().serialize(self)))"
         }
     }
-    open class GroupManagementTypeSerializer: JSONSerializer {
+    public class GroupManagementTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupManagementType) -> JSON {
             switch value {
@@ -60,7 +60,7 @@ public class TeamCommon {
     }
 
     /// Information about a group.
-    open class GroupSummary: CustomStringConvertible {
+    public class GroupSummary: CustomStringConvertible {
         /// (no description)
         public let groupName: String
         /// (no description)
@@ -86,7 +86,7 @@ public class TeamCommon {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSummarySerializer().serialize(self)))"
         }
     }
-    open class GroupSummarySerializer: JSONSerializer {
+    public class GroupSummarySerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupSummary) -> JSON {
             let output = [ 
@@ -127,7 +127,7 @@ public class TeamCommon {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupTypeSerializer().serialize(self)))"
         }
     }
-    open class GroupTypeSerializer: JSONSerializer {
+    public class GroupTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupType) -> JSON {
             switch value {

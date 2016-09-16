@@ -23,7 +23,7 @@ public class Auth {
             return "\(SerializeUtil.prepareJSONForSerialization(AuthErrorSerializer().serialize(self)))"
         }
     }
-    open class AuthErrorSerializer: JSONSerializer {
+    public class AuthErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AuthError) -> JSON {
             switch value {
@@ -68,7 +68,7 @@ public class Auth {
     }
 
     /// Error occurred because the app is being rate limited.
-    open class RateLimitError: CustomStringConvertible {
+    public class RateLimitError: CustomStringConvertible {
         /// The reason why the app is being rate limited.
         public let reason: Auth.RateLimitReason
         /// The number of seconds that the app should wait before making another request.
@@ -82,7 +82,7 @@ public class Auth {
             return "\(SerializeUtil.prepareJSONForSerialization(RateLimitErrorSerializer().serialize(self)))"
         }
     }
-    open class RateLimitErrorSerializer: JSONSerializer {
+    public class RateLimitErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RateLimitError) -> JSON {
             let output = [ 
@@ -95,7 +95,7 @@ public class Auth {
             switch json {
                 case .dictionary(let dict):
                     let reason = Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .null)
-                    let retryAfter = Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .null)
+                    let retryAfter = Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .number(1))
                     return RateLimitError(reason: reason, retryAfter: retryAfter)
                 default:
                     fatalError("Type error deserializing")
@@ -116,7 +116,7 @@ public class Auth {
             return "\(SerializeUtil.prepareJSONForSerialization(RateLimitReasonSerializer().serialize(self)))"
         }
     }
-    open class RateLimitReasonSerializer: JSONSerializer {
+    public class RateLimitReasonSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RateLimitReason) -> JSON {
             switch value {

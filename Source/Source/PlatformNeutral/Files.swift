@@ -23,7 +23,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertiesErrorSerializer().serialize(self)))"
         }
     }
-    open class PropertiesErrorSerializer: JSONSerializer {
+    public class PropertiesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertiesError) -> JSON {
             switch value {
@@ -88,7 +88,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(InvalidPropertyGroupErrorSerializer().serialize(self)))"
         }
     }
-    open class InvalidPropertyGroupErrorSerializer: JSONSerializer {
+    public class InvalidPropertyGroupErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: InvalidPropertyGroupError) -> JSON {
             switch value {
@@ -167,7 +167,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertiesErrorSerializer().serialize(self)))"
         }
     }
-    open class AddPropertiesErrorSerializer: JSONSerializer {
+    public class AddPropertiesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AddPropertiesError) -> JSON {
             switch value {
@@ -232,7 +232,7 @@ public class Files {
     }
 
     /// The GetMetadataArg struct
-    open class GetMetadataArg: CustomStringConvertible {
+    public class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
         public let path: String
         /// If true, mediaInfo in FileMetadata is set for photo and video.
@@ -254,7 +254,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
         }
     }
-    open class GetMetadataArgSerializer: JSONSerializer {
+    public class GetMetadataArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetMetadataArg) -> JSON {
             let output = [ 
@@ -269,9 +269,9 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -280,7 +280,7 @@ public class Files {
     }
 
     /// The AlphaGetMetadataArg struct
-    open class AlphaGetMetadataArg: Files.GetMetadataArg {
+    public class AlphaGetMetadataArg: Files.GetMetadataArg {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
         public let includePropertyTemplates: Array<String>?
@@ -293,7 +293,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataArgSerializer().serialize(self)))"
         }
     }
-    open class AlphaGetMetadataArgSerializer: JSONSerializer {
+    public class AlphaGetMetadataArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AlphaGetMetadataArg) -> JSON {
             let output = [ 
@@ -309,9 +309,9 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .null)
                     return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
                 default:
@@ -329,7 +329,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
         }
     }
-    open class GetMetadataErrorSerializer: JSONSerializer {
+    public class GetMetadataErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetMetadataError) -> JSON {
             switch value {
@@ -367,7 +367,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataErrorSerializer().serialize(self)))"
         }
     }
-    open class AlphaGetMetadataErrorSerializer: JSONSerializer {
+    public class AlphaGetMetadataErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AlphaGetMetadataError) -> JSON {
             switch value {
@@ -402,7 +402,7 @@ public class Files {
     }
 
     /// The CommitInfo struct
-    open class CommitInfo: CustomStringConvertible {
+    public class CommitInfo: CustomStringConvertible {
         /// Path in the user's Dropbox to save the file.
         public let path: String
         /// Selects what to do if the file already exists.
@@ -430,7 +430,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
         }
     }
-    open class CommitInfoSerializer: JSONSerializer {
+    public class CommitInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: CommitInfo) -> JSON {
             let output = [ 
@@ -446,10 +446,10 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
                 default:
                     fatalError("Type error deserializing")
@@ -458,7 +458,7 @@ public class Files {
     }
 
     /// The CommitInfoWithProperties struct
-    open class CommitInfoWithProperties: Files.CommitInfo {
+    public class CommitInfoWithProperties: Files.CommitInfo {
         /// List of custom properties to add to file.
         public let propertyGroups: Array<Properties.PropertyGroup>?
         public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil) {
@@ -469,7 +469,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoWithPropertiesSerializer().serialize(self)))"
         }
     }
-    open class CommitInfoWithPropertiesSerializer: JSONSerializer {
+    public class CommitInfoWithPropertiesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: CommitInfoWithProperties) -> JSON {
             let output = [ 
@@ -486,10 +486,10 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
                 default:
@@ -499,7 +499,7 @@ public class Files {
     }
 
     /// The CreateFolderArg struct
-    open class CreateFolderArg: CustomStringConvertible {
+    public class CreateFolderArg: CustomStringConvertible {
         /// Path in the user's Dropbox to create.
         public let path: String
         public init(path: String) {
@@ -510,7 +510,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
         }
     }
-    open class CreateFolderArgSerializer: JSONSerializer {
+    public class CreateFolderArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: CreateFolderArg) -> JSON {
             let output = [ 
@@ -538,7 +538,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
         }
     }
-    open class CreateFolderErrorSerializer: JSONSerializer {
+    public class CreateFolderErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: CreateFolderError) -> JSON {
             switch value {
@@ -566,7 +566,7 @@ public class Files {
     }
 
     /// The DeleteArg struct
-    open class DeleteArg: CustomStringConvertible {
+    public class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
         public let path: String
         public init(path: String) {
@@ -577,7 +577,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
         }
     }
-    open class DeleteArgSerializer: JSONSerializer {
+    public class DeleteArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DeleteArg) -> JSON {
             let output = [ 
@@ -609,7 +609,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
         }
     }
-    open class DeleteErrorSerializer: JSONSerializer {
+    public class DeleteErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DeleteError) -> JSON {
             switch value {
@@ -650,7 +650,7 @@ public class Files {
     }
 
     /// Metadata for a file or folder.
-    open class Metadata: CustomStringConvertible {
+    public class Metadata: CustomStringConvertible {
         /// The last component of the path (including extension). This never contains a slash.
         public let name: String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will be null if
@@ -678,7 +678,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
         }
     }
-    open class MetadataSerializer: JSONSerializer {
+    public class MetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: Metadata) -> JSON {
             var output = [ 
@@ -728,12 +728,12 @@ public class Files {
     }
 
     /// Indicates that there used to be a file or folder at this path, but it no longer exists.
-    open class DeletedMetadata: Files.Metadata {
+    public class DeletedMetadata: Files.Metadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
     }
-    open class DeletedMetadataSerializer: JSONSerializer {
+    public class DeletedMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DeletedMetadata) -> JSON {
             let output = [ 
@@ -759,7 +759,7 @@ public class Files {
     }
 
     /// Dimensions for a photo or video.
-    open class Dimensions: CustomStringConvertible {
+    public class Dimensions: CustomStringConvertible {
         /// Height of the photo/video.
         public let height: UInt64
         /// Width of the photo/video.
@@ -774,7 +774,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
         }
     }
-    open class DimensionsSerializer: JSONSerializer {
+    public class DimensionsSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: Dimensions) -> JSON {
             let output = [ 
@@ -796,7 +796,7 @@ public class Files {
     }
 
     /// The DownloadArg struct
-    open class DownloadArg: CustomStringConvertible {
+    public class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
         public let path: String
         /// Deprecated. Please specify revision in path instead
@@ -811,7 +811,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
         }
     }
-    open class DownloadArgSerializer: JSONSerializer {
+    public class DownloadArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DownloadArg) -> JSON {
             let output = [ 
@@ -843,7 +843,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
         }
     }
-    open class DownloadErrorSerializer: JSONSerializer {
+    public class DownloadErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DownloadError) -> JSON {
             switch value {
@@ -877,7 +877,7 @@ public class Files {
     }
 
     /// The FileMetadata struct
-    open class FileMetadata: Files.Metadata {
+    public class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
         public let id: String
         /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
@@ -922,7 +922,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
         }
     }
-    open class FileMetadataSerializer: JSONSerializer {
+    public class FileMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FileMetadata) -> JSON {
             let output = [ 
@@ -966,7 +966,7 @@ public class Files {
     }
 
     /// Sharing info for a file or folder.
-    open class SharingInfo: CustomStringConvertible {
+    public class SharingInfo: CustomStringConvertible {
         /// True if the file or folder is inside a read-only shared folder.
         public let readOnly: Bool
         public init(readOnly: Bool) {
@@ -976,7 +976,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
         }
     }
-    open class SharingInfoSerializer: JSONSerializer {
+    public class SharingInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SharingInfo) -> JSON {
             let output = [ 
@@ -996,7 +996,7 @@ public class Files {
     }
 
     /// Sharing info for a file which is contained by a shared folder.
-    open class FileSharingInfo: Files.SharingInfo {
+    public class FileSharingInfo: Files.SharingInfo {
         /// ID of shared folder that holds this file.
         public let parentSharedFolderId: String
         /// The last user who modified the file. This field will be null if the user's account has been deleted.
@@ -1012,7 +1012,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
         }
     }
-    open class FileSharingInfoSerializer: JSONSerializer {
+    public class FileSharingInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FileSharingInfo) -> JSON {
             let output = [ 
@@ -1036,7 +1036,7 @@ public class Files {
     }
 
     /// The FolderMetadata struct
-    open class FolderMetadata: Files.Metadata {
+    public class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
         public let id: String
         /// Deprecated. Please use sharingInfo instead.
@@ -1058,7 +1058,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
         }
     }
-    open class FolderMetadataSerializer: JSONSerializer {
+    public class FolderMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FolderMetadata) -> JSON {
             let output = [ 
@@ -1092,7 +1092,7 @@ public class Files {
     }
 
     /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
-    open class FolderSharingInfo: Files.SharingInfo {
+    public class FolderSharingInfo: Files.SharingInfo {
         /// Set if the folder is contained by a shared folder.
         public let parentSharedFolderId: String?
         /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
@@ -1116,7 +1116,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
         }
     }
-    open class FolderSharingInfoSerializer: JSONSerializer {
+    public class FolderSharingInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: FolderSharingInfo) -> JSON {
             let output = [ 
@@ -1134,8 +1134,8 @@ public class Files {
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .null)
-                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .null)
-                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .null)
+                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .number(0))
+                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .number(0))
                     return FolderSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, traverseOnly: traverseOnly, noAccess: noAccess)
                 default:
                     fatalError("Type error deserializing")
@@ -1144,7 +1144,7 @@ public class Files {
     }
 
     /// The GetCopyReferenceArg struct
-    open class GetCopyReferenceArg: CustomStringConvertible {
+    public class GetCopyReferenceArg: CustomStringConvertible {
         /// The path to the file or folder you want to get a copy reference to.
         public let path: String
         public init(path: String) {
@@ -1155,7 +1155,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceArgSerializer().serialize(self)))"
         }
     }
-    open class GetCopyReferenceArgSerializer: JSONSerializer {
+    public class GetCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetCopyReferenceArg) -> JSON {
             let output = [ 
@@ -1185,7 +1185,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceErrorSerializer().serialize(self)))"
         }
     }
-    open class GetCopyReferenceErrorSerializer: JSONSerializer {
+    public class GetCopyReferenceErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetCopyReferenceError) -> JSON {
             switch value {
@@ -1219,7 +1219,7 @@ public class Files {
     }
 
     /// The GetCopyReferenceResult struct
-    open class GetCopyReferenceResult: CustomStringConvertible {
+    public class GetCopyReferenceResult: CustomStringConvertible {
         /// Metadata of the file or folder.
         public let metadata: Files.Metadata
         /// A copy reference to the file or folder.
@@ -1237,7 +1237,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceResultSerializer().serialize(self)))"
         }
     }
-    open class GetCopyReferenceResultSerializer: JSONSerializer {
+    public class GetCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetCopyReferenceResult) -> JSON {
             let output = [ 
@@ -1261,7 +1261,7 @@ public class Files {
     }
 
     /// The GetTemporaryLinkArg struct
-    open class GetTemporaryLinkArg: CustomStringConvertible {
+    public class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
         public let path: String
         public init(path: String) {
@@ -1272,7 +1272,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkArgSerializer().serialize(self)))"
         }
     }
-    open class GetTemporaryLinkArgSerializer: JSONSerializer {
+    public class GetTemporaryLinkArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetTemporaryLinkArg) -> JSON {
             let output = [ 
@@ -1302,7 +1302,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkErrorSerializer().serialize(self)))"
         }
     }
-    open class GetTemporaryLinkErrorSerializer: JSONSerializer {
+    public class GetTemporaryLinkErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetTemporaryLinkError) -> JSON {
             switch value {
@@ -1336,7 +1336,7 @@ public class Files {
     }
 
     /// The GetTemporaryLinkResult struct
-    open class GetTemporaryLinkResult: CustomStringConvertible {
+    public class GetTemporaryLinkResult: CustomStringConvertible {
         /// Metadata of the file.
         public let metadata: Files.FileMetadata
         /// The temporary link which can be used to stream content the file.
@@ -1350,7 +1350,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkResultSerializer().serialize(self)))"
         }
     }
-    open class GetTemporaryLinkResultSerializer: JSONSerializer {
+    public class GetTemporaryLinkResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetTemporaryLinkResult) -> JSON {
             let output = [ 
@@ -1372,7 +1372,7 @@ public class Files {
     }
 
     /// GPS coordinates for a photo or video.
-    open class GpsCoordinates: CustomStringConvertible {
+    public class GpsCoordinates: CustomStringConvertible {
         /// Latitude of the GPS coordinates.
         public let latitude: Double
         /// Longitude of the GPS coordinates.
@@ -1387,7 +1387,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
         }
     }
-    open class GpsCoordinatesSerializer: JSONSerializer {
+    public class GpsCoordinatesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GpsCoordinates) -> JSON {
             let output = [ 
@@ -1409,7 +1409,7 @@ public class Files {
     }
 
     /// The ListFolderArg struct
-    open class ListFolderArg: CustomStringConvertible {
+    public class ListFolderArg: CustomStringConvertible {
         /// The path to the folder you want to see the contents of.
         public let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
@@ -1434,7 +1434,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
         }
     }
-    open class ListFolderArgSerializer: JSONSerializer {
+    public class ListFolderArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderArg) -> JSON {
             let output = [ 
@@ -1450,10 +1450,10 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .null)
+                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .number(0))
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1462,7 +1462,7 @@ public class Files {
     }
 
     /// The ListFolderContinueArg struct
-    open class ListFolderContinueArg: CustomStringConvertible {
+    public class ListFolderContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
         public let cursor: String
         public init(cursor: String) {
@@ -1473,7 +1473,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
         }
     }
-    open class ListFolderContinueArgSerializer: JSONSerializer {
+    public class ListFolderContinueArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderContinueArg) -> JSON {
             let output = [ 
@@ -1505,7 +1505,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
         }
     }
-    open class ListFolderContinueErrorSerializer: JSONSerializer {
+    public class ListFolderContinueErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderContinueError) -> JSON {
             switch value {
@@ -1555,7 +1555,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
         }
     }
-    open class ListFolderErrorSerializer: JSONSerializer {
+    public class ListFolderErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderError) -> JSON {
             switch value {
@@ -1589,7 +1589,7 @@ public class Files {
     }
 
     /// The ListFolderGetLatestCursorResult struct
-    open class ListFolderGetLatestCursorResult: CustomStringConvertible {
+    public class ListFolderGetLatestCursorResult: CustomStringConvertible {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
         public let cursor: String
         public init(cursor: String) {
@@ -1600,7 +1600,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
         }
     }
-    open class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
+    public class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderGetLatestCursorResult) -> JSON {
             let output = [ 
@@ -1620,7 +1620,7 @@ public class Files {
     }
 
     /// The ListFolderLongpollArg struct
-    open class ListFolderLongpollArg: CustomStringConvertible {
+    public class ListFolderLongpollArg: CustomStringConvertible {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
         public let cursor: String
@@ -1638,7 +1638,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
         }
     }
-    open class ListFolderLongpollArgSerializer: JSONSerializer {
+    public class ListFolderLongpollArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderLongpollArg) -> JSON {
             let output = [ 
@@ -1651,7 +1651,7 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .null)
+                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .number(30))
                     return ListFolderLongpollArg(cursor: cursor, timeout: timeout)
                 default:
                     fatalError("Type error deserializing")
@@ -1670,7 +1670,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
         }
     }
-    open class ListFolderLongpollErrorSerializer: JSONSerializer {
+    public class ListFolderLongpollErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderLongpollError) -> JSON {
             switch value {
@@ -1703,7 +1703,7 @@ public class Files {
     }
 
     /// The ListFolderLongpollResult struct
-    open class ListFolderLongpollResult: CustomStringConvertible {
+    public class ListFolderLongpollResult: CustomStringConvertible {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
         public let changes: Bool
         /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
@@ -1717,7 +1717,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
         }
     }
-    open class ListFolderLongpollResultSerializer: JSONSerializer {
+    public class ListFolderLongpollResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderLongpollResult) -> JSON {
             let output = [ 
@@ -1739,7 +1739,7 @@ public class Files {
     }
 
     /// The ListFolderResult struct
-    open class ListFolderResult: CustomStringConvertible {
+    public class ListFolderResult: CustomStringConvertible {
         /// The files and (direct) subfolders in the folder.
         public let entries: Array<Files.Metadata>
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
@@ -1756,7 +1756,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
         }
     }
-    open class ListFolderResultSerializer: JSONSerializer {
+    public class ListFolderResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListFolderResult) -> JSON {
             let output = [ 
@@ -1780,7 +1780,7 @@ public class Files {
     }
 
     /// The ListRevisionsArg struct
-    open class ListRevisionsArg: CustomStringConvertible {
+    public class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
         public let path: String
         /// The maximum number of revision entries returned.
@@ -1795,7 +1795,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
         }
     }
-    open class ListRevisionsArgSerializer: JSONSerializer {
+    public class ListRevisionsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListRevisionsArg) -> JSON {
             let output = [ 
@@ -1808,7 +1808,7 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .null)
+                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(10))
                     return ListRevisionsArg(path: path, limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -1827,7 +1827,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
         }
     }
-    open class ListRevisionsErrorSerializer: JSONSerializer {
+    public class ListRevisionsErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListRevisionsError) -> JSON {
             switch value {
@@ -1861,7 +1861,7 @@ public class Files {
     }
 
     /// The ListRevisionsResult struct
-    open class ListRevisionsResult: CustomStringConvertible {
+    public class ListRevisionsResult: CustomStringConvertible {
         /// If the file is deleted.
         public let isDeleted: Bool
         /// The revisions for the file. Only non-delete revisions will show up here.
@@ -1874,7 +1874,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
         }
     }
-    open class ListRevisionsResultSerializer: JSONSerializer {
+    public class ListRevisionsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListRevisionsResult) -> JSON {
             let output = [ 
@@ -1904,7 +1904,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(LookUpPropertiesErrorSerializer().serialize(self)))"
         }
     }
-    open class LookUpPropertiesErrorSerializer: JSONSerializer {
+    public class LookUpPropertiesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: LookUpPropertiesError) -> JSON {
             switch value {
@@ -1950,7 +1950,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
         }
     }
-    open class LookupErrorSerializer: JSONSerializer {
+    public class LookupErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: LookupError) -> JSON {
             switch value {
@@ -2018,7 +2018,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
         }
     }
-    open class MediaInfoSerializer: JSONSerializer {
+    public class MediaInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MediaInfo) -> JSON {
             switch value {
@@ -2052,7 +2052,7 @@ public class Files {
     }
 
     /// Metadata for a photo or video.
-    open class MediaMetadata: CustomStringConvertible {
+    public class MediaMetadata: CustomStringConvertible {
         /// Dimension of the photo/video.
         public let dimensions: Files.Dimensions?
         /// The GPS coordinate of the photo/video.
@@ -2068,7 +2068,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
         }
     }
-    open class MediaMetadataSerializer: JSONSerializer {
+    public class MediaMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MediaMetadata) -> JSON {
             var output = [ 
@@ -2110,12 +2110,12 @@ public class Files {
     }
 
     /// Metadata for a photo.
-    open class PhotoMetadata: Files.MediaMetadata {
+    public class PhotoMetadata: Files.MediaMetadata {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
         }
     }
-    open class PhotoMetadataSerializer: JSONSerializer {
+    public class PhotoMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PhotoMetadata) -> JSON {
             let output = [ 
@@ -2139,7 +2139,7 @@ public class Files {
     }
 
     /// The PreviewArg struct
-    open class PreviewArg: CustomStringConvertible {
+    public class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
         public let path: String
         /// Deprecated. Please specify revision in path instead
@@ -2154,7 +2154,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
         }
     }
-    open class PreviewArgSerializer: JSONSerializer {
+    public class PreviewArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PreviewArg) -> JSON {
             let output = [ 
@@ -2190,7 +2190,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
         }
     }
-    open class PreviewErrorSerializer: JSONSerializer {
+    public class PreviewErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PreviewError) -> JSON {
             switch value {
@@ -2236,7 +2236,7 @@ public class Files {
     }
 
     /// The PropertyGroupUpdate struct
-    open class PropertyGroupUpdate: CustomStringConvertible {
+    public class PropertyGroupUpdate: CustomStringConvertible {
         /// A unique identifier for a property template.
         public let templateId: String
         /// List of property fields to update if the field already exists. If the field doesn't exist, add the field to
@@ -2255,7 +2255,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupUpdateSerializer().serialize(self)))"
         }
     }
-    open class PropertyGroupUpdateSerializer: JSONSerializer {
+    public class PropertyGroupUpdateSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyGroupUpdate) -> JSON {
             let output = [ 
@@ -2279,7 +2279,7 @@ public class Files {
     }
 
     /// The PropertyGroupWithPath struct
-    open class PropertyGroupWithPath: CustomStringConvertible {
+    public class PropertyGroupWithPath: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
         /// Filled custom property templates associated with a file.
@@ -2293,7 +2293,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupWithPathSerializer().serialize(self)))"
         }
     }
-    open class PropertyGroupWithPathSerializer: JSONSerializer {
+    public class PropertyGroupWithPathSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyGroupWithPath) -> JSON {
             let output = [ 
@@ -2315,7 +2315,7 @@ public class Files {
     }
 
     /// The RelocationArg struct
-    open class RelocationArg: CustomStringConvertible {
+    public class RelocationArg: CustomStringConvertible {
         /// Path in the user's Dropbox to be copied or moved.
         public let fromPath: String
         /// Path in the user's Dropbox that is the destination.
@@ -2330,7 +2330,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
         }
     }
-    open class RelocationArgSerializer: JSONSerializer {
+    public class RelocationArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RelocationArg) -> JSON {
             let output = [ 
@@ -2374,7 +2374,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
         }
     }
-    open class RelocationErrorSerializer: JSONSerializer {
+    public class RelocationErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RelocationError) -> JSON {
             switch value {
@@ -2446,7 +2446,7 @@ public class Files {
     }
 
     /// The RemovePropertiesArg struct
-    open class RemovePropertiesArg: CustomStringConvertible {
+    public class RemovePropertiesArg: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
         /// A list of identifiers for a property template created by route properties/template/add.
@@ -2461,7 +2461,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovePropertiesArgSerializer().serialize(self)))"
         }
     }
-    open class RemovePropertiesArgSerializer: JSONSerializer {
+    public class RemovePropertiesArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RemovePropertiesArg) -> JSON {
             let output = [ 
@@ -2499,7 +2499,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovePropertiesErrorSerializer().serialize(self)))"
         }
     }
-    open class RemovePropertiesErrorSerializer: JSONSerializer {
+    public class RemovePropertiesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RemovePropertiesError) -> JSON {
             switch value {
@@ -2553,7 +2553,7 @@ public class Files {
     }
 
     /// The RestoreArg struct
-    open class RestoreArg: CustomStringConvertible {
+    public class RestoreArg: CustomStringConvertible {
         /// The path to the file you want to restore.
         public let path: String
         /// The revision to restore for the file.
@@ -2568,7 +2568,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
         }
     }
-    open class RestoreArgSerializer: JSONSerializer {
+    public class RestoreArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RestoreArg) -> JSON {
             let output = [ 
@@ -2604,7 +2604,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
         }
     }
-    open class RestoreErrorSerializer: JSONSerializer {
+    public class RestoreErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RestoreError) -> JSON {
             switch value {
@@ -2651,7 +2651,7 @@ public class Files {
     }
 
     /// The SaveCopyReferenceArg struct
-    open class SaveCopyReferenceArg: CustomStringConvertible {
+    public class SaveCopyReferenceArg: CustomStringConvertible {
         /// A copy reference returned by copyReferenceGet.
         public let copyReference: String
         /// Path in the user's Dropbox that is the destination.
@@ -2666,7 +2666,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceArgSerializer().serialize(self)))"
         }
     }
-    open class SaveCopyReferenceArgSerializer: JSONSerializer {
+    public class SaveCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveCopyReferenceArg) -> JSON {
             let output = [ 
@@ -2707,7 +2707,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceErrorSerializer().serialize(self)))"
         }
     }
-    open class SaveCopyReferenceErrorSerializer: JSONSerializer {
+    public class SaveCopyReferenceErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveCopyReferenceError) -> JSON {
             switch value {
@@ -2765,7 +2765,7 @@ public class Files {
     }
 
     /// The SaveCopyReferenceResult struct
-    open class SaveCopyReferenceResult: CustomStringConvertible {
+    public class SaveCopyReferenceResult: CustomStringConvertible {
         /// The metadata of the saved file or folder in the user's Dropbox.
         public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
@@ -2775,7 +2775,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceResultSerializer().serialize(self)))"
         }
     }
-    open class SaveCopyReferenceResultSerializer: JSONSerializer {
+    public class SaveCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveCopyReferenceResult) -> JSON {
             let output = [ 
@@ -2795,7 +2795,7 @@ public class Files {
     }
 
     /// The SaveUrlArg struct
-    open class SaveUrlArg: CustomStringConvertible {
+    public class SaveUrlArg: CustomStringConvertible {
         /// The path in Dropbox where the URL will be saved to.
         public let path: String
         /// The URL to be saved.
@@ -2810,7 +2810,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlArgSerializer().serialize(self)))"
         }
     }
-    open class SaveUrlArgSerializer: JSONSerializer {
+    public class SaveUrlArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveUrlArg) -> JSON {
             let output = [ 
@@ -2848,7 +2848,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlErrorSerializer().serialize(self)))"
         }
     }
-    open class SaveUrlErrorSerializer: JSONSerializer {
+    public class SaveUrlErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveUrlError) -> JSON {
             switch value {
@@ -2912,7 +2912,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlJobStatusSerializer().serialize(self)))"
         }
     }
-    open class SaveUrlJobStatusSerializer: JSONSerializer {
+    public class SaveUrlJobStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveUrlJobStatus) -> JSON {
             switch value {
@@ -2964,7 +2964,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlResultSerializer().serialize(self)))"
         }
     }
-    open class SaveUrlResultSerializer: JSONSerializer {
+    public class SaveUrlResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SaveUrlResult) -> JSON {
             switch value {
@@ -2999,7 +2999,7 @@ public class Files {
     }
 
     /// The SearchArg struct
-    open class SearchArg: CustomStringConvertible {
+    public class SearchArg: CustomStringConvertible {
         /// The path in the user's Dropbox to search. Should probably be a folder.
         public let path: String
         /// The string to search for. The search string is split on spaces into multiple tokens. For file name
@@ -3028,7 +3028,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
         }
     }
-    open class SearchArgSerializer: JSONSerializer {
+    public class SearchArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchArg) -> JSON {
             let output = [ 
@@ -3045,9 +3045,9 @@ public class Files {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
-                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .null)
-                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .null)
-                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? .null)
+                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .number(0))
+                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .number(100))
+                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? Files.SearchModeSerializer().serialize(.filename))
                     return SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
                     fatalError("Type error deserializing")
@@ -3066,7 +3066,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
         }
     }
-    open class SearchErrorSerializer: JSONSerializer {
+    public class SearchErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchError) -> JSON {
             switch value {
@@ -3100,7 +3100,7 @@ public class Files {
     }
 
     /// The SearchMatch struct
-    open class SearchMatch: CustomStringConvertible {
+    public class SearchMatch: CustomStringConvertible {
         /// The type of the match.
         public let matchType: Files.SearchMatchType
         /// The metadata for the matched file or folder.
@@ -3113,7 +3113,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
         }
     }
-    open class SearchMatchSerializer: JSONSerializer {
+    public class SearchMatchSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchMatch) -> JSON {
             let output = [ 
@@ -3147,7 +3147,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
         }
     }
-    open class SearchMatchTypeSerializer: JSONSerializer {
+    public class SearchMatchTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchMatchType) -> JSON {
             switch value {
@@ -3198,7 +3198,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
         }
     }
-    open class SearchModeSerializer: JSONSerializer {
+    public class SearchModeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchMode) -> JSON {
             switch value {
@@ -3237,7 +3237,7 @@ public class Files {
     }
 
     /// The SearchResult struct
-    open class SearchResult: CustomStringConvertible {
+    public class SearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
         public let matches: Array<Files.SearchMatch>
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
@@ -3255,7 +3255,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
         }
     }
-    open class SearchResultSerializer: JSONSerializer {
+    public class SearchResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: SearchResult) -> JSON {
             let output = [ 
@@ -3279,7 +3279,7 @@ public class Files {
     }
 
     /// The ThumbnailArg struct
-    open class ThumbnailArg: CustomStringConvertible {
+    public class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
         public let path: String
         /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
@@ -3297,7 +3297,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
         }
     }
-    open class ThumbnailArgSerializer: JSONSerializer {
+    public class ThumbnailArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ThumbnailArg) -> JSON {
             let output = [ 
@@ -3311,8 +3311,8 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? .null)
-                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? .null)
+                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
+                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                     return ThumbnailArg(path: path, format: format, size: size)
                 default:
                     fatalError("Type error deserializing")
@@ -3335,7 +3335,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
         }
     }
-    open class ThumbnailErrorSerializer: JSONSerializer {
+    public class ThumbnailErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ThumbnailError) -> JSON {
             switch value {
@@ -3391,7 +3391,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
         }
     }
-    open class ThumbnailFormatSerializer: JSONSerializer {
+    public class ThumbnailFormatSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ThumbnailFormat) -> JSON {
             switch value {
@@ -3440,7 +3440,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
     }
-    open class ThumbnailSizeSerializer: JSONSerializer {
+    public class ThumbnailSizeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ThumbnailSize) -> JSON {
             switch value {
@@ -3511,7 +3511,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertiesErrorSerializer().serialize(self)))"
         }
     }
-    open class UpdatePropertiesErrorSerializer: JSONSerializer {
+    public class UpdatePropertiesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UpdatePropertiesError) -> JSON {
             switch value {
@@ -3577,7 +3577,7 @@ public class Files {
     }
 
     /// The UpdatePropertyGroupArg struct
-    open class UpdatePropertyGroupArg: CustomStringConvertible {
+    public class UpdatePropertyGroupArg: CustomStringConvertible {
         /// A unique identifier for the file.
         public let path: String
         /// Filled custom property templates associated with a file.
@@ -3591,7 +3591,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyGroupArgSerializer().serialize(self)))"
         }
     }
-    open class UpdatePropertyGroupArgSerializer: JSONSerializer {
+    public class UpdatePropertyGroupArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UpdatePropertyGroupArg) -> JSON {
             let output = [ 
@@ -3623,7 +3623,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
         }
     }
-    open class UploadErrorSerializer: JSONSerializer {
+    public class UploadErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadError) -> JSON {
             switch value {
@@ -3669,7 +3669,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorWithPropertiesSerializer().serialize(self)))"
         }
     }
-    open class UploadErrorWithPropertiesSerializer: JSONSerializer {
+    public class UploadErrorWithPropertiesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadErrorWithProperties) -> JSON {
             switch value {
@@ -3710,7 +3710,7 @@ public class Files {
     }
 
     /// The UploadSessionAppendArg struct
-    open class UploadSessionAppendArg: CustomStringConvertible {
+    public class UploadSessionAppendArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
@@ -3724,7 +3724,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionAppendArgSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionAppendArgSerializer: JSONSerializer {
+    public class UploadSessionAppendArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionAppendArg) -> JSON {
             let output = [ 
@@ -3737,7 +3737,7 @@ public class Files {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
                     return UploadSessionAppendArg(cursor: cursor, close: close)
                 default:
                     fatalError("Type error deserializing")
@@ -3746,7 +3746,7 @@ public class Files {
     }
 
     /// The UploadSessionCursor struct
-    open class UploadSessionCursor: CustomStringConvertible {
+    public class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
         public let sessionId: String
         /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
@@ -3762,7 +3762,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionCursorSerializer: JSONSerializer {
+    public class UploadSessionCursorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionCursor) -> JSON {
             let output = [ 
@@ -3784,7 +3784,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishArg struct
-    open class UploadSessionFinishArg: CustomStringConvertible {
+    public class UploadSessionFinishArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
@@ -3797,7 +3797,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishArgSerializer: JSONSerializer {
+    public class UploadSessionFinishArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishArg) -> JSON {
             let output = [ 
@@ -3819,7 +3819,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchArg struct
-    open class UploadSessionFinishBatchArg: CustomStringConvertible {
+    public class UploadSessionFinishBatchArg: CustomStringConvertible {
         /// Commit information for each file in the batch.
         public let entries: Array<Files.UploadSessionFinishArg>
         public init(entries: Array<Files.UploadSessionFinishArg>) {
@@ -3829,7 +3829,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchArgSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishBatchArgSerializer: JSONSerializer {
+    public class UploadSessionFinishBatchArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishBatchArg) -> JSON {
             let output = [ 
@@ -3859,7 +3859,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchJobStatusSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishBatchJobStatusSerializer: JSONSerializer {
+    public class UploadSessionFinishBatchJobStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishBatchJobStatus) -> JSON {
             switch value {
@@ -3893,7 +3893,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchResult struct
-    open class UploadSessionFinishBatchResult: CustomStringConvertible {
+    public class UploadSessionFinishBatchResult: CustomStringConvertible {
         /// Commit result for each file in the batch.
         public let entries: Array<Files.UploadSessionFinishBatchResultEntry>
         public init(entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
@@ -3903,7 +3903,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishBatchResultSerializer: JSONSerializer {
+    public class UploadSessionFinishBatchResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishBatchResult) -> JSON {
             let output = [ 
@@ -3933,7 +3933,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultEntrySerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishBatchResultEntrySerializer: JSONSerializer {
+    public class UploadSessionFinishBatchResultEntrySerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishBatchResultEntry) -> JSON {
             switch value {
@@ -3983,7 +3983,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionFinishErrorSerializer: JSONSerializer {
+    public class UploadSessionFinishErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionFinishError) -> JSON {
             switch value {
@@ -4048,7 +4048,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionLookupErrorSerializer: JSONSerializer {
+    public class UploadSessionLookupErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionLookupError) -> JSON {
             switch value {
@@ -4100,7 +4100,7 @@ public class Files {
     }
 
     /// The UploadSessionOffsetError struct
-    open class UploadSessionOffsetError: CustomStringConvertible {
+    public class UploadSessionOffsetError: CustomStringConvertible {
         /// The offset up to which data has been collected.
         public let correctOffset: UInt64
         public init(correctOffset: UInt64) {
@@ -4111,7 +4111,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionOffsetErrorSerializer: JSONSerializer {
+    public class UploadSessionOffsetErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionOffsetError) -> JSON {
             let output = [ 
@@ -4131,7 +4131,7 @@ public class Files {
     }
 
     /// The UploadSessionStartArg struct
-    open class UploadSessionStartArg: CustomStringConvertible {
+    public class UploadSessionStartArg: CustomStringConvertible {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
         public let close: Bool
@@ -4142,7 +4142,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartArgSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionStartArgSerializer: JSONSerializer {
+    public class UploadSessionStartArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionStartArg) -> JSON {
             let output = [ 
@@ -4153,7 +4153,7 @@ public class Files {
         public func deserialize(_ json: JSON) -> UploadSessionStartArg {
             switch json {
                 case .dictionary(let dict):
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
                     return UploadSessionStartArg(close: close)
                 default:
                     fatalError("Type error deserializing")
@@ -4162,7 +4162,7 @@ public class Files {
     }
 
     /// The UploadSessionStartResult struct
-    open class UploadSessionStartResult: CustomStringConvertible {
+    public class UploadSessionStartResult: CustomStringConvertible {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
         public let sessionId: String
         public init(sessionId: String) {
@@ -4173,7 +4173,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
         }
     }
-    open class UploadSessionStartResultSerializer: JSONSerializer {
+    public class UploadSessionStartResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadSessionStartResult) -> JSON {
             let output = [ 
@@ -4193,7 +4193,7 @@ public class Files {
     }
 
     /// The UploadWriteFailed struct
-    open class UploadWriteFailed: CustomStringConvertible {
+    public class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
         public let reason: Files.WriteError
         /// The upload session ID; this may be used to retry the commit.
@@ -4207,7 +4207,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
         }
     }
-    open class UploadWriteFailedSerializer: JSONSerializer {
+    public class UploadWriteFailedSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UploadWriteFailed) -> JSON {
             let output = [ 
@@ -4229,7 +4229,7 @@ public class Files {
     }
 
     /// Metadata for a video.
-    open class VideoMetadata: Files.MediaMetadata {
+    public class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
         public let duration: UInt64?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil, duration: UInt64? = nil) {
@@ -4241,7 +4241,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
         }
     }
-    open class VideoMetadataSerializer: JSONSerializer {
+    public class VideoMetadataSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: VideoMetadata) -> JSON {
             let output = [ 
@@ -4281,7 +4281,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
         }
     }
-    open class WriteConflictErrorSerializer: JSONSerializer {
+    public class WriteConflictErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: WriteConflictError) -> JSON {
             switch value {
@@ -4344,7 +4344,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
         }
     }
-    open class WriteErrorSerializer: JSONSerializer {
+    public class WriteErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: WriteError) -> JSON {
             switch value {
@@ -4423,7 +4423,7 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
         }
     }
-    open class WriteModeSerializer: JSONSerializer {
+    public class WriteModeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: WriteMode) -> JSON {
             switch value {

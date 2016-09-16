@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the properties namespace
 public class Properties {
     /// The GetPropertyTemplateArg struct
-    open class GetPropertyTemplateArg: CustomStringConvertible {
+    public class GetPropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by route properties/template/add.
         public let templateId: String
         public init(templateId: String) {
@@ -20,7 +20,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(GetPropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    open class GetPropertyTemplateArgSerializer: JSONSerializer {
+    public class GetPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetPropertyTemplateArg) -> JSON {
             let output = [ 
@@ -40,7 +40,7 @@ public class Properties {
     }
 
     /// Describes property templates that can be filled and associated with a file.
-    open class PropertyGroupTemplate: CustomStringConvertible {
+    public class PropertyGroupTemplate: CustomStringConvertible {
         /// A display name for the property template. Property template names can be up to 256 bytes.
         public let name: String
         /// Description for new property template. Property template descriptions can be up to 1024 bytes.
@@ -59,7 +59,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupTemplateSerializer().serialize(self)))"
         }
     }
-    open class PropertyGroupTemplateSerializer: JSONSerializer {
+    public class PropertyGroupTemplateSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyGroupTemplate) -> JSON {
             let output = [ 
@@ -83,12 +83,12 @@ public class Properties {
     }
 
     /// The Property template for the specified template.
-    open class GetPropertyTemplateResult: Properties.PropertyGroupTemplate {
+    public class GetPropertyTemplateResult: Properties.PropertyGroupTemplate {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetPropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    open class GetPropertyTemplateResultSerializer: JSONSerializer {
+    public class GetPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetPropertyTemplateResult) -> JSON {
             let output = [ 
@@ -112,7 +112,7 @@ public class Properties {
     }
 
     /// The ListPropertyTemplateIds struct
-    open class ListPropertyTemplateIds: CustomStringConvertible {
+    public class ListPropertyTemplateIds: CustomStringConvertible {
         /// List of identifiers for templates added by route properties/template/add.
         public let templateIds: Array<String>
         public init(templateIds: Array<String>) {
@@ -123,7 +123,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(ListPropertyTemplateIdsSerializer().serialize(self)))"
         }
     }
-    open class ListPropertyTemplateIdsSerializer: JSONSerializer {
+    public class ListPropertyTemplateIdsSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListPropertyTemplateIds) -> JSON {
             let output = [ 
@@ -155,7 +155,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyTemplateErrorSerializer().serialize(self)))"
         }
     }
-    open class PropertyTemplateErrorSerializer: JSONSerializer {
+    public class PropertyTemplateErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyTemplateError) -> JSON {
             switch value {
@@ -215,7 +215,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(ModifyPropertyTemplateErrorSerializer().serialize(self)))"
         }
     }
-    open class ModifyPropertyTemplateErrorSerializer: JSONSerializer {
+    public class ModifyPropertyTemplateErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ModifyPropertyTemplateError) -> JSON {
             switch value {
@@ -279,7 +279,7 @@ public class Properties {
     }
 
     /// The PropertyField struct
-    open class PropertyField: CustomStringConvertible {
+    public class PropertyField: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
         public let name: String
@@ -295,7 +295,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyFieldSerializer().serialize(self)))"
         }
     }
-    open class PropertyFieldSerializer: JSONSerializer {
+    public class PropertyFieldSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyField) -> JSON {
             let output = [ 
@@ -317,7 +317,7 @@ public class Properties {
     }
 
     /// Describe a single property field type which that can be part of a property template.
-    open class PropertyFieldTemplate: CustomStringConvertible {
+    public class PropertyFieldTemplate: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
         public let name: String
@@ -338,7 +338,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyFieldTemplateSerializer().serialize(self)))"
         }
     }
-    open class PropertyFieldTemplateSerializer: JSONSerializer {
+    public class PropertyFieldTemplateSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyFieldTemplate) -> JSON {
             let output = [ 
@@ -362,7 +362,7 @@ public class Properties {
     }
 
     /// Collection of custom properties in filled property templates.
-    open class PropertyGroup: CustomStringConvertible {
+    public class PropertyGroup: CustomStringConvertible {
         /// A unique identifier for a property template type.
         public let templateId: String
         /// This is a list of custom properties associated with a file. There can be up to 32 properties for a template.
@@ -376,7 +376,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupSerializer().serialize(self)))"
         }
     }
-    open class PropertyGroupSerializer: JSONSerializer {
+    public class PropertyGroupSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyGroup) -> JSON {
             let output = [ 
@@ -409,7 +409,7 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyTypeSerializer().serialize(self)))"
         }
     }
-    open class PropertyTypeSerializer: JSONSerializer {
+    public class PropertyTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: PropertyType) -> JSON {
             switch value {

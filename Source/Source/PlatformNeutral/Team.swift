@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the team namespace
 public class Team {
     /// The DeviceSession struct
-    open class DeviceSession: CustomStringConvertible {
+    public class DeviceSession: CustomStringConvertible {
         /// The session id
         public let sessionId: String
         /// The IP address of the last activity from this session
@@ -34,7 +34,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DeviceSessionSerializer().serialize(self)))"
         }
     }
-    open class DeviceSessionSerializer: JSONSerializer {
+    public class DeviceSessionSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DeviceSession) -> JSON {
             let output = [ 
@@ -62,7 +62,7 @@ public class Team {
     }
 
     /// Information on active web sessions
-    open class ActiveWebSession: Team.DeviceSession {
+    public class ActiveWebSession: Team.DeviceSession {
         /// Information on the hosting device
         public let userAgent: String
         /// Information on the hosting operating system
@@ -82,7 +82,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ActiveWebSessionSerializer().serialize(self)))"
         }
     }
-    open class ActiveWebSessionSerializer: JSONSerializer {
+    public class ActiveWebSessionSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ActiveWebSession) -> JSON {
             let output = [ 
@@ -116,12 +116,12 @@ public class Team {
     }
 
     /// Arguments for adding property templates.
-    open class AddPropertyTemplateArg: Properties.PropertyGroupTemplate {
+    public class AddPropertyTemplateArg: Properties.PropertyGroupTemplate {
         public override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    open class AddPropertyTemplateArgSerializer: JSONSerializer {
+    public class AddPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AddPropertyTemplateArg) -> JSON {
             let output = [ 
@@ -145,7 +145,7 @@ public class Team {
     }
 
     /// The AddPropertyTemplateResult struct
-    open class AddPropertyTemplateResult: CustomStringConvertible {
+    public class AddPropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
         public init(templateId: String) {
@@ -156,7 +156,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    open class AddPropertyTemplateResultSerializer: JSONSerializer {
+    public class AddPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AddPropertyTemplateResult) -> JSON {
             let output = [ 
@@ -190,7 +190,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(AdminTierSerializer().serialize(self)))"
         }
     }
-    open class AdminTierSerializer: JSONSerializer {
+    public class AdminTierSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: AdminTier) -> JSON {
             switch value {
@@ -235,7 +235,7 @@ public class Team {
     }
 
     /// Information on linked third party applications
-    open class ApiApp: CustomStringConvertible {
+    public class ApiApp: CustomStringConvertible {
         /// The application unique id
         public let appId: String
         /// The application name
@@ -264,7 +264,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ApiAppSerializer().serialize(self)))"
         }
     }
-    open class ApiAppSerializer: JSONSerializer {
+    public class ApiAppSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ApiApp) -> JSON {
             let output = [ 
@@ -294,7 +294,7 @@ public class Team {
     }
 
     /// Base report structure.
-    open class BaseDfbReport: CustomStringConvertible {
+    public class BaseDfbReport: CustomStringConvertible {
         /// First date present in the results as 'YYYY-MM-DD' or None.
         public let startDate: String
         public init(startDate: String) {
@@ -305,7 +305,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(BaseDfbReportSerializer().serialize(self)))"
         }
     }
-    open class BaseDfbReportSerializer: JSONSerializer {
+    public class BaseDfbReportSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: BaseDfbReport) -> JSON {
             let output = [ 
@@ -325,7 +325,7 @@ public class Team {
     }
 
     /// Input arguments that can be provided for most reports.
-    open class DateRange: CustomStringConvertible {
+    public class DateRange: CustomStringConvertible {
         /// Optional starting date (inclusive)
         public let startDate: Date?
         /// Optional ending date (exclusive)
@@ -338,7 +338,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DateRangeSerializer().serialize(self)))"
         }
     }
-    open class DateRangeSerializer: JSONSerializer {
+    public class DateRangeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DateRange) -> JSON {
             let output = [ 
@@ -368,7 +368,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DateRangeErrorSerializer().serialize(self)))"
         }
     }
-    open class DateRangeErrorSerializer: JSONSerializer {
+    public class DateRangeErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DateRangeError) -> JSON {
             switch value {
@@ -395,7 +395,7 @@ public class Team {
     }
 
     /// Information about linked Dropbox desktop client sessions
-    open class DesktopClientSession: Team.DeviceSession {
+    public class DesktopClientSession: Team.DeviceSession {
         /// Name of the hosting desktop
         public let hostName: String
         /// The Dropbox desktop client type
@@ -421,7 +421,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DesktopClientSessionSerializer().serialize(self)))"
         }
     }
-    open class DesktopClientSessionSerializer: JSONSerializer {
+    public class DesktopClientSessionSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DesktopClientSession) -> JSON {
             let output = [ 
@@ -473,7 +473,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DesktopPlatformSerializer().serialize(self)))"
         }
     }
-    open class DesktopPlatformSerializer: JSONSerializer {
+    public class DesktopPlatformSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DesktopPlatform) -> JSON {
             switch value {
@@ -518,7 +518,7 @@ public class Team {
     }
 
     /// The DeviceSessionArg struct
-    open class DeviceSessionArg: CustomStringConvertible {
+    public class DeviceSessionArg: CustomStringConvertible {
         /// The session id
         public let sessionId: String
         /// The unique id of the member owning the device
@@ -533,7 +533,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DeviceSessionArgSerializer().serialize(self)))"
         }
     }
-    open class DeviceSessionArgSerializer: JSONSerializer {
+    public class DeviceSessionArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DeviceSessionArg) -> JSON {
             let output = [ 
@@ -556,7 +556,7 @@ public class Team {
 
     /// Each of the items is an array of values, one value per day. The value is the number of devices active within a
     /// time window, ending with that day. If there is no data for a day, then the value will be None.
-    open class DevicesActive: CustomStringConvertible {
+    public class DevicesActive: CustomStringConvertible {
         /// Array of number of linked windows (desktop) clients with activity.
         public let windows: Array<UInt64?>
         /// Array of number of linked mac (desktop) clients with activity.
@@ -591,7 +591,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DevicesActiveSerializer().serialize(self)))"
         }
     }
-    open class DevicesActiveSerializer: JSONSerializer {
+    public class DevicesActiveSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: DevicesActive) -> JSON {
             let output = [ 
@@ -624,7 +624,7 @@ public class Team {
 
     /// Activity Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    open class GetActivityReport: Team.BaseDfbReport {
+    public class GetActivityReport: Team.BaseDfbReport {
         /// Array of total number of adds by team members.
         public let adds: Array<UInt64?>
         /// Array of number of edits by team members. If the same user edits the same file multiple times this is
@@ -689,7 +689,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GetActivityReportSerializer().serialize(self)))"
         }
     }
-    open class GetActivityReportSerializer: JSONSerializer {
+    public class GetActivityReportSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetActivityReport) -> JSON {
             let output = [ 
@@ -739,7 +739,7 @@ public class Team {
     /// Devices Report Result. Contains subsections for different time ranges of activity. Each of the items in each
     /// subsection of the storage report is an array of values, one value per day. If there is no data for a day, then
     /// the value will be None.
-    open class GetDevicesReport: Team.BaseDfbReport {
+    public class GetDevicesReport: Team.BaseDfbReport {
         /// Report of the number of devices active in the last day.
         public let active1Day: Team.DevicesActive
         /// Report of the number of devices active in the last 7 days.
@@ -756,7 +756,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GetDevicesReportSerializer().serialize(self)))"
         }
     }
-    open class GetDevicesReportSerializer: JSONSerializer {
+    public class GetDevicesReportSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetDevicesReport) -> JSON {
             let output = [ 
@@ -783,7 +783,7 @@ public class Team {
 
     /// Membership Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    open class GetMembershipReport: Team.BaseDfbReport {
+    public class GetMembershipReport: Team.BaseDfbReport {
         /// Team size, for each day.
         public let teamSize: Array<UInt64?>
         /// The number of pending invites to the team, for each day.
@@ -811,7 +811,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMembershipReportSerializer().serialize(self)))"
         }
     }
-    open class GetMembershipReportSerializer: JSONSerializer {
+    public class GetMembershipReportSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetMembershipReport) -> JSON {
             let output = [ 
@@ -842,7 +842,7 @@ public class Team {
 
     /// Storage Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    open class GetStorageReport: Team.BaseDfbReport {
+    public class GetStorageReport: Team.BaseDfbReport {
         /// Sum of the shared, unshared, and datastore usages, for each day.
         public let totalUsage: Array<UInt64?>
         /// Array of the combined size (bytes) of team members' shared folders, for each day.
@@ -872,7 +872,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GetStorageReportSerializer().serialize(self)))"
         }
     }
-    open class GetStorageReportSerializer: JSONSerializer {
+    public class GetStorageReportSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GetStorageReport) -> JSON {
             let output = [ 
@@ -912,7 +912,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupAccessTypeSerializer().serialize(self)))"
         }
     }
-    open class GroupAccessTypeSerializer: JSONSerializer {
+    public class GroupAccessTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupAccessType) -> JSON {
             switch value {
@@ -945,7 +945,7 @@ public class Team {
     }
 
     /// The GroupCreateArg struct
-    open class GroupCreateArg: CustomStringConvertible {
+    public class GroupCreateArg: CustomStringConvertible {
         /// Group name.
         public let groupName: String
         /// The creator of a team can associate an arbitrary external ID to the group.
@@ -963,7 +963,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateArgSerializer().serialize(self)))"
         }
     }
-    open class GroupCreateArgSerializer: JSONSerializer {
+    public class GroupCreateArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupCreateArg) -> JSON {
             let output = [ 
@@ -1001,7 +1001,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupCreateErrorSerializer: JSONSerializer {
+    public class GroupCreateErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupCreateError) -> JSON {
             switch value {
@@ -1056,7 +1056,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSelectorErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupSelectorErrorSerializer: JSONSerializer {
+    public class GroupSelectorErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupSelectorError) -> JSON {
             switch value {
@@ -1101,7 +1101,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupDeleteErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupDeleteErrorSerializer: JSONSerializer {
+    public class GroupDeleteErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupDeleteError) -> JSON {
             switch value {
@@ -1140,7 +1140,7 @@ public class Team {
     }
 
     /// Full description of a group.
-    open class GroupFullInfo: TeamCommon.GroupSummary {
+    public class GroupFullInfo: TeamCommon.GroupSummary {
         /// List of group members.
         public let members: Array<Team.GroupMemberInfo>?
         /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
@@ -1155,7 +1155,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupFullInfoSerializer().serialize(self)))"
         }
     }
-    open class GroupFullInfoSerializer: JSONSerializer {
+    public class GroupFullInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupFullInfo) -> JSON {
             let output = [ 
@@ -1187,7 +1187,7 @@ public class Team {
     }
 
     /// Profile of group member, and role in group.
-    open class GroupMemberInfo: CustomStringConvertible {
+    public class GroupMemberInfo: CustomStringConvertible {
         /// Profile of group member.
         public let profile: Team.MemberProfile
         /// The role that the user has in the group.
@@ -1200,7 +1200,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberInfoSerializer().serialize(self)))"
         }
     }
-    open class GroupMemberInfoSerializer: JSONSerializer {
+    public class GroupMemberInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMemberInfo) -> JSON {
             let output = [ 
@@ -1222,7 +1222,7 @@ public class Team {
     }
 
     /// Argument for selecting a group and a single user.
-    open class GroupMemberSelector: CustomStringConvertible {
+    public class GroupMemberSelector: CustomStringConvertible {
         /// Specify a group.
         public let group: Team.GroupSelector
         /// Identity of a user that is a member of group.
@@ -1235,7 +1235,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSelectorSerializer().serialize(self)))"
         }
     }
-    open class GroupMemberSelectorSerializer: JSONSerializer {
+    public class GroupMemberSelectorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMemberSelector) -> JSON {
             let output = [ 
@@ -1270,7 +1270,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSelectorErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupMemberSelectorErrorSerializer: JSONSerializer {
+    public class GroupMemberSelectorErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMemberSelectorError) -> JSON {
             switch value {
@@ -1323,7 +1323,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSetAccessTypeErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupMemberSetAccessTypeErrorSerializer: JSONSerializer {
+    public class GroupMemberSetAccessTypeErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMemberSetAccessTypeError) -> JSON {
             switch value {
@@ -1368,7 +1368,7 @@ public class Team {
     }
 
     /// The IncludeMembersArg struct
-    open class IncludeMembersArg: CustomStringConvertible {
+    public class IncludeMembersArg: CustomStringConvertible {
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
         /// members  to be returned in the response. This may take a long time for large groups.
         public let returnMembers: Bool
@@ -1379,7 +1379,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(IncludeMembersArgSerializer().serialize(self)))"
         }
     }
-    open class IncludeMembersArgSerializer: JSONSerializer {
+    public class IncludeMembersArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: IncludeMembersArg) -> JSON {
             let output = [ 
@@ -1390,7 +1390,7 @@ public class Team {
         public func deserialize(_ json: JSON) -> IncludeMembersArg {
             switch json {
                 case .dictionary(let dict):
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return IncludeMembersArg(returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1399,7 +1399,7 @@ public class Team {
     }
 
     /// The GroupMembersAddArg struct
-    open class GroupMembersAddArg: Team.IncludeMembersArg {
+    public class GroupMembersAddArg: Team.IncludeMembersArg {
         /// Group to which users will be added.
         public let group: Team.GroupSelector
         /// List of users to be added to the group.
@@ -1413,7 +1413,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersAddArgSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersAddArgSerializer: JSONSerializer {
+    public class GroupMembersAddArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersAddArg) -> JSON {
             let output = [ 
@@ -1428,7 +1428,7 @@ public class Team {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
                     let members = ArraySerializer(Team.MemberAccessSerializer()).deserialize(dict["members"] ?? .null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersAddArg(group: group, members: members, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1462,7 +1462,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersAddErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersAddErrorSerializer: JSONSerializer {
+    public class GroupMembersAddErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersAddError) -> JSON {
             switch value {
@@ -1534,7 +1534,7 @@ public class Team {
     }
 
     /// Result returned by groupsMembersAdd and groupsMembersRemove.
-    open class GroupMembersChangeResult: CustomStringConvertible {
+    public class GroupMembersChangeResult: CustomStringConvertible {
         /// The group info after member change operation has been performed.
         public let groupInfo: Team.GroupFullInfo
         /// An ID that can be used to obtain the status of granting/revoking group-owned resources.
@@ -1548,7 +1548,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersChangeResultSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersChangeResultSerializer: JSONSerializer {
+    public class GroupMembersChangeResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersChangeResult) -> JSON {
             let output = [ 
@@ -1570,7 +1570,7 @@ public class Team {
     }
 
     /// The GroupMembersRemoveArg struct
-    open class GroupMembersRemoveArg: Team.IncludeMembersArg {
+    public class GroupMembersRemoveArg: Team.IncludeMembersArg {
         /// Group from which users will be removed.
         public let group: Team.GroupSelector
         /// List of users to be removed from the group.
@@ -1584,7 +1584,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersRemoveArgSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersRemoveArgSerializer: JSONSerializer {
+    public class GroupMembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersRemoveArg) -> JSON {
             let output = [ 
@@ -1599,7 +1599,7 @@ public class Team {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
                     let users = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["users"] ?? .null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersRemoveArg(group: group, users: users, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1621,7 +1621,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSelectorErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersSelectorErrorSerializer: JSONSerializer {
+    public class GroupMembersSelectorErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersSelectorError) -> JSON {
             switch value {
@@ -1674,7 +1674,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersRemoveErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersRemoveErrorSerializer: JSONSerializer {
+    public class GroupMembersRemoveErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersRemoveError) -> JSON {
             switch value {
@@ -1719,7 +1719,7 @@ public class Team {
     }
 
     /// Argument for selecting a group and a list of users.
-    open class GroupMembersSelector: CustomStringConvertible {
+    public class GroupMembersSelector: CustomStringConvertible {
         /// Specify a group.
         public let group: Team.GroupSelector
         /// A list of users that are members of group.
@@ -1732,7 +1732,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSelectorSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersSelectorSerializer: JSONSerializer {
+    public class GroupMembersSelectorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersSelector) -> JSON {
             let output = [ 
@@ -1754,7 +1754,7 @@ public class Team {
     }
 
     /// The GroupMembersSetAccessTypeArg struct
-    open class GroupMembersSetAccessTypeArg: Team.GroupMemberSelector {
+    public class GroupMembersSetAccessTypeArg: Team.GroupMemberSelector {
         /// New group access type the user will have.
         public let accessType: Team.GroupAccessType
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
@@ -1769,7 +1769,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSetAccessTypeArgSerializer().serialize(self)))"
         }
     }
-    open class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
+    public class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupMembersSetAccessTypeArg) -> JSON {
             let output = [ 
@@ -1786,7 +1786,7 @@ public class Team {
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
                     let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersSetAccessTypeArg(group: group, user: user, accessType: accessType, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1805,7 +1805,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSelectorSerializer().serialize(self)))"
         }
     }
-    open class GroupSelectorSerializer: JSONSerializer {
+    public class GroupSelectorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupSelector) -> JSON {
             switch value {
@@ -1840,7 +1840,7 @@ public class Team {
     }
 
     /// The GroupUpdateArgs struct
-    open class GroupUpdateArgs: Team.IncludeMembersArg {
+    public class GroupUpdateArgs: Team.IncludeMembersArg {
         /// Specify a group.
         public let group: Team.GroupSelector
         /// Optional argument. Set group name to this if provided.
@@ -1863,7 +1863,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateArgsSerializer().serialize(self)))"
         }
     }
-    open class GroupUpdateArgsSerializer: JSONSerializer {
+    public class GroupUpdateArgsSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupUpdateArgs) -> JSON {
             let output = [ 
@@ -1879,7 +1879,7 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .null)
                     let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .null)
                     let newGroupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["new_group_management_type"] ?? .null)
@@ -1903,7 +1903,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupUpdateErrorSerializer: JSONSerializer {
+    public class GroupUpdateErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupUpdateError) -> JSON {
             switch value {
@@ -1952,7 +1952,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsGetInfoErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupsGetInfoErrorSerializer: JSONSerializer {
+    public class GroupsGetInfoErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsGetInfoError) -> JSON {
             switch value {
@@ -1996,7 +1996,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsGetInfoItemSerializer().serialize(self)))"
         }
     }
-    open class GroupsGetInfoItemSerializer: JSONSerializer {
+    public class GroupsGetInfoItemSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsGetInfoItem) -> JSON {
             switch value {
@@ -2031,7 +2031,7 @@ public class Team {
     }
 
     /// The GroupsListArg struct
-    open class GroupsListArg: CustomStringConvertible {
+    public class GroupsListArg: CustomStringConvertible {
         /// Number of results to return per call.
         public let limit: UInt32
         public init(limit: UInt32 = 1000) {
@@ -2042,7 +2042,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListArgSerializer().serialize(self)))"
         }
     }
-    open class GroupsListArgSerializer: JSONSerializer {
+    public class GroupsListArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsListArg) -> JSON {
             let output = [ 
@@ -2053,7 +2053,7 @@ public class Team {
         public func deserialize(_ json: JSON) -> GroupsListArg {
             switch json {
                 case .dictionary(let dict):
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
                     return GroupsListArg(limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -2062,7 +2062,7 @@ public class Team {
     }
 
     /// The GroupsListContinueArg struct
-    open class GroupsListContinueArg: CustomStringConvertible {
+    public class GroupsListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
         public init(cursor: String) {
@@ -2073,7 +2073,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListContinueArgSerializer().serialize(self)))"
         }
     }
-    open class GroupsListContinueArgSerializer: JSONSerializer {
+    public class GroupsListContinueArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsListContinueArg) -> JSON {
             let output = [ 
@@ -2103,7 +2103,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListContinueErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupsListContinueErrorSerializer: JSONSerializer {
+    public class GroupsListContinueErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsListContinueError) -> JSON {
             switch value {
@@ -2136,7 +2136,7 @@ public class Team {
     }
 
     /// The GroupsListResult struct
-    open class GroupsListResult: CustomStringConvertible {
+    public class GroupsListResult: CustomStringConvertible {
         /// (no description)
         public let groups: Array<TeamCommon.GroupSummary>
         /// Pass the cursor into groupsListContinue to obtain the additional groups.
@@ -2154,7 +2154,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListResultSerializer().serialize(self)))"
         }
     }
-    open class GroupsListResultSerializer: JSONSerializer {
+    public class GroupsListResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsListResult) -> JSON {
             let output = [ 
@@ -2178,7 +2178,7 @@ public class Team {
     }
 
     /// The GroupsMembersListArg struct
-    open class GroupsMembersListArg: CustomStringConvertible {
+    public class GroupsMembersListArg: CustomStringConvertible {
         /// The group whose members are to be listed.
         public let group: Team.GroupSelector
         /// Number of results to return per call.
@@ -2192,7 +2192,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListArgSerializer().serialize(self)))"
         }
     }
-    open class GroupsMembersListArgSerializer: JSONSerializer {
+    public class GroupsMembersListArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsMembersListArg) -> JSON {
             let output = [ 
@@ -2205,7 +2205,7 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
                     return GroupsMembersListArg(group: group, limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -2214,7 +2214,7 @@ public class Team {
     }
 
     /// The GroupsMembersListContinueArg struct
-    open class GroupsMembersListContinueArg: CustomStringConvertible {
+    public class GroupsMembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
         public init(cursor: String) {
@@ -2225,7 +2225,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListContinueArgSerializer().serialize(self)))"
         }
     }
-    open class GroupsMembersListContinueArgSerializer: JSONSerializer {
+    public class GroupsMembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsMembersListContinueArg) -> JSON {
             let output = [ 
@@ -2255,7 +2255,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListContinueErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupsMembersListContinueErrorSerializer: JSONSerializer {
+    public class GroupsMembersListContinueErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsMembersListContinueError) -> JSON {
             switch value {
@@ -2288,7 +2288,7 @@ public class Team {
     }
 
     /// The GroupsMembersListResult struct
-    open class GroupsMembersListResult: CustomStringConvertible {
+    public class GroupsMembersListResult: CustomStringConvertible {
         /// (no description)
         public let members: Array<Team.GroupMemberInfo>
         /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
@@ -2306,7 +2306,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListResultSerializer().serialize(self)))"
         }
     }
-    open class GroupsMembersListResultSerializer: JSONSerializer {
+    public class GroupsMembersListResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsMembersListResult) -> JSON {
             let output = [ 
@@ -2345,7 +2345,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsPollErrorSerializer().serialize(self)))"
         }
     }
-    open class GroupsPollErrorSerializer: JSONSerializer {
+    public class GroupsPollErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsPollError) -> JSON {
             switch value {
@@ -2400,7 +2400,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsSelectorSerializer().serialize(self)))"
         }
     }
-    open class GroupsSelectorSerializer: JSONSerializer {
+    public class GroupsSelectorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: GroupsSelector) -> JSON {
             switch value {
@@ -2435,7 +2435,7 @@ public class Team {
     }
 
     /// The ListMemberAppsArg struct
-    open class ListMemberAppsArg: CustomStringConvertible {
+    public class ListMemberAppsArg: CustomStringConvertible {
         /// The team member id
         public let teamMemberId: String
         public init(teamMemberId: String) {
@@ -2446,7 +2446,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsArgSerializer().serialize(self)))"
         }
     }
-    open class ListMemberAppsArgSerializer: JSONSerializer {
+    public class ListMemberAppsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberAppsArg) -> JSON {
             let output = [ 
@@ -2476,7 +2476,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsErrorSerializer().serialize(self)))"
         }
     }
-    open class ListMemberAppsErrorSerializer: JSONSerializer {
+    public class ListMemberAppsErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberAppsError) -> JSON {
             switch value {
@@ -2509,7 +2509,7 @@ public class Team {
     }
 
     /// The ListMemberAppsResult struct
-    open class ListMemberAppsResult: CustomStringConvertible {
+    public class ListMemberAppsResult: CustomStringConvertible {
         /// List of third party applications linked by this team member
         public let linkedApiApps: Array<Team.ApiApp>
         public init(linkedApiApps: Array<Team.ApiApp>) {
@@ -2519,7 +2519,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsResultSerializer().serialize(self)))"
         }
     }
-    open class ListMemberAppsResultSerializer: JSONSerializer {
+    public class ListMemberAppsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberAppsResult) -> JSON {
             let output = [ 
@@ -2539,7 +2539,7 @@ public class Team {
     }
 
     /// The ListMemberDevicesArg struct
-    open class ListMemberDevicesArg: CustomStringConvertible {
+    public class ListMemberDevicesArg: CustomStringConvertible {
         /// The team's member id
         public let teamMemberId: String
         /// Whether to list web sessions of the team's member
@@ -2559,7 +2559,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesArgSerializer().serialize(self)))"
         }
     }
-    open class ListMemberDevicesArgSerializer: JSONSerializer {
+    public class ListMemberDevicesArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberDevicesArg) -> JSON {
             let output = [ 
@@ -2574,9 +2574,9 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListMemberDevicesArg(teamMemberId: teamMemberId, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -2595,7 +2595,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesErrorSerializer().serialize(self)))"
         }
     }
-    open class ListMemberDevicesErrorSerializer: JSONSerializer {
+    public class ListMemberDevicesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberDevicesError) -> JSON {
             switch value {
@@ -2628,7 +2628,7 @@ public class Team {
     }
 
     /// The ListMemberDevicesResult struct
-    open class ListMemberDevicesResult: CustomStringConvertible {
+    public class ListMemberDevicesResult: CustomStringConvertible {
         /// List of web sessions made by this team member
         public let activeWebSessions: Array<Team.ActiveWebSession>?
         /// List of desktop clients used by this team member
@@ -2644,7 +2644,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesResultSerializer().serialize(self)))"
         }
     }
-    open class ListMemberDevicesResultSerializer: JSONSerializer {
+    public class ListMemberDevicesResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMemberDevicesResult) -> JSON {
             let output = [ 
@@ -2668,7 +2668,7 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListMembersLinkedApps.
-    open class ListMembersAppsArg: CustomStringConvertible {
+    public class ListMembersAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed. Then, if the result
         /// of the call includes a cursor, the following requests should include the received cursors in order to
         /// receive the next sub list of the team applications
@@ -2681,7 +2681,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsArgSerializer().serialize(self)))"
         }
     }
-    open class ListMembersAppsArgSerializer: JSONSerializer {
+    public class ListMembersAppsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersAppsArg) -> JSON {
             let output = [ 
@@ -2712,7 +2712,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsErrorSerializer().serialize(self)))"
         }
     }
-    open class ListMembersAppsErrorSerializer: JSONSerializer {
+    public class ListMembersAppsErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersAppsError) -> JSON {
             switch value {
@@ -2745,7 +2745,7 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListMembersLinkedApps.
-    open class ListMembersAppsResult: CustomStringConvertible {
+    public class ListMembersAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
         public let apps: Array<Team.MemberLinkedApps>
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListMembersLinkedApps to retrieve
@@ -2763,7 +2763,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsResultSerializer().serialize(self)))"
         }
     }
-    open class ListMembersAppsResultSerializer: JSONSerializer {
+    public class ListMembersAppsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersAppsResult) -> JSON {
             let output = [ 
@@ -2787,7 +2787,7 @@ public class Team {
     }
 
     /// The ListMembersDevicesArg struct
-    open class ListMembersDevicesArg: CustomStringConvertible {
+    public class ListMembersDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
         /// the next sub list of team devices
@@ -2809,7 +2809,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesArgSerializer().serialize(self)))"
         }
     }
-    open class ListMembersDevicesArgSerializer: JSONSerializer {
+    public class ListMembersDevicesArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersDevicesArg) -> JSON {
             let output = [ 
@@ -2824,9 +2824,9 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListMembersDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -2846,7 +2846,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesErrorSerializer().serialize(self)))"
         }
     }
-    open class ListMembersDevicesErrorSerializer: JSONSerializer {
+    public class ListMembersDevicesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersDevicesError) -> JSON {
             switch value {
@@ -2879,7 +2879,7 @@ public class Team {
     }
 
     /// The ListMembersDevicesResult struct
-    open class ListMembersDevicesResult: CustomStringConvertible {
+    public class ListMembersDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
         public let devices: Array<Team.MemberDevices>
         /// If true, then there are more devices available. Pass the cursor to devicesListMembersDevices to retrieve the
@@ -2897,7 +2897,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesResultSerializer().serialize(self)))"
         }
     }
-    open class ListMembersDevicesResultSerializer: JSONSerializer {
+    public class ListMembersDevicesResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListMembersDevicesResult) -> JSON {
             let output = [ 
@@ -2921,7 +2921,7 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListTeamLinkedApps.
-    open class ListTeamAppsArg: CustomStringConvertible {
+    public class ListTeamAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
         /// the next sub list of the team applications
@@ -2934,7 +2934,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsArgSerializer().serialize(self)))"
         }
     }
-    open class ListTeamAppsArgSerializer: JSONSerializer {
+    public class ListTeamAppsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamAppsArg) -> JSON {
             let output = [ 
@@ -2965,7 +2965,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsErrorSerializer().serialize(self)))"
         }
     }
-    open class ListTeamAppsErrorSerializer: JSONSerializer {
+    public class ListTeamAppsErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamAppsError) -> JSON {
             switch value {
@@ -2998,7 +2998,7 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListTeamLinkedApps.
-    open class ListTeamAppsResult: CustomStringConvertible {
+    public class ListTeamAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
         public let apps: Array<Team.MemberLinkedApps>
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListTeamLinkedApps to retrieve the
@@ -3016,7 +3016,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsResultSerializer().serialize(self)))"
         }
     }
-    open class ListTeamAppsResultSerializer: JSONSerializer {
+    public class ListTeamAppsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamAppsResult) -> JSON {
             let output = [ 
@@ -3040,7 +3040,7 @@ public class Team {
     }
 
     /// The ListTeamDevicesArg struct
-    open class ListTeamDevicesArg: CustomStringConvertible {
+    public class ListTeamDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the result of the
         /// call includes a cursor, the following requests should include the received cursors in order to receive the
         /// next sub list of team devices
@@ -3062,7 +3062,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesArgSerializer().serialize(self)))"
         }
     }
-    open class ListTeamDevicesArgSerializer: JSONSerializer {
+    public class ListTeamDevicesArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamDevicesArg) -> JSON {
             let output = [ 
@@ -3077,9 +3077,9 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListTeamDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -3099,7 +3099,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesErrorSerializer().serialize(self)))"
         }
     }
-    open class ListTeamDevicesErrorSerializer: JSONSerializer {
+    public class ListTeamDevicesErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamDevicesError) -> JSON {
             switch value {
@@ -3132,7 +3132,7 @@ public class Team {
     }
 
     /// The ListTeamDevicesResult struct
-    open class ListTeamDevicesResult: CustomStringConvertible {
+    public class ListTeamDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
         public let devices: Array<Team.MemberDevices>
         /// If true, then there are more devices available. Pass the cursor to devicesListTeamDevices to retrieve the
@@ -3150,7 +3150,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesResultSerializer().serialize(self)))"
         }
     }
-    open class ListTeamDevicesResultSerializer: JSONSerializer {
+    public class ListTeamDevicesResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: ListTeamDevicesResult) -> JSON {
             let output = [ 
@@ -3174,7 +3174,7 @@ public class Team {
     }
 
     /// Specify access type a member should have when joined to a group.
-    open class MemberAccess: CustomStringConvertible {
+    public class MemberAccess: CustomStringConvertible {
         /// Identity of a user.
         public let user: Team.UserSelectorArg
         /// Access type.
@@ -3187,7 +3187,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAccessSerializer().serialize(self)))"
         }
     }
-    open class MemberAccessSerializer: JSONSerializer {
+    public class MemberAccessSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberAccess) -> JSON {
             let output = [ 
@@ -3209,7 +3209,7 @@ public class Team {
     }
 
     /// The MemberAddArg struct
-    open class MemberAddArg: CustomStringConvertible {
+    public class MemberAddArg: CustomStringConvertible {
         /// (no description)
         public let memberEmail: String
         /// Member's first name.
@@ -3240,7 +3240,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddArgSerializer().serialize(self)))"
         }
     }
-    open class MemberAddArgSerializer: JSONSerializer {
+    public class MemberAddArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberAddArg) -> JSON {
             let output = [ 
@@ -3260,8 +3260,8 @@ public class Team {
                     let memberGivenName = Serialization._StringSerializer.deserialize(dict["member_given_name"] ?? .null)
                     let memberSurname = Serialization._StringSerializer.deserialize(dict["member_surname"] ?? .null)
                     let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
-                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .null)
-                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .null)
+                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
+                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
                     return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, sendWelcomeEmail: sendWelcomeEmail, role: role)
                 default:
                     fatalError("Type error deserializing")
@@ -3298,7 +3298,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddResultSerializer().serialize(self)))"
         }
     }
-    open class MemberAddResultSerializer: JSONSerializer {
+    public class MemberAddResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberAddResult) -> JSON {
             switch value {
@@ -3382,7 +3382,7 @@ public class Team {
     }
 
     /// Information on devices of a team's member.
-    open class MemberDevices: CustomStringConvertible {
+    public class MemberDevices: CustomStringConvertible {
         /// The member unique Id
         public let teamMemberId: String
         /// List of web sessions made by this team member
@@ -3402,7 +3402,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberDevicesSerializer().serialize(self)))"
         }
     }
-    open class MemberDevicesSerializer: JSONSerializer {
+    public class MemberDevicesSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberDevices) -> JSON {
             let output = [ 
@@ -3428,7 +3428,7 @@ public class Team {
     }
 
     /// Information on linked applications of a team member.
-    open class MemberLinkedApps: CustomStringConvertible {
+    public class MemberLinkedApps: CustomStringConvertible {
         /// The member unique Id
         public let teamMemberId: String
         /// List of third party applications linked by this team member
@@ -3442,7 +3442,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberLinkedAppsSerializer().serialize(self)))"
         }
     }
-    open class MemberLinkedAppsSerializer: JSONSerializer {
+    public class MemberLinkedAppsSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberLinkedApps) -> JSON {
             let output = [ 
@@ -3464,7 +3464,7 @@ public class Team {
     }
 
     /// Basic member profile.
-    open class MemberProfile: CustomStringConvertible {
+    public class MemberProfile: CustomStringConvertible {
         /// ID of user as a member of a team.
         public let teamMemberId: String
         /// External ID that a team can attach to the user. An application using the API may find it easier to use their
@@ -3501,7 +3501,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberProfileSerializer().serialize(self)))"
         }
     }
-    open class MemberProfileSerializer: JSONSerializer {
+    public class MemberProfileSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberProfile) -> JSON {
             let output = [ 
@@ -3543,7 +3543,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UserSelectorErrorSerializer().serialize(self)))"
         }
     }
-    open class UserSelectorErrorSerializer: JSONSerializer {
+    public class UserSelectorErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UserSelectorError) -> JSON {
             switch value {
@@ -3580,7 +3580,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberSelectorErrorSerializer().serialize(self)))"
         }
     }
-    open class MemberSelectorErrorSerializer: JSONSerializer {
+    public class MemberSelectorErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MemberSelectorError) -> JSON {
             switch value {
@@ -3613,7 +3613,7 @@ public class Team {
     }
 
     /// The MembersAddArg struct
-    open class MembersAddArg: CustomStringConvertible {
+    public class MembersAddArg: CustomStringConvertible {
         /// Details of new members to be added to the team.
         public let newMembers: Array<Team.MemberAddArg>
         /// Whether to force the add to happen asynchronously.
@@ -3626,7 +3626,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddArgSerializer().serialize(self)))"
         }
     }
-    open class MembersAddArgSerializer: JSONSerializer {
+    public class MembersAddArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersAddArg) -> JSON {
             let output = [ 
@@ -3639,7 +3639,7 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let newMembers = ArraySerializer(Team.MemberAddArgSerializer()).deserialize(dict["new_members"] ?? .null)
-                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .null)
+                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .number(0))
                     return MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
                 default:
                     fatalError("Type error deserializing")
@@ -3661,7 +3661,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddJobStatusSerializer().serialize(self)))"
         }
     }
-    open class MembersAddJobStatusSerializer: JSONSerializer {
+    public class MembersAddJobStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersAddJobStatus) -> JSON {
             switch value {
@@ -3713,7 +3713,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddLaunchSerializer().serialize(self)))"
         }
     }
-    open class MembersAddLaunchSerializer: JSONSerializer {
+    public class MembersAddLaunchSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersAddLaunch) -> JSON {
             switch value {
@@ -3748,7 +3748,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    open class MembersDeactivateArg: CustomStringConvertible {
+    public class MembersDeactivateArg: CustomStringConvertible {
         /// Identity of user to remove/suspend.
         public let user: Team.UserSelectorArg
         /// If provided, controls if the user's data will be deleted on their linked devices.
@@ -3761,7 +3761,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateArgSerializer().serialize(self)))"
         }
     }
-    open class MembersDeactivateArgSerializer: JSONSerializer {
+    public class MembersDeactivateArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersDeactivateArg) -> JSON {
             let output = [ 
@@ -3774,7 +3774,7 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
-                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .null)
+                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .number(1))
                     return MembersDeactivateArg(user: user, wipeData: wipeData)
                 default:
                     fatalError("Type error deserializing")
@@ -3795,7 +3795,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersDeactivateErrorSerializer: JSONSerializer {
+    public class MembersDeactivateErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersDeactivateError) -> JSON {
             switch value {
@@ -3834,7 +3834,7 @@ public class Team {
     }
 
     /// The MembersGetInfoArgs struct
-    open class MembersGetInfoArgs: CustomStringConvertible {
+    public class MembersGetInfoArgs: CustomStringConvertible {
         /// List of team members.
         public let members: Array<Team.UserSelectorArg>
         public init(members: Array<Team.UserSelectorArg>) {
@@ -3844,7 +3844,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoArgsSerializer().serialize(self)))"
         }
     }
-    open class MembersGetInfoArgsSerializer: JSONSerializer {
+    public class MembersGetInfoArgsSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersGetInfoArgs) -> JSON {
             let output = [ 
@@ -3872,7 +3872,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersGetInfoErrorSerializer: JSONSerializer {
+    public class MembersGetInfoErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersGetInfoError) -> JSON {
             switch value {
@@ -3910,7 +3910,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoItemSerializer().serialize(self)))"
         }
     }
-    open class MembersGetInfoItemSerializer: JSONSerializer {
+    public class MembersGetInfoItemSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersGetInfoItem) -> JSON {
             switch value {
@@ -3945,7 +3945,7 @@ public class Team {
     }
 
     /// The MembersListArg struct
-    open class MembersListArg: CustomStringConvertible {
+    public class MembersListArg: CustomStringConvertible {
         /// Number of results to return per call.
         public let limit: UInt32
         /// Whether to return removed members.
@@ -3959,7 +3959,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListArgSerializer().serialize(self)))"
         }
     }
-    open class MembersListArgSerializer: JSONSerializer {
+    public class MembersListArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersListArg) -> JSON {
             let output = [ 
@@ -3971,8 +3971,8 @@ public class Team {
         public func deserialize(_ json: JSON) -> MembersListArg {
             switch json {
                 case .dictionary(let dict):
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .null)
-                    let includeRemoved = Serialization._BoolSerializer.deserialize(dict["include_removed"] ?? .null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    let includeRemoved = Serialization._BoolSerializer.deserialize(dict["include_removed"] ?? .number(0))
                     return MembersListArg(limit: limit, includeRemoved: includeRemoved)
                 default:
                     fatalError("Type error deserializing")
@@ -3981,7 +3981,7 @@ public class Team {
     }
 
     /// The MembersListContinueArg struct
-    open class MembersListContinueArg: CustomStringConvertible {
+    public class MembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of members.
         public let cursor: String
         public init(cursor: String) {
@@ -3992,7 +3992,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListContinueArgSerializer().serialize(self)))"
         }
     }
-    open class MembersListContinueArgSerializer: JSONSerializer {
+    public class MembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersListContinueArg) -> JSON {
             let output = [ 
@@ -4022,7 +4022,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListContinueErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersListContinueErrorSerializer: JSONSerializer {
+    public class MembersListContinueErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersListContinueError) -> JSON {
             switch value {
@@ -4063,7 +4063,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersListErrorSerializer: JSONSerializer {
+    public class MembersListErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersListError) -> JSON {
             switch value {
@@ -4090,7 +4090,7 @@ public class Team {
     }
 
     /// The MembersListResult struct
-    open class MembersListResult: CustomStringConvertible {
+    public class MembersListResult: CustomStringConvertible {
         /// List of team members.
         public let members: Array<Team.TeamMemberInfo>
         /// Pass the cursor into membersListContinue to obtain the additional members.
@@ -4108,7 +4108,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListResultSerializer().serialize(self)))"
         }
     }
-    open class MembersListResultSerializer: JSONSerializer {
+    public class MembersListResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersListResult) -> JSON {
             let output = [ 
@@ -4132,7 +4132,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    open class MembersRecoverArg: CustomStringConvertible {
+    public class MembersRecoverArg: CustomStringConvertible {
         /// Identity of user to recover.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
@@ -4142,7 +4142,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverArgSerializer().serialize(self)))"
         }
     }
-    open class MembersRecoverArgSerializer: JSONSerializer {
+    public class MembersRecoverArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersRecoverArg) -> JSON {
             let output = [ 
@@ -4176,7 +4176,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersRecoverErrorSerializer: JSONSerializer {
+    public class MembersRecoverErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersRecoverError) -> JSON {
             switch value {
@@ -4221,7 +4221,7 @@ public class Team {
     }
 
     /// The MembersRemoveArg struct
-    open class MembersRemoveArg: Team.MembersDeactivateArg {
+    public class MembersRemoveArg: Team.MembersDeactivateArg {
         /// If provided, files from the deleted member account will be transferred to this user.
         public let transferDestId: Team.UserSelectorArg?
         /// If provided, errors during the transfer process will be sent via email to this user. If the transfer_dest_id
@@ -4240,7 +4240,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveArgSerializer().serialize(self)))"
         }
     }
-    open class MembersRemoveArgSerializer: JSONSerializer {
+    public class MembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersRemoveArg) -> JSON {
             let output = [ 
@@ -4256,10 +4256,10 @@ public class Team {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
-                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .null)
+                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .number(1))
                     let transferDestId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_dest_id"] ?? .null)
                     let transferAdminId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_admin_id"] ?? .null)
-                    let keepAccount = Serialization._BoolSerializer.deserialize(dict["keep_account"] ?? .null)
+                    let keepAccount = Serialization._BoolSerializer.deserialize(dict["keep_account"] ?? .number(0))
                     return MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount)
                 default:
                     fatalError("Type error deserializing")
@@ -4304,7 +4304,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersRemoveErrorSerializer: JSONSerializer {
+    public class MembersRemoveErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersRemoveError) -> JSON {
             switch value {
@@ -4427,7 +4427,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSendWelcomeErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersSendWelcomeErrorSerializer: JSONSerializer {
+    public class MembersSendWelcomeErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSendWelcomeError) -> JSON {
             switch value {
@@ -4466,7 +4466,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    open class MembersSetPermissionsArg: CustomStringConvertible {
+    public class MembersSetPermissionsArg: CustomStringConvertible {
         /// Identity of user whose role will be set.
         public let user: Team.UserSelectorArg
         /// The new role of the member.
@@ -4479,7 +4479,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsArgSerializer().serialize(self)))"
         }
     }
-    open class MembersSetPermissionsArgSerializer: JSONSerializer {
+    public class MembersSetPermissionsArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSetPermissionsArg) -> JSON {
             let output = [ 
@@ -4519,7 +4519,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersSetPermissionsErrorSerializer: JSONSerializer {
+    public class MembersSetPermissionsErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSetPermissionsError) -> JSON {
             switch value {
@@ -4576,7 +4576,7 @@ public class Team {
     }
 
     /// The MembersSetPermissionsResult struct
-    open class MembersSetPermissionsResult: CustomStringConvertible {
+    public class MembersSetPermissionsResult: CustomStringConvertible {
         /// The member ID of the user to which the change was applied.
         public let teamMemberId: String
         /// The role after the change.
@@ -4590,7 +4590,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsResultSerializer().serialize(self)))"
         }
     }
-    open class MembersSetPermissionsResultSerializer: JSONSerializer {
+    public class MembersSetPermissionsResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSetPermissionsResult) -> JSON {
             let output = [ 
@@ -4613,7 +4613,7 @@ public class Team {
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account. At least one
     /// of new_email, new_external_id, new_given_name, and/or new_surname must be provided.
-    open class MembersSetProfileArg: CustomStringConvertible {
+    public class MembersSetProfileArg: CustomStringConvertible {
         /// Identity of user whose profile will be set.
         public let user: Team.UserSelectorArg
         /// New email for member.
@@ -4639,7 +4639,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileArgSerializer().serialize(self)))"
         }
     }
-    open class MembersSetProfileArgSerializer: JSONSerializer {
+    public class MembersSetProfileArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSetProfileArg) -> JSON {
             let output = [ 
@@ -4691,7 +4691,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersSetProfileErrorSerializer: JSONSerializer {
+    public class MembersSetProfileErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSetProfileError) -> JSON {
             switch value {
@@ -4784,7 +4784,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSuspendErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersSuspendErrorSerializer: JSONSerializer {
+    public class MembersSuspendErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersSuspendError) -> JSON {
             switch value {
@@ -4841,7 +4841,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    open class MembersUnsuspendArg: CustomStringConvertible {
+    public class MembersUnsuspendArg: CustomStringConvertible {
         /// Identity of user to unsuspend.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
@@ -4851,7 +4851,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersUnsuspendArgSerializer().serialize(self)))"
         }
     }
-    open class MembersUnsuspendArgSerializer: JSONSerializer {
+    public class MembersUnsuspendArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersUnsuspendArg) -> JSON {
             let output = [ 
@@ -4887,7 +4887,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersUnsuspendErrorSerializer().serialize(self)))"
         }
     }
-    open class MembersUnsuspendErrorSerializer: JSONSerializer {
+    public class MembersUnsuspendErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MembersUnsuspendError) -> JSON {
             switch value {
@@ -4956,7 +4956,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MobileClientPlatformSerializer().serialize(self)))"
         }
     }
-    open class MobileClientPlatformSerializer: JSONSerializer {
+    public class MobileClientPlatformSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MobileClientPlatform) -> JSON {
             switch value {
@@ -5013,7 +5013,7 @@ public class Team {
     }
 
     /// Information about linked Dropbox mobile client sessions
-    open class MobileClientSession: Team.DeviceSession {
+    public class MobileClientSession: Team.DeviceSession {
         /// The device name
         public let deviceName: String
         /// The mobile application type
@@ -5040,7 +5040,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MobileClientSessionSerializer().serialize(self)))"
         }
     }
-    open class MobileClientSessionSerializer: JSONSerializer {
+    public class MobileClientSessionSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: MobileClientSession) -> JSON {
             let output = [ 
@@ -5078,7 +5078,7 @@ public class Team {
     }
 
     /// The RemovedStatus struct
-    open class RemovedStatus: CustomStringConvertible {
+    public class RemovedStatus: CustomStringConvertible {
         /// True if the removed team member is recoverable
         public let isRecoverable: Bool
         public init(isRecoverable: Bool) {
@@ -5088,7 +5088,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovedStatusSerializer().serialize(self)))"
         }
     }
-    open class RemovedStatusSerializer: JSONSerializer {
+    public class RemovedStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RemovedStatus) -> JSON {
             let output = [ 
@@ -5108,7 +5108,7 @@ public class Team {
     }
 
     /// The RevokeDesktopClientArg struct
-    open class RevokeDesktopClientArg: Team.DeviceSessionArg {
+    public class RevokeDesktopClientArg: Team.DeviceSessionArg {
         /// Whether to delete all files of the account (this is possible only if supported by the desktop client and
         /// will be made the next time the client access the account)
         public let deleteOnUnlink: Bool
@@ -5120,7 +5120,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDesktopClientArgSerializer().serialize(self)))"
         }
     }
-    open class RevokeDesktopClientArgSerializer: JSONSerializer {
+    public class RevokeDesktopClientArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDesktopClientArg) -> JSON {
             let output = [ 
@@ -5135,7 +5135,7 @@ public class Team {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
-                    let deleteOnUnlink = Serialization._BoolSerializer.deserialize(dict["delete_on_unlink"] ?? .null)
+                    let deleteOnUnlink = Serialization._BoolSerializer.deserialize(dict["delete_on_unlink"] ?? .number(0))
                     return RevokeDesktopClientArg(sessionId: sessionId, teamMemberId: teamMemberId, deleteOnUnlink: deleteOnUnlink)
                 default:
                     fatalError("Type error deserializing")
@@ -5156,7 +5156,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionArgSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionArgSerializer: JSONSerializer {
+    public class RevokeDeviceSessionArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionArg) -> JSON {
             switch value {
@@ -5198,7 +5198,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchArg struct
-    open class RevokeDeviceSessionBatchArg: CustomStringConvertible {
+    public class RevokeDeviceSessionBatchArg: CustomStringConvertible {
         /// (no description)
         public let revokeDevices: Array<Team.RevokeDeviceSessionArg>
         public init(revokeDevices: Array<Team.RevokeDeviceSessionArg>) {
@@ -5208,7 +5208,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchArgSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
+    public class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionBatchArg) -> JSON {
             let output = [ 
@@ -5236,7 +5236,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchErrorSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionBatchErrorSerializer: JSONSerializer {
+    public class RevokeDeviceSessionBatchErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionBatchError) -> JSON {
             switch value {
@@ -5263,7 +5263,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchResult struct
-    open class RevokeDeviceSessionBatchResult: CustomStringConvertible {
+    public class RevokeDeviceSessionBatchResult: CustomStringConvertible {
         /// (no description)
         public let revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>
         public init(revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>) {
@@ -5273,7 +5273,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchResultSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
+    public class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionBatchResult) -> JSON {
             let output = [ 
@@ -5305,7 +5305,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionErrorSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionErrorSerializer: JSONSerializer {
+    public class RevokeDeviceSessionErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionError) -> JSON {
             switch value {
@@ -5344,7 +5344,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionStatus struct
-    open class RevokeDeviceSessionStatus: CustomStringConvertible {
+    public class RevokeDeviceSessionStatus: CustomStringConvertible {
         /// Result of the revoking request
         public let success: Bool
         /// The error cause in case of a failure
@@ -5357,7 +5357,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionStatusSerializer().serialize(self)))"
         }
     }
-    open class RevokeDeviceSessionStatusSerializer: JSONSerializer {
+    public class RevokeDeviceSessionStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeDeviceSessionStatus) -> JSON {
             let output = [ 
@@ -5379,7 +5379,7 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppArg struct
-    open class RevokeLinkedApiAppArg: CustomStringConvertible {
+    public class RevokeLinkedApiAppArg: CustomStringConvertible {
         /// The application's unique id
         public let appId: String
         /// The unique id of the member owning the device
@@ -5397,7 +5397,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedApiAppArgSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedApiAppArgSerializer: JSONSerializer {
+    public class RevokeLinkedApiAppArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedApiAppArg) -> JSON {
             let output = [ 
@@ -5412,7 +5412,7 @@ public class Team {
                 case .dictionary(let dict):
                     let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .null)
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
-                    let keepAppFolder = Serialization._BoolSerializer.deserialize(dict["keep_app_folder"] ?? .null)
+                    let keepAppFolder = Serialization._BoolSerializer.deserialize(dict["keep_app_folder"] ?? .number(1))
                     return RevokeLinkedApiAppArg(appId: appId, teamMemberId: teamMemberId, keepAppFolder: keepAppFolder)
                 default:
                     fatalError("Type error deserializing")
@@ -5421,7 +5421,7 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppBatchArg struct
-    open class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
+    public class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
         /// (no description)
         public let revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>
         public init(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) {
@@ -5431,7 +5431,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedApiAppBatchArgSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
+    public class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedApiAppBatchArg) -> JSON {
             let output = [ 
@@ -5459,7 +5459,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppBatchErrorSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedAppBatchErrorSerializer: JSONSerializer {
+    public class RevokeLinkedAppBatchErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedAppBatchError) -> JSON {
             switch value {
@@ -5486,7 +5486,7 @@ public class Team {
     }
 
     /// The RevokeLinkedAppBatchResult struct
-    open class RevokeLinkedAppBatchResult: CustomStringConvertible {
+    public class RevokeLinkedAppBatchResult: CustomStringConvertible {
         /// (no description)
         public let revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>
         public init(revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>) {
@@ -5496,7 +5496,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppBatchResultSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
+    public class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedAppBatchResult) -> JSON {
             let output = [ 
@@ -5528,7 +5528,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppErrorSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedAppErrorSerializer: JSONSerializer {
+    public class RevokeLinkedAppErrorSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedAppError) -> JSON {
             switch value {
@@ -5567,7 +5567,7 @@ public class Team {
     }
 
     /// The RevokeLinkedAppStatus struct
-    open class RevokeLinkedAppStatus: CustomStringConvertible {
+    public class RevokeLinkedAppStatus: CustomStringConvertible {
         /// Result of the revoking request
         public let success: Bool
         /// The error cause in case of a failure
@@ -5580,7 +5580,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppStatusSerializer().serialize(self)))"
         }
     }
-    open class RevokeLinkedAppStatusSerializer: JSONSerializer {
+    public class RevokeLinkedAppStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: RevokeLinkedAppStatus) -> JSON {
             let output = [ 
@@ -5602,7 +5602,7 @@ public class Team {
     }
 
     /// Describes the number of users in a specific storage bucket.
-    open class StorageBucket: CustomStringConvertible {
+    public class StorageBucket: CustomStringConvertible {
         /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up to 1 Giga.
         public let bucket: String
         /// The number of people whose storage is in the range of this storage bucket.
@@ -5617,7 +5617,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(StorageBucketSerializer().serialize(self)))"
         }
     }
-    open class StorageBucketSerializer: JSONSerializer {
+    public class StorageBucketSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: StorageBucket) -> JSON {
             let output = [ 
@@ -5639,7 +5639,7 @@ public class Team {
     }
 
     /// The TeamGetInfoResult struct
-    open class TeamGetInfoResult: CustomStringConvertible {
+    public class TeamGetInfoResult: CustomStringConvertible {
         /// The name of the team.
         public let name: String
         /// The ID of the team.
@@ -5665,7 +5665,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamGetInfoResultSerializer().serialize(self)))"
         }
     }
-    open class TeamGetInfoResultSerializer: JSONSerializer {
+    public class TeamGetInfoResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamGetInfoResult) -> JSON {
             let output = [ 
@@ -5693,7 +5693,7 @@ public class Team {
     }
 
     /// Information about a team member.
-    open class TeamMemberInfo: CustomStringConvertible {
+    public class TeamMemberInfo: CustomStringConvertible {
         /// Profile of a user as a member of a team.
         public let profile: Team.TeamMemberProfile
         /// The user's role in the team.
@@ -5706,7 +5706,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberInfoSerializer().serialize(self)))"
         }
     }
-    open class TeamMemberInfoSerializer: JSONSerializer {
+    public class TeamMemberInfoSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamMemberInfo) -> JSON {
             let output = [ 
@@ -5728,7 +5728,7 @@ public class Team {
     }
 
     /// Profile of a user as a member of a team.
-    open class TeamMemberProfile: Team.MemberProfile {
+    public class TeamMemberProfile: Team.MemberProfile {
         /// List of group IDs of groups that the user belongs to.
         public let groups: Array<String>
         public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, externalId: String? = nil, accountId: String? = nil) {
@@ -5740,7 +5740,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
         }
     }
-    open class TeamMemberProfileSerializer: JSONSerializer {
+    public class TeamMemberProfileSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamMemberProfile) -> JSON {
             let output = [ 
@@ -5792,7 +5792,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberStatusSerializer().serialize(self)))"
         }
     }
-    open class TeamMemberStatusSerializer: JSONSerializer {
+    public class TeamMemberStatusSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamMemberStatus) -> JSON {
             switch value {
@@ -5848,7 +5848,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMembershipTypeSerializer().serialize(self)))"
         }
     }
-    open class TeamMembershipTypeSerializer: JSONSerializer {
+    public class TeamMembershipTypeSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: TeamMembershipType) -> JSON {
             switch value {
@@ -5881,7 +5881,7 @@ public class Team {
     }
 
     /// The UpdatePropertyTemplateArg struct
-    open class UpdatePropertyTemplateArg: CustomStringConvertible {
+    public class UpdatePropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
         /// A display name for the property template. Property template names can be up to 256 bytes.
@@ -5904,7 +5904,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    open class UpdatePropertyTemplateArgSerializer: JSONSerializer {
+    public class UpdatePropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UpdatePropertyTemplateArg) -> JSON {
             let output = [ 
@@ -5930,7 +5930,7 @@ public class Team {
     }
 
     /// The UpdatePropertyTemplateResult struct
-    open class UpdatePropertyTemplateResult: CustomStringConvertible {
+    public class UpdatePropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
         public let templateId: String
         public init(templateId: String) {
@@ -5941,7 +5941,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    open class UpdatePropertyTemplateResultSerializer: JSONSerializer {
+    public class UpdatePropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UpdatePropertyTemplateResult) -> JSON {
             let output = [ 
@@ -5973,7 +5973,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UserSelectorArgSerializer().serialize(self)))"
         }
     }
-    open class UserSelectorArgSerializer: JSONSerializer {
+    public class UserSelectorArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UserSelectorArg) -> JSON {
             switch value {
@@ -6027,7 +6027,7 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UsersSelectorArgSerializer().serialize(self)))"
         }
     }
-    open class UsersSelectorArgSerializer: JSONSerializer {
+    public class UsersSelectorArgSerializer: JSONSerializer {
         public init() { }
         public func serialize(_ value: UsersSelectorArg) -> JSON {
             switch value {
