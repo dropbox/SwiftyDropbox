@@ -267,9 +267,9 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Number(0))
                     return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -307,9 +307,9 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Number(0))
                     let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .Null)
                     return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
                 default:
@@ -444,10 +444,10 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.Add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .Null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Number(0))
                     return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
                 default:
                     fatalError("Type error deserializing")
@@ -484,10 +484,10 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.Add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .Null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .Null)
                     return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
                 default:
@@ -1132,8 +1132,8 @@ public class Files {
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .Null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
                     let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
-                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .Null)
-                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .Null)
+                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .Number(0))
+                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .Number(0))
                     return FolderSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, traverseOnly: traverseOnly, noAccess: noAccess)
                 default:
                     fatalError("Type error deserializing")
@@ -1448,10 +1448,10 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
+                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Number(0))
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Number(0))
                     return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1649,7 +1649,7 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .Null)
+                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .Number(30))
                     return ListFolderLongpollArg(cursor: cursor, timeout: timeout)
                 default:
                     fatalError("Type error deserializing")
@@ -1806,7 +1806,7 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .Null)
+                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .Number(10))
                     return ListRevisionsArg(path: path, limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -3043,9 +3043,9 @@ public class Files {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
                     let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .Null)
-                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
-                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .Null)
-                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? .Null)
+                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Number(0))
+                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .Number(100))
+                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? Files.SearchModeSerializer().serialize(.Filename))
                     return SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
                     fatalError("Type error deserializing")
@@ -3309,8 +3309,8 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? .Null)
-                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? .Null)
+                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.Jpeg))
+                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.W64h64))
                     return ThumbnailArg(path: path, format: format, size: size)
                 default:
                     fatalError("Type error deserializing")
@@ -3735,7 +3735,7 @@ public class Files {
             switch json {
                 case .Dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .Null)
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Number(0))
                     return UploadSessionAppendArg(cursor: cursor, close: close)
                 default:
                     fatalError("Type error deserializing")
@@ -4151,7 +4151,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionStartArg {
             switch json {
                 case .Dictionary(let dict):
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Number(0))
                     return UploadSessionStartArg(close: close)
                 default:
                     fatalError("Type error deserializing")

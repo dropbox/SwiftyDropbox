@@ -1,0 +1,370 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "URLConvertible"
+- "URLRequestConvertible"
+- "request"
+- "request"
+- "download"
+- "download"
+- "download"
+- "upload"
+- "upload"
+- "upload"
+- "upload"
+- "upload"
+- "upload"
+- "upload"
+- "upload"
+- "stream"
+- "stream"
+provides-nominal:
+- "P9Alamofire14URLConvertible"
+- "SS"
+- "V10Foundation3URL"
+- "V10Foundation13URLComponents"
+- "P9Alamofire21URLRequestConvertible"
+- "V10Foundation10URLRequest"
+provides-member:
+- ["P9Alamofire14URLConvertible", ""]
+- ["SS", ""]
+- ["V10Foundation3URL", ""]
+- ["V10Foundation13URLComponents", ""]
+- ["P9Alamofire21URLRequestConvertible", ""]
+- ["V10Foundation10URLRequest", ""]
+- ["P9Alamofire21URLRequestConvertible", "urlRequest"]
+- ["V10Foundation10URLRequest", "init"]
+- ["V10Foundation10URLRequest", "adapt"]
+provides-dynamic-lookup:
+depends-top-level:
+- "DownloadRequest"
+- "NetService"
+- "Parameters"
+- "InputStream"
+- "Void"
+- "Data"
+- "DataRequest"
+- "URLConvertible"
+- "URLComponents"
+- "URLRequestConvertible"
+- "SessionManager"
+- "stream"
+- "HTTPHeaders"
+- !private "AFError"
+- "HTTPMethod"
+- "Int"
+- "AssignmentPrecedence"
+- "URL"
+- "UploadRequest"
+- "String"
+- "URLRequest"
+- "download"
+- "RequestAdapter"
+- "upload"
+- "UInt64"
+- "StreamRequest"
+- "request"
+- !private "URLEncoding"
+- "ParameterEncoding"
+- "MultipartFormData"
+depends-member:
+- ["O9Alamofire7AFError", "deinit"]
+- !private ["O9Alamofire7AFError", "invalidURL"]
+- ["Ps9AnyObject", "DownloadFileDestination"]
+- ["Ps9AnyObject", "MultipartFormDataEncodingResult"]
+- !private ["Ps9AnyObject", "default"]
+- !private ["Ps9AnyObject", "download"]
+- !private ["Ps9AnyObject", "multipartFormDataEncodingMemoryThreshold"]
+- !private ["Ps9AnyObject", "request"]
+- !private ["Ps9AnyObject", "stream"]
+- !private ["Ps9AnyObject", "upload"]
+- !private ["Ps7CVarArg", "AFError"]
+- !private ["Ps7CVarArg", "Iterator"]
+- !private ["Ps7CVarArg", "URL"]
+- ["Ps7CVarArg", "asURL"]
+- !private ["Ps10Collection", "Iterator"]
+- !private ["Ps10Comparable", "AFError"]
+- !private ["Ps10Comparable", "URL"]
+- ["Ps10Comparable", "asURL"]
+- !private ["Ps28CustomDebugStringConvertible", "AFError"]
+- ["Ps28CustomDebugStringConvertible", "DownloadFileDestination"]
+- !private ["Ps28CustomDebugStringConvertible", "Iterator"]
+- !private ["Ps28CustomDebugStringConvertible", "URL"]
+- ["Ps28CustomDebugStringConvertible", "asURL"]
+- ["Ps28CustomDebugStringConvertible", "asURLRequest"]
+- !private ["Ps28CustomDebugStringConvertible", "httpMethod"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "setValue"]
+- ["Ps28CustomDebugStringConvertible", "some"]
+- !private ["Ps28CustomDebugStringConvertible", "url"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "AFError"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "URL"]
+- ["Ps29CustomPlaygroundQuickLookable", "asURL"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps17CustomReflectable", "AFError"]
+- !private ["Ps17CustomReflectable", "Element"]
+- !private ["Ps17CustomReflectable", "Iterator"]
+- !private ["Ps17CustomReflectable", "URL"]
+- ["Ps17CustomReflectable", "asURL"]
+- ["Ps17CustomReflectable", "asURLRequest"]
+- !private ["Ps17CustomReflectable", "httpMethod"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps17CustomReflectable", "setValue"]
+- ["Ps17CustomReflectable", "some"]
+- !private ["Ps17CustomReflectable", "url"]
+- !private ["Ps23CustomStringConvertible", "AFError"]
+- ["Ps23CustomStringConvertible", "DownloadFileDestination"]
+- !private ["Ps23CustomStringConvertible", "Iterator"]
+- !private ["Ps23CustomStringConvertible", "URL"]
+- ["Ps23CustomStringConvertible", "asURL"]
+- ["Ps23CustomStringConvertible", "asURLRequest"]
+- !private ["Ps23CustomStringConvertible", "httpMethod"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- !private ["Ps23CustomStringConvertible", "setValue"]
+- !private ["Ps23CustomStringConvertible", "url"]
+- ["V10Foundation4Data", "deinit"]
+- ["C9Alamofire11DataRequest", "deinit"]
+- !private ["Vs10Dictionary", "Iterator"]
+- ["Vs10Dictionary", "deinit"]
+- !private ["Vs18DictionaryIterator", "Element"]
+- ["C9Alamofire15DownloadRequest", "DownloadFileDestination"]
+- ["C9Alamofire15DownloadRequest", "deinit"]
+- !private ["Ps9Equatable", "AFError"]
+- !private ["Ps9Equatable", "URL"]
+- ["Ps9Equatable", "asURL"]
+- ["Ps9Equatable", "asURLRequest"]
+- !private ["Ps9Equatable", "get"]
+- !private ["Ps9Equatable", "httpMethod"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "post"]
+- !private ["Ps9Equatable", "rawValue"]
+- !private ["Ps9Equatable", "setValue"]
+- !private ["Ps9Equatable", "url"]
+- !private ["Ps5Error", "invalidURL"]
+- !private ["Ps30ExpressibleByDictionaryLiteral", "Iterator"]
+- !private ["Ps43ExpressibleByExtendedGraphemeClusterLiteral", "AFError"]
+- !private ["Ps43ExpressibleByExtendedGraphemeClusterLiteral", "URL"]
+- ["Ps43ExpressibleByExtendedGraphemeClusterLiteral", "asURL"]
+- ["Ps23ExpressibleByNilLiteral", "some"]
+- !private ["Ps32ExpressibleByStringInterpolation", "AFError"]
+- !private ["Ps32ExpressibleByStringInterpolation", "URL"]
+- ["Ps32ExpressibleByStringInterpolation", "asURL"]
+- !private ["Ps26ExpressibleByStringLiteral", "AFError"]
+- !private ["Ps26ExpressibleByStringLiteral", "URL"]
+- ["Ps26ExpressibleByStringLiteral", "asURL"]
+- !private ["Ps33ExpressibleByUnicodeScalarLiteral", "AFError"]
+- !private ["Ps33ExpressibleByUnicodeScalarLiteral", "URL"]
+- ["Ps33ExpressibleByUnicodeScalarLiteral", "asURL"]
+- ["O9Alamofire10HTTPMethod", "deinit"]
+- !private ["O9Alamofire10HTTPMethod", "get"]
+- !private ["O9Alamofire10HTTPMethod", "post"]
+- !private ["O9Alamofire10HTTPMethod", "rawValue"]
+- !private ["Ps8Hashable", "AFError"]
+- !private ["Ps8Hashable", "URL"]
+- ["Ps8Hashable", "asURL"]
+- ["Ps8Hashable", "asURLRequest"]
+- !private ["Ps8Hashable", "get"]
+- !private ["Ps8Hashable", "httpMethod"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "post"]
+- !private ["Ps8Hashable", "rawValue"]
+- !private ["Ps8Hashable", "setValue"]
+- !private ["Ps8Hashable", "url"]
+- !private ["Ps9Indexable", "Iterator"]
+- !private ["Ps13IndexableBase", "Iterator"]
+- ["CSo11InputStream", "deinit"]
+- ["Si", "deinit"]
+- !private ["Ps16IteratorProtocol", "Element"]
+- !private ["P10Foundation14LocalizedError", "invalidURL"]
+- !private ["Ps25LosslessStringConvertible", "AFError"]
+- !private ["Ps25LosslessStringConvertible", "URL"]
+- ["Ps25LosslessStringConvertible", "asURL"]
+- !private ["Ps10MirrorPath", "AFError"]
+- !private ["Ps10MirrorPath", "URL"]
+- ["Ps10MirrorPath", "asURL"]
+- ["CSo10NetService", "deinit"]
+- ["Sq", "deinit"]
+- ["Sq", "some"]
+- !private ["P9Alamofire17ParameterEncoding", "default"]
+- ["P9Alamofire17ParameterEncoding", "deinit"]
+- !private ["Ps16RawRepresentable", "get"]
+- !private ["Ps16RawRepresentable", "post"]
+- !private ["Ps16RawRepresentable", "rawValue"]
+- !private ["P10Foundation20ReferenceConvertible", "AFError"]
+- ["P10Foundation20ReferenceConvertible", "asURL"]
+- ["P10Foundation20ReferenceConvertible", "asURLRequest"]
+- !private ["P10Foundation20ReferenceConvertible", "httpMethod"]
+- !private ["P10Foundation20ReferenceConvertible", "init"]
+- !private ["P10Foundation20ReferenceConvertible", "setValue"]
+- !private ["P10Foundation20ReferenceConvertible", "url"]
+- ["C9Alamofire7Request", "DownloadFileDestination"]
+- !private ["P9Alamofire14RequestAdapter", "adapt"]
+- ["P9Alamofire14RequestAdapter", "deinit"]
+- !private ["Ps8Sequence", "Iterator"]
+- ["C9Alamofire14SessionManager", "MultipartFormDataEncodingResult"]
+- !private ["C9Alamofire14SessionManager", "default"]
+- ["C9Alamofire14SessionManager", "deinit"]
+- !private ["C9Alamofire14SessionManager", "download"]
+- !private ["C9Alamofire14SessionManager", "multipartFormDataEncodingMemoryThreshold"]
+- !private ["C9Alamofire14SessionManager", "request"]
+- !private ["C9Alamofire14SessionManager", "stream"]
+- !private ["C9Alamofire14SessionManager", "upload"]
+- ["C9Alamofire13StreamRequest", "deinit"]
+- !private ["SS", "AFError"]
+- ["SS", "URL"]
+- ["SS", "asURL"]
+- ["SS", "deinit"]
+- !private ["Ps16TextOutputStream", "AFError"]
+- !private ["Ps16TextOutputStream", "URL"]
+- ["Ps16TextOutputStream", "asURL"]
+- !private ["Ps20TextOutputStreamable", "AFError"]
+- !private ["Ps20TextOutputStreamable", "URL"]
+- ["Ps20TextOutputStreamable", "asURL"]
+- ["Vs6UInt64", "deinit"]
+- ["V10Foundation3URL", "URL"]
+- ["V10Foundation3URL", "asURL"]
+- ["V10Foundation3URL", "deinit"]
+- !private ["V10Foundation3URL", "init"]
+- !private ["V10Foundation13URLComponents", "AFError"]
+- ["V10Foundation13URLComponents", "URL"]
+- ["V10Foundation13URLComponents", "asURL"]
+- ["V10Foundation13URLComponents", "deinit"]
+- !private ["V10Foundation13URLComponents", "url"]
+- !private ["P9Alamofire14URLConvertible", "AFError"]
+- ["P9Alamofire14URLConvertible", "URL"]
+- ["P9Alamofire14URLConvertible", "asURL"]
+- ["P9Alamofire14URLConvertible", "deinit"]
+- !private ["P9Alamofire14URLConvertible", "init"]
+- !private ["P9Alamofire14URLConvertible", "url"]
+- ["P9Alamofire14URLConvertible", ""]
+- !private ["V9Alamofire11URLEncoding", "default"]
+- !private ["V9Alamofire11URLEncoding", "deinit"]
+- ["V10Foundation10URLRequest", "HTTPHeaders"]
+- ["V10Foundation10URLRequest", "HTTPMethod"]
+- ["V10Foundation10URLRequest", "RequestAdapter"]
+- ["V10Foundation10URLRequest", "URLConvertible"]
+- ["V10Foundation10URLRequest", "URLRequest"]
+- ["V10Foundation10URLRequest", "adapt"]
+- ["V10Foundation10URLRequest", "asURLRequest"]
+- ["V10Foundation10URLRequest", "deinit"]
+- !private ["V10Foundation10URLRequest", "httpMethod"]
+- ["V10Foundation10URLRequest", "init"]
+- !private ["V10Foundation10URLRequest", "setValue"]
+- ["P9Alamofire21URLRequestConvertible", "URLRequest"]
+- ["P9Alamofire21URLRequestConvertible", "asURLRequest"]
+- ["P9Alamofire21URLRequestConvertible", "deinit"]
+- !private ["P9Alamofire21URLRequestConvertible", "httpMethod"]
+- !private ["P9Alamofire21URLRequestConvertible", "init"]
+- !private ["P9Alamofire21URLRequestConvertible", "setValue"]
+- ["P9Alamofire21URLRequestConvertible", "urlRequest"]
+- ["P9Alamofire21URLRequestConvertible", ""]
+- ["C9Alamofire13UploadRequest", "deinit"]
+- !private ["Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral", "AFError"]
+- !private ["Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral", "URL"]
+- ["Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral", "asURL"]
+- !private ["Ps34_ExpressibleByBuiltinStringLiteral", "AFError"]
+- !private ["Ps34_ExpressibleByBuiltinStringLiteral", "URL"]
+- ["Ps34_ExpressibleByBuiltinStringLiteral", "asURL"]
+- !private ["Ps39_ExpressibleByBuiltinUTF16StringLiteral", "AFError"]
+- !private ["Ps39_ExpressibleByBuiltinUTF16StringLiteral", "URL"]
+- ["Ps39_ExpressibleByBuiltinUTF16StringLiteral", "asURL"]
+- !private ["Ps41_ExpressibleByBuiltinUnicodeScalarLiteral", "AFError"]
+- !private ["Ps41_ExpressibleByBuiltinUnicodeScalarLiteral", "URL"]
+- ["Ps41_ExpressibleByBuiltinUnicodeScalarLiteral", "asURL"]
+- ["Ps34_ExpressibleByFileReferenceLiteral", "asURL"]
+- !private ["Ps34_ExpressibleByFileReferenceLiteral", "init"]
+- !private ["Ps9_Hashable", "AFError"]
+- !private ["Ps9_Hashable", "URL"]
+- ["Ps9_Hashable", "asURL"]
+- ["Ps9_Hashable", "asURLRequest"]
+- !private ["Ps9_Hashable", "get"]
+- !private ["Ps9_Hashable", "httpMethod"]
+- !private ["Ps9_Hashable", "init"]
+- !private ["Ps9_Hashable", "post"]
+- !private ["Ps9_Hashable", "rawValue"]
+- !private ["Ps9_Hashable", "setValue"]
+- !private ["Ps9_Hashable", "url"]
+- !private ["P10Foundation14_MutableBoxing", "AFError"]
+- ["P10Foundation14_MutableBoxing", "asURL"]
+- !private ["P10Foundation14_MutableBoxing", "url"]
+- !private ["Ps21_ObjectiveCBridgeable", "AFError"]
+- !private ["Ps21_ObjectiveCBridgeable", "Iterator"]
+- !private ["Ps21_ObjectiveCBridgeable", "URL"]
+- ["Ps21_ObjectiveCBridgeable", "asURL"]
+- ["Ps21_ObjectiveCBridgeable", "asURLRequest"]
+- !private ["Ps21_ObjectiveCBridgeable", "httpMethod"]
+- !private ["Ps21_ObjectiveCBridgeable", "init"]
+- !private ["Ps21_ObjectiveCBridgeable", "setValue"]
+- !private ["Ps21_ObjectiveCBridgeable", "url"]
+depends-nominal:
+- "O9Alamofire7AFError"
+- "Ps9AnyObject"
+- "Ps7CVarArg"
+- !private "Ps10Collection"
+- "Ps10Comparable"
+- "Ps28CustomDebugStringConvertible"
+- "Ps29CustomPlaygroundQuickLookable"
+- "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- "V10Foundation4Data"
+- "C9Alamofire11DataRequest"
+- "Vs10Dictionary"
+- !private "Vs18DictionaryIterator"
+- "C9Alamofire15DownloadRequest"
+- "Ps9Equatable"
+- !private "Ps5Error"
+- !private "Ps30ExpressibleByDictionaryLiteral"
+- "Ps43ExpressibleByExtendedGraphemeClusterLiteral"
+- "Ps23ExpressibleByNilLiteral"
+- "Ps32ExpressibleByStringInterpolation"
+- "Ps26ExpressibleByStringLiteral"
+- "Ps33ExpressibleByUnicodeScalarLiteral"
+- "O9Alamofire10HTTPMethod"
+- "Ps8Hashable"
+- !private "Ps9Indexable"
+- !private "Ps13IndexableBase"
+- "CSo11InputStream"
+- "Si"
+- !private "Ps16IteratorProtocol"
+- !private "P10Foundation14LocalizedError"
+- "Ps25LosslessStringConvertible"
+- "Ps10MirrorPath"
+- "CSo10NetService"
+- "Sq"
+- "P9Alamofire17ParameterEncoding"
+- !private "Ps16RawRepresentable"
+- "P10Foundation20ReferenceConvertible"
+- "C9Alamofire7Request"
+- "P9Alamofire14RequestAdapter"
+- !private "Ps8Sequence"
+- "C9Alamofire14SessionManager"
+- "C9Alamofire13StreamRequest"
+- "SS"
+- "Ps16TextOutputStream"
+- "Ps20TextOutputStreamable"
+- "Vs6UInt64"
+- "V10Foundation3URL"
+- "V10Foundation13URLComponents"
+- "P9Alamofire14URLConvertible"
+- !private "V9Alamofire11URLEncoding"
+- "V10Foundation10URLRequest"
+- "P9Alamofire21URLRequestConvertible"
+- "C9Alamofire13UploadRequest"
+- "Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral"
+- "Ps34_ExpressibleByBuiltinStringLiteral"
+- "Ps39_ExpressibleByBuiltinUTF16StringLiteral"
+- "Ps41_ExpressibleByBuiltinUnicodeScalarLiteral"
+- "Ps34_ExpressibleByFileReferenceLiteral"
+- "Ps9_Hashable"
+- "P10Foundation14_MutableBoxing"
+- "Ps21_ObjectiveCBridgeable"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+interface-hash: "59b2ba54b97e25a89266b1659dc2522f"

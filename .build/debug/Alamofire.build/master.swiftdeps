@@ -1,0 +1,21 @@
+version: "Apple Swift version 3.0 (swiftlang-800.0.46.2 clang-800.0.38)"
+options: "333aaa9897019e82183d988ed5623b67"
+build_time: [527642316, 687587000]
+inputs:
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/AFError.swift": !dirty [527638172, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Alamofire.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/DispatchQueue+Alamofire.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/MultipartFormData.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/NetworkReachabilityManager.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Notifications.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/ParameterEncoding.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Request.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Response.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/ResponseSerialization.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Result.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/ServerTrustPolicy.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/SessionDelegate.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/SessionManager.swift": !dirty [527638172, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/TaskDelegate.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Timeline.swift": !dirty [527638170, 0]
+  "/Users/scobbe/src/sdk/SwiftyDropbox/Packages/Alamofire-4.0.0/Source/Validation.swift": !dirty [527638170, 0]

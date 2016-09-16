@@ -1,0 +1,134 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+- "VE9AlamofireVCSo14NSNotification4Name4Task"
+- "VE9AlamofireV10Foundation12Notification3Key"
+provides-member:
+- ["VCSo14NSNotification4Name", ""]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", ""]
+- ["V10Foundation12Notification", ""]
+- ["VE9AlamofireV10Foundation12Notification3Key", ""]
+- ["VCSo14NSNotification4Name", "Task"]
+- ["V10Foundation12Notification", "Key"]
+provides-dynamic-lookup:
+depends-top-level:
+- "StringLiteralType"
+- "Notification"
+depends-member:
+- ["Ps9AnyObject", "init"]
+- ["Ps7CVarArg", "init"]
+- ["Ps10Comparable", "Notification"]
+- ["Ps10Comparable", "init"]
+- ["Ps28CustomDebugStringConvertible", "Name"]
+- ["Ps28CustomDebugStringConvertible", "init"]
+- ["Ps29CustomPlaygroundQuickLookable", "init"]
+- ["Ps17CustomReflectable", "Name"]
+- ["Ps17CustomReflectable", "init"]
+- ["Ps23CustomStringConvertible", "Name"]
+- ["Ps23CustomStringConvertible", "init"]
+- ["Ps9Equatable", "Name"]
+- ["Ps9Equatable", "Notification"]
+- ["Ps9Equatable", "init"]
+- ["Ps43ExpressibleByExtendedGraphemeClusterLiteral", "init"]
+- ["Ps32ExpressibleByStringInterpolation", "init"]
+- ["Ps26ExpressibleByStringLiteral", "init"]
+- ["Ps33ExpressibleByUnicodeScalarLiteral", "init"]
+- ["Ps8Hashable", "Name"]
+- ["Ps8Hashable", "Notification"]
+- ["Ps8Hashable", "init"]
+- ["VE9AlamofireV10Foundation12Notification3Key", "Task"]
+- ["VE9AlamofireV10Foundation12Notification3Key", "init"]
+- ["Ps25LosslessStringConvertible", "init"]
+- ["Ps10MirrorPath", "init"]
+- ["PSo8NSCoding", "init"]
+- ["PSo9NSCopying", "init"]
+- ["PSo16NSMutableCopying", "init"]
+- ["CSo8NSObject", "init"]
+- ["PSo16NSObjectProtocol", "init"]
+- ["PSo14NSSecureCoding", "init"]
+- ["CSo8NSString", "init"]
+- ["VCSo14NSNotification4Name", "Notification"]
+- ["VCSo14NSNotification4Name", "Task"]
+- ["VCSo14NSNotification4Name", "deinit"]
+- ["VCSo14NSNotification4Name", "init"]
+- ["V10Foundation12Notification", "Key"]
+- ["V10Foundation12Notification", "Name"]
+- ["Ps16RawRepresentable", "Notification"]
+- ["Ps16RawRepresentable", "init"]
+- ["P10Foundation20ReferenceConvertible", "Name"]
+- ["SS", "deinit"]
+- ["SS", "init"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "DidCancel"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "DidComplete"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "DidResume"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "DidSuspend"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "Notification"]
+- ["VE9AlamofireVCSo14NSNotification4Name4Task", "init"]
+- ["Ps16TextOutputStream", "init"]
+- ["Ps20TextOutputStreamable", "init"]
+- ["P9Alamofire14URLConvertible", "init"]
+- ["Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral", "init"]
+- ["Ps34_ExpressibleByBuiltinStringLiteral", "init"]
+- ["Ps39_ExpressibleByBuiltinUTF16StringLiteral", "init"]
+- ["Ps41_ExpressibleByBuiltinUnicodeScalarLiteral", "init"]
+- ["Ps35_HasCustomAnyHashableRepresentation", "init"]
+- ["Ps9_Hashable", "Name"]
+- ["Ps9_Hashable", "Notification"]
+- ["Ps9_Hashable", "init"]
+- ["Ps21_ObjectiveCBridgeable", "Name"]
+- ["Ps21_ObjectiveCBridgeable", "Notification"]
+- ["Ps21_ObjectiveCBridgeable", "init"]
+- ["Ps20_SwiftNewtypeWrapper", "Notification"]
+- ["Ps20_SwiftNewtypeWrapper", "init"]
+depends-nominal:
+- "Ps9AnyObject"
+- "Ps7CVarArg"
+- "Ps10Comparable"
+- "Ps28CustomDebugStringConvertible"
+- "Ps29CustomPlaygroundQuickLookable"
+- "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- "Ps9Equatable"
+- "Ps43ExpressibleByExtendedGraphemeClusterLiteral"
+- "Ps32ExpressibleByStringInterpolation"
+- "Ps26ExpressibleByStringLiteral"
+- "Ps33ExpressibleByUnicodeScalarLiteral"
+- "Ps8Hashable"
+- "VE9AlamofireV10Foundation12Notification3Key"
+- "Ps25LosslessStringConvertible"
+- "Ps10MirrorPath"
+- "PSo8NSCoding"
+- "PSo9NSCopying"
+- "PSo16NSMutableCopying"
+- "CSo8NSObject"
+- "PSo16NSObjectProtocol"
+- "PSo14NSSecureCoding"
+- "CSo8NSString"
+- "VCSo14NSNotification4Name"
+- "V10Foundation12Notification"
+- "Ps16RawRepresentable"
+- "P10Foundation20ReferenceConvertible"
+- "SS"
+- "VE9AlamofireVCSo14NSNotification4Name4Task"
+- "Ps16TextOutputStream"
+- "Ps20TextOutputStreamable"
+- "P9Alamofire14URLConvertible"
+- "Ps51_ExpressibleByBuiltinExtendedGraphemeClusterLiteral"
+- "Ps34_ExpressibleByBuiltinStringLiteral"
+- "Ps39_ExpressibleByBuiltinUTF16StringLiteral"
+- "Ps41_ExpressibleByBuiltinUnicodeScalarLiteral"
+- "Ps35_HasCustomAnyHashableRepresentation"
+- "Ps9_Hashable"
+- "Ps21_ObjectiveCBridgeable"
+- "Ps20_SwiftNewtypeWrapper"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+interface-hash: "bb7eb966a255e0c7907b802ec3c02f5a"

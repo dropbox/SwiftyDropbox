@@ -93,7 +93,7 @@ public class Auth {
             switch json {
                 case .Dictionary(let dict):
                     let reason = Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .Null)
-                    let retryAfter = Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .Null)
+                    let retryAfter = Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .Number(1))
                     return RateLimitError(reason: reason, retryAfter: retryAfter)
                 default:
                     fatalError("Type error deserializing")

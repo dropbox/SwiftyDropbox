@@ -1,0 +1,387 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "NetworkReachabilityManager"
+- "=="
+- "=="
+provides-nominal:
+- "C9Alamofire26NetworkReachabilityManager"
+- "OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus"
+- "OC9Alamofire26NetworkReachabilityManager14ConnectionType"
+provides-member:
+- ["C9Alamofire26NetworkReachabilityManager", ""]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", ""]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- !private "??"
+- "String"
+- !private "SCNetworkReachabilityCreateWithName"
+- !private "BooleanLiteralType"
+- !private "withUnsafePointer"
+- !private "SCNetworkReachabilityCreateWithAddress"
+- !private "SCNetworkReachabilitySetDispatchQueue"
+- !private "AF_INET"
+- !private "sa_family_t"
+- !private "&&"
+- !private "!"
+- !private "sockaddr_in"
+- "SCNetworkReachabilityFlags"
+- !private "SCNetworkReachabilityGetFlags"
+- !private "!="
+- !private "UInt8"
+- "DispatchQueue"
+- !private "||"
+- "Void"
+- "Bool"
+- "=="
+- "SCNetworkReachability"
+- "AssignmentPrecedence"
+- !private "SCNetworkReachabilitySetCallback"
+- !private "SCNetworkReachabilityContext"
+- "NetworkReachabilityManager"
+- "Equatable"
+- !private "sockaddr"
+- !private "Unmanaged"
+- !private "MemoryLayout"
+depends-member:
+- !private ["Ps9AnyObject", "AF_INET"]
+- ["Ps9AnyObject", "DispatchQueue"]
+- !private ["Ps9AnyObject", "MemoryLayout"]
+- ["Ps9AnyObject", "NetworkReachabilityStatus"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilityContext"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilityCreateWithAddress"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilityCreateWithName"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilityFlags"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilityGetFlags"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilitySetCallback"]
+- !private ["Ps9AnyObject", "SCNetworkReachabilitySetDispatchQueue"]
+- !private ["Ps9AnyObject", "UInt8"]
+- !private ["Ps9AnyObject", "Unmanaged"]
+- !private ["Ps9AnyObject", "async"]
+- !private ["Ps9AnyObject", "flags"]
+- !private ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "isReachableOnEthernetOrWiFi"]
+- !private ["Ps9AnyObject", "isReachableOnWWAN"]
+- !private ["Ps9AnyObject", "listener"]
+- !private ["Ps9AnyObject", "listenerQueue"]
+- ["Ps9AnyObject", "main"]
+- !private ["Ps9AnyObject", "networkReachabilityStatus"]
+- !private ["Ps9AnyObject", "networkReachabilityStatusForFlags"]
+- !private ["Ps9AnyObject", "notifyListener"]
+- !private ["Ps9AnyObject", "previousFlags"]
+- !private ["Ps9AnyObject", "reachability"]
+- !private ["Ps9AnyObject", "sa_family_t"]
+- !private ["Ps9AnyObject", "sockaddr"]
+- !private ["Ps9AnyObject", "sockaddr_in"]
+- !private ["Ps9AnyObject", "stopListening"]
+- !private ["Ps9AnyObject", "withUnsafePointer"]
+- ["Ps9AnyObject", ""]
+- !private ["Ps17BitwiseOperations", "hashValue"]
+- !private ["Ps17BitwiseOperations", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- ["Sb", "deinit"]
+- !private ["Ps7CVarArg", "async"]
+- !private ["Ps7CVarArg", "hashValue"]
+- !private ["Ps7CVarArg", "init"]
+- ["Ps7CVarArg", "main"]
+- !private ["Ps7CVarArg", "withMemoryRebound"]
+- !private ["Ps10Comparable", "hashValue"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps10Comparable", "withMemoryRebound"]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "=="]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "_toAnyHashable"]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "deinit"]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "ethernetOrWiFi"]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "hashValue"]
+- ["OC9Alamofire26NetworkReachabilityManager14ConnectionType", "wwan"]
+- !private ["Ps28CustomDebugStringConvertible", "async"]
+- ["Ps28CustomDebugStringConvertible", "main"]
+- ["Ps28CustomDebugStringConvertible", "some"]
+- !private ["Ps28CustomDebugStringConvertible", "withMemoryRebound"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "hashValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "withMemoryRebound"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "hashValue"]
+- !private ["Ps17CustomReflectable", "init"]
+- ["Ps17CustomReflectable", "some"]
+- !private ["Ps17CustomReflectable", "withMemoryRebound"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "async"]
+- !private ["Ps23CustomStringConvertible", "hashValue"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- ["Ps23CustomStringConvertible", "main"]
+- !private ["CSo14DispatchObject", "async"]
+- ["CSo14DispatchObject", "main"]
+- !private ["CSo13DispatchQueue", "async"]
+- ["CSo13DispatchQueue", "deinit"]
+- ["CSo13DispatchQueue", "main"]
+- !private ["Ps9Equatable", "Element"]
+- !private ["Ps9Equatable", "RawValue"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- ["Ps9Equatable", "_toAnyHashable"]
+- !private ["Ps9Equatable", "async"]
+- !private ["Ps9Equatable", "connectionOnDemand"]
+- !private ["Ps9Equatable", "connectionOnTraffic"]
+- !private ["Ps9Equatable", "connectionRequired"]
+- !private ["Ps9Equatable", "contains"]
+- !private ["Ps9Equatable", "ethernetOrWiFi"]
+- ["Ps9Equatable", "hashValue"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "interventionRequired"]
+- ["Ps9Equatable", "main"]
+- ["Ps9Equatable", "notReachable"]
+- ["Ps9Equatable", "reachable"]
+- ["Ps9Equatable", "unknown"]
+- !private ["Ps9Equatable", "withMemoryRebound"]
+- !private ["Ps9Equatable", "wwan"]
+- ["Ps9Equatable", ""]
+- !private ["Ps25ExpressibleByArrayLiteral", "Element"]
+- !private ["Ps25ExpressibleByArrayLiteral", "RawValue"]
+- !private ["Ps25ExpressibleByArrayLiteral", "connectionOnDemand"]
+- !private ["Ps25ExpressibleByArrayLiteral", "connectionOnTraffic"]
+- !private ["Ps25ExpressibleByArrayLiteral", "connectionRequired"]
+- !private ["Ps25ExpressibleByArrayLiteral", "contains"]
+- !private ["Ps25ExpressibleByArrayLiteral", "init"]
+- !private ["Ps25ExpressibleByArrayLiteral", "interventionRequired"]
+- !private ["Ps25ExpressibleByArrayLiteral", "reachable"]
+- !private ["Ps27ExpressibleByBooleanLiteral", "_getBuiltinLogicValue"]
+- !private ["Ps27ExpressibleByIntegerLiteral", "hashValue"]
+- !private ["Ps27ExpressibleByIntegerLiteral", "init"]
+- ["Ps23ExpressibleByNilLiteral", "some"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- ["Ps8Hashable", "_toAnyHashable"]
+- !private ["Ps8Hashable", "async"]
+- !private ["Ps8Hashable", "ethernetOrWiFi"]
+- ["Ps8Hashable", "hashValue"]
+- !private ["Ps8Hashable", "init"]
+- ["Ps8Hashable", "main"]
+- !private ["Ps8Hashable", "withMemoryRebound"]
+- !private ["Ps8Hashable", "wwan"]
+- ["Ps8Hashable", ""]
+- ["Si", "deinit"]
+- !private ["Si", "hashValue"]
+- ["Vs5Int32", "deinit"]
+- !private ["Ps7Integer", "hashValue"]
+- !private ["Ps7Integer", "init"]
+- !private ["Ps17IntegerArithmetic", "hashValue"]
+- !private ["Ps17IntegerArithmetic", "init"]
+- !private ["Ps25LosslessStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Os12MemoryLayout", "size"]
+- !private ["Ps10MirrorPath", "hashValue"]
+- !private ["CSo8NSObject", "async"]
+- ["CSo8NSObject", "main"]
+- !private ["PSo16NSObjectProtocol", "async"]
+- ["PSo16NSObjectProtocol", "main"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "AF_INET"]
+- ["C9Alamofire26NetworkReachabilityManager", "Bool"]
+- ["C9Alamofire26NetworkReachabilityManager", "ConnectionType"]
+- ["C9Alamofire26NetworkReachabilityManager", "DispatchQueue"]
+- ["C9Alamofire26NetworkReachabilityManager", "Listener"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "MemoryLayout"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "NetworkReachabilityManager"]
+- ["C9Alamofire26NetworkReachabilityManager", "NetworkReachabilityStatus"]
+- ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachability"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilityContext"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilityCreateWithAddress"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilityCreateWithName"]
+- ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilityFlags"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilityGetFlags"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilitySetCallback"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "SCNetworkReachabilitySetDispatchQueue"]
+- ["C9Alamofire26NetworkReachabilityManager", "String"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "UInt8"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "Unmanaged"]
+- ["C9Alamofire26NetworkReachabilityManager", "Void"]
+- ["C9Alamofire26NetworkReachabilityManager", "deinit"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "flags"]
+- ["C9Alamofire26NetworkReachabilityManager", "init"]
+- ["C9Alamofire26NetworkReachabilityManager", "isReachable"]
+- ["C9Alamofire26NetworkReachabilityManager", "isReachableOnEthernetOrWiFi"]
+- ["C9Alamofire26NetworkReachabilityManager", "isReachableOnWWAN"]
+- ["C9Alamofire26NetworkReachabilityManager", "listener"]
+- ["C9Alamofire26NetworkReachabilityManager", "listenerQueue"]
+- ["C9Alamofire26NetworkReachabilityManager", "networkReachabilityStatus"]
+- ["C9Alamofire26NetworkReachabilityManager", "networkReachabilityStatusForFlags"]
+- ["C9Alamofire26NetworkReachabilityManager", "notifyListener"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "previousFlags"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "reachability"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "sa_family_t"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "sockaddr"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "sockaddr_in"]
+- ["C9Alamofire26NetworkReachabilityManager", "startListening"]
+- ["C9Alamofire26NetworkReachabilityManager", "stopListening"]
+- !private ["C9Alamofire26NetworkReachabilityManager", "withUnsafePointer"]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", "ConnectionType"]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", "deinit"]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", "notReachable"]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", "reachable"]
+- ["OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus", "unknown"]
+- !private ["CSo9OS_object", "async"]
+- ["CSo9OS_object", "main"]
+- !private ["Ps9OptionSet", "Element"]
+- !private ["Ps9OptionSet", "RawValue"]
+- !private ["Ps9OptionSet", "connectionOnDemand"]
+- !private ["Ps9OptionSet", "connectionOnTraffic"]
+- !private ["Ps9OptionSet", "connectionRequired"]
+- !private ["Ps9OptionSet", "contains"]
+- !private ["Ps9OptionSet", "init"]
+- !private ["Ps9OptionSet", "interventionRequired"]
+- !private ["Ps9OptionSet", "reachable"]
+- ["Sq", "deinit"]
+- ["Sq", "some"]
+- !private ["Ps16RawRepresentable", "Element"]
+- !private ["Ps16RawRepresentable", "RawValue"]
+- !private ["Ps16RawRepresentable", "connectionOnDemand"]
+- !private ["Ps16RawRepresentable", "connectionOnTraffic"]
+- !private ["Ps16RawRepresentable", "connectionRequired"]
+- !private ["Ps16RawRepresentable", "contains"]
+- !private ["Ps16RawRepresentable", "init"]
+- !private ["Ps16RawRepresentable", "interventionRequired"]
+- !private ["Ps16RawRepresentable", "reachable"]
+- ["CSo21SCNetworkReachability", "deinit"]
+- ["VSC28SCNetworkReachabilityContext", "deinit"]
+- !private ["VSC28SCNetworkReachabilityContext", "info"]
+- !private ["VSC28SCNetworkReachabilityContext", "init"]
+- !private ["VSC26SCNetworkReachabilityFlags", "Element"]
+- !private ["VSC26SCNetworkReachabilityFlags", "RawValue"]
+- !private ["VSC26SCNetworkReachabilityFlags", "connectionOnDemand"]
+- !private ["VSC26SCNetworkReachabilityFlags", "connectionOnTraffic"]
+- !private ["VSC26SCNetworkReachabilityFlags", "connectionRequired"]
+- !private ["VSC26SCNetworkReachabilityFlags", "contains"]
+- ["VSC26SCNetworkReachabilityFlags", "deinit"]
+- !private ["VSC26SCNetworkReachabilityFlags", "init"]
+- !private ["VSC26SCNetworkReachabilityFlags", "interventionRequired"]
+- !private ["VSC26SCNetworkReachabilityFlags", "reachable"]
+- !private ["Ps10SetAlgebra", "Element"]
+- !private ["Ps10SetAlgebra", "RawValue"]
+- !private ["Ps10SetAlgebra", "connectionOnDemand"]
+- !private ["Ps10SetAlgebra", "connectionOnTraffic"]
+- !private ["Ps10SetAlgebra", "connectionRequired"]
+- !private ["Ps10SetAlgebra", "contains"]
+- !private ["Ps10SetAlgebra", "init"]
+- !private ["Ps10SetAlgebra", "interventionRequired"]
+- !private ["Ps10SetAlgebra", "reachable"]
+- !private ["Ps13SignedInteger", "hashValue"]
+- !private ["Ps12SignedNumber", "hashValue"]
+- !private ["Ps10Strideable", "hashValue"]
+- !private ["Ps10Strideable", "init"]
+- !private ["Ps10Strideable", "withMemoryRebound"]
+- ["SS", "deinit"]
+- ["Vs5UInt8", "deinit"]
+- !private ["Vs5UInt8", "init"]
+- ["Vs9Unmanaged", "deinit"]
+- !private ["Vs9Unmanaged", "fromOpaque"]
+- !private ["Vs9Unmanaged", "passUnretained"]
+- !private ["Vs9Unmanaged", "takeUnretainedValue"]
+- !private ["Vs9Unmanaged", "toOpaque"]
+- !private ["Sp", "deinit"]
+- ["Sv", "deinit"]
+- !private ["SP", "deinit"]
+- !private ["SP", "withMemoryRebound"]
+- !private ["Ps15UnsignedInteger", "init"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "init"]
+- !private ["Ps35_ExpressibleByBuiltinBooleanLiteral", "_getBuiltinLogicValue"]
+- !private ["Ps35_ExpressibleByBuiltinIntegerLiteral", "hashValue"]
+- !private ["Ps35_ExpressibleByBuiltinIntegerLiteral", "init"]
+- !private ["Ps9_Hashable", "_getBuiltinLogicValue"]
+- ["Ps9_Hashable", "_toAnyHashable"]
+- !private ["Ps9_Hashable", "async"]
+- !private ["Ps9_Hashable", "ethernetOrWiFi"]
+- ["Ps9_Hashable", "hashValue"]
+- !private ["Ps9_Hashable", "init"]
+- ["Ps9_Hashable", "main"]
+- !private ["Ps9_Hashable", "withMemoryRebound"]
+- !private ["Ps9_Hashable", "wwan"]
+- ["Ps9_Hashable", ""]
+- !private ["Ps14_Incrementable", "hashValue"]
+- !private ["Ps14_Incrementable", "init"]
+- !private ["Ps8_Integer", "hashValue"]
+- !private ["Ps8_Integer", "init"]
+- !private ["Ps18_IntegerArithmetic", "hashValue"]
+- !private ["Ps18_IntegerArithmetic", "init"]
+- !private ["Ps21_ObjectiveCBridgeable", "_getBuiltinLogicValue"]
+- !private ["Ps21_ObjectiveCBridgeable", "hashValue"]
+- !private ["Ps8_Pointer", "withMemoryRebound"]
+- !private ["Ps14_SignedInteger", "hashValue"]
+- !private ["Ps11_Strideable", "hashValue"]
+- !private ["Ps11_Strideable", "init"]
+- !private ["Ps11_Strideable", "withMemoryRebound"]
+- !private ["Ps14_StringElement", "init"]
+- ["VSC11sockaddr_in", "deinit"]
+- !private ["VSC11sockaddr_in", "init"]
+- !private ["VSC11sockaddr_in", "sin_family"]
+- !private ["VSC11sockaddr_in", "sin_len"]
+depends-nominal:
+- "Ps9AnyObject"
+- !private "Ps17BitwiseOperations"
+- "Sb"
+- "Ps7CVarArg"
+- !private "Ps10Comparable"
+- "OC9Alamofire26NetworkReachabilityManager14ConnectionType"
+- "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- "CSo14DispatchObject"
+- "CSo13DispatchQueue"
+- "Ps9Equatable"
+- !private "Ps25ExpressibleByArrayLiteral"
+- !private "Ps27ExpressibleByBooleanLiteral"
+- !private "Ps27ExpressibleByIntegerLiteral"
+- "Ps23ExpressibleByNilLiteral"
+- "Ps8Hashable"
+- "Si"
+- "Vs5Int32"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25LosslessStringConvertible"
+- !private "Os12MemoryLayout"
+- !private "Ps10MirrorPath"
+- "CSo8NSObject"
+- "PSo16NSObjectProtocol"
+- "C9Alamofire26NetworkReachabilityManager"
+- "OC9Alamofire26NetworkReachabilityManager25NetworkReachabilityStatus"
+- "CSo9OS_object"
+- !private "Ps9OptionSet"
+- "Sq"
+- !private "Ps16RawRepresentable"
+- "CSo21SCNetworkReachability"
+- "VSC28SCNetworkReachabilityContext"
+- "VSC26SCNetworkReachabilityFlags"
+- !private "Ps10SetAlgebra"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "Ps10Strideable"
+- "SS"
+- "Vs5UInt8"
+- "Vs9Unmanaged"
+- !private "Sp"
+- "Sv"
+- !private "SP"
+- !private "Ps15UnsignedInteger"
+- !private "Ps28_DisallowMixedSignArithmetic"
+- !private "Ps35_ExpressibleByBuiltinBooleanLiteral"
+- !private "Ps35_ExpressibleByBuiltinIntegerLiteral"
+- "Ps9_Hashable"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps21_ObjectiveCBridgeable"
+- !private "Ps8_Pointer"
+- !private "Ps14_SignedInteger"
+- !private "Ps11_Strideable"
+- !private "Ps14_StringElement"
+- "VSC11sockaddr_in"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+interface-hash: "ec87303330f5a4ee54ecafcf905c1416"

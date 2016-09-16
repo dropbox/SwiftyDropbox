@@ -1,0 +1,10 @@
+framework module SwiftyDropbox {
+  umbrella header "SwiftyDropbox.h"
+
+  export *
+  module * { export * }
+}
+
+module SwiftyDropbox.__Swift {
+    exclude header "SwiftyDropbox-Swift.h"
+}

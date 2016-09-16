@@ -1,0 +1,168 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+provides-member:
+- ["CSo13DispatchQueue", ""]
+- ["CSo13DispatchQueue", "userInteractive"]
+- ["CSo13DispatchQueue", "userInitiated"]
+- ["CSo13DispatchQueue", "utility"]
+- ["CSo13DispatchQueue", "background"]
+- ["CSo13DispatchQueue", "after"]
+- ["CSo13DispatchQueue", "syncResult"]
+provides-dynamic-lookup:
+depends-top-level:
+- "TimeInterval"
+- "DispatchQueue"
+- "Void"
+- !private "AssignmentPrecedence"
+- !private "+"
+depends-member:
+- !private ["Ps9AnyObject", "DispatchQueue"]
+- !private ["Ps9AnyObject", "asyncAfter"]
+- ["Ps9AnyObject", "background"]
+- !private ["Ps9AnyObject", "global"]
+- !private ["Ps9AnyObject", "sync"]
+- ["Ps9AnyObject", "syncResult"]
+- ["Ps9AnyObject", "userInitiated"]
+- ["Ps9AnyObject", "userInteractive"]
+- ["Ps9AnyObject", "utility"]
+- !private ["Ps7CVarArg", "DispatchQueue"]
+- !private ["Ps7CVarArg", "asyncAfter"]
+- ["Ps7CVarArg", "background"]
+- !private ["Ps7CVarArg", "global"]
+- !private ["Ps7CVarArg", "sync"]
+- ["Ps7CVarArg", "syncResult"]
+- ["Ps7CVarArg", "userInitiated"]
+- ["Ps7CVarArg", "userInteractive"]
+- ["Ps7CVarArg", "utility"]
+- !private ["Ps28CustomDebugStringConvertible", "DispatchQueue"]
+- !private ["Ps28CustomDebugStringConvertible", "asyncAfter"]
+- ["Ps28CustomDebugStringConvertible", "background"]
+- !private ["Ps28CustomDebugStringConvertible", "global"]
+- !private ["Ps28CustomDebugStringConvertible", "sync"]
+- ["Ps28CustomDebugStringConvertible", "syncResult"]
+- ["Ps28CustomDebugStringConvertible", "userInitiated"]
+- ["Ps28CustomDebugStringConvertible", "userInteractive"]
+- ["Ps28CustomDebugStringConvertible", "utility"]
+- !private ["Ps23CustomStringConvertible", "DispatchQueue"]
+- !private ["Ps23CustomStringConvertible", "asyncAfter"]
+- ["Ps23CustomStringConvertible", "background"]
+- !private ["Ps23CustomStringConvertible", "global"]
+- !private ["Ps23CustomStringConvertible", "sync"]
+- ["Ps23CustomStringConvertible", "syncResult"]
+- ["Ps23CustomStringConvertible", "userInitiated"]
+- ["Ps23CustomStringConvertible", "userInteractive"]
+- ["Ps23CustomStringConvertible", "utility"]
+- ["CSo14DispatchObject", "DispatchQueue"]
+- ["CSo14DispatchObject", "TimeInterval"]
+- ["CSo14DispatchObject", "Void"]
+- !private ["CSo14DispatchObject", "asyncAfter"]
+- ["CSo14DispatchObject", "background"]
+- !private ["CSo14DispatchObject", "global"]
+- !private ["CSo14DispatchObject", "sync"]
+- ["CSo14DispatchObject", "syncResult"]
+- ["CSo14DispatchObject", "userInitiated"]
+- ["CSo14DispatchObject", "userInteractive"]
+- ["CSo14DispatchObject", "utility"]
+- ["CSo13DispatchQueue", "DispatchQueue"]
+- ["CSo13DispatchQueue", "TimeInterval"]
+- ["CSo13DispatchQueue", "Void"]
+- !private ["CSo13DispatchQueue", "asyncAfter"]
+- ["CSo13DispatchQueue", "background"]
+- ["CSo13DispatchQueue", "deinit"]
+- !private ["CSo13DispatchQueue", "global"]
+- !private ["CSo13DispatchQueue", "sync"]
+- ["CSo13DispatchQueue", "syncResult"]
+- ["CSo13DispatchQueue", "userInitiated"]
+- ["CSo13DispatchQueue", "userInteractive"]
+- ["CSo13DispatchQueue", "utility"]
+- !private ["Ps9Equatable", "DispatchQueue"]
+- !private ["Ps9Equatable", "asyncAfter"]
+- ["Ps9Equatable", "background"]
+- !private ["Ps9Equatable", "global"]
+- !private ["Ps9Equatable", "sync"]
+- ["Ps9Equatable", "syncResult"]
+- ["Ps9Equatable", "userInitiated"]
+- ["Ps9Equatable", "userInteractive"]
+- ["Ps9Equatable", "utility"]
+- !private ["Ps8Hashable", "DispatchQueue"]
+- !private ["Ps8Hashable", "asyncAfter"]
+- ["Ps8Hashable", "background"]
+- !private ["Ps8Hashable", "global"]
+- !private ["Ps8Hashable", "sync"]
+- ["Ps8Hashable", "syncResult"]
+- ["Ps8Hashable", "userInitiated"]
+- ["Ps8Hashable", "userInteractive"]
+- ["Ps8Hashable", "utility"]
+- ["SQ", "deinit"]
+- ["CSo8NSObject", "DispatchQueue"]
+- ["CSo8NSObject", "TimeInterval"]
+- ["CSo8NSObject", "Void"]
+- !private ["CSo8NSObject", "asyncAfter"]
+- ["CSo8NSObject", "background"]
+- !private ["CSo8NSObject", "global"]
+- !private ["CSo8NSObject", "sync"]
+- ["CSo8NSObject", "syncResult"]
+- ["CSo8NSObject", "userInitiated"]
+- ["CSo8NSObject", "userInteractive"]
+- ["CSo8NSObject", "utility"]
+- !private ["PSo16NSObjectProtocol", "DispatchQueue"]
+- !private ["PSo16NSObjectProtocol", "asyncAfter"]
+- ["PSo16NSObjectProtocol", "background"]
+- !private ["PSo16NSObjectProtocol", "global"]
+- !private ["PSo16NSObjectProtocol", "sync"]
+- ["PSo16NSObjectProtocol", "syncResult"]
+- ["PSo16NSObjectProtocol", "userInitiated"]
+- ["PSo16NSObjectProtocol", "userInteractive"]
+- ["PSo16NSObjectProtocol", "utility"]
+- ["CSo9OS_object", "DispatchQueue"]
+- ["CSo9OS_object", "TimeInterval"]
+- ["CSo9OS_object", "Void"]
+- !private ["CSo9OS_object", "asyncAfter"]
+- ["CSo9OS_object", "background"]
+- !private ["CSo9OS_object", "global"]
+- !private ["CSo9OS_object", "sync"]
+- ["CSo9OS_object", "syncResult"]
+- ["CSo9OS_object", "userInitiated"]
+- ["CSo9OS_object", "userInteractive"]
+- ["CSo9OS_object", "utility"]
+- !private ["OV8Dispatch11DispatchQoS8QoSClass", "background"]
+- ["OV8Dispatch11DispatchQoS8QoSClass", "deinit"]
+- !private ["OV8Dispatch11DispatchQoS8QoSClass", "userInitiated"]
+- !private ["OV8Dispatch11DispatchQoS8QoSClass", "userInteractive"]
+- !private ["OV8Dispatch11DispatchQoS8QoSClass", "utility"]
+- !private ["Ps9_Hashable", "DispatchQueue"]
+- !private ["Ps9_Hashable", "asyncAfter"]
+- ["Ps9_Hashable", "background"]
+- !private ["Ps9_Hashable", "global"]
+- !private ["Ps9_Hashable", "sync"]
+- ["Ps9_Hashable", "syncResult"]
+- ["Ps9_Hashable", "userInitiated"]
+- ["Ps9_Hashable", "userInteractive"]
+- ["Ps9_Hashable", "utility"]
+depends-nominal:
+- "Ps9AnyObject"
+- "Ps7CVarArg"
+- "Ps28CustomDebugStringConvertible"
+- "Ps23CustomStringConvertible"
+- "CSo14DispatchObject"
+- "CSo13DispatchQueue"
+- "Ps9Equatable"
+- "Ps8Hashable"
+- "SQ"
+- "CSo8NSObject"
+- "PSo16NSObjectProtocol"
+- "CSo9OS_object"
+- "OV8Dispatch11DispatchQoS8QoSClass"
+- "Ps9_Hashable"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+interface-hash: "9c99cab7315bbc9bb447720da04f77ba"

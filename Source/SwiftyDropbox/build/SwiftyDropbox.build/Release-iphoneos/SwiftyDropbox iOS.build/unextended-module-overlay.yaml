@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': '/Users/scobbe/src/sdk/SwiftyDropbox/Source/SwiftyDropbox/build/Release-iphoneos/SwiftyDropbox.framework/Modules'
+    'contents': [{
+      'type': 'file',
+      'name': 'module.modulemap',
+      'external-contents': '/Users/scobbe/src/sdk/SwiftyDropbox/Source/SwiftyDropbox/build/SwiftyDropbox.build/Release-iphoneos/SwiftyDropbox iOS.build/unextended-module.modulemap',
+    }]
+  }]
+}

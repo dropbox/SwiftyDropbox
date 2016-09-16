@@ -1,0 +1,10 @@
+framework module SwiftyDropbox {
+  umbrella header "SwiftyDropbox.h"
+
+  export *
+  module * { export * }
+}
+
+module SwiftyDropbox.Swift {
+    header "SwiftyDropbox-Swift.h"
+}
