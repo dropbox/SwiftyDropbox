@@ -8,15 +8,15 @@ import Foundation
 
 import Alamofire
 
-public class DropboxBase {
+open class DropboxBase {
     /// Routes within the auth namespace. See AuthRoutes for details.
-    public var auth: AuthRoutes!
+    open var auth: AuthRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
-    public var files: FilesRoutes!
+    open var files: FilesRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
-    public var sharing: SharingRoutes!
+    open var sharing: SharingRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
-    public var users: UsersRoutes!
+    open var users: UsersRoutes!
 
     public init(client: DropboxTransportClient) {
         self.auth = AuthRoutes(client: client)

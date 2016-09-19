@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the files namespace
-public class Files {
+open class Files {
     /// The PropertiesError union
     public enum PropertiesError: CustomStringConvertible {
         /// Property template does not exist for given identifier.
@@ -23,9 +23,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertiesErrorSerializer().serialize(self)))"
         }
     }
-    public class PropertiesErrorSerializer: JSONSerializer {
+    open class PropertiesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertiesError) -> JSON {
+        open func serialize(_ value: PropertiesError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -45,7 +45,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PropertiesError {
+        open func deserialize(_ json: JSON) -> PropertiesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -88,9 +88,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(InvalidPropertyGroupErrorSerializer().serialize(self)))"
         }
     }
-    public class InvalidPropertyGroupErrorSerializer: JSONSerializer {
+    open class InvalidPropertyGroupErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: InvalidPropertyGroupError) -> JSON {
+        open func serialize(_ value: InvalidPropertyGroupError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -118,7 +118,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> InvalidPropertyGroupError {
+        open func deserialize(_ json: JSON) -> InvalidPropertyGroupError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -167,9 +167,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertiesErrorSerializer().serialize(self)))"
         }
     }
-    public class AddPropertiesErrorSerializer: JSONSerializer {
+    open class AddPropertiesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AddPropertiesError) -> JSON {
+        open func serialize(_ value: AddPropertiesError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -201,7 +201,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> AddPropertiesError {
+        open func deserialize(_ json: JSON) -> AddPropertiesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -232,17 +232,17 @@ public class Files {
     }
 
     /// The GetMetadataArg struct
-    public class GetMetadataArg: CustomStringConvertible {
+    open class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
-        public let path: String
+        open let path: String
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        public let includeMediaInfo: Bool
+        open let includeMediaInfo: Bool
         /// If true, DeletedMetadata will be returned for deleted file or folder, otherwise notFound in LookupError will
         /// be returned.
-        public let includeDeleted: Bool
+        open let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        public let includeHasExplicitSharedMembers: Bool
+        open let includeHasExplicitSharedMembers: Bool
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -250,13 +250,13 @@ public class Files {
             self.includeDeleted = includeDeleted
             self.includeHasExplicitSharedMembers = includeHasExplicitSharedMembers
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
         }
     }
-    public class GetMetadataArgSerializer: JSONSerializer {
+    open class GetMetadataArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetMetadataArg) -> JSON {
+        open func serialize(_ value: GetMetadataArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
@@ -265,7 +265,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetMetadataArg {
+        open func deserialize(_ json: JSON) -> GetMetadataArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -280,22 +280,22 @@ public class Files {
     }
 
     /// The AlphaGetMetadataArg struct
-    public class AlphaGetMetadataArg: Files.GetMetadataArg {
+    open class AlphaGetMetadataArg: Files.GetMetadataArg {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
-        public let includePropertyTemplates: Array<String>?
+        open let includePropertyTemplates: Array<String>?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
             self.includePropertyTemplates = includePropertyTemplates
             super.init(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataArgSerializer().serialize(self)))"
         }
     }
-    public class AlphaGetMetadataArgSerializer: JSONSerializer {
+    open class AlphaGetMetadataArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AlphaGetMetadataArg) -> JSON {
+        open func serialize(_ value: AlphaGetMetadataArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
@@ -305,7 +305,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> AlphaGetMetadataArg {
+        open func deserialize(_ json: JSON) -> AlphaGetMetadataArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -329,9 +329,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataErrorSerializer().serialize(self)))"
         }
     }
-    public class GetMetadataErrorSerializer: JSONSerializer {
+    open class GetMetadataErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetMetadataError) -> JSON {
+        open func serialize(_ value: GetMetadataError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -339,7 +339,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GetMetadataError {
+        open func deserialize(_ json: JSON) -> GetMetadataError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -367,9 +367,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataErrorSerializer().serialize(self)))"
         }
     }
-    public class AlphaGetMetadataErrorSerializer: JSONSerializer {
+    open class AlphaGetMetadataErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AlphaGetMetadataError) -> JSON {
+        open func serialize(_ value: AlphaGetMetadataError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -381,7 +381,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> AlphaGetMetadataError {
+        open func deserialize(_ json: JSON) -> AlphaGetMetadataError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -402,22 +402,22 @@ public class Files {
     }
 
     /// The CommitInfo struct
-    public class CommitInfo: CustomStringConvertible {
+    open class CommitInfo: CustomStringConvertible {
         /// Path in the user's Dropbox to save the file.
-        public let path: String
+        open let path: String
         /// Selects what to do if the file already exists.
-        public let mode: Files.WriteMode
+        open let mode: Files.WriteMode
         /// If there's a conflict, as determined by mode, have the Dropbox server try to autorename the file to avoid
         /// conflict.
-        public let autorename: Bool
+        open let autorename: Bool
         /// The value to store as the clientModified timestamp. Dropbox automatically records the time at which the file
         /// was written to the Dropbox servers. It can also record an additional timestamp, provided by Dropbox desktop
         /// clients, mobile clients, and API apps of when the file was actually created or modified.
-        public let clientModified: Date?
+        open let clientModified: Date?
         /// Normally, users are made aware of any file modifications in their Dropbox account via notifications in the
         /// client software. If true, this tells the clients that this modification shouldn't result in a user
         /// notification.
-        public let mute: Bool
+        open let mute: Bool
         public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -426,13 +426,13 @@ public class Files {
             self.clientModified = clientModified
             self.mute = mute
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
         }
     }
-    public class CommitInfoSerializer: JSONSerializer {
+    open class CommitInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: CommitInfo) -> JSON {
+        open func serialize(_ value: CommitInfo) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "mode": Files.WriteModeSerializer().serialize(value.mode),
@@ -442,7 +442,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> CommitInfo {
+        open func deserialize(_ json: JSON) -> CommitInfo {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -458,20 +458,20 @@ public class Files {
     }
 
     /// The CommitInfoWithProperties struct
-    public class CommitInfoWithProperties: Files.CommitInfo {
+    open class CommitInfoWithProperties: Files.CommitInfo {
         /// List of custom properties to add to file.
-        public let propertyGroups: Array<Properties.PropertyGroup>?
+        open let propertyGroups: Array<Properties.PropertyGroup>?
         public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil) {
             self.propertyGroups = propertyGroups
             super.init(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoWithPropertiesSerializer().serialize(self)))"
         }
     }
-    public class CommitInfoWithPropertiesSerializer: JSONSerializer {
+    open class CommitInfoWithPropertiesSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: CommitInfoWithProperties) -> JSON {
+        open func serialize(_ value: CommitInfoWithProperties) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "mode": Files.WriteModeSerializer().serialize(value.mode),
@@ -482,7 +482,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> CommitInfoWithProperties {
+        open func deserialize(_ json: JSON) -> CommitInfoWithProperties {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -499,26 +499,26 @@ public class Files {
     }
 
     /// The CreateFolderArg struct
-    public class CreateFolderArg: CustomStringConvertible {
+    open class CreateFolderArg: CustomStringConvertible {
         /// Path in the user's Dropbox to create.
-        public let path: String
+        open let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderArgSerializer().serialize(self)))"
         }
     }
-    public class CreateFolderArgSerializer: JSONSerializer {
+    open class CreateFolderArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: CreateFolderArg) -> JSON {
+        open func serialize(_ value: CreateFolderArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> CreateFolderArg {
+        open func deserialize(_ json: JSON) -> CreateFolderArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -538,9 +538,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderErrorSerializer().serialize(self)))"
         }
     }
-    public class CreateFolderErrorSerializer: JSONSerializer {
+    open class CreateFolderErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: CreateFolderError) -> JSON {
+        open func serialize(_ value: CreateFolderError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
@@ -548,7 +548,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> CreateFolderError {
+        open func deserialize(_ json: JSON) -> CreateFolderError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -566,26 +566,26 @@ public class Files {
     }
 
     /// The DeleteArg struct
-    public class DeleteArg: CustomStringConvertible {
+    open class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
-        public let path: String
+        open let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
         }
     }
-    public class DeleteArgSerializer: JSONSerializer {
+    open class DeleteArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DeleteArg) -> JSON {
+        open func serialize(_ value: DeleteArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DeleteArg {
+        open func deserialize(_ json: JSON) -> DeleteArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -609,9 +609,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DeleteErrorSerializer().serialize(self)))"
         }
     }
-    public class DeleteErrorSerializer: JSONSerializer {
+    open class DeleteErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DeleteError) -> JSON {
+        open func serialize(_ value: DeleteError) -> JSON {
             switch value {
                 case .pathLookup(let arg):
                     var d = ["path_lookup": Files.LookupErrorSerializer().serialize(arg)]
@@ -627,7 +627,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> DeleteError {
+        open func deserialize(_ json: JSON) -> DeleteError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -650,20 +650,20 @@ public class Files {
     }
 
     /// Metadata for a file or folder.
-    public class Metadata: CustomStringConvertible {
+    open class Metadata: CustomStringConvertible {
         /// The last component of the path (including extension). This never contains a slash.
-        public let name: String
+        open let name: String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will be null if
         /// the file or folder is not mounted.
-        public let pathLower: String?
+        open let pathLower: String?
         /// The cased path to be used for display purposes only. In rare instances the casing will not correctly match
         /// the user's filesystem, but this behavior will match the path provided in the Core API v1. Changes to the
         /// casing of paths won't be returned by listFolderContinue. This field will be null if the file or folder is
         /// not mounted.
-        public let pathDisplay: String?
+        open let pathDisplay: String?
         /// Deprecated. Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo
         /// instead.
-        public let parentSharedFolderId: String?
+        open let parentSharedFolderId: String?
         public init(name: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil) {
             stringValidator()(name)
             self.name = name
@@ -674,13 +674,13 @@ public class Files {
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
         }
     }
-    public class MetadataSerializer: JSONSerializer {
+    open class MetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: Metadata) -> JSON {
+        open func serialize(_ value: Metadata) -> JSON {
             var output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
@@ -707,7 +707,7 @@ public class Files {
             }
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> Metadata {
+        open func deserialize(_ json: JSON) -> Metadata {
             switch json {
                 case .dictionary(let dict):
                     let tag = Serialization.getTag(dict)
@@ -728,14 +728,14 @@ public class Files {
     }
 
     /// Indicates that there used to be a file or folder at this path, but it no longer exists.
-    public class DeletedMetadata: Files.Metadata {
-        public override var description: String {
+    open class DeletedMetadata: Files.Metadata {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeletedMetadataSerializer().serialize(self)))"
         }
     }
-    public class DeletedMetadataSerializer: JSONSerializer {
+    open class DeletedMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DeletedMetadata) -> JSON {
+        open func serialize(_ value: DeletedMetadata) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
@@ -744,7 +744,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DeletedMetadata {
+        open func deserialize(_ json: JSON) -> DeletedMetadata {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -759,31 +759,31 @@ public class Files {
     }
 
     /// Dimensions for a photo or video.
-    public class Dimensions: CustomStringConvertible {
+    open class Dimensions: CustomStringConvertible {
         /// Height of the photo/video.
-        public let height: UInt64
+        open let height: UInt64
         /// Width of the photo/video.
-        public let width: UInt64
+        open let width: UInt64
         public init(height: UInt64, width: UInt64) {
             comparableValidator()(height)
             self.height = height
             comparableValidator()(width)
             self.width = width
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DimensionsSerializer().serialize(self)))"
         }
     }
-    public class DimensionsSerializer: JSONSerializer {
+    open class DimensionsSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: Dimensions) -> JSON {
+        open func serialize(_ value: Dimensions) -> JSON {
             let output = [ 
             "height": Serialization._UInt64Serializer.serialize(value.height),
             "width": Serialization._UInt64Serializer.serialize(value.width),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> Dimensions {
+        open func deserialize(_ json: JSON) -> Dimensions {
             switch json {
                 case .dictionary(let dict):
                     let height = Serialization._UInt64Serializer.deserialize(dict["height"] ?? .null)
@@ -796,31 +796,31 @@ public class Files {
     }
 
     /// The DownloadArg struct
-    public class DownloadArg: CustomStringConvertible {
+    open class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
-        public let path: String
+        open let path: String
         /// Deprecated. Please specify revision in path instead
-        public let rev: String?
+        open let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(rev)
             self.rev = rev
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DownloadArgSerializer().serialize(self)))"
         }
     }
-    public class DownloadArgSerializer: JSONSerializer {
+    open class DownloadArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DownloadArg) -> JSON {
+        open func serialize(_ value: DownloadArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DownloadArg {
+        open func deserialize(_ json: JSON) -> DownloadArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -843,9 +843,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(DownloadErrorSerializer().serialize(self)))"
         }
     }
-    public class DownloadErrorSerializer: JSONSerializer {
+    open class DownloadErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DownloadError) -> JSON {
+        open func serialize(_ value: DownloadError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -857,7 +857,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> DownloadError {
+        open func deserialize(_ json: JSON) -> DownloadError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -877,32 +877,32 @@ public class Files {
     }
 
     /// The FileMetadata struct
-    public class FileMetadata: Files.Metadata {
+    open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
-        public let id: String
+        open let id: String
         /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
         /// this time is not verified (the Dropbox server stores whatever the desktop client sends up), this should only
         /// be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
         /// not.
-        public let clientModified: Date
+        open let clientModified: Date
         /// The last time the file was modified on Dropbox.
-        public let serverModified: Date
+        open let serverModified: Date
         /// A unique identifier for the current revision of a file. This field is the same rev as elsewhere in the API
         /// and can be used to detect changes and avoid conflicts.
-        public let rev: String
+        open let rev: String
         /// The file size in bytes.
-        public let size: UInt64
+        open let size: UInt64
         /// Additional information if the file is a photo or video.
-        public let mediaInfo: Files.MediaInfo?
+        open let mediaInfo: Files.MediaInfo?
         /// Set if this file is contained in a shared folder.
-        public let sharingInfo: Files.FileSharingInfo?
+        open let sharingInfo: Files.FileSharingInfo?
         /// Additional information if the file has custom properties with the property template specified.
-        public let propertyGroups: Array<Properties.PropertyGroup>?
+        open let propertyGroups: Array<Properties.PropertyGroup>?
         /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
         /// If this  flag is present, it will be true if this file has any explicit shared  members. This is different
         /// from sharing_info in that this could be true  in the case where a file has explicit members but is not
         /// contained within  a shared folder.
-        public let hasExplicitSharedMembers: Bool?
+        open let hasExplicitSharedMembers: Bool?
         public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<Properties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -918,13 +918,13 @@ public class Files {
             self.hasExplicitSharedMembers = hasExplicitSharedMembers
             super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
         }
     }
-    public class FileMetadataSerializer: JSONSerializer {
+    open class FileMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: FileMetadata) -> JSON {
+        open func serialize(_ value: FileMetadata) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
@@ -942,7 +942,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> FileMetadata {
+        open func deserialize(_ json: JSON) -> FileMetadata {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -966,25 +966,25 @@ public class Files {
     }
 
     /// Sharing info for a file or folder.
-    public class SharingInfo: CustomStringConvertible {
+    open class SharingInfo: CustomStringConvertible {
         /// True if the file or folder is inside a read-only shared folder.
-        public let readOnly: Bool
+        open let readOnly: Bool
         public init(readOnly: Bool) {
             self.readOnly = readOnly
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharingInfoSerializer().serialize(self)))"
         }
     }
-    public class SharingInfoSerializer: JSONSerializer {
+    open class SharingInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SharingInfo) -> JSON {
+        open func serialize(_ value: SharingInfo) -> JSON {
             let output = [ 
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SharingInfo {
+        open func deserialize(_ json: JSON) -> SharingInfo {
             switch json {
                 case .dictionary(let dict):
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
@@ -996,11 +996,11 @@ public class Files {
     }
 
     /// Sharing info for a file which is contained by a shared folder.
-    public class FileSharingInfo: Files.SharingInfo {
+    open class FileSharingInfo: Files.SharingInfo {
         /// ID of shared folder that holds this file.
-        public let parentSharedFolderId: String
+        open let parentSharedFolderId: String
         /// The last user who modified the file. This field will be null if the user's account has been deleted.
-        public let modifiedBy: String?
+        open let modifiedBy: String?
         public init(readOnly: Bool, parentSharedFolderId: String, modifiedBy: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1008,13 +1008,13 @@ public class Files {
             self.modifiedBy = modifiedBy
             super.init(readOnly: readOnly)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FileSharingInfoSerializer().serialize(self)))"
         }
     }
-    public class FileSharingInfoSerializer: JSONSerializer {
+    open class FileSharingInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: FileSharingInfo) -> JSON {
+        open func serialize(_ value: FileSharingInfo) -> JSON {
             let output = [ 
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             "parent_shared_folder_id": Serialization._StringSerializer.serialize(value.parentSharedFolderId),
@@ -1022,7 +1022,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> FileSharingInfo {
+        open func deserialize(_ json: JSON) -> FileSharingInfo {
             switch json {
                 case .dictionary(let dict):
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
@@ -1036,15 +1036,15 @@ public class Files {
     }
 
     /// The FolderMetadata struct
-    public class FolderMetadata: Files.Metadata {
+    open class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
-        public let id: String
+        open let id: String
         /// Deprecated. Please use sharingInfo instead.
-        public let sharedFolderId: String?
+        open let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
-        public let sharingInfo: Files.FolderSharingInfo?
+        open let sharingInfo: Files.FolderSharingInfo?
         /// Additional information if the file has custom properties with the property template specified.
-        public let propertyGroups: Array<Properties.PropertyGroup>?
+        open let propertyGroups: Array<Properties.PropertyGroup>?
         public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<Properties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -1054,13 +1054,13 @@ public class Files {
             self.propertyGroups = propertyGroups
             super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
         }
     }
-    public class FolderMetadataSerializer: JSONSerializer {
+    open class FolderMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: FolderMetadata) -> JSON {
+        open func serialize(_ value: FolderMetadata) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
@@ -1073,7 +1073,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> FolderMetadata {
+        open func deserialize(_ json: JSON) -> FolderMetadata {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -1092,17 +1092,17 @@ public class Files {
     }
 
     /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
-    public class FolderSharingInfo: Files.SharingInfo {
+    open class FolderSharingInfo: Files.SharingInfo {
         /// Set if the folder is contained by a shared folder.
-        public let parentSharedFolderId: String?
+        open let parentSharedFolderId: String?
         /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
-        public let sharedFolderId: String?
+        open let sharedFolderId: String?
         /// Specifies that the folder can only be traversed and the user can only see a limited subset of the contents
         /// of this folder because they don't have read access to this folder. They do, however, have access to some sub
         /// folder.
-        public let traverseOnly: Bool
+        open let traverseOnly: Bool
         /// Specifies that the folder cannot be accessed by the user
-        public let noAccess: Bool
+        open let noAccess: Bool
         public init(readOnly: Bool, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, traverseOnly: Bool = false, noAccess: Bool = false) {
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1112,13 +1112,13 @@ public class Files {
             self.noAccess = noAccess
             super.init(readOnly: readOnly)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderSharingInfoSerializer().serialize(self)))"
         }
     }
-    public class FolderSharingInfoSerializer: JSONSerializer {
+    open class FolderSharingInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: FolderSharingInfo) -> JSON {
+        open func serialize(_ value: FolderSharingInfo) -> JSON {
             let output = [ 
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
@@ -1128,7 +1128,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> FolderSharingInfo {
+        open func deserialize(_ json: JSON) -> FolderSharingInfo {
             switch json {
                 case .dictionary(let dict):
                     let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
@@ -1144,26 +1144,26 @@ public class Files {
     }
 
     /// The GetCopyReferenceArg struct
-    public class GetCopyReferenceArg: CustomStringConvertible {
+    open class GetCopyReferenceArg: CustomStringConvertible {
         /// The path to the file or folder you want to get a copy reference to.
-        public let path: String
+        open let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceArgSerializer().serialize(self)))"
         }
     }
-    public class GetCopyReferenceArgSerializer: JSONSerializer {
+    open class GetCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetCopyReferenceArg) -> JSON {
+        open func serialize(_ value: GetCopyReferenceArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetCopyReferenceArg {
+        open func deserialize(_ json: JSON) -> GetCopyReferenceArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -1185,9 +1185,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceErrorSerializer().serialize(self)))"
         }
     }
-    public class GetCopyReferenceErrorSerializer: JSONSerializer {
+    open class GetCopyReferenceErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetCopyReferenceError) -> JSON {
+        open func serialize(_ value: GetCopyReferenceError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -1199,7 +1199,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GetCopyReferenceError {
+        open func deserialize(_ json: JSON) -> GetCopyReferenceError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1219,27 +1219,27 @@ public class Files {
     }
 
     /// The GetCopyReferenceResult struct
-    public class GetCopyReferenceResult: CustomStringConvertible {
+    open class GetCopyReferenceResult: CustomStringConvertible {
         /// Metadata of the file or folder.
-        public let metadata: Files.Metadata
+        open let metadata: Files.Metadata
         /// A copy reference to the file or folder.
-        public let copyReference: String
+        open let copyReference: String
         /// The expiration date of the copy reference. This value is currently set to be far enough in the future so
         /// that expiration is effectively not an issue.
-        public let expires: Date
+        open let expires: Date
         public init(metadata: Files.Metadata, copyReference: String, expires: Date) {
             self.metadata = metadata
             stringValidator()(copyReference)
             self.copyReference = copyReference
             self.expires = expires
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetCopyReferenceResultSerializer().serialize(self)))"
         }
     }
-    public class GetCopyReferenceResultSerializer: JSONSerializer {
+    open class GetCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetCopyReferenceResult) -> JSON {
+        open func serialize(_ value: GetCopyReferenceResult) -> JSON {
             let output = [ 
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             "copy_reference": Serialization._StringSerializer.serialize(value.copyReference),
@@ -1247,7 +1247,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetCopyReferenceResult {
+        open func deserialize(_ json: JSON) -> GetCopyReferenceResult {
             switch json {
                 case .dictionary(let dict):
                     let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .null)
@@ -1261,26 +1261,26 @@ public class Files {
     }
 
     /// The GetTemporaryLinkArg struct
-    public class GetTemporaryLinkArg: CustomStringConvertible {
+    open class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
-        public let path: String
+        open let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkArgSerializer().serialize(self)))"
         }
     }
-    public class GetTemporaryLinkArgSerializer: JSONSerializer {
+    open class GetTemporaryLinkArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetTemporaryLinkArg) -> JSON {
+        open func serialize(_ value: GetTemporaryLinkArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetTemporaryLinkArg {
+        open func deserialize(_ json: JSON) -> GetTemporaryLinkArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -1302,9 +1302,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkErrorSerializer().serialize(self)))"
         }
     }
-    public class GetTemporaryLinkErrorSerializer: JSONSerializer {
+    open class GetTemporaryLinkErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetTemporaryLinkError) -> JSON {
+        open func serialize(_ value: GetTemporaryLinkError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -1316,7 +1316,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GetTemporaryLinkError {
+        open func deserialize(_ json: JSON) -> GetTemporaryLinkError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1336,30 +1336,30 @@ public class Files {
     }
 
     /// The GetTemporaryLinkResult struct
-    public class GetTemporaryLinkResult: CustomStringConvertible {
+    open class GetTemporaryLinkResult: CustomStringConvertible {
         /// Metadata of the file.
-        public let metadata: Files.FileMetadata
+        open let metadata: Files.FileMetadata
         /// The temporary link which can be used to stream content the file.
-        public let link: String
+        open let link: String
         public init(metadata: Files.FileMetadata, link: String) {
             self.metadata = metadata
             stringValidator()(link)
             self.link = link
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryLinkResultSerializer().serialize(self)))"
         }
     }
-    public class GetTemporaryLinkResultSerializer: JSONSerializer {
+    open class GetTemporaryLinkResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetTemporaryLinkResult) -> JSON {
+        open func serialize(_ value: GetTemporaryLinkResult) -> JSON {
             let output = [ 
             "metadata": Files.FileMetadataSerializer().serialize(value.metadata),
             "link": Serialization._StringSerializer.serialize(value.link),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetTemporaryLinkResult {
+        open func deserialize(_ json: JSON) -> GetTemporaryLinkResult {
             switch json {
                 case .dictionary(let dict):
                     let metadata = Files.FileMetadataSerializer().deserialize(dict["metadata"] ?? .null)
@@ -1372,31 +1372,31 @@ public class Files {
     }
 
     /// GPS coordinates for a photo or video.
-    public class GpsCoordinates: CustomStringConvertible {
+    open class GpsCoordinates: CustomStringConvertible {
         /// Latitude of the GPS coordinates.
-        public let latitude: Double
+        open let latitude: Double
         /// Longitude of the GPS coordinates.
-        public let longitude: Double
+        open let longitude: Double
         public init(latitude: Double, longitude: Double) {
             comparableValidator()(latitude)
             self.latitude = latitude
             comparableValidator()(longitude)
             self.longitude = longitude
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GpsCoordinatesSerializer().serialize(self)))"
         }
     }
-    public class GpsCoordinatesSerializer: JSONSerializer {
+    open class GpsCoordinatesSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GpsCoordinates) -> JSON {
+        open func serialize(_ value: GpsCoordinates) -> JSON {
             let output = [ 
             "latitude": Serialization._DoubleSerializer.serialize(value.latitude),
             "longitude": Serialization._DoubleSerializer.serialize(value.longitude),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GpsCoordinates {
+        open func deserialize(_ json: JSON) -> GpsCoordinates {
             switch json {
                 case .dictionary(let dict):
                     let latitude = Serialization._DoubleSerializer.deserialize(dict["latitude"] ?? .null)
@@ -1409,19 +1409,19 @@ public class Files {
     }
 
     /// The ListFolderArg struct
-    public class ListFolderArg: CustomStringConvertible {
+    open class ListFolderArg: CustomStringConvertible {
         /// The path to the folder you want to see the contents of.
-        public let path: String
+        open let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
         /// contain contents of all subfolders.
-        public let recursive: Bool
+        open let recursive: Bool
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        public let includeMediaInfo: Bool
+        open let includeMediaInfo: Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
-        public let includeDeleted: Bool
+        open let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        public let includeHasExplicitSharedMembers: Bool
+        open let includeHasExplicitSharedMembers: Bool
         public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1430,13 +1430,13 @@ public class Files {
             self.includeDeleted = includeDeleted
             self.includeHasExplicitSharedMembers = includeHasExplicitSharedMembers
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
         }
     }
-    public class ListFolderArgSerializer: JSONSerializer {
+    open class ListFolderArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderArg) -> JSON {
+        open func serialize(_ value: ListFolderArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "recursive": Serialization._BoolSerializer.serialize(value.recursive),
@@ -1446,7 +1446,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderArg {
+        open func deserialize(_ json: JSON) -> ListFolderArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -1462,26 +1462,26 @@ public class Files {
     }
 
     /// The ListFolderContinueArg struct
-    public class ListFolderContinueArg: CustomStringConvertible {
+    open class ListFolderContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
-        public let cursor: String
+        open let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueArgSerializer().serialize(self)))"
         }
     }
-    public class ListFolderContinueArgSerializer: JSONSerializer {
+    open class ListFolderContinueArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderContinueArg) -> JSON {
+        open func serialize(_ value: ListFolderContinueArg) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderContinueArg {
+        open func deserialize(_ json: JSON) -> ListFolderContinueArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -1505,9 +1505,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderContinueErrorSerializer().serialize(self)))"
         }
     }
-    public class ListFolderContinueErrorSerializer: JSONSerializer {
+    open class ListFolderContinueErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderContinueError) -> JSON {
+        open func serialize(_ value: ListFolderContinueError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -1523,7 +1523,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListFolderContinueError {
+        open func deserialize(_ json: JSON) -> ListFolderContinueError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1555,9 +1555,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderErrorSerializer().serialize(self)))"
         }
     }
-    public class ListFolderErrorSerializer: JSONSerializer {
+    open class ListFolderErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderError) -> JSON {
+        open func serialize(_ value: ListFolderError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -1569,7 +1569,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListFolderError {
+        open func deserialize(_ json: JSON) -> ListFolderError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1589,26 +1589,26 @@ public class Files {
     }
 
     /// The ListFolderGetLatestCursorResult struct
-    public class ListFolderGetLatestCursorResult: CustomStringConvertible {
+    open class ListFolderGetLatestCursorResult: CustomStringConvertible {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        public let cursor: String
+        open let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderGetLatestCursorResultSerializer().serialize(self)))"
         }
     }
-    public class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
+    open class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderGetLatestCursorResult) -> JSON {
+        open func serialize(_ value: ListFolderGetLatestCursorResult) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderGetLatestCursorResult {
+        open func deserialize(_ json: JSON) -> ListFolderGetLatestCursorResult {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -1620,34 +1620,34 @@ public class Files {
     }
 
     /// The ListFolderLongpollArg struct
-    public class ListFolderLongpollArg: CustomStringConvertible {
+    open class ListFolderLongpollArg: CustomStringConvertible {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
-        public let cursor: String
+        open let cursor: String
         /// A timeout in seconds. The request will block for at most this length of time, plus up to 90 seconds of
         /// random jitter added to avoid the thundering herd problem. Care should be taken when using this parameter, as
         /// some network infrastructure does not support long timeouts.
-        public let timeout: UInt64
+        open let timeout: UInt64
         public init(cursor: String, timeout: UInt64 = 30) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
             comparableValidator(minValue: 30, maxValue: 480)(timeout)
             self.timeout = timeout
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollArgSerializer().serialize(self)))"
         }
     }
-    public class ListFolderLongpollArgSerializer: JSONSerializer {
+    open class ListFolderLongpollArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderLongpollArg) -> JSON {
+        open func serialize(_ value: ListFolderLongpollArg) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "timeout": Serialization._UInt64Serializer.serialize(value.timeout),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderLongpollArg {
+        open func deserialize(_ json: JSON) -> ListFolderLongpollArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -1670,9 +1670,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollErrorSerializer().serialize(self)))"
         }
     }
-    public class ListFolderLongpollErrorSerializer: JSONSerializer {
+    open class ListFolderLongpollErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderLongpollError) -> JSON {
+        open func serialize(_ value: ListFolderLongpollError) -> JSON {
             switch value {
                 case .reset:
                     var d = [String: JSON]()
@@ -1684,7 +1684,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListFolderLongpollError {
+        open func deserialize(_ json: JSON) -> ListFolderLongpollError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1703,30 +1703,30 @@ public class Files {
     }
 
     /// The ListFolderLongpollResult struct
-    public class ListFolderLongpollResult: CustomStringConvertible {
+    open class ListFolderLongpollResult: CustomStringConvertible {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
-        public let changes: Bool
+        open let changes: Bool
         /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
-        public let backoff: UInt64?
+        open let backoff: UInt64?
         public init(changes: Bool, backoff: UInt64? = nil) {
             self.changes = changes
             nullableValidator(comparableValidator())(backoff)
             self.backoff = backoff
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderLongpollResultSerializer().serialize(self)))"
         }
     }
-    public class ListFolderLongpollResultSerializer: JSONSerializer {
+    open class ListFolderLongpollResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderLongpollResult) -> JSON {
+        open func serialize(_ value: ListFolderLongpollResult) -> JSON {
             let output = [ 
             "changes": Serialization._BoolSerializer.serialize(value.changes),
             "backoff": NullableSerializer(Serialization._UInt64Serializer).serialize(value.backoff),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderLongpollResult {
+        open func deserialize(_ json: JSON) -> ListFolderLongpollResult {
             switch json {
                 case .dictionary(let dict):
                     let changes = Serialization._BoolSerializer.deserialize(dict["changes"] ?? .null)
@@ -1739,26 +1739,26 @@ public class Files {
     }
 
     /// The ListFolderResult struct
-    public class ListFolderResult: CustomStringConvertible {
+    open class ListFolderResult: CustomStringConvertible {
         /// The files and (direct) subfolders in the folder.
-        public let entries: Array<Files.Metadata>
+        open let entries: Array<Files.Metadata>
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        public let cursor: String
+        open let cursor: String
         /// If true, then there are more entries available. Pass the cursor to listFolderContinue to retrieve the rest.
-        public let hasMore: Bool
+        open let hasMore: Bool
         public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderResultSerializer().serialize(self)))"
         }
     }
-    public class ListFolderResultSerializer: JSONSerializer {
+    open class ListFolderResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListFolderResult) -> JSON {
+        open func serialize(_ value: ListFolderResult) -> JSON {
             let output = [ 
             "entries": ArraySerializer(Files.MetadataSerializer()).serialize(value.entries),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
@@ -1766,7 +1766,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListFolderResult {
+        open func deserialize(_ json: JSON) -> ListFolderResult {
             switch json {
                 case .dictionary(let dict):
                     let entries = ArraySerializer(Files.MetadataSerializer()).deserialize(dict["entries"] ?? .null)
@@ -1780,31 +1780,31 @@ public class Files {
     }
 
     /// The ListRevisionsArg struct
-    public class ListRevisionsArg: CustomStringConvertible {
+    open class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
-        public let path: String
+        open let path: String
         /// The maximum number of revision entries returned.
-        public let limit: UInt64
+        open let limit: UInt64
         public init(path: String, limit: UInt64 = 10) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             comparableValidator(minValue: 1, maxValue: 100)(limit)
             self.limit = limit
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsArgSerializer().serialize(self)))"
         }
     }
-    public class ListRevisionsArgSerializer: JSONSerializer {
+    open class ListRevisionsArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListRevisionsArg) -> JSON {
+        open func serialize(_ value: ListRevisionsArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "limit": Serialization._UInt64Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListRevisionsArg {
+        open func deserialize(_ json: JSON) -> ListRevisionsArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -1827,9 +1827,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsErrorSerializer().serialize(self)))"
         }
     }
-    public class ListRevisionsErrorSerializer: JSONSerializer {
+    open class ListRevisionsErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListRevisionsError) -> JSON {
+        open func serialize(_ value: ListRevisionsError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -1841,7 +1841,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListRevisionsError {
+        open func deserialize(_ json: JSON) -> ListRevisionsError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1861,29 +1861,29 @@ public class Files {
     }
 
     /// The ListRevisionsResult struct
-    public class ListRevisionsResult: CustomStringConvertible {
+    open class ListRevisionsResult: CustomStringConvertible {
         /// If the file is deleted.
-        public let isDeleted: Bool
+        open let isDeleted: Bool
         /// The revisions for the file. Only non-delete revisions will show up here.
-        public let entries: Array<Files.FileMetadata>
+        open let entries: Array<Files.FileMetadata>
         public init(isDeleted: Bool, entries: Array<Files.FileMetadata>) {
             self.isDeleted = isDeleted
             self.entries = entries
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsResultSerializer().serialize(self)))"
         }
     }
-    public class ListRevisionsResultSerializer: JSONSerializer {
+    open class ListRevisionsResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListRevisionsResult) -> JSON {
+        open func serialize(_ value: ListRevisionsResult) -> JSON {
             let output = [ 
             "is_deleted": Serialization._BoolSerializer.serialize(value.isDeleted),
             "entries": ArraySerializer(Files.FileMetadataSerializer()).serialize(value.entries),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListRevisionsResult {
+        open func deserialize(_ json: JSON) -> ListRevisionsResult {
             switch json {
                 case .dictionary(let dict):
                     let isDeleted = Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
@@ -1904,9 +1904,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(LookUpPropertiesErrorSerializer().serialize(self)))"
         }
     }
-    public class LookUpPropertiesErrorSerializer: JSONSerializer {
+    open class LookUpPropertiesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: LookUpPropertiesError) -> JSON {
+        open func serialize(_ value: LookUpPropertiesError) -> JSON {
             switch value {
                 case .propertyGroupNotFound:
                     var d = [String: JSON]()
@@ -1914,7 +1914,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> LookUpPropertiesError {
+        open func deserialize(_ json: JSON) -> LookUpPropertiesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1950,9 +1950,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(LookupErrorSerializer().serialize(self)))"
         }
     }
-    public class LookupErrorSerializer: JSONSerializer {
+    open class LookupErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: LookupError) -> JSON {
+        open func serialize(_ value: LookupError) -> JSON {
             switch value {
                 case .malformedPath(let arg):
                     var d = ["malformed_path": NullableSerializer(Serialization._StringSerializer).serialize(arg)]
@@ -1980,7 +1980,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> LookupError {
+        open func deserialize(_ json: JSON) -> LookupError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2018,9 +2018,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(MediaInfoSerializer().serialize(self)))"
         }
     }
-    public class MediaInfoSerializer: JSONSerializer {
+    open class MediaInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MediaInfo) -> JSON {
+        open func serialize(_ value: MediaInfo) -> JSON {
             switch value {
                 case .pending:
                     var d = [String: JSON]()
@@ -2032,7 +2032,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MediaInfo {
+        open func deserialize(_ json: JSON) -> MediaInfo {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2052,25 +2052,25 @@ public class Files {
     }
 
     /// Metadata for a photo or video.
-    public class MediaMetadata: CustomStringConvertible {
+    open class MediaMetadata: CustomStringConvertible {
         /// Dimension of the photo/video.
-        public let dimensions: Files.Dimensions?
+        open let dimensions: Files.Dimensions?
         /// The GPS coordinate of the photo/video.
-        public let location: Files.GpsCoordinates?
+        open let location: Files.GpsCoordinates?
         /// The timestamp when the photo/video is taken.
-        public let timeTaken: Date?
+        open let timeTaken: Date?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil) {
             self.dimensions = dimensions
             self.location = location
             self.timeTaken = timeTaken
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MediaMetadataSerializer().serialize(self)))"
         }
     }
-    public class MediaMetadataSerializer: JSONSerializer {
+    open class MediaMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MediaMetadata) -> JSON {
+        open func serialize(_ value: MediaMetadata) -> JSON {
             var output = [ 
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
@@ -2091,7 +2091,7 @@ public class Files {
             }
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MediaMetadata {
+        open func deserialize(_ json: JSON) -> MediaMetadata {
             switch json {
                 case .dictionary(let dict):
                     let tag = Serialization.getTag(dict)
@@ -2110,14 +2110,14 @@ public class Files {
     }
 
     /// Metadata for a photo.
-    public class PhotoMetadata: Files.MediaMetadata {
-        public override var description: String {
+    open class PhotoMetadata: Files.MediaMetadata {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PhotoMetadataSerializer().serialize(self)))"
         }
     }
-    public class PhotoMetadataSerializer: JSONSerializer {
+    open class PhotoMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PhotoMetadata) -> JSON {
+        open func serialize(_ value: PhotoMetadata) -> JSON {
             let output = [ 
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
@@ -2125,7 +2125,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PhotoMetadata {
+        open func deserialize(_ json: JSON) -> PhotoMetadata {
             switch json {
                 case .dictionary(let dict):
                     let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .null)
@@ -2139,31 +2139,31 @@ public class Files {
     }
 
     /// The PreviewArg struct
-    public class PreviewArg: CustomStringConvertible {
+    open class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
-        public let path: String
+        open let path: String
         /// Deprecated. Please specify revision in path instead
-        public let rev: String?
+        open let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(rev)
             self.rev = rev
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PreviewArgSerializer().serialize(self)))"
         }
     }
-    public class PreviewArgSerializer: JSONSerializer {
+    open class PreviewArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PreviewArg) -> JSON {
+        open func serialize(_ value: PreviewArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PreviewArg {
+        open func deserialize(_ json: JSON) -> PreviewArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -2190,9 +2190,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(PreviewErrorSerializer().serialize(self)))"
         }
     }
-    public class PreviewErrorSerializer: JSONSerializer {
+    open class PreviewErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PreviewError) -> JSON {
+        open func serialize(_ value: PreviewError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -2212,7 +2212,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PreviewError {
+        open func deserialize(_ json: JSON) -> PreviewError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2236,14 +2236,14 @@ public class Files {
     }
 
     /// The PropertyGroupUpdate struct
-    public class PropertyGroupUpdate: CustomStringConvertible {
+    open class PropertyGroupUpdate: CustomStringConvertible {
         /// A unique identifier for a property template.
-        public let templateId: String
+        open let templateId: String
         /// List of property fields to update if the field already exists. If the field doesn't exist, add the field to
         /// the property group.
-        public let addOrUpdateFields: Array<Properties.PropertyField>?
+        open let addOrUpdateFields: Array<Properties.PropertyField>?
         /// List of property field names to remove from property group if the field exists.
-        public let removeFields: Array<String>?
+        open let removeFields: Array<String>?
         public init(templateId: String, addOrUpdateFields: Array<Properties.PropertyField>? = nil, removeFields: Array<String>? = nil) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
@@ -2251,13 +2251,13 @@ public class Files {
             nullableValidator(arrayValidator(itemValidator: stringValidator()))(removeFields)
             self.removeFields = removeFields
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupUpdateSerializer().serialize(self)))"
         }
     }
-    public class PropertyGroupUpdateSerializer: JSONSerializer {
+    open class PropertyGroupUpdateSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyGroupUpdate) -> JSON {
+        open func serialize(_ value: PropertyGroupUpdate) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "add_or_update_fields": NullableSerializer(ArraySerializer(Properties.PropertyFieldSerializer())).serialize(value.addOrUpdateFields),
@@ -2265,7 +2265,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyGroupUpdate {
+        open func deserialize(_ json: JSON) -> PropertyGroupUpdate {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -2279,30 +2279,30 @@ public class Files {
     }
 
     /// The PropertyGroupWithPath struct
-    public class PropertyGroupWithPath: CustomStringConvertible {
+    open class PropertyGroupWithPath: CustomStringConvertible {
         /// A unique identifier for the file.
-        public let path: String
+        open let path: String
         /// Filled custom property templates associated with a file.
-        public let propertyGroups: Array<Properties.PropertyGroup>
+        open let propertyGroups: Array<Properties.PropertyGroup>
         public init(path: String, propertyGroups: Array<Properties.PropertyGroup>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.propertyGroups = propertyGroups
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupWithPathSerializer().serialize(self)))"
         }
     }
-    public class PropertyGroupWithPathSerializer: JSONSerializer {
+    open class PropertyGroupWithPathSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyGroupWithPath) -> JSON {
+        open func serialize(_ value: PropertyGroupWithPath) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "property_groups": ArraySerializer(Properties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyGroupWithPath {
+        open func deserialize(_ json: JSON) -> PropertyGroupWithPath {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -2315,31 +2315,31 @@ public class Files {
     }
 
     /// The RelocationArg struct
-    public class RelocationArg: CustomStringConvertible {
+    open class RelocationArg: CustomStringConvertible {
         /// Path in the user's Dropbox to be copied or moved.
-        public let fromPath: String
+        open let fromPath: String
         /// Path in the user's Dropbox that is the destination.
-        public let toPath: String
+        open let toPath: String
         public init(fromPath: String, toPath: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(fromPath)
             self.fromPath = fromPath
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(toPath)
             self.toPath = toPath
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RelocationArgSerializer().serialize(self)))"
         }
     }
-    public class RelocationArgSerializer: JSONSerializer {
+    open class RelocationArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RelocationArg) -> JSON {
+        open func serialize(_ value: RelocationArg) -> JSON {
             let output = [ 
             "from_path": Serialization._StringSerializer.serialize(value.fromPath),
             "to_path": Serialization._StringSerializer.serialize(value.toPath),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RelocationArg {
+        open func deserialize(_ json: JSON) -> RelocationArg {
             switch json {
                 case .dictionary(let dict):
                     let fromPath = Serialization._StringSerializer.deserialize(dict["from_path"] ?? .null)
@@ -2374,9 +2374,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RelocationErrorSerializer().serialize(self)))"
         }
     }
-    public class RelocationErrorSerializer: JSONSerializer {
+    open class RelocationErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RelocationError) -> JSON {
+        open func serialize(_ value: RelocationError) -> JSON {
             switch value {
                 case .fromLookup(let arg):
                     var d = ["from_lookup": Files.LookupErrorSerializer().serialize(arg)]
@@ -2412,7 +2412,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RelocationError {
+        open func deserialize(_ json: JSON) -> RelocationError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2446,31 +2446,31 @@ public class Files {
     }
 
     /// The RemovePropertiesArg struct
-    public class RemovePropertiesArg: CustomStringConvertible {
+    open class RemovePropertiesArg: CustomStringConvertible {
         /// A unique identifier for the file.
-        public let path: String
+        open let path: String
         /// A list of identifiers for a property template created by route properties/template/add.
-        public let propertyTemplateIds: Array<String>
+        open let propertyTemplateIds: Array<String>
         public init(path: String, propertyTemplateIds: Array<String>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*"))(propertyTemplateIds)
             self.propertyTemplateIds = propertyTemplateIds
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovePropertiesArgSerializer().serialize(self)))"
         }
     }
-    public class RemovePropertiesArgSerializer: JSONSerializer {
+    open class RemovePropertiesArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RemovePropertiesArg) -> JSON {
+        open func serialize(_ value: RemovePropertiesArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "property_template_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.propertyTemplateIds),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RemovePropertiesArg {
+        open func deserialize(_ json: JSON) -> RemovePropertiesArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -2499,9 +2499,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovePropertiesErrorSerializer().serialize(self)))"
         }
     }
-    public class RemovePropertiesErrorSerializer: JSONSerializer {
+    open class RemovePropertiesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RemovePropertiesError) -> JSON {
+        open func serialize(_ value: RemovePropertiesError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -2525,7 +2525,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RemovePropertiesError {
+        open func deserialize(_ json: JSON) -> RemovePropertiesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2553,31 +2553,31 @@ public class Files {
     }
 
     /// The RestoreArg struct
-    public class RestoreArg: CustomStringConvertible {
+    open class RestoreArg: CustomStringConvertible {
         /// The path to the file you want to restore.
-        public let path: String
+        open let path: String
         /// The revision to restore for the file.
-        public let rev: String
+        open let rev: String
         public init(path: String, rev: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             stringValidator(minLength: 9, pattern: "[0-9a-f]+")(rev)
             self.rev = rev
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RestoreArgSerializer().serialize(self)))"
         }
     }
-    public class RestoreArgSerializer: JSONSerializer {
+    open class RestoreArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RestoreArg) -> JSON {
+        open func serialize(_ value: RestoreArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": Serialization._StringSerializer.serialize(value.rev),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RestoreArg {
+        open func deserialize(_ json: JSON) -> RestoreArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -2604,9 +2604,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(RestoreErrorSerializer().serialize(self)))"
         }
     }
-    public class RestoreErrorSerializer: JSONSerializer {
+    open class RestoreErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RestoreError) -> JSON {
+        open func serialize(_ value: RestoreError) -> JSON {
             switch value {
                 case .pathLookup(let arg):
                     var d = ["path_lookup": Files.LookupErrorSerializer().serialize(arg)]
@@ -2626,7 +2626,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RestoreError {
+        open func deserialize(_ json: JSON) -> RestoreError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2651,31 +2651,31 @@ public class Files {
     }
 
     /// The SaveCopyReferenceArg struct
-    public class SaveCopyReferenceArg: CustomStringConvertible {
+    open class SaveCopyReferenceArg: CustomStringConvertible {
         /// A copy reference returned by copyReferenceGet.
-        public let copyReference: String
+        open let copyReference: String
         /// Path in the user's Dropbox that is the destination.
-        public let path: String
+        open let path: String
         public init(copyReference: String, path: String) {
             stringValidator()(copyReference)
             self.copyReference = copyReference
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceArgSerializer().serialize(self)))"
         }
     }
-    public class SaveCopyReferenceArgSerializer: JSONSerializer {
+    open class SaveCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveCopyReferenceArg) -> JSON {
+        open func serialize(_ value: SaveCopyReferenceArg) -> JSON {
             let output = [ 
             "copy_reference": Serialization._StringSerializer.serialize(value.copyReference),
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SaveCopyReferenceArg {
+        open func deserialize(_ json: JSON) -> SaveCopyReferenceArg {
             switch json {
                 case .dictionary(let dict):
                     let copyReference = Serialization._StringSerializer.deserialize(dict["copy_reference"] ?? .null)
@@ -2707,9 +2707,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceErrorSerializer().serialize(self)))"
         }
     }
-    public class SaveCopyReferenceErrorSerializer: JSONSerializer {
+    open class SaveCopyReferenceErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveCopyReferenceError) -> JSON {
+        open func serialize(_ value: SaveCopyReferenceError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
@@ -2737,7 +2737,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SaveCopyReferenceError {
+        open func deserialize(_ json: JSON) -> SaveCopyReferenceError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2765,25 +2765,25 @@ public class Files {
     }
 
     /// The SaveCopyReferenceResult struct
-    public class SaveCopyReferenceResult: CustomStringConvertible {
+    open class SaveCopyReferenceResult: CustomStringConvertible {
         /// The metadata of the saved file or folder in the user's Dropbox.
-        public let metadata: Files.Metadata
+        open let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveCopyReferenceResultSerializer().serialize(self)))"
         }
     }
-    public class SaveCopyReferenceResultSerializer: JSONSerializer {
+    open class SaveCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveCopyReferenceResult) -> JSON {
+        open func serialize(_ value: SaveCopyReferenceResult) -> JSON {
             let output = [ 
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SaveCopyReferenceResult {
+        open func deserialize(_ json: JSON) -> SaveCopyReferenceResult {
             switch json {
                 case .dictionary(let dict):
                     let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .null)
@@ -2795,31 +2795,31 @@ public class Files {
     }
 
     /// The SaveUrlArg struct
-    public class SaveUrlArg: CustomStringConvertible {
+    open class SaveUrlArg: CustomStringConvertible {
         /// The path in Dropbox where the URL will be saved to.
-        public let path: String
+        open let path: String
         /// The URL to be saved.
-        public let url: String
+        open let url: String
         public init(path: String, url: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
             stringValidator()(url)
             self.url = url
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlArgSerializer().serialize(self)))"
         }
     }
-    public class SaveUrlArgSerializer: JSONSerializer {
+    open class SaveUrlArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveUrlArg) -> JSON {
+        open func serialize(_ value: SaveUrlArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "url": Serialization._StringSerializer.serialize(value.url),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SaveUrlArg {
+        open func deserialize(_ json: JSON) -> SaveUrlArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -2848,9 +2848,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlErrorSerializer().serialize(self)))"
         }
     }
-    public class SaveUrlErrorSerializer: JSONSerializer {
+    open class SaveUrlErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveUrlError) -> JSON {
+        open func serialize(_ value: SaveUrlError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
@@ -2874,7 +2874,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SaveUrlError {
+        open func deserialize(_ json: JSON) -> SaveUrlError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2912,9 +2912,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlJobStatusSerializer().serialize(self)))"
         }
     }
-    public class SaveUrlJobStatusSerializer: JSONSerializer {
+    open class SaveUrlJobStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveUrlJobStatus) -> JSON {
+        open func serialize(_ value: SaveUrlJobStatus) -> JSON {
             switch value {
                 case .inProgress:
                     var d = [String: JSON]()
@@ -2930,7 +2930,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SaveUrlJobStatus {
+        open func deserialize(_ json: JSON) -> SaveUrlJobStatus {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2964,9 +2964,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SaveUrlResultSerializer().serialize(self)))"
         }
     }
-    public class SaveUrlResultSerializer: JSONSerializer {
+    open class SaveUrlResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SaveUrlResult) -> JSON {
+        open func serialize(_ value: SaveUrlResult) -> JSON {
             switch value {
                 case .asyncJobId(let arg):
                     var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
@@ -2978,7 +2978,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SaveUrlResult {
+        open func deserialize(_ json: JSON) -> SaveUrlResult {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2999,20 +2999,20 @@ public class Files {
     }
 
     /// The SearchArg struct
-    public class SearchArg: CustomStringConvertible {
+    open class SearchArg: CustomStringConvertible {
         /// The path in the user's Dropbox to search. Should probably be a folder.
-        public let path: String
+        open let path: String
         /// The string to search for. The search string is split on spaces into multiple tokens. For file name
         /// searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
         /// car").
-        public let query: String
+        open let query: String
         /// The starting index within the search results (used for paging).
-        public let start: UInt64
+        open let start: UInt64
         /// The maximum number of search results to return.
-        public let maxResults: UInt64
+        open let maxResults: UInt64
         /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is
         /// only available for Dropbox Business accounts.
-        public let mode: Files.SearchMode
+        open let mode: Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -3024,13 +3024,13 @@ public class Files {
             self.maxResults = maxResults
             self.mode = mode
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchArgSerializer().serialize(self)))"
         }
     }
-    public class SearchArgSerializer: JSONSerializer {
+    open class SearchArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchArg) -> JSON {
+        open func serialize(_ value: SearchArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "query": Serialization._StringSerializer.serialize(value.query),
@@ -3040,7 +3040,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SearchArg {
+        open func deserialize(_ json: JSON) -> SearchArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -3066,9 +3066,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchErrorSerializer().serialize(self)))"
         }
     }
-    public class SearchErrorSerializer: JSONSerializer {
+    open class SearchErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchError) -> JSON {
+        open func serialize(_ value: SearchError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -3080,7 +3080,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SearchError {
+        open func deserialize(_ json: JSON) -> SearchError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3100,29 +3100,29 @@ public class Files {
     }
 
     /// The SearchMatch struct
-    public class SearchMatch: CustomStringConvertible {
+    open class SearchMatch: CustomStringConvertible {
         /// The type of the match.
-        public let matchType: Files.SearchMatchType
+        open let matchType: Files.SearchMatchType
         /// The metadata for the matched file or folder.
-        public let metadata: Files.Metadata
+        open let metadata: Files.Metadata
         public init(matchType: Files.SearchMatchType, metadata: Files.Metadata) {
             self.matchType = matchType
             self.metadata = metadata
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchSerializer().serialize(self)))"
         }
     }
-    public class SearchMatchSerializer: JSONSerializer {
+    open class SearchMatchSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchMatch) -> JSON {
+        open func serialize(_ value: SearchMatch) -> JSON {
             let output = [ 
             "match_type": Files.SearchMatchTypeSerializer().serialize(value.matchType),
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SearchMatch {
+        open func deserialize(_ json: JSON) -> SearchMatch {
             switch json {
                 case .dictionary(let dict):
                     let matchType = Files.SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .null)
@@ -3147,9 +3147,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchTypeSerializer().serialize(self)))"
         }
     }
-    public class SearchMatchTypeSerializer: JSONSerializer {
+    open class SearchMatchTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchMatchType) -> JSON {
+        open func serialize(_ value: SearchMatchType) -> JSON {
             switch value {
                 case .filename:
                     var d = [String: JSON]()
@@ -3165,7 +3165,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SearchMatchType {
+        open func deserialize(_ json: JSON) -> SearchMatchType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3198,9 +3198,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchModeSerializer().serialize(self)))"
         }
     }
-    public class SearchModeSerializer: JSONSerializer {
+    open class SearchModeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchMode) -> JSON {
+        open func serialize(_ value: SearchMode) -> JSON {
             switch value {
                 case .filename:
                     var d = [String: JSON]()
@@ -3216,7 +3216,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> SearchMode {
+        open func deserialize(_ json: JSON) -> SearchMode {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3237,27 +3237,27 @@ public class Files {
     }
 
     /// The SearchResult struct
-    public class SearchResult: CustomStringConvertible {
+    open class SearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
-        public let matches: Array<Files.SearchMatch>
+        open let matches: Array<Files.SearchMatch>
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
         /// calling search again.
-        public let more: Bool
+        open let more: Bool
         /// Used for paging. Value to set the start argument to when calling search to fetch the next page of results.
-        public let start: UInt64
+        open let start: UInt64
         public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64) {
             self.matches = matches
             self.more = more
             comparableValidator()(start)
             self.start = start
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchResultSerializer().serialize(self)))"
         }
     }
-    public class SearchResultSerializer: JSONSerializer {
+    open class SearchResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: SearchResult) -> JSON {
+        open func serialize(_ value: SearchResult) -> JSON {
             let output = [ 
             "matches": ArraySerializer(Files.SearchMatchSerializer()).serialize(value.matches),
             "more": Serialization._BoolSerializer.serialize(value.more),
@@ -3265,7 +3265,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> SearchResult {
+        open func deserialize(_ json: JSON) -> SearchResult {
             switch json {
                 case .dictionary(let dict):
                     let matches = ArraySerializer(Files.SearchMatchSerializer()).deserialize(dict["matches"] ?? .null)
@@ -3279,27 +3279,27 @@ public class Files {
     }
 
     /// The ThumbnailArg struct
-    public class ThumbnailArg: CustomStringConvertible {
+    open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
-        public let path: String
+        open let path: String
         /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
         /// preferred, while png is  better for screenshots and digital arts.
-        public let format: Files.ThumbnailFormat
+        open let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
-        public let size: Files.ThumbnailSize
+        open let size: Files.ThumbnailSize
         public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.format = format
             self.size = size
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
         }
     }
-    public class ThumbnailArgSerializer: JSONSerializer {
+    open class ThumbnailArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ThumbnailArg) -> JSON {
+        open func serialize(_ value: ThumbnailArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "format": Files.ThumbnailFormatSerializer().serialize(value.format),
@@ -3307,7 +3307,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ThumbnailArg {
+        open func deserialize(_ json: JSON) -> ThumbnailArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -3335,9 +3335,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailErrorSerializer().serialize(self)))"
         }
     }
-    public class ThumbnailErrorSerializer: JSONSerializer {
+    open class ThumbnailErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ThumbnailError) -> JSON {
+        open func serialize(_ value: ThumbnailError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
@@ -3357,7 +3357,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ThumbnailError {
+        open func deserialize(_ json: JSON) -> ThumbnailError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3391,9 +3391,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailFormatSerializer().serialize(self)))"
         }
     }
-    public class ThumbnailFormatSerializer: JSONSerializer {
+    open class ThumbnailFormatSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ThumbnailFormat) -> JSON {
+        open func serialize(_ value: ThumbnailFormat) -> JSON {
             switch value {
                 case .jpeg:
                     var d = [String: JSON]()
@@ -3405,7 +3405,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ThumbnailFormat {
+        open func deserialize(_ json: JSON) -> ThumbnailFormat {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3440,9 +3440,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
         }
     }
-    public class ThumbnailSizeSerializer: JSONSerializer {
+    open class ThumbnailSizeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ThumbnailSize) -> JSON {
+        open func serialize(_ value: ThumbnailSize) -> JSON {
             switch value {
                 case .w32h32:
                     var d = [String: JSON]()
@@ -3466,7 +3466,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ThumbnailSize {
+        open func deserialize(_ json: JSON) -> ThumbnailSize {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3511,9 +3511,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertiesErrorSerializer().serialize(self)))"
         }
     }
-    public class UpdatePropertiesErrorSerializer: JSONSerializer {
+    open class UpdatePropertiesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UpdatePropertiesError) -> JSON {
+        open func serialize(_ value: UpdatePropertiesError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -3545,7 +3545,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UpdatePropertiesError {
+        open func deserialize(_ json: JSON) -> UpdatePropertiesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3577,30 +3577,30 @@ public class Files {
     }
 
     /// The UpdatePropertyGroupArg struct
-    public class UpdatePropertyGroupArg: CustomStringConvertible {
+    open class UpdatePropertyGroupArg: CustomStringConvertible {
         /// A unique identifier for the file.
-        public let path: String
+        open let path: String
         /// Filled custom property templates associated with a file.
-        public let updatePropertyGroups: Array<Files.PropertyGroupUpdate>
+        open let updatePropertyGroups: Array<Files.PropertyGroupUpdate>
         public init(path: String, updatePropertyGroups: Array<Files.PropertyGroupUpdate>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.updatePropertyGroups = updatePropertyGroups
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyGroupArgSerializer().serialize(self)))"
         }
     }
-    public class UpdatePropertyGroupArgSerializer: JSONSerializer {
+    open class UpdatePropertyGroupArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UpdatePropertyGroupArg) -> JSON {
+        open func serialize(_ value: UpdatePropertyGroupArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
             "update_property_groups": ArraySerializer(Files.PropertyGroupUpdateSerializer()).serialize(value.updatePropertyGroups),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UpdatePropertyGroupArg {
+        open func deserialize(_ json: JSON) -> UpdatePropertyGroupArg {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
@@ -3623,9 +3623,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorSerializer().serialize(self)))"
         }
     }
-    public class UploadErrorSerializer: JSONSerializer {
+    open class UploadErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadError) -> JSON {
+        open func serialize(_ value: UploadError) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
@@ -3637,7 +3637,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadError {
+        open func deserialize(_ json: JSON) -> UploadError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3669,9 +3669,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorWithPropertiesSerializer().serialize(self)))"
         }
     }
-    public class UploadErrorWithPropertiesSerializer: JSONSerializer {
+    open class UploadErrorWithPropertiesSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadErrorWithProperties) -> JSON {
+        open func serialize(_ value: UploadErrorWithProperties) -> JSON {
             switch value {
                 case .path(let arg):
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
@@ -3687,7 +3687,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadErrorWithProperties {
+        open func deserialize(_ json: JSON) -> UploadErrorWithProperties {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3710,30 +3710,30 @@ public class Files {
     }
 
     /// The UploadSessionAppendArg struct
-    public class UploadSessionAppendArg: CustomStringConvertible {
+    open class UploadSessionAppendArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        public let cursor: Files.UploadSessionCursor
+        open let cursor: Files.UploadSessionCursor
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        public let close: Bool
+        open let close: Bool
         public init(cursor: Files.UploadSessionCursor, close: Bool = false) {
             self.cursor = cursor
             self.close = close
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionAppendArgSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionAppendArgSerializer: JSONSerializer {
+    open class UploadSessionAppendArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionAppendArg) -> JSON {
+        open func serialize(_ value: UploadSessionAppendArg) -> JSON {
             let output = [ 
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "close": Serialization._BoolSerializer.serialize(value.close),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionAppendArg {
+        open func deserialize(_ json: JSON) -> UploadSessionAppendArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
@@ -3746,32 +3746,32 @@ public class Files {
     }
 
     /// The UploadSessionCursor struct
-    public class UploadSessionCursor: CustomStringConvertible {
+    open class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
-        public let sessionId: String
+        open let sessionId: String
         /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
         /// duplicated in the event of a network error.
-        public let offset: UInt64
+        open let offset: UInt64
         public init(sessionId: String, offset: UInt64) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
             comparableValidator()(offset)
             self.offset = offset
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionCursorSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionCursorSerializer: JSONSerializer {
+    open class UploadSessionCursorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionCursor) -> JSON {
+        open func serialize(_ value: UploadSessionCursor) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "offset": Serialization._UInt64Serializer.serialize(value.offset),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionCursor {
+        open func deserialize(_ json: JSON) -> UploadSessionCursor {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -3784,29 +3784,29 @@ public class Files {
     }
 
     /// The UploadSessionFinishArg struct
-    public class UploadSessionFinishArg: CustomStringConvertible {
+    open class UploadSessionFinishArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        public let cursor: Files.UploadSessionCursor
+        open let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
-        public let commit: Files.CommitInfo
+        open let commit: Files.CommitInfo
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
             self.cursor = cursor
             self.commit = commit
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishArgSerializer: JSONSerializer {
+    open class UploadSessionFinishArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishArg) -> JSON {
+        open func serialize(_ value: UploadSessionFinishArg) -> JSON {
             let output = [ 
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "commit": Files.CommitInfoSerializer().serialize(value.commit),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishArg {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
@@ -3819,25 +3819,25 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchArg struct
-    public class UploadSessionFinishBatchArg: CustomStringConvertible {
+    open class UploadSessionFinishBatchArg: CustomStringConvertible {
         /// Commit information for each file in the batch.
-        public let entries: Array<Files.UploadSessionFinishArg>
+        open let entries: Array<Files.UploadSessionFinishArg>
         public init(entries: Array<Files.UploadSessionFinishArg>) {
             self.entries = entries
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchArgSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishBatchArgSerializer: JSONSerializer {
+    open class UploadSessionFinishBatchArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishBatchArg) -> JSON {
+        open func serialize(_ value: UploadSessionFinishBatchArg) -> JSON {
             let output = [ 
             "entries": ArraySerializer(Files.UploadSessionFinishArgSerializer()).serialize(value.entries),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishBatchArg {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishBatchArg {
             switch json {
                 case .dictionary(let dict):
                     let entries = ArraySerializer(Files.UploadSessionFinishArgSerializer()).deserialize(dict["entries"] ?? .null)
@@ -3859,9 +3859,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchJobStatusSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishBatchJobStatusSerializer: JSONSerializer {
+    open class UploadSessionFinishBatchJobStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishBatchJobStatus) -> JSON {
+        open func serialize(_ value: UploadSessionFinishBatchJobStatus) -> JSON {
             switch value {
                 case .inProgress:
                     var d = [String: JSON]()
@@ -3873,7 +3873,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishBatchJobStatus {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishBatchJobStatus {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3893,25 +3893,25 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchResult struct
-    public class UploadSessionFinishBatchResult: CustomStringConvertible {
+    open class UploadSessionFinishBatchResult: CustomStringConvertible {
         /// Commit result for each file in the batch.
-        public let entries: Array<Files.UploadSessionFinishBatchResultEntry>
+        open let entries: Array<Files.UploadSessionFinishBatchResultEntry>
         public init(entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
             self.entries = entries
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishBatchResultSerializer: JSONSerializer {
+    open class UploadSessionFinishBatchResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishBatchResult) -> JSON {
+        open func serialize(_ value: UploadSessionFinishBatchResult) -> JSON {
             let output = [ 
             "entries": ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).serialize(value.entries),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishBatchResult {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishBatchResult {
             switch json {
                 case .dictionary(let dict):
                     let entries = ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .null)
@@ -3933,9 +3933,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishBatchResultEntrySerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishBatchResultEntrySerializer: JSONSerializer {
+    open class UploadSessionFinishBatchResultEntrySerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishBatchResultEntry) -> JSON {
+        open func serialize(_ value: UploadSessionFinishBatchResultEntry) -> JSON {
             switch value {
                 case .success(let arg):
                     var d = Serialization.getFields(Files.FileMetadataSerializer().serialize(arg))
@@ -3947,7 +3947,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishBatchResultEntry {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishBatchResultEntry {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3983,9 +3983,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishErrorSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionFinishErrorSerializer: JSONSerializer {
+    open class UploadSessionFinishErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionFinishError) -> JSON {
+        open func serialize(_ value: UploadSessionFinishError) -> JSON {
             switch value {
                 case .lookupFailed(let arg):
                     var d = ["lookup_failed": Files.UploadSessionLookupErrorSerializer().serialize(arg)]
@@ -4005,7 +4005,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadSessionFinishError {
+        open func deserialize(_ json: JSON) -> UploadSessionFinishError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4048,9 +4048,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionLookupErrorSerializer: JSONSerializer {
+    open class UploadSessionLookupErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionLookupError) -> JSON {
+        open func serialize(_ value: UploadSessionLookupError) -> JSON {
             switch value {
                 case .notFound:
                     var d = [String: JSON]()
@@ -4074,7 +4074,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UploadSessionLookupError {
+        open func deserialize(_ json: JSON) -> UploadSessionLookupError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4100,26 +4100,26 @@ public class Files {
     }
 
     /// The UploadSessionOffsetError struct
-    public class UploadSessionOffsetError: CustomStringConvertible {
+    open class UploadSessionOffsetError: CustomStringConvertible {
         /// The offset up to which data has been collected.
-        public let correctOffset: UInt64
+        open let correctOffset: UInt64
         public init(correctOffset: UInt64) {
             comparableValidator()(correctOffset)
             self.correctOffset = correctOffset
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionOffsetErrorSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionOffsetErrorSerializer: JSONSerializer {
+    open class UploadSessionOffsetErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionOffsetError) -> JSON {
+        open func serialize(_ value: UploadSessionOffsetError) -> JSON {
             let output = [ 
             "correct_offset": Serialization._UInt64Serializer.serialize(value.correctOffset),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionOffsetError {
+        open func deserialize(_ json: JSON) -> UploadSessionOffsetError {
             switch json {
                 case .dictionary(let dict):
                     let correctOffset = Serialization._UInt64Serializer.deserialize(dict["correct_offset"] ?? .null)
@@ -4131,26 +4131,26 @@ public class Files {
     }
 
     /// The UploadSessionStartArg struct
-    public class UploadSessionStartArg: CustomStringConvertible {
+    open class UploadSessionStartArg: CustomStringConvertible {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        public let close: Bool
+        open let close: Bool
         public init(close: Bool = false) {
             self.close = close
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartArgSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionStartArgSerializer: JSONSerializer {
+    open class UploadSessionStartArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionStartArg) -> JSON {
+        open func serialize(_ value: UploadSessionStartArg) -> JSON {
             let output = [ 
             "close": Serialization._BoolSerializer.serialize(value.close),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionStartArg {
+        open func deserialize(_ json: JSON) -> UploadSessionStartArg {
             switch json {
                 case .dictionary(let dict):
                     let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
@@ -4162,26 +4162,26 @@ public class Files {
     }
 
     /// The UploadSessionStartResult struct
-    public class UploadSessionStartResult: CustomStringConvertible {
+    open class UploadSessionStartResult: CustomStringConvertible {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
-        public let sessionId: String
+        open let sessionId: String
         public init(sessionId: String) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartResultSerializer().serialize(self)))"
         }
     }
-    public class UploadSessionStartResultSerializer: JSONSerializer {
+    open class UploadSessionStartResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadSessionStartResult) -> JSON {
+        open func serialize(_ value: UploadSessionStartResult) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadSessionStartResult {
+        open func deserialize(_ json: JSON) -> UploadSessionStartResult {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -4193,30 +4193,30 @@ public class Files {
     }
 
     /// The UploadWriteFailed struct
-    public class UploadWriteFailed: CustomStringConvertible {
+    open class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
-        public let reason: Files.WriteError
+        open let reason: Files.WriteError
         /// The upload session ID; this may be used to retry the commit.
-        public let uploadSessionId: String
+        open let uploadSessionId: String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
             stringValidator()(uploadSessionId)
             self.uploadSessionId = uploadSessionId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadWriteFailedSerializer().serialize(self)))"
         }
     }
-    public class UploadWriteFailedSerializer: JSONSerializer {
+    open class UploadWriteFailedSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UploadWriteFailed) -> JSON {
+        open func serialize(_ value: UploadWriteFailed) -> JSON {
             let output = [ 
             "reason": Files.WriteErrorSerializer().serialize(value.reason),
             "upload_session_id": Serialization._StringSerializer.serialize(value.uploadSessionId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UploadWriteFailed {
+        open func deserialize(_ json: JSON) -> UploadWriteFailed {
             switch json {
                 case .dictionary(let dict):
                     let reason = Files.WriteErrorSerializer().deserialize(dict["reason"] ?? .null)
@@ -4229,21 +4229,21 @@ public class Files {
     }
 
     /// Metadata for a video.
-    public class VideoMetadata: Files.MediaMetadata {
+    open class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
-        public let duration: UInt64?
+        open let duration: UInt64?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil, duration: UInt64? = nil) {
             nullableValidator(comparableValidator())(duration)
             self.duration = duration
             super.init(dimensions: dimensions, location: location, timeTaken: timeTaken)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(VideoMetadataSerializer().serialize(self)))"
         }
     }
-    public class VideoMetadataSerializer: JSONSerializer {
+    open class VideoMetadataSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: VideoMetadata) -> JSON {
+        open func serialize(_ value: VideoMetadata) -> JSON {
             let output = [ 
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
@@ -4252,7 +4252,7 @@ public class Files {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> VideoMetadata {
+        open func deserialize(_ json: JSON) -> VideoMetadata {
             switch json {
                 case .dictionary(let dict):
                     let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .null)
@@ -4281,9 +4281,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteConflictErrorSerializer().serialize(self)))"
         }
     }
-    public class WriteConflictErrorSerializer: JSONSerializer {
+    open class WriteConflictErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: WriteConflictError) -> JSON {
+        open func serialize(_ value: WriteConflictError) -> JSON {
             switch value {
                 case .file:
                     var d = [String: JSON]()
@@ -4303,7 +4303,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> WriteConflictError {
+        open func deserialize(_ json: JSON) -> WriteConflictError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4344,9 +4344,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteErrorSerializer().serialize(self)))"
         }
     }
-    public class WriteErrorSerializer: JSONSerializer {
+    open class WriteErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: WriteError) -> JSON {
+        open func serialize(_ value: WriteError) -> JSON {
             switch value {
                 case .malformedPath(let arg):
                     var d = ["malformed_path": NullableSerializer(Serialization._StringSerializer).serialize(arg)]
@@ -4374,7 +4374,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> WriteError {
+        open func deserialize(_ json: JSON) -> WriteError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4423,9 +4423,9 @@ public class Files {
             return "\(SerializeUtil.prepareJSONForSerialization(WriteModeSerializer().serialize(self)))"
         }
     }
-    public class WriteModeSerializer: JSONSerializer {
+    open class WriteModeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: WriteMode) -> JSON {
+        open func serialize(_ value: WriteMode) -> JSON {
             switch value {
                 case .add:
                     var d = [String: JSON]()
@@ -4441,7 +4441,7 @@ public class Files {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> WriteMode {
+        open func deserialize(_ json: JSON) -> WriteMode {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the auth namespace
-public class Auth {
+open class Auth {
     /// Errors occurred during authentication.
     public enum AuthError: CustomStringConvertible {
         /// The access token is invalid.
@@ -23,9 +23,9 @@ public class Auth {
             return "\(SerializeUtil.prepareJSONForSerialization(AuthErrorSerializer().serialize(self)))"
         }
     }
-    public class AuthErrorSerializer: JSONSerializer {
+    open class AuthErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AuthError) -> JSON {
+        open func serialize(_ value: AuthError) -> JSON {
             switch value {
                 case .invalidAccessToken:
                     var d = [String: JSON]()
@@ -45,7 +45,7 @@ public class Auth {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> AuthError {
+        open func deserialize(_ json: JSON) -> AuthError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -68,30 +68,30 @@ public class Auth {
     }
 
     /// Error occurred because the app is being rate limited.
-    public class RateLimitError: CustomStringConvertible {
+    open class RateLimitError: CustomStringConvertible {
         /// The reason why the app is being rate limited.
-        public let reason: Auth.RateLimitReason
+        open let reason: Auth.RateLimitReason
         /// The number of seconds that the app should wait before making another request.
-        public let retryAfter: UInt64
+        open let retryAfter: UInt64
         public init(reason: Auth.RateLimitReason, retryAfter: UInt64 = 1) {
             self.reason = reason
             comparableValidator()(retryAfter)
             self.retryAfter = retryAfter
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RateLimitErrorSerializer().serialize(self)))"
         }
     }
-    public class RateLimitErrorSerializer: JSONSerializer {
+    open class RateLimitErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RateLimitError) -> JSON {
+        open func serialize(_ value: RateLimitError) -> JSON {
             let output = [ 
             "reason": Auth.RateLimitReasonSerializer().serialize(value.reason),
             "retry_after": Serialization._UInt64Serializer.serialize(value.retryAfter),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RateLimitError {
+        open func deserialize(_ json: JSON) -> RateLimitError {
             switch json {
                 case .dictionary(let dict):
                     let reason = Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .null)
@@ -116,9 +116,9 @@ public class Auth {
             return "\(SerializeUtil.prepareJSONForSerialization(RateLimitReasonSerializer().serialize(self)))"
         }
     }
-    public class RateLimitReasonSerializer: JSONSerializer {
+    open class RateLimitReasonSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RateLimitReason) -> JSON {
+        open func serialize(_ value: RateLimitReason) -> JSON {
             switch value {
                 case .tooManyRequests:
                     var d = [String: JSON]()
@@ -134,7 +134,7 @@ public class Auth {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RateLimitReason {
+        open func deserialize(_ json: JSON) -> RateLimitReason {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

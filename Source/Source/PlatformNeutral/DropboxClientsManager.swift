@@ -10,12 +10,12 @@ import Alamofire
 /// https://www.dropbox.com/developers/documentation/swift#tutorial
 ///
 /// For information on the available API methods, see the documentation for DropboxClient
-public class DropboxClientsManager {
+open class DropboxClientsManager {
     /// An authorized client. This will be set to nil if unlinked.
-    public static var authorizedClient: DropboxClient?
+    open static var authorizedClient: DropboxClient?
 
     /// An authorized team client. This will be set to nil if unlinked.
-    public static var authorizedTeamClient: DropboxTeamClient?
+    open static var authorizedTeamClient: DropboxTeamClient?
 
     /// Sets up access to the Dropbox User API
     static func setupWithOAuthManager(_ appKey: String, oAuthManager: DropboxOAuthManager, transportClient: DropboxTransportClient?) {
@@ -57,7 +57,7 @@ public class DropboxClientsManager {
         }
     }
     
-    public static func reauthorizeClient(tokenUid: String) {
+    open static func reauthorizeClient(_ tokenUid: String) {
         precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedClient == nil, "Dropbox user client is already authorized")
         
@@ -66,7 +66,7 @@ public class DropboxClientsManager {
         }
     }
     
-    public static func reauthorizeTeamClient(tokenUid: String) {
+    open static func reauthorizeTeamClient(_ tokenUid: String) {
         precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedClient == nil, "Dropbox user client is already authorized")
         
@@ -106,7 +106,7 @@ public class DropboxClientsManager {
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
+    open static func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
         precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedClient == nil, "Dropbox user client is already authorized")
         if let result =  DropboxOAuthManager.sharedAuthManager.handleRedirectURL(url) {
@@ -125,7 +125,7 @@ public class DropboxClientsManager {
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURLTeam(_ url: URL) -> DropboxOAuthResult? {
+    open static func handleRedirectURLTeam(_ url: URL) -> DropboxOAuthResult? {
         precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedTeamClient == nil, "Dropbox team client is already authorized")
         if let result =  DropboxOAuthManager.sharedAuthManager.handleRedirectURL(url) {
@@ -144,7 +144,7 @@ public class DropboxClientsManager {
     }
 
     /// Unlink the user.
-    public static func unlinkClient() {
+    open static func unlinkClient() {
         precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
         
         _ = DropboxOAuthManager.sharedAuthManager.clearStoredAccessTokens()
@@ -152,7 +152,7 @@ public class DropboxClientsManager {
     }
     
     /// Unlink the user.
-    public static func resetClients() {
+    open static func resetClients() {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
             // already unlinked
             return

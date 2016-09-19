@@ -7,7 +7,7 @@ import Alamofire
 
 /// The client for the User API. Call routes using the namespaces inside this object (inherited from parent).
 
-public class DropboxClient: DropboxBase {
+open class DropboxClient: DropboxBase {
     fileprivate var transportClient: DropboxTransportClient
 
     public convenience init(accessToken: String, selectUser: String? = nil) {

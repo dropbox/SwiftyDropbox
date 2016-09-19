@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the async namespace
-public class Async {
+open class Async {
     /// Result returned by methods that launch an asynchronous job. A method who may either launch an asynchronous job,
     /// or complete the request synchronously, can use this union by extending it, and adding a 'complete' field with
     /// the type of the synchronous response. See LaunchEmptyResult for an example.
@@ -20,9 +20,9 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(LaunchResultBaseSerializer().serialize(self)))"
         }
     }
-    public class LaunchResultBaseSerializer: JSONSerializer {
+    open class LaunchResultBaseSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: LaunchResultBase) -> JSON {
+        open func serialize(_ value: LaunchResultBase) -> JSON {
             switch value {
                 case .asyncJobId(let arg):
                     var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
@@ -30,7 +30,7 @@ public class Async {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> LaunchResultBase {
+        open func deserialize(_ json: JSON) -> LaunchResultBase {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -60,9 +60,9 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(LaunchEmptyResultSerializer().serialize(self)))"
         }
     }
-    public class LaunchEmptyResultSerializer: JSONSerializer {
+    open class LaunchEmptyResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: LaunchEmptyResult) -> JSON {
+        open func serialize(_ value: LaunchEmptyResult) -> JSON {
             switch value {
                 case .asyncJobId(let arg):
                     var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
@@ -74,7 +74,7 @@ public class Async {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> LaunchEmptyResult {
+        open func deserialize(_ json: JSON) -> LaunchEmptyResult {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -94,26 +94,26 @@ public class Async {
     }
 
     /// Arguments for methods that poll the status of an asynchronous job.
-    public class PollArg: CustomStringConvertible {
+    open class PollArg: CustomStringConvertible {
         /// Id of the asynchronous job. This is the value of a response returned from the method that launched the job.
-        public let asyncJobId: String
+        open let asyncJobId: String
         public init(asyncJobId: String) {
             stringValidator(minLength: 1)(asyncJobId)
             self.asyncJobId = asyncJobId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PollArgSerializer().serialize(self)))"
         }
     }
-    public class PollArgSerializer: JSONSerializer {
+    open class PollArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PollArg) -> JSON {
+        open func serialize(_ value: PollArg) -> JSON {
             let output = [ 
             "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PollArg {
+        open func deserialize(_ json: JSON) -> PollArg {
             switch json {
                 case .dictionary(let dict):
                     let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .null)
@@ -135,9 +135,9 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollResultBaseSerializer().serialize(self)))"
         }
     }
-    public class PollResultBaseSerializer: JSONSerializer {
+    open class PollResultBaseSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PollResultBase) -> JSON {
+        open func serialize(_ value: PollResultBase) -> JSON {
             switch value {
                 case .inProgress:
                     var d = [String: JSON]()
@@ -145,7 +145,7 @@ public class Async {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PollResultBase {
+        open func deserialize(_ json: JSON) -> PollResultBase {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -173,9 +173,9 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollEmptyResultSerializer().serialize(self)))"
         }
     }
-    public class PollEmptyResultSerializer: JSONSerializer {
+    open class PollEmptyResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PollEmptyResult) -> JSON {
+        open func serialize(_ value: PollEmptyResult) -> JSON {
             switch value {
                 case .inProgress:
                     var d = [String: JSON]()
@@ -187,7 +187,7 @@ public class Async {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PollEmptyResult {
+        open func deserialize(_ json: JSON) -> PollEmptyResult {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -219,9 +219,9 @@ public class Async {
             return "\(SerializeUtil.prepareJSONForSerialization(PollErrorSerializer().serialize(self)))"
         }
     }
-    public class PollErrorSerializer: JSONSerializer {
+    open class PollErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PollError) -> JSON {
+        open func serialize(_ value: PollError) -> JSON {
             switch value {
                 case .invalidAsyncJobId:
                     var d = [String: JSON]()
@@ -237,7 +237,7 @@ public class Async {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PollError {
+        open func deserialize(_ json: JSON) -> PollError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

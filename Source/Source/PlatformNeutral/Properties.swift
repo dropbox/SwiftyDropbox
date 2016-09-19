@@ -7,28 +7,28 @@
 import Foundation
 
 /// Datatypes and serializers for the properties namespace
-public class Properties {
+open class Properties {
     /// The GetPropertyTemplateArg struct
-    public class GetPropertyTemplateArg: CustomStringConvertible {
+    open class GetPropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by route properties/template/add.
-        public let templateId: String
+        open let templateId: String
         public init(templateId: String) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetPropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    public class GetPropertyTemplateArgSerializer: JSONSerializer {
+    open class GetPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetPropertyTemplateArg) -> JSON {
+        open func serialize(_ value: GetPropertyTemplateArg) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetPropertyTemplateArg {
+        open func deserialize(_ json: JSON) -> GetPropertyTemplateArg {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -40,14 +40,14 @@ public class Properties {
     }
 
     /// Describes property templates that can be filled and associated with a file.
-    public class PropertyGroupTemplate: CustomStringConvertible {
+    open class PropertyGroupTemplate: CustomStringConvertible {
         /// A display name for the property template. Property template names can be up to 256 bytes.
-        public let name: String
+        open let name: String
         /// Description for new property template. Property template descriptions can be up to 1024 bytes.
-        public let description_: String
+        open let description_: String
         /// This is a list of custom properties associated with a property template. There can be up to 64 properties in
         /// a single property template.
-        public let fields: Array<Properties.PropertyFieldTemplate>
+        open let fields: Array<Properties.PropertyFieldTemplate>
         public init(name: String, description_: String, fields: Array<Properties.PropertyFieldTemplate>) {
             stringValidator()(name)
             self.name = name
@@ -55,13 +55,13 @@ public class Properties {
             self.description_ = description_
             self.fields = fields
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupTemplateSerializer().serialize(self)))"
         }
     }
-    public class PropertyGroupTemplateSerializer: JSONSerializer {
+    open class PropertyGroupTemplateSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyGroupTemplate) -> JSON {
+        open func serialize(_ value: PropertyGroupTemplate) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
@@ -69,7 +69,7 @@ public class Properties {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyGroupTemplate {
+        open func deserialize(_ json: JSON) -> PropertyGroupTemplate {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -83,14 +83,14 @@ public class Properties {
     }
 
     /// The Property template for the specified template.
-    public class GetPropertyTemplateResult: Properties.PropertyGroupTemplate {
-        public override var description: String {
+    open class GetPropertyTemplateResult: Properties.PropertyGroupTemplate {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetPropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    public class GetPropertyTemplateResultSerializer: JSONSerializer {
+    open class GetPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetPropertyTemplateResult) -> JSON {
+        open func serialize(_ value: GetPropertyTemplateResult) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
@@ -98,7 +98,7 @@ public class Properties {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetPropertyTemplateResult {
+        open func deserialize(_ json: JSON) -> GetPropertyTemplateResult {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -112,26 +112,26 @@ public class Properties {
     }
 
     /// The ListPropertyTemplateIds struct
-    public class ListPropertyTemplateIds: CustomStringConvertible {
+    open class ListPropertyTemplateIds: CustomStringConvertible {
         /// List of identifiers for templates added by route properties/template/add.
-        public let templateIds: Array<String>
+        open let templateIds: Array<String>
         public init(templateIds: Array<String>) {
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*"))(templateIds)
             self.templateIds = templateIds
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListPropertyTemplateIdsSerializer().serialize(self)))"
         }
     }
-    public class ListPropertyTemplateIdsSerializer: JSONSerializer {
+    open class ListPropertyTemplateIdsSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListPropertyTemplateIds) -> JSON {
+        open func serialize(_ value: ListPropertyTemplateIds) -> JSON {
             let output = [ 
             "template_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.templateIds),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListPropertyTemplateIds {
+        open func deserialize(_ json: JSON) -> ListPropertyTemplateIds {
             switch json {
                 case .dictionary(let dict):
                     let templateIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["template_ids"] ?? .null)
@@ -155,9 +155,9 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyTemplateErrorSerializer().serialize(self)))"
         }
     }
-    public class PropertyTemplateErrorSerializer: JSONSerializer {
+    open class PropertyTemplateErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyTemplateError) -> JSON {
+        open func serialize(_ value: PropertyTemplateError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -173,7 +173,7 @@ public class Properties {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PropertyTemplateError {
+        open func deserialize(_ json: JSON) -> PropertyTemplateError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -215,9 +215,9 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(ModifyPropertyTemplateErrorSerializer().serialize(self)))"
         }
     }
-    public class ModifyPropertyTemplateErrorSerializer: JSONSerializer {
+    open class ModifyPropertyTemplateErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ModifyPropertyTemplateError) -> JSON {
+        open func serialize(_ value: ModifyPropertyTemplateError) -> JSON {
             switch value {
                 case .templateNotFound(let arg):
                     var d = ["template_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -249,7 +249,7 @@ public class Properties {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ModifyPropertyTemplateError {
+        open func deserialize(_ json: JSON) -> ModifyPropertyTemplateError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -279,32 +279,32 @@ public class Properties {
     }
 
     /// The PropertyField struct
-    public class PropertyField: CustomStringConvertible {
+    open class PropertyField: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
-        public let name: String
+        open let name: String
         /// Value of a custom property attached to a file. Values can be up to 1024 bytes.
-        public let value: String
+        open let value: String
         public init(name: String, value: String) {
             stringValidator()(name)
             self.name = name
             stringValidator()(value)
             self.value = value
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyFieldSerializer().serialize(self)))"
         }
     }
-    public class PropertyFieldSerializer: JSONSerializer {
+    open class PropertyFieldSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyField) -> JSON {
+        open func serialize(_ value: PropertyField) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "value": Serialization._StringSerializer.serialize(value.value),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyField {
+        open func deserialize(_ json: JSON) -> PropertyField {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -317,16 +317,16 @@ public class Properties {
     }
 
     /// Describe a single property field type which that can be part of a property template.
-    public class PropertyFieldTemplate: CustomStringConvertible {
+    open class PropertyFieldTemplate: CustomStringConvertible {
         /// This is the name or key of a custom property in a property template. File property names can be up to 256
         /// bytes.
-        public let name: String
+        open let name: String
         /// This is the description for a custom property in a property template. File property description can be up to
         /// 1024 bytes.
-        public let description_: String
+        open let description_: String
         /// This is the data type of the value of this property. This type will be enforced upon property creation and
         /// modifications.
-        public let type: Properties.PropertyType
+        open let type: Properties.PropertyType
         public init(name: String, description_: String, type: Properties.PropertyType) {
             stringValidator()(name)
             self.name = name
@@ -334,13 +334,13 @@ public class Properties {
             self.description_ = description_
             self.type = type
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyFieldTemplateSerializer().serialize(self)))"
         }
     }
-    public class PropertyFieldTemplateSerializer: JSONSerializer {
+    open class PropertyFieldTemplateSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyFieldTemplate) -> JSON {
+        open func serialize(_ value: PropertyFieldTemplate) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
@@ -348,7 +348,7 @@ public class Properties {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyFieldTemplate {
+        open func deserialize(_ json: JSON) -> PropertyFieldTemplate {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -362,30 +362,30 @@ public class Properties {
     }
 
     /// Collection of custom properties in filled property templates.
-    public class PropertyGroup: CustomStringConvertible {
+    open class PropertyGroup: CustomStringConvertible {
         /// A unique identifier for a property template type.
-        public let templateId: String
+        open let templateId: String
         /// This is a list of custom properties associated with a file. There can be up to 32 properties for a template.
-        public let fields: Array<Properties.PropertyField>
+        open let fields: Array<Properties.PropertyField>
         public init(templateId: String, fields: Array<Properties.PropertyField>) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
             self.fields = fields
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyGroupSerializer().serialize(self)))"
         }
     }
-    public class PropertyGroupSerializer: JSONSerializer {
+    open class PropertyGroupSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyGroup) -> JSON {
+        open func serialize(_ value: PropertyGroup) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "fields": ArraySerializer(Properties.PropertyFieldSerializer()).serialize(value.fields),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> PropertyGroup {
+        open func deserialize(_ json: JSON) -> PropertyGroup {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -409,9 +409,9 @@ public class Properties {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertyTypeSerializer().serialize(self)))"
         }
     }
-    public class PropertyTypeSerializer: JSONSerializer {
+    open class PropertyTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: PropertyType) -> JSON {
+        open func serialize(_ value: PropertyType) -> JSON {
             switch value {
                 case .string_:
                     var d = [String: JSON]()
@@ -423,7 +423,7 @@ public class Properties {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> PropertyType {
+        open func deserialize(_ json: JSON) -> PropertyType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

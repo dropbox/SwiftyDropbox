@@ -7,19 +7,19 @@
 import Foundation
 
 /// Datatypes and serializers for the team namespace
-public class Team {
+open class Team {
     /// The DeviceSession struct
-    public class DeviceSession: CustomStringConvertible {
+    open class DeviceSession: CustomStringConvertible {
         /// The session id
-        public let sessionId: String
+        open let sessionId: String
         /// The IP address of the last activity from this session
-        public let ipAddress: String?
+        open let ipAddress: String?
         /// The country from which the last activity from this session was made
-        public let country: String?
+        open let country: String?
         /// The time this session was created
-        public let created: Date?
+        open let created: Date?
         /// The time of the last activity from this session
-        public let updated: Date?
+        open let updated: Date?
         public init(sessionId: String, ipAddress: String? = nil, country: String? = nil, created: Date? = nil, updated: Date? = nil) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
@@ -30,13 +30,13 @@ public class Team {
             self.created = created
             self.updated = updated
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeviceSessionSerializer().serialize(self)))"
         }
     }
-    public class DeviceSessionSerializer: JSONSerializer {
+    open class DeviceSessionSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DeviceSession) -> JSON {
+        open func serialize(_ value: DeviceSession) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "ip_address": NullableSerializer(Serialization._StringSerializer).serialize(value.ipAddress),
@@ -46,7 +46,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DeviceSession {
+        open func deserialize(_ json: JSON) -> DeviceSession {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -62,13 +62,13 @@ public class Team {
     }
 
     /// Information on active web sessions
-    public class ActiveWebSession: Team.DeviceSession {
+    open class ActiveWebSession: Team.DeviceSession {
         /// Information on the hosting device
-        public let userAgent: String
+        open let userAgent: String
         /// Information on the hosting operating system
-        public let os: String
+        open let os: String
         /// Information on the browser used for this web session
-        public let browser: String
+        open let browser: String
         public init(sessionId: String, userAgent: String, os: String, browser: String, ipAddress: String? = nil, country: String? = nil, created: Date? = nil, updated: Date? = nil) {
             stringValidator()(userAgent)
             self.userAgent = userAgent
@@ -78,13 +78,13 @@ public class Team {
             self.browser = browser
             super.init(sessionId: sessionId, ipAddress: ipAddress, country: country, created: created, updated: updated)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ActiveWebSessionSerializer().serialize(self)))"
         }
     }
-    public class ActiveWebSessionSerializer: JSONSerializer {
+    open class ActiveWebSessionSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ActiveWebSession) -> JSON {
+        open func serialize(_ value: ActiveWebSession) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "user_agent": Serialization._StringSerializer.serialize(value.userAgent),
@@ -97,7 +97,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ActiveWebSession {
+        open func deserialize(_ json: JSON) -> ActiveWebSession {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -116,14 +116,14 @@ public class Team {
     }
 
     /// Arguments for adding property templates.
-    public class AddPropertyTemplateArg: Properties.PropertyGroupTemplate {
-        public override var description: String {
+    open class AddPropertyTemplateArg: Properties.PropertyGroupTemplate {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    public class AddPropertyTemplateArgSerializer: JSONSerializer {
+    open class AddPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AddPropertyTemplateArg) -> JSON {
+        open func serialize(_ value: AddPropertyTemplateArg) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
@@ -131,7 +131,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> AddPropertyTemplateArg {
+        open func deserialize(_ json: JSON) -> AddPropertyTemplateArg {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -145,26 +145,26 @@ public class Team {
     }
 
     /// The AddPropertyTemplateResult struct
-    public class AddPropertyTemplateResult: CustomStringConvertible {
+    open class AddPropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
-        public let templateId: String
+        open let templateId: String
         public init(templateId: String) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AddPropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    public class AddPropertyTemplateResultSerializer: JSONSerializer {
+    open class AddPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AddPropertyTemplateResult) -> JSON {
+        open func serialize(_ value: AddPropertyTemplateResult) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> AddPropertyTemplateResult {
+        open func deserialize(_ json: JSON) -> AddPropertyTemplateResult {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -190,9 +190,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(AdminTierSerializer().serialize(self)))"
         }
     }
-    public class AdminTierSerializer: JSONSerializer {
+    open class AdminTierSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: AdminTier) -> JSON {
+        open func serialize(_ value: AdminTier) -> JSON {
             switch value {
                 case .teamAdmin:
                     var d = [String: JSON]()
@@ -212,7 +212,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> AdminTier {
+        open func deserialize(_ json: JSON) -> AdminTier {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -235,19 +235,19 @@ public class Team {
     }
 
     /// Information on linked third party applications
-    public class ApiApp: CustomStringConvertible {
+    open class ApiApp: CustomStringConvertible {
         /// The application unique id
-        public let appId: String
+        open let appId: String
         /// The application name
-        public let appName: String
+        open let appName: String
         /// The application publisher name
-        public let publisher: String?
+        open let publisher: String?
         /// The publisher's URL
-        public let publisherUrl: String?
+        open let publisherUrl: String?
         /// The time this application was linked
-        public let linked: Date?
+        open let linked: Date?
         /// Whether the linked application uses a dedicated folder
-        public let isAppFolder: Bool
+        open let isAppFolder: Bool
         public init(appId: String, appName: String, isAppFolder: Bool, publisher: String? = nil, publisherUrl: String? = nil, linked: Date? = nil) {
             stringValidator()(appId)
             self.appId = appId
@@ -260,13 +260,13 @@ public class Team {
             self.linked = linked
             self.isAppFolder = isAppFolder
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ApiAppSerializer().serialize(self)))"
         }
     }
-    public class ApiAppSerializer: JSONSerializer {
+    open class ApiAppSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ApiApp) -> JSON {
+        open func serialize(_ value: ApiApp) -> JSON {
             let output = [ 
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "app_name": Serialization._StringSerializer.serialize(value.appName),
@@ -277,7 +277,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ApiApp {
+        open func deserialize(_ json: JSON) -> ApiApp {
             switch json {
                 case .dictionary(let dict):
                     let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .null)
@@ -294,26 +294,26 @@ public class Team {
     }
 
     /// Base report structure.
-    public class BaseDfbReport: CustomStringConvertible {
+    open class BaseDfbReport: CustomStringConvertible {
         /// First date present in the results as 'YYYY-MM-DD' or None.
-        public let startDate: String
+        open let startDate: String
         public init(startDate: String) {
             stringValidator()(startDate)
             self.startDate = startDate
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(BaseDfbReportSerializer().serialize(self)))"
         }
     }
-    public class BaseDfbReportSerializer: JSONSerializer {
+    open class BaseDfbReportSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: BaseDfbReport) -> JSON {
+        open func serialize(_ value: BaseDfbReport) -> JSON {
             let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> BaseDfbReport {
+        open func deserialize(_ json: JSON) -> BaseDfbReport {
             switch json {
                 case .dictionary(let dict):
                     let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
@@ -325,29 +325,29 @@ public class Team {
     }
 
     /// Input arguments that can be provided for most reports.
-    public class DateRange: CustomStringConvertible {
+    open class DateRange: CustomStringConvertible {
         /// Optional starting date (inclusive)
-        public let startDate: Date?
+        open let startDate: Date?
         /// Optional ending date (exclusive)
-        public let endDate: Date?
+        open let endDate: Date?
         public init(startDate: Date? = nil, endDate: Date? = nil) {
             self.startDate = startDate
             self.endDate = endDate
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DateRangeSerializer().serialize(self)))"
         }
     }
-    public class DateRangeSerializer: JSONSerializer {
+    open class DateRangeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DateRange) -> JSON {
+        open func serialize(_ value: DateRange) -> JSON {
             let output = [ 
             "start_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.startDate),
             "end_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.endDate),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DateRange {
+        open func deserialize(_ json: JSON) -> DateRange {
             switch json {
                 case .dictionary(let dict):
                     let startDate = NullableSerializer(NSDateSerializer("%Y-%m-%d")).deserialize(dict["start_date"] ?? .null)
@@ -368,9 +368,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DateRangeErrorSerializer().serialize(self)))"
         }
     }
-    public class DateRangeErrorSerializer: JSONSerializer {
+    open class DateRangeErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DateRangeError) -> JSON {
+        open func serialize(_ value: DateRangeError) -> JSON {
             switch value {
                 case .other:
                     var d = [String: JSON]()
@@ -378,7 +378,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> DateRangeError {
+        open func deserialize(_ json: JSON) -> DateRangeError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -395,17 +395,17 @@ public class Team {
     }
 
     /// Information about linked Dropbox desktop client sessions
-    public class DesktopClientSession: Team.DeviceSession {
+    open class DesktopClientSession: Team.DeviceSession {
         /// Name of the hosting desktop
-        public let hostName: String
+        open let hostName: String
         /// The Dropbox desktop client type
-        public let clientType: Team.DesktopPlatform
+        open let clientType: Team.DesktopPlatform
         /// The Dropbox client version
-        public let clientVersion: String
+        open let clientVersion: String
         /// Information on the hosting platform
-        public let platform: String
+        open let platform: String
         /// Whether it's possible to delete all of the account files upon unlinking
-        public let isDeleteOnUnlinkSupported: Bool
+        open let isDeleteOnUnlinkSupported: Bool
         public init(sessionId: String, hostName: String, clientType: Team.DesktopPlatform, clientVersion: String, platform: String, isDeleteOnUnlinkSupported: Bool, ipAddress: String? = nil, country: String? = nil, created: Date? = nil, updated: Date? = nil) {
             stringValidator()(hostName)
             self.hostName = hostName
@@ -417,13 +417,13 @@ public class Team {
             self.isDeleteOnUnlinkSupported = isDeleteOnUnlinkSupported
             super.init(sessionId: sessionId, ipAddress: ipAddress, country: country, created: created, updated: updated)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DesktopClientSessionSerializer().serialize(self)))"
         }
     }
-    public class DesktopClientSessionSerializer: JSONSerializer {
+    open class DesktopClientSessionSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DesktopClientSession) -> JSON {
+        open func serialize(_ value: DesktopClientSession) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "host_name": Serialization._StringSerializer.serialize(value.hostName),
@@ -438,7 +438,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DesktopClientSession {
+        open func deserialize(_ json: JSON) -> DesktopClientSession {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -473,9 +473,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(DesktopPlatformSerializer().serialize(self)))"
         }
     }
-    public class DesktopPlatformSerializer: JSONSerializer {
+    open class DesktopPlatformSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DesktopPlatform) -> JSON {
+        open func serialize(_ value: DesktopPlatform) -> JSON {
             switch value {
                 case .windows:
                     var d = [String: JSON]()
@@ -495,7 +495,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> DesktopPlatform {
+        open func deserialize(_ json: JSON) -> DesktopPlatform {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -518,31 +518,31 @@ public class Team {
     }
 
     /// The DeviceSessionArg struct
-    public class DeviceSessionArg: CustomStringConvertible {
+    open class DeviceSessionArg: CustomStringConvertible {
         /// The session id
-        public let sessionId: String
+        open let sessionId: String
         /// The unique id of the member owning the device
-        public let teamMemberId: String
+        open let teamMemberId: String
         public init(sessionId: String, teamMemberId: String) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeviceSessionArgSerializer().serialize(self)))"
         }
     }
-    public class DeviceSessionArgSerializer: JSONSerializer {
+    open class DeviceSessionArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DeviceSessionArg) -> JSON {
+        open func serialize(_ value: DeviceSessionArg) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DeviceSessionArg {
+        open func deserialize(_ json: JSON) -> DeviceSessionArg {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -556,21 +556,21 @@ public class Team {
 
     /// Each of the items is an array of values, one value per day. The value is the number of devices active within a
     /// time window, ending with that day. If there is no data for a day, then the value will be None.
-    public class DevicesActive: CustomStringConvertible {
+    open class DevicesActive: CustomStringConvertible {
         /// Array of number of linked windows (desktop) clients with activity.
-        public let windows: Array<UInt64?>
+        open let windows: Array<UInt64?>
         /// Array of number of linked mac (desktop) clients with activity.
-        public let macos: Array<UInt64?>
+        open let macos: Array<UInt64?>
         /// Array of number of linked linus (desktop) clients with activity.
-        public let linux: Array<UInt64?>
+        open let linux: Array<UInt64?>
         /// Array of number of linked ios devices with activity.
-        public let ios: Array<UInt64?>
+        open let ios: Array<UInt64?>
         /// Array of number of linked android devices with activity.
-        public let android: Array<UInt64?>
+        open let android: Array<UInt64?>
         /// Array of number of other linked devices (blackberry, windows phone, etc)  with activity.
-        public let other: Array<UInt64?>
+        open let other: Array<UInt64?>
         /// Array of total number of linked clients with activity.
-        public let total: Array<UInt64?>
+        open let total: Array<UInt64?>
         public init(windows: Array<UInt64?>, macos: Array<UInt64?>, linux: Array<UInt64?>, ios: Array<UInt64?>, android: Array<UInt64?>, other: Array<UInt64?>, total: Array<UInt64?>) {
             arrayValidator(itemValidator: nullableValidator(comparableValidator()))(windows)
             self.windows = windows
@@ -587,13 +587,13 @@ public class Team {
             arrayValidator(itemValidator: nullableValidator(comparableValidator()))(total)
             self.total = total
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DevicesActiveSerializer().serialize(self)))"
         }
     }
-    public class DevicesActiveSerializer: JSONSerializer {
+    open class DevicesActiveSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: DevicesActive) -> JSON {
+        open func serialize(_ value: DevicesActive) -> JSON {
             let output = [ 
             "windows": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.windows),
             "macos": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.macos),
@@ -605,7 +605,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> DevicesActive {
+        open func deserialize(_ json: JSON) -> DevicesActive {
             switch json {
                 case .dictionary(let dict):
                     let windows = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["windows"] ?? .null)
@@ -624,36 +624,36 @@ public class Team {
 
     /// Activity Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    public class GetActivityReport: Team.BaseDfbReport {
+    open class GetActivityReport: Team.BaseDfbReport {
         /// Array of total number of adds by team members.
-        public let adds: Array<UInt64?>
+        open let adds: Array<UInt64?>
         /// Array of number of edits by team members. If the same user edits the same file multiple times this is
         /// counted as a single edit.
-        public let edits: Array<UInt64?>
+        open let edits: Array<UInt64?>
         /// Array of total number of deletes by team members.
-        public let deletes: Array<UInt64?>
+        open let deletes: Array<UInt64?>
         /// Array of the number of users who have been active in the last 28 days.
-        public let activeUsers28Day: Array<UInt64?>
+        open let activeUsers28Day: Array<UInt64?>
         /// Array of the number of users who have been active in the last week.
-        public let activeUsers7Day: Array<UInt64?>
+        open let activeUsers7Day: Array<UInt64?>
         /// Array of the number of users who have been active in the last day.
-        public let activeUsers1Day: Array<UInt64?>
+        open let activeUsers1Day: Array<UInt64?>
         /// Array of the number of shared folders with some activity in the last 28 days.
-        public let activeSharedFolders28Day: Array<UInt64?>
+        open let activeSharedFolders28Day: Array<UInt64?>
         /// Array of the number of shared folders with some activity in the last week.
-        public let activeSharedFolders7Day: Array<UInt64?>
+        open let activeSharedFolders7Day: Array<UInt64?>
         /// Array of the number of shared folders with some activity in the last day.
-        public let activeSharedFolders1Day: Array<UInt64?>
+        open let activeSharedFolders1Day: Array<UInt64?>
         /// Array of the number of shared links created.
-        public let sharedLinksCreated: Array<UInt64?>
+        open let sharedLinksCreated: Array<UInt64?>
         /// Array of the number of views by team users to shared links created by the team.
-        public let sharedLinksViewedByTeam: Array<UInt64?>
+        open let sharedLinksViewedByTeam: Array<UInt64?>
         /// Array of the number of views by users outside of the team to shared links created by the team.
-        public let sharedLinksViewedByOutsideUser: Array<UInt64?>
+        open let sharedLinksViewedByOutsideUser: Array<UInt64?>
         /// Array of the number of views by non-logged-in users to shared links created by the team.
-        public let sharedLinksViewedByNotLoggedIn: Array<UInt64?>
+        open let sharedLinksViewedByNotLoggedIn: Array<UInt64?>
         /// Array of the total number of views to shared links created by the team.
-        public let sharedLinksViewedTotal: Array<UInt64?>
+        open let sharedLinksViewedTotal: Array<UInt64?>
         public init(startDate: String, adds: Array<UInt64?>, edits: Array<UInt64?>, deletes: Array<UInt64?>, activeUsers28Day: Array<UInt64?>, activeUsers7Day: Array<UInt64?>, activeUsers1Day: Array<UInt64?>, activeSharedFolders28Day: Array<UInt64?>, activeSharedFolders7Day: Array<UInt64?>, activeSharedFolders1Day: Array<UInt64?>, sharedLinksCreated: Array<UInt64?>, sharedLinksViewedByTeam: Array<UInt64?>, sharedLinksViewedByOutsideUser: Array<UInt64?>, sharedLinksViewedByNotLoggedIn: Array<UInt64?>, sharedLinksViewedTotal: Array<UInt64?>) {
             arrayValidator(itemValidator: nullableValidator(comparableValidator()))(adds)
             self.adds = adds
@@ -685,13 +685,13 @@ public class Team {
             self.sharedLinksViewedTotal = sharedLinksViewedTotal
             super.init(startDate: startDate)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetActivityReportSerializer().serialize(self)))"
         }
     }
-    public class GetActivityReportSerializer: JSONSerializer {
+    open class GetActivityReportSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetActivityReport) -> JSON {
+        open func serialize(_ value: GetActivityReport) -> JSON {
             let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "adds": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.adds),
@@ -711,7 +711,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetActivityReport {
+        open func deserialize(_ json: JSON) -> GetActivityReport {
             switch json {
                 case .dictionary(let dict):
                     let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
@@ -739,26 +739,26 @@ public class Team {
     /// Devices Report Result. Contains subsections for different time ranges of activity. Each of the items in each
     /// subsection of the storage report is an array of values, one value per day. If there is no data for a day, then
     /// the value will be None.
-    public class GetDevicesReport: Team.BaseDfbReport {
+    open class GetDevicesReport: Team.BaseDfbReport {
         /// Report of the number of devices active in the last day.
-        public let active1Day: Team.DevicesActive
+        open let active1Day: Team.DevicesActive
         /// Report of the number of devices active in the last 7 days.
-        public let active7Day: Team.DevicesActive
+        open let active7Day: Team.DevicesActive
         /// Report of the number of devices active in the last 28 days.
-        public let active28Day: Team.DevicesActive
+        open let active28Day: Team.DevicesActive
         public init(startDate: String, active1Day: Team.DevicesActive, active7Day: Team.DevicesActive, active28Day: Team.DevicesActive) {
             self.active1Day = active1Day
             self.active7Day = active7Day
             self.active28Day = active28Day
             super.init(startDate: startDate)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetDevicesReportSerializer().serialize(self)))"
         }
     }
-    public class GetDevicesReportSerializer: JSONSerializer {
+    open class GetDevicesReportSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetDevicesReport) -> JSON {
+        open func serialize(_ value: GetDevicesReport) -> JSON {
             let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "active_1_day": Team.DevicesActiveSerializer().serialize(value.active1Day),
@@ -767,7 +767,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetDevicesReport {
+        open func deserialize(_ json: JSON) -> GetDevicesReport {
             switch json {
                 case .dictionary(let dict):
                     let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
@@ -783,17 +783,17 @@ public class Team {
 
     /// Membership Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    public class GetMembershipReport: Team.BaseDfbReport {
+    open class GetMembershipReport: Team.BaseDfbReport {
         /// Team size, for each day.
-        public let teamSize: Array<UInt64?>
+        open let teamSize: Array<UInt64?>
         /// The number of pending invites to the team, for each day.
-        public let pendingInvites: Array<UInt64?>
+        open let pendingInvites: Array<UInt64?>
         /// The number of members that joined the team, for each day.
-        public let membersJoined: Array<UInt64?>
+        open let membersJoined: Array<UInt64?>
         /// The number of suspended team members, for each day.
-        public let suspendedMembers: Array<UInt64?>
+        open let suspendedMembers: Array<UInt64?>
         /// The total number of licenses the team has, for each day.
-        public let licenses: Array<UInt64?>
+        open let licenses: Array<UInt64?>
         public init(startDate: String, teamSize: Array<UInt64?>, pendingInvites: Array<UInt64?>, membersJoined: Array<UInt64?>, suspendedMembers: Array<UInt64?>, licenses: Array<UInt64?>) {
             arrayValidator(itemValidator: nullableValidator(comparableValidator()))(teamSize)
             self.teamSize = teamSize
@@ -807,13 +807,13 @@ public class Team {
             self.licenses = licenses
             super.init(startDate: startDate)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMembershipReportSerializer().serialize(self)))"
         }
     }
-    public class GetMembershipReportSerializer: JSONSerializer {
+    open class GetMembershipReportSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetMembershipReport) -> JSON {
+        open func serialize(_ value: GetMembershipReport) -> JSON {
             let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "team_size": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.teamSize),
@@ -824,7 +824,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetMembershipReport {
+        open func deserialize(_ json: JSON) -> GetMembershipReport {
             switch json {
                 case .dictionary(let dict):
                     let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
@@ -842,20 +842,20 @@ public class Team {
 
     /// Storage Report Result. Each of the items in the storage report is an array of values, one value per day. If
     /// there is no data for a day, then the value will be None.
-    public class GetStorageReport: Team.BaseDfbReport {
+    open class GetStorageReport: Team.BaseDfbReport {
         /// Sum of the shared, unshared, and datastore usages, for each day.
-        public let totalUsage: Array<UInt64?>
+        open let totalUsage: Array<UInt64?>
         /// Array of the combined size (bytes) of team members' shared folders, for each day.
-        public let sharedUsage: Array<UInt64?>
+        open let sharedUsage: Array<UInt64?>
         /// Array of the combined size (bytes) of team members' root namespaces, for each day.
-        public let unsharedUsage: Array<UInt64?>
+        open let unsharedUsage: Array<UInt64?>
         /// Array of the number of shared folders owned by team members, for each day.
-        public let sharedFolders: Array<UInt64?>
+        open let sharedFolders: Array<UInt64?>
         /// Array of storage summaries of team members' account sizes. Each storage summary is an array of key, value
         /// pairs, where each pair describes a storage bucket. The key indicates the upper bound of the bucket and the
         /// value is the number of users in that bucket. There is one such summary per day. If there is no data for a
         /// day, the storage summary will be empty.
-        public let memberStorageMap: Array<Array<Team.StorageBucket>>
+        open let memberStorageMap: Array<Array<Team.StorageBucket>>
         public init(startDate: String, totalUsage: Array<UInt64?>, sharedUsage: Array<UInt64?>, unsharedUsage: Array<UInt64?>, sharedFolders: Array<UInt64?>, memberStorageMap: Array<Array<Team.StorageBucket>>) {
             arrayValidator(itemValidator: nullableValidator(comparableValidator()))(totalUsage)
             self.totalUsage = totalUsage
@@ -868,13 +868,13 @@ public class Team {
             self.memberStorageMap = memberStorageMap
             super.init(startDate: startDate)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetStorageReportSerializer().serialize(self)))"
         }
     }
-    public class GetStorageReportSerializer: JSONSerializer {
+    open class GetStorageReportSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GetStorageReport) -> JSON {
+        open func serialize(_ value: GetStorageReport) -> JSON {
             let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "total_usage": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.totalUsage),
@@ -885,7 +885,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GetStorageReport {
+        open func deserialize(_ json: JSON) -> GetStorageReport {
             switch json {
                 case .dictionary(let dict):
                     let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
@@ -912,9 +912,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupAccessTypeSerializer().serialize(self)))"
         }
     }
-    public class GroupAccessTypeSerializer: JSONSerializer {
+    open class GroupAccessTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupAccessType) -> JSON {
+        open func serialize(_ value: GroupAccessType) -> JSON {
             switch value {
                 case .member:
                     var d = [String: JSON]()
@@ -926,7 +926,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupAccessType {
+        open func deserialize(_ json: JSON) -> GroupAccessType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -945,13 +945,13 @@ public class Team {
     }
 
     /// The GroupCreateArg struct
-    public class GroupCreateArg: CustomStringConvertible {
+    open class GroupCreateArg: CustomStringConvertible {
         /// Group name.
-        public let groupName: String
+        open let groupName: String
         /// The creator of a team can associate an arbitrary external ID to the group.
-        public let groupExternalId: String?
+        open let groupExternalId: String?
         /// Whether the team can be managed by selected users, or only by team admins
-        public let groupManagementType: TeamCommon.GroupManagementType?
+        open let groupManagementType: TeamCommon.GroupManagementType?
         public init(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) {
             stringValidator()(groupName)
             self.groupName = groupName
@@ -959,13 +959,13 @@ public class Team {
             self.groupExternalId = groupExternalId
             self.groupManagementType = groupManagementType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateArgSerializer().serialize(self)))"
         }
     }
-    public class GroupCreateArgSerializer: JSONSerializer {
+    open class GroupCreateArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupCreateArg) -> JSON {
+        open func serialize(_ value: GroupCreateArg) -> JSON {
             let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
@@ -973,7 +973,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupCreateArg {
+        open func deserialize(_ json: JSON) -> GroupCreateArg {
             switch json {
                 case .dictionary(let dict):
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
@@ -1001,9 +1001,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupCreateErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupCreateErrorSerializer: JSONSerializer {
+    open class GroupCreateErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupCreateError) -> JSON {
+        open func serialize(_ value: GroupCreateError) -> JSON {
             switch value {
                 case .groupNameAlreadyUsed:
                     var d = [String: JSON]()
@@ -1023,7 +1023,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupCreateError {
+        open func deserialize(_ json: JSON) -> GroupCreateError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1056,9 +1056,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSelectorErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupSelectorErrorSerializer: JSONSerializer {
+    open class GroupSelectorErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupSelectorError) -> JSON {
+        open func serialize(_ value: GroupSelectorError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1070,7 +1070,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupSelectorError {
+        open func deserialize(_ json: JSON) -> GroupSelectorError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1101,9 +1101,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupDeleteErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupDeleteErrorSerializer: JSONSerializer {
+    open class GroupDeleteErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupDeleteError) -> JSON {
+        open func serialize(_ value: GroupDeleteError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1119,7 +1119,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupDeleteError {
+        open func deserialize(_ json: JSON) -> GroupDeleteError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1140,24 +1140,24 @@ public class Team {
     }
 
     /// Full description of a group.
-    public class GroupFullInfo: TeamCommon.GroupSummary {
+    open class GroupFullInfo: TeamCommon.GroupSummary {
         /// List of group members.
-        public let members: Array<Team.GroupMemberInfo>?
+        open let members: Array<Team.GroupMemberInfo>?
         /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
-        public let created: UInt64
+        open let created: UInt64
         public init(groupName: String, groupId: String, groupManagementType: TeamCommon.GroupManagementType, created: UInt64, groupExternalId: String? = nil, memberCount: UInt32? = nil, members: Array<Team.GroupMemberInfo>? = nil) {
             self.members = members
             comparableValidator()(created)
             self.created = created
             super.init(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, groupExternalId: groupExternalId, memberCount: memberCount)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupFullInfoSerializer().serialize(self)))"
         }
     }
-    public class GroupFullInfoSerializer: JSONSerializer {
+    open class GroupFullInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupFullInfo) -> JSON {
+        open func serialize(_ value: GroupFullInfo) -> JSON {
             let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
@@ -1169,7 +1169,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupFullInfo {
+        open func deserialize(_ json: JSON) -> GroupFullInfo {
             switch json {
                 case .dictionary(let dict):
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
@@ -1187,29 +1187,29 @@ public class Team {
     }
 
     /// Profile of group member, and role in group.
-    public class GroupMemberInfo: CustomStringConvertible {
+    open class GroupMemberInfo: CustomStringConvertible {
         /// Profile of group member.
-        public let profile: Team.MemberProfile
+        open let profile: Team.MemberProfile
         /// The role that the user has in the group.
-        public let accessType: Team.GroupAccessType
+        open let accessType: Team.GroupAccessType
         public init(profile: Team.MemberProfile, accessType: Team.GroupAccessType) {
             self.profile = profile
             self.accessType = accessType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberInfoSerializer().serialize(self)))"
         }
     }
-    public class GroupMemberInfoSerializer: JSONSerializer {
+    open class GroupMemberInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMemberInfo) -> JSON {
+        open func serialize(_ value: GroupMemberInfo) -> JSON {
             let output = [ 
             "profile": Team.MemberProfileSerializer().serialize(value.profile),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMemberInfo {
+        open func deserialize(_ json: JSON) -> GroupMemberInfo {
             switch json {
                 case .dictionary(let dict):
                     let profile = Team.MemberProfileSerializer().deserialize(dict["profile"] ?? .null)
@@ -1222,29 +1222,29 @@ public class Team {
     }
 
     /// Argument for selecting a group and a single user.
-    public class GroupMemberSelector: CustomStringConvertible {
+    open class GroupMemberSelector: CustomStringConvertible {
         /// Specify a group.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// Identity of a user that is a member of group.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         public init(group: Team.GroupSelector, user: Team.UserSelectorArg) {
             self.group = group
             self.user = user
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSelectorSerializer().serialize(self)))"
         }
     }
-    public class GroupMemberSelectorSerializer: JSONSerializer {
+    open class GroupMemberSelectorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMemberSelector) -> JSON {
+        open func serialize(_ value: GroupMemberSelector) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMemberSelector {
+        open func deserialize(_ json: JSON) -> GroupMemberSelector {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1270,9 +1270,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSelectorErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupMemberSelectorErrorSerializer: JSONSerializer {
+    open class GroupMemberSelectorErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMemberSelectorError) -> JSON {
+        open func serialize(_ value: GroupMemberSelectorError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1288,7 +1288,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupMemberSelectorError {
+        open func deserialize(_ json: JSON) -> GroupMemberSelectorError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1323,9 +1323,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMemberSetAccessTypeErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupMemberSetAccessTypeErrorSerializer: JSONSerializer {
+    open class GroupMemberSetAccessTypeErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMemberSetAccessTypeError) -> JSON {
+        open func serialize(_ value: GroupMemberSetAccessTypeError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1345,7 +1345,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupMemberSetAccessTypeError {
+        open func deserialize(_ json: JSON) -> GroupMemberSetAccessTypeError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1368,26 +1368,26 @@ public class Team {
     }
 
     /// The IncludeMembersArg struct
-    public class IncludeMembersArg: CustomStringConvertible {
+    open class IncludeMembersArg: CustomStringConvertible {
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
         /// members  to be returned in the response. This may take a long time for large groups.
-        public let returnMembers: Bool
+        open let returnMembers: Bool
         public init(returnMembers: Bool = true) {
             self.returnMembers = returnMembers
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(IncludeMembersArgSerializer().serialize(self)))"
         }
     }
-    public class IncludeMembersArgSerializer: JSONSerializer {
+    open class IncludeMembersArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: IncludeMembersArg) -> JSON {
+        open func serialize(_ value: IncludeMembersArg) -> JSON {
             let output = [ 
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> IncludeMembersArg {
+        open func deserialize(_ json: JSON) -> IncludeMembersArg {
             switch json {
                 case .dictionary(let dict):
                     let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
@@ -1399,23 +1399,23 @@ public class Team {
     }
 
     /// The GroupMembersAddArg struct
-    public class GroupMembersAddArg: Team.IncludeMembersArg {
+    open class GroupMembersAddArg: Team.IncludeMembersArg {
         /// Group to which users will be added.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// List of users to be added to the group.
-        public let members: Array<Team.MemberAccess>
+        open let members: Array<Team.MemberAccess>
         public init(group: Team.GroupSelector, members: Array<Team.MemberAccess>, returnMembers: Bool = true) {
             self.group = group
             self.members = members
             super.init(returnMembers: returnMembers)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersAddArgSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersAddArgSerializer: JSONSerializer {
+    open class GroupMembersAddArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersAddArg) -> JSON {
+        open func serialize(_ value: GroupMembersAddArg) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "members": ArraySerializer(Team.MemberAccessSerializer()).serialize(value.members),
@@ -1423,7 +1423,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMembersAddArg {
+        open func deserialize(_ json: JSON) -> GroupMembersAddArg {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1462,9 +1462,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersAddErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersAddErrorSerializer: JSONSerializer {
+    open class GroupMembersAddErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersAddError) -> JSON {
+        open func serialize(_ value: GroupMembersAddError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1500,7 +1500,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupMembersAddError {
+        open func deserialize(_ json: JSON) -> GroupMembersAddError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1534,30 +1534,30 @@ public class Team {
     }
 
     /// Result returned by groupsMembersAdd and groupsMembersRemove.
-    public class GroupMembersChangeResult: CustomStringConvertible {
+    open class GroupMembersChangeResult: CustomStringConvertible {
         /// The group info after member change operation has been performed.
-        public let groupInfo: Team.GroupFullInfo
+        open let groupInfo: Team.GroupFullInfo
         /// An ID that can be used to obtain the status of granting/revoking group-owned resources.
-        public let asyncJobId: String
+        open let asyncJobId: String
         public init(groupInfo: Team.GroupFullInfo, asyncJobId: String) {
             self.groupInfo = groupInfo
             stringValidator(minLength: 1)(asyncJobId)
             self.asyncJobId = asyncJobId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersChangeResultSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersChangeResultSerializer: JSONSerializer {
+    open class GroupMembersChangeResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersChangeResult) -> JSON {
+        open func serialize(_ value: GroupMembersChangeResult) -> JSON {
             let output = [ 
             "group_info": Team.GroupFullInfoSerializer().serialize(value.groupInfo),
             "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMembersChangeResult {
+        open func deserialize(_ json: JSON) -> GroupMembersChangeResult {
             switch json {
                 case .dictionary(let dict):
                     let groupInfo = Team.GroupFullInfoSerializer().deserialize(dict["group_info"] ?? .null)
@@ -1570,23 +1570,23 @@ public class Team {
     }
 
     /// The GroupMembersRemoveArg struct
-    public class GroupMembersRemoveArg: Team.IncludeMembersArg {
+    open class GroupMembersRemoveArg: Team.IncludeMembersArg {
         /// Group from which users will be removed.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// List of users to be removed from the group.
-        public let users: Array<Team.UserSelectorArg>
+        open let users: Array<Team.UserSelectorArg>
         public init(group: Team.GroupSelector, users: Array<Team.UserSelectorArg>, returnMembers: Bool = true) {
             self.group = group
             self.users = users
             super.init(returnMembers: returnMembers)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersRemoveArgSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersRemoveArgSerializer: JSONSerializer {
+    open class GroupMembersRemoveArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersRemoveArg) -> JSON {
+        open func serialize(_ value: GroupMembersRemoveArg) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.users),
@@ -1594,7 +1594,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMembersRemoveArg {
+        open func deserialize(_ json: JSON) -> GroupMembersRemoveArg {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1621,9 +1621,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSelectorErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersSelectorErrorSerializer: JSONSerializer {
+    open class GroupMembersSelectorErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersSelectorError) -> JSON {
+        open func serialize(_ value: GroupMembersSelectorError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1639,7 +1639,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupMembersSelectorError {
+        open func deserialize(_ json: JSON) -> GroupMembersSelectorError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1674,9 +1674,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersRemoveErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersRemoveErrorSerializer: JSONSerializer {
+    open class GroupMembersRemoveErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersRemoveError) -> JSON {
+        open func serialize(_ value: GroupMembersRemoveError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1696,7 +1696,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupMembersRemoveError {
+        open func deserialize(_ json: JSON) -> GroupMembersRemoveError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1719,29 +1719,29 @@ public class Team {
     }
 
     /// Argument for selecting a group and a list of users.
-    public class GroupMembersSelector: CustomStringConvertible {
+    open class GroupMembersSelector: CustomStringConvertible {
         /// Specify a group.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// A list of users that are members of group.
-        public let users: Team.UsersSelectorArg
+        open let users: Team.UsersSelectorArg
         public init(group: Team.GroupSelector, users: Team.UsersSelectorArg) {
             self.group = group
             self.users = users
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSelectorSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersSelectorSerializer: JSONSerializer {
+    open class GroupMembersSelectorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersSelector) -> JSON {
+        open func serialize(_ value: GroupMembersSelector) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": Team.UsersSelectorArgSerializer().serialize(value.users),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMembersSelector {
+        open func deserialize(_ json: JSON) -> GroupMembersSelector {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1754,24 +1754,24 @@ public class Team {
     }
 
     /// The GroupMembersSetAccessTypeArg struct
-    public class GroupMembersSetAccessTypeArg: Team.GroupMemberSelector {
+    open class GroupMembersSetAccessTypeArg: Team.GroupMemberSelector {
         /// New group access type the user will have.
-        public let accessType: Team.GroupAccessType
+        open let accessType: Team.GroupAccessType
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
         /// members  to be returned in the response. This may take a long time for large groups.
-        public let returnMembers: Bool
+        open let returnMembers: Bool
         public init(group: Team.GroupSelector, user: Team.UserSelectorArg, accessType: Team.GroupAccessType, returnMembers: Bool = true) {
             self.accessType = accessType
             self.returnMembers = returnMembers
             super.init(group: group, user: user)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersSetAccessTypeArgSerializer().serialize(self)))"
         }
     }
-    public class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
+    open class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupMembersSetAccessTypeArg) -> JSON {
+        open func serialize(_ value: GroupMembersSetAccessTypeArg) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
@@ -1780,7 +1780,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupMembersSetAccessTypeArg {
+        open func deserialize(_ json: JSON) -> GroupMembersSetAccessTypeArg {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1805,9 +1805,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSelectorSerializer().serialize(self)))"
         }
     }
-    public class GroupSelectorSerializer: JSONSerializer {
+    open class GroupSelectorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupSelector) -> JSON {
+        open func serialize(_ value: GroupSelector) -> JSON {
             switch value {
                 case .groupId(let arg):
                     var d = ["group_id": Serialization._StringSerializer.serialize(arg)]
@@ -1819,7 +1819,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupSelector {
+        open func deserialize(_ json: JSON) -> GroupSelector {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1840,16 +1840,16 @@ public class Team {
     }
 
     /// The GroupUpdateArgs struct
-    public class GroupUpdateArgs: Team.IncludeMembersArg {
+    open class GroupUpdateArgs: Team.IncludeMembersArg {
         /// Specify a group.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// Optional argument. Set group name to this if provided.
-        public let newGroupName: String?
+        open let newGroupName: String?
         /// Optional argument. New group external ID. If the argument is None, the group's external_id won't be updated.
         /// If the argument is empty string, the group's external id will be cleared.
-        public let newGroupExternalId: String?
+        open let newGroupExternalId: String?
         /// Set new group management type, if provided.
-        public let newGroupManagementType: TeamCommon.GroupManagementType?
+        open let newGroupManagementType: TeamCommon.GroupManagementType?
         public init(group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) {
             self.group = group
             nullableValidator(stringValidator())(newGroupName)
@@ -1859,13 +1859,13 @@ public class Team {
             self.newGroupManagementType = newGroupManagementType
             super.init(returnMembers: returnMembers)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateArgsSerializer().serialize(self)))"
         }
     }
-    public class GroupUpdateArgsSerializer: JSONSerializer {
+    open class GroupUpdateArgsSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupUpdateArgs) -> JSON {
+        open func serialize(_ value: GroupUpdateArgs) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
@@ -1875,7 +1875,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupUpdateArgs {
+        open func deserialize(_ json: JSON) -> GroupUpdateArgs {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -1903,9 +1903,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupUpdateErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupUpdateErrorSerializer: JSONSerializer {
+    open class GroupUpdateErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupUpdateError) -> JSON {
+        open func serialize(_ value: GroupUpdateError) -> JSON {
             switch value {
                 case .groupNotFound:
                     var d = [String: JSON]()
@@ -1921,7 +1921,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupUpdateError {
+        open func deserialize(_ json: JSON) -> GroupUpdateError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1952,9 +1952,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsGetInfoErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupsGetInfoErrorSerializer: JSONSerializer {
+    open class GroupsGetInfoErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsGetInfoError) -> JSON {
+        open func serialize(_ value: GroupsGetInfoError) -> JSON {
             switch value {
                 case .groupNotOnTeam:
                     var d = [String: JSON]()
@@ -1966,7 +1966,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsGetInfoError {
+        open func deserialize(_ json: JSON) -> GroupsGetInfoError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -1996,9 +1996,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsGetInfoItemSerializer().serialize(self)))"
         }
     }
-    public class GroupsGetInfoItemSerializer: JSONSerializer {
+    open class GroupsGetInfoItemSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsGetInfoItem) -> JSON {
+        open func serialize(_ value: GroupsGetInfoItem) -> JSON {
             switch value {
                 case .idNotFound(let arg):
                     var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -2010,7 +2010,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsGetInfoItem {
+        open func deserialize(_ json: JSON) -> GroupsGetInfoItem {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2031,26 +2031,26 @@ public class Team {
     }
 
     /// The GroupsListArg struct
-    public class GroupsListArg: CustomStringConvertible {
+    open class GroupsListArg: CustomStringConvertible {
         /// Number of results to return per call.
-        public let limit: UInt32
+        open let limit: UInt32
         public init(limit: UInt32 = 1000) {
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListArgSerializer().serialize(self)))"
         }
     }
-    public class GroupsListArgSerializer: JSONSerializer {
+    open class GroupsListArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsListArg) -> JSON {
+        open func serialize(_ value: GroupsListArg) -> JSON {
             let output = [ 
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsListArg {
+        open func deserialize(_ json: JSON) -> GroupsListArg {
             switch json {
                 case .dictionary(let dict):
                     let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
@@ -2062,26 +2062,26 @@ public class Team {
     }
 
     /// The GroupsListContinueArg struct
-    public class GroupsListContinueArg: CustomStringConvertible {
+    open class GroupsListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
-        public let cursor: String
+        open let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListContinueArgSerializer().serialize(self)))"
         }
     }
-    public class GroupsListContinueArgSerializer: JSONSerializer {
+    open class GroupsListContinueArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsListContinueArg) -> JSON {
+        open func serialize(_ value: GroupsListContinueArg) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsListContinueArg {
+        open func deserialize(_ json: JSON) -> GroupsListContinueArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -2103,9 +2103,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListContinueErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupsListContinueErrorSerializer: JSONSerializer {
+    open class GroupsListContinueErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsListContinueError) -> JSON {
+        open func serialize(_ value: GroupsListContinueError) -> JSON {
             switch value {
                 case .invalidCursor:
                     var d = [String: JSON]()
@@ -2117,7 +2117,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsListContinueError {
+        open func deserialize(_ json: JSON) -> GroupsListContinueError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2136,27 +2136,27 @@ public class Team {
     }
 
     /// The GroupsListResult struct
-    public class GroupsListResult: CustomStringConvertible {
+    open class GroupsListResult: CustomStringConvertible {
         /// (no description)
-        public let groups: Array<TeamCommon.GroupSummary>
+        open let groups: Array<TeamCommon.GroupSummary>
         /// Pass the cursor into groupsListContinue to obtain the additional groups.
-        public let cursor: String
+        open let cursor: String
         /// Is true if there are additional groups that have not been returned yet. An additional call to
         /// groupsListContinue can retrieve them.
-        public let hasMore: Bool
+        open let hasMore: Bool
         public init(groups: Array<TeamCommon.GroupSummary>, cursor: String, hasMore: Bool) {
             self.groups = groups
             stringValidator()(cursor)
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsListResultSerializer().serialize(self)))"
         }
     }
-    public class GroupsListResultSerializer: JSONSerializer {
+    open class GroupsListResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsListResult) -> JSON {
+        open func serialize(_ value: GroupsListResult) -> JSON {
             let output = [ 
             "groups": ArraySerializer(TeamCommon.GroupSummarySerializer()).serialize(value.groups),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
@@ -2164,7 +2164,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsListResult {
+        open func deserialize(_ json: JSON) -> GroupsListResult {
             switch json {
                 case .dictionary(let dict):
                     let groups = ArraySerializer(TeamCommon.GroupSummarySerializer()).deserialize(dict["groups"] ?? .null)
@@ -2178,30 +2178,30 @@ public class Team {
     }
 
     /// The GroupsMembersListArg struct
-    public class GroupsMembersListArg: CustomStringConvertible {
+    open class GroupsMembersListArg: CustomStringConvertible {
         /// The group whose members are to be listed.
-        public let group: Team.GroupSelector
+        open let group: Team.GroupSelector
         /// Number of results to return per call.
-        public let limit: UInt32
+        open let limit: UInt32
         public init(group: Team.GroupSelector, limit: UInt32 = 1000) {
             self.group = group
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListArgSerializer().serialize(self)))"
         }
     }
-    public class GroupsMembersListArgSerializer: JSONSerializer {
+    open class GroupsMembersListArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsMembersListArg) -> JSON {
+        open func serialize(_ value: GroupsMembersListArg) -> JSON {
             let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsMembersListArg {
+        open func deserialize(_ json: JSON) -> GroupsMembersListArg {
             switch json {
                 case .dictionary(let dict):
                     let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
@@ -2214,26 +2214,26 @@ public class Team {
     }
 
     /// The GroupsMembersListContinueArg struct
-    public class GroupsMembersListContinueArg: CustomStringConvertible {
+    open class GroupsMembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of groups.
-        public let cursor: String
+        open let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListContinueArgSerializer().serialize(self)))"
         }
     }
-    public class GroupsMembersListContinueArgSerializer: JSONSerializer {
+    open class GroupsMembersListContinueArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsMembersListContinueArg) -> JSON {
+        open func serialize(_ value: GroupsMembersListContinueArg) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsMembersListContinueArg {
+        open func deserialize(_ json: JSON) -> GroupsMembersListContinueArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -2255,9 +2255,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListContinueErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupsMembersListContinueErrorSerializer: JSONSerializer {
+    open class GroupsMembersListContinueErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsMembersListContinueError) -> JSON {
+        open func serialize(_ value: GroupsMembersListContinueError) -> JSON {
             switch value {
                 case .invalidCursor:
                     var d = [String: JSON]()
@@ -2269,7 +2269,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsMembersListContinueError {
+        open func deserialize(_ json: JSON) -> GroupsMembersListContinueError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2288,27 +2288,27 @@ public class Team {
     }
 
     /// The GroupsMembersListResult struct
-    public class GroupsMembersListResult: CustomStringConvertible {
+    open class GroupsMembersListResult: CustomStringConvertible {
         /// (no description)
-        public let members: Array<Team.GroupMemberInfo>
+        open let members: Array<Team.GroupMemberInfo>
         /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
-        public let cursor: String
+        open let cursor: String
         /// Is true if there are additional group members that have not been returned yet. An additional call to
         /// groupsMembersListContinue can retrieve them.
-        public let hasMore: Bool
+        open let hasMore: Bool
         public init(members: Array<Team.GroupMemberInfo>, cursor: String, hasMore: Bool) {
             self.members = members
             stringValidator()(cursor)
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsMembersListResultSerializer().serialize(self)))"
         }
     }
-    public class GroupsMembersListResultSerializer: JSONSerializer {
+    open class GroupsMembersListResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsMembersListResult) -> JSON {
+        open func serialize(_ value: GroupsMembersListResult) -> JSON {
             let output = [ 
             "members": ArraySerializer(Team.GroupMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
@@ -2316,7 +2316,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupsMembersListResult {
+        open func deserialize(_ json: JSON) -> GroupsMembersListResult {
             switch json {
                 case .dictionary(let dict):
                     let members = ArraySerializer(Team.GroupMemberInfoSerializer()).deserialize(dict["members"] ?? .null)
@@ -2345,9 +2345,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsPollErrorSerializer().serialize(self)))"
         }
     }
-    public class GroupsPollErrorSerializer: JSONSerializer {
+    open class GroupsPollErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsPollError) -> JSON {
+        open func serialize(_ value: GroupsPollError) -> JSON {
             switch value {
                 case .invalidAsyncJobId:
                     var d = [String: JSON]()
@@ -2367,7 +2367,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsPollError {
+        open func deserialize(_ json: JSON) -> GroupsPollError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2400,9 +2400,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupsSelectorSerializer().serialize(self)))"
         }
     }
-    public class GroupsSelectorSerializer: JSONSerializer {
+    open class GroupsSelectorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupsSelector) -> JSON {
+        open func serialize(_ value: GroupsSelector) -> JSON {
             switch value {
                 case .groupIds(let arg):
                     var d = ["group_ids": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
@@ -2414,7 +2414,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupsSelector {
+        open func deserialize(_ json: JSON) -> GroupsSelector {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2435,26 +2435,26 @@ public class Team {
     }
 
     /// The ListMemberAppsArg struct
-    public class ListMemberAppsArg: CustomStringConvertible {
+    open class ListMemberAppsArg: CustomStringConvertible {
         /// The team member id
-        public let teamMemberId: String
+        open let teamMemberId: String
         public init(teamMemberId: String) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsArgSerializer().serialize(self)))"
         }
     }
-    public class ListMemberAppsArgSerializer: JSONSerializer {
+    open class ListMemberAppsArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberAppsArg) -> JSON {
+        open func serialize(_ value: ListMemberAppsArg) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMemberAppsArg {
+        open func deserialize(_ json: JSON) -> ListMemberAppsArg {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -2476,9 +2476,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsErrorSerializer().serialize(self)))"
         }
     }
-    public class ListMemberAppsErrorSerializer: JSONSerializer {
+    open class ListMemberAppsErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberAppsError) -> JSON {
+        open func serialize(_ value: ListMemberAppsError) -> JSON {
             switch value {
                 case .memberNotFound:
                     var d = [String: JSON]()
@@ -2490,7 +2490,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListMemberAppsError {
+        open func deserialize(_ json: JSON) -> ListMemberAppsError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2509,25 +2509,25 @@ public class Team {
     }
 
     /// The ListMemberAppsResult struct
-    public class ListMemberAppsResult: CustomStringConvertible {
+    open class ListMemberAppsResult: CustomStringConvertible {
         /// List of third party applications linked by this team member
-        public let linkedApiApps: Array<Team.ApiApp>
+        open let linkedApiApps: Array<Team.ApiApp>
         public init(linkedApiApps: Array<Team.ApiApp>) {
             self.linkedApiApps = linkedApiApps
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberAppsResultSerializer().serialize(self)))"
         }
     }
-    public class ListMemberAppsResultSerializer: JSONSerializer {
+    open class ListMemberAppsResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberAppsResult) -> JSON {
+        open func serialize(_ value: ListMemberAppsResult) -> JSON {
             let output = [ 
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMemberAppsResult {
+        open func deserialize(_ json: JSON) -> ListMemberAppsResult {
             switch json {
                 case .dictionary(let dict):
                     let linkedApiApps = ArraySerializer(Team.ApiAppSerializer()).deserialize(dict["linked_api_apps"] ?? .null)
@@ -2539,15 +2539,15 @@ public class Team {
     }
 
     /// The ListMemberDevicesArg struct
-    public class ListMemberDevicesArg: CustomStringConvertible {
+    open class ListMemberDevicesArg: CustomStringConvertible {
         /// The team's member id
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// Whether to list web sessions of the team's member
-        public let includeWebSessions: Bool
+        open let includeWebSessions: Bool
         /// Whether to list linked desktop devices of the team's member
-        public let includeDesktopClients: Bool
+        open let includeDesktopClients: Bool
         /// Whether to list linked mobile devices of the team's member
-        public let includeMobileClients: Bool
+        open let includeMobileClients: Bool
         public init(teamMemberId: String, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
@@ -2555,13 +2555,13 @@ public class Team {
             self.includeDesktopClients = includeDesktopClients
             self.includeMobileClients = includeMobileClients
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesArgSerializer().serialize(self)))"
         }
     }
-    public class ListMemberDevicesArgSerializer: JSONSerializer {
+    open class ListMemberDevicesArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberDevicesArg) -> JSON {
+        open func serialize(_ value: ListMemberDevicesArg) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
@@ -2570,7 +2570,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMemberDevicesArg {
+        open func deserialize(_ json: JSON) -> ListMemberDevicesArg {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -2595,9 +2595,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesErrorSerializer().serialize(self)))"
         }
     }
-    public class ListMemberDevicesErrorSerializer: JSONSerializer {
+    open class ListMemberDevicesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberDevicesError) -> JSON {
+        open func serialize(_ value: ListMemberDevicesError) -> JSON {
             switch value {
                 case .memberNotFound:
                     var d = [String: JSON]()
@@ -2609,7 +2609,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListMemberDevicesError {
+        open func deserialize(_ json: JSON) -> ListMemberDevicesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2628,25 +2628,25 @@ public class Team {
     }
 
     /// The ListMemberDevicesResult struct
-    public class ListMemberDevicesResult: CustomStringConvertible {
+    open class ListMemberDevicesResult: CustomStringConvertible {
         /// List of web sessions made by this team member
-        public let activeWebSessions: Array<Team.ActiveWebSession>?
+        open let activeWebSessions: Array<Team.ActiveWebSession>?
         /// List of desktop clients used by this team member
-        public let desktopClientSessions: Array<Team.DesktopClientSession>?
+        open let desktopClientSessions: Array<Team.DesktopClientSession>?
         /// List of mobile client used by this team member
-        public let mobileClientSessions: Array<Team.MobileClientSession>?
+        open let mobileClientSessions: Array<Team.MobileClientSession>?
         public init(activeWebSessions: Array<Team.ActiveWebSession>? = nil, desktopClientSessions: Array<Team.DesktopClientSession>? = nil, mobileClientSessions: Array<Team.MobileClientSession>? = nil) {
             self.activeWebSessions = activeWebSessions
             self.desktopClientSessions = desktopClientSessions
             self.mobileClientSessions = mobileClientSessions
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMemberDevicesResultSerializer().serialize(self)))"
         }
     }
-    public class ListMemberDevicesResultSerializer: JSONSerializer {
+    open class ListMemberDevicesResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMemberDevicesResult) -> JSON {
+        open func serialize(_ value: ListMemberDevicesResult) -> JSON {
             let output = [ 
             "active_web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.activeWebSessions),
             "desktop_client_sessions": NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).serialize(value.desktopClientSessions),
@@ -2654,7 +2654,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMemberDevicesResult {
+        open func deserialize(_ json: JSON) -> ListMemberDevicesResult {
             switch json {
                 case .dictionary(let dict):
                     let activeWebSessions = NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).deserialize(dict["active_web_sessions"] ?? .null)
@@ -2668,28 +2668,28 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListMembersLinkedApps.
-    public class ListMembersAppsArg: CustomStringConvertible {
+    open class ListMembersAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed. Then, if the result
         /// of the call includes a cursor, the following requests should include the received cursors in order to
         /// receive the next sub list of the team applications
-        public let cursor: String?
+        open let cursor: String?
         public init(cursor: String? = nil) {
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsArgSerializer().serialize(self)))"
         }
     }
-    public class ListMembersAppsArgSerializer: JSONSerializer {
+    open class ListMembersAppsArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersAppsArg) -> JSON {
+        open func serialize(_ value: ListMembersAppsArg) -> JSON {
             let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMembersAppsArg {
+        open func deserialize(_ json: JSON) -> ListMembersAppsArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
@@ -2712,9 +2712,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsErrorSerializer().serialize(self)))"
         }
     }
-    public class ListMembersAppsErrorSerializer: JSONSerializer {
+    open class ListMembersAppsErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersAppsError) -> JSON {
+        open func serialize(_ value: ListMembersAppsError) -> JSON {
             switch value {
                 case .reset:
                     var d = [String: JSON]()
@@ -2726,7 +2726,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListMembersAppsError {
+        open func deserialize(_ json: JSON) -> ListMembersAppsError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2745,27 +2745,27 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListMembersLinkedApps.
-    public class ListMembersAppsResult: CustomStringConvertible {
+    open class ListMembersAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
-        public let apps: Array<Team.MemberLinkedApps>
+        open let apps: Array<Team.MemberLinkedApps>
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListMembersLinkedApps to retrieve
         /// the rest.
-        public let hasMore: Bool
+        open let hasMore: Bool
         /// Pass the cursor into linkedAppsListMembersLinkedApps to receive the next sub list of team's applications.
-        public let cursor: String?
+        open let cursor: String?
         public init(apps: Array<Team.MemberLinkedApps>, hasMore: Bool, cursor: String? = nil) {
             self.apps = apps
             self.hasMore = hasMore
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersAppsResultSerializer().serialize(self)))"
         }
     }
-    public class ListMembersAppsResultSerializer: JSONSerializer {
+    open class ListMembersAppsResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersAppsResult) -> JSON {
+        open func serialize(_ value: ListMembersAppsResult) -> JSON {
             let output = [ 
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2773,7 +2773,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMembersAppsResult {
+        open func deserialize(_ json: JSON) -> ListMembersAppsResult {
             switch json {
                 case .dictionary(let dict):
                     let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .null)
@@ -2787,17 +2787,17 @@ public class Team {
     }
 
     /// The ListMembersDevicesArg struct
-    public class ListMembersDevicesArg: CustomStringConvertible {
+    open class ListMembersDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
         /// the next sub list of team devices
-        public let cursor: String?
+        open let cursor: String?
         /// Whether to list web sessions of the team members
-        public let includeWebSessions: Bool
+        open let includeWebSessions: Bool
         /// Whether to list desktop clients of the team members
-        public let includeDesktopClients: Bool
+        open let includeDesktopClients: Bool
         /// Whether to list mobile clients of the team members
-        public let includeMobileClients: Bool
+        open let includeMobileClients: Bool
         public init(cursor: String? = nil, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) {
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
@@ -2805,13 +2805,13 @@ public class Team {
             self.includeDesktopClients = includeDesktopClients
             self.includeMobileClients = includeMobileClients
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesArgSerializer().serialize(self)))"
         }
     }
-    public class ListMembersDevicesArgSerializer: JSONSerializer {
+    open class ListMembersDevicesArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersDevicesArg) -> JSON {
+        open func serialize(_ value: ListMembersDevicesArg) -> JSON {
             let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
@@ -2820,7 +2820,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMembersDevicesArg {
+        open func deserialize(_ json: JSON) -> ListMembersDevicesArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
@@ -2846,9 +2846,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesErrorSerializer().serialize(self)))"
         }
     }
-    public class ListMembersDevicesErrorSerializer: JSONSerializer {
+    open class ListMembersDevicesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersDevicesError) -> JSON {
+        open func serialize(_ value: ListMembersDevicesError) -> JSON {
             switch value {
                 case .reset:
                     var d = [String: JSON]()
@@ -2860,7 +2860,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListMembersDevicesError {
+        open func deserialize(_ json: JSON) -> ListMembersDevicesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2879,27 +2879,27 @@ public class Team {
     }
 
     /// The ListMembersDevicesResult struct
-    public class ListMembersDevicesResult: CustomStringConvertible {
+    open class ListMembersDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
-        public let devices: Array<Team.MemberDevices>
+        open let devices: Array<Team.MemberDevices>
         /// If true, then there are more devices available. Pass the cursor to devicesListMembersDevices to retrieve the
         /// rest.
-        public let hasMore: Bool
+        open let hasMore: Bool
         /// Pass the cursor into devicesListMembersDevices to receive the next sub list of team's devices.
-        public let cursor: String?
+        open let cursor: String?
         public init(devices: Array<Team.MemberDevices>, hasMore: Bool, cursor: String? = nil) {
             self.devices = devices
             self.hasMore = hasMore
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListMembersDevicesResultSerializer().serialize(self)))"
         }
     }
-    public class ListMembersDevicesResultSerializer: JSONSerializer {
+    open class ListMembersDevicesResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListMembersDevicesResult) -> JSON {
+        open func serialize(_ value: ListMembersDevicesResult) -> JSON {
             let output = [ 
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2907,7 +2907,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListMembersDevicesResult {
+        open func deserialize(_ json: JSON) -> ListMembersDevicesResult {
             switch json {
                 case .dictionary(let dict):
                     let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .null)
@@ -2921,28 +2921,28 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListTeamLinkedApps.
-    public class ListTeamAppsArg: CustomStringConvertible {
+    open class ListTeamAppsArg: CustomStringConvertible {
         /// At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to receive
         /// the next sub list of the team applications
-        public let cursor: String?
+        open let cursor: String?
         public init(cursor: String? = nil) {
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsArgSerializer().serialize(self)))"
         }
     }
-    public class ListTeamAppsArgSerializer: JSONSerializer {
+    open class ListTeamAppsArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamAppsArg) -> JSON {
+        open func serialize(_ value: ListTeamAppsArg) -> JSON {
             let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListTeamAppsArg {
+        open func deserialize(_ json: JSON) -> ListTeamAppsArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
@@ -2965,9 +2965,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsErrorSerializer().serialize(self)))"
         }
     }
-    public class ListTeamAppsErrorSerializer: JSONSerializer {
+    open class ListTeamAppsErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamAppsError) -> JSON {
+        open func serialize(_ value: ListTeamAppsError) -> JSON {
             switch value {
                 case .reset:
                     var d = [String: JSON]()
@@ -2979,7 +2979,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListTeamAppsError {
+        open func deserialize(_ json: JSON) -> ListTeamAppsError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -2998,27 +2998,27 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListTeamLinkedApps.
-    public class ListTeamAppsResult: CustomStringConvertible {
+    open class ListTeamAppsResult: CustomStringConvertible {
         /// The linked applications of each member of the team
-        public let apps: Array<Team.MemberLinkedApps>
+        open let apps: Array<Team.MemberLinkedApps>
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListTeamLinkedApps to retrieve the
         /// rest.
-        public let hasMore: Bool
+        open let hasMore: Bool
         /// Pass the cursor into linkedAppsListTeamLinkedApps to receive the next sub list of team's applications.
-        public let cursor: String?
+        open let cursor: String?
         public init(apps: Array<Team.MemberLinkedApps>, hasMore: Bool, cursor: String? = nil) {
             self.apps = apps
             self.hasMore = hasMore
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamAppsResultSerializer().serialize(self)))"
         }
     }
-    public class ListTeamAppsResultSerializer: JSONSerializer {
+    open class ListTeamAppsResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamAppsResult) -> JSON {
+        open func serialize(_ value: ListTeamAppsResult) -> JSON {
             let output = [ 
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -3026,7 +3026,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListTeamAppsResult {
+        open func deserialize(_ json: JSON) -> ListTeamAppsResult {
             switch json {
                 case .dictionary(let dict):
                     let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .null)
@@ -3040,17 +3040,17 @@ public class Team {
     }
 
     /// The ListTeamDevicesArg struct
-    public class ListTeamDevicesArg: CustomStringConvertible {
+    open class ListTeamDevicesArg: CustomStringConvertible {
         /// At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the result of the
         /// call includes a cursor, the following requests should include the received cursors in order to receive the
         /// next sub list of team devices
-        public let cursor: String?
+        open let cursor: String?
         /// Whether to list web sessions of the team members
-        public let includeWebSessions: Bool
+        open let includeWebSessions: Bool
         /// Whether to list desktop clients of the team members
-        public let includeDesktopClients: Bool
+        open let includeDesktopClients: Bool
         /// Whether to list mobile clients of the team members
-        public let includeMobileClients: Bool
+        open let includeMobileClients: Bool
         public init(cursor: String? = nil, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) {
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
@@ -3058,13 +3058,13 @@ public class Team {
             self.includeDesktopClients = includeDesktopClients
             self.includeMobileClients = includeMobileClients
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesArgSerializer().serialize(self)))"
         }
     }
-    public class ListTeamDevicesArgSerializer: JSONSerializer {
+    open class ListTeamDevicesArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamDevicesArg) -> JSON {
+        open func serialize(_ value: ListTeamDevicesArg) -> JSON {
             let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
@@ -3073,7 +3073,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListTeamDevicesArg {
+        open func deserialize(_ json: JSON) -> ListTeamDevicesArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
@@ -3099,9 +3099,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesErrorSerializer().serialize(self)))"
         }
     }
-    public class ListTeamDevicesErrorSerializer: JSONSerializer {
+    open class ListTeamDevicesErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamDevicesError) -> JSON {
+        open func serialize(_ value: ListTeamDevicesError) -> JSON {
             switch value {
                 case .reset:
                     var d = [String: JSON]()
@@ -3113,7 +3113,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> ListTeamDevicesError {
+        open func deserialize(_ json: JSON) -> ListTeamDevicesError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3132,27 +3132,27 @@ public class Team {
     }
 
     /// The ListTeamDevicesResult struct
-    public class ListTeamDevicesResult: CustomStringConvertible {
+    open class ListTeamDevicesResult: CustomStringConvertible {
         /// The devices of each member of the team
-        public let devices: Array<Team.MemberDevices>
+        open let devices: Array<Team.MemberDevices>
         /// If true, then there are more devices available. Pass the cursor to devicesListTeamDevices to retrieve the
         /// rest.
-        public let hasMore: Bool
+        open let hasMore: Bool
         /// Pass the cursor into devicesListTeamDevices to receive the next sub list of team's devices.
-        public let cursor: String?
+        open let cursor: String?
         public init(devices: Array<Team.MemberDevices>, hasMore: Bool, cursor: String? = nil) {
             self.devices = devices
             self.hasMore = hasMore
             nullableValidator(stringValidator())(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListTeamDevicesResultSerializer().serialize(self)))"
         }
     }
-    public class ListTeamDevicesResultSerializer: JSONSerializer {
+    open class ListTeamDevicesResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: ListTeamDevicesResult) -> JSON {
+        open func serialize(_ value: ListTeamDevicesResult) -> JSON {
             let output = [ 
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -3160,7 +3160,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> ListTeamDevicesResult {
+        open func deserialize(_ json: JSON) -> ListTeamDevicesResult {
             switch json {
                 case .dictionary(let dict):
                     let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .null)
@@ -3174,29 +3174,29 @@ public class Team {
     }
 
     /// Specify access type a member should have when joined to a group.
-    public class MemberAccess: CustomStringConvertible {
+    open class MemberAccess: CustomStringConvertible {
         /// Identity of a user.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         /// Access type.
-        public let accessType: Team.GroupAccessType
+        open let accessType: Team.GroupAccessType
         public init(user: Team.UserSelectorArg, accessType: Team.GroupAccessType) {
             self.user = user
             self.accessType = accessType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAccessSerializer().serialize(self)))"
         }
     }
-    public class MemberAccessSerializer: JSONSerializer {
+    open class MemberAccessSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberAccess) -> JSON {
+        open func serialize(_ value: MemberAccess) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MemberAccess {
+        open func deserialize(_ json: JSON) -> MemberAccess {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -3209,21 +3209,21 @@ public class Team {
     }
 
     /// The MemberAddArg struct
-    public class MemberAddArg: CustomStringConvertible {
+    open class MemberAddArg: CustomStringConvertible {
         /// (no description)
-        public let memberEmail: String
+        open let memberEmail: String
         /// Member's first name.
-        public let memberGivenName: String
+        open let memberGivenName: String
         /// Member's last name.
-        public let memberSurname: String
+        open let memberSurname: String
         /// External ID for member.
-        public let memberExternalId: String?
+        open let memberExternalId: String?
         /// Whether to send a welcome email to the member. If send_welcome_email is false, no email invitation will be
         /// sent to the user. This may be useful for apps using single sign-on (SSO) flows for onboarding that want to
         /// handle announcements themselves.
-        public let sendWelcomeEmail: Bool
+        open let sendWelcomeEmail: Bool
         /// (no description)
-        public let role: Team.AdminTier
+        open let role: Team.AdminTier
         public init(memberEmail: String, memberGivenName: String, memberSurname: String, memberExternalId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
@@ -3236,13 +3236,13 @@ public class Team {
             self.sendWelcomeEmail = sendWelcomeEmail
             self.role = role
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddArgSerializer().serialize(self)))"
         }
     }
-    public class MemberAddArgSerializer: JSONSerializer {
+    open class MemberAddArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberAddArg) -> JSON {
+        open func serialize(_ value: MemberAddArg) -> JSON {
             let output = [ 
             "member_email": Serialization._StringSerializer.serialize(value.memberEmail),
             "member_given_name": Serialization._StringSerializer.serialize(value.memberGivenName),
@@ -3253,7 +3253,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MemberAddArg {
+        open func deserialize(_ json: JSON) -> MemberAddArg {
             switch json {
                 case .dictionary(let dict):
                     let memberEmail = Serialization._StringSerializer.deserialize(dict["member_email"] ?? .null)
@@ -3298,9 +3298,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddResultSerializer().serialize(self)))"
         }
     }
-    public class MemberAddResultSerializer: JSONSerializer {
+    open class MemberAddResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberAddResult) -> JSON {
+        open func serialize(_ value: MemberAddResult) -> JSON {
             switch value {
                 case .success(let arg):
                     var d = Serialization.getFields(Team.TeamMemberInfoSerializer().serialize(arg))
@@ -3340,7 +3340,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MemberAddResult {
+        open func deserialize(_ json: JSON) -> MemberAddResult {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3382,15 +3382,15 @@ public class Team {
     }
 
     /// Information on devices of a team's member.
-    public class MemberDevices: CustomStringConvertible {
+    open class MemberDevices: CustomStringConvertible {
         /// The member unique Id
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// List of web sessions made by this team member
-        public let webSessions: Array<Team.ActiveWebSession>?
+        open let webSessions: Array<Team.ActiveWebSession>?
         /// List of desktop clients by this team member
-        public let desktopClients: Array<Team.DesktopClientSession>?
+        open let desktopClients: Array<Team.DesktopClientSession>?
         /// List of mobile clients by this team member
-        public let mobileClients: Array<Team.MobileClientSession>?
+        open let mobileClients: Array<Team.MobileClientSession>?
         public init(teamMemberId: String, webSessions: Array<Team.ActiveWebSession>? = nil, desktopClients: Array<Team.DesktopClientSession>? = nil, mobileClients: Array<Team.MobileClientSession>? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
@@ -3398,13 +3398,13 @@ public class Team {
             self.desktopClients = desktopClients
             self.mobileClients = mobileClients
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberDevicesSerializer().serialize(self)))"
         }
     }
-    public class MemberDevicesSerializer: JSONSerializer {
+    open class MemberDevicesSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberDevices) -> JSON {
+        open func serialize(_ value: MemberDevices) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.webSessions),
@@ -3413,7 +3413,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MemberDevices {
+        open func deserialize(_ json: JSON) -> MemberDevices {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -3428,30 +3428,30 @@ public class Team {
     }
 
     /// Information on linked applications of a team member.
-    public class MemberLinkedApps: CustomStringConvertible {
+    open class MemberLinkedApps: CustomStringConvertible {
         /// The member unique Id
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// List of third party applications linked by this team member
-        public let linkedApiApps: Array<Team.ApiApp>
+        open let linkedApiApps: Array<Team.ApiApp>
         public init(teamMemberId: String, linkedApiApps: Array<Team.ApiApp>) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             self.linkedApiApps = linkedApiApps
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberLinkedAppsSerializer().serialize(self)))"
         }
     }
-    public class MemberLinkedAppsSerializer: JSONSerializer {
+    open class MemberLinkedAppsSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberLinkedApps) -> JSON {
+        open func serialize(_ value: MemberLinkedApps) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MemberLinkedApps {
+        open func deserialize(_ json: JSON) -> MemberLinkedApps {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -3464,25 +3464,25 @@ public class Team {
     }
 
     /// Basic member profile.
-    public class MemberProfile: CustomStringConvertible {
+    open class MemberProfile: CustomStringConvertible {
         /// ID of user as a member of a team.
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// External ID that a team can attach to the user. An application using the API may find it easier to use their
         /// own IDs instead of Dropbox IDs like account_id or team_member_id.
-        public let externalId: String?
+        open let externalId: String?
         /// A user's account identifier.
-        public let accountId: String?
+        open let accountId: String?
         /// Email address of user.
-        public let email: String
+        open let email: String
         /// Is true if the user's email is verified to be owned by the user.
-        public let emailVerified: Bool
+        open let emailVerified: Bool
         /// The user's status as a member of a specific team.
-        public let status: Team.TeamMemberStatus
+        open let status: Team.TeamMemberStatus
         /// Representations for a person's name.
-        public let name: Users.Name
+        open let name: Users.Name
         /// The user's membership type: full (normal team member) vs limited (does not use a license; no access to the
         /// team's shared quota).
-        public let membershipType: Team.TeamMembershipType
+        open let membershipType: Team.TeamMembershipType
         public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
@@ -3497,13 +3497,13 @@ public class Team {
             self.name = name
             self.membershipType = membershipType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberProfileSerializer().serialize(self)))"
         }
     }
-    public class MemberProfileSerializer: JSONSerializer {
+    open class MemberProfileSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberProfile) -> JSON {
+        open func serialize(_ value: MemberProfile) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
@@ -3516,7 +3516,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MemberProfile {
+        open func deserialize(_ json: JSON) -> MemberProfile {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -3543,9 +3543,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UserSelectorErrorSerializer().serialize(self)))"
         }
     }
-    public class UserSelectorErrorSerializer: JSONSerializer {
+    open class UserSelectorErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UserSelectorError) -> JSON {
+        open func serialize(_ value: UserSelectorError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -3553,7 +3553,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UserSelectorError {
+        open func deserialize(_ json: JSON) -> UserSelectorError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3580,9 +3580,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberSelectorErrorSerializer().serialize(self)))"
         }
     }
-    public class MemberSelectorErrorSerializer: JSONSerializer {
+    open class MemberSelectorErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MemberSelectorError) -> JSON {
+        open func serialize(_ value: MemberSelectorError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -3594,7 +3594,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MemberSelectorError {
+        open func deserialize(_ json: JSON) -> MemberSelectorError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3613,29 +3613,29 @@ public class Team {
     }
 
     /// The MembersAddArg struct
-    public class MembersAddArg: CustomStringConvertible {
+    open class MembersAddArg: CustomStringConvertible {
         /// Details of new members to be added to the team.
-        public let newMembers: Array<Team.MemberAddArg>
+        open let newMembers: Array<Team.MemberAddArg>
         /// Whether to force the add to happen asynchronously.
-        public let forceAsync: Bool
+        open let forceAsync: Bool
         public init(newMembers: Array<Team.MemberAddArg>, forceAsync: Bool = false) {
             self.newMembers = newMembers
             self.forceAsync = forceAsync
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddArgSerializer().serialize(self)))"
         }
     }
-    public class MembersAddArgSerializer: JSONSerializer {
+    open class MembersAddArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersAddArg) -> JSON {
+        open func serialize(_ value: MembersAddArg) -> JSON {
             let output = [ 
             "new_members": ArraySerializer(Team.MemberAddArgSerializer()).serialize(value.newMembers),
             "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersAddArg {
+        open func deserialize(_ json: JSON) -> MembersAddArg {
             switch json {
                 case .dictionary(let dict):
                     let newMembers = ArraySerializer(Team.MemberAddArgSerializer()).deserialize(dict["new_members"] ?? .null)
@@ -3661,9 +3661,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddJobStatusSerializer().serialize(self)))"
         }
     }
-    public class MembersAddJobStatusSerializer: JSONSerializer {
+    open class MembersAddJobStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersAddJobStatus) -> JSON {
+        open func serialize(_ value: MembersAddJobStatus) -> JSON {
             switch value {
                 case .inProgress:
                     var d = [String: JSON]()
@@ -3679,7 +3679,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersAddJobStatus {
+        open func deserialize(_ json: JSON) -> MembersAddJobStatus {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3713,9 +3713,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddLaunchSerializer().serialize(self)))"
         }
     }
-    public class MembersAddLaunchSerializer: JSONSerializer {
+    open class MembersAddLaunchSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersAddLaunch) -> JSON {
+        open func serialize(_ value: MembersAddLaunch) -> JSON {
             switch value {
                 case .asyncJobId(let arg):
                     var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
@@ -3727,7 +3727,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersAddLaunch {
+        open func deserialize(_ json: JSON) -> MembersAddLaunch {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3748,29 +3748,29 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersDeactivateArg: CustomStringConvertible {
+    open class MembersDeactivateArg: CustomStringConvertible {
         /// Identity of user to remove/suspend.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         /// If provided, controls if the user's data will be deleted on their linked devices.
-        public let wipeData: Bool
+        open let wipeData: Bool
         public init(user: Team.UserSelectorArg, wipeData: Bool = true) {
             self.user = user
             self.wipeData = wipeData
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateArgSerializer().serialize(self)))"
         }
     }
-    public class MembersDeactivateArgSerializer: JSONSerializer {
+    open class MembersDeactivateArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersDeactivateArg) -> JSON {
+        open func serialize(_ value: MembersDeactivateArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersDeactivateArg {
+        open func deserialize(_ json: JSON) -> MembersDeactivateArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -3795,9 +3795,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersDeactivateErrorSerializer: JSONSerializer {
+    open class MembersDeactivateErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersDeactivateError) -> JSON {
+        open func serialize(_ value: MembersDeactivateError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -3813,7 +3813,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersDeactivateError {
+        open func deserialize(_ json: JSON) -> MembersDeactivateError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3834,25 +3834,25 @@ public class Team {
     }
 
     /// The MembersGetInfoArgs struct
-    public class MembersGetInfoArgs: CustomStringConvertible {
+    open class MembersGetInfoArgs: CustomStringConvertible {
         /// List of team members.
-        public let members: Array<Team.UserSelectorArg>
+        open let members: Array<Team.UserSelectorArg>
         public init(members: Array<Team.UserSelectorArg>) {
             self.members = members
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoArgsSerializer().serialize(self)))"
         }
     }
-    public class MembersGetInfoArgsSerializer: JSONSerializer {
+    open class MembersGetInfoArgsSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersGetInfoArgs) -> JSON {
+        open func serialize(_ value: MembersGetInfoArgs) -> JSON {
             let output = [ 
             "members": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.members),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersGetInfoArgs {
+        open func deserialize(_ json: JSON) -> MembersGetInfoArgs {
             switch json {
                 case .dictionary(let dict):
                     let members = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["members"] ?? .null)
@@ -3872,9 +3872,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersGetInfoErrorSerializer: JSONSerializer {
+    open class MembersGetInfoErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersGetInfoError) -> JSON {
+        open func serialize(_ value: MembersGetInfoError) -> JSON {
             switch value {
                 case .other:
                     var d = [String: JSON]()
@@ -3882,7 +3882,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersGetInfoError {
+        open func deserialize(_ json: JSON) -> MembersGetInfoError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3910,9 +3910,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoItemSerializer().serialize(self)))"
         }
     }
-    public class MembersGetInfoItemSerializer: JSONSerializer {
+    open class MembersGetInfoItemSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersGetInfoItem) -> JSON {
+        open func serialize(_ value: MembersGetInfoItem) -> JSON {
             switch value {
                 case .idNotFound(let arg):
                     var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
@@ -3924,7 +3924,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersGetInfoItem {
+        open func deserialize(_ json: JSON) -> MembersGetInfoItem {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -3945,30 +3945,30 @@ public class Team {
     }
 
     /// The MembersListArg struct
-    public class MembersListArg: CustomStringConvertible {
+    open class MembersListArg: CustomStringConvertible {
         /// Number of results to return per call.
-        public let limit: UInt32
+        open let limit: UInt32
         /// Whether to return removed members.
-        public let includeRemoved: Bool
+        open let includeRemoved: Bool
         public init(limit: UInt32 = 1000, includeRemoved: Bool = false) {
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
             self.includeRemoved = includeRemoved
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListArgSerializer().serialize(self)))"
         }
     }
-    public class MembersListArgSerializer: JSONSerializer {
+    open class MembersListArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersListArg) -> JSON {
+        open func serialize(_ value: MembersListArg) -> JSON {
             let output = [ 
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             "include_removed": Serialization._BoolSerializer.serialize(value.includeRemoved),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersListArg {
+        open func deserialize(_ json: JSON) -> MembersListArg {
             switch json {
                 case .dictionary(let dict):
                     let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
@@ -3981,26 +3981,26 @@ public class Team {
     }
 
     /// The MembersListContinueArg struct
-    public class MembersListContinueArg: CustomStringConvertible {
+    open class MembersListContinueArg: CustomStringConvertible {
         /// Indicates from what point to get the next set of members.
-        public let cursor: String
+        open let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListContinueArgSerializer().serialize(self)))"
         }
     }
-    public class MembersListContinueArgSerializer: JSONSerializer {
+    open class MembersListContinueArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersListContinueArg) -> JSON {
+        open func serialize(_ value: MembersListContinueArg) -> JSON {
             let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersListContinueArg {
+        open func deserialize(_ json: JSON) -> MembersListContinueArg {
             switch json {
                 case .dictionary(let dict):
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
@@ -4022,9 +4022,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListContinueErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersListContinueErrorSerializer: JSONSerializer {
+    open class MembersListContinueErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersListContinueError) -> JSON {
+        open func serialize(_ value: MembersListContinueError) -> JSON {
             switch value {
                 case .invalidCursor:
                     var d = [String: JSON]()
@@ -4036,7 +4036,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersListContinueError {
+        open func deserialize(_ json: JSON) -> MembersListContinueError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4063,9 +4063,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersListErrorSerializer: JSONSerializer {
+    open class MembersListErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersListError) -> JSON {
+        open func serialize(_ value: MembersListError) -> JSON {
             switch value {
                 case .other:
                     var d = [String: JSON]()
@@ -4073,7 +4073,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersListError {
+        open func deserialize(_ json: JSON) -> MembersListError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4090,27 +4090,27 @@ public class Team {
     }
 
     /// The MembersListResult struct
-    public class MembersListResult: CustomStringConvertible {
+    open class MembersListResult: CustomStringConvertible {
         /// List of team members.
-        public let members: Array<Team.TeamMemberInfo>
+        open let members: Array<Team.TeamMemberInfo>
         /// Pass the cursor into membersListContinue to obtain the additional members.
-        public let cursor: String
+        open let cursor: String
         /// Is true if there are additional team members that have not been returned yet. An additional call to
         /// membersListContinue can retrieve them.
-        public let hasMore: Bool
+        open let hasMore: Bool
         public init(members: Array<Team.TeamMemberInfo>, cursor: String, hasMore: Bool) {
             self.members = members
             stringValidator()(cursor)
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersListResultSerializer().serialize(self)))"
         }
     }
-    public class MembersListResultSerializer: JSONSerializer {
+    open class MembersListResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersListResult) -> JSON {
+        open func serialize(_ value: MembersListResult) -> JSON {
             let output = [ 
             "members": ArraySerializer(Team.TeamMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
@@ -4118,7 +4118,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersListResult {
+        open func deserialize(_ json: JSON) -> MembersListResult {
             switch json {
                 case .dictionary(let dict):
                     let members = ArraySerializer(Team.TeamMemberInfoSerializer()).deserialize(dict["members"] ?? .null)
@@ -4132,25 +4132,25 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersRecoverArg: CustomStringConvertible {
+    open class MembersRecoverArg: CustomStringConvertible {
         /// Identity of user to recover.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverArgSerializer().serialize(self)))"
         }
     }
-    public class MembersRecoverArgSerializer: JSONSerializer {
+    open class MembersRecoverArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersRecoverArg) -> JSON {
+        open func serialize(_ value: MembersRecoverArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersRecoverArg {
+        open func deserialize(_ json: JSON) -> MembersRecoverArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -4176,9 +4176,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRecoverErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersRecoverErrorSerializer: JSONSerializer {
+    open class MembersRecoverErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersRecoverError) -> JSON {
+        open func serialize(_ value: MembersRecoverError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4198,7 +4198,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersRecoverError {
+        open func deserialize(_ json: JSON) -> MembersRecoverError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4221,28 +4221,28 @@ public class Team {
     }
 
     /// The MembersRemoveArg struct
-    public class MembersRemoveArg: Team.MembersDeactivateArg {
+    open class MembersRemoveArg: Team.MembersDeactivateArg {
         /// If provided, files from the deleted member account will be transferred to this user.
-        public let transferDestId: Team.UserSelectorArg?
+        open let transferDestId: Team.UserSelectorArg?
         /// If provided, errors during the transfer process will be sent via email to this user. If the transfer_dest_id
         /// argument was provided, then this argument must be provided as well.
-        public let transferAdminId: Team.UserSelectorArg?
+        open let transferAdminId: Team.UserSelectorArg?
         /// Downgrade the member to a Basic account. The user will retain the email address associated with their
         /// Dropbox  account and data in their account that is not restricted to team members.
-        public let keepAccount: Bool
+        open let keepAccount: Bool
         public init(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false) {
             self.transferDestId = transferDestId
             self.transferAdminId = transferAdminId
             self.keepAccount = keepAccount
             super.init(user: user, wipeData: wipeData)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveArgSerializer().serialize(self)))"
         }
     }
-    public class MembersRemoveArgSerializer: JSONSerializer {
+    open class MembersRemoveArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersRemoveArg) -> JSON {
+        open func serialize(_ value: MembersRemoveArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
@@ -4252,7 +4252,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersRemoveArg {
+        open func deserialize(_ json: JSON) -> MembersRemoveArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -4304,9 +4304,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersRemoveErrorSerializer: JSONSerializer {
+    open class MembersRemoveErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersRemoveError) -> JSON {
+        open func serialize(_ value: MembersRemoveError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4370,7 +4370,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersRemoveError {
+        open func deserialize(_ json: JSON) -> MembersRemoveError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4427,9 +4427,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSendWelcomeErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersSendWelcomeErrorSerializer: JSONSerializer {
+    open class MembersSendWelcomeErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSendWelcomeError) -> JSON {
+        open func serialize(_ value: MembersSendWelcomeError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4445,7 +4445,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersSendWelcomeError {
+        open func deserialize(_ json: JSON) -> MembersSendWelcomeError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4466,29 +4466,29 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersSetPermissionsArg: CustomStringConvertible {
+    open class MembersSetPermissionsArg: CustomStringConvertible {
         /// Identity of user whose role will be set.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         /// The new role of the member.
-        public let newRole: Team.AdminTier
+        open let newRole: Team.AdminTier
         public init(user: Team.UserSelectorArg, newRole: Team.AdminTier) {
             self.user = user
             self.newRole = newRole
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsArgSerializer().serialize(self)))"
         }
     }
-    public class MembersSetPermissionsArgSerializer: JSONSerializer {
+    open class MembersSetPermissionsArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSetPermissionsArg) -> JSON {
+        open func serialize(_ value: MembersSetPermissionsArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_role": Team.AdminTierSerializer().serialize(value.newRole),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersSetPermissionsArg {
+        open func deserialize(_ json: JSON) -> MembersSetPermissionsArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -4519,9 +4519,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersSetPermissionsErrorSerializer: JSONSerializer {
+    open class MembersSetPermissionsErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSetPermissionsError) -> JSON {
+        open func serialize(_ value: MembersSetPermissionsError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4549,7 +4549,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersSetPermissionsError {
+        open func deserialize(_ json: JSON) -> MembersSetPermissionsError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4576,30 +4576,30 @@ public class Team {
     }
 
     /// The MembersSetPermissionsResult struct
-    public class MembersSetPermissionsResult: CustomStringConvertible {
+    open class MembersSetPermissionsResult: CustomStringConvertible {
         /// The member ID of the user to which the change was applied.
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// The role after the change.
-        public let role: Team.AdminTier
+        open let role: Team.AdminTier
         public init(teamMemberId: String, role: Team.AdminTier) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             self.role = role
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissionsResultSerializer().serialize(self)))"
         }
     }
-    public class MembersSetPermissionsResultSerializer: JSONSerializer {
+    open class MembersSetPermissionsResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSetPermissionsResult) -> JSON {
+        open func serialize(_ value: MembersSetPermissionsResult) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersSetPermissionsResult {
+        open func deserialize(_ json: JSON) -> MembersSetPermissionsResult {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -4613,17 +4613,17 @@ public class Team {
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account. At least one
     /// of new_email, new_external_id, new_given_name, and/or new_surname must be provided.
-    public class MembersSetProfileArg: CustomStringConvertible {
+    open class MembersSetProfileArg: CustomStringConvertible {
         /// Identity of user whose profile will be set.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         /// New email for member.
-        public let newEmail: String?
+        open let newEmail: String?
         /// New external ID for member.
-        public let newExternalId: String?
+        open let newExternalId: String?
         /// New given name for member.
-        public let newGivenName: String?
+        open let newGivenName: String?
         /// New surname for member.
-        public let newSurname: String?
+        open let newSurname: String?
         public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil) {
             self.user = user
             nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$"))(newEmail)
@@ -4635,13 +4635,13 @@ public class Team {
             nullableValidator(stringValidator(minLength: 1, maxLength: 100, pattern: "[^/:?*<>\"|]*"))(newSurname)
             self.newSurname = newSurname
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileArgSerializer().serialize(self)))"
         }
     }
-    public class MembersSetProfileArgSerializer: JSONSerializer {
+    open class MembersSetProfileArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSetProfileArg) -> JSON {
+        open func serialize(_ value: MembersSetProfileArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_email": NullableSerializer(Serialization._StringSerializer).serialize(value.newEmail),
@@ -4651,7 +4651,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersSetProfileArg {
+        open func deserialize(_ json: JSON) -> MembersSetProfileArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -4691,9 +4691,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersSetProfileErrorSerializer: JSONSerializer {
+    open class MembersSetProfileErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSetProfileError) -> JSON {
+        open func serialize(_ value: MembersSetProfileError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4733,7 +4733,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersSetProfileError {
+        open func deserialize(_ json: JSON) -> MembersSetProfileError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4784,9 +4784,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSuspendErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersSuspendErrorSerializer: JSONSerializer {
+    open class MembersSuspendErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersSuspendError) -> JSON {
+        open func serialize(_ value: MembersSuspendError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4814,7 +4814,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersSuspendError {
+        open func deserialize(_ json: JSON) -> MembersSuspendError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4841,25 +4841,25 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersUnsuspendArg: CustomStringConvertible {
+    open class MembersUnsuspendArg: CustomStringConvertible {
         /// Identity of user to unsuspend.
-        public let user: Team.UserSelectorArg
+        open let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersUnsuspendArgSerializer().serialize(self)))"
         }
     }
-    public class MembersUnsuspendArgSerializer: JSONSerializer {
+    open class MembersUnsuspendArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersUnsuspendArg) -> JSON {
+        open func serialize(_ value: MembersUnsuspendArg) -> JSON {
             let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MembersUnsuspendArg {
+        open func deserialize(_ json: JSON) -> MembersUnsuspendArg {
             switch json {
                 case .dictionary(let dict):
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
@@ -4887,9 +4887,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersUnsuspendErrorSerializer().serialize(self)))"
         }
     }
-    public class MembersUnsuspendErrorSerializer: JSONSerializer {
+    open class MembersUnsuspendErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MembersUnsuspendError) -> JSON {
+        open func serialize(_ value: MembersUnsuspendError) -> JSON {
             switch value {
                 case .userNotFound:
                     var d = [String: JSON]()
@@ -4913,7 +4913,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MembersUnsuspendError {
+        open func deserialize(_ json: JSON) -> MembersUnsuspendError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -4956,9 +4956,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(MobileClientPlatformSerializer().serialize(self)))"
         }
     }
-    public class MobileClientPlatformSerializer: JSONSerializer {
+    open class MobileClientPlatformSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MobileClientPlatform) -> JSON {
+        open func serialize(_ value: MobileClientPlatform) -> JSON {
             switch value {
                 case .iphone:
                     var d = [String: JSON]()
@@ -4986,7 +4986,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> MobileClientPlatform {
+        open func deserialize(_ json: JSON) -> MobileClientPlatform {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5013,17 +5013,17 @@ public class Team {
     }
 
     /// Information about linked Dropbox mobile client sessions
-    public class MobileClientSession: Team.DeviceSession {
+    open class MobileClientSession: Team.DeviceSession {
         /// The device name
-        public let deviceName: String
+        open let deviceName: String
         /// The mobile application type
-        public let clientType: Team.MobileClientPlatform
+        open let clientType: Team.MobileClientPlatform
         /// The dropbox client version
-        public let clientVersion: String?
+        open let clientVersion: String?
         /// The hosting OS version
-        public let osVersion: String?
+        open let osVersion: String?
         /// last carrier used by the device
-        public let lastCarrier: String?
+        open let lastCarrier: String?
         public init(sessionId: String, deviceName: String, clientType: Team.MobileClientPlatform, ipAddress: String? = nil, country: String? = nil, created: Date? = nil, updated: Date? = nil, clientVersion: String? = nil, osVersion: String? = nil, lastCarrier: String? = nil) {
             stringValidator()(deviceName)
             self.deviceName = deviceName
@@ -5036,13 +5036,13 @@ public class Team {
             self.lastCarrier = lastCarrier
             super.init(sessionId: sessionId, ipAddress: ipAddress, country: country, created: created, updated: updated)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MobileClientSessionSerializer().serialize(self)))"
         }
     }
-    public class MobileClientSessionSerializer: JSONSerializer {
+    open class MobileClientSessionSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: MobileClientSession) -> JSON {
+        open func serialize(_ value: MobileClientSession) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "device_name": Serialization._StringSerializer.serialize(value.deviceName),
@@ -5057,7 +5057,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> MobileClientSession {
+        open func deserialize(_ json: JSON) -> MobileClientSession {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -5078,25 +5078,25 @@ public class Team {
     }
 
     /// The RemovedStatus struct
-    public class RemovedStatus: CustomStringConvertible {
+    open class RemovedStatus: CustomStringConvertible {
         /// True if the removed team member is recoverable
-        public let isRecoverable: Bool
+        open let isRecoverable: Bool
         public init(isRecoverable: Bool) {
             self.isRecoverable = isRecoverable
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovedStatusSerializer().serialize(self)))"
         }
     }
-    public class RemovedStatusSerializer: JSONSerializer {
+    open class RemovedStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RemovedStatus) -> JSON {
+        open func serialize(_ value: RemovedStatus) -> JSON {
             let output = [ 
             "is_recoverable": Serialization._BoolSerializer.serialize(value.isRecoverable),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RemovedStatus {
+        open func deserialize(_ json: JSON) -> RemovedStatus {
             switch json {
                 case .dictionary(let dict):
                     let isRecoverable = Serialization._BoolSerializer.deserialize(dict["is_recoverable"] ?? .null)
@@ -5108,21 +5108,21 @@ public class Team {
     }
 
     /// The RevokeDesktopClientArg struct
-    public class RevokeDesktopClientArg: Team.DeviceSessionArg {
+    open class RevokeDesktopClientArg: Team.DeviceSessionArg {
         /// Whether to delete all files of the account (this is possible only if supported by the desktop client and
         /// will be made the next time the client access the account)
-        public let deleteOnUnlink: Bool
+        open let deleteOnUnlink: Bool
         public init(sessionId: String, teamMemberId: String, deleteOnUnlink: Bool = false) {
             self.deleteOnUnlink = deleteOnUnlink
             super.init(sessionId: sessionId, teamMemberId: teamMemberId)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDesktopClientArgSerializer().serialize(self)))"
         }
     }
-    public class RevokeDesktopClientArgSerializer: JSONSerializer {
+    open class RevokeDesktopClientArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDesktopClientArg) -> JSON {
+        open func serialize(_ value: RevokeDesktopClientArg) -> JSON {
             let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
@@ -5130,7 +5130,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeDesktopClientArg {
+        open func deserialize(_ json: JSON) -> RevokeDesktopClientArg {
             switch json {
                 case .dictionary(let dict):
                     let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
@@ -5156,9 +5156,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionArgSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionArgSerializer: JSONSerializer {
+    open class RevokeDeviceSessionArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionArg) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionArg) -> JSON {
             switch value {
                 case .webSession(let arg):
                     var d = Serialization.getFields(Team.DeviceSessionArgSerializer().serialize(arg))
@@ -5174,7 +5174,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionArg {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionArg {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5198,25 +5198,25 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchArg struct
-    public class RevokeDeviceSessionBatchArg: CustomStringConvertible {
+    open class RevokeDeviceSessionBatchArg: CustomStringConvertible {
         /// (no description)
-        public let revokeDevices: Array<Team.RevokeDeviceSessionArg>
+        open let revokeDevices: Array<Team.RevokeDeviceSessionArg>
         public init(revokeDevices: Array<Team.RevokeDeviceSessionArg>) {
             self.revokeDevices = revokeDevices
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchArgSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
+    open class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionBatchArg) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionBatchArg) -> JSON {
             let output = [ 
             "revoke_devices": ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).serialize(value.revokeDevices),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchArg {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchArg {
             switch json {
                 case .dictionary(let dict):
                     let revokeDevices = ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).deserialize(dict["revoke_devices"] ?? .null)
@@ -5236,9 +5236,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchErrorSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionBatchErrorSerializer: JSONSerializer {
+    open class RevokeDeviceSessionBatchErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionBatchError) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionBatchError) -> JSON {
             switch value {
                 case .other:
                     var d = [String: JSON]()
@@ -5246,7 +5246,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchError {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5263,25 +5263,25 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchResult struct
-    public class RevokeDeviceSessionBatchResult: CustomStringConvertible {
+    open class RevokeDeviceSessionBatchResult: CustomStringConvertible {
         /// (no description)
-        public let revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>
+        open let revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>
         public init(revokeDevicesStatus: Array<Team.RevokeDeviceSessionStatus>) {
             self.revokeDevicesStatus = revokeDevicesStatus
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionBatchResultSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
+    open class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionBatchResult) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionBatchResult) -> JSON {
             let output = [ 
             "revoke_devices_status": ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).serialize(value.revokeDevicesStatus),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchResult {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionBatchResult {
             switch json {
                 case .dictionary(let dict):
                     let revokeDevicesStatus = ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).deserialize(dict["revoke_devices_status"] ?? .null)
@@ -5305,9 +5305,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionErrorSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionErrorSerializer: JSONSerializer {
+    open class RevokeDeviceSessionErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionError) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionError) -> JSON {
             switch value {
                 case .deviceSessionNotFound:
                     var d = [String: JSON]()
@@ -5323,7 +5323,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionError {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5344,29 +5344,29 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionStatus struct
-    public class RevokeDeviceSessionStatus: CustomStringConvertible {
+    open class RevokeDeviceSessionStatus: CustomStringConvertible {
         /// Result of the revoking request
-        public let success: Bool
+        open let success: Bool
         /// The error cause in case of a failure
-        public let errorType: Team.RevokeDeviceSessionError?
+        open let errorType: Team.RevokeDeviceSessionError?
         public init(success: Bool, errorType: Team.RevokeDeviceSessionError? = nil) {
             self.success = success
             self.errorType = errorType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeDeviceSessionStatusSerializer().serialize(self)))"
         }
     }
-    public class RevokeDeviceSessionStatusSerializer: JSONSerializer {
+    open class RevokeDeviceSessionStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeDeviceSessionStatus) -> JSON {
+        open func serialize(_ value: RevokeDeviceSessionStatus) -> JSON {
             let output = [ 
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeDeviceSessionErrorSerializer()).serialize(value.errorType),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeDeviceSessionStatus {
+        open func deserialize(_ json: JSON) -> RevokeDeviceSessionStatus {
             switch json {
                 case .dictionary(let dict):
                     let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .null)
@@ -5379,13 +5379,13 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppArg struct
-    public class RevokeLinkedApiAppArg: CustomStringConvertible {
+    open class RevokeLinkedApiAppArg: CustomStringConvertible {
         /// The application's unique id
-        public let appId: String
+        open let appId: String
         /// The unique id of the member owning the device
-        public let teamMemberId: String
+        open let teamMemberId: String
         /// Whether to keep the application dedicated folder (in case the application uses  one)
-        public let keepAppFolder: Bool
+        open let keepAppFolder: Bool
         public init(appId: String, teamMemberId: String, keepAppFolder: Bool = true) {
             stringValidator()(appId)
             self.appId = appId
@@ -5393,13 +5393,13 @@ public class Team {
             self.teamMemberId = teamMemberId
             self.keepAppFolder = keepAppFolder
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedApiAppArgSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedApiAppArgSerializer: JSONSerializer {
+    open class RevokeLinkedApiAppArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedApiAppArg) -> JSON {
+        open func serialize(_ value: RevokeLinkedApiAppArg) -> JSON {
             let output = [ 
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
@@ -5407,7 +5407,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedApiAppArg {
+        open func deserialize(_ json: JSON) -> RevokeLinkedApiAppArg {
             switch json {
                 case .dictionary(let dict):
                     let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .null)
@@ -5421,25 +5421,25 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppBatchArg struct
-    public class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
+    open class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
         /// (no description)
-        public let revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>
+        open let revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>
         public init(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) {
             self.revokeLinkedApp = revokeLinkedApp
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedApiAppBatchArgSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
+    open class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedApiAppBatchArg) -> JSON {
+        open func serialize(_ value: RevokeLinkedApiAppBatchArg) -> JSON {
             let output = [ 
             "revoke_linked_app": ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).serialize(value.revokeLinkedApp),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedApiAppBatchArg {
+        open func deserialize(_ json: JSON) -> RevokeLinkedApiAppBatchArg {
             switch json {
                 case .dictionary(let dict):
                     let revokeLinkedApp = ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).deserialize(dict["revoke_linked_app"] ?? .null)
@@ -5459,9 +5459,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppBatchErrorSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedAppBatchErrorSerializer: JSONSerializer {
+    open class RevokeLinkedAppBatchErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedAppBatchError) -> JSON {
+        open func serialize(_ value: RevokeLinkedAppBatchError) -> JSON {
             switch value {
                 case .other:
                     var d = [String: JSON]()
@@ -5469,7 +5469,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedAppBatchError {
+        open func deserialize(_ json: JSON) -> RevokeLinkedAppBatchError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5486,25 +5486,25 @@ public class Team {
     }
 
     /// The RevokeLinkedAppBatchResult struct
-    public class RevokeLinkedAppBatchResult: CustomStringConvertible {
+    open class RevokeLinkedAppBatchResult: CustomStringConvertible {
         /// (no description)
-        public let revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>
+        open let revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>
         public init(revokeLinkedAppStatus: Array<Team.RevokeLinkedAppStatus>) {
             self.revokeLinkedAppStatus = revokeLinkedAppStatus
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppBatchResultSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
+    open class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedAppBatchResult) -> JSON {
+        open func serialize(_ value: RevokeLinkedAppBatchResult) -> JSON {
             let output = [ 
             "revoke_linked_app_status": ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).serialize(value.revokeLinkedAppStatus),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedAppBatchResult {
+        open func deserialize(_ json: JSON) -> RevokeLinkedAppBatchResult {
             switch json {
                 case .dictionary(let dict):
                     let revokeLinkedAppStatus = ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).deserialize(dict["revoke_linked_app_status"] ?? .null)
@@ -5528,9 +5528,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppErrorSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedAppErrorSerializer: JSONSerializer {
+    open class RevokeLinkedAppErrorSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedAppError) -> JSON {
+        open func serialize(_ value: RevokeLinkedAppError) -> JSON {
             switch value {
                 case .appNotFound:
                     var d = [String: JSON]()
@@ -5546,7 +5546,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedAppError {
+        open func deserialize(_ json: JSON) -> RevokeLinkedAppError {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5567,29 +5567,29 @@ public class Team {
     }
 
     /// The RevokeLinkedAppStatus struct
-    public class RevokeLinkedAppStatus: CustomStringConvertible {
+    open class RevokeLinkedAppStatus: CustomStringConvertible {
         /// Result of the revoking request
-        public let success: Bool
+        open let success: Bool
         /// The error cause in case of a failure
-        public let errorType: Team.RevokeLinkedAppError?
+        open let errorType: Team.RevokeLinkedAppError?
         public init(success: Bool, errorType: Team.RevokeLinkedAppError? = nil) {
             self.success = success
             self.errorType = errorType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RevokeLinkedAppStatusSerializer().serialize(self)))"
         }
     }
-    public class RevokeLinkedAppStatusSerializer: JSONSerializer {
+    open class RevokeLinkedAppStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: RevokeLinkedAppStatus) -> JSON {
+        open func serialize(_ value: RevokeLinkedAppStatus) -> JSON {
             let output = [ 
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeLinkedAppErrorSerializer()).serialize(value.errorType),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> RevokeLinkedAppStatus {
+        open func deserialize(_ json: JSON) -> RevokeLinkedAppStatus {
             switch json {
                 case .dictionary(let dict):
                     let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .null)
@@ -5602,31 +5602,31 @@ public class Team {
     }
 
     /// Describes the number of users in a specific storage bucket.
-    public class StorageBucket: CustomStringConvertible {
+    open class StorageBucket: CustomStringConvertible {
         /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up to 1 Giga.
-        public let bucket: String
+        open let bucket: String
         /// The number of people whose storage is in the range of this storage bucket.
-        public let users: UInt64
+        open let users: UInt64
         public init(bucket: String, users: UInt64) {
             stringValidator()(bucket)
             self.bucket = bucket
             comparableValidator()(users)
             self.users = users
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(StorageBucketSerializer().serialize(self)))"
         }
     }
-    public class StorageBucketSerializer: JSONSerializer {
+    open class StorageBucketSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: StorageBucket) -> JSON {
+        open func serialize(_ value: StorageBucket) -> JSON {
             let output = [ 
             "bucket": Serialization._StringSerializer.serialize(value.bucket),
             "users": Serialization._UInt64Serializer.serialize(value.users),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> StorageBucket {
+        open func deserialize(_ json: JSON) -> StorageBucket {
             switch json {
                 case .dictionary(let dict):
                     let bucket = Serialization._StringSerializer.deserialize(dict["bucket"] ?? .null)
@@ -5639,17 +5639,17 @@ public class Team {
     }
 
     /// The TeamGetInfoResult struct
-    public class TeamGetInfoResult: CustomStringConvertible {
+    open class TeamGetInfoResult: CustomStringConvertible {
         /// The name of the team.
-        public let name: String
+        open let name: String
         /// The ID of the team.
-        public let teamId: String
+        open let teamId: String
         /// The number of licenses available to the team.
-        public let numLicensedUsers: UInt32
+        open let numLicensedUsers: UInt32
         /// The number of accounts that have been invited or are already active members of the team.
-        public let numProvisionedUsers: UInt32
+        open let numProvisionedUsers: UInt32
         /// (no description)
-        public let policies: TeamPolicies.TeamMemberPolicies
+        open let policies: TeamPolicies.TeamMemberPolicies
         public init(name: String, teamId: String, numLicensedUsers: UInt32, numProvisionedUsers: UInt32, policies: TeamPolicies.TeamMemberPolicies) {
             stringValidator()(name)
             self.name = name
@@ -5661,13 +5661,13 @@ public class Team {
             self.numProvisionedUsers = numProvisionedUsers
             self.policies = policies
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamGetInfoResultSerializer().serialize(self)))"
         }
     }
-    public class TeamGetInfoResultSerializer: JSONSerializer {
+    open class TeamGetInfoResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: TeamGetInfoResult) -> JSON {
+        open func serialize(_ value: TeamGetInfoResult) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "team_id": Serialization._StringSerializer.serialize(value.teamId),
@@ -5677,7 +5677,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> TeamGetInfoResult {
+        open func deserialize(_ json: JSON) -> TeamGetInfoResult {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
@@ -5693,29 +5693,29 @@ public class Team {
     }
 
     /// Information about a team member.
-    public class TeamMemberInfo: CustomStringConvertible {
+    open class TeamMemberInfo: CustomStringConvertible {
         /// Profile of a user as a member of a team.
-        public let profile: Team.TeamMemberProfile
+        open let profile: Team.TeamMemberProfile
         /// The user's role in the team.
-        public let role: Team.AdminTier
+        open let role: Team.AdminTier
         public init(profile: Team.TeamMemberProfile, role: Team.AdminTier) {
             self.profile = profile
             self.role = role
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberInfoSerializer().serialize(self)))"
         }
     }
-    public class TeamMemberInfoSerializer: JSONSerializer {
+    open class TeamMemberInfoSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: TeamMemberInfo) -> JSON {
+        open func serialize(_ value: TeamMemberInfo) -> JSON {
             let output = [ 
             "profile": Team.TeamMemberProfileSerializer().serialize(value.profile),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> TeamMemberInfo {
+        open func deserialize(_ json: JSON) -> TeamMemberInfo {
             switch json {
                 case .dictionary(let dict):
                     let profile = Team.TeamMemberProfileSerializer().deserialize(dict["profile"] ?? .null)
@@ -5728,21 +5728,21 @@ public class Team {
     }
 
     /// Profile of a user as a member of a team.
-    public class TeamMemberProfile: Team.MemberProfile {
+    open class TeamMemberProfile: Team.MemberProfile {
         /// List of group IDs of groups that the user belongs to.
-        public let groups: Array<String>
+        open let groups: Array<String>
         public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, externalId: String? = nil, accountId: String? = nil) {
             arrayValidator(itemValidator: stringValidator())(groups)
             self.groups = groups
             super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId)
         }
-        public override var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
         }
     }
-    public class TeamMemberProfileSerializer: JSONSerializer {
+    open class TeamMemberProfileSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: TeamMemberProfile) -> JSON {
+        open func serialize(_ value: TeamMemberProfile) -> JSON {
             let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
@@ -5756,7 +5756,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> TeamMemberProfile {
+        open func deserialize(_ json: JSON) -> TeamMemberProfile {
             switch json {
                 case .dictionary(let dict):
                     let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
@@ -5792,9 +5792,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberStatusSerializer().serialize(self)))"
         }
     }
-    public class TeamMemberStatusSerializer: JSONSerializer {
+    open class TeamMemberStatusSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: TeamMemberStatus) -> JSON {
+        open func serialize(_ value: TeamMemberStatus) -> JSON {
             switch value {
                 case .active:
                     var d = [String: JSON]()
@@ -5814,7 +5814,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> TeamMemberStatus {
+        open func deserialize(_ json: JSON) -> TeamMemberStatus {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5848,9 +5848,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMembershipTypeSerializer().serialize(self)))"
         }
     }
-    public class TeamMembershipTypeSerializer: JSONSerializer {
+    open class TeamMembershipTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: TeamMembershipType) -> JSON {
+        open func serialize(_ value: TeamMembershipType) -> JSON {
             switch value {
                 case .full:
                     var d = [String: JSON]()
@@ -5862,7 +5862,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> TeamMembershipType {
+        open func deserialize(_ json: JSON) -> TeamMembershipType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -5881,16 +5881,16 @@ public class Team {
     }
 
     /// The UpdatePropertyTemplateArg struct
-    public class UpdatePropertyTemplateArg: CustomStringConvertible {
+    open class UpdatePropertyTemplateArg: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
-        public let templateId: String
+        open let templateId: String
         /// A display name for the property template. Property template names can be up to 256 bytes.
-        public let name: String?
+        open let name: String?
         /// Description for new property template. Property template descriptions can be up to 1024 bytes.
-        public let description_: String?
+        open let description_: String?
         /// This is a list of custom properties to add to the property template. There can be up to 64 properties in a
         /// single property template.
-        public let addFields: Array<Properties.PropertyFieldTemplate>?
+        open let addFields: Array<Properties.PropertyFieldTemplate>?
         public init(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<Properties.PropertyFieldTemplate>? = nil) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
@@ -5900,13 +5900,13 @@ public class Team {
             self.description_ = description_
             self.addFields = addFields
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyTemplateArgSerializer().serialize(self)))"
         }
     }
-    public class UpdatePropertyTemplateArgSerializer: JSONSerializer {
+    open class UpdatePropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UpdatePropertyTemplateArg) -> JSON {
+        open func serialize(_ value: UpdatePropertyTemplateArg) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "name": NullableSerializer(Serialization._StringSerializer).serialize(value.name),
@@ -5915,7 +5915,7 @@ public class Team {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UpdatePropertyTemplateArg {
+        open func deserialize(_ json: JSON) -> UpdatePropertyTemplateArg {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -5930,26 +5930,26 @@ public class Team {
     }
 
     /// The UpdatePropertyTemplateResult struct
-    public class UpdatePropertyTemplateResult: CustomStringConvertible {
+    open class UpdatePropertyTemplateResult: CustomStringConvertible {
         /// An identifier for property template added by propertiesTemplateAdd.
-        public let templateId: String
+        open let templateId: String
         public init(templateId: String) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdatePropertyTemplateResultSerializer().serialize(self)))"
         }
     }
-    public class UpdatePropertyTemplateResultSerializer: JSONSerializer {
+    open class UpdatePropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UpdatePropertyTemplateResult) -> JSON {
+        open func serialize(_ value: UpdatePropertyTemplateResult) -> JSON {
             let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> UpdatePropertyTemplateResult {
+        open func deserialize(_ json: JSON) -> UpdatePropertyTemplateResult {
             switch json {
                 case .dictionary(let dict):
                     let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
@@ -5973,9 +5973,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UserSelectorArgSerializer().serialize(self)))"
         }
     }
-    public class UserSelectorArgSerializer: JSONSerializer {
+    open class UserSelectorArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UserSelectorArg) -> JSON {
+        open func serialize(_ value: UserSelectorArg) -> JSON {
             switch value {
                 case .teamMemberId(let arg):
                     var d = ["team_member_id": Serialization._StringSerializer.serialize(arg)]
@@ -5991,7 +5991,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UserSelectorArg {
+        open func deserialize(_ json: JSON) -> UserSelectorArg {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -6027,9 +6027,9 @@ public class Team {
             return "\(SerializeUtil.prepareJSONForSerialization(UsersSelectorArgSerializer().serialize(self)))"
         }
     }
-    public class UsersSelectorArgSerializer: JSONSerializer {
+    open class UsersSelectorArgSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: UsersSelectorArg) -> JSON {
+        open func serialize(_ value: UsersSelectorArg) -> JSON {
             switch value {
                 case .teamMemberIds(let arg):
                     var d = ["team_member_ids": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
@@ -6045,7 +6045,7 @@ public class Team {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> UsersSelectorArg {
+        open func deserialize(_ json: JSON) -> UsersSelectorArg {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

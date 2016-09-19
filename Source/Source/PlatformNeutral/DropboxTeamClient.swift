@@ -3,7 +3,7 @@ import Alamofire
 
 /// The client for the Business API. Call routes using the namespaces inside this object (inherited from parent).
 
-public class DropboxTeamClient: DropboxTeamBase {
+open class DropboxTeamClient: DropboxTeamBase {
     fileprivate var transportClient: DropboxTransportClient
     fileprivate var accessToken: String
 

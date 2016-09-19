@@ -7,5 +7,5 @@
 import Foundation
 
 /// Datatypes and serializers for the common namespace
-public class Common {
+open class Common {
 }

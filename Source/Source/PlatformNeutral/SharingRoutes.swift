@@ -5,8 +5,8 @@
 ///
 
 /// Routes for the sharing namespace
-public class SharingRoutes {
-    public let client: DropboxTransportClient
+open class SharingRoutes {
+    open let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }
@@ -23,7 +23,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
-    public func addFileMember(file: String, members: Array<Sharing.MemberSelector>, customMessage: String? = nil, quiet: Bool = false, accessLevel: Sharing.AccessLevel = .viewer, addMessageAsComment: Bool = false) -> RpcRequest<ArraySerializer<Sharing.FileMemberActionResultSerializer>, Sharing.AddFileMemberErrorSerializer> {
+    open func addFileMember(file: String, members: Array<Sharing.MemberSelector>, customMessage: String? = nil, quiet: Bool = false, accessLevel: Sharing.AccessLevel = .viewer, addMessageAsComment: Bool = false) -> RpcRequest<ArraySerializer<Sharing.FileMemberActionResultSerializer>, Sharing.AddFileMemberErrorSerializer> {
         let route = Sharing.addFileMember
         let serverArgs = Sharing.AddFileMemberArgs(file: file, members: members, customMessage: customMessage, quiet: quiet, accessLevel: accessLevel, addMessageAsComment: addMessageAsComment)
         return client.request(route, serverArgs: serverArgs)
@@ -41,7 +41,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
-    public func addFolderMember(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil) -> RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
+    open func addFolderMember(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil) -> RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
         let route = Sharing.addFolderMember
         let serverArgs = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
         return client.request(route, serverArgs: serverArgs)
@@ -55,7 +55,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.
-    public func changeFileMemberAccess(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
+    open func changeFileMemberAccess(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
         let route = Sharing.changeFileMemberAccess
         let serverArgs = Sharing.ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
         return client.request(route, serverArgs: serverArgs)
@@ -68,7 +68,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.JobStatus` object on success or a
     /// `Async.PollError` object on failure.
-    public func checkJobStatus(asyncJobId: String) -> RpcRequest<Sharing.JobStatusSerializer, Async.PollErrorSerializer> {
+    open func checkJobStatus(asyncJobId: String) -> RpcRequest<Sharing.JobStatusSerializer, Async.PollErrorSerializer> {
         let route = Sharing.checkJobStatus
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -82,7 +82,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.RemoveMemberJobStatus` object on
     /// success or a `Async.PollError` object on failure.
-    public func checkRemoveMemberJobStatus(asyncJobId: String) -> RpcRequest<Sharing.RemoveMemberJobStatusSerializer, Async.PollErrorSerializer> {
+    open func checkRemoveMemberJobStatus(asyncJobId: String) -> RpcRequest<Sharing.RemoveMemberJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Sharing.checkRemoveMemberJobStatus
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -96,7 +96,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderJobStatus` object on
     /// success or a `Async.PollError` object on failure.
-    public func checkShareJobStatus(asyncJobId: String) -> RpcRequest<Sharing.ShareFolderJobStatusSerializer, Async.PollErrorSerializer> {
+    open func checkShareJobStatus(asyncJobId: String) -> RpcRequest<Sharing.ShareFolderJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Sharing.checkShareJobStatus
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -116,7 +116,7 @@ public class SharingRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Sharing.PathLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkError` object on failure.
     @available(*, unavailable, message:"create_shared_link is deprecated. Use create_shared_link_with_settings.")
-    public func createSharedLink(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) -> RpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer> {
+    open func createSharedLink(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) -> RpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer> {
         let route = Sharing.createSharedLink
         let serverArgs = Sharing.CreateSharedLinkArg(path: path, shortUrl: shortUrl, pendingUpload: pendingUpload)
         return client.request(route, serverArgs: serverArgs)
@@ -131,7 +131,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkWithSettingsError` object on failure.
-    public func createSharedLinkWithSettings(path: String, settings: Sharing.SharedLinkSettings? = nil) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.CreateSharedLinkWithSettingsErrorSerializer> {
+    open func createSharedLinkWithSettings(path: String, settings: Sharing.SharedLinkSettings? = nil) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.CreateSharedLinkWithSettingsErrorSerializer> {
         let route = Sharing.createSharedLinkWithSettings
         let serverArgs = Sharing.CreateSharedLinkWithSettingsArg(path: path, settings: settings)
         return client.request(route, serverArgs: serverArgs)
@@ -144,7 +144,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
     /// success or a `Sharing.GetFileMetadataError` object on failure.
-    public func getFileMetadata(file: String, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.GetFileMetadataErrorSerializer> {
+    open func getFileMetadata(file: String, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.GetFileMetadataErrorSerializer> {
         let route = Sharing.getFileMetadata
         let serverArgs = Sharing.GetFileMetadataArg(file: file, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -157,7 +157,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Sharing.GetFileMetadataBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
-    public func getFileMetadataBatch(files: Array<String>, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<ArraySerializer<Sharing.GetFileMetadataBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
+    open func getFileMetadataBatch(files: Array<String>, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<ArraySerializer<Sharing.GetFileMetadataBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
         let route = Sharing.getFileMetadataBatch
         let serverArgs = Sharing.GetFileMetadataBatchArg(files: files, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -171,7 +171,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
-    public func getFolderMetadata(sharedFolderId: String, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.SharedFolderAccessErrorSerializer> {
+    open func getFolderMetadata(sharedFolderId: String, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.SharedFolderAccessErrorSerializer> {
         let route = Sharing.getFolderMetadata
         let serverArgs = Sharing.GetMetadataArgs(sharedFolderId: sharedFolderId, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -191,7 +191,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.GetSharedLinkFileError` object on failure.
-    public func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    open func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
         let route = Sharing.getSharedLinkFile
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
@@ -206,7 +206,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.GetSharedLinkFileError` object on failure.
-    public func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil) -> DownloadRequestMemory<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    open func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil) -> DownloadRequestMemory<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
         let route = Sharing.getSharedLinkFile
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs)
@@ -221,7 +221,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.SharedLinkError` object on failure.
-    public func getSharedLinkMetadata(url: String, path: String? = nil, linkPassword: String? = nil) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer> {
+    open func getSharedLinkMetadata(url: String, path: String? = nil, linkPassword: String? = nil) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer> {
         let route = Sharing.getSharedLinkMetadata
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs)
@@ -237,7 +237,7 @@ public class SharingRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Sharing.GetSharedLinksResult` object on
     /// success or a `Sharing.GetSharedLinksError` object on failure.
     @available(*, unavailable, message:"get_shared_links is deprecated. Use list_shared_links.")
-    public func getSharedLinks(path: String? = nil) -> RpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer> {
+    open func getSharedLinks(path: String? = nil) -> RpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer> {
         let route = Sharing.getSharedLinks
         let serverArgs = Sharing.GetSharedLinksArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -252,7 +252,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMembers` object on
     /// success or a `Sharing.ListFileMembersError` object on failure.
-    public func listFileMembers(file: String, actions: Array<Sharing.MemberAction>? = nil, includeInherited: Bool = true, limit: UInt32 = 100) -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersErrorSerializer> {
+    open func listFileMembers(file: String, actions: Array<Sharing.MemberAction>? = nil, includeInherited: Bool = true, limit: UInt32 = 100) -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersErrorSerializer> {
         let route = Sharing.listFileMembers
         let serverArgs = Sharing.ListFileMembersArg(file: file, actions: actions, includeInherited: includeInherited, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -267,7 +267,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Sharing.ListFileMembersBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
-    public func listFileMembersBatch(files: Array<String>, limit: UInt32 = 10) -> RpcRequest<ArraySerializer<Sharing.ListFileMembersBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
+    open func listFileMembersBatch(files: Array<String>, limit: UInt32 = 10) -> RpcRequest<ArraySerializer<Sharing.ListFileMembersBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
         let route = Sharing.listFileMembersBatch
         let serverArgs = Sharing.ListFileMembersBatchArg(files: files, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -281,7 +281,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMembers` object on
     /// success or a `Sharing.ListFileMembersContinueError` object on failure.
-    public func listFileMembersContinue(cursor: String) -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersContinueErrorSerializer> {
+    open func listFileMembersContinue(cursor: String) -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersContinueErrorSerializer> {
         let route = Sharing.listFileMembersContinue
         let serverArgs = Sharing.ListFileMembersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -293,7 +293,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
-    public func listFolderMembers(sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
+    open func listFolderMembers(sharedFolderId: String, actions: Array<Sharing.MemberAction>? = nil, limit: UInt32 = 1000) -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
         let route = Sharing.listFolderMembers
         let serverArgs = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -306,7 +306,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
     /// success or a `Sharing.ListFolderMembersContinueError` object on failure.
-    public func listFolderMembersContinue(cursor: String) -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.ListFolderMembersContinueErrorSerializer> {
+    open func listFolderMembersContinue(cursor: String) -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.ListFolderMembersContinueErrorSerializer> {
         let route = Sharing.listFolderMembersContinue
         let serverArgs = Sharing.ListFolderMembersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -322,7 +322,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
-    public func listFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+    open func listFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
         let route = Sharing.listFolders
         let serverArgs = Sharing.ListFoldersArgs(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -336,7 +336,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Sharing.ListFoldersContinueError` object on failure.
-    public func listFoldersContinue(cursor: String) -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
+    open func listFoldersContinue(cursor: String) -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
         let route = Sharing.listFoldersContinue
         let serverArgs = Sharing.ListFoldersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -352,7 +352,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
-    public func listMountableFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+    open func listMountableFolders(limit: UInt32 = 1000, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
         let route = Sharing.listMountableFolders
         let serverArgs = Sharing.ListFoldersArgs(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -366,7 +366,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Sharing.ListFoldersContinueError` object on failure.
-    public func listMountableFoldersContinue(cursor: String) -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
+    open func listMountableFoldersContinue(cursor: String) -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
         let route = Sharing.listMountableFoldersContinue
         let serverArgs = Sharing.ListFoldersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -380,7 +380,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.SharingUserError` object on failure.
-    public func listReceivedFiles(limit: UInt32 = 100, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.SharingUserErrorSerializer> {
+    open func listReceivedFiles(limit: UInt32 = 100, actions: Array<Sharing.FileAction>? = nil) -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.SharingUserErrorSerializer> {
         let route = Sharing.listReceivedFiles
         let serverArgs = Sharing.ListFilesArg(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -392,7 +392,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.ListFilesContinueError` object on failure.
-    public func listReceivedFilesContinue(cursor: String) -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.ListFilesContinueErrorSerializer> {
+    open func listReceivedFilesContinue(cursor: String) -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.ListFilesContinueErrorSerializer> {
         let route = Sharing.listReceivedFilesContinue
         let serverArgs = Sharing.ListFilesContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -409,7 +409,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListSharedLinksResult` object on
     /// success or a `Sharing.ListSharedLinksError` object on failure.
-    public func listSharedLinks(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) -> RpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
+    open func listSharedLinks(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) -> RpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
         let route = Sharing.listSharedLinks
         let serverArgs = Sharing.ListSharedLinksArg(path: path, cursor: cursor, directOnly: directOnly)
         return client.request(route, serverArgs: serverArgs)
@@ -426,7 +426,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.ModifySharedLinkSettingsError` object on failure.
-    public func modifySharedLinkSettings(url: String, settings: Sharing.SharedLinkSettings, removeExpiration: Bool = false) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.ModifySharedLinkSettingsErrorSerializer> {
+    open func modifySharedLinkSettings(url: String, settings: Sharing.SharedLinkSettings, removeExpiration: Bool = false) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.ModifySharedLinkSettingsErrorSerializer> {
         let route = Sharing.modifySharedLinkSettings
         let serverArgs = Sharing.ModifySharedLinkSettingsArgs(url: url, settings: settings, removeExpiration: removeExpiration)
         return client.request(route, serverArgs: serverArgs)
@@ -440,7 +440,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.MountFolderError` object on failure.
-    public func mountFolder(sharedFolderId: String) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer> {
+    open func mountFolder(sharedFolderId: String) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer> {
         let route = Sharing.mountFolder
         let serverArgs = Sharing.MountFolderArg(sharedFolderId: sharedFolderId)
         return client.request(route, serverArgs: serverArgs)
@@ -454,7 +454,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.RelinquishFileMembershipError` object on failure.
-    public func relinquishFileMembership(file: String) -> RpcRequest<VoidSerializer, Sharing.RelinquishFileMembershipErrorSerializer> {
+    open func relinquishFileMembership(file: String) -> RpcRequest<VoidSerializer, Sharing.RelinquishFileMembershipErrorSerializer> {
         let route = Sharing.relinquishFileMembership
         let serverArgs = Sharing.RelinquishFileMembershipArg(file: file)
         return client.request(route, serverArgs: serverArgs)
@@ -470,7 +470,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Sharing.RelinquishFolderMembershipError` object on failure.
-    public func relinquishFolderMembership(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.RelinquishFolderMembershipErrorSerializer> {
+    open func relinquishFolderMembership(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.RelinquishFolderMembershipErrorSerializer> {
         let route = Sharing.relinquishFolderMembership
         let serverArgs = Sharing.RelinquishFolderMembershipArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -485,7 +485,7 @@ public class SharingRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionIndividualResult`
     /// object on success or a `Sharing.RemoveFileMemberError` object on failure.
     @available(*, unavailable, message:"remove_file_member is deprecated. Use remove_file_member_2.")
-    public func removeFileMember(file: String, member: Sharing.MemberSelector) -> RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
+    open func removeFileMember(file: String, member: Sharing.MemberSelector) -> RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
         let route = Sharing.removeFileMember
         let serverArgs = Sharing.RemoveFileMemberArg(file: file, member: member)
         return client.request(route, serverArgs: serverArgs)
@@ -499,7 +499,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberRemoveActionResult`
     /// object on success or a `Sharing.RemoveFileMemberError` object on failure.
-    public func removeFileMember2(file: String, member: Sharing.MemberSelector) -> RpcRequest<Sharing.FileMemberRemoveActionResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
+    open func removeFileMember2(file: String, member: Sharing.MemberSelector) -> RpcRequest<Sharing.FileMemberRemoveActionResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
         let route = Sharing.removeFileMember2
         let serverArgs = Sharing.RemoveFileMemberArg(file: file, member: member)
         return client.request(route, serverArgs: serverArgs)
@@ -516,7 +516,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Sharing.RemoveFolderMemberError` object on failure.
-    public func removeFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) -> RpcRequest<Async.LaunchResultBaseSerializer, Sharing.RemoveFolderMemberErrorSerializer> {
+    open func removeFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) -> RpcRequest<Async.LaunchResultBaseSerializer, Sharing.RemoveFolderMemberErrorSerializer> {
         let route = Sharing.removeFolderMember
         let serverArgs = Sharing.RemoveFolderMemberArg(sharedFolderId: sharedFolderId, member: member, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -530,7 +530,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.RevokeSharedLinkError` object on failure.
-    public func revokeSharedLink(url: String) -> RpcRequest<VoidSerializer, Sharing.RevokeSharedLinkErrorSerializer> {
+    open func revokeSharedLink(url: String) -> RpcRequest<VoidSerializer, Sharing.RevokeSharedLinkErrorSerializer> {
         let route = Sharing.revokeSharedLink
         let serverArgs = Sharing.RevokeSharedLinkArg(url: url)
         return client.request(route, serverArgs: serverArgs)
@@ -551,7 +551,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.ShareFolderError` object on failure.
-    public func shareFolder(path: String, memberPolicy: Sharing.MemberPolicy = .anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .anyone, forceAsync: Bool = false) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
+    open func shareFolder(path: String, memberPolicy: Sharing.MemberPolicy = .anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .anyone, forceAsync: Bool = false) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
         let route = Sharing.shareFolder
         let serverArgs = Sharing.ShareFolderArg(path: path, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, forceAsync: forceAsync)
         return client.request(route, serverArgs: serverArgs)
@@ -565,7 +565,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.TransferFolderError` object on failure.
-    public func transferFolder(sharedFolderId: String, toDropboxId: String) -> RpcRequest<VoidSerializer, Sharing.TransferFolderErrorSerializer> {
+    open func transferFolder(sharedFolderId: String, toDropboxId: String) -> RpcRequest<VoidSerializer, Sharing.TransferFolderErrorSerializer> {
         let route = Sharing.transferFolder
         let serverArgs = Sharing.TransferFolderArg(sharedFolderId: sharedFolderId, toDropboxId: toDropboxId)
         return client.request(route, serverArgs: serverArgs)
@@ -578,7 +578,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.UnmountFolderError` object on failure.
-    public func unmountFolder(sharedFolderId: String) -> RpcRequest<VoidSerializer, Sharing.UnmountFolderErrorSerializer> {
+    open func unmountFolder(sharedFolderId: String) -> RpcRequest<VoidSerializer, Sharing.UnmountFolderErrorSerializer> {
         let route = Sharing.unmountFolder
         let serverArgs = Sharing.UnmountFolderArg(sharedFolderId: sharedFolderId)
         return client.request(route, serverArgs: serverArgs)
@@ -590,7 +590,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.UnshareFileError` object on failure.
-    public func unshareFile(file: String) -> RpcRequest<VoidSerializer, Sharing.UnshareFileErrorSerializer> {
+    open func unshareFile(file: String) -> RpcRequest<VoidSerializer, Sharing.UnshareFileErrorSerializer> {
         let route = Sharing.unshareFile
         let serverArgs = Sharing.UnshareFileArg(file: file)
         return client.request(route, serverArgs: serverArgs)
@@ -606,7 +606,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Sharing.UnshareFolderError` object on failure.
-    public func unshareFolder(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
+    open func unshareFolder(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
         let route = Sharing.unshareFolder
         let serverArgs = Sharing.UnshareFolderArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -622,7 +622,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.UpdateFolderMemberError` object on failure.
-    public func updateFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.UpdateFolderMemberErrorSerializer> {
+    open func updateFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.UpdateFolderMemberErrorSerializer> {
         let route = Sharing.updateFolderMember
         let serverArgs = Sharing.UpdateFolderMemberArg(sharedFolderId: sharedFolderId, member: member, accessLevel: accessLevel)
         return client.request(route, serverArgs: serverArgs)
@@ -640,7 +640,7 @@ public class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.UpdateFolderPolicyError` object on failure.
-    public func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
+    open func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
         let route = Sharing.updateFolderPolicy
         let serverArgs = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy)
         return client.request(route, serverArgs: serverArgs)

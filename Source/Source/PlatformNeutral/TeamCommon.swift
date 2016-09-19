@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the team_common namespace
-public class TeamCommon {
+open class TeamCommon {
     /// The group type determines how a group is managed.
     public enum GroupManagementType: CustomStringConvertible {
         /// A group which is managed by team admins only.
@@ -21,9 +21,9 @@ public class TeamCommon {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupManagementTypeSerializer().serialize(self)))"
         }
     }
-    public class GroupManagementTypeSerializer: JSONSerializer {
+    open class GroupManagementTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupManagementType) -> JSON {
+        open func serialize(_ value: GroupManagementType) -> JSON {
             switch value {
                 case .companyManaged:
                     var d = [String: JSON]()
@@ -39,7 +39,7 @@ public class TeamCommon {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupManagementType {
+        open func deserialize(_ json: JSON) -> GroupManagementType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
@@ -60,17 +60,17 @@ public class TeamCommon {
     }
 
     /// Information about a group.
-    public class GroupSummary: CustomStringConvertible {
+    open class GroupSummary: CustomStringConvertible {
         /// (no description)
-        public let groupName: String
+        open let groupName: String
         /// (no description)
-        public let groupId: String
+        open let groupId: String
         /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
-        public let groupExternalId: String?
+        open let groupExternalId: String?
         /// The number of members in the group.
-        public let memberCount: UInt32?
+        open let memberCount: UInt32?
         /// Who is allowed to manage the group.
-        public let groupManagementType: TeamCommon.GroupManagementType
+        open let groupManagementType: TeamCommon.GroupManagementType
         public init(groupName: String, groupId: String, groupManagementType: TeamCommon.GroupManagementType, groupExternalId: String? = nil, memberCount: UInt32? = nil) {
             stringValidator()(groupName)
             self.groupName = groupName
@@ -82,13 +82,13 @@ public class TeamCommon {
             self.memberCount = memberCount
             self.groupManagementType = groupManagementType
         }
-        public var description: String {
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupSummarySerializer().serialize(self)))"
         }
     }
-    public class GroupSummarySerializer: JSONSerializer {
+    open class GroupSummarySerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupSummary) -> JSON {
+        open func serialize(_ value: GroupSummary) -> JSON {
             let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
@@ -98,7 +98,7 @@ public class TeamCommon {
             ]
             return .dictionary(output)
         }
-        public func deserialize(_ json: JSON) -> GroupSummary {
+        open func deserialize(_ json: JSON) -> GroupSummary {
             switch json {
                 case .dictionary(let dict):
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
@@ -127,9 +127,9 @@ public class TeamCommon {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupTypeSerializer().serialize(self)))"
         }
     }
-    public class GroupTypeSerializer: JSONSerializer {
+    open class GroupTypeSerializer: JSONSerializer {
         public init() { }
-        public func serialize(_ value: GroupType) -> JSON {
+        open func serialize(_ value: GroupType) -> JSON {
             switch value {
                 case .team:
                     var d = [String: JSON]()
@@ -145,7 +145,7 @@ public class TeamCommon {
                     return .dictionary(d)
             }
         }
-        public func deserialize(_ json: JSON) -> GroupType {
+        open func deserialize(_ json: JSON) -> GroupType {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)

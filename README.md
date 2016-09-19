@@ -60,13 +60,14 @@ Then, run the following command to install the dependency:
 $ pod install
 ```
 
-**Note**: If you are encountering `Use Legacy Swift Language Version` warnings after running `pod install`, then add the following to the end of your Podfile:
+**Note**: If you are encountering `Use Legacy Swift Language Version` and/or `Always Embed Swift Standard Libraries` warnings after running `pod install`, then add the following to the end of your Podfile:
 
 ```ruby
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['SWIFT_VERSION'] = '3.0'
+      config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = 'YES'
     end
   end
 end
@@ -91,7 +92,7 @@ brew install carthage
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.2
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.3
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -609,6 +610,20 @@ let transportClient = DropboxTransportClient(accessToken: "<MY_ACCESS_TOKEN>",
                                              userAgent: "CustomUserAgent",
                                              selectUser: nil)
 DropboxClientsManager.setupWithAppKeyDesktop("<APP_KEY>", transportClient: transportClient)
+```
+
+You can also set custom queues on a route-by-route basis in the response handler:
+
+```Swift
+let client = DropboxClientsManager.authorizedClient!
+
+_ = client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustomSerialQueue")) { response, error in
+    if let result = response {
+        print(Thread.current)  // Output: <NSThread: 0x61000007bec0>{number = 4, name = (null)}
+        print(Thread.main)     // Output: <NSThread: 0x608000070100>{number = 1, name = (null)}
+        print(result)
+    }
+}
 ```
 
 ### `DropboxClientsManager` class
