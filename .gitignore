@@ -11,3 +11,7 @@ Pods/
 
 ## Carthage
 Carthage/
+
+## Swift Package Manager
+Packages/
+.build/

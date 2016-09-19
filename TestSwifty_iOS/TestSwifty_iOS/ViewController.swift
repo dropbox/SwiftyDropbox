@@ -1,3 +1,7 @@
+///
+/// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
+///
+
 import UIKit
 import SwiftyDropbox
 
