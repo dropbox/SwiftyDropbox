@@ -139,7 +139,7 @@ open class DropboxOAuthManager {
 
     // MARK: Shared instance
     /// A shared instance of a `DropboxOAuthManager` for convenience
-    open static var sharedAuthManager: DropboxOAuthManager!
+    open static var sharedOAuthManager: DropboxOAuthManager!
 
     // MARK: Functions
     public init(appKey: String, host: String) {

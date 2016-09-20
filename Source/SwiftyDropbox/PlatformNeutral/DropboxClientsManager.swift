@@ -19,56 +19,56 @@ open class DropboxClientsManager {
 
     /// Sets up access to the Dropbox User API
     static func setupWithOAuthManager(_ appKey: String, oAuthManager: DropboxOAuthManager, transportClient: DropboxTransportClient?) {
-        precondition(DropboxOAuthManager.sharedAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
-        DropboxOAuthManager.sharedAuthManager = oAuthManager
+        precondition(DropboxOAuthManager.sharedOAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
+        DropboxOAuthManager.sharedOAuthManager = oAuthManager
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getFirstAccessToken() {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
             setupAuthorizedClient(token, transportClient:transportClient)
         }
     }
 
     /// Sets up access to the Dropbox User API
     static func setupWithOAuthManagerMultiUser(_ appKey: String, oAuthManager: DropboxOAuthManager, transportClient: DropboxTransportClient?, tokenUid: String?) {
-        precondition(DropboxOAuthManager.sharedAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
-        DropboxOAuthManager.sharedAuthManager = oAuthManager
+        precondition(DropboxOAuthManager.sharedOAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
+        DropboxOAuthManager.sharedOAuthManager = oAuthManager
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getAccessToken(tokenUid) {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedClient(token, transportClient:transportClient)
         }
     }
 
     /// Sets up access to the Dropbox Business (Team) API
     static func setupWithOAuthManagerTeam(_ appKey: String, oAuthManager: DropboxOAuthManager, transportClient: DropboxTransportClient?) {
-        precondition(DropboxOAuthManager.sharedAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
-        DropboxOAuthManager.sharedAuthManager = oAuthManager
+        precondition(DropboxOAuthManager.sharedOAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
+        DropboxOAuthManager.sharedOAuthManager = oAuthManager
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getFirstAccessToken() {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
             setupAuthorizedTeamClient(token, transportClient:transportClient)
         }
     }
 
     /// Sets up access to the Dropbox Business (Team) API in multi-user case
     static func setupWithOAuthManagerMultiUserTeam(_ appKey: String, oAuthManager: DropboxOAuthManager, transportClient: DropboxTransportClient?, tokenUid: String?) {
-        precondition(DropboxOAuthManager.sharedAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
-        DropboxOAuthManager.sharedAuthManager = oAuthManager
+        precondition(DropboxOAuthManager.sharedOAuthManager == nil, "Only call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` once")
+        DropboxOAuthManager.sharedOAuthManager = oAuthManager
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getAccessToken(tokenUid) {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedTeamClient(token, transportClient:transportClient)
         }
     }
 
     open static func reauthorizeClient(_ tokenUid: String) {
-        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getAccessToken(tokenUid) {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedClient(token, transportClient:nil)
         }
     }
 
     open static func reauthorizeTeamClient(_ tokenUid: String) {
-        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
-        if let token = DropboxOAuthManager.sharedAuthManager.getAccessToken(tokenUid) {
+        if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedTeamClient(token, transportClient:nil)
         }
     }
@@ -105,8 +105,8 @@ open class DropboxClientsManager {
 
     /// Handle a redirect and automatically initialize the client and save the token.
     open static func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
-        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
-        if let result =  DropboxOAuthManager.sharedAuthManager.handleRedirectURL(url) {
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
+        if let result =  DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url) {
             switch result {
             case .success(let accessToken):
                 DropboxClientsManager.authorizedClient = DropboxClient(accessToken: accessToken.accessToken)
@@ -123,8 +123,8 @@ open class DropboxClientsManager {
 
     /// Handle a redirect and automatically initialize the client and save the token.
     open static func handleRedirectURLTeam(_ url: URL) -> DropboxOAuthResult? {
-        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
-        if let result =  DropboxOAuthManager.sharedAuthManager.handleRedirectURL(url) {
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
+        if let result =  DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url) {
             switch result {
             case .success(let accessToken):
                 DropboxClientsManager.authorizedTeamClient = DropboxTeamClient(accessToken: accessToken.accessToken)
@@ -141,10 +141,10 @@ open class DropboxClientsManager {
 
     /// Unlink the user.
     open static func unlinkClient() {
-        precondition(DropboxOAuthManager.sharedAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
-
-        _ = DropboxOAuthManager.sharedAuthManager.clearStoredAccessTokens()
-        resetClients()
+        if let oAuthManager = DropboxOAuthManager.sharedOAuthManager {
+            _ = oAuthManager.clearStoredAccessTokens()
+            resetClients()
+        }
     }
 
     /// Unlink the user.
