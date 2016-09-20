@@ -65,6 +65,7 @@ open class DropboxTransportClient {
       
         let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
         let request = Alamofire.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
+        request.task?.priority = URLSessionTask.highPriority
         let rpcRequestObj = RpcRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 
         request.resume()
