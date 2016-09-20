@@ -251,7 +251,7 @@ open class TeamPolicies {
     open class TeamMemberPoliciesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberPolicies) -> JSON {
-            let output = [ 
+            let output = [
             "sharing": TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharing),
             "emm_state": TeamPolicies.EmmStateSerializer().serialize(value.emmState),
             ]
@@ -289,7 +289,7 @@ open class TeamPolicies {
     open class TeamSharingPoliciesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamSharingPolicies) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_member_policy": TeamPolicies.SharedFolderMemberPolicySerializer().serialize(value.sharedFolderMemberPolicy),
             "shared_folder_join_policy": TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
             "shared_link_create_policy": TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),

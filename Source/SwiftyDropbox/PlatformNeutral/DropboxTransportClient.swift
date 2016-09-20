@@ -7,7 +7,7 @@ import Alamofire
 
 open class DropboxTransportClient {
     static let version = "4.0.3"
-  
+
     open let manager: SessionManager
     open let backgroundManager: SessionManager
     open var accessToken: String
@@ -31,13 +31,13 @@ open class DropboxTransportClient {
         let backgroundDelegate = backgroundSessionDelegate ?? SessionDelegate()
         let backgroundManager = SessionManager(configuration: backgroundConfig, delegate: backgroundDelegate, serverTrustPolicyManager: serverTrustPolicyManager)
         backgroundManager.startRequestsImmediately = false
-        
+
         let defaultBaseHosts = [
             "api": "https://api.dropbox.com/2",
             "content": "https://api-content.dropbox.com/2",
             "notify": "https://notify.dropboxapi.com/2",
             ]
-        
+
         let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(DropboxTransportClient.version)"
 
         self.manager = manager
@@ -72,7 +72,7 @@ open class DropboxTransportClient {
         }
 
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
-      
+
         let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
         let request = self.manager.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
         request.task?.priority = URLSessionTask.highPriority
@@ -82,14 +82,14 @@ open class DropboxTransportClient {
 
         return rpcRequestObj
     }
-  
+
     struct SwiftyArgEncoding: ParameterEncoding {
         fileprivate let rawJsonRequest: Data
-      
+
         init(rawJsonRequest: Data) {
             self.rawJsonRequest = rawJsonRequest
         }
-      
+
         func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
             var urlRequest = urlRequest.urlRequest
             urlRequest!.httpBody = rawJsonRequest
@@ -136,7 +136,7 @@ open class DropboxTransportClient {
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
         weak var _self: DownloadRequestFile<RSerial, ESerial>!
-      
+
         let destinationWrapper: DownloadRequest.DownloadFileDestination = { url, resp in
             var finalUrl = destination(url, resp)
 
@@ -412,7 +412,7 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
         self.request = request
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
-  
+
     open func cancel() {
         self.request.cancel()
     }
@@ -437,14 +437,14 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
         self.request = request
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
-  
+
     open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.uploadProgress { progressData in
             progressHandler(progressData)
         }
         return self
     }
-  
+
     open func cancel() {
         self.request.cancel()
     }
@@ -474,14 +474,14 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
         errorMessage = Data()
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
-  
+
     open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.downloadProgress { progressData in
             progressHandler(progressData)
         }
         return self
     }
-  
+
     open func cancel() {
         self.request.cancel()
     }
@@ -511,14 +511,14 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
         self.request = request
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
-  
+
     open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.downloadProgress { progressData in
             progressHandler(progressData)
         }
         return self
     }
-  
+
     open func cancel() {
         self.request.cancel()
     }
@@ -532,7 +532,7 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
                 let result = caseInsensitiveLookup("Dropbox-Api-Result", dictionary: headerFields)!
                 let resultData = result.data(using: .utf8, allowLossyConversion: false)
                 let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
-                
+
                 completionHandler((resultObject, response.data!), nil)
             }
         }
@@ -544,8 +544,8 @@ func caseInsensitiveLookup(_ lookupKey: String, dictionary: [AnyHashable : Any])
     for key in dictionary.keys {
         let keyString = key as! String
         if (keyString.lowercased() == lookupKey.lowercased()) {
-            return dictionary[key] as? String;
+            return dictionary[key] as? String
         }
     }
-    return nil;
+    return nil
 }

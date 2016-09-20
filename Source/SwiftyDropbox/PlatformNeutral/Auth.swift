@@ -85,7 +85,7 @@ open class Auth {
     open class RateLimitErrorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RateLimitError) -> JSON {
-            let output = [ 
+            let output = [
             "reason": Auth.RateLimitReasonSerializer().serialize(value.reason),
             "retry_after": Serialization._UInt64Serializer.serialize(value.retryAfter),
             ]

@@ -89,7 +89,7 @@ open class TeamCommon {
     open class GroupSummarySerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupSummary) -> JSON {
-            let output = [ 
+            let output = [
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),

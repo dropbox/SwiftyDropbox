@@ -23,7 +23,7 @@ open class Properties {
     open class GetPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetPropertyTemplateArg) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
@@ -62,7 +62,7 @@ open class Properties {
     open class PropertyGroupTemplateSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyGroupTemplate) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
             "fields": ArraySerializer(Properties.PropertyFieldTemplateSerializer()).serialize(value.fields),
@@ -91,7 +91,7 @@ open class Properties {
     open class GetPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetPropertyTemplateResult) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
             "fields": ArraySerializer(Properties.PropertyFieldTemplateSerializer()).serialize(value.fields),
@@ -126,7 +126,7 @@ open class Properties {
     open class ListPropertyTemplateIdsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListPropertyTemplateIds) -> JSON {
-            let output = [ 
+            let output = [
             "template_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.templateIds),
             ]
             return .dictionary(output)
@@ -298,7 +298,7 @@ open class Properties {
     open class PropertyFieldSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyField) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "value": Serialization._StringSerializer.serialize(value.value),
             ]
@@ -341,7 +341,7 @@ open class Properties {
     open class PropertyFieldTemplateSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyFieldTemplate) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
             "type": Properties.PropertyTypeSerializer().serialize(value.type),
@@ -379,7 +379,7 @@ open class Properties {
     open class PropertyGroupSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyGroup) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "fields": ArraySerializer(Properties.PropertyFieldSerializer()).serialize(value.fields),
             ]

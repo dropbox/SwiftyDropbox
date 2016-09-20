@@ -37,7 +37,7 @@ open class Team {
     open class DeviceSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeviceSession) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "ip_address": NullableSerializer(Serialization._StringSerializer).serialize(value.ipAddress),
             "country": NullableSerializer(Serialization._StringSerializer).serialize(value.country),
@@ -85,7 +85,7 @@ open class Team {
     open class ActiveWebSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ActiveWebSession) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "user_agent": Serialization._StringSerializer.serialize(value.userAgent),
             "os": Serialization._StringSerializer.serialize(value.os),
@@ -124,7 +124,7 @@ open class Team {
     open class AddPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddPropertyTemplateArg) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
             "fields": ArraySerializer(Properties.PropertyFieldTemplateSerializer()).serialize(value.fields),
@@ -159,7 +159,7 @@ open class Team {
     open class AddPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddPropertyTemplateResult) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
@@ -267,7 +267,7 @@ open class Team {
     open class ApiAppSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ApiApp) -> JSON {
-            let output = [ 
+            let output = [
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "app_name": Serialization._StringSerializer.serialize(value.appName),
             "is_app_folder": Serialization._BoolSerializer.serialize(value.isAppFolder),
@@ -308,7 +308,7 @@ open class Team {
     open class BaseDfbReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: BaseDfbReport) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             ]
             return .dictionary(output)
@@ -341,7 +341,7 @@ open class Team {
     open class DateRangeSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DateRange) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.startDate),
             "end_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.endDate),
             ]
@@ -424,7 +424,7 @@ open class Team {
     open class DesktopClientSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DesktopClientSession) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "host_name": Serialization._StringSerializer.serialize(value.hostName),
             "client_type": Team.DesktopPlatformSerializer().serialize(value.clientType),
@@ -536,7 +536,7 @@ open class Team {
     open class DeviceSessionArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeviceSessionArg) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
@@ -594,7 +594,7 @@ open class Team {
     open class DevicesActiveSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DevicesActive) -> JSON {
-            let output = [ 
+            let output = [
             "windows": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.windows),
             "macos": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.macos),
             "linux": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.linux),
@@ -692,7 +692,7 @@ open class Team {
     open class GetActivityReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetActivityReport) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "adds": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.adds),
             "edits": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.edits),
@@ -759,7 +759,7 @@ open class Team {
     open class GetDevicesReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetDevicesReport) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "active_1_day": Team.DevicesActiveSerializer().serialize(value.active1Day),
             "active_7_day": Team.DevicesActiveSerializer().serialize(value.active7Day),
@@ -814,7 +814,7 @@ open class Team {
     open class GetMembershipReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetMembershipReport) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "team_size": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.teamSize),
             "pending_invites": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.pendingInvites),
@@ -875,7 +875,7 @@ open class Team {
     open class GetStorageReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetStorageReport) -> JSON {
-            let output = [ 
+            let output = [
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "total_usage": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.totalUsage),
             "shared_usage": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.sharedUsage),
@@ -966,7 +966,7 @@ open class Team {
     open class GroupCreateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupCreateArg) -> JSON {
-            let output = [ 
+            let output = [
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
             "group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.groupManagementType),
@@ -1158,7 +1158,7 @@ open class Team {
     open class GroupFullInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupFullInfo) -> JSON {
-            let output = [ 
+            let output = [
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
@@ -1203,7 +1203,7 @@ open class Team {
     open class GroupMemberInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMemberInfo) -> JSON {
-            let output = [ 
+            let output = [
             "profile": Team.MemberProfileSerializer().serialize(value.profile),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
@@ -1238,7 +1238,7 @@ open class Team {
     open class GroupMemberSelectorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMemberSelector) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
@@ -1382,7 +1382,7 @@ open class Team {
     open class IncludeMembersArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: IncludeMembersArg) -> JSON {
-            let output = [ 
+            let output = [
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
             ]
             return .dictionary(output)
@@ -1416,7 +1416,7 @@ open class Team {
     open class GroupMembersAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersAddArg) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "members": ArraySerializer(Team.MemberAccessSerializer()).serialize(value.members),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
@@ -1551,7 +1551,7 @@ open class Team {
     open class GroupMembersChangeResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersChangeResult) -> JSON {
-            let output = [ 
+            let output = [
             "group_info": Team.GroupFullInfoSerializer().serialize(value.groupInfo),
             "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
@@ -1587,7 +1587,7 @@ open class Team {
     open class GroupMembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersRemoveArg) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.users),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
@@ -1735,7 +1735,7 @@ open class Team {
     open class GroupMembersSelectorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersSelector) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": Team.UsersSelectorArgSerializer().serialize(value.users),
             ]
@@ -1772,7 +1772,7 @@ open class Team {
     open class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersSetAccessTypeArg) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
@@ -1866,7 +1866,7 @@ open class Team {
     open class GroupUpdateArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupUpdateArgs) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
             "new_group_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupName),
@@ -2045,7 +2045,7 @@ open class Team {
     open class GroupsListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListArg) -> JSON {
-            let output = [ 
+            let output = [
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
@@ -2076,7 +2076,7 @@ open class Team {
     open class GroupsListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2157,7 +2157,7 @@ open class Team {
     open class GroupsListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListResult) -> JSON {
-            let output = [ 
+            let output = [
             "groups": ArraySerializer(TeamCommon.GroupSummarySerializer()).serialize(value.groups),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2195,7 +2195,7 @@ open class Team {
     open class GroupsMembersListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListArg) -> JSON {
-            let output = [ 
+            let output = [
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
@@ -2228,7 +2228,7 @@ open class Team {
     open class GroupsMembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2309,7 +2309,7 @@ open class Team {
     open class GroupsMembersListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListResult) -> JSON {
-            let output = [ 
+            let output = [
             "members": ArraySerializer(Team.GroupMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2449,7 +2449,7 @@ open class Team {
     open class ListMemberAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberAppsArg) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
             return .dictionary(output)
@@ -2522,7 +2522,7 @@ open class Team {
     open class ListMemberAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberAppsResult) -> JSON {
-            let output = [ 
+            let output = [
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
             return .dictionary(output)
@@ -2562,7 +2562,7 @@ open class Team {
     open class ListMemberDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberDevicesArg) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -2647,7 +2647,7 @@ open class Team {
     open class ListMemberDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberDevicesResult) -> JSON {
-            let output = [ 
+            let output = [
             "active_web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.activeWebSessions),
             "desktop_client_sessions": NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).serialize(value.desktopClientSessions),
             "mobile_client_sessions": NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).serialize(value.mobileClientSessions),
@@ -2684,7 +2684,7 @@ open class Team {
     open class ListMembersAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersAppsArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2766,7 +2766,7 @@ open class Team {
     open class ListMembersAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersAppsResult) -> JSON {
-            let output = [ 
+            let output = [
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -2812,7 +2812,7 @@ open class Team {
     open class ListMembersDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersDevicesArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -2900,7 +2900,7 @@ open class Team {
     open class ListMembersDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersDevicesResult) -> JSON {
-            let output = [ 
+            let output = [
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -2937,7 +2937,7 @@ open class Team {
     open class ListTeamAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamAppsArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -3019,7 +3019,7 @@ open class Team {
     open class ListTeamAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamAppsResult) -> JSON {
-            let output = [ 
+            let output = [
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -3065,7 +3065,7 @@ open class Team {
     open class ListTeamDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamDevicesArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -3153,7 +3153,7 @@ open class Team {
     open class ListTeamDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamDevicesResult) -> JSON {
-            let output = [ 
+            let output = [
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -3190,7 +3190,7 @@ open class Team {
     open class MemberAccessSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberAccess) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
@@ -3243,7 +3243,7 @@ open class Team {
     open class MemberAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberAddArg) -> JSON {
-            let output = [ 
+            let output = [
             "member_email": Serialization._StringSerializer.serialize(value.memberEmail),
             "member_given_name": Serialization._StringSerializer.serialize(value.memberGivenName),
             "member_surname": Serialization._StringSerializer.serialize(value.memberSurname),
@@ -3405,7 +3405,7 @@ open class Team {
     open class MemberDevicesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberDevices) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.webSessions),
             "desktop_clients": NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).serialize(value.desktopClients),
@@ -3445,7 +3445,7 @@ open class Team {
     open class MemberLinkedAppsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberLinkedApps) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
@@ -3504,7 +3504,7 @@ open class Team {
     open class MemberProfileSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberProfile) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
             "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
@@ -3629,7 +3629,7 @@ open class Team {
     open class MembersAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersAddArg) -> JSON {
-            let output = [ 
+            let output = [
             "new_members": ArraySerializer(Team.MemberAddArgSerializer()).serialize(value.newMembers),
             "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
             ]
@@ -3764,7 +3764,7 @@ open class Team {
     open class MembersDeactivateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersDeactivateArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
             ]
@@ -3847,7 +3847,7 @@ open class Team {
     open class MembersGetInfoArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersGetInfoArgs) -> JSON {
-            let output = [ 
+            let output = [
             "members": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.members),
             ]
             return .dictionary(output)
@@ -3962,7 +3962,7 @@ open class Team {
     open class MembersListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListArg) -> JSON {
-            let output = [ 
+            let output = [
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             "include_removed": Serialization._BoolSerializer.serialize(value.includeRemoved),
             ]
@@ -3995,7 +3995,7 @@ open class Team {
     open class MembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -4111,7 +4111,7 @@ open class Team {
     open class MembersListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListResult) -> JSON {
-            let output = [ 
+            let output = [
             "members": ArraySerializer(Team.TeamMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -4145,7 +4145,7 @@ open class Team {
     open class MembersRecoverArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersRecoverArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
@@ -4243,7 +4243,7 @@ open class Team {
     open class MembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersRemoveArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
             "transfer_dest_id": NullableSerializer(Team.UserSelectorArgSerializer()).serialize(value.transferDestId),
@@ -4482,7 +4482,7 @@ open class Team {
     open class MembersSetPermissionsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetPermissionsArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_role": Team.AdminTierSerializer().serialize(value.newRole),
             ]
@@ -4593,7 +4593,7 @@ open class Team {
     open class MembersSetPermissionsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetPermissionsResult) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
@@ -4642,7 +4642,7 @@ open class Team {
     open class MembersSetProfileArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetProfileArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_email": NullableSerializer(Serialization._StringSerializer).serialize(value.newEmail),
             "new_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newExternalId),
@@ -4854,7 +4854,7 @@ open class Team {
     open class MembersUnsuspendArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersUnsuspendArg) -> JSON {
-            let output = [ 
+            let output = [
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
@@ -5043,7 +5043,7 @@ open class Team {
     open class MobileClientSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MobileClientSession) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "device_name": Serialization._StringSerializer.serialize(value.deviceName),
             "client_type": Team.MobileClientPlatformSerializer().serialize(value.clientType),
@@ -5091,7 +5091,7 @@ open class Team {
     open class RemovedStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RemovedStatus) -> JSON {
-            let output = [ 
+            let output = [
             "is_recoverable": Serialization._BoolSerializer.serialize(value.isRecoverable),
             ]
             return .dictionary(output)
@@ -5123,7 +5123,7 @@ open class Team {
     open class RevokeDesktopClientArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDesktopClientArg) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "delete_on_unlink": Serialization._BoolSerializer.serialize(value.deleteOnUnlink),
@@ -5211,7 +5211,7 @@ open class Team {
     open class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionBatchArg) -> JSON {
-            let output = [ 
+            let output = [
             "revoke_devices": ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).serialize(value.revokeDevices),
             ]
             return .dictionary(output)
@@ -5276,7 +5276,7 @@ open class Team {
     open class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionBatchResult) -> JSON {
-            let output = [ 
+            let output = [
             "revoke_devices_status": ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).serialize(value.revokeDevicesStatus),
             ]
             return .dictionary(output)
@@ -5360,7 +5360,7 @@ open class Team {
     open class RevokeDeviceSessionStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionStatus) -> JSON {
-            let output = [ 
+            let output = [
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeDeviceSessionErrorSerializer()).serialize(value.errorType),
             ]
@@ -5400,7 +5400,7 @@ open class Team {
     open class RevokeLinkedApiAppArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedApiAppArg) -> JSON {
-            let output = [ 
+            let output = [
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "keep_app_folder": Serialization._BoolSerializer.serialize(value.keepAppFolder),
@@ -5434,7 +5434,7 @@ open class Team {
     open class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedApiAppBatchArg) -> JSON {
-            let output = [ 
+            let output = [
             "revoke_linked_app": ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).serialize(value.revokeLinkedApp),
             ]
             return .dictionary(output)
@@ -5499,7 +5499,7 @@ open class Team {
     open class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedAppBatchResult) -> JSON {
-            let output = [ 
+            let output = [
             "revoke_linked_app_status": ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).serialize(value.revokeLinkedAppStatus),
             ]
             return .dictionary(output)
@@ -5583,7 +5583,7 @@ open class Team {
     open class RevokeLinkedAppStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedAppStatus) -> JSON {
-            let output = [ 
+            let output = [
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeLinkedAppErrorSerializer()).serialize(value.errorType),
             ]
@@ -5620,7 +5620,7 @@ open class Team {
     open class StorageBucketSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: StorageBucket) -> JSON {
-            let output = [ 
+            let output = [
             "bucket": Serialization._StringSerializer.serialize(value.bucket),
             "users": Serialization._UInt64Serializer.serialize(value.users),
             ]
@@ -5668,7 +5668,7 @@ open class Team {
     open class TeamGetInfoResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamGetInfoResult) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "team_id": Serialization._StringSerializer.serialize(value.teamId),
             "num_licensed_users": Serialization._UInt32Serializer.serialize(value.numLicensedUsers),
@@ -5709,7 +5709,7 @@ open class Team {
     open class TeamMemberInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberInfo) -> JSON {
-            let output = [ 
+            let output = [
             "profile": Team.TeamMemberProfileSerializer().serialize(value.profile),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
@@ -5743,7 +5743,7 @@ open class Team {
     open class TeamMemberProfileSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberProfile) -> JSON {
-            let output = [ 
+            let output = [
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
             "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
@@ -5907,7 +5907,7 @@ open class Team {
     open class UpdatePropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdatePropertyTemplateArg) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "name": NullableSerializer(Serialization._StringSerializer).serialize(value.name),
             "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
@@ -5944,7 +5944,7 @@ open class Team {
     open class UpdatePropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdatePropertyTemplateResult) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)

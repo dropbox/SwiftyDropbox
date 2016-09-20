@@ -257,7 +257,7 @@ open class Files {
     open class GetMetadataArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetMetadataArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
@@ -296,7 +296,7 @@ open class Files {
     open class AlphaGetMetadataArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AlphaGetMetadataArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
@@ -433,7 +433,7 @@ open class Files {
     open class CommitInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CommitInfo) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "mode": Files.WriteModeSerializer().serialize(value.mode),
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
@@ -472,7 +472,7 @@ open class Files {
     open class CommitInfoWithPropertiesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CommitInfoWithProperties) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "mode": Files.WriteModeSerializer().serialize(value.mode),
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
@@ -513,7 +513,7 @@ open class Files {
     open class CreateFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CreateFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
@@ -580,7 +580,7 @@ open class Files {
     open class DeleteArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeleteArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
@@ -681,7 +681,7 @@ open class Files {
     open class MetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: Metadata) -> JSON {
-            var output = [ 
+            var output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
@@ -736,7 +736,7 @@ open class Files {
     open class DeletedMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeletedMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
@@ -777,7 +777,7 @@ open class Files {
     open class DimensionsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: Dimensions) -> JSON {
-            let output = [ 
+            let output = [
             "height": Serialization._UInt64Serializer.serialize(value.height),
             "width": Serialization._UInt64Serializer.serialize(value.width),
             ]
@@ -814,7 +814,7 @@ open class Files {
     open class DownloadArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DownloadArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
@@ -925,7 +925,7 @@ open class Files {
     open class FileMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FileMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
             "client_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.clientModified),
@@ -979,7 +979,7 @@ open class Files {
     open class SharingInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharingInfo) -> JSON {
-            let output = [ 
+            let output = [
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             ]
             return .dictionary(output)
@@ -1015,7 +1015,7 @@ open class Files {
     open class FileSharingInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FileSharingInfo) -> JSON {
-            let output = [ 
+            let output = [
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             "parent_shared_folder_id": Serialization._StringSerializer.serialize(value.parentSharedFolderId),
             "modified_by": NullableSerializer(Serialization._StringSerializer).serialize(value.modifiedBy),
@@ -1061,7 +1061,7 @@ open class Files {
     open class FolderMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FolderMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "name": Serialization._StringSerializer.serialize(value.name),
             "id": Serialization._StringSerializer.serialize(value.id),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
@@ -1119,7 +1119,7 @@ open class Files {
     open class FolderSharingInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FolderSharingInfo) -> JSON {
-            let output = [ 
+            let output = [
             "read_only": Serialization._BoolSerializer.serialize(value.readOnly),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.sharedFolderId),
@@ -1158,7 +1158,7 @@ open class Files {
     open class GetCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetCopyReferenceArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
@@ -1240,7 +1240,7 @@ open class Files {
     open class GetCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetCopyReferenceResult) -> JSON {
-            let output = [ 
+            let output = [
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             "copy_reference": Serialization._StringSerializer.serialize(value.copyReference),
             "expires": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.expires),
@@ -1275,7 +1275,7 @@ open class Files {
     open class GetTemporaryLinkArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetTemporaryLinkArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
             return .dictionary(output)
@@ -1353,7 +1353,7 @@ open class Files {
     open class GetTemporaryLinkResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetTemporaryLinkResult) -> JSON {
-            let output = [ 
+            let output = [
             "metadata": Files.FileMetadataSerializer().serialize(value.metadata),
             "link": Serialization._StringSerializer.serialize(value.link),
             ]
@@ -1390,7 +1390,7 @@ open class Files {
     open class GpsCoordinatesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GpsCoordinates) -> JSON {
-            let output = [ 
+            let output = [
             "latitude": Serialization._DoubleSerializer.serialize(value.latitude),
             "longitude": Serialization._DoubleSerializer.serialize(value.longitude),
             ]
@@ -1437,7 +1437,7 @@ open class Files {
     open class ListFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "recursive": Serialization._BoolSerializer.serialize(value.recursive),
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
@@ -1476,7 +1476,7 @@ open class Files {
     open class ListFolderContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -1603,7 +1603,7 @@ open class Files {
     open class ListFolderGetLatestCursorResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderGetLatestCursorResult) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -1641,7 +1641,7 @@ open class Files {
     open class ListFolderLongpollArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderLongpollArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "timeout": Serialization._UInt64Serializer.serialize(value.timeout),
             ]
@@ -1720,7 +1720,7 @@ open class Files {
     open class ListFolderLongpollResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderLongpollResult) -> JSON {
-            let output = [ 
+            let output = [
             "changes": Serialization._BoolSerializer.serialize(value.changes),
             "backoff": NullableSerializer(Serialization._UInt64Serializer).serialize(value.backoff),
             ]
@@ -1759,7 +1759,7 @@ open class Files {
     open class ListFolderResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderResult) -> JSON {
-            let output = [ 
+            let output = [
             "entries": ArraySerializer(Files.MetadataSerializer()).serialize(value.entries),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -1798,7 +1798,7 @@ open class Files {
     open class ListRevisionsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListRevisionsArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "limit": Serialization._UInt64Serializer.serialize(value.limit),
             ]
@@ -1877,7 +1877,7 @@ open class Files {
     open class ListRevisionsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListRevisionsResult) -> JSON {
-            let output = [ 
+            let output = [
             "is_deleted": Serialization._BoolSerializer.serialize(value.isDeleted),
             "entries": ArraySerializer(Files.FileMetadataSerializer()).serialize(value.entries),
             ]
@@ -2071,7 +2071,7 @@ open class Files {
     open class MediaMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MediaMetadata) -> JSON {
-            var output = [ 
+            var output = [
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
             "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),
@@ -2118,7 +2118,7 @@ open class Files {
     open class PhotoMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PhotoMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
             "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),
@@ -2157,7 +2157,7 @@ open class Files {
     open class PreviewArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PreviewArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": NullableSerializer(Serialization._StringSerializer).serialize(value.rev),
             ]
@@ -2258,7 +2258,7 @@ open class Files {
     open class PropertyGroupUpdateSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyGroupUpdate) -> JSON {
-            let output = [ 
+            let output = [
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "add_or_update_fields": NullableSerializer(ArraySerializer(Properties.PropertyFieldSerializer())).serialize(value.addOrUpdateFields),
             "remove_fields": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.removeFields),
@@ -2296,7 +2296,7 @@ open class Files {
     open class PropertyGroupWithPathSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PropertyGroupWithPath) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "property_groups": ArraySerializer(Properties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
@@ -2333,7 +2333,7 @@ open class Files {
     open class RelocationArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RelocationArg) -> JSON {
-            let output = [ 
+            let output = [
             "from_path": Serialization._StringSerializer.serialize(value.fromPath),
             "to_path": Serialization._StringSerializer.serialize(value.toPath),
             ]
@@ -2464,7 +2464,7 @@ open class Files {
     open class RemovePropertiesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RemovePropertiesArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "property_template_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.propertyTemplateIds),
             ]
@@ -2571,7 +2571,7 @@ open class Files {
     open class RestoreArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RestoreArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "rev": Serialization._StringSerializer.serialize(value.rev),
             ]
@@ -2669,7 +2669,7 @@ open class Files {
     open class SaveCopyReferenceArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SaveCopyReferenceArg) -> JSON {
-            let output = [ 
+            let output = [
             "copy_reference": Serialization._StringSerializer.serialize(value.copyReference),
             "path": Serialization._StringSerializer.serialize(value.path),
             ]
@@ -2778,7 +2778,7 @@ open class Files {
     open class SaveCopyReferenceResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SaveCopyReferenceResult) -> JSON {
-            let output = [ 
+            let output = [
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             ]
             return .dictionary(output)
@@ -2813,7 +2813,7 @@ open class Files {
     open class SaveUrlArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SaveUrlArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "url": Serialization._StringSerializer.serialize(value.url),
             ]
@@ -3031,7 +3031,7 @@ open class Files {
     open class SearchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SearchArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "query": Serialization._StringSerializer.serialize(value.query),
             "start": Serialization._UInt64Serializer.serialize(value.start),
@@ -3116,7 +3116,7 @@ open class Files {
     open class SearchMatchSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SearchMatch) -> JSON {
-            let output = [ 
+            let output = [
             "match_type": Files.SearchMatchTypeSerializer().serialize(value.matchType),
             "metadata": Files.MetadataSerializer().serialize(value.metadata),
             ]
@@ -3258,7 +3258,7 @@ open class Files {
     open class SearchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SearchResult) -> JSON {
-            let output = [ 
+            let output = [
             "matches": ArraySerializer(Files.SearchMatchSerializer()).serialize(value.matches),
             "more": Serialization._BoolSerializer.serialize(value.more),
             "start": Serialization._UInt64Serializer.serialize(value.start),
@@ -3300,7 +3300,7 @@ open class Files {
     open class ThumbnailArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ThumbnailArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "format": Files.ThumbnailFormatSerializer().serialize(value.format),
             "size": Files.ThumbnailSizeSerializer().serialize(value.size),
@@ -3594,7 +3594,7 @@ open class Files {
     open class UpdatePropertyGroupArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdatePropertyGroupArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "update_property_groups": ArraySerializer(Files.PropertyGroupUpdateSerializer()).serialize(value.updatePropertyGroups),
             ]
@@ -3727,7 +3727,7 @@ open class Files {
     open class UploadSessionAppendArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionAppendArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "close": Serialization._BoolSerializer.serialize(value.close),
             ]
@@ -3765,7 +3765,7 @@ open class Files {
     open class UploadSessionCursorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionCursor) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "offset": Serialization._UInt64Serializer.serialize(value.offset),
             ]
@@ -3800,7 +3800,7 @@ open class Files {
     open class UploadSessionFinishArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionFinishArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "commit": Files.CommitInfoSerializer().serialize(value.commit),
             ]
@@ -3832,7 +3832,7 @@ open class Files {
     open class UploadSessionFinishBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionFinishBatchArg) -> JSON {
-            let output = [ 
+            let output = [
             "entries": ArraySerializer(Files.UploadSessionFinishArgSerializer()).serialize(value.entries),
             ]
             return .dictionary(output)
@@ -3906,7 +3906,7 @@ open class Files {
     open class UploadSessionFinishBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionFinishBatchResult) -> JSON {
-            let output = [ 
+            let output = [
             "entries": ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).serialize(value.entries),
             ]
             return .dictionary(output)
@@ -4114,7 +4114,7 @@ open class Files {
     open class UploadSessionOffsetErrorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionOffsetError) -> JSON {
-            let output = [ 
+            let output = [
             "correct_offset": Serialization._UInt64Serializer.serialize(value.correctOffset),
             ]
             return .dictionary(output)
@@ -4145,7 +4145,7 @@ open class Files {
     open class UploadSessionStartArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionStartArg) -> JSON {
-            let output = [ 
+            let output = [
             "close": Serialization._BoolSerializer.serialize(value.close),
             ]
             return .dictionary(output)
@@ -4176,7 +4176,7 @@ open class Files {
     open class UploadSessionStartResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadSessionStartResult) -> JSON {
-            let output = [ 
+            let output = [
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             ]
             return .dictionary(output)
@@ -4210,7 +4210,7 @@ open class Files {
     open class UploadWriteFailedSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UploadWriteFailed) -> JSON {
-            let output = [ 
+            let output = [
             "reason": Files.WriteErrorSerializer().serialize(value.reason),
             "upload_session_id": Serialization._StringSerializer.serialize(value.uploadSessionId),
             ]
@@ -4244,7 +4244,7 @@ open class Files {
     open class VideoMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: VideoMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "dimensions": NullableSerializer(Files.DimensionsSerializer()).serialize(value.dimensions),
             "location": NullableSerializer(Files.GpsCoordinatesSerializer()).serialize(value.location),
             "time_taken": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeTaken),

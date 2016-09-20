@@ -1,7 +1,7 @@
 disabled_rules: # rule identifiers to exclude from running
-  - colon
-  - comma
-  - control_statement
+  # - colon
+  # - comma
+  # - control_statement
 opt_in_rules: # some rules are only opt-in
   - empty_count
   - missing_docs
@@ -22,7 +22,9 @@ force_try:
   severity: warning # explicitly
 # rules that have both warning and error levels, can set just the warning level
 # implicitly
-line_length: 80
+line_length:
+  - 50 # warning
+  - 70 # error
 # they can set both implicitly with an array
 type_body_length:
   - 300 # warning

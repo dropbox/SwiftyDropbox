@@ -160,7 +160,7 @@ open class Sharing {
     open class AddFileMemberArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddFileMemberArgs) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "members": ArraySerializer(Sharing.MemberSelectorSerializer()).serialize(value.members),
             "custom_message": NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
@@ -280,7 +280,7 @@ open class Sharing {
     open class AddFolderMemberArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddFolderMemberArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "members": ArraySerializer(Sharing.AddMemberSerializer()).serialize(value.members),
             "quiet": Serialization._BoolSerializer.serialize(value.quiet),
@@ -447,7 +447,7 @@ open class Sharing {
     open class AddMemberSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddMember) -> JSON {
-            let output = [ 
+            let output = [
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "access_level": Sharing.AccessLevelSerializer().serialize(value.accessLevel),
             ]
@@ -573,7 +573,7 @@ open class Sharing {
     open class ChangeFileMemberAccessArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ChangeFileMemberAccessArgs) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "access_level": Sharing.AccessLevelSerializer().serialize(value.accessLevel),
@@ -614,7 +614,7 @@ open class Sharing {
     open class LinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: LinkMetadata) -> JSON {
-            var output = [ 
+            var output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "visibility": Sharing.VisibilitySerializer().serialize(value.visibility),
             "expires": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expires),
@@ -664,7 +664,7 @@ open class Sharing {
     open class CollectionLinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CollectionLinkMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "visibility": Sharing.VisibilitySerializer().serialize(value.visibility),
             "expires": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expires),
@@ -706,7 +706,7 @@ open class Sharing {
     open class CreateSharedLinkArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CreateSharedLinkArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "short_url": Serialization._BoolSerializer.serialize(value.shortUrl),
             "pending_upload": NullableSerializer(Sharing.PendingUploadModeSerializer()).serialize(value.pendingUpload),
@@ -788,7 +788,7 @@ open class Sharing {
     open class CreateSharedLinkWithSettingsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: CreateSharedLinkWithSettingsArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "settings": NullableSerializer(Sharing.SharedLinkSettingsSerializer()).serialize(value.settings),
             ]
@@ -1070,7 +1070,7 @@ open class Sharing {
     open class SharedLinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedLinkMetadata) -> JSON {
-            var output = [ 
+            var output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "name": Serialization._StringSerializer.serialize(value.name),
             "link_permissions": Sharing.LinkPermissionsSerializer().serialize(value.linkPermissions),
@@ -1150,7 +1150,7 @@ open class Sharing {
     open class FileLinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FileLinkMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "name": Serialization._StringSerializer.serialize(value.name),
             "link_permissions": Sharing.LinkPermissionsSerializer().serialize(value.linkPermissions),
@@ -1311,7 +1311,7 @@ open class Sharing {
     open class FileMemberActionResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FileMemberActionResult) -> JSON {
-            let output = [ 
+            let output = [
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "result": Sharing.FileMemberActionIndividualResultSerializer().serialize(value.result),
             ]
@@ -1402,7 +1402,7 @@ open class Sharing {
     open class FilePermissionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FilePermission) -> JSON {
-            let output = [ 
+            let output = [
             "action": Sharing.FileActionSerializer().serialize(value.action),
             "allow": Serialization._BoolSerializer.serialize(value.allow),
             "reason": NullableSerializer(Sharing.PermissionDeniedReasonSerializer()).serialize(value.reason),
@@ -1554,7 +1554,7 @@ open class Sharing {
     open class FolderLinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FolderLinkMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "name": Serialization._StringSerializer.serialize(value.name),
             "link_permissions": Sharing.LinkPermissionsSerializer().serialize(value.linkPermissions),
@@ -1605,7 +1605,7 @@ open class Sharing {
     open class FolderPermissionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FolderPermission) -> JSON {
-            let output = [ 
+            let output = [
             "action": Sharing.FolderActionSerializer().serialize(value.action),
             "allow": Serialization._BoolSerializer.serialize(value.allow),
             "reason": NullableSerializer(Sharing.PermissionDeniedReasonSerializer()).serialize(value.reason),
@@ -1651,7 +1651,7 @@ open class Sharing {
     open class FolderPolicySerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FolderPolicy) -> JSON {
-            let output = [ 
+            let output = [
             "acl_update_policy": Sharing.AclUpdatePolicySerializer().serialize(value.aclUpdatePolicy),
             "shared_link_policy": Sharing.SharedLinkPolicySerializer().serialize(value.sharedLinkPolicy),
             "member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.memberPolicy),
@@ -1691,7 +1691,7 @@ open class Sharing {
     open class GetFileMetadataArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetFileMetadataArg) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "actions": NullableSerializer(ArraySerializer(Sharing.FileActionSerializer())).serialize(value.actions),
             ]
@@ -1727,7 +1727,7 @@ open class Sharing {
     open class GetFileMetadataBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetFileMetadataBatchArg) -> JSON {
-            let output = [ 
+            let output = [
             "files": ArraySerializer(Serialization._StringSerializer).serialize(value.files),
             "actions": NullableSerializer(ArraySerializer(Sharing.FileActionSerializer())).serialize(value.actions),
             ]
@@ -1763,7 +1763,7 @@ open class Sharing {
     open class GetFileMetadataBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetFileMetadataBatchResult) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "result": Sharing.GetFileMetadataIndividualResultSerializer().serialize(value.result),
             ]
@@ -1906,7 +1906,7 @@ open class Sharing {
     open class GetMetadataArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetMetadataArgs) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "actions": NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).serialize(value.actions),
             ]
@@ -2058,7 +2058,7 @@ open class Sharing {
     open class GetSharedLinkMetadataArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetSharedLinkMetadataArg) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "path": NullableSerializer(Serialization._StringSerializer).serialize(value.path),
             "link_password": NullableSerializer(Serialization._StringSerializer).serialize(value.linkPassword),
@@ -2093,7 +2093,7 @@ open class Sharing {
     open class GetSharedLinksArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetSharedLinksArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": NullableSerializer(Serialization._StringSerializer).serialize(value.path),
             ]
             return .dictionary(output)
@@ -2167,7 +2167,7 @@ open class Sharing {
     open class GetSharedLinksResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetSharedLinksResult) -> JSON {
-            let output = [ 
+            let output = [
             "links": ArraySerializer(Sharing.LinkMetadataSerializer()).serialize(value.links),
             ]
             return .dictionary(output)
@@ -2205,7 +2205,7 @@ open class Sharing {
     open class GroupInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupInfo) -> JSON {
-            let output = [ 
+            let output = [
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
@@ -2260,7 +2260,7 @@ open class Sharing {
     open class MembershipInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembershipInfo) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
             "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
@@ -2297,7 +2297,7 @@ open class Sharing {
     open class GroupMembershipInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembershipInfo) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "group": Sharing.GroupInfoSerializer().serialize(value.group),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
@@ -2344,7 +2344,7 @@ open class Sharing {
     open class InsufficientQuotaAmountsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: InsufficientQuotaAmounts) -> JSON {
-            let output = [ 
+            let output = [
             "space_needed": Serialization._UInt64Serializer.serialize(value.spaceNeeded),
             "space_shortage": Serialization._UInt64Serializer.serialize(value.spaceShortage),
             "space_left": Serialization._UInt64Serializer.serialize(value.spaceLeft),
@@ -2426,7 +2426,7 @@ open class Sharing {
     open class InviteeMembershipInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: InviteeMembershipInfo) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "invitee": Sharing.InviteeInfoSerializer().serialize(value.invitee),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
@@ -2594,7 +2594,7 @@ open class Sharing {
     open class LinkPermissionsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: LinkPermissions) -> JSON {
-            let output = [ 
+            let output = [
             "can_revoke": Serialization._BoolSerializer.serialize(value.canRevoke),
             "resolved_visibility": NullableSerializer(Sharing.ResolvedVisibilitySerializer()).serialize(value.resolvedVisibility),
             "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
@@ -2641,7 +2641,7 @@ open class Sharing {
     open class ListFileMembersArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFileMembersArg) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "actions": NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).serialize(value.actions),
             "include_inherited": Serialization._BoolSerializer.serialize(value.includeInherited),
@@ -2682,7 +2682,7 @@ open class Sharing {
     open class ListFileMembersBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFileMembersBatchArg) -> JSON {
-            let output = [ 
+            let output = [
             "files": ArraySerializer(Serialization._StringSerializer).serialize(value.files),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
@@ -2718,7 +2718,7 @@ open class Sharing {
     open class ListFileMembersBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFileMembersBatchResult) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "result": Sharing.ListFileMembersIndividualResultSerializer().serialize(value.result),
             ]
@@ -2751,7 +2751,7 @@ open class Sharing {
     open class ListFileMembersContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFileMembersContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2846,7 +2846,7 @@ open class Sharing {
     open class ListFileMembersCountResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFileMembersCountResult) -> JSON {
-            let output = [ 
+            let output = [
             "members": Sharing.SharedFileMembersSerializer().serialize(value.members),
             "member_count": Serialization._UInt32Serializer.serialize(value.memberCount),
             ]
@@ -2988,7 +2988,7 @@ open class Sharing {
     open class ListFilesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFilesArg) -> JSON {
-            let output = [ 
+            let output = [
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             "actions": NullableSerializer(ArraySerializer(Sharing.FileActionSerializer())).serialize(value.actions),
             ]
@@ -3021,7 +3021,7 @@ open class Sharing {
     open class ListFilesContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFilesContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -3107,7 +3107,7 @@ open class Sharing {
     open class ListFilesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFilesResult) -> JSON {
-            let output = [ 
+            let output = [
             "entries": ArraySerializer(Sharing.SharedFileMetadataSerializer()).serialize(value.entries),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
@@ -3144,7 +3144,7 @@ open class Sharing {
     open class ListFolderMembersCursorArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderMembersCursorArg) -> JSON {
-            let output = [ 
+            let output = [
             "actions": NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).serialize(value.actions),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
@@ -3178,7 +3178,7 @@ open class Sharing {
     open class ListFolderMembersArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderMembersArgs) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "actions": NullableSerializer(ArraySerializer(Sharing.MemberActionSerializer())).serialize(value.actions),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
@@ -3213,7 +3213,7 @@ open class Sharing {
     open class ListFolderMembersContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFolderMembersContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -3300,7 +3300,7 @@ open class Sharing {
     open class ListFoldersArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFoldersArgs) -> JSON {
-            let output = [ 
+            let output = [
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             "actions": NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).serialize(value.actions),
             ]
@@ -3333,7 +3333,7 @@ open class Sharing {
     open class ListFoldersContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFoldersContinueArg) -> JSON {
-            let output = [ 
+            let output = [
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -3413,7 +3413,7 @@ open class Sharing {
     open class ListFoldersResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListFoldersResult) -> JSON {
-            let output = [ 
+            let output = [
             "entries": ArraySerializer(Sharing.SharedFolderMetadataSerializer()).serialize(value.entries),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
@@ -3453,7 +3453,7 @@ open class Sharing {
     open class ListSharedLinksArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListSharedLinksArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": NullableSerializer(Serialization._StringSerializer).serialize(value.path),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "direct_only": NullableSerializer(Serialization._BoolSerializer).serialize(value.directOnly),
@@ -3548,7 +3548,7 @@ open class Sharing {
     open class ListSharedLinksResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListSharedLinksResult) -> JSON {
-            let output = [ 
+            let output = [
             "links": ArraySerializer(Sharing.SharedLinkMetadataSerializer()).serialize(value.links),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -3590,7 +3590,7 @@ open class Sharing {
     open class MemberAccessLevelResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberAccessLevelResult) -> JSON {
-            let output = [ 
+            let output = [
             "access_level": NullableSerializer(Sharing.AccessLevelSerializer()).serialize(value.accessLevel),
             "warning": NullableSerializer(Serialization._StringSerializer).serialize(value.warning),
             "access_details": NullableSerializer(ArraySerializer(Sharing.ParentFolderAccessInfoSerializer())).serialize(value.accessDetails),
@@ -3713,7 +3713,7 @@ open class Sharing {
     open class MemberPermissionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberPermission) -> JSON {
-            let output = [ 
+            let output = [
             "action": Sharing.MemberActionSerializer().serialize(value.action),
             "allow": Serialization._BoolSerializer.serialize(value.allow),
             "reason": NullableSerializer(Sharing.PermissionDeniedReasonSerializer()).serialize(value.reason),
@@ -3858,7 +3858,7 @@ open class Sharing {
     open class ModifySharedLinkSettingsArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ModifySharedLinkSettingsArgs) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "settings": Sharing.SharedLinkSettingsSerializer().serialize(value.settings),
             "remove_expiration": Serialization._BoolSerializer.serialize(value.removeExpiration),
@@ -3961,7 +3961,7 @@ open class Sharing {
     open class MountFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MountFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             ]
             return .dictionary(output)
@@ -4085,7 +4085,7 @@ open class Sharing {
     open class ParentFolderAccessInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ParentFolderAccessInfo) -> JSON {
-            let output = [ 
+            let output = [
             "folder_name": Serialization._StringSerializer.serialize(value.folderName),
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "permissions": ArraySerializer(Sharing.MemberPermissionSerializer()).serialize(value.permissions),
@@ -4121,7 +4121,7 @@ open class Sharing {
     open class PathLinkMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PathLinkMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             "visibility": Sharing.VisibilitySerializer().serialize(value.visibility),
             "path": Serialization._StringSerializer.serialize(value.path),
@@ -4292,7 +4292,7 @@ open class Sharing {
     open class RelinquishFileMembershipArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RelinquishFileMembershipArg) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             ]
             return .dictionary(output)
@@ -4387,7 +4387,7 @@ open class Sharing {
     open class RelinquishFolderMembershipArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RelinquishFolderMembershipArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "leave_a_copy": Serialization._BoolSerializer.serialize(value.leaveACopy),
             ]
@@ -4510,7 +4510,7 @@ open class Sharing {
     open class RemoveFileMemberArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RemoveFileMemberArg) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             ]
@@ -4613,7 +4613,7 @@ open class Sharing {
     open class RemoveFolderMemberArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RemoveFolderMemberArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "leave_a_copy": Serialization._BoolSerializer.serialize(value.leaveACopy),
@@ -4918,7 +4918,7 @@ open class Sharing {
     open class RevokeSharedLinkArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeSharedLinkArg) -> JSON {
-            let output = [ 
+            let output = [
             "url": Serialization._StringSerializer.serialize(value.url),
             ]
             return .dictionary(output)
@@ -5021,7 +5021,7 @@ open class Sharing {
     open class ShareFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ShareFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "path": Serialization._StringSerializer.serialize(value.path),
             "member_policy": Sharing.MemberPolicySerializer().serialize(value.memberPolicy),
             "acl_update_policy": Sharing.AclUpdatePolicySerializer().serialize(value.aclUpdatePolicy),
@@ -5438,7 +5438,7 @@ open class Sharing {
     open class SharedFileMembersSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedFileMembers) -> JSON {
-            let output = [ 
+            let output = [
             "users": ArraySerializer(Sharing.UserMembershipInfoSerializer()).serialize(value.users),
             "groups": ArraySerializer(Sharing.GroupMembershipInfoSerializer()).serialize(value.groups),
             "invitees": ArraySerializer(Sharing.InviteeMembershipInfoSerializer()).serialize(value.invitees),
@@ -5513,7 +5513,7 @@ open class Sharing {
     open class SharedFileMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedFileMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "policy": Sharing.FolderPolicySerializer().serialize(value.policy),
             "preview_url": Serialization._StringSerializer.serialize(value.previewUrl),
             "name": Serialization._StringSerializer.serialize(value.name),
@@ -5699,7 +5699,7 @@ open class Sharing {
     open class SharedFolderMembersSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedFolderMembers) -> JSON {
-            let output = [ 
+            let output = [
             "users": ArraySerializer(Sharing.UserMembershipInfoSerializer()).serialize(value.users),
             "groups": ArraySerializer(Sharing.GroupMembershipInfoSerializer()).serialize(value.groups),
             "invitees": ArraySerializer(Sharing.InviteeMembershipInfoSerializer()).serialize(value.invitees),
@@ -5749,7 +5749,7 @@ open class Sharing {
     open class SharedFolderMetadataBaseSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedFolderMetadataBase) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "is_team_folder": Serialization._BoolSerializer.serialize(value.isTeamFolder),
             "policy": Sharing.FolderPolicySerializer().serialize(value.policy),
@@ -5808,7 +5808,7 @@ open class Sharing {
     open class SharedFolderMetadataSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedFolderMetadata) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "is_team_folder": Serialization._BoolSerializer.serialize(value.isTeamFolder),
             "policy": Sharing.FolderPolicySerializer().serialize(value.policy),
@@ -5992,7 +5992,7 @@ open class Sharing {
     open class SharedLinkSettingsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SharedLinkSettings) -> JSON {
-            let output = [ 
+            let output = [
             "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
             "link_password": NullableSerializer(Serialization._StringSerializer).serialize(value.linkPassword),
             "expires": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expires),
@@ -6200,7 +6200,7 @@ open class Sharing {
     open class TeamMemberInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberInfo) -> JSON {
-            let output = [ 
+            let output = [
             "team_info": Users.TeamSerializer().serialize(value.teamInfo),
             "display_name": Serialization._StringSerializer.serialize(value.displayName),
             "member_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberId),
@@ -6239,7 +6239,7 @@ open class Sharing {
     open class TransferFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TransferFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "to_dropbox_id": Serialization._StringSerializer.serialize(value.toDropboxId),
             ]
@@ -6364,7 +6364,7 @@ open class Sharing {
     open class UnmountFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UnmountFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             ]
             return .dictionary(output)
@@ -6456,7 +6456,7 @@ open class Sharing {
     open class UnshareFileArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UnshareFileArg) -> JSON {
-            let output = [ 
+            let output = [
             "file": Serialization._StringSerializer.serialize(value.file),
             ]
             return .dictionary(output)
@@ -6544,7 +6544,7 @@ open class Sharing {
     open class UnshareFolderArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UnshareFolderArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "leave_a_copy": Serialization._BoolSerializer.serialize(value.leaveACopy),
             ]
@@ -6643,7 +6643,7 @@ open class Sharing {
     open class UpdateFolderMemberArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdateFolderMemberArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "access_level": Sharing.AccessLevelSerializer().serialize(value.accessLevel),
@@ -6768,7 +6768,7 @@ open class Sharing {
     open class UpdateFolderPolicyArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdateFolderPolicyArg) -> JSON {
-            let output = [ 
+            let output = [
             "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
             "member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.memberPolicy),
             "acl_update_policy": NullableSerializer(Sharing.AclUpdatePolicySerializer()).serialize(value.aclUpdatePolicy),
@@ -6888,7 +6888,7 @@ open class Sharing {
     open class UserInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UserInfo) -> JSON {
-            let output = [ 
+            let output = [
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "same_team": Serialization._BoolSerializer.serialize(value.sameTeam),
             "team_member_id": NullableSerializer(Serialization._StringSerializer).serialize(value.teamMemberId),
@@ -6923,7 +6923,7 @@ open class Sharing {
     open class UserMembershipInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UserMembershipInfo) -> JSON {
-            let output = [ 
+            let output = [
             "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
             "user": Sharing.UserInfoSerializer().serialize(value.user),
             "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
