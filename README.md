@@ -8,12 +8,12 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 ## Table of Contents
 
-* [System Requirements](#system-requirements)
+* [System requirements](#system-requirements)
   * [Swift 3 Keychain bug](#swift-3-keychain-bug)
-* [Get Started](#get-started)
+* [Get started](#get-started)
   * [Register your application](#register-your-application)
   * [Obtain an OAuth2 token](#obtain-an-oauth2-token)
-* [SDK Distribution](#sdk-distribution)
+* [SDK distribution](#sdk-distribution)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
   * [Manually add subproject](#manually-add-subproject)
@@ -36,7 +36,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
     * [Generic network request errors](#generic-network-request-errors)
     * [Response handling edge cases](#response-handling-edge-cases)
   * [Customizing network calls](#customizing-network-calls)
-    * [Specify global response queue](#specify-global-response-queue)
+    * [Configure network client](#configure-network-client)
     * [Specify API call response queue](#specify-api-call-response-queue)
   * [`DropboxClientsManager` class](#dropboxclientsmanager-class)
     * [Single Dropbox user case](#single-dropbox-user-case)
@@ -49,7 +49,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 ---
 
-## System Requirements
+## System requirements
 
 - iOS 9.0+
 - macOS 10.11+
@@ -81,7 +81,7 @@ Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-de
 
 ---
 
-## SDK Distribution
+## SDK distribution
 
 You can integrate the Dropbox Swift SDK into your project using one of several methods.
 
@@ -673,10 +673,9 @@ In this way, datatypes with subtypes are a hybrid of structs and unions. Only a 
 
 ### Customizing network calls
 
-#### Specify global response queue
+#### Configure network client
 
-By default, all response handler code is executed via the main queue (which makes UI updating convenient). However, if additional customization is necessary
-(like handling responses on a custom queue), you can initialize your `DropboxClient` with a customized `DropboxTransportClient` in your application delegate. See below:
+It is possible to configure the networking client used by the SDK to make API requests. You can supply custom fields like a custom user agent or custom delegates to manage response handler code, or a custom server trust policy. See below:
 
 ##### iOS
 ```Swift
@@ -685,7 +684,11 @@ import SwiftyDropbox
 let transportClient = DropboxTransportClient(accessToken: "<MY_ACCESS_TOKEN>",
                                              baseHosts: nil,
                                              userAgent: "CustomUserAgent",
-                                             selectUser: nil)
+                                             selectUser: nil,
+                                             sessionDelegate: mySessionDelegate,
+                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
+                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+
 DropboxClientsManager.setupWithAppKey("<APP_KEY>", transportClient: transportClient)
 ```
 
@@ -696,7 +699,11 @@ import SwiftyDropbox
 let transportClient = DropboxTransportClient(accessToken: "<MY_ACCESS_TOKEN>",
                                              baseHosts: nil,
                                              userAgent: "CustomUserAgent",
-                                             selectUser: nil)
+                                             selectUser: nil,
+                                             sessionDelegate: mySessionDelegate,
+                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
+                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+
 DropboxClientsManager.setupWithAppKeyDesktop("<APP_KEY>", transportClient: transportClient)
 ```
 

@@ -297,7 +297,7 @@ open class DropboxOAuthManager {
             return .error(OAuth2Error(errorCode: error), desc ?? "")
         } else {
             let accessToken = results["access_token"]!
-            let uid = results["account_id"] ?? results["team_id"]!
+            let uid = results["uid"]!
             return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
         }
     }

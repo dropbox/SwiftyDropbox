@@ -8,6 +8,7 @@ import Alamofire
 open class DropboxTransportClient {
     static let version = "4.0.3"
   
+    open let manager: SessionManager
     open let backgroundManager: SessionManager
     open var accessToken: String
     open var selectUser: String?
@@ -18,9 +19,17 @@ open class DropboxTransportClient {
         self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
     }
 
-    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?) {
-        let backgroundConfig = URLSessionConfiguration.background(withIdentifier: "com.dropbox.SwiftyDropbox_" + UUID().uuidString)
-        let backgroundManager = SessionManager(configuration: backgroundConfig)
+    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
+        let config = URLSessionConfiguration.default
+        let delegate = sessionDelegate ?? SessionDelegate()
+        let serverTrustPolicyManager = serverTrustPolicyManager ?? nil
+
+        let manager = SessionManager(configuration: config, delegate: delegate, serverTrustPolicyManager: serverTrustPolicyManager)
+        manager.startRequestsImmediately = false
+
+        let backgroundConfig = URLSessionConfiguration.background(withIdentifier: "com.dropbox.SwiftyDropbox." + UUID().uuidString)
+        let backgroundDelegate = backgroundSessionDelegate ?? SessionDelegate()
+        let backgroundManager = SessionManager(configuration: backgroundConfig, delegate: backgroundDelegate, serverTrustPolicyManager: serverTrustPolicyManager)
         backgroundManager.startRequestsImmediately = false
         
         let defaultBaseHosts = [
@@ -30,7 +39,8 @@ open class DropboxTransportClient {
             ]
         
         let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(DropboxTransportClient.version)"
-      
+
+        self.manager = manager
         self.backgroundManager = backgroundManager
         self.accessToken = accessToken
         self.selectUser = selectUser
@@ -64,7 +74,7 @@ open class DropboxTransportClient {
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
       
         let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
-        let request = Alamofire.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
+        let request = self.manager.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
         request.task?.priority = URLSessionTask.highPriority
         let rpcRequestObj = RpcRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 
@@ -102,11 +112,11 @@ open class DropboxTransportClient {
 
         switch input {
         case let .data(data):
-            request = Alamofire.upload(data, to: url, method: .post, headers: headers)
+            request = self.manager.upload(data, to: url, method: .post, headers: headers)
         case let .file(file):
             request = self.backgroundManager.upload(file, to: url, method: .post, headers: headers)
         case let .stream(stream):
-            request = Alamofire.upload(stream, to: url, method: .post, headers: headers)
+            request = self.manager.upload(stream, to: url, method: .post, headers: headers)
         }
         let uploadRequestObj = UploadRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
         request.resume()
