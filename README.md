@@ -57,7 +57,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 ### Swift 3 Keychain bug
 
-> SwiftyDropbox currently supports Swift 3. However, there appears to be a bug with the Keychain in the iOS simulator environment where data is not persistently saved to the Keychain.
+> SwiftyDropbox currently supports Swift 3, Xcode 8 and iOS 10. However, there appears to be a bug with the Keychain in the iOS simulator environment where data is not persistently saved to the Keychain.
 >
 > As a temporary workaround, in the Project Navigator, select **your project** > **Capabilities** > **Keychain Sharing** > **ON**.
 >
@@ -143,7 +143,7 @@ brew install carthage
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.3
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.4
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -183,7 +183,7 @@ Then navigate to **Build Phases** > **+** > **New Copy Files Phase**. In the new
 
 Finally, you can also integrate the Dropbox Swift SDK into your project manually without using a dependency manager.
 
-Drag the `Source/SwiftyDropbox.xcodeproj` project into your project as a subproject.
+Drag the `Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` project into your project as a subproject.
 
 Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add `SwiftyDropbox.framework`.
 
@@ -709,7 +709,7 @@ DropboxClientsManager.setupWithAppKeyDesktop("<APP_KEY>", transportClient: trans
 
 #### Specify API call response queue
 
-You can also set custom response queues on a API call-by-call basis in the response handler:
+By default, response/progress handler code runs on the main thread. You can set a custom response queue for each API call that you make via the `response` method, in the event want your response/progress handler code to run on a different thread:
 
 ```Swift
 let client = DropboxClientsManager.authorizedClient!

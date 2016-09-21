@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F2C6FCC41D89E16800E0DD9E"
                BuildableName = "SwiftyDropbox.framework"
-               BlueprintName = "SwiftyDropbox"
+               BlueprintName = "SwiftyDropbox iOS"
                ReferencedContainer = "container:SwiftyDropbox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,7 +47,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F2C6FCC41D89E16800E0DD9E"
             BuildableName = "SwiftyDropbox.framework"
-            BlueprintName = "SwiftyDropbox"
+            BlueprintName = "SwiftyDropbox iOS"
             ReferencedContainer = "container:SwiftyDropbox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,7 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F2C6FCC41D89E16800E0DD9E"
             BuildableName = "SwiftyDropbox.framework"
-            BlueprintName = "SwiftyDropbox"
+            BlueprintName = "SwiftyDropbox iOS"
             ReferencedContainer = "container:SwiftyDropbox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -1,14 +1,14 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropbox'
-  s.version      = '4.0.3'
+  s.version      = '4.0.4'
   s.summary      = 'Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
   s.author       = { 'Stephen Cobbe' => 'scobbe@dropbox.com' }
   s.source       = { :git => 'https://github.com/dropbox/SwiftyDropbox.git', :tag => s.version }
 
-  s.osx.source_files = 'Source/SwiftyDropbox/SwiftyDropbox_macOS/SwiftyDropbox_macOS.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/macOS/*.{h,m,swift}'
-  s.ios.source_files = 'Source/SwiftyDropbox/SwiftyDropbox/SwiftyDropbox.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/iOS/*.{h,m,swift}'
+  s.osx.source_files = 'Source/SwiftyDropbox/PlatformNeutral/**/*.{swift,h}', 'Source/SwiftyDropbox/SwiftyDropbox_macOS/**/*.{swift,h}'
+  s.ios.source_files = 'Source/SwiftyDropbox/PlatformNeutral/**/*.{swift,h}', 'Source/SwiftyDropbox/SwiftyDropbox_iOS/**/*.{swift,h}'
 
   s.requires_arc = true
 
