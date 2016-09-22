@@ -30,8 +30,8 @@
     {
       "name": "Authentication", 
       "children": [
-        "DropboxAuthManager", 
-        "DropboxAuthResult", 
+        "DropboxOAuthManager", 
+        "DropboxOAuthResult", 
         "DropboxAccessToken", 
         "OAuth2Error"
       ]
