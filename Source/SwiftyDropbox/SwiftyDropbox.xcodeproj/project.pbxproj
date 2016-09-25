@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F25D1B861D9776A500B748CF /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F25D1B851D9776A500B748CF /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F25D1B881D97772400B748CF /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F25D1B851D9776A500B748CF /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F2C54A9E1D89F6F0003A2675 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */; };
 		F2C54AA01D89F6FA003A2675 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */; };
 		F2C6FD371D89E37500E0DD9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD361D89E37500E0DD9E /* Foundation.framework */; };
@@ -14,9 +16,7 @@
 		F2C6FD3B1D89E38200E0DD9E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */; };
 		F2C6FD3D1D89E38800E0DD9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */; };
 		F2DB17731D930A66005D7934 /* OAuthMobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DB17701D930A66005D7934 /* OAuthMobile.swift */; };
-		F2DB17741D930A66005D7934 /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F2DB17711D930A66005D7934 /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F2DB177B1D930A6E005D7934 /* OAuthDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DB17781D930A6E005D7934 /* OAuthDesktop.swift */; };
-		F2DB177C1D930A6E005D7934 /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F2DB17791D930A6E005D7934 /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F2DB17971D930A7C005D7934 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DB177E1D930A7C005D7934 /* Async.swift */; };
 		F2DB17981D930A7C005D7934 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DB177E1D930A7C005D7934 /* Async.swift */; };
 		F2DB17991D930A7C005D7934 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DB177F1D930A7C005D7934 /* Auth.swift */; };
@@ -70,6 +70,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F25D1B851D9776A500B748CF /* SwiftyDropbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox.h; sourceTree = "<group>"; };
 		F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		F2C6FCC51D89E16800E0DD9E /* SwiftyDropbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyDropbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -226,6 +227,7 @@
 				F2DB178E1D930A7C005D7934 /* StoneBase.swift */,
 				F2DB178F1D930A7C005D7934 /* StoneSerializers.swift */,
 				F2DB17901D930A7C005D7934 /* StoneValidators.swift */,
+				F25D1B851D9776A500B748CF /* SwiftyDropbox.h */,
 				F2DB17911D930A7C005D7934 /* Team.swift */,
 				F2DB17921D930A7C005D7934 /* TeamCommon.swift */,
 				F2DB17931D930A7C005D7934 /* TeamPolicies.swift */,
@@ -243,7 +245,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2DB17741D930A66005D7934 /* SwiftyDropbox.h in Headers */,
+				F25D1B861D9776A500B748CF /* SwiftyDropbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +253,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2DB177C1D930A6E005D7934 /* SwiftyDropbox.h in Headers */,
+				F25D1B881D97772400B748CF /* SwiftyDropbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

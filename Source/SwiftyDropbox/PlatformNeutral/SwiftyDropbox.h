@@ -5,7 +5,13 @@
 //  Copyright © 2016 Dropbox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
+  #import <UIKit/UIKit.h>
+#else
+  #import <Cocoa/Cocoa.h>
+#endif
 
 //! Project version number for SwiftyDropbox.
 FOUNDATION_EXPORT double SwiftyDropboxVersionNumber;
