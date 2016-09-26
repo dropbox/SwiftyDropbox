@@ -25,19 +25,19 @@ class ViewController: NSViewController {
     }
 
     @IBAction func oauthLinkBrowserButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.unlinkClient()
+        DropboxClientsManager.unlinkClients()
         DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)}, browserAuth: true)
     }
 
     @IBAction func oauthUnlinkButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.unlinkClient()
+        DropboxClientsManager.unlinkClients()
         checkButtons()
     }
     
     @IBAction func runApiTestsButtonPressed(_ sender: AnyObject) {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
             let unlink = {
-                DropboxClientsManager.unlinkClient()
+                DropboxClientsManager.unlinkClients()
                 self.checkButtons()
             }
             

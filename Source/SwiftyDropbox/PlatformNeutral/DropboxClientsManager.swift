@@ -140,7 +140,7 @@ open class DropboxClientsManager {
     }
 
     /// Unlink the user.
-    open static func unlinkClient() {
+    open static func unlinkClients() {
         if let oAuthManager = DropboxOAuthManager.sharedOAuthManager {
             _ = oAuthManager.clearStoredAccessTokens()
             resetClients()

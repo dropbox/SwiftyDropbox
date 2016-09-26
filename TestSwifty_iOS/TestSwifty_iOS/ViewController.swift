@@ -20,13 +20,13 @@ class ViewController: UIViewController {
     }
 
     @IBAction func unlinkButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.unlinkClient()
+        DropboxClientsManager.unlinkClients()
         checkButtons()
     }
 
     @IBAction func runTestsButtonPressed(_ sender: AnyObject) {
         let unlink = {
-            DropboxClientsManager.unlinkClient()
+            DropboxClientsManager.unlinkClients()
             self.checkButtons()
         }
         
