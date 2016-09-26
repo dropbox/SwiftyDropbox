@@ -143,7 +143,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.4
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.5
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -462,7 +462,7 @@ Note: Response handlers are required for all endpoints. Progress handlers, on th
 
 #### RPC-style request
 ```Swift
-_ = tester.files.createFolder(path: "/test/path/in/Dropbox/account").response { response, error in
+tester.files.createFolder(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -506,7 +506,7 @@ let destURL = directoryURL.appendingPathComponent("myTestFile")
 let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
     return destURL
 }
-_ = tester.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
+tester.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
     .response { response, error in
         if let response = response {
             print(response)
@@ -520,7 +520,7 @@ _ = tester.files.download(path: "/test/path/in/Dropbox/account", overwrite: true
 
 
 // Download to Data
-_ = tester.files.download(path: "/test/path/in/Dropbox/account")
+tester.files.download(path: "/test/path/in/Dropbox/account")
     .response { response, error in
         if let response = response {
             let responseMetadata = response.0
@@ -559,7 +559,7 @@ To properly handle union types, you should pass each union through a switch stat
 
 #### Route-specific errors
 ```Swift
-_ = tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -610,7 +610,7 @@ In the case of a network error, errors are either specific to the endpoint (as s
 To determine if an error is route-specific or not, the error object should be cast as a `CallError`, and depending on the type of error, handled in the appropriate switch statement. 
 
 ```Swift
-_ = tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -651,7 +651,7 @@ For example, the [/delete](https://www.dropbox.com/developers/documentation/http
 To determine at runtime which subtype the `Metadata` type exists as, pass the object through a switch statement, and check for each possible class, with the result casted accordingly. See below:
 
 ```Swift
-_ = tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         switch response {
         case let fileMetadata as Files.FileMetadata:
@@ -732,7 +732,7 @@ By default, response/progress handler code runs on the main thread. You can set 
 ```Swift
 let client = DropboxClientsManager.authorizedClient!
 
-_ = client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustomSerialQueue")) { response, error in
+client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustomSerialQueue")) { response, error in
     if let result = response {
         print(Thread.current)  // Output: <NSThread: 0x61000007bec0>{number = 4, name = (null)}
         print(Thread.main)     // Output: <NSThread: 0x608000070100>{number = 1, name = (null)}

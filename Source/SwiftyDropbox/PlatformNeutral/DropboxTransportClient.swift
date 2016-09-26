@@ -6,7 +6,7 @@ import Foundation
 import Alamofire
 
 open class DropboxTransportClient {
-    static let version = "4.0.4"
+    static let version = "4.0.5"
 
     open let manager: SessionManager
     open let backgroundManager: SessionManager
@@ -417,7 +417,7 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
         self.request.cancel()
     }
 
-    open func response(queue: DispatchQueue? = nil, completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+    @discardableResult open func response(queue: DispatchQueue? = nil, completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
         self.request.validate().response(queue: queue) { response in
             if let error = response.error {
                 completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
@@ -438,7 +438,7 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
 
-    open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+    @discardableResult open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.uploadProgress { progressData in
             progressHandler(progressData)
         }
@@ -449,7 +449,7 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
         self.request.cancel()
     }
 
-    open func response(queue: DispatchQueue? = nil, completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+    @discardableResult open func response(queue: DispatchQueue? = nil, completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void) -> Self {
         self.request.validate().response(queue: queue) { response in
             if let error = response.error {
                 completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
@@ -475,7 +475,7 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
 
-    open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+    @discardableResult open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.downloadProgress { progressData in
             progressHandler(progressData)
         }
@@ -486,7 +486,7 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
         self.request.cancel()
     }
 
-    open func response(queue: DispatchQueue? = nil, completionHandler: @escaping ((RSerial.ValueType, URL)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+    @discardableResult open func response(queue: DispatchQueue? = nil, completionHandler: @escaping ((RSerial.ValueType, URL)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
         self.request.validate().response(queue: queue) { response in
             if let error = response.error {
                 completionHandler(nil, self.handleResponseError(response.response, data: self.errorMessage, error: error))
@@ -512,7 +512,7 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
         super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
 
-    open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+    @discardableResult open func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         self.request.downloadProgress { progressData in
             progressHandler(progressData)
         }
@@ -523,7 +523,7 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
         self.request.cancel()
     }
 
-    open func response(queue: DispatchQueue? = nil, completionHandler: @escaping ((RSerial.ValueType, Data)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
+    @discardableResult open func response(queue: DispatchQueue? = nil, completionHandler: @escaping ((RSerial.ValueType, Data)?, CallError<ESerial.ValueType>?) -> Void) -> Self {
         self.request.validate().response(queue: queue) { response in
             if let error = response.error {
                 completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))

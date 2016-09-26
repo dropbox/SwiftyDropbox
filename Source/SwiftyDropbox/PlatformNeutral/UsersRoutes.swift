@@ -17,7 +17,7 @@ open class UsersRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Users.BasicAccount` object on success or a
     /// `Users.GetAccountError` object on failure.
-    open func getAccount(accountId: String) -> RpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
+    @discardableResult open func getAccount(accountId: String) -> RpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
         let route = Users.getAccount
         let serverArgs = Users.GetAccountArg(accountId: accountId)
         return client.request(route, serverArgs: serverArgs)
@@ -29,7 +29,7 @@ open class UsersRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
     /// success or a `Users.GetAccountBatchError` object on failure.
-    open func getAccountBatch(accountIds: Array<String>) -> RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
+    @discardableResult open func getAccountBatch(accountIds: Array<String>) -> RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
         let route = Users.getAccountBatch
         let serverArgs = Users.GetAccountBatchArg(accountIds: accountIds)
         return client.request(route, serverArgs: serverArgs)
@@ -40,7 +40,7 @@ open class UsersRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Users.FullAccount` object on success or a
     /// `Void` object on failure.
-    open func getCurrentAccount() -> RpcRequest<Users.FullAccountSerializer, VoidSerializer> {
+    @discardableResult open func getCurrentAccount() -> RpcRequest<Users.FullAccountSerializer, VoidSerializer> {
         let route = Users.getCurrentAccount
         return client.request(route)
     }
@@ -50,7 +50,7 @@ open class UsersRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Users.SpaceUsage` object on success or a
     /// `Void` object on failure.
-    open func getSpaceUsage() -> RpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
+    @discardableResult open func getSpaceUsage() -> RpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
         let route = Users.getSpaceUsage
         return client.request(route)
     }

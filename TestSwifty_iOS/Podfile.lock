@@ -1,6 +1,6 @@
 PODS:
-  - Alamofire (4.0.0)
-  - SwiftyDropbox (4.0.3):
+  - Alamofire (4.0.1)
+  - SwiftyDropbox (4.0.4):
     - Alamofire (~> 4.0.0)
 
 DEPENDENCIES:
@@ -11,8 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: fef59f00388f267e52d9b432aa5d93dc97190f14
-  SwiftyDropbox: 5ed14e36c616836b697dbd2d5cc8578301121d87
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  SwiftyDropbox: 0dd4fd2ba9b7acb97ca2c0d57ef57befd1149e64
 
 PODFILE CHECKSUM: cda7778a68b8e1516da95c603eec2ef267d40ce9
 

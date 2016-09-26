@@ -81,10 +81,8 @@
 		F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F2DB176E1D930A66005D7934 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2DB17701D930A66005D7934 /* OAuthMobile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthMobile.swift; sourceTree = "<group>"; };
-		F2DB17711D930A66005D7934 /* SwiftyDropbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox.h; sourceTree = "<group>"; };
 		F2DB17761D930A6E005D7934 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2DB17781D930A6E005D7934 /* OAuthDesktop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthDesktop.swift; sourceTree = "<group>"; };
-		F2DB17791D930A6E005D7934 /* SwiftyDropbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox.h; sourceTree = "<group>"; };
 		F2DB177E1D930A7C005D7934 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		F2DB177F1D930A7C005D7934 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		F2DB17801D930A7C005D7934 /* AuthRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthRoutes.swift; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 			children = (
 				F2DB176E1D930A66005D7934 /* Info.plist */,
 				F2DB176F1D930A66005D7934 /* iOS */,
-				F2DB17711D930A66005D7934 /* SwiftyDropbox.h */,
 			);
 			path = SwiftyDropbox_iOS;
 			sourceTree = "<group>";
@@ -192,7 +189,6 @@
 			children = (
 				F2DB17761D930A6E005D7934 /* Info.plist */,
 				F2DB17771D930A6E005D7934 /* macOS */,
-				F2DB17791D930A6E005D7934 /* SwiftyDropbox.h */,
 			);
 			path = SwiftyDropbox_macOS;
 			sourceTree = "<group>";

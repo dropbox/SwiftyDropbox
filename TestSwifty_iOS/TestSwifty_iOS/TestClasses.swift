@@ -31,7 +31,7 @@ open class AuthTests {
 
     func tokenRevoke(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.auth.tokenRevoke().response { response, error in
+        tester.auth.tokenRevoke().response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Token successfully revoked")
                 TestFormat.printSubTestEnd(#function)
@@ -52,7 +52,7 @@ open class FilesTests {
 
     func delete(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.delete(path: TestData.baseFolder).response { response, error in
+        tester.files.delete(path: TestData.baseFolder).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -67,7 +67,7 @@ open class FilesTests {
 
     func createFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.createFolder(path: TestData.testFolderPath).response { response, error in
+        tester.files.createFolder(path: TestData.testFolderPath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -80,7 +80,7 @@ open class FilesTests {
 
     func listFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.listFolder(path: TestData.testFolderPath).response { response, error in
+        tester.files.listFolder(path: TestData.testFolderPath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -93,7 +93,7 @@ open class FilesTests {
 
     func uploadData(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.upload(path: TestData.testFilePath, input: TestData.fileData).response { response, error in
+        tester.files.upload(path: TestData.testFilePath, input: TestData.fileData).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -108,11 +108,11 @@ open class FilesTests {
         TestFormat.printSubTestBegin(#function)
 
         let uploadSessionAppendV2: ((String, Files.UploadSessionCursor) -> Void) = { sessionId, cursor in
-            _ = self.tester.files.uploadSessionAppendV2(cursor: cursor, input: TestData.fileData).response { response, error in
+            self.tester.files.uploadSessionAppendV2(cursor: cursor, input: TestData.fileData).response { response, error in
                 if let _ = response {
                     let cursor = Files.UploadSessionCursor(sessionId: sessionId, offset: UInt64(TestData.fileData.count * 2))
                     let commitInfo = Files.CommitInfo(path: TestData.testFilePath + "_session")
-                    _ = self.tester.files.uploadSessionFinish(cursor: cursor, commit: commitInfo, input: TestData.fileData).response { response, error in
+                    self.tester.files.uploadSessionFinish(cursor: cursor, commit: commitInfo, input: TestData.fileData).response { response, error in
                         if let result = response {
                             print(result)
                             TestFormat.printOffset("Upload session complete")
@@ -128,7 +128,7 @@ open class FilesTests {
             }
         }
 
-        _ = self.tester.files.uploadSessionStart(input: TestData.fileData).response { response, error in
+        self.tester.files.uploadSessionStart(input: TestData.fileData).response { response, error in
             if let result = response {
                 let sessionId = result.sessionId
                 print(result)
@@ -144,7 +144,7 @@ open class FilesTests {
     func copy(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let copyOutputPath = TestData.testFilePath + "_duplicate" + "_" + TestData.testId
-        _ = tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
+        tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -157,7 +157,7 @@ open class FilesTests {
 
     func copyReferenceGet(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.copyReferenceGet(path: TestData.testFilePath).response { response, error in
+        tester.files.copyReferenceGet(path: TestData.testFilePath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -170,7 +170,7 @@ open class FilesTests {
 
     func getMetadata(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.getMetadata(path: TestData.testFilePath).response { response, error in
+        tester.files.getMetadata(path: TestData.testFilePath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -183,7 +183,7 @@ open class FilesTests {
 
     func getMetadataInvalid(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.getMetadata(path: "/").response { response, error in
+        tester.files.getMetadata(path: "/").response { response, error in
             assert(error != nil, "This call should have errored!")
             TestFormat.printOffset("Error properly detected")
             TestFormat.printSubTestEnd(#function)
@@ -193,7 +193,7 @@ open class FilesTests {
 
     func getTemporaryLink(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.getTemporaryLink(path: TestData.testFilePath).response { response, error in
+        tester.files.getTemporaryLink(path: TestData.testFilePath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -206,7 +206,7 @@ open class FilesTests {
 
     func listRevisions(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.listRevisions(path: TestData.testFilePath).response { response, error in
+        tester.files.listRevisions(path: TestData.testFilePath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -219,12 +219,12 @@ open class FilesTests {
 
     func move(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.createFolder(path: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
+        tester.files.createFolder(path: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printOffset("Created destination folder")
 
-                _ = self.tester.files.move(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
+                self.tester.files.move(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
                     if let result = response {
                         print(result)
                         TestFormat.printSubTestEnd(#function)
@@ -246,7 +246,7 @@ open class FilesTests {
         }
 
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.saveUrl(path: TestData.testFolderPath + "/" + "dbx-test.html", url: "https://www.dropbox.com/help/5").response { response, error in
+        tester.files.saveUrl(path: TestData.testFolderPath + "/" + "dbx-test.html", url: "https://www.dropbox.com/help/5").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -259,7 +259,7 @@ open class FilesTests {
 
     func downloadToFile(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
+        tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -272,7 +272,7 @@ open class FilesTests {
 
     func downloadAgain(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
+        tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -285,7 +285,7 @@ open class FilesTests {
 
     func downloadError(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.download(path: TestData.testFilePath + "_does_not_exist", overwrite: false, destination: TestData.destinationException).response { response, error in
+        tester.files.download(path: TestData.testFilePath + "_does_not_exist", overwrite: false, destination: TestData.destinationException).response { response, error in
             assert(error != nil, "This call should have errored!")
             assert(!FileManager.default.fileExists(atPath: TestData.destURLException.path))
             TestFormat.printOffset("Error properly detected")
@@ -296,7 +296,7 @@ open class FilesTests {
 
     func downloadToMemory(_ nextTest: @escaping (() -> Void)) {
         
-        _ = tester.files.download(path: "/test/path/in/Dropbox/account")
+        tester.files.download(path: "/test/path/in/Dropbox/account")
             .response { response, error in
                 if let response = response {
                     let responseMetadata = response.0
@@ -312,7 +312,7 @@ open class FilesTests {
         }
         
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.download(path: TestData.testFilePath).response { response, error in
+        tester.files.download(path: TestData.testFilePath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -325,7 +325,7 @@ open class FilesTests {
 
     func uploadFile(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.files.upload(path: TestData.testFilePath + "_from_file", input: TestData.destURL).response { response, error in
+        tester.files.upload(path: TestData.testFilePath + "_from_file", input: TestData.destURL).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -345,7 +345,7 @@ open class FilesTests {
         let copy = {
             TestFormat.printOffset("Making change that longpoll will detect (copy file)")
             let copyOutputPath = TestData.testFilePath + "_duplicate2" + "_" + TestData.testId
-            _ = self.tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
+            self.tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
                 if let result = response {
                     print(result)
                 } else if let callError = error {
@@ -355,7 +355,7 @@ open class FilesTests {
         }
 
         let listFolderContinue: ((String) -> Void) = { cursor in
-            _ = self.tester.files.listFolderContinue(cursor: cursor).response { response, error in
+            self.tester.files.listFolderContinue(cursor: cursor).response { response, error in
                 if let result = response {
                     TestFormat.printOffset("Here are the changes:")
                     print(result)
@@ -369,7 +369,7 @@ open class FilesTests {
 
         let listFolderLongpoll: ((String) -> Void) = { cursor in
             TestFormat.printOffset("Establishing longpoll")
-            _ = self.tester.files.listFolderLongpoll(cursor: cursor).response { response, error in
+            self.tester.files.listFolderLongpoll(cursor: cursor).response { response, error in
                 if let result = response {
                     print(result)
                     if (result.changes) {
@@ -388,7 +388,7 @@ open class FilesTests {
         TestFormat.printSubTestBegin(#function)
 
         TestFormat.printOffset("Acquiring cursor")
-        _ = tester.files.listFolderGetLatestCursor(path: TestData.testFolderPath).response { response, error in
+        tester.files.listFolderGetLatestCursor(path: TestData.testFolderPath).response { response, error in
             if let result = response {
                 TestFormat.printOffset("Cursor acquired")
                 print(result)
@@ -413,7 +413,7 @@ open class SharingTests {
 
     func shareFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.shareFolder(path: TestData.testShareFolderPath).response { response, error in
+        tester.sharing.shareFolder(path: TestData.testShareFolderPath).response { response, error in
             if let result = response {
                 switch result {
                 case .asyncJobId(let asyncJobId):
@@ -432,7 +432,7 @@ open class SharingTests {
 
     func createSharedLinkWithSettings(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.createSharedLinkWithSettings(path: TestData.testShareFolderPath).response { response, error in
+        tester.sharing.createSharedLinkWithSettings(path: TestData.testShareFolderPath).response { response, error in
             if let result = response {
                 print(result)
                 self.sharedLink = result.url
@@ -446,7 +446,7 @@ open class SharingTests {
 
     func getFolderMetadata(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.getFolderMetadata(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.getFolderMetadata(sharedFolderId: sharedFolderId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -459,7 +459,7 @@ open class SharingTests {
 
     func getSharedLinkMetadata(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.getSharedLinkMetadata(url: sharedLink).response { response, error in
+        tester.sharing.getSharedLinkMetadata(url: sharedLink).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -475,7 +475,7 @@ open class SharingTests {
 
         let memberSelector = Sharing.MemberSelector.email(TestData.accountId3Email)
         let addFolderMemberArg = Sharing.AddMember(member: memberSelector)
-        _ = tester.sharing.addFolderMember(sharedFolderId: sharedFolderId, members: [addFolderMemberArg], quiet: true).response { response, error in
+        tester.sharing.addFolderMember(sharedFolderId: sharedFolderId, members: [addFolderMemberArg], quiet: true).response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Folder memeber added")
                 TestFormat.printSubTestEnd(#function)
@@ -488,7 +488,7 @@ open class SharingTests {
 
     func listFolderMembers(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.listFolderMembers(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.listFolderMembers(sharedFolderId: sharedFolderId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -501,7 +501,7 @@ open class SharingTests {
 
     func listFolders(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.listFolders(limit: 2).response { response, error in
+        tester.sharing.listFolders(limit: 2).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -514,7 +514,7 @@ open class SharingTests {
 
     func listSharedLinks(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.listSharedLinks().response { response, error in
+        tester.sharing.listSharedLinks().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -531,7 +531,7 @@ open class SharingTests {
         let memberSelector = Sharing.MemberSelector.dropboxId(TestData.accountId3)
 
         let checkJobStatus: ((String) -> Void) = { asyncJobId in
-            _ = self.tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
+            self.tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -549,7 +549,7 @@ open class SharingTests {
             }
         }
 
-        _ = tester.sharing.removeFolderMember(sharedFolderId: sharedFolderId, member: memberSelector, leaveACopy: false).response { response, error in
+        tester.sharing.removeFolderMember(sharedFolderId: sharedFolderId, member: memberSelector, leaveACopy: false).response { response, error in
             if let result = response {
                 print(result)
 
@@ -573,7 +573,7 @@ open class SharingTests {
 
     func revokeSharedLink(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.revokeSharedLink(url: sharedLink).response { response, error in
+        tester.sharing.revokeSharedLink(url: sharedLink).response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Shared link revoked")
                 TestFormat.printSubTestEnd(#function)
@@ -586,7 +586,7 @@ open class SharingTests {
 
     func unmountFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.unmountFolder(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.unmountFolder(sharedFolderId: sharedFolderId).response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Folder unmounted")
                 TestFormat.printSubTestEnd(#function)
@@ -599,7 +599,7 @@ open class SharingTests {
 
     func mountFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.mountFolder(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.mountFolder(sharedFolderId: sharedFolderId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -612,7 +612,7 @@ open class SharingTests {
 
     func updateFolderPolicy(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.updateFolderPolicy(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.updateFolderPolicy(sharedFolderId: sharedFolderId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -625,7 +625,7 @@ open class SharingTests {
 
     func unshareFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.sharing.unshareFolder(sharedFolderId: sharedFolderId).response { response, error in
+        tester.sharing.unshareFolder(sharedFolderId: sharedFolderId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -646,7 +646,7 @@ open class UserTests {
 
     func getAccount(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.users.getAccount(accountId: TestData.accountId).response { response, error in
+        tester.users.getAccount(accountId: TestData.accountId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -660,7 +660,7 @@ open class UserTests {
     func getAccountBatch(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let accountIds = [TestData.accountId, TestData.accountId2]
-        _ = tester.users.getAccountBatch(accountIds: accountIds).response { response, error in
+        tester.users.getAccountBatch(accountIds: accountIds).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -673,7 +673,7 @@ open class UserTests {
 
     func getCurrentAccount(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.users.getCurrentAccount().response { response, error in
+        tester.users.getCurrentAccount().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -686,7 +686,7 @@ open class UserTests {
 
     func getSpaceUsage(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.users.getSpaceUsage().response { response, error in
+        tester.users.getSpaceUsage().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -720,7 +720,7 @@ open class TeamTests {
     func initMembersGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let userSelectArg = Team.UserSelectorArg.email(TestTeamData.teamMemberEmail)
-        _ = tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
+        tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
             if let result = response {
                 print(result)
                 switch result[0] {
@@ -740,7 +740,7 @@ open class TeamTests {
 
     func listMemberDevices(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.devicesListMemberDevices(teamMemberId: self.teamMemberId!).response { response, error in
+        tester.team.devicesListMemberDevices(teamMemberId: self.teamMemberId!).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -753,7 +753,7 @@ open class TeamTests {
 
     func listMembersDevices(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.devicesListMembersDevices().response { response, error in
+        tester.team.devicesListMembersDevices().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -766,7 +766,7 @@ open class TeamTests {
 
     func linkedAppsListMemberLinkedApps(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.linkedAppsListMemberLinkedApps(teamMemberId: self.teamMemberId!).response { response, error in
+        tester.team.linkedAppsListMemberLinkedApps(teamMemberId: self.teamMemberId!).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -779,7 +779,7 @@ open class TeamTests {
 
     func linkedAppsListMembersLinkedApps(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.linkedAppsListMembersLinkedApps().response { response, error in
+        tester.team.linkedAppsListMembersLinkedApps().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -792,7 +792,7 @@ open class TeamTests {
 
     func getInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.getInfo().response { response, error in
+        tester.team.getInfo().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -807,7 +807,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let calendar = Calendar.current
         let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        _ = tester.team.reportsGetActivity(startDate: twoDaysAgo, endDate: Date()).response { response, error in
+        tester.team.reportsGetActivity(startDate: twoDaysAgo, endDate: Date()).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -822,7 +822,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let calendar = Calendar.current
         let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        _ = tester.team.reportsGetDevices(startDate: twoDaysAgo, endDate: Date()).response { response, error in
+        tester.team.reportsGetDevices(startDate: twoDaysAgo, endDate: Date()).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -837,7 +837,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let calendar = Calendar.current
         let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        _ = tester.team.reportsGetMembership(startDate: twoDaysAgo, endDate: Date()).response { response, error in
+        tester.team.reportsGetMembership(startDate: twoDaysAgo, endDate: Date()).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -852,7 +852,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let calendar = Calendar.current
         let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        _ = tester.team.reportsGetStorage(startDate: twoDaysAgo, endDate: Date()).response { response, error in
+        tester.team.reportsGetStorage(startDate: twoDaysAgo, endDate: Date()).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -871,7 +871,7 @@ open class TeamTests {
 
     func groupsCreate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.groupsCreate(groupName: TestTeamData.groupName, groupExternalId: TestTeamData.groupExternalId).response { response, error in
+        tester.team.groupsCreate(groupName: TestTeamData.groupName, groupExternalId: TestTeamData.groupExternalId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -885,7 +885,7 @@ open class TeamTests {
     func groupsGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let groupsSelector = Team.GroupsSelector.groupExternalIds([TestTeamData.groupExternalId])
-        _ = tester.team.groupsGetInfo(groupsSelector: groupsSelector).response { response, error in
+        tester.team.groupsGetInfo(groupsSelector: groupsSelector).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -898,7 +898,7 @@ open class TeamTests {
 
     func groupsList(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.groupsList().response { response, error in
+        tester.team.groupsList().response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -918,7 +918,7 @@ open class TeamTests {
         let memberAccess = Team.MemberAccess(user: userSelectorArg, accessType: accessType)
         let members = [memberAccess]
 
-        _ = tester.team.groupsMembersAdd(group: groupSelector, members: members).response { response, error in
+        tester.team.groupsMembersAdd(group: groupSelector, members: members).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -933,7 +933,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
 
-        _ = tester.team.groupsMembersList(group: groupSelector).response { response, error in
+        tester.team.groupsMembersList(group: groupSelector).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -948,7 +948,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
 
-        _ = tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name").response { response, error in
+        tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -963,7 +963,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
 
         let jobStatus: ((String) -> Void) = { jobId in
-            _ = self.tester.team.groupsJobStatusGet(asyncJobId: jobId).response { response, error in
+            self.tester.team.groupsJobStatusGet(asyncJobId: jobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -981,7 +981,7 @@ open class TeamTests {
         }
 
         let groupsSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
-        _ = self.tester.team.groupsDelete(groupSelector: groupsSelector).response { response, error in
+        self.tester.team.groupsDelete(groupSelector: groupsSelector).response { response, error in
             if let result = response {
                 print(result)
                 switch result {
@@ -1004,7 +1004,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         
         let jobStatus: ((String) -> Void) = { jobId in
-            _ = self.tester.team.membersAddJobStatusGet(asyncJobId: jobId).response { response, error in
+            self.tester.team.membersAddJobStatusGet(asyncJobId: jobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -1031,7 +1031,7 @@ open class TeamTests {
         }
 
         let memberAddArg = Team.MemberAddArg(memberEmail: TestTeamData.newMemberEmail, memberGivenName: "FirstName", memberSurname: "LastName")
-        _ = tester.team.membersAdd(newMembers: [memberAddArg]).response { response, error in
+        tester.team.membersAdd(newMembers: [memberAddArg]).response { response, error in
             if let result = response {
                 print(result)
                 switch result {
@@ -1059,7 +1059,7 @@ open class TeamTests {
     func membersGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let userSelectArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
-        _ = tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
+        tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1072,7 +1072,7 @@ open class TeamTests {
 
     func membersList(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        _ = tester.team.membersList(limit: 2).response { response, error in
+        tester.team.membersList(limit: 2).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1086,7 +1086,7 @@ open class TeamTests {
     func membersSendWelcomeEmail(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
-        _ = tester.team.membersSendWelcomeEmail(userSelectorArg: userSelectorArg).response { response, error in
+        tester.team.membersSendWelcomeEmail(userSelectorArg: userSelectorArg).response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Welcome email sent!")
                 TestFormat.printSubTestEnd(#function)
@@ -1101,7 +1101,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId2!)
         let newRole = Team.AdminTier.teamAdmin
-        _ = tester.team.membersSetAdminPermissions(user: userSelectorArg, newRole: newRole).response { response, error in
+        tester.team.membersSetAdminPermissions(user: userSelectorArg, newRole: newRole).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1115,7 +1115,7 @@ open class TeamTests {
     func membersSetProfile(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId2!)
-        _ = tester.team.membersSetProfile(user: userSelectorArg, newGivenName: "NewFirstName").response { response, error in
+        tester.team.membersSetProfile(user: userSelectorArg, newGivenName: "NewFirstName").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1130,7 +1130,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
 
         let jobStatus: ((String) -> Void) = { jobId in
-            _ = self.tester.team.membersRemoveJobStatusGet(asyncJobId: jobId).response { response, error in
+            self.tester.team.membersRemoveJobStatusGet(asyncJobId: jobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -1148,7 +1148,7 @@ open class TeamTests {
         }
 
         let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId2!)
-        _ = tester.team.membersRemove(user: userSelectorArg).response { response, error in
+        tester.team.membersRemove(user: userSelectorArg).response { response, error in
             if let result = response {
                 print(result)
                 switch result {

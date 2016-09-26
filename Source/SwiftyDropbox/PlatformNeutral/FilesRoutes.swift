@@ -19,7 +19,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.AlphaGetMetadataError` object on failure.
-    open func alphaGetMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) -> RpcRequest<Files.MetadataSerializer, Files.AlphaGetMetadataErrorSerializer> {
+    @discardableResult open func alphaGetMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) -> RpcRequest<Files.MetadataSerializer, Files.AlphaGetMetadataErrorSerializer> {
         let route = Files.alphaGetMetadata
         let serverArgs = Files.AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
         return client.request(route, serverArgs: serverArgs)
@@ -34,7 +34,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
-    open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
+    @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -49,7 +49,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
-    open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
+    @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -64,7 +64,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
-    open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
+    @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<Properties.PropertyGroup>? = nil, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -78,7 +78,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.RelocationError` object on failure.
-    open func copy(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    @discardableResult open func copy(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let route = Files.copy
         let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return client.request(route, serverArgs: serverArgs)
@@ -91,7 +91,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.GetCopyReferenceResult` object on
     /// success or a `Files.GetCopyReferenceError` object on failure.
-    open func copyReferenceGet(path: String) -> RpcRequest<Files.GetCopyReferenceResultSerializer, Files.GetCopyReferenceErrorSerializer> {
+    @discardableResult open func copyReferenceGet(path: String) -> RpcRequest<Files.GetCopyReferenceResultSerializer, Files.GetCopyReferenceErrorSerializer> {
         let route = Files.copyReferenceGet
         let serverArgs = Files.GetCopyReferenceArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -104,7 +104,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SaveCopyReferenceResult` object on
     /// success or a `Files.SaveCopyReferenceError` object on failure.
-    open func copyReferenceSave(copyReference: String, path: String) -> RpcRequest<Files.SaveCopyReferenceResultSerializer, Files.SaveCopyReferenceErrorSerializer> {
+    @discardableResult open func copyReferenceSave(copyReference: String, path: String) -> RpcRequest<Files.SaveCopyReferenceResultSerializer, Files.SaveCopyReferenceErrorSerializer> {
         let route = Files.copyReferenceSave
         let serverArgs = Files.SaveCopyReferenceArg(copyReference: copyReference, path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -116,7 +116,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FolderMetadata` object on success or
     /// a `Files.CreateFolderError` object on failure.
-    open func createFolder(path: String) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
+    @discardableResult open func createFolder(path: String) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
         let route = Files.createFolder
         let serverArgs = Files.CreateFolderArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -130,7 +130,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.DeleteError` object on failure.
-    open func delete(path: String) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
+    @discardableResult open func delete(path: String) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
         let route = Files.delete
         let serverArgs = Files.DeleteArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -148,7 +148,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.DownloadError` object on failure.
-    open func download(path: String, rev: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    @discardableResult open func download(path: String, rev: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let route = Files.download
         let serverArgs = Files.DownloadArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
@@ -161,7 +161,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.DownloadError` object on failure.
-    open func download(path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
+    @discardableResult open func download(path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.DownloadErrorSerializer> {
         let route = Files.download
         let serverArgs = Files.DownloadArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs)
@@ -178,7 +178,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.GetMetadataError` object on failure.
-    open func getMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
+    @discardableResult open func getMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let route = Files.getMetadata
         let serverArgs = Files.GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -197,7 +197,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.PreviewError` object on failure.
-    open func getPreview(path: String, rev: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    @discardableResult open func getPreview(path: String, rev: String? = nil, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let route = Files.getPreview
         let serverArgs = Files.PreviewArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
@@ -211,7 +211,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.PreviewError` object on failure.
-    open func getPreview(path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
+    @discardableResult open func getPreview(path: String, rev: String? = nil) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.PreviewErrorSerializer> {
         let route = Files.getPreview
         let serverArgs = Files.PreviewArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs)
@@ -224,7 +224,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.GetTemporaryLinkResult` object on
     /// success or a `Files.GetTemporaryLinkError` object on failure.
-    open func getTemporaryLink(path: String) -> RpcRequest<Files.GetTemporaryLinkResultSerializer, Files.GetTemporaryLinkErrorSerializer> {
+    @discardableResult open func getTemporaryLink(path: String) -> RpcRequest<Files.GetTemporaryLinkResultSerializer, Files.GetTemporaryLinkErrorSerializer> {
         let route = Files.getTemporaryLink
         let serverArgs = Files.GetTemporaryLinkArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -245,7 +245,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.ThumbnailError` object on failure.
-    open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
         let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
@@ -261,7 +261,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.ThumbnailError` object on failure.
-    open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
         let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
         return client.request(route, serverArgs: serverArgs)
@@ -280,7 +280,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
-    open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolder
         let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -293,7 +293,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderContinueError` object on failure.
-    open func listFolderContinue(cursor: String) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
+    @discardableResult open func listFolderContinue(cursor: String) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderContinueErrorSerializer> {
         let route = Files.listFolderContinue
         let serverArgs = Files.ListFolderContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -314,7 +314,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
     /// object on success or a `Files.ListFolderError` object on failure.
-    open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolderGetLatestCursor
         let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -334,7 +334,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderLongpollResult` object on
     /// success or a `Files.ListFolderLongpollError` object on failure.
-    open func listFolderLongpoll(cursor: String, timeout: UInt64 = 30) -> RpcRequest<Files.ListFolderLongpollResultSerializer, Files.ListFolderLongpollErrorSerializer> {
+    @discardableResult open func listFolderLongpoll(cursor: String, timeout: UInt64 = 30) -> RpcRequest<Files.ListFolderLongpollResultSerializer, Files.ListFolderLongpollErrorSerializer> {
         let route = Files.listFolderLongpoll
         let serverArgs = Files.ListFolderLongpollArg(cursor: cursor, timeout: timeout)
         return client.request(route, serverArgs: serverArgs)
@@ -347,7 +347,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListRevisionsResult` object on
     /// success or a `Files.ListRevisionsError` object on failure.
-    open func listRevisions(path: String, limit: UInt64 = 10) -> RpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
+    @discardableResult open func listRevisions(path: String, limit: UInt64 = 10) -> RpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
         let route = Files.listRevisions
         let serverArgs = Files.ListRevisionsArg(path: path, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -361,7 +361,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.RelocationError` object on failure.
-    open func move(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    @discardableResult open func move(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let route = Files.move
         let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
         return client.request(route, serverArgs: serverArgs)
@@ -374,7 +374,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.DeleteError` object on failure.
-    open func permanentlyDelete(path: String) -> RpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
+    @discardableResult open func permanentlyDelete(path: String) -> RpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
         let route = Files.permanentlyDelete
         let serverArgs = Files.DeleteArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -388,7 +388,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.AddPropertiesError` object on failure.
-    open func propertiesAdd(path: String, propertyGroups: Array<Properties.PropertyGroup>) -> RpcRequest<VoidSerializer, Files.AddPropertiesErrorSerializer> {
+    @discardableResult open func propertiesAdd(path: String, propertyGroups: Array<Properties.PropertyGroup>) -> RpcRequest<VoidSerializer, Files.AddPropertiesErrorSerializer> {
         let route = Files.propertiesAdd
         let serverArgs = Files.PropertyGroupWithPath(path: path, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -401,7 +401,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.InvalidPropertyGroupError` object on failure.
-    open func propertiesOverwrite(path: String, propertyGroups: Array<Properties.PropertyGroup>) -> RpcRequest<VoidSerializer, Files.InvalidPropertyGroupErrorSerializer> {
+    @discardableResult open func propertiesOverwrite(path: String, propertyGroups: Array<Properties.PropertyGroup>) -> RpcRequest<VoidSerializer, Files.InvalidPropertyGroupErrorSerializer> {
         let route = Files.propertiesOverwrite
         let serverArgs = Files.PropertyGroupWithPath(path: path, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -417,7 +417,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.RemovePropertiesError` object on failure.
-    open func propertiesRemove(path: String, propertyTemplateIds: Array<String>) -> RpcRequest<VoidSerializer, Files.RemovePropertiesErrorSerializer> {
+    @discardableResult open func propertiesRemove(path: String, propertyTemplateIds: Array<String>) -> RpcRequest<VoidSerializer, Files.RemovePropertiesErrorSerializer> {
         let route = Files.propertiesRemove
         let serverArgs = Files.RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
         return client.request(route, serverArgs: serverArgs)
@@ -429,7 +429,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Properties.GetPropertyTemplateResult`
     /// object on success or a `Properties.PropertyTemplateError` object on failure.
-    open func propertiesTemplateGet(templateId: String) -> RpcRequest<Properties.GetPropertyTemplateResultSerializer, Properties.PropertyTemplateErrorSerializer> {
+    @discardableResult open func propertiesTemplateGet(templateId: String) -> RpcRequest<Properties.GetPropertyTemplateResultSerializer, Properties.PropertyTemplateErrorSerializer> {
         let route = Files.propertiesTemplateGet
         let serverArgs = Properties.GetPropertyTemplateArg(templateId: templateId)
         return client.request(route, serverArgs: serverArgs)
@@ -440,7 +440,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Properties.ListPropertyTemplateIds` object
     /// on success or a `Properties.PropertyTemplateError` object on failure.
-    open func propertiesTemplateList() -> RpcRequest<Properties.ListPropertyTemplateIdsSerializer, Properties.PropertyTemplateErrorSerializer> {
+    @discardableResult open func propertiesTemplateList() -> RpcRequest<Properties.ListPropertyTemplateIdsSerializer, Properties.PropertyTemplateErrorSerializer> {
         let route = Files.propertiesTemplateList
         return client.request(route)
     }
@@ -453,7 +453,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UpdatePropertiesError` object on failure.
-    open func propertiesUpdate(path: String, updatePropertyGroups: Array<Files.PropertyGroupUpdate>) -> RpcRequest<VoidSerializer, Files.UpdatePropertiesErrorSerializer> {
+    @discardableResult open func propertiesUpdate(path: String, updatePropertyGroups: Array<Files.PropertyGroupUpdate>) -> RpcRequest<VoidSerializer, Files.UpdatePropertiesErrorSerializer> {
         let route = Files.propertiesUpdate
         let serverArgs = Files.UpdatePropertyGroupArg(path: path, updatePropertyGroups: updatePropertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -466,7 +466,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.RestoreError` object on failure.
-    open func restore(path: String, rev: String) -> RpcRequest<Files.FileMetadataSerializer, Files.RestoreErrorSerializer> {
+    @discardableResult open func restore(path: String, rev: String) -> RpcRequest<Files.FileMetadataSerializer, Files.RestoreErrorSerializer> {
         let route = Files.restore
         let serverArgs = Files.RestoreArg(path: path, rev: rev)
         return client.request(route, serverArgs: serverArgs)
@@ -480,7 +480,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SaveUrlResult` object on success or
     /// a `Files.SaveUrlError` object on failure.
-    open func saveUrl(path: String, url: String) -> RpcRequest<Files.SaveUrlResultSerializer, Files.SaveUrlErrorSerializer> {
+    @discardableResult open func saveUrl(path: String, url: String) -> RpcRequest<Files.SaveUrlResultSerializer, Files.SaveUrlErrorSerializer> {
         let route = Files.saveUrl
         let serverArgs = Files.SaveUrlArg(path: path, url: url)
         return client.request(route, serverArgs: serverArgs)
@@ -493,7 +493,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SaveUrlJobStatus` object on success
     /// or a `Async.PollError` object on failure.
-    open func saveUrlCheckJobStatus(asyncJobId: String) -> RpcRequest<Files.SaveUrlJobStatusSerializer, Async.PollErrorSerializer> {
+    @discardableResult open func saveUrlCheckJobStatus(asyncJobId: String) -> RpcRequest<Files.SaveUrlJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.saveUrlCheckJobStatus
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -513,7 +513,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SearchResult` object on success or a
     /// `Files.SearchError` object on failure.
-    open func search(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) -> RpcRequest<Files.SearchResultSerializer, Files.SearchErrorSerializer> {
+    @discardableResult open func search(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) -> RpcRequest<Files.SearchResultSerializer, Files.SearchErrorSerializer> {
         let route = Files.search
         let serverArgs = Files.SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
         return client.request(route, serverArgs: serverArgs)
@@ -537,7 +537,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
         let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -561,7 +561,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
         let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -585,7 +585,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
         let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -601,7 +601,7 @@ open class FilesRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
     @available(*, unavailable, message:"upload_session/append is deprecated. Use upload_session/append_v2.")
-    open func uploadSessionAppend(sessionId: String, offset: UInt64, input: Data) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppend(sessionId: String, offset: UInt64, input: Data) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppend
         let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -617,7 +617,7 @@ open class FilesRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
     @available(*, unavailable, message:"upload_session/append is deprecated. Use upload_session/append_v2.")
-    open func uploadSessionAppend(sessionId: String, offset: UInt64, input: URL) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppend(sessionId: String, offset: UInt64, input: URL) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppend
         let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -633,7 +633,7 @@ open class FilesRoutes {
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
     @available(*, unavailable, message:"upload_session/append is deprecated. Use upload_session/append_v2.")
-    open func uploadSessionAppend(sessionId: String, offset: UInt64, input: InputStream) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppend(sessionId: String, offset: UInt64, input: InputStream) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppend
         let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -649,7 +649,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
-    open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: Data) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: Data) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppendV2
         let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -665,7 +665,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
-    open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: URL) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: URL) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppendV2
         let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -681,7 +681,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionLookupError` object on failure.
-    open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: InputStream) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
+    @discardableResult open func uploadSessionAppendV2(cursor: Files.UploadSessionCursor, close: Bool = false, input: InputStream) -> UploadRequest<VoidSerializer, Files.UploadSessionLookupErrorSerializer> {
         let route = Files.uploadSessionAppendV2
         let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -696,7 +696,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
-    open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+    @discardableResult open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let route = Files.uploadSessionFinish
         let serverArgs = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -711,7 +711,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
-    open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+    @discardableResult open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let route = Files.uploadSessionFinish
         let serverArgs = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -726,7 +726,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
-    open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
+    @discardableResult open func uploadSessionFinish(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer> {
         let route = Files.uploadSessionFinish
         let serverArgs = Files.UploadSessionFinishArg(cursor: cursor, commit: commit)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -746,7 +746,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Void` object on failure.
-    open func uploadSessionFinishBatch(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+    @discardableResult open func uploadSessionFinishBatch(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
         let route = Files.uploadSessionFinishBatch
         let serverArgs = Files.UploadSessionFinishBatchArg(entries: entries)
         return client.request(route, serverArgs: serverArgs)
@@ -760,7 +760,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionFinishBatchJobStatus`
     /// object on success or a `Async.PollError` object on failure.
-    open func uploadSessionFinishBatchCheck(asyncJobId: String) -> RpcRequest<Files.UploadSessionFinishBatchJobStatusSerializer, Async.PollErrorSerializer> {
+    @discardableResult open func uploadSessionFinishBatchCheck(asyncJobId: String) -> RpcRequest<Files.UploadSessionFinishBatchJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.uploadSessionFinishBatchCheck
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -776,7 +776,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartResult` object on
     /// success or a `Void` object on failure.
-    open func uploadSessionStart(close: Bool = false, input: Data) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+    @discardableResult open func uploadSessionStart(close: Bool = false, input: Data) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
         let route = Files.uploadSessionStart
         let serverArgs = Files.UploadSessionStartArg(close: close)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -792,7 +792,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartResult` object on
     /// success or a `Void` object on failure.
-    open func uploadSessionStart(close: Bool = false, input: URL) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+    @discardableResult open func uploadSessionStart(close: Bool = false, input: URL) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
         let route = Files.uploadSessionStart
         let serverArgs = Files.UploadSessionStartArg(close: close)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -808,7 +808,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartResult` object on
     /// success or a `Void` object on failure.
-    open func uploadSessionStart(close: Bool = false, input: InputStream) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
+    @discardableResult open func uploadSessionStart(close: Bool = false, input: InputStream) -> UploadRequest<Files.UploadSessionStartResultSerializer, VoidSerializer> {
         let route = Files.uploadSessionStart
         let serverArgs = Files.UploadSessionStartArg(close: close)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))

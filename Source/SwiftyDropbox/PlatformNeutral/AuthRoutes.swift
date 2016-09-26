@@ -16,7 +16,7 @@ open class AuthRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
     /// on failure.
-    open func tokenRevoke() -> RpcRequest<VoidSerializer, VoidSerializer> {
+    @discardableResult open func tokenRevoke() -> RpcRequest<VoidSerializer, VoidSerializer> {
         let route = Auth.tokenRevoke
         return client.request(route)
     }
