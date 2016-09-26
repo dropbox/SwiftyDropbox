@@ -5,7 +5,6 @@
 import Foundation
 import UIKit
 import WebKit
-import SystemConfiguration
 
 extension DropboxClientsManager {
     public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
