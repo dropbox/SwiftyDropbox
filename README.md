@@ -462,7 +462,7 @@ Note: Response handlers are required for all endpoints. Progress handlers, on th
 
 #### RPC-style request
 ```Swift
-tester.files.createFolder(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.createFolder(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -477,7 +477,7 @@ tester.files.createFolder(path: "/test/path/in/Dropbox/account").response { resp
 ```Swift
 let fileData = "testing data example".data(using: String.Encoding.utf8, allowLossyConversion: false)!
 
-let request = tester.files.upload(path: "/test/path/in/Dropbox/account", input: TestData.fileData)
+let request = client.files.upload(path: "/test/path/in/Dropbox/account", input: TestData.fileData)
     .response { response, error in
         if let response = response {
             print(response)
@@ -506,7 +506,7 @@ let destURL = directoryURL.appendingPathComponent("myTestFile")
 let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
     return destURL
 }
-tester.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
+client.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
     .response { response, error in
         if let response = response {
             print(response)
@@ -520,7 +520,7 @@ tester.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, de
 
 
 // Download to Data
-tester.files.download(path: "/test/path/in/Dropbox/account")
+client.files.download(path: "/test/path/in/Dropbox/account")
     .response { response, error in
         if let response = response {
             let responseMetadata = response.0
@@ -559,7 +559,7 @@ To properly handle union types, you should pass each union through a switch stat
 
 #### Route-specific errors
 ```Swift
-tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -610,7 +610,7 @@ In the case of a network error, errors are either specific to the endpoint (as s
 To determine if an error is route-specific or not, the error object should be cast as a `CallError`, and depending on the type of error, handled in the appropriate switch statement. 
 
 ```Swift
-tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -651,7 +651,7 @@ For example, the [/delete](https://www.dropbox.com/developers/documentation/http
 To determine at runtime which subtype the `Metadata` type exists as, pass the object through a switch statement, and check for each possible class, with the result casted accordingly. See below:
 
 ```Swift
-tester.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         switch response {
         case let fileMetadata as Files.FileMetadata:
