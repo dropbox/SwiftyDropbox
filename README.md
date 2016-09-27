@@ -12,7 +12,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [Swift 3 Keychain bug](#swift-3-keychain-bug)
 * [Get started](#get-started)
   * [Register your application](#register-your-application)
-  * [Obtain an OAuth2 token](#obtain-an-oauth2-token)
+  * [Obtain an OAuth 2.0 token](#obtain-an-OAuth 2.0-token)
 * [SDK distribution](#sdk-distribution)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
@@ -71,9 +71,9 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 Before using this SDK, you should register your application in the [Dropbox App Console](https://dropbox.com/developers/apps). This creates a record of your app with Dropbox that will be associated with the API calls you make.
 
-### Obtain an OAuth2 token
+### Obtain an OAuth 2.0 token
 
-All requests need to be made with an OAuth2 access token. An OAuth token represents an authenticated link between a Dropbox app and
+All requests need to be made with an OAuth 2.0 access token. An OAuth token represents an authenticated link between a Dropbox app and
 a Dropbox user account or team.
 
 Once you've created an app, you can go to the App Console and manually generate an access token to authorize your app to access your own Dropbox account.
@@ -143,7 +143,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.5
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.0.6
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -244,9 +244,9 @@ add the following code to your application's `.plist` file:
         <string>dbapi-2</string>
     </array>
 ```
-This allows the Swift SDK to determine if the official Dropbox iOS app is installed on the current device. If it is installed, then the official Dropbox iOS app can be used to programmatically obtain an OAuth2 access token.
+This allows the Swift SDK to determine if the official Dropbox iOS app is installed on the current device. If it is installed, then the official Dropbox iOS app can be used to programmatically obtain an OAuth 2.0 access token.
 
-Additionally, your application needs to register to handle a unique Dropbox URL scheme for redirect following completion of the OAuth2 authorization flow. This URL scheme should have the format `db-<APP_KEY>`, where `<APP_KEY>` is your
+Additionally, your application needs to register to handle a unique Dropbox URL scheme for redirect following completion of the OAuth 2.0 authorization flow. This URL scheme should have the format `db-<APP_KEY>`, where `<APP_KEY>` is your
 Dropbox app's app key, which can be found in the [App Console](https://dropbox.com/developers/apps).
 
 You should add the following code to your `.plist` file (but be sure to replace `<APP_KEY>` with your app's app key):
@@ -275,7 +275,7 @@ After you've made the above changes, your application's `.plist` file should loo
 
 ### Handling the authorization flow
 
-There are three methods to programmatically retrieve an OAuth2 access token:
+There are three methods to programmatically retrieve an OAuth 2.0 access token:
 
 * **Direct auth** (iOS only): This launches the official Dropbox iOS app (if installed), authenticates via the official app, then redirects back into the SDK
 * **In-app webview auth** (iOS, macOS): This opens a pre-built in-app webview for authenticating via the Dropbox authorization page. This is convenient because the user is never redirected outside of your app.
@@ -421,7 +421,7 @@ Now you're ready to begin making API requests!
 
 ## Try some API requests
 
-Once you have obtained an OAuth2 token, you can try some API v2 calls using the Swift SDK.
+Once you have obtained an OAuth 2.0 token, you can try some API v2 calls using the Swift SDK.
 
 ### Dropbox client instance
 

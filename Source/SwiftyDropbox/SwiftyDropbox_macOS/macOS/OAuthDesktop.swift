@@ -13,19 +13,19 @@ extension DropboxClientsManager {
     }
 
     public static func setupWithAppKeyDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
-        setupWithOAuthManager(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient)
+        setupWithOAuthManager(appKey, oAuthManager: DropboxDesktopOAuthManager(appKey: appKey), transportClient: transportClient)
     }
 
     public static func setupWithAppKeyMultiUserDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil, tokenUid: String?) {
-        setupWithOAuthManagerMultiUser(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
+        setupWithOAuthManagerMultiUser(appKey, oAuthManager: DropboxDesktopOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
     }
 
     public static func setupWithTeamAppKeyDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
-        setupWithOAuthManagerTeam(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient)
+        setupWithOAuthManagerTeam(appKey, oAuthManager: DropboxDesktopOAuthManager(appKey: appKey), transportClient: transportClient)
     }
 
     public static func setupWithTeamAppKeyMultiUserDesktop(_ appKey: String, transportClient: DropboxTransportClient? = nil, tokenUid: String?) {
-        setupWithOAuthManagerMultiUserTeam(appKey, oAuthManager: DropboxMobileOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
+        setupWithOAuthManagerMultiUserTeam(appKey, oAuthManager: DropboxDesktopOAuthManager(appKey: appKey), transportClient: transportClient, tokenUid: tokenUid)
     }
 }
 

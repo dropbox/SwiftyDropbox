@@ -6,7 +6,7 @@ import Foundation
 import Alamofire
 
 open class DropboxTransportClient {
-    static let version = "4.0.5"
+    static let version = "4.0.6"
 
     open let manager: SessionManager
     open let backgroundManager: SessionManager
