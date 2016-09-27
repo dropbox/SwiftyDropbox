@@ -387,6 +387,15 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpe
 ```Swift
 import SwiftyDropbox
 
+func applicationDidFinishLaunching(_ aNotification: Notification) {
+    ...... // code outlined above goes here
+
+    NSAppleEventManager.shared().setEventHandler(self,
+                                                 andSelector: #selector(handleGetURLEvent),
+                                                 forEventClass: AEEventClass(kInternetEventClass),
+                                                 andEventID: AEEventID(kAEGetURL))
+}
+
 func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
     if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
         if let urlStr = aeEventDescriptor.stringValue {
@@ -403,6 +412,7 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
             }
         }
     }
+}
 ```
 
 After the end user signs in with their Dropbox login credentials via the in-app webview, they will see a window like this:
