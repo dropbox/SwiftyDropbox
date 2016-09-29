@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RemovedStatus Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/RemovedStatus" class="dashAnchor"></a>
+    <a title="RemovedStatus Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">SwiftyDropbox Docs</a></p>
+        <p class="header-right"><a href="https://github.com/dropbox/SwiftyDropbox"><img src="../../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">SwiftyDropbox Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        RemovedStatus Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Routes.html">Routes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/AuthRoutes.html">AuthRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/FilesRoutes.html">FilesRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/SharingRoutes.html">SharingRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamRoutes.html">TeamRoutes</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/UsersRoutes.html">UsersRoutes</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Data Types.html">Data Types</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/Async.html">Async</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/LaunchResultBase.html">– LaunchResultBase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/LaunchEmptyResult.html">– LaunchEmptyResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/PollArg.html">– PollArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/PollResultBase.html">– PollResultBase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/PollEmptyResult.html">– PollEmptyResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Async/PollError.html">– PollError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Auth.html">Auth</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Auth/AuthError.html">– AuthError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Auth/RateLimitError.html">– RateLimitError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Auth/RateLimitReason.html">– RateLimitReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Data Types.html#/s:C13SwiftyDropbox6Common">Common</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files.html">Files</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PropertiesError.html">– PropertiesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/InvalidPropertyGroupError.html">– InvalidPropertyGroupError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/AddPropertiesError.html">– AddPropertiesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetMetadataArg.html">– GetMetadataArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/AlphaGetMetadataArg.html">– AlphaGetMetadataArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetMetadataError.html">– GetMetadataError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/AlphaGetMetadataError.html">– AlphaGetMetadataError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/CommitInfo.html">– CommitInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/CommitInfoWithProperties.html">– CommitInfoWithProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/CreateFolderArg.html">– CreateFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/CreateFolderError.html">– CreateFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteArg.html">– DeleteArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteBatchArg.html">– DeleteBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteBatchError.html">– DeleteBatchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteBatchJobStatus.html">– DeleteBatchJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteBatchResult.html">– DeleteBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteBatchResultEntry.html">– DeleteBatchResultEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteError.html">– DeleteError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DeleteResult.html">– DeleteResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/Metadata.html">– Metadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files.html#/s:CC13SwiftyDropbox5Files15DeletedMetadata">– DeletedMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/Dimensions.html">– Dimensions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DownloadArg.html">– DownloadArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/DownloadError.html">– DownloadError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/FileMetadata.html">– FileMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SharingInfo.html">– SharingInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/FileSharingInfo.html">– FileSharingInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/FolderMetadata.html">– FolderMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/FolderSharingInfo.html">– FolderSharingInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetCopyReferenceArg.html">– GetCopyReferenceArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetCopyReferenceError.html">– GetCopyReferenceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetCopyReferenceResult.html">– GetCopyReferenceResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetTemporaryLinkArg.html">– GetTemporaryLinkArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetTemporaryLinkError.html">– GetTemporaryLinkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GetTemporaryLinkResult.html">– GetTemporaryLinkResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/GpsCoordinates.html">– GpsCoordinates</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderArg.html">– ListFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderContinueArg.html">– ListFolderContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderContinueError.html">– ListFolderContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderError.html">– ListFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderGetLatestCursorResult.html">– ListFolderGetLatestCursorResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderLongpollArg.html">– ListFolderLongpollArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderLongpollError.html">– ListFolderLongpollError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderLongpollResult.html">– ListFolderLongpollResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListFolderResult.html">– ListFolderResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListRevisionsArg.html">– ListRevisionsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListRevisionsError.html">– ListRevisionsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ListRevisionsResult.html">– ListRevisionsResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/LookUpPropertiesError.html">– LookUpPropertiesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/LookupError.html">– LookupError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/MediaInfo.html">– MediaInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/MediaMetadata.html">– MediaMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PathRootError.html">– PathRootError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files.html#/s:CC13SwiftyDropbox5Files13PhotoMetadata">– PhotoMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PreviewArg.html">– PreviewArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PreviewError.html">– PreviewError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PropertyGroupUpdate.html">– PropertyGroupUpdate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/PropertyGroupWithPath.html">– PropertyGroupWithPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationPath.html">– RelocationPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationArg.html">– RelocationArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationBatchArg.html">– RelocationBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationError.html">– RelocationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationBatchError.html">– RelocationBatchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationBatchJobStatus.html">– RelocationBatchJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationBatchResult.html">– RelocationBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RelocationResult.html">– RelocationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RemovePropertiesArg.html">– RemovePropertiesArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RemovePropertiesError.html">– RemovePropertiesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RestoreArg.html">– RestoreArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/RestoreError.html">– RestoreError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveCopyReferenceArg.html">– SaveCopyReferenceArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveCopyReferenceError.html">– SaveCopyReferenceError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveCopyReferenceResult.html">– SaveCopyReferenceResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveUrlArg.html">– SaveUrlArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveUrlError.html">– SaveUrlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveUrlJobStatus.html">– SaveUrlJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SaveUrlResult.html">– SaveUrlResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchArg.html">– SearchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchError.html">– SearchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchMatch.html">– SearchMatch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchMatchType.html">– SearchMatchType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchMode.html">– SearchMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/SearchResult.html">– SearchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ThumbnailArg.html">– ThumbnailArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ThumbnailError.html">– ThumbnailError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ThumbnailFormat.html">– ThumbnailFormat</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/ThumbnailSize.html">– ThumbnailSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UpdatePropertiesError.html">– UpdatePropertiesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UpdatePropertyGroupArg.html">– UpdatePropertyGroupArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadError.html">– UploadError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadErrorWithProperties.html">– UploadErrorWithProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionAppendArg.html">– UploadSessionAppendArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionCursor.html">– UploadSessionCursor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishArg.html">– UploadSessionFinishArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishBatchArg.html">– UploadSessionFinishBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishBatchJobStatus.html">– UploadSessionFinishBatchJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishBatchResult.html">– UploadSessionFinishBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishBatchResultEntry.html">– UploadSessionFinishBatchResultEntry</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionFinishError.html">– UploadSessionFinishError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionLookupError.html">– UploadSessionLookupError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionOffsetError.html">– UploadSessionOffsetError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionStartArg.html">– UploadSessionStartArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadSessionStartResult.html">– UploadSessionStartResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/UploadWriteFailed.html">– UploadWriteFailed</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/VideoMetadata.html">– VideoMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/WriteConflictError.html">– WriteConflictError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/WriteError.html">– WriteError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Files/WriteMode.html">– WriteMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties.html">Properties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/GetPropertyTemplateArg.html">– GetPropertyTemplateArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyGroupTemplate.html">– PropertyGroupTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties.html#/s:CC13SwiftyDropbox10Properties25GetPropertyTemplateResult">– GetPropertyTemplateResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/ListPropertyTemplateIds.html">– ListPropertyTemplateIds</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyTemplateError.html">– PropertyTemplateError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/ModifyPropertyTemplateError.html">– ModifyPropertyTemplateError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyField.html">– PropertyField</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyFieldTemplate.html">– PropertyFieldTemplate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyGroup.html">– PropertyGroup</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Properties/PropertyType.html">– PropertyType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing.html">Sharing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AccessLevel.html">– AccessLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AclUpdatePolicy.html">– AclUpdatePolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddFileMemberArgs.html">– AddFileMemberArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddFileMemberError.html">– AddFileMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddFolderMemberArg.html">– AddFolderMemberArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddFolderMemberError.html">– AddFolderMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddMember.html">– AddMember</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/AddMemberSelectorError.html">– AddMemberSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ChangeFileMemberAccessArgs.html">– ChangeFileMemberAccessArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/LinkMetadata.html">– LinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing.html#/s:CC13SwiftyDropbox7Sharing22CollectionLinkMetadata">– CollectionLinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/CreateSharedLinkArg.html">– CreateSharedLinkArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/CreateSharedLinkError.html">– CreateSharedLinkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/CreateSharedLinkWithSettingsArg.html">– CreateSharedLinkWithSettingsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/CreateSharedLinkWithSettingsError.html">– CreateSharedLinkWithSettingsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileAction.html">– FileAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileErrorResult.html">– FileErrorResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkMetadata.html">– SharedLinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileLinkMetadata.html">– FileLinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileMemberActionError.html">– FileMemberActionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileMemberActionIndividualResult.html">– FileMemberActionIndividualResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileMemberActionResult.html">– FileMemberActionResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FileMemberRemoveActionResult.html">– FileMemberRemoveActionResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FilePermission.html">– FilePermission</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FolderAction.html">– FolderAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing.html#/s:CC13SwiftyDropbox7Sharing18FolderLinkMetadata">– FolderLinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FolderPermission.html">– FolderPermission</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/FolderPolicy.html">– FolderPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetFileMetadataArg.html">– GetFileMetadataArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetFileMetadataBatchArg.html">– GetFileMetadataBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetFileMetadataBatchResult.html">– GetFileMetadataBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetFileMetadataError.html">– GetFileMetadataError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetFileMetadataIndividualResult.html">– GetFileMetadataIndividualResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetMetadataArgs.html">– GetMetadataArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkError.html">– SharedLinkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetSharedLinkFileError.html">– GetSharedLinkFileError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetSharedLinkMetadataArg.html">– GetSharedLinkMetadataArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetSharedLinksArg.html">– GetSharedLinksArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetSharedLinksError.html">– GetSharedLinksError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GetSharedLinksResult.html">– GetSharedLinksResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GroupInfo.html">– GroupInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MembershipInfo.html">– MembershipInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/GroupMembershipInfo.html">– GroupMembershipInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/InsufficientQuotaAmounts.html">– InsufficientQuotaAmounts</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/InviteeInfo.html">– InviteeInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/InviteeMembershipInfo.html">– InviteeMembershipInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/JobError.html">– JobError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/JobStatus.html">– JobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/LinkPermissions.html">– LinkPermissions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersArg.html">– ListFileMembersArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersBatchArg.html">– ListFileMembersBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersBatchResult.html">– ListFileMembersBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersContinueArg.html">– ListFileMembersContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersContinueError.html">– ListFileMembersContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersCountResult.html">– ListFileMembersCountResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersError.html">– ListFileMembersError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFileMembersIndividualResult.html">– ListFileMembersIndividualResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFilesArg.html">– ListFilesArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFilesContinueArg.html">– ListFilesContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFilesContinueError.html">– ListFilesContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFilesResult.html">– ListFilesResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFolderMembersCursorArg.html">– ListFolderMembersCursorArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFolderMembersArgs.html">– ListFolderMembersArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFolderMembersContinueArg.html">– ListFolderMembersContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFolderMembersContinueError.html">– ListFolderMembersContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFoldersArgs.html">– ListFoldersArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFoldersContinueArg.html">– ListFoldersContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFoldersContinueError.html">– ListFoldersContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListFoldersResult.html">– ListFoldersResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListSharedLinksArg.html">– ListSharedLinksArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListSharedLinksError.html">– ListSharedLinksError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ListSharedLinksResult.html">– ListSharedLinksResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MemberAccessLevelResult.html">– MemberAccessLevelResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MemberAction.html">– MemberAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MemberPermission.html">– MemberPermission</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MemberPolicy.html">– MemberPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MemberSelector.html">– MemberSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ModifySharedLinkSettingsArgs.html">– ModifySharedLinkSettingsArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ModifySharedLinkSettingsError.html">– ModifySharedLinkSettingsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MountFolderArg.html">– MountFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/MountFolderError.html">– MountFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ParentFolderAccessInfo.html">– ParentFolderAccessInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/PathLinkMetadata.html">– PathLinkMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/PendingUploadMode.html">– PendingUploadMode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/PermissionDeniedReason.html">– PermissionDeniedReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RelinquishFileMembershipArg.html">– RelinquishFileMembershipArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RelinquishFileMembershipError.html">– RelinquishFileMembershipError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RelinquishFolderMembershipArg.html">– RelinquishFolderMembershipArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RelinquishFolderMembershipError.html">– RelinquishFolderMembershipError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RemoveFileMemberArg.html">– RemoveFileMemberArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RemoveFileMemberError.html">– RemoveFileMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RemoveFolderMemberArg.html">– RemoveFolderMemberArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RemoveFolderMemberError.html">– RemoveFolderMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RemoveMemberJobStatus.html">– RemoveMemberJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RequestedVisibility.html">– RequestedVisibility</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ResolvedVisibility.html">– ResolvedVisibility</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RevokeSharedLinkArg.html">– RevokeSharedLinkArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/RevokeSharedLinkError.html">– RevokeSharedLinkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ShareFolderArg.html">– ShareFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ShareFolderErrorBase.html">– ShareFolderErrorBase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ShareFolderError.html">– ShareFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ShareFolderJobStatus.html">– ShareFolderJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/ShareFolderLaunch.html">– ShareFolderLaunch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharePathError.html">– SharePathError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFileMembers.html">– SharedFileMembers</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFileMetadata.html">– SharedFileMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFolderAccessError.html">– SharedFolderAccessError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFolderMemberError.html">– SharedFolderMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFolderMembers.html">– SharedFolderMembers</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFolderMetadataBase.html">– SharedFolderMetadataBase</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedFolderMetadata.html">– SharedFolderMetadata</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkAccessFailureReason.html">– SharedLinkAccessFailureReason</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkPolicy.html">– SharedLinkPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkSettings.html">– SharedLinkSettings</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharedLinkSettingsError.html">– SharedLinkSettingsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharingFileAccessError.html">– SharingFileAccessError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/SharingUserError.html">– SharingUserError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/TeamMemberInfo.html">– TeamMemberInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/TransferFolderArg.html">– TransferFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/TransferFolderError.html">– TransferFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnmountFolderArg.html">– UnmountFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnmountFolderError.html">– UnmountFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnshareFileArg.html">– UnshareFileArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnshareFileError.html">– UnshareFileError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnshareFolderArg.html">– UnshareFolderArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UnshareFolderError.html">– UnshareFolderError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UpdateFolderMemberArg.html">– UpdateFolderMemberArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UpdateFolderMemberError.html">– UpdateFolderMemberError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UpdateFolderPolicyArg.html">– UpdateFolderPolicyArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UpdateFolderPolicyError.html">– UpdateFolderPolicyError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UserInfo.html">– UserInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/UserMembershipInfo.html">– UserMembershipInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Sharing/Visibility.html">– Visibility</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team.html">Team</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DeviceSession.html">– DeviceSession</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ActiveWebSession.html">– ActiveWebSession</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team.html#/s:CC13SwiftyDropbox4Team22AddPropertyTemplateArg">– AddPropertyTemplateArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/AddPropertyTemplateResult.html">– AddPropertyTemplateResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/AdminTier.html">– AdminTier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ApiApp.html">– ApiApp</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/BaseDfbReport.html">– BaseDfbReport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DateRange.html">– DateRange</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DateRangeError.html">– DateRangeError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DesktopClientSession.html">– DesktopClientSession</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DesktopPlatform.html">– DesktopPlatform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DeviceSessionArg.html">– DeviceSessionArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/DevicesActive.html">– DevicesActive</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GetActivityReport.html">– GetActivityReport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GetDevicesReport.html">– GetDevicesReport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GetMembershipReport.html">– GetMembershipReport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GetStorageReport.html">– GetStorageReport</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupAccessType.html">– GroupAccessType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupCreateArg.html">– GroupCreateArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupCreateError.html">– GroupCreateError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupSelectorError.html">– GroupSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupDeleteError.html">– GroupDeleteError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupFullInfo.html">– GroupFullInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMemberInfo.html">– GroupMemberInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMemberSelector.html">– GroupMemberSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMemberSelectorError.html">– GroupMemberSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMemberSetAccessTypeError.html">– GroupMemberSetAccessTypeError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/IncludeMembersArg.html">– IncludeMembersArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersAddArg.html">– GroupMembersAddArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersAddError.html">– GroupMembersAddError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersChangeResult.html">– GroupMembersChangeResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersRemoveArg.html">– GroupMembersRemoveArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersSelectorError.html">– GroupMembersSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersRemoveError.html">– GroupMembersRemoveError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersSelector.html">– GroupMembersSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupMembersSetAccessTypeArg.html">– GroupMembersSetAccessTypeArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupSelector.html">– GroupSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupUpdateArgs.html">– GroupUpdateArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupUpdateError.html">– GroupUpdateError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsGetInfoError.html">– GroupsGetInfoError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsGetInfoItem.html">– GroupsGetInfoItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsListArg.html">– GroupsListArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsListContinueArg.html">– GroupsListContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsListContinueError.html">– GroupsListContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsListResult.html">– GroupsListResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsMembersListArg.html">– GroupsMembersListArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsMembersListContinueArg.html">– GroupsMembersListContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsMembersListContinueError.html">– GroupsMembersListContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsMembersListResult.html">– GroupsMembersListResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsPollError.html">– GroupsPollError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/GroupsSelector.html">– GroupsSelector</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberAppsArg.html">– ListMemberAppsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberAppsError.html">– ListMemberAppsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberAppsResult.html">– ListMemberAppsResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberDevicesArg.html">– ListMemberDevicesArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberDevicesError.html">– ListMemberDevicesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMemberDevicesResult.html">– ListMemberDevicesResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersAppsArg.html">– ListMembersAppsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersAppsError.html">– ListMembersAppsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersAppsResult.html">– ListMembersAppsResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersDevicesArg.html">– ListMembersDevicesArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersDevicesError.html">– ListMembersDevicesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListMembersDevicesResult.html">– ListMembersDevicesResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamAppsArg.html">– ListTeamAppsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamAppsError.html">– ListTeamAppsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamAppsResult.html">– ListTeamAppsResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamDevicesArg.html">– ListTeamDevicesArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamDevicesError.html">– ListTeamDevicesError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/ListTeamDevicesResult.html">– ListTeamDevicesResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberAccess.html">– MemberAccess</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberAddArg.html">– MemberAddArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberAddResult.html">– MemberAddResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberDevices.html">– MemberDevices</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberLinkedApps.html">– MemberLinkedApps</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberProfile.html">– MemberProfile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/UserSelectorError.html">– UserSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MemberSelectorError.html">– MemberSelectorError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersAddArg.html">– MembersAddArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersAddJobStatus.html">– MembersAddJobStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersAddLaunch.html">– MembersAddLaunch</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersDeactivateArg.html">– MembersDeactivateArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersDeactivateError.html">– MembersDeactivateError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersGetInfoArgs.html">– MembersGetInfoArgs</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersGetInfoError.html">– MembersGetInfoError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersGetInfoItem.html">– MembersGetInfoItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersListArg.html">– MembersListArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersListContinueArg.html">– MembersListContinueArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersListContinueError.html">– MembersListContinueError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersListError.html">– MembersListError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersListResult.html">– MembersListResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersRecoverArg.html">– MembersRecoverArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersRecoverError.html">– MembersRecoverError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersRemoveArg.html">– MembersRemoveArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersRemoveError.html">– MembersRemoveError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSendWelcomeError.html">– MembersSendWelcomeError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSetPermissionsArg.html">– MembersSetPermissionsArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSetPermissionsError.html">– MembersSetPermissionsError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSetPermissionsResult.html">– MembersSetPermissionsResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSetProfileArg.html">– MembersSetProfileArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSetProfileError.html">– MembersSetProfileError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersSuspendError.html">– MembersSuspendError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersUnsuspendArg.html">– MembersUnsuspendArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MembersUnsuspendError.html">– MembersUnsuspendError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MobileClientPlatform.html">– MobileClientPlatform</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/MobileClientSession.html">– MobileClientSession</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RemovedStatus.html">– RemovedStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDesktopClientArg.html">– RevokeDesktopClientArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionArg.html">– RevokeDeviceSessionArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionBatchArg.html">– RevokeDeviceSessionBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionBatchError.html">– RevokeDeviceSessionBatchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionBatchResult.html">– RevokeDeviceSessionBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionError.html">– RevokeDeviceSessionError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeDeviceSessionStatus.html">– RevokeDeviceSessionStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedApiAppArg.html">– RevokeLinkedApiAppArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedApiAppBatchArg.html">– RevokeLinkedApiAppBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedAppBatchError.html">– RevokeLinkedAppBatchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedAppBatchResult.html">– RevokeLinkedAppBatchResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedAppError.html">– RevokeLinkedAppError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/RevokeLinkedAppStatus.html">– RevokeLinkedAppStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/StorageBucket.html">– StorageBucket</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/TeamGetInfoResult.html">– TeamGetInfoResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/TeamMemberInfo.html">– TeamMemberInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/TeamMemberProfile.html">– TeamMemberProfile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/TeamMemberStatus.html">– TeamMemberStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/TeamMembershipType.html">– TeamMembershipType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/UpdatePropertyTemplateArg.html">– UpdatePropertyTemplateArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/UpdatePropertyTemplateResult.html">– UpdatePropertyTemplateResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/UserSelectorArg.html">– UserSelectorArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Team/UsersSelectorArg.html">– UsersSelectorArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamCommon.html">TeamCommon</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamCommon/GroupManagementType.html">– GroupManagementType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamCommon/GroupSummary.html">– GroupSummary</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamCommon/GroupType.html">– GroupType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies.html">TeamPolicies</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/EmmState.html">– EmmState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/SharedFolderJoinPolicy.html">– SharedFolderJoinPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/SharedFolderMemberPolicy.html">– SharedFolderMemberPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/SharedLinkCreatePolicy.html">– SharedLinkCreatePolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/TeamMemberPolicies.html">– TeamMemberPolicies</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/TeamPolicies/TeamSharingPolicies.html">– TeamSharingPolicies</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users.html">Users</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/Account.html">– Account</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/AccountType.html">– AccountType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/BasicAccount.html">– BasicAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/FullAccount.html">– FullAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/Team.html">– Team</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/FullTeam.html">– FullTeam</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/GetAccountArg.html">– GetAccountArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/GetAccountBatchArg.html">– GetAccountBatchArg</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/GetAccountBatchError.html">– GetAccountBatchError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/GetAccountError.html">– GetAccountError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/IndividualSpaceAllocation.html">– IndividualSpaceAllocation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/SpaceAllocation.html">– SpaceAllocation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/SpaceUsage.html">– SpaceUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/Users/TeamSpaceAllocation.html">– TeamSpaceAllocation</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxOAuthManager.html">DropboxOAuthManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/DropboxOAuthResult.html">DropboxOAuthResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxAccessToken.html">DropboxAccessToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/OAuth2Error.html">OAuth2Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Client Classes.html">Client Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Client Classes.html#/s:C13SwiftyDropbox13DropboxClient">DropboxClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Client Classes.html#/s:C13SwiftyDropbox17DropboxTeamClient">DropboxTeamClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/DropboxClientsManager.html">DropboxClientsManager</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Other Classes.html">Other Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox19DownloadRequestFile">DownloadRequestFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox21DownloadRequestMemory">DownloadRequestMemory</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox7Request">Request</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox10RpcRequest">RpcRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Other Classes.html#/s:C13SwiftyDropbox13UploadRequest">UploadRequest</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>RemovedStatus</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RemovedStatus</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                </div>
+              </div>
+            <p>The RemovedStatus struct</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vCC13SwiftyDropbox4Team13RemovedStatus13isRecoverableSb"></a>
+                    <a name="//apple_ref/swift/Property/isRecoverable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vCC13SwiftyDropbox4Team13RemovedStatus13isRecoverableSb">isRecoverable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>True if the removed team member is recoverable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="k">let</span> <span class="nv">isRecoverable</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vPs23CustomStringConvertible11descriptionSS"></a>
+                    <a name="//apple_ref/swift/Property/description" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vPs23CustomStringConvertible11descriptionSS">description</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>True if the removed team member is recoverable</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2016-09-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
