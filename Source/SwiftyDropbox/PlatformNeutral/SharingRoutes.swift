@@ -227,10 +227,10 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns a list of LinkMetadata objects for this user, including collection links. If no path is given or the
-    /// path is empty, returns a list of all shared links for the current user, including collection links. If a
-    /// non-empty path is given, returns a list of all shared links that allow access to the given path.  Collection
-    /// links are never returned in this case. Note that the url field in the response is never the shortened URL.
+    /// Returns a list of LinkMetadata objects for this user, including collection links. If no path is given, returns a
+    /// list of all shared links for the current user, including collection links. If a non-empty path is given, returns
+    /// a list of all shared links that allow access to the given path.  Collection links are never returned in this
+    /// case. Note that the url field in the response is never the shortened URL.
     ///
     /// - parameter path: See getSharedLinks description.
     ///
@@ -398,10 +398,10 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// List shared links of this user. If no path is given or the path is empty, returns a list of all shared links for
-    /// the current user. If a non-empty path is given, returns a list of all shared links that allow access to the
-    /// given path - direct links to the given path and links to parent folders of the given path. Links to parent
-    /// folders can be suppressed by setting direct_only to true.
+    /// List shared links of this user. If no path is given, returns a list of all shared links for the current user. If
+    /// a non-empty path is given, returns a list of all shared links that allow access to the given path - direct links
+    /// to the given path and links to parent folders of the given path. Links to parent folders can be suppressed by
+    /// setting direct_only to true.
     ///
     /// - parameter path: See listSharedLinks description.
     /// - parameter cursor: The cursor returned by your last call to listSharedLinks.

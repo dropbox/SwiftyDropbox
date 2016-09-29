@@ -4169,6 +4169,8 @@ open class Team {
         case userUnrecoverable
         /// The user is not a member of the team.
         case userNotInTeam
+        /// Team is full. The organization has no available licenses.
+        case teamLicenseLimit
         /// An unspecified error.
         case other
 
@@ -4192,6 +4194,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("user_not_in_team")
                     return .dictionary(d)
+                case .teamLicenseLimit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_license_limit")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4209,6 +4215,8 @@ open class Team {
                             return MembersRecoverError.userUnrecoverable
                         case "user_not_in_team":
                             return MembersRecoverError.userNotInTeam
+                        case "team_license_limit":
+                            return MembersRecoverError.teamLicenseLimit
                         case "other":
                             return MembersRecoverError.other
                         default:

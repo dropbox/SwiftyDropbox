@@ -73,14 +73,50 @@ open class FilesRoutes {
     /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be copied.
     ///
-    /// - parameter fromPath: Path in the user's Dropbox to be copied or moved.
-    /// - parameter toPath: Path in the user's Dropbox that is the destination.
+    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
+    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
+    /// conflict.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.RelocationError` object on failure.
-    @discardableResult open func copy(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    @discardableResult open func copy(fromPath: String, toPath: String, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let route = Files.copy
-        let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
+        let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath, allowSharedFolder: allowSharedFolder, autorename: autorename)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Copy multiple files or folders to different locations at once in the user's Dropbox. If allowSharedFolder in
+    /// RelocationBatchArg is false, this route is atomic. If on entry failes, the whole transaction will abort. If
+    /// allowSharedFolder in RelocationBatchArg is true, not atomicity is guaranteed, but you will be able to copy the
+    /// contents of shared folders to new locations. This route will return job ID immediately and do the async copy job
+    /// in background. Please use copyBatchCheck to check the job status.
+    ///
+    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
+    /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
+    /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
+    /// This field is always true for moveBatch.
+    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
+    /// to avoid the conflict.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// or a `Void` object on failure.
+    @discardableResult open func copyBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+        let route = Files.copyBatch
+        let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for copyBatch. If success, it returns list of results for each entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchJobStatus` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult open func copyBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.copyBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -113,12 +149,14 @@ open class FilesRoutes {
     /// Create a folder at a given path.
     ///
     /// - parameter path: Path in the user's Dropbox to create.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
+    /// conflict.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FolderMetadata` object on success or
     /// a `Files.CreateFolderError` object on failure.
-    @discardableResult open func createFolder(path: String) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
+    @discardableResult open func createFolder(path: String, autorename: Bool = false) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
         let route = Files.createFolder
-        let serverArgs = Files.CreateFolderArg(path: path)
+        let serverArgs = Files.CreateFolderArg(path: path, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -136,10 +174,35 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Delete multiple files/folders at once. This route is asynchronous, which returns a job ID immediately and runs
+    /// the delete batch asynchronously. Use deleteBatchCheck to check the job status.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// or a `Void` object on failure.
+    @discardableResult open func deleteBatch(entries: Array<Files.DeleteArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+        let route = Files.deleteBatch
+        let serverArgs = Files.DeleteBatchArg(entries: entries)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for deleteBatch. If success, it returns list of result for each entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.DeleteBatchJobStatus` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult open func deleteBatchCheck(asyncJobId: String) -> RpcRequest<Files.DeleteBatchJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.deleteBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Download a file from a user's Dropbox.
     ///
     /// - parameter path: The path of the file to download.
-    /// - parameter rev: Deprecated. Please specify revision in path instead
+    /// - parameter rev: Deprecated. Please specify revision in path instead.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
     /// NSError will be thrown).
@@ -157,7 +220,7 @@ open class FilesRoutes {
     /// Download a file from a user's Dropbox.
     ///
     /// - parameter path: The path of the file to download.
-    /// - parameter rev: Deprecated. Please specify revision in path instead
+    /// - parameter rev: Deprecated. Please specify revision in path instead.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.DownloadError` object on failure.
@@ -185,10 +248,10 @@ open class FilesRoutes {
     }
 
     /// Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
-    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf
+    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf.
     ///
     /// - parameter path: The path of the file to preview.
-    /// - parameter rev: Deprecated. Please specify revision in path instead
+    /// - parameter rev: Deprecated. Please specify revision in path instead.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
     /// NSError will be thrown).
@@ -204,10 +267,10 @@ open class FilesRoutes {
     }
 
     /// Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
-    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf
+    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf.
     ///
     /// - parameter path: The path of the file to preview.
-    /// - parameter rev: Deprecated. Please specify revision in path instead
+    /// - parameter rev: Deprecated. Please specify revision in path instead.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.PreviewError` object on failure.
@@ -267,7 +330,17 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns the contents of a folder.
+    /// Starts returning the contents of a folder. If the result's hasMore in ListFolderResult field is true, call
+    /// listFolderContinue with the returned cursor in ListFolderResult to retrieve more entries. If you're using
+    /// recursive in ListFolderArg set to true to keep a local cache of the contents of a Dropbox account, iterate
+    /// through each entry in order and process them as follows to keep your local state in sync: For each FileMetadata,
+    /// store the new entry at the given path in your local state. If the required parent folders don't exist yet,
+    /// create them. If there's already something else at the given path, replace it and remove all its children. For
+    /// each FolderMetadata, store the new entry at the given path in your local state. If the required parent folders
+    /// don't exist yet, create them. If there's already something else at the given path, replace it but leave the
+    /// children as they are. Check the new entry's readOnly in FolderSharingInfo and set all its children's read-only
+    /// statuses to match. For each DeletedMetadata, if your local state has something at the given path, remove it and
+    /// all its children. If there's nothing at the given path, ignore this entry.
     ///
     /// - parameter path: The path to the folder you want to see the contents of.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
@@ -287,7 +360,7 @@ open class FilesRoutes {
     }
 
     /// Once a cursor has been retrieved from listFolder, use this to paginate through all files and retrieve updates to
-    /// the folder.
+    /// the folder, following the same rules as documented for listFolder.
     ///
     /// - parameter cursor: The cursor returned by your last call to listFolder or listFolderContinue.
     ///
@@ -340,7 +413,7 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Return revisions of a file
+    /// Return revisions of a file.
     ///
     /// - parameter path: The path to the file you want to see the revisions of.
     /// - parameter limit: The maximum number of revision entries returned.
@@ -356,14 +429,48 @@ open class FilesRoutes {
     /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be moved.
     ///
-    /// - parameter fromPath: Path in the user's Dropbox to be copied or moved.
-    /// - parameter toPath: Path in the user's Dropbox that is the destination.
+    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
+    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
+    /// conflict.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.RelocationError` object on failure.
-    @discardableResult open func move(fromPath: String, toPath: String) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
+    @discardableResult open func move(fromPath: String, toPath: String, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer> {
         let route = Files.move
-        let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath)
+        let serverArgs = Files.RelocationArg(fromPath: fromPath, toPath: toPath, allowSharedFolder: allowSharedFolder, autorename: autorename)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Move multiple files or folders to different locations at once in the user's Dropbox. This route is 'all or
+    /// nothing', which means if one entry fails, the whole transaction will abort. This route will return job ID
+    /// immediately and do the async moving job in background. Please use moveBatchCheck to check the job status.
+    ///
+    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
+    /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
+    /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
+    /// This field is always true for moveBatch.
+    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
+    /// to avoid the conflict.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// or a `Void` object on failure.
+    @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+        let route = Files.moveBatch
+        let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for moveBatch. If success, it returns list of results for each entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchJobStatus` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult open func moveBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.moveBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -459,7 +566,7 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Restore a file to a specific revision
+    /// Restore a file to a specific revision.
     ///
     /// - parameter path: The path to the file you want to restore.
     /// - parameter rev: The revision to restore for the file.
@@ -736,11 +843,11 @@ open class FilesRoutes {
     /// uploadSessionAppendV2 to upload file contents. We recommend uploading many files in parallel to increase
     /// throughput. Once the file contents have been uploaded, rather than calling uploadSessionFinish, use this route
     /// to finish all your upload sessions in a single request. close in UploadSessionStartArg or close in
-    /// UploadSessionAppendArg needs to be true for last uploadSessionStart or uploadSessionAppendV2 call. This route
-    /// will return job_id immediately and do the async commit job in background. We have another route
+    /// UploadSessionAppendArg needs to be true for the last uploadSessionStart or uploadSessionAppendV2 call. This
+    /// route will return a job_id immediately and do the async commit job in background. Use
     /// uploadSessionFinishBatchCheck to check the job status. For the same account, this route should be executed
-    /// serially. That means you should not start next job before current job finishes. Also we only allow up to 1000
-    /// entries in a single request
+    /// serially. That means you should not start the next job before current job finishes. We allow up to 1000 entries
+    /// in a single request.
     ///
     /// - parameter entries: Commit information for each file in the batch.
     ///
@@ -753,7 +860,7 @@ open class FilesRoutes {
     }
 
     /// Returns the status of an asynchronous job for uploadSessionFinishBatch. If success, it returns list of result
-    /// for each entry
+    /// for each entry.
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
@@ -766,9 +873,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
-    /// with the given data.  You can then use uploadSessionAppendV2 to add more data and uploadSessionFinish to save
-    /// all the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
+    /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
+    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
+    /// single request should not upload more than 150 MB of file contents.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -782,9 +890,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
-    /// with the given data.  You can then use uploadSessionAppendV2 to add more data and uploadSessionFinish to save
-    /// all the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
+    /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
+    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
+    /// single request should not upload more than 150 MB of file contents.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -798,9 +907,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Upload sessions allow you to upload a single file using multiple requests. This call starts a new upload session
-    /// with the given data.  You can then use uploadSessionAppendV2 to add more data and uploadSessionFinish to save
-    /// all the data to a file in Dropbox. A single request should not upload more than 150 MB of file contents.
+    /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
+    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
+    /// single request should not upload more than 150 MB of file contents.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.

@@ -16,6 +16,8 @@ open class Auth {
         case invalidSelectUser
         /// The user specified in 'Dropbox-API-Select-Admin' is not a Dropbox Business team admin.
         case invalidSelectAdmin
+        /// The user has been suspended.
+        case userSuspended
         /// An unspecified error.
         case other
 
@@ -39,6 +41,10 @@ open class Auth {
                     var d = [String: JSON]()
                     d[".tag"] = .str("invalid_select_admin")
                     return .dictionary(d)
+                case .userSuspended:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_suspended")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -56,6 +62,8 @@ open class Auth {
                             return AuthError.invalidSelectUser
                         case "invalid_select_admin":
                             return AuthError.invalidSelectAdmin
+                        case "user_suspended":
+                            return AuthError.userSuspended
                         case "other":
                             return AuthError.other
                         default:

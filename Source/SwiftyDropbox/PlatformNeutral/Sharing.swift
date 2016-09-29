@@ -144,7 +144,7 @@ open class Sharing {
         /// If the custom message should be added as a comment on the file.
         open let addMessageAsComment: Bool
         public init(file: String, members: Array<Sharing.MemberSelector>, customMessage: String? = nil, quiet: Bool = false, accessLevel: Sharing.AccessLevel = .viewer, addMessageAsComment: Bool = false) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.members = members
             nullableValidator(stringValidator())(customMessage)
@@ -561,7 +561,7 @@ open class Sharing {
         /// The new access level for the member.
         open let accessLevel: Sharing.AccessLevel
         public init(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.member = member
             self.accessLevel = accessLevel
@@ -1680,7 +1680,7 @@ open class Sharing {
         /// File actions to query.
         open let actions: Array<Sharing.FileAction>?
         public init(file: String, actions: Array<Sharing.FileAction>? = nil) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.actions = actions
         }
@@ -1716,7 +1716,7 @@ open class Sharing {
         /// File actions to query.
         open let actions: Array<Sharing.FileAction>?
         public init(files: Array<String>, actions: Array<Sharing.FileAction>? = nil) {
-            arrayValidator(maxItems: 100, itemValidator: stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)"))(files)
+            arrayValidator(maxItems: 100, itemValidator: stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?"))(files)
             self.files = files
             self.actions = actions
         }
@@ -1752,7 +1752,7 @@ open class Sharing {
         /// The result for this particular file
         open let result: Sharing.GetFileMetadataIndividualResult
         public init(file: String, result: Sharing.GetFileMetadataIndividualResult) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.result = result
         }
@@ -2627,7 +2627,7 @@ open class Sharing {
         /// Number of members to return max per query. Defaults to 100 if no limit is specified.
         open let limit: UInt32
         public init(file: String, actions: Array<Sharing.MemberAction>? = nil, includeInherited: Bool = true, limit: UInt32 = 100) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.actions = actions
             self.includeInherited = includeInherited
@@ -2670,7 +2670,7 @@ open class Sharing {
         /// Number of members to return max per query. Defaults to 10 if no limit is specified.
         open let limit: UInt32
         public init(files: Array<String>, limit: UInt32 = 10) {
-            arrayValidator(maxItems: 100, itemValidator: stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)"))(files)
+            arrayValidator(maxItems: 100, itemValidator: stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?"))(files)
             self.files = files
             comparableValidator(maxValue: 20)(limit)
             self.limit = limit
@@ -2707,7 +2707,7 @@ open class Sharing {
         /// The result for this particular file
         open let result: Sharing.ListFileMembersIndividualResult
         public init(file: String, result: Sharing.ListFileMembersIndividualResult) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.result = result
         }
@@ -3533,7 +3533,7 @@ open class Sharing {
         /// listSharedLinks to retrieve them.
         open let hasMore: Bool
         /// Pass the cursor into listSharedLinks to obtain the additional links. Cursor is returned only if no path is
-        /// given or the path is empty.
+        /// given.
         open let cursor: String?
         public init(links: Array<Sharing.SharedLinkMetadata>, hasMore: Bool, cursor: String? = nil) {
             self.links = links
@@ -4282,7 +4282,7 @@ open class Sharing {
         /// The path or id for the file.
         open let file: String
         public init(file: String) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
         }
         open var description: String {
@@ -4499,7 +4499,7 @@ open class Sharing {
         /// user (not an invitee) if the user's main account corresponds to that email address.
         open let member: Sharing.MemberSelector
         public init(file: String, member: Sharing.MemberSelector) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
             self.member = member
         }
@@ -5007,7 +5007,7 @@ open class Sharing {
         /// Whether to force the share to happen asynchronously.
         open let forceAsync: Bool
         public init(path: String, memberPolicy: Sharing.MemberPolicy = .anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .anyone, forceAsync: Bool = false) {
-            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.memberPolicy = memberPolicy
             self.aclUpdatePolicy = aclUpdatePolicy
@@ -5296,6 +5296,10 @@ open class Sharing {
         case insideSharedFolder
         /// We do not support shared folders that contain shared folders.
         case containsSharedFolder
+        /// We do not support shared folders that contain app folders.
+        case containsAppFolder
+        /// We do not support shared folders that contain team folders.
+        case containsTeamFolder
         /// We do not support sharing an app folder.
         case isAppFolder
         /// We do not support sharing a folder inside an app folder.
@@ -5312,6 +5316,8 @@ open class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
+        /// The path root parameter provided is invalid.
+        case invalidPathRoot(Files.PathRootError)
         /// An unspecified error.
         case other
 
@@ -5334,6 +5340,14 @@ open class Sharing {
                 case .containsSharedFolder:
                     var d = [String: JSON]()
                     d[".tag"] = .str("contains_shared_folder")
+                    return .dictionary(d)
+                case .containsAppFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("contains_app_folder")
+                    return .dictionary(d)
+                case .containsTeamFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("contains_team_folder")
                     return .dictionary(d)
                 case .isAppFolder:
                     var d = [String: JSON]()
@@ -5367,6 +5381,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("inside_osx_package")
                     return .dictionary(d)
+                case .invalidPathRoot(let arg):
+                    var d = Serialization.getFields(Files.PathRootErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("invalid_path_root")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5384,6 +5402,10 @@ open class Sharing {
                             return SharePathError.insideSharedFolder
                         case "contains_shared_folder":
                             return SharePathError.containsSharedFolder
+                        case "contains_app_folder":
+                            return SharePathError.containsAppFolder
+                        case "contains_team_folder":
+                            return SharePathError.containsTeamFolder
                         case "is_app_folder":
                             return SharePathError.isAppFolder
                         case "inside_app_folder":
@@ -5401,6 +5423,9 @@ open class Sharing {
                             return SharePathError.isOsxPackage
                         case "inside_osx_package":
                             return SharePathError.insideOsxPackage
+                        case "invalid_path_root":
+                            let v = Files.PathRootErrorSerializer().deserialize(json)
+                            return SharePathError.invalidPathRoot(v)
                         case "other":
                             return SharePathError.other
                         default:
@@ -6446,7 +6471,7 @@ open class Sharing {
         /// The file to unshare.
         open let file: String
         public init(file: String) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[^:]*:[^:]*)")(file)
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
         }
         open var description: String {

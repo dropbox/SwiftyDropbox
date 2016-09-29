@@ -247,7 +247,6 @@ open class DropboxOAuthManager {
         for urlType in urlTypes {
             let schemes = urlType["CFBundleURLSchemes"] as? [String] ?? []
             for scheme in schemes {
-                print(scheme)
                 if scheme == appScheme {
                     return true
                 }
