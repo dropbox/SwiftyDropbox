@@ -6249,7 +6249,7 @@ open class Sharing {
     open class TransferFolderArg: CustomStringConvertible {
         /// The ID for the shared folder.
         open let sharedFolderId: String
-        /// A account or team member ID to transfer ownership to.
+        /// An account or team member ID to transfer ownership to.
         open let toDropboxId: String
         public init(sharedFolderId: String, toDropboxId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
