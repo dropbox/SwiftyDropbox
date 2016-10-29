@@ -477,7 +477,7 @@ open class SharingTests {
         let addFolderMemberArg = Sharing.AddMember(member: memberSelector)
         tester.sharing.addFolderMember(sharedFolderId: sharedFolderId, members: [addFolderMemberArg], quiet: true).response { response, error in
             if let _ = response {
-                TestFormat.printOffset("Folder memeber added")
+                TestFormat.printOffset("Folder member added")
                 TestFormat.printSubTestEnd(#function)
                 nextTest()
             } else if let callError = error {
