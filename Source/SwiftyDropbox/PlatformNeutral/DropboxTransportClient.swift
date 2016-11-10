@@ -74,7 +74,7 @@ open class DropboxTransportClient {
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
         let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
-        let request = self.manager.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest], encoding: customEncoding, headers: headers)
+        let request = self.manager.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest!], encoding: customEncoding, headers: headers)
         request.task?.priority = URLSessionTask.highPriority
         let rpcRequestObj = RpcRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 

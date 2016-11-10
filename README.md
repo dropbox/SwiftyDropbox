@@ -109,19 +109,6 @@ Then, run the following command to install the dependency:
 $ pod install
 ```
 
-**Note**: If you are encountering `Use Legacy Swift Language Version` and/or `Always Embed Swift Standard Libraries` warnings after running `pod install`, then add the following to the end of your Podfile:
-
-```ruby
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '3.0'
-      config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = 'YES'
-    end
-  end
-end
-```
-
 Once your project is integrated with the Dropbox Swift SDK, you can pull SDK updates using the following command:
 
 ```bash
@@ -143,7 +130,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.1.0
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.1.1
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:

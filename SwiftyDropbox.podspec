@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropbox'
-  s.version      = '4.1.0'
+  s.version      = '4.1.1'
   s.summary      = 'Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.osx.frameworks = 'AppKit', 'Webkit', 'SystemConfiguration', 'Foundation'
   s.ios.frameworks = 'UIKit', 'Webkit', 'SystemConfiguration', 'Foundation'
 
-  s.dependency       'Alamofire', '~> 4.0.0'
+  s.dependency       'Alamofire', '~> 4.0.1'
 end
