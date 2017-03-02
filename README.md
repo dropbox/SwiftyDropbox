@@ -202,27 +202,6 @@ Finally, to retrieve SwiftyDropbox's Alamofire dependency, drag the `Carthage/Ch
 
 ---
 
-## Swift 2.3
-
-SwiftyDropbox currently supports only Swift 3+. However, we have a Swift 2.3 compatible branch, if necessary. To access it, you can either pull the `swift_2_3` branch from the repo, or using one of the following distribution channels: 
-
-#### CocoaPods
-```ruby
-use_frameworks!
-
-target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropbox', :git => 'https://github.com/dropbox/SwiftyDropbox', :branch => 'swift_2_3'
-end
-```
-
-#### Carthage
-```
-# SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 3.4.0
-```
-
----
-
 ## Configure your project
 
 Once you have integrated the Dropbox Swift SDK into your project, there are a few additional steps to take before you can begin making API calls.
