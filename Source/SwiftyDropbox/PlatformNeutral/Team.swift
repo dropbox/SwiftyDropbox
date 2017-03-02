@@ -37,7 +37,7 @@ open class Team {
     open class DeviceSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeviceSession) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "ip_address": NullableSerializer(Serialization._StringSerializer).serialize(value.ipAddress),
             "country": NullableSerializer(Serialization._StringSerializer).serialize(value.country),
@@ -85,7 +85,7 @@ open class Team {
     open class ActiveWebSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ActiveWebSession) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "user_agent": Serialization._StringSerializer.serialize(value.userAgent),
             "os": Serialization._StringSerializer.serialize(value.os),
@@ -124,7 +124,7 @@ open class Team {
     open class AddPropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddPropertyTemplateArg) -> JSON {
-            let output = [
+            let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "description": Serialization._StringSerializer.serialize(value.description_),
             "fields": ArraySerializer(Properties.PropertyFieldTemplateSerializer()).serialize(value.fields),
@@ -159,7 +159,7 @@ open class Team {
     open class AddPropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: AddPropertyTemplateResult) -> JSON {
-            let output = [
+            let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
@@ -267,7 +267,7 @@ open class Team {
     open class ApiAppSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ApiApp) -> JSON {
-            let output = [
+            let output = [ 
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "app_name": Serialization._StringSerializer.serialize(value.appName),
             "is_app_folder": Serialization._BoolSerializer.serialize(value.isAppFolder),
@@ -308,7 +308,7 @@ open class Team {
     open class BaseDfbReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: BaseDfbReport) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             ]
             return .dictionary(output)
@@ -320,6 +320,59 @@ open class Team {
                     return BaseDfbReport(startDate: startDate)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Base error that all errors for existing team folders should extend.
+    public enum BaseTeamFolderError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(BaseTeamFolderErrorSerializer().serialize(self)))"
+        }
+    }
+    open class BaseTeamFolderErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: BaseTeamFolderError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> BaseTeamFolderError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return BaseTeamFolderError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return BaseTeamFolderError.statusError(v)
+                        case "other":
+                            return BaseTeamFolderError.other
+                        default:
+                            return BaseTeamFolderError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -341,7 +394,7 @@ open class Team {
     open class DateRangeSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DateRange) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.startDate),
             "end_date": NullableSerializer(NSDateSerializer("%Y-%m-%d")).serialize(value.endDate),
             ]
@@ -424,7 +477,7 @@ open class Team {
     open class DesktopClientSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DesktopClientSession) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "host_name": Serialization._StringSerializer.serialize(value.hostName),
             "client_type": Team.DesktopPlatformSerializer().serialize(value.clientType),
@@ -536,7 +589,7 @@ open class Team {
     open class DeviceSessionArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DeviceSessionArg) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
@@ -594,7 +647,7 @@ open class Team {
     open class DevicesActiveSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: DevicesActive) -> JSON {
-            let output = [
+            let output = [ 
             "windows": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.windows),
             "macos": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.macos),
             "linux": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.linux),
@@ -692,7 +745,7 @@ open class Team {
     open class GetActivityReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetActivityReport) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "adds": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.adds),
             "edits": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.edits),
@@ -759,7 +812,7 @@ open class Team {
     open class GetDevicesReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetDevicesReport) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "active_1_day": Team.DevicesActiveSerializer().serialize(value.active1Day),
             "active_7_day": Team.DevicesActiveSerializer().serialize(value.active7Day),
@@ -814,7 +867,7 @@ open class Team {
     open class GetMembershipReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetMembershipReport) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "team_size": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.teamSize),
             "pending_invites": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.pendingInvites),
@@ -875,7 +928,7 @@ open class Team {
     open class GetStorageReportSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetStorageReport) -> JSON {
-            let output = [
+            let output = [ 
             "start_date": Serialization._StringSerializer.serialize(value.startDate),
             "total_usage": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.totalUsage),
             "shared_usage": ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).serialize(value.sharedUsage),
@@ -950,7 +1003,7 @@ open class Team {
         open let groupName: String
         /// The creator of a team can associate an arbitrary external ID to the group.
         open let groupExternalId: String?
-        /// Whether the team can be managed by selected users, or only by team admins
+        /// Whether the team can be managed by selected users, or only by team admins.
         open let groupManagementType: TeamCommon.GroupManagementType?
         public init(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) {
             stringValidator()(groupName)
@@ -966,7 +1019,7 @@ open class Team {
     open class GroupCreateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupCreateArg) -> JSON {
-            let output = [
+            let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
             "group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.groupManagementType),
@@ -988,12 +1041,14 @@ open class Team {
 
     /// The GroupCreateError union
     public enum GroupCreateError: CustomStringConvertible {
-        /// There is already an existing group with the requested name.
+        /// The requested group name is already being used by another group.
         case groupNameAlreadyUsed
         /// Group name is empty or has invalid characters.
         case groupNameInvalid
-        /// The new external ID is already being used by another group.
+        /// The requested external ID is already being used by another group.
         case externalIdAlreadyInUse
+        /// System-managed group cannot be manually created.
+        case systemManagedGroupDisallowed
         /// An unspecified error.
         case other
 
@@ -1017,6 +1072,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("external_id_already_in_use")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1034,6 +1093,8 @@ open class Team {
                             return GroupCreateError.groupNameInvalid
                         case "external_id_already_in_use":
                             return GroupCreateError.externalIdAlreadyInUse
+                        case "system_managed_group_disallowed":
+                            return GroupCreateError.systemManagedGroupDisallowed
                         case "other":
                             return GroupCreateError.other
                         default:
@@ -1088,12 +1149,65 @@ open class Team {
         }
     }
 
+    /// Error that can be raised when GroupSelector is used and team groups are disallowed from being used.
+    public enum GroupSelectorWithTeamGroupError: CustomStringConvertible {
+        /// No matching group found. No groups match the specified group ID.
+        case groupNotFound
+        /// An unspecified error.
+        case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupSelectorWithTeamGroupErrorSerializer().serialize(self)))"
+        }
+    }
+    open class GroupSelectorWithTeamGroupErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GroupSelectorWithTeamGroupError) -> JSON {
+            switch value {
+                case .groupNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("group_not_found")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> GroupSelectorWithTeamGroupError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "group_not_found":
+                            return GroupSelectorWithTeamGroupError.groupNotFound
+                        case "other":
+                            return GroupSelectorWithTeamGroupError.other
+                        case "system_managed_group_disallowed":
+                            return GroupSelectorWithTeamGroupError.systemManagedGroupDisallowed
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The GroupDeleteError union
     public enum GroupDeleteError: CustomStringConvertible {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// This group has already been deleted.
         case groupAlreadyDeleted
 
@@ -1113,6 +1227,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .groupAlreadyDeleted:
                     var d = [String: JSON]()
                     d[".tag"] = .str("group_already_deleted")
@@ -1128,6 +1246,8 @@ open class Team {
                             return GroupDeleteError.groupNotFound
                         case "other":
                             return GroupDeleteError.other
+                        case "system_managed_group_disallowed":
+                            return GroupDeleteError.systemManagedGroupDisallowed
                         case "group_already_deleted":
                             return GroupDeleteError.groupAlreadyDeleted
                         default:
@@ -1158,7 +1278,7 @@ open class Team {
     open class GroupFullInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupFullInfo) -> JSON {
-            let output = [
+            let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
@@ -1203,7 +1323,7 @@ open class Team {
     open class GroupMemberInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMemberInfo) -> JSON {
-            let output = [
+            let output = [ 
             "profile": Team.MemberProfileSerializer().serialize(value.profile),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
@@ -1238,7 +1358,7 @@ open class Team {
     open class GroupMemberSelectorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMemberSelector) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
@@ -1263,6 +1383,8 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// The specified user is not a member of this group.
         case memberNotInGroup
 
@@ -1282,6 +1404,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .memberNotInGroup:
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_not_in_group")
@@ -1297,6 +1423,8 @@ open class Team {
                             return GroupMemberSelectorError.groupNotFound
                         case "other":
                             return GroupMemberSelectorError.other
+                        case "system_managed_group_disallowed":
+                            return GroupMemberSelectorError.systemManagedGroupDisallowed
                         case "member_not_in_group":
                             return GroupMemberSelectorError.memberNotInGroup
                         default:
@@ -1314,6 +1442,8 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// The specified user is not a member of this group.
         case memberNotInGroup
         /// A company managed group cannot be managed by a user.
@@ -1335,6 +1465,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .memberNotInGroup:
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_not_in_group")
@@ -1354,6 +1488,8 @@ open class Team {
                             return GroupMemberSetAccessTypeError.groupNotFound
                         case "other":
                             return GroupMemberSetAccessTypeError.other
+                        case "system_managed_group_disallowed":
+                            return GroupMemberSetAccessTypeError.systemManagedGroupDisallowed
                         case "member_not_in_group":
                             return GroupMemberSetAccessTypeError.memberNotInGroup
                         case "user_cannot_be_manager_of_company_managed_group":
@@ -1382,7 +1518,7 @@ open class Team {
     open class IncludeMembersArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: IncludeMembersArg) -> JSON {
-            let output = [
+            let output = [ 
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
             ]
             return .dictionary(output)
@@ -1416,7 +1552,7 @@ open class Team {
     open class GroupMembersAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersAddArg) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "members": ArraySerializer(Team.MemberAccessSerializer()).serialize(value.members),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
@@ -1442,6 +1578,8 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
         /// group.
         case duplicateUser
@@ -1473,6 +1611,10 @@ open class Team {
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
                     return .dictionary(d)
                 case .duplicateUser:
                     var d = [String: JSON]()
@@ -1509,6 +1651,8 @@ open class Team {
                             return GroupMembersAddError.groupNotFound
                         case "other":
                             return GroupMembersAddError.other
+                        case "system_managed_group_disallowed":
+                            return GroupMembersAddError.systemManagedGroupDisallowed
                         case "duplicate_user":
                             return GroupMembersAddError.duplicateUser
                         case "group_not_in_team":
@@ -1551,7 +1695,7 @@ open class Team {
     open class GroupMembersChangeResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersChangeResult) -> JSON {
-            let output = [
+            let output = [ 
             "group_info": Team.GroupFullInfoSerializer().serialize(value.groupInfo),
             "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
@@ -1587,7 +1731,7 @@ open class Team {
     open class GroupMembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersRemoveArg) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.users),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
@@ -1614,6 +1758,8 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// At least one of the specified users is not a member of the group.
         case memberNotInGroup
 
@@ -1633,6 +1779,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .memberNotInGroup:
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_not_in_group")
@@ -1648,6 +1798,8 @@ open class Team {
                             return GroupMembersSelectorError.groupNotFound
                         case "other":
                             return GroupMembersSelectorError.other
+                        case "system_managed_group_disallowed":
+                            return GroupMembersSelectorError.systemManagedGroupDisallowed
                         case "member_not_in_group":
                             return GroupMembersSelectorError.memberNotInGroup
                         default:
@@ -1665,10 +1817,16 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
         /// At least one of the specified users is not a member of the group.
         case memberNotInGroup
         /// Group is not in this team. You cannot remove members from a group that is outside of your team.
         case groupNotInTeam
+        /// These members are not part of your team.
+        case membersNotInTeam(Array<String>)
+        /// These users were not found in Dropbox.
+        case usersNotFound(Array<String>)
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupMembersRemoveErrorSerializer().serialize(self)))"
@@ -1686,6 +1844,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
                 case .memberNotInGroup:
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_not_in_group")
@@ -1693,6 +1855,14 @@ open class Team {
                 case .groupNotInTeam:
                     var d = [String: JSON]()
                     d[".tag"] = .str("group_not_in_team")
+                    return .dictionary(d)
+                case .membersNotInTeam(let arg):
+                    var d = ["members_not_in_team": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                    d[".tag"] = .str("members_not_in_team")
+                    return .dictionary(d)
+                case .usersNotFound(let arg):
+                    var d = ["users_not_found": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                    d[".tag"] = .str("users_not_found")
                     return .dictionary(d)
             }
         }
@@ -1705,10 +1875,18 @@ open class Team {
                             return GroupMembersRemoveError.groupNotFound
                         case "other":
                             return GroupMembersRemoveError.other
+                        case "system_managed_group_disallowed":
+                            return GroupMembersRemoveError.systemManagedGroupDisallowed
                         case "member_not_in_group":
                             return GroupMembersRemoveError.memberNotInGroup
                         case "group_not_in_team":
                             return GroupMembersRemoveError.groupNotInTeam
+                        case "members_not_in_team":
+                            let v = ArraySerializer(Serialization._StringSerializer).deserialize(d["members_not_in_team"] ?? .null)
+                            return GroupMembersRemoveError.membersNotInTeam(v)
+                        case "users_not_found":
+                            let v = ArraySerializer(Serialization._StringSerializer).deserialize(d["users_not_found"] ?? .null)
+                            return GroupMembersRemoveError.usersNotFound(v)
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -1735,7 +1913,7 @@ open class Team {
     open class GroupMembersSelectorSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersSelector) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "users": Team.UsersSelectorArgSerializer().serialize(value.users),
             ]
@@ -1772,7 +1950,7 @@ open class Team {
     open class GroupMembersSetAccessTypeArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupMembersSetAccessTypeArg) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
@@ -1866,7 +2044,7 @@ open class Team {
     open class GroupUpdateArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupUpdateArgs) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "return_members": Serialization._BoolSerializer.serialize(value.returnMembers),
             "new_group_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGroupName),
@@ -1896,7 +2074,13 @@ open class Team {
         case groupNotFound
         /// An unspecified error.
         case other
-        /// The new external ID is already being used by another group.
+        /// This operation is not supported on system-managed groups.
+        case systemManagedGroupDisallowed
+        /// The requested group name is already being used by another group.
+        case groupNameAlreadyUsed
+        /// Group name is empty or has invalid characters.
+        case groupNameInvalid
+        /// The requested external ID is already being used by another group.
         case externalIdAlreadyInUse
 
         public var description: String {
@@ -1915,6 +2099,18 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
+                case .systemManagedGroupDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed_group_disallowed")
+                    return .dictionary(d)
+                case .groupNameAlreadyUsed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("group_name_already_used")
+                    return .dictionary(d)
+                case .groupNameInvalid:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("group_name_invalid")
+                    return .dictionary(d)
                 case .externalIdAlreadyInUse:
                     var d = [String: JSON]()
                     d[".tag"] = .str("external_id_already_in_use")
@@ -1930,6 +2126,12 @@ open class Team {
                             return GroupUpdateError.groupNotFound
                         case "other":
                             return GroupUpdateError.other
+                        case "system_managed_group_disallowed":
+                            return GroupUpdateError.systemManagedGroupDisallowed
+                        case "group_name_already_used":
+                            return GroupUpdateError.groupNameAlreadyUsed
+                        case "group_name_invalid":
+                            return GroupUpdateError.groupNameInvalid
                         case "external_id_already_in_use":
                             return GroupUpdateError.externalIdAlreadyInUse
                         default:
@@ -2045,7 +2247,7 @@ open class Team {
     open class GroupsListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListArg) -> JSON {
-            let output = [
+            let output = [ 
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
@@ -2076,7 +2278,7 @@ open class Team {
     open class GroupsListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListContinueArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2157,7 +2359,7 @@ open class Team {
     open class GroupsListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsListResult) -> JSON {
-            let output = [
+            let output = [ 
             "groups": ArraySerializer(TeamCommon.GroupSummarySerializer()).serialize(value.groups),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2195,7 +2397,7 @@ open class Team {
     open class GroupsMembersListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListArg) -> JSON {
-            let output = [
+            let output = [ 
             "group": Team.GroupSelectorSerializer().serialize(value.group),
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             ]
@@ -2228,7 +2430,7 @@ open class Team {
     open class GroupsMembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListContinueArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2309,7 +2511,7 @@ open class Team {
     open class GroupsMembersListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupsMembersListResult) -> JSON {
-            let output = [
+            let output = [ 
             "members": ArraySerializer(Team.GroupMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -2449,7 +2651,7 @@ open class Team {
     open class ListMemberAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberAppsArg) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             ]
             return .dictionary(output)
@@ -2522,7 +2724,7 @@ open class Team {
     open class ListMemberAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberAppsResult) -> JSON {
-            let output = [
+            let output = [ 
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
             return .dictionary(output)
@@ -2562,7 +2764,7 @@ open class Team {
     open class ListMemberDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberDevicesArg) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -2647,7 +2849,7 @@ open class Team {
     open class ListMemberDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMemberDevicesResult) -> JSON {
-            let output = [
+            let output = [ 
             "active_web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.activeWebSessions),
             "desktop_client_sessions": NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).serialize(value.desktopClientSessions),
             "mobile_client_sessions": NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).serialize(value.mobileClientSessions),
@@ -2684,7 +2886,7 @@ open class Team {
     open class ListMembersAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersAppsArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -2766,7 +2968,7 @@ open class Team {
     open class ListMembersAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersAppsResult) -> JSON {
-            let output = [
+            let output = [ 
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -2812,7 +3014,7 @@ open class Team {
     open class ListMembersDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersDevicesArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -2900,7 +3102,7 @@ open class Team {
     open class ListMembersDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListMembersDevicesResult) -> JSON {
-            let output = [
+            let output = [ 
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -2937,7 +3139,7 @@ open class Team {
     open class ListTeamAppsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamAppsArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -3019,7 +3221,7 @@ open class Team {
     open class ListTeamAppsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamAppsResult) -> JSON {
-            let output = [
+            let output = [ 
             "apps": ArraySerializer(Team.MemberLinkedAppsSerializer()).serialize(value.apps),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -3065,7 +3267,7 @@ open class Team {
     open class ListTeamDevicesArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamDevicesArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             "include_web_sessions": Serialization._BoolSerializer.serialize(value.includeWebSessions),
             "include_desktop_clients": Serialization._BoolSerializer.serialize(value.includeDesktopClients),
@@ -3153,7 +3355,7 @@ open class Team {
     open class ListTeamDevicesResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: ListTeamDevicesResult) -> JSON {
-            let output = [
+            let output = [ 
             "devices": ArraySerializer(Team.MemberDevicesSerializer()).serialize(value.devices),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -3190,7 +3392,7 @@ open class Team {
     open class MemberAccessSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberAccess) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "access_type": Team.GroupAccessTypeSerializer().serialize(value.accessType),
             ]
@@ -3218,13 +3420,15 @@ open class Team {
         open let memberSurname: String
         /// External ID for member.
         open let memberExternalId: String?
+        /// Persistent ID for member. This field is only available to teams using persistent ID SAML configuration.
+        open let memberPersistentId: String?
         /// Whether to send a welcome email to the member. If send_welcome_email is false, no email invitation will be
         /// sent to the user. This may be useful for apps using single sign-on (SSO) flows for onboarding that want to
         /// handle announcements themselves.
         open let sendWelcomeEmail: Bool
         /// (no description)
         open let role: Team.AdminTier
-        public init(memberEmail: String, memberGivenName: String, memberSurname: String, memberExternalId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly) {
+        public init(memberEmail: String, memberGivenName: String, memberSurname: String, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
             stringValidator(minLength: 1, maxLength: 100, pattern: "[^/:?*<>\"|]*")(memberGivenName)
@@ -3233,6 +3437,8 @@ open class Team {
             self.memberSurname = memberSurname
             nullableValidator(stringValidator(maxLength: 64))(memberExternalId)
             self.memberExternalId = memberExternalId
+            nullableValidator(stringValidator())(memberPersistentId)
+            self.memberPersistentId = memberPersistentId
             self.sendWelcomeEmail = sendWelcomeEmail
             self.role = role
         }
@@ -3243,11 +3449,12 @@ open class Team {
     open class MemberAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberAddArg) -> JSON {
-            let output = [
+            let output = [ 
             "member_email": Serialization._StringSerializer.serialize(value.memberEmail),
             "member_given_name": Serialization._StringSerializer.serialize(value.memberGivenName),
             "member_surname": Serialization._StringSerializer.serialize(value.memberSurname),
             "member_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberExternalId),
+            "member_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberPersistentId),
             "send_welcome_email": Serialization._BoolSerializer.serialize(value.sendWelcomeEmail),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
@@ -3260,9 +3467,10 @@ open class Team {
                     let memberGivenName = Serialization._StringSerializer.deserialize(dict["member_given_name"] ?? .null)
                     let memberSurname = Serialization._StringSerializer.deserialize(dict["member_surname"] ?? .null)
                     let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
+                    let memberPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_persistent_id"] ?? .null)
                     let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
                     let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
-                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, sendWelcomeEmail: sendWelcomeEmail, role: role)
+                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, role: role)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3291,6 +3499,11 @@ open class Team {
         case userMigrationFailed(String)
         /// A user with the given external member ID already exists on the team (including in recoverable state).
         case duplicateExternalMemberId(String)
+        /// A user with the given persistent ID already exists on the team (including in recoverable state).
+        case duplicateMemberPersistentId(String)
+        /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
+        /// more information.
+        case persistentIdDisabled(String)
         /// User creation has failed.
         case userCreationFailed(String)
 
@@ -3334,6 +3547,14 @@ open class Team {
                     var d = ["duplicate_external_member_id": Serialization._StringSerializer.serialize(arg)]
                     d[".tag"] = .str("duplicate_external_member_id")
                     return .dictionary(d)
+                case .duplicateMemberPersistentId(let arg):
+                    var d = ["duplicate_member_persistent_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("duplicate_member_persistent_id")
+                    return .dictionary(d)
+                case .persistentIdDisabled(let arg):
+                    var d = ["persistent_id_disabled": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("persistent_id_disabled")
+                    return .dictionary(d)
                 case .userCreationFailed(let arg):
                     var d = ["user_creation_failed": Serialization._StringSerializer.serialize(arg)]
                     d[".tag"] = .str("user_creation_failed")
@@ -3369,6 +3590,12 @@ open class Team {
                         case "duplicate_external_member_id":
                             let v = Serialization._StringSerializer.deserialize(d["duplicate_external_member_id"] ?? .null)
                             return MemberAddResult.duplicateExternalMemberId(v)
+                        case "duplicate_member_persistent_id":
+                            let v = Serialization._StringSerializer.deserialize(d["duplicate_member_persistent_id"] ?? .null)
+                            return MemberAddResult.duplicateMemberPersistentId(v)
+                        case "persistent_id_disabled":
+                            let v = Serialization._StringSerializer.deserialize(d["persistent_id_disabled"] ?? .null)
+                            return MemberAddResult.persistentIdDisabled(v)
                         case "user_creation_failed":
                             let v = Serialization._StringSerializer.deserialize(d["user_creation_failed"] ?? .null)
                             return MemberAddResult.userCreationFailed(v)
@@ -3405,7 +3632,7 @@ open class Team {
     open class MemberDevicesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberDevices) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "web_sessions": NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).serialize(value.webSessions),
             "desktop_clients": NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).serialize(value.desktopClients),
@@ -3445,7 +3672,7 @@ open class Team {
     open class MemberLinkedAppsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberLinkedApps) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "linked_api_apps": ArraySerializer(Team.ApiAppSerializer()).serialize(value.linkedApiApps),
             ]
@@ -3483,7 +3710,12 @@ open class Team {
         /// The user's membership type: full (normal team member) vs limited (does not use a license; no access to the
         /// team's shared quota).
         open let membershipType: Team.TeamMembershipType
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil) {
+        /// The date and time the user joined as a member of a specific team.
+        open let joinedOn: Date?
+        /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used for SAML
+        /// authentication.
+        open let persistentId: String?
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             nullableValidator(stringValidator())(externalId)
@@ -3496,6 +3728,9 @@ open class Team {
             self.status = status
             self.name = name
             self.membershipType = membershipType
+            self.joinedOn = joinedOn
+            nullableValidator(stringValidator())(persistentId)
+            self.persistentId = persistentId
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberProfileSerializer().serialize(self)))"
@@ -3504,7 +3739,7 @@ open class Team {
     open class MemberProfileSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MemberProfile) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
             "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
@@ -3513,6 +3748,8 @@ open class Team {
             "membership_type": Team.TeamMembershipTypeSerializer().serialize(value.membershipType),
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
+            "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
+            "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
             ]
             return .dictionary(output)
         }
@@ -3527,7 +3764,9 @@ open class Team {
                     let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .null)
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
-                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId)
+                    let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
+                    let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
+                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3629,7 +3868,7 @@ open class Team {
     open class MembersAddArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersAddArg) -> JSON {
-            let output = [
+            let output = [ 
             "new_members": ArraySerializer(Team.MemberAddArgSerializer()).serialize(value.newMembers),
             "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
             ]
@@ -3764,7 +4003,7 @@ open class Team {
     open class MembersDeactivateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersDeactivateArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
             ]
@@ -3847,7 +4086,7 @@ open class Team {
     open class MembersGetInfoArgsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersGetInfoArgs) -> JSON {
-            let output = [
+            let output = [ 
             "members": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.members),
             ]
             return .dictionary(output)
@@ -3962,7 +4201,7 @@ open class Team {
     open class MembersListArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListArg) -> JSON {
-            let output = [
+            let output = [ 
             "limit": Serialization._UInt32Serializer.serialize(value.limit),
             "include_removed": Serialization._BoolSerializer.serialize(value.includeRemoved),
             ]
@@ -3995,7 +4234,7 @@ open class Team {
     open class MembersListContinueArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListContinueArg) -> JSON {
-            let output = [
+            let output = [ 
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
@@ -4111,7 +4350,7 @@ open class Team {
     open class MembersListResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersListResult) -> JSON {
-            let output = [
+            let output = [ 
             "members": ArraySerializer(Team.TeamMemberInfoSerializer()).serialize(value.members),
             "cursor": Serialization._StringSerializer.serialize(value.cursor),
             "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
@@ -4145,7 +4384,7 @@ open class Team {
     open class MembersRecoverArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersRecoverArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
@@ -4236,7 +4475,8 @@ open class Team {
         /// argument was provided, then this argument must be provided as well.
         open let transferAdminId: Team.UserSelectorArg?
         /// Downgrade the member to a Basic account. The user will retain the email address associated with their
-        /// Dropbox  account and data in their account that is not restricted to team members.
+        /// Dropbox  account and data in their account that is not restricted to team members. In order to keep the
+        /// account the argument wipe_data should be set to False.
         open let keepAccount: Bool
         public init(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false) {
             self.transferDestId = transferDestId
@@ -4251,7 +4491,7 @@ open class Team {
     open class MembersRemoveArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersRemoveArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "wipe_data": Serialization._BoolSerializer.serialize(value.wipeData),
             "transfer_dest_id": NullableSerializer(Team.UserSelectorArgSerializer()).serialize(value.transferDestId),
@@ -4303,7 +4543,8 @@ open class Team {
         case transferAdminIsNotAdmin
         /// Cannot keep account and transfer the data to another user at the same time.
         case cannotKeepAccountAndTransfer
-        /// Cannot keep account and delete the data at the same time.
+        /// Cannot keep account and delete the data at the same time. To keep the account the argument wipe_data should
+        /// be set to False.
         case cannotKeepAccountAndDeleteData
         /// The email address of the user is too long to be disabled.
         case emailAddressTooLongToBeDisabled
@@ -4490,7 +4731,7 @@ open class Team {
     open class MembersSetPermissionsArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetPermissionsArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_role": Team.AdminTierSerializer().serialize(value.newRole),
             ]
@@ -4601,7 +4842,7 @@ open class Team {
     open class MembersSetPermissionsResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetPermissionsResult) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
@@ -4632,7 +4873,9 @@ open class Team {
         open let newGivenName: String?
         /// New surname for member.
         open let newSurname: String?
-        public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil) {
+        /// New persistent ID. This field only available to teams using persistent ID SAML configuration.
+        open let newPersistentId: String?
+        public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil) {
             self.user = user
             nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$"))(newEmail)
             self.newEmail = newEmail
@@ -4642,6 +4885,8 @@ open class Team {
             self.newGivenName = newGivenName
             nullableValidator(stringValidator(minLength: 1, maxLength: 100, pattern: "[^/:?*<>\"|]*"))(newSurname)
             self.newSurname = newSurname
+            nullableValidator(stringValidator())(newPersistentId)
+            self.newPersistentId = newPersistentId
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileArgSerializer().serialize(self)))"
@@ -4650,12 +4895,13 @@ open class Team {
     open class MembersSetProfileArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersSetProfileArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             "new_email": NullableSerializer(Serialization._StringSerializer).serialize(value.newEmail),
             "new_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newExternalId),
             "new_given_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGivenName),
             "new_surname": NullableSerializer(Serialization._StringSerializer).serialize(value.newSurname),
+            "new_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newPersistentId),
             ]
             return .dictionary(output)
         }
@@ -4667,7 +4913,8 @@ open class Team {
                     let newExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_external_id"] ?? .null)
                     let newGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_given_name"] ?? .null)
                     let newSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_surname"] ?? .null)
-                    return MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname)
+                    let newPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_persistent_id"] ?? .null)
+                    return MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4688,10 +4935,15 @@ open class Team {
         case emailReservedForOtherUser
         /// The external ID is already in use by another team member.
         case externalIdUsedByOtherUser
-        /// Setting profile disallowed
+        /// Pending team member's email cannot be modified.
         case setProfileDisallowed
         /// Parameter new_email cannot be empty.
         case paramCannotBeEmpty
+        /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
+        /// more information.
+        case persistentIdDisabled
+        /// The persistent ID is already in use by another team member.
+        case persistentIdUsedByOtherUser
         /// An unspecified error.
         case other
 
@@ -4735,6 +4987,14 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("param_cannot_be_empty")
                     return .dictionary(d)
+                case .persistentIdDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("persistent_id_disabled")
+                    return .dictionary(d)
+                case .persistentIdUsedByOtherUser:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("persistent_id_used_by_other_user")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4762,6 +5022,10 @@ open class Team {
                             return MembersSetProfileError.setProfileDisallowed
                         case "param_cannot_be_empty":
                             return MembersSetProfileError.paramCannotBeEmpty
+                        case "persistent_id_disabled":
+                            return MembersSetProfileError.persistentIdDisabled
+                        case "persistent_id_used_by_other_user":
+                            return MembersSetProfileError.persistentIdUsedByOtherUser
                         case "other":
                             return MembersSetProfileError.other
                         default:
@@ -4862,7 +5126,7 @@ open class Team {
     open class MembersUnsuspendArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MembersUnsuspendArg) -> JSON {
-            let output = [
+            let output = [ 
             "user": Team.UserSelectorArgSerializer().serialize(value.user),
             ]
             return .dictionary(output)
@@ -5051,7 +5315,7 @@ open class Team {
     open class MobileClientSessionSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: MobileClientSession) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "device_name": Serialization._StringSerializer.serialize(value.deviceName),
             "client_type": Team.MobileClientPlatformSerializer().serialize(value.clientType),
@@ -5099,7 +5363,7 @@ open class Team {
     open class RemovedStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RemovedStatus) -> JSON {
-            let output = [
+            let output = [ 
             "is_recoverable": Serialization._BoolSerializer.serialize(value.isRecoverable),
             ]
             return .dictionary(output)
@@ -5131,7 +5395,7 @@ open class Team {
     open class RevokeDesktopClientArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDesktopClientArg) -> JSON {
-            let output = [
+            let output = [ 
             "session_id": Serialization._StringSerializer.serialize(value.sessionId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "delete_on_unlink": Serialization._BoolSerializer.serialize(value.deleteOnUnlink),
@@ -5219,7 +5483,7 @@ open class Team {
     open class RevokeDeviceSessionBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionBatchArg) -> JSON {
-            let output = [
+            let output = [ 
             "revoke_devices": ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).serialize(value.revokeDevices),
             ]
             return .dictionary(output)
@@ -5284,7 +5548,7 @@ open class Team {
     open class RevokeDeviceSessionBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionBatchResult) -> JSON {
-            let output = [
+            let output = [ 
             "revoke_devices_status": ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).serialize(value.revokeDevicesStatus),
             ]
             return .dictionary(output)
@@ -5368,7 +5632,7 @@ open class Team {
     open class RevokeDeviceSessionStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeDeviceSessionStatus) -> JSON {
-            let output = [
+            let output = [ 
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeDeviceSessionErrorSerializer()).serialize(value.errorType),
             ]
@@ -5408,7 +5672,7 @@ open class Team {
     open class RevokeLinkedApiAppArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedApiAppArg) -> JSON {
-            let output = [
+            let output = [ 
             "app_id": Serialization._StringSerializer.serialize(value.appId),
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "keep_app_folder": Serialization._BoolSerializer.serialize(value.keepAppFolder),
@@ -5442,7 +5706,7 @@ open class Team {
     open class RevokeLinkedApiAppBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedApiAppBatchArg) -> JSON {
-            let output = [
+            let output = [ 
             "revoke_linked_app": ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).serialize(value.revokeLinkedApp),
             ]
             return .dictionary(output)
@@ -5507,7 +5771,7 @@ open class Team {
     open class RevokeLinkedAppBatchResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedAppBatchResult) -> JSON {
-            let output = [
+            let output = [ 
             "revoke_linked_app_status": ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).serialize(value.revokeLinkedAppStatus),
             ]
             return .dictionary(output)
@@ -5591,7 +5855,7 @@ open class Team {
     open class RevokeLinkedAppStatusSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: RevokeLinkedAppStatus) -> JSON {
-            let output = [
+            let output = [ 
             "success": Serialization._BoolSerializer.serialize(value.success),
             "error_type": NullableSerializer(Team.RevokeLinkedAppErrorSerializer()).serialize(value.errorType),
             ]
@@ -5628,7 +5892,7 @@ open class Team {
     open class StorageBucketSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: StorageBucket) -> JSON {
-            let output = [
+            let output = [ 
             "bucket": Serialization._StringSerializer.serialize(value.bucket),
             "users": Serialization._UInt64Serializer.serialize(value.users),
             ]
@@ -5642,6 +5906,907 @@ open class Team {
                     return StorageBucket(bucket: bucket, users: users)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderAccessError union
+    public enum TeamFolderAccessError: CustomStringConvertible {
+        /// The team folder ID is invalid.
+        case invalidTeamFolderId
+        /// The authenticated app does not have permission to manage that team folder.
+        case noAccess
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderAccessErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderAccessErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderAccessError) -> JSON {
+            switch value {
+                case .invalidTeamFolderId:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_team_folder_id")
+                    return .dictionary(d)
+                case .noAccess:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_access")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderAccessError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_team_folder_id":
+                            return TeamFolderAccessError.invalidTeamFolderId
+                        case "no_access":
+                            return TeamFolderAccessError.noAccess
+                        case "other":
+                            return TeamFolderAccessError.other
+                        default:
+                            return TeamFolderAccessError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderActivateError union
+    public enum TeamFolderActivateError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderActivateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderActivateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderActivateError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderActivateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return TeamFolderActivateError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return TeamFolderActivateError.statusError(v)
+                        case "other":
+                            return TeamFolderActivateError.other
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderIdArg struct
+    open class TeamFolderIdArg: CustomStringConvertible {
+        /// The ID of the team folder.
+        open let teamFolderId: String
+        public init(teamFolderId: String) {
+            stringValidator(pattern: "[-_0-9a-zA-Z:]+")(teamFolderId)
+            self.teamFolderId = teamFolderId
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderIdArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderIdArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderIdArg) -> JSON {
+            let output = [ 
+            "team_folder_id": Serialization._StringSerializer.serialize(value.teamFolderId),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderIdArg {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderId = Serialization._StringSerializer.deserialize(dict["team_folder_id"] ?? .null)
+                    return TeamFolderIdArg(teamFolderId: teamFolderId)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderArchiveArg struct
+    open class TeamFolderArchiveArg: Team.TeamFolderIdArg {
+        /// Whether to force the archive to happen synchronously.
+        open let forceAsyncOff: Bool
+        public init(teamFolderId: String, forceAsyncOff: Bool = false) {
+            self.forceAsyncOff = forceAsyncOff
+            super.init(teamFolderId: teamFolderId)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderArchiveArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderArchiveArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderArchiveArg) -> JSON {
+            let output = [ 
+            "team_folder_id": Serialization._StringSerializer.serialize(value.teamFolderId),
+            "force_async_off": Serialization._BoolSerializer.serialize(value.forceAsyncOff),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderArchiveArg {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderId = Serialization._StringSerializer.deserialize(dict["team_folder_id"] ?? .null)
+                    let forceAsyncOff = Serialization._BoolSerializer.deserialize(dict["force_async_off"] ?? .number(0))
+                    return TeamFolderArchiveArg(teamFolderId: teamFolderId, forceAsyncOff: forceAsyncOff)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderArchiveError union
+    public enum TeamFolderArchiveError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderArchiveErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderArchiveErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderArchiveError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderArchiveError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return TeamFolderArchiveError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return TeamFolderArchiveError.statusError(v)
+                        case "other":
+                            return TeamFolderArchiveError.other
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderArchiveJobStatus union
+    public enum TeamFolderArchiveJobStatus: CustomStringConvertible {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// The archive job has finished. The value is the metadata for the resulting team folder.
+        case complete(Team.TeamFolderMetadata)
+        /// Error occurred while performing an asynchronous job from teamFolderArchive.
+        case failed(Team.TeamFolderArchiveError)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderArchiveJobStatusSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderArchiveJobStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderArchiveJobStatus) -> JSON {
+            switch value {
+                case .inProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("in_progress")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Team.TeamFolderMetadataSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+                case .failed(let arg):
+                    var d = ["failed": Team.TeamFolderArchiveErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("failed")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderArchiveJobStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "in_progress":
+                            return TeamFolderArchiveJobStatus.inProgress
+                        case "complete":
+                            let v = Team.TeamFolderMetadataSerializer().deserialize(json)
+                            return TeamFolderArchiveJobStatus.complete(v)
+                        case "failed":
+                            let v = Team.TeamFolderArchiveErrorSerializer().deserialize(d["failed"] ?? .null)
+                            return TeamFolderArchiveJobStatus.failed(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderArchiveLaunch union
+    public enum TeamFolderArchiveLaunch: CustomStringConvertible {
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
+        case asyncJobId(String)
+        /// An unspecified error.
+        case complete(Team.TeamFolderMetadata)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderArchiveLaunchSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderArchiveLaunchSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderArchiveLaunch) -> JSON {
+            switch value {
+                case .asyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("async_job_id")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Team.TeamFolderMetadataSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderArchiveLaunch {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                            return TeamFolderArchiveLaunch.asyncJobId(v)
+                        case "complete":
+                            let v = Team.TeamFolderMetadataSerializer().deserialize(json)
+                            return TeamFolderArchiveLaunch.complete(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderCreateArg struct
+    open class TeamFolderCreateArg: CustomStringConvertible {
+        /// Name for the new team folder.
+        open let name: String
+        public init(name: String) {
+            stringValidator()(name)
+            self.name = name
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderCreateArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderCreateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderCreateArg) -> JSON {
+            let output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderCreateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return TeamFolderCreateArg(name: name)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderCreateError union
+    public enum TeamFolderCreateError: CustomStringConvertible {
+        /// The provided name cannot be used.
+        case invalidFolderName
+        /// There is already a team folder with the provided name.
+        case folderNameAlreadyUsed
+        /// The provided name cannot be used because it is reserved.
+        case folderNameReserved
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderCreateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderCreateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderCreateError) -> JSON {
+            switch value {
+                case .invalidFolderName:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_folder_name")
+                    return .dictionary(d)
+                case .folderNameAlreadyUsed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_name_already_used")
+                    return .dictionary(d)
+                case .folderNameReserved:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_name_reserved")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderCreateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_folder_name":
+                            return TeamFolderCreateError.invalidFolderName
+                        case "folder_name_already_used":
+                            return TeamFolderCreateError.folderNameAlreadyUsed
+                        case "folder_name_reserved":
+                            return TeamFolderCreateError.folderNameReserved
+                        case "other":
+                            return TeamFolderCreateError.other
+                        default:
+                            return TeamFolderCreateError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderGetInfoItem union
+    public enum TeamFolderGetInfoItem: CustomStringConvertible {
+        /// An ID that was provided as a parameter to teamFolderGetInfo did not match any of the team's team folders.
+        case idNotFound(String)
+        /// Properties of a team folder.
+        case teamFolderMetadata(Team.TeamFolderMetadata)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderGetInfoItemSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderGetInfoItemSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderGetInfoItem) -> JSON {
+            switch value {
+                case .idNotFound(let arg):
+                    var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("id_not_found")
+                    return .dictionary(d)
+                case .teamFolderMetadata(let arg):
+                    var d = Serialization.getFields(Team.TeamFolderMetadataSerializer().serialize(arg))
+                    d[".tag"] = .str("team_folder_metadata")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderGetInfoItem {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "id_not_found":
+                            let v = Serialization._StringSerializer.deserialize(d["id_not_found"] ?? .null)
+                            return TeamFolderGetInfoItem.idNotFound(v)
+                        case "team_folder_metadata":
+                            let v = Team.TeamFolderMetadataSerializer().deserialize(json)
+                            return TeamFolderGetInfoItem.teamFolderMetadata(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderIdListArg struct
+    open class TeamFolderIdListArg: CustomStringConvertible {
+        /// The list of team folder IDs.
+        open let teamFolderIds: Array<String>
+        public init(teamFolderIds: Array<String>) {
+            arrayValidator(minItems: 1, itemValidator: stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(teamFolderIds)
+            self.teamFolderIds = teamFolderIds
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderIdListArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderIdListArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderIdListArg) -> JSON {
+            let output = [ 
+            "team_folder_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.teamFolderIds),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderIdListArg {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["team_folder_ids"] ?? .null)
+                    return TeamFolderIdListArg(teamFolderIds: teamFolderIds)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderInvalidStatusError union
+    public enum TeamFolderInvalidStatusError: CustomStringConvertible {
+        /// The folder is active and the operation did not succeed.
+        case active
+        /// The folder is archived and the operation did not succeed.
+        case archived
+        /// The folder is being archived and the operation did not succeed.
+        case archiveInProgress
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderInvalidStatusErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderInvalidStatusErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderInvalidStatusError) -> JSON {
+            switch value {
+                case .active:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("active")
+                    return .dictionary(d)
+                case .archived:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("archived")
+                    return .dictionary(d)
+                case .archiveInProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("archive_in_progress")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderInvalidStatusError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "active":
+                            return TeamFolderInvalidStatusError.active
+                        case "archived":
+                            return TeamFolderInvalidStatusError.archived
+                        case "archive_in_progress":
+                            return TeamFolderInvalidStatusError.archiveInProgress
+                        case "other":
+                            return TeamFolderInvalidStatusError.other
+                        default:
+                            return TeamFolderInvalidStatusError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderListArg struct
+    open class TeamFolderListArg: CustomStringConvertible {
+        /// The maximum number of results to return per request.
+        open let limit: UInt32
+        public init(limit: UInt32 = 1000) {
+            comparableValidator(minValue: 1, maxValue: 1000)(limit)
+            self.limit = limit
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderListArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderListArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderListArg) -> JSON {
+            let output = [ 
+            "limit": Serialization._UInt32Serializer.serialize(value.limit),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderListArg {
+            switch json {
+                case .dictionary(let dict):
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    return TeamFolderListArg(limit: limit)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderListError struct
+    open class TeamFolderListError: CustomStringConvertible {
+        /// (no description)
+        open let accessError: Team.TeamFolderAccessError
+        public init(accessError: Team.TeamFolderAccessError) {
+            self.accessError = accessError
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderListErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderListErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderListError) -> JSON {
+            let output = [ 
+            "access_error": Team.TeamFolderAccessErrorSerializer().serialize(value.accessError),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderListError {
+            switch json {
+                case .dictionary(let dict):
+                    let accessError = Team.TeamFolderAccessErrorSerializer().deserialize(dict["access_error"] ?? .null)
+                    return TeamFolderListError(accessError: accessError)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Result for teamFolderList.
+    open class TeamFolderListResult: CustomStringConvertible {
+        /// List of all team folders in the authenticated team.
+        open let teamFolders: Array<Team.TeamFolderMetadata>
+        public init(teamFolders: Array<Team.TeamFolderMetadata>) {
+            self.teamFolders = teamFolders
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderListResultSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderListResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderListResult) -> JSON {
+            let output = [ 
+            "team_folders": ArraySerializer(Team.TeamFolderMetadataSerializer()).serialize(value.teamFolders),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderListResult {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolders = ArraySerializer(Team.TeamFolderMetadataSerializer()).deserialize(dict["team_folders"] ?? .null)
+                    return TeamFolderListResult(teamFolders: teamFolders)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Properties of a team folder.
+    open class TeamFolderMetadata: CustomStringConvertible {
+        /// The ID of the team folder.
+        open let teamFolderId: String
+        /// The name of the team folder.
+        open let name: String
+        /// The status of the team folder.
+        open let status: Team.TeamFolderStatus
+        public init(teamFolderId: String, name: String, status: Team.TeamFolderStatus) {
+            stringValidator(pattern: "[-_0-9a-zA-Z:]+")(teamFolderId)
+            self.teamFolderId = teamFolderId
+            stringValidator()(name)
+            self.name = name
+            self.status = status
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderMetadataSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderMetadataSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderMetadata) -> JSON {
+            let output = [ 
+            "team_folder_id": Serialization._StringSerializer.serialize(value.teamFolderId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "status": Team.TeamFolderStatusSerializer().serialize(value.status),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderMetadata {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderId = Serialization._StringSerializer.deserialize(dict["team_folder_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let status = Team.TeamFolderStatusSerializer().deserialize(dict["status"] ?? .null)
+                    return TeamFolderMetadata(teamFolderId: teamFolderId, name: name, status: status)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderPermanentlyDeleteError union
+    public enum TeamFolderPermanentlyDeleteError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderPermanentlyDeleteErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderPermanentlyDeleteErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderPermanentlyDeleteError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderPermanentlyDeleteError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return TeamFolderPermanentlyDeleteError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return TeamFolderPermanentlyDeleteError.statusError(v)
+                        case "other":
+                            return TeamFolderPermanentlyDeleteError.other
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderRenameArg struct
+    open class TeamFolderRenameArg: Team.TeamFolderIdArg {
+        /// New team folder name.
+        open let name: String
+        public init(teamFolderId: String, name: String) {
+            stringValidator()(name)
+            self.name = name
+            super.init(teamFolderId: teamFolderId)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderRenameArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderRenameArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderRenameArg) -> JSON {
+            let output = [ 
+            "team_folder_id": Serialization._StringSerializer.serialize(value.teamFolderId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderRenameArg {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderId = Serialization._StringSerializer.deserialize(dict["team_folder_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return TeamFolderRenameArg(teamFolderId: teamFolderId, name: name)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderRenameError union
+    public enum TeamFolderRenameError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case other
+        /// The provided folder name cannot be used.
+        case invalidFolderName
+        /// There is already a team folder with the same name.
+        case folderNameAlreadyUsed
+        /// The provided name cannot be used because it is reserved.
+        case folderNameReserved
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderRenameErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderRenameErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderRenameError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .invalidFolderName:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_folder_name")
+                    return .dictionary(d)
+                case .folderNameAlreadyUsed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_name_already_used")
+                    return .dictionary(d)
+                case .folderNameReserved:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_name_reserved")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderRenameError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return TeamFolderRenameError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return TeamFolderRenameError.statusError(v)
+                        case "other":
+                            return TeamFolderRenameError.other
+                        case "invalid_folder_name":
+                            return TeamFolderRenameError.invalidFolderName
+                        case "folder_name_already_used":
+                            return TeamFolderRenameError.folderNameAlreadyUsed
+                        case "folder_name_reserved":
+                            return TeamFolderRenameError.folderNameReserved
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderStatus union
+    public enum TeamFolderStatus: CustomStringConvertible {
+        /// The team folder and sub-folders are available to all members.
+        case active
+        /// The team folder is not accessible outside of the team folder manager.
+        case archived
+        /// The team folder is not accessible outside of the team folder manager.
+        case archiveInProgress
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderStatusSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderStatus) -> JSON {
+            switch value {
+                case .active:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("active")
+                    return .dictionary(d)
+                case .archived:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("archived")
+                    return .dictionary(d)
+                case .archiveInProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("archive_in_progress")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "active":
+                            return TeamFolderStatus.active
+                        case "archived":
+                            return TeamFolderStatus.archived
+                        case "archive_in_progress":
+                            return TeamFolderStatus.archiveInProgress
+                        case "other":
+                            return TeamFolderStatus.other
+                        default:
+                            return TeamFolderStatus.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -5676,7 +6841,7 @@ open class Team {
     open class TeamGetInfoResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamGetInfoResult) -> JSON {
-            let output = [
+            let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
             "team_id": Serialization._StringSerializer.serialize(value.teamId),
             "num_licensed_users": Serialization._UInt32Serializer.serialize(value.numLicensedUsers),
@@ -5717,7 +6882,7 @@ open class Team {
     open class TeamMemberInfoSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberInfo) -> JSON {
-            let output = [
+            let output = [ 
             "profile": Team.TeamMemberProfileSerializer().serialize(value.profile),
             "role": Team.AdminTierSerializer().serialize(value.role),
             ]
@@ -5739,10 +6904,10 @@ open class Team {
     open class TeamMemberProfile: Team.MemberProfile {
         /// List of group IDs of groups that the user belongs to.
         open let groups: Array<String>
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, externalId: String? = nil, accountId: String? = nil) {
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil) {
             arrayValidator(itemValidator: stringValidator())(groups)
             self.groups = groups
-            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId)
+            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
@@ -5751,7 +6916,7 @@ open class Team {
     open class TeamMemberProfileSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberProfile) -> JSON {
-            let output = [
+            let output = [ 
             "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
             "email": Serialization._StringSerializer.serialize(value.email),
             "email_verified": Serialization._BoolSerializer.serialize(value.emailVerified),
@@ -5761,6 +6926,8 @@ open class Team {
             "groups": ArraySerializer(Serialization._StringSerializer).serialize(value.groups),
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
+            "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
+            "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
             ]
             return .dictionary(output)
         }
@@ -5776,7 +6943,9 @@ open class Team {
                     let groups = ArraySerializer(Serialization._StringSerializer).deserialize(dict["groups"] ?? .null)
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
-                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, externalId: externalId, accountId: accountId)
+                    let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
+                    let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
+                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5915,7 +7084,7 @@ open class Team {
     open class UpdatePropertyTemplateArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdatePropertyTemplateArg) -> JSON {
-            let output = [
+            let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             "name": NullableSerializer(Serialization._StringSerializer).serialize(value.name),
             "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
@@ -5952,7 +7121,7 @@ open class Team {
     open class UpdatePropertyTemplateResultSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: UpdatePropertyTemplateResult) -> JSON {
-            let output = [
+            let output = [ 
             "template_id": Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
@@ -6079,56 +7248,6 @@ open class Team {
 
     /// Stone Route Objects
 
-    static let alphaGroupsCreate = Route(
-        name: "alpha/groups/create",
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.GroupCreateArgSerializer(),
-        responseSerializer: Team.GroupFullInfoSerializer(),
-        errorSerializer: Team.GroupCreateErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let alphaGroupsGetInfo = Route(
-        name: "alpha/groups/get_info",
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.GroupsSelectorSerializer(),
-        responseSerializer: ArraySerializer(Team.GroupsGetInfoItemSerializer()),
-        errorSerializer: Team.GroupsGetInfoErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let alphaGroupsList = Route(
-        name: "alpha/groups/list",
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.GroupsListArgSerializer(),
-        responseSerializer: Team.GroupsListResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let alphaGroupsListContinue = Route(
-        name: "alpha/groups/list/continue",
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.GroupsListContinueArgSerializer(),
-        responseSerializer: Team.GroupsListResultSerializer(),
-        errorSerializer: Team.GroupsListContinueErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
-    static let alphaGroupsUpdate = Route(
-        name: "alpha/groups/update",
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.GroupUpdateArgsSerializer(),
-        responseSerializer: Team.GroupFullInfoSerializer(),
-        errorSerializer: Team.GroupUpdateErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
     static let devicesListMemberDevices = Route(
         name: "devices/list_member_devices",
         namespace: "team",
@@ -6566,6 +7685,86 @@ open class Team {
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetStorageReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderActivate = Route(
+        name: "team_folder/activate",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderIdArgSerializer(),
+        responseSerializer: Team.TeamFolderMetadataSerializer(),
+        errorSerializer: Team.TeamFolderActivateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderArchive = Route(
+        name: "team_folder/archive",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderArchiveArgSerializer(),
+        responseSerializer: Team.TeamFolderArchiveLaunchSerializer(),
+        errorSerializer: Team.TeamFolderArchiveErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderArchiveCheck = Route(
+        name: "team_folder/archive/check",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Team.TeamFolderArchiveJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderCreate = Route(
+        name: "team_folder/create",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderCreateArgSerializer(),
+        responseSerializer: Team.TeamFolderMetadataSerializer(),
+        errorSerializer: Team.TeamFolderCreateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderGetInfo = Route(
+        name: "team_folder/get_info",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderIdListArgSerializer(),
+        responseSerializer: ArraySerializer(Team.TeamFolderGetInfoItemSerializer()),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderList = Route(
+        name: "team_folder/list",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderListArgSerializer(),
+        responseSerializer: Team.TeamFolderListResultSerializer(),
+        errorSerializer: Team.TeamFolderListErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderPermanentlyDelete = Route(
+        name: "team_folder/permanently_delete",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderIdArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Team.TeamFolderPermanentlyDeleteErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderRename = Route(
+        name: "team_folder/rename",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderRenameArgSerializer(),
+        responseSerializer: Team.TeamFolderMetadataSerializer(),
+        errorSerializer: Team.TeamFolderRenameErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )

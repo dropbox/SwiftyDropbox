@@ -169,7 +169,8 @@ open class TeamPolicies {
         }
     }
 
-    /// Policy governing the visibility of newly created shared links.
+    /// Policy governing the visibility of shared links. This policy can apply to newly created shared links, or all
+    /// shared links.
     public enum SharedLinkCreatePolicy: CustomStringConvertible {
         /// By default, anyone can access newly created shared links. No login will be required to access the shared
         /// links unless overridden.
@@ -177,8 +178,8 @@ open class TeamPolicies {
         /// By default, only members of the same team can access newly created shared links. Login will be required to
         /// access the shared links unless overridden.
         case defaultTeamOnly
-        /// Only members of the same team can access newly created shared links. Login will be required to access the
-        /// shared links.
+        /// Only members of the same team can access all shared links. Login will be required to access all shared
+        /// links.
         case teamOnly
         /// An unspecified error.
         case other
@@ -251,7 +252,7 @@ open class TeamPolicies {
     open class TeamMemberPoliciesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamMemberPolicies) -> JSON {
-            let output = [
+            let output = [ 
             "sharing": TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharing),
             "emm_state": TeamPolicies.EmmStateSerializer().serialize(value.emmState),
             ]
@@ -275,7 +276,7 @@ open class TeamPolicies {
         open let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
         /// Which shared folders team members can join.
         open let sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy
-        /// What is the visibility of newly created shared links.
+        /// Who can view shared links owned by team members.
         open let sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy
         public init(sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy, sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy, sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
@@ -289,7 +290,7 @@ open class TeamPolicies {
     open class TeamSharingPoliciesSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamSharingPolicies) -> JSON {
-            let output = [
+            let output = [ 
             "shared_folder_member_policy": TeamPolicies.SharedFolderMemberPolicySerializer().serialize(value.sharedFolderMemberPolicy),
             "shared_folder_join_policy": TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
             "shared_link_create_policy": TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),

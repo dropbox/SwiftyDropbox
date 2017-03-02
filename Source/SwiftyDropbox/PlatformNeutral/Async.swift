@@ -108,7 +108,7 @@ open class Async {
     open class PollArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: PollArg) -> JSON {
-            let output = [
+            let output = [ 
             "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
             return .dictionary(output)

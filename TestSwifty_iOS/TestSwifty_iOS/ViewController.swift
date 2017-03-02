@@ -28,6 +28,7 @@ class ViewController: UIViewController {
         let unlink = {
             DropboxClientsManager.unlinkClients()
             self.checkButtons()
+            exit(0)
         }
         
         switch(appPermission) {

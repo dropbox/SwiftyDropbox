@@ -10,10 +10,12 @@ import Foundation
 open class TeamCommon {
     /// The group type determines how a group is managed.
     public enum GroupManagementType: CustomStringConvertible {
-        /// A group which is managed by team admins only.
-        case companyManaged
         /// A group which is managed by selected users.
         case userManaged
+        /// A group which is managed by team admins only.
+        case companyManaged
+        /// A group which is managed automatically by Dropbox.
+        case systemManaged
         /// An unspecified error.
         case other
 
@@ -25,13 +27,17 @@ open class TeamCommon {
         public init() { }
         open func serialize(_ value: GroupManagementType) -> JSON {
             switch value {
+                case .userManaged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_managed")
+                    return .dictionary(d)
                 case .companyManaged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("company_managed")
                     return .dictionary(d)
-                case .userManaged:
+                case .systemManaged:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("user_managed")
+                    d[".tag"] = .str("system_managed")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -44,10 +50,12 @@ open class TeamCommon {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "company_managed":
-                            return GroupManagementType.companyManaged
                         case "user_managed":
                             return GroupManagementType.userManaged
+                        case "company_managed":
+                            return GroupManagementType.companyManaged
+                        case "system_managed":
+                            return GroupManagementType.systemManaged
                         case "other":
                             return GroupManagementType.other
                         default:
@@ -89,7 +97,7 @@ open class TeamCommon {
     open class GroupSummarySerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GroupSummary) -> JSON {
-            let output = [
+            let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
             "group_id": Serialization._StringSerializer.serialize(value.groupId),
             "group_management_type": TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
@@ -161,6 +169,41 @@ open class TeamCommon {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Time range.
+    open class TimeRange: CustomStringConvertible {
+        /// Optional starting time (inclusive).
+        open let startTime: Date?
+        /// Optional ending time (exclusive).
+        open let endTime: Date?
+        public init(startTime: Date? = nil, endTime: Date? = nil) {
+            self.startTime = startTime
+            self.endTime = endTime
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TimeRangeSerializer().serialize(self)))"
+        }
+    }
+    open class TimeRangeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TimeRange) -> JSON {
+            let output = [ 
+            "start_time": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.startTime),
+            "end_time": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.endTime),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TimeRange {
+            switch json {
+                case .dictionary(let dict):
+                    let startTime = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["start_time"] ?? .null)
+                    let endTime = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["end_time"] ?? .null)
+                    return TimeRange(startTime: startTime, endTime: endTime)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }

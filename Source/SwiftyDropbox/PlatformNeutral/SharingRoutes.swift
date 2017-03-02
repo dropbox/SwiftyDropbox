@@ -47,7 +47,7 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Changes a member's access on a shared file.
+    /// Identical to update_file_member but with less information returned.
     ///
     /// - parameter file: File for which we are changing a member's access.
     /// - parameter member: The member whose access we are changing.
@@ -55,6 +55,7 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.
+    @available(*, unavailable, message:"change_file_member_access is deprecated. Use update_file_member.")
     @discardableResult open func changeFileMemberAccess(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
         let route = Sharing.changeFileMemberAccess
         let serverArgs = Sharing.ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
@@ -246,7 +247,7 @@ open class SharingRoutes {
     /// Use to obtain the members who have been invited to a file, both inherited and uninherited members.
     ///
     /// - parameter file: The file for which you want to see members.
-    /// - parameter actions: The actions for which to return permissions on a member
+    /// - parameter actions: The actions for which to return permissions on a member.
     /// - parameter includeInherited: Whether to include members who only have access from a parent shared folder.
     /// - parameter limit: Number of members to return max per query. Defaults to 100 if no limit is specified.
     ///
@@ -260,7 +261,7 @@ open class SharingRoutes {
 
     /// Get members of multiple files at once. The arguments to this route are more limited, and the limit on query
     /// result size per file is more strict. To customize the results more, use the individual file endpoint. Inherited
-    /// users are not included in the result, and permissions are not returned for this endpoint.
+    /// users and groups are not included in the result, and permissions are not returned for this endpoint.
     ///
     /// - parameter files: Files for which to return members.
     /// - parameter limit: Number of members to return max per query. Defaults to 10 if no limit is specified.
@@ -388,7 +389,7 @@ open class SharingRoutes {
 
     /// Get more results with a cursor from listReceivedFiles.
     ///
-    /// - parameter cursor: Cursor in cursor in ListFilesResult
+    /// - parameter cursor: Cursor in cursor in ListFilesResult.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.ListFilesContinueError` object on failure.
@@ -537,7 +538,7 @@ open class SharingRoutes {
     }
 
     /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders will be completed
-    /// asynchronously. To make testing the async case repeatable, set `ShareFolderArg.force_async`. If an asyncJobId in
+    /// asynchronously. To make testing the async case repeatable, set `ShareFolderArg.force_async`. If a asyncJobId in
     /// ShareFolderLaunch is returned, you'll need to call checkShareJobStatus until the action completes to get the
     /// metadata for the folder. Apps must have full Dropbox access to use this endpoint.
     ///
@@ -548,12 +549,17 @@ open class SharingRoutes {
     /// - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
     /// - parameter forceAsync: Whether to force the share to happen asynchronously.
+    /// - parameter actions: This is a list indicating whether each returned folder data entry will include a boolean
+    /// field allow in FolderPermission that describes whether the current user can perform the `FolderAction` on the
+    /// folder.
+    /// - parameter linkSettings: Settings on the link for this folder.
+    /// - parameter viewerInfoPolicy: Who can enable/disable viewer info for this shared folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.ShareFolderError` object on failure.
-    @discardableResult open func shareFolder(path: String, memberPolicy: Sharing.MemberPolicy = .anyone, aclUpdatePolicy: Sharing.AclUpdatePolicy = .owner, sharedLinkPolicy: Sharing.SharedLinkPolicy = .anyone, forceAsync: Bool = false) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
+    @discardableResult open func shareFolder(path: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, forceAsync: Bool = false, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
         let route = Sharing.shareFolder
-        let serverArgs = Sharing.ShareFolderArg(path: path, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, forceAsync: forceAsync)
+        let serverArgs = Sharing.ShareFolderArg(path: path, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, forceAsync: forceAsync, actions: actions, linkSettings: linkSettings, viewerInfoPolicy: viewerInfoPolicy)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -561,7 +567,7 @@ open class SharingRoutes {
     /// access to the shared folder to perform a transfer. Apps must have full Dropbox access to use this endpoint.
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
-    /// - parameter toDropboxId: An account or team member ID to transfer ownership to.
+    /// - parameter toDropboxId: A account or team member ID to transfer ownership to.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.TransferFolderError` object on failure.
@@ -612,6 +618,17 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Changes a member's access on a shared file.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
+    /// success or a `Sharing.FileMemberActionError` object on failure.
+    @discardableResult open func updateFileMember(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.FileMemberActionErrorSerializer> {
+        let route = Sharing.updateFileMember
+        let serverArgs = Sharing.UpdateFileMemberArgs(file: file, member: member, accessLevel: accessLevel)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Allows an owner or editor of a shared folder to update another member's permissions. Apps must have full Dropbox
     /// access to use this endpoint.
     ///
@@ -635,14 +652,16 @@ open class SharingRoutes {
     /// - parameter memberPolicy: Who can be a member of this shared folder. Only applicable if the current user is on a
     /// team.
     /// - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
+    /// - parameter viewerInfoPolicy: Who can enable/disable viewer info for this shared folder.
     /// - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
+    /// - parameter linkSettings: Settings on the link for this folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.UpdateFolderPolicyError` object on failure.
-    @discardableResult open func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
+    @discardableResult open func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, linkSettings: Sharing.LinkSettings? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
         let route = Sharing.updateFolderPolicy
-        let serverArgs = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy)
+        let serverArgs = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, viewerInfoPolicy: viewerInfoPolicy, sharedLinkPolicy: sharedLinkPolicy, linkSettings: linkSettings)
         return client.request(route, serverArgs: serverArgs)
     }
 

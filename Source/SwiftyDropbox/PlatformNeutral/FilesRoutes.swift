@@ -99,9 +99,9 @@ open class FilesRoutes {
     /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
     /// to avoid the conflict.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
-    /// or a `Void` object on failure.
-    @discardableResult open func copyBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchLaunch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func copyBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
         let route = Files.copyBatch
         let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
@@ -178,9 +178,9 @@ open class FilesRoutes {
     /// the delete batch asynchronously. Use deleteBatchCheck to check the job status.
     ///
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    ///  - returns: Through the response callback, the caller will receive a `Files.DeleteBatchLaunch` object on success
     /// or a `Void` object on failure.
-    @discardableResult open func deleteBatch(entries: Array<Files.DeleteArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+    @discardableResult open func deleteBatch(entries: Array<Files.DeleteArg>) -> RpcRequest<Files.DeleteBatchLaunchSerializer, VoidSerializer> {
         let route = Files.deleteBatch
         let serverArgs = Files.DeleteBatchArg(entries: entries)
         return client.request(route, serverArgs: serverArgs)
@@ -453,9 +453,9 @@ open class FilesRoutes {
     /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
     /// to avoid the conflict.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
-    /// or a `Void` object on failure.
-    @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchLaunch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
         let route = Files.moveBatch
         let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
@@ -851,9 +851,9 @@ open class FilesRoutes {
     ///
     /// - parameter entries: Commit information for each file in the batch.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
-    /// or a `Void` object on failure.
-    @discardableResult open func uploadSessionFinishBatch(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Async.LaunchEmptyResultSerializer, VoidSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionFinishBatchLaunch`
+    /// object on success or a `Void` object on failure.
+    @discardableResult open func uploadSessionFinishBatch(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Files.UploadSessionFinishBatchLaunchSerializer, VoidSerializer> {
         let route = Files.uploadSessionFinishBatch
         let serverArgs = Files.UploadSessionFinishBatchArg(entries: entries)
         return client.request(route, serverArgs: serverArgs)

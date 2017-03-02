@@ -41,7 +41,7 @@ open class Users {
     open class AccountSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: Account) -> JSON {
-            let output = [
+            let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
             "email": Serialization._StringSerializer.serialize(value.email),
@@ -139,7 +139,7 @@ open class Users {
     open class BasicAccountSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: BasicAccount) -> JSON {
-            let output = [
+            let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
             "email": Serialization._StringSerializer.serialize(value.email),
@@ -209,7 +209,7 @@ open class Users {
     open class FullAccountSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FullAccount) -> JSON {
-            let output = [
+            let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             "name": Users.NameSerializer().serialize(value.name),
             "email": Serialization._StringSerializer.serialize(value.email),
@@ -268,7 +268,7 @@ open class Users {
     open class TeamSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: Team) -> JSON {
-            let output = [
+            let output = [ 
             "id": Serialization._StringSerializer.serialize(value.id),
             "name": Serialization._StringSerializer.serialize(value.name),
             ]
@@ -301,7 +301,7 @@ open class Users {
     open class FullTeamSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: FullTeam) -> JSON {
-            let output = [
+            let output = [ 
             "id": Serialization._StringSerializer.serialize(value.id),
             "name": Serialization._StringSerializer.serialize(value.name),
             "sharing_policies": TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharingPolicies),
@@ -336,7 +336,7 @@ open class Users {
     open class GetAccountArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetAccountArg) -> JSON {
-            let output = [
+            let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
             ]
             return .dictionary(output)
@@ -367,7 +367,7 @@ open class Users {
     open class GetAccountBatchArgSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: GetAccountBatchArg) -> JSON {
-            let output = [
+            let output = [ 
             "account_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.accountIds),
             ]
             return .dictionary(output)
@@ -485,7 +485,7 @@ open class Users {
     open class IndividualSpaceAllocationSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: IndividualSpaceAllocation) -> JSON {
-            let output = [
+            let output = [ 
             "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
             ]
             return .dictionary(output)
@@ -533,7 +533,7 @@ open class Users {
     open class NameSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: Name) -> JSON {
-            let output = [
+            let output = [ 
             "given_name": Serialization._StringSerializer.serialize(value.givenName),
             "surname": Serialization._StringSerializer.serialize(value.surname),
             "familiar_name": Serialization._StringSerializer.serialize(value.familiarName),
@@ -628,7 +628,7 @@ open class Users {
     open class SpaceUsageSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: SpaceUsage) -> JSON {
-            let output = [
+            let output = [ 
             "used": Serialization._UInt64Serializer.serialize(value.used),
             "allocation": Users.SpaceAllocationSerializer().serialize(value.allocation),
             ]
@@ -665,7 +665,7 @@ open class Users {
     open class TeamSpaceAllocationSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: TeamSpaceAllocation) -> JSON {
-            let output = [
+            let output = [ 
             "used": Serialization._UInt64Serializer.serialize(value.used),
             "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
             ]
