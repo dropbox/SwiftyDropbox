@@ -259,7 +259,7 @@ open class DropboxOAuthManager {
         var components = URLComponents()
         components.scheme = "https"
         components.host = self.host
-        components.path = "/1/oauth2/authorize"
+        components.path = "/oauth2/authorize"
 
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "token"),
