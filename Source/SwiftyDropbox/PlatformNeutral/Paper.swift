@@ -385,7 +385,7 @@ open class Paper {
     /// The subscription level of a Paper doc.
     public enum DocSubscriptionLevel: CustomStringConvertible {
         /// No change e-mails unless you're the creator.
-        case default
+        case default_
         /// Ignored: Not shown in pad lists or activity and no email is sent.
         case ignore
         /// Subscribed: Shown in pad lists and activity and change e-mails are sent.
@@ -401,7 +401,7 @@ open class Paper {
         public init() { }
         open func serialize(_ value: DocSubscriptionLevel) -> JSON {
             switch value {
-                case .default:
+                case .default_:
                     var d = [String: JSON]()
                     d[".tag"] = .str("default")
                     return .dictionary(d)
@@ -425,7 +425,7 @@ open class Paper {
                     let tag = Serialization.getTag(d)
                     switch tag {
                         case "default":
-                            return DocSubscriptionLevel.default
+                            return DocSubscriptionLevel.default_
                         case "ignore":
                             return DocSubscriptionLevel.ignore
                         case "every":

@@ -10,10 +10,348 @@ open class DropboxTester {
     let users = DropboxClientsManager.authorizedClient!.users!
     let files = DropboxClientsManager.authorizedClient!.files!
     let sharing = DropboxClientsManager.authorizedClient!.sharing!
+
+    // Test user app with 'Full Dropbox' permission
+    func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
+        let end = {
+            if let nextTest = nextTest {
+                nextTest()
+            } else {
+                TestFormat.printAllTestsEnd()
+            }
+        }
+        let testAuthActions = {
+            self.testAuthActions(end)
+        }
+        let testUserActions = {
+            self.testUserActions(testAuthActions)
+        }
+        let testSharingActions = {
+            self.testSharingActions(testUserActions)
+        }
+        let start = {
+            self.testFilesActions(testSharingActions, asMember: asMember)
+        }
+
+        start()
+    }
+
+    func testFilesActions(_ nextTest: @escaping (() -> Void), asMember: Bool = false) {
+        let tester = FilesTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let listFolderLongpollAndTrigger = {
+            // route currently doesn't work with Team app performing 'As Member'
+            tester.listFolderLongpollAndTrigger(end, asMember: asMember)
+        }
+        let uploadFile = {
+            tester.uploadFile(listFolderLongpollAndTrigger)
+        }
+        let downloadToMemory = {
+            tester.downloadToMemory(uploadFile)
+        }
+        let downloadError = {
+            tester.downloadError(downloadToMemory)
+        }
+        let downloadAgain = {
+            tester.downloadAgain(downloadError)
+        }
+        let downloadToFile = {
+            tester.downloadToFile(downloadAgain)
+        }
+        let saveUrl = {
+            // route currently doesn't work with Team app performing 'As Member'
+            tester.saveUrl(downloadToFile, asMember: asMember)
+        }
+        let listRevisions = {
+            tester.listRevisions(saveUrl)
+        }
+        let getTemporaryLink = {
+            tester.getTemporaryLink(listRevisions)
+        }
+        let getMetadataInvalid = {
+            tester.getMetadataInvalid(getTemporaryLink)
+        }
+        let getMetadata = {
+            tester.getMetadata(getMetadataInvalid)
+        }
+        let copyReferenceGet = {
+            tester.copyReferenceGet(getMetadata)
+        }
+        let copy = {
+            tester.copy(copyReferenceGet)
+        }
+        let uploadDataSession = {
+            tester.uploadDataSession(copy)
+        }
+        let uploadData = {
+            tester.uploadData(uploadDataSession)
+        }
+        let listFolder = {
+            tester.listFolder(uploadData)
+        }
+        let createFolder = {
+            tester.createFolder(listFolder)
+        }
+        let delete = {
+            tester.delete(createFolder)
+        }
+        let start = {
+            delete()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
+
+    func testSharingActions(_ nextTest: @escaping (() -> Void)) {
+        let tester = SharingTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let unshareFolder = {
+            tester.unshareFolder(end)
+        }
+        let updateFolderPolicy = {
+            tester.updateFolderPolicy(unshareFolder)
+        }
+        let mountFolder = {
+            tester.mountFolder(updateFolderPolicy)
+        }
+        let unmountFolder = {
+            tester.unmountFolder(mountFolder)
+        }
+        let revokeSharedLink = {
+            tester.revokeSharedLink(unmountFolder)
+        }
+        let removeFolderMember = {
+            tester.removeFolderMember(revokeSharedLink)
+        }
+        let listSharedLinks = {
+            tester.listSharedLinks(removeFolderMember)
+        }
+        let listFolders = {
+            tester.listFolders(listSharedLinks)
+        }
+        let listFolderMembers = {
+            tester.listFolderMembers(listFolders)
+        }
+        let addFolderMember = {
+            tester.addFolderMember(listFolderMembers)
+        }
+        let getSharedLinkMetadata = {
+            tester.getSharedLinkMetadata(addFolderMember)
+        }
+        let getFolderMetadata = {
+            tester.getFolderMetadata(getSharedLinkMetadata)
+        }
+        let createSharedLinkWithSettings = {
+            tester.createSharedLinkWithSettings(getFolderMetadata)
+        }
+        let shareFolder = {
+            tester.shareFolder(createSharedLinkWithSettings)
+        }
+        let start = {
+            shareFolder()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
+
+    func testUserActions(_ nextTest: @escaping (() -> Void)) {
+        let tester = UserTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let getSpaceUsage = {
+            tester.getSpaceUsage(end)
+        }
+        let getCurrentAccount = {
+            tester.getCurrentAccount(getSpaceUsage)
+        }
+        let getAccountBatch = {
+            tester.getAccountBatch(getCurrentAccount)
+        }
+        let getAccount = {
+            tester.getAccount(getAccountBatch)
+        }
+        let start = {
+            getAccount()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
+
+    func testAuthActions(_ nextTest: @escaping (() -> Void)) {
+        let tester = AuthTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let tokenRevoke = {
+            tester.tokenRevoke(end)
+        }
+        let start = {
+            tokenRevoke()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
 }
 
 open class DropboxTeamTester {
     let team = DropboxClientsManager.authorizedTeamClient!.team!
+
+    // Test business app with 'Team member file access' permission
+    func testTeamMemberFileAcessActions(_ nextTest: (() -> Void)? = nil) {
+        let end = {
+            if let nextTest = nextTest {
+                nextTest()
+            } else {
+                TestFormat.printAllTestsEnd()
+            }
+        }
+        let testPerformActionAsMember = {
+            DropboxTester().testAllUserEndpoints(true, nextTest: end)
+        }
+        let start = {
+            self.testTeamMemberFileAcessActionsGroup(testPerformActionAsMember)
+        }
+
+        start()
+    }
+
+    // Test business app with 'Team member management' permission
+    func testTeamMemberManagementActions(_ nextTest: (() -> Void)? = nil) {
+        let end = {
+            if let nextTest = nextTest {
+                nextTest()
+            } else {
+                TestFormat.printAllTestsEnd()
+            }
+        }
+        let start = {
+            self.testTeamMemberManagementActionsGroup(end)
+        }
+
+        start()
+    }
+
+    func testTeamMemberFileAcessActionsGroup(_ nextTest: @escaping (() -> Void)) {
+        let tester = TeamTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let reportsGetStorage = {
+            tester.reportsGetStorage(end)
+        }
+        let reportsGetMembership = {
+            tester.reportsGetMembership(reportsGetStorage)
+        }
+        let reportsGetDevices = {
+            tester.reportsGetDevices(reportsGetMembership)
+        }
+        let reportsGetActivity = {
+            tester.reportsGetActivity(reportsGetDevices)
+        }
+        let linkedAppsListMembersLinkedApps = {
+            tester.linkedAppsListMembersLinkedApps(reportsGetActivity)
+        }
+        let linkedAppsListMemberLinkedApps = {
+            tester.linkedAppsListMemberLinkedApps(linkedAppsListMembersLinkedApps)
+        }
+        let getInfo = {
+            tester.getInfo(linkedAppsListMemberLinkedApps)
+        }
+        let listMembersDevices = {
+            tester.listMembersDevices(getInfo)
+        }
+        let listMemberDevices = {
+            tester.listMemberDevices(listMembersDevices)
+        }
+        let initMembersGetInfo = {
+            tester.initMembersGetInfo(listMemberDevices)
+        }
+        let start = {
+            initMembersGetInfo()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
+
+    func testTeamMemberManagementActionsGroup(_ nextTest: @escaping (() -> Void)) {
+        let tester = TeamTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let membersRemove = {
+            tester.membersRemove(end)
+        }
+        let membersSetProfile = {
+            tester.membersSetProfile(membersRemove)
+        }
+        let membersSetAdminPermissions = {
+            tester.membersSetAdminPermissions(membersSetProfile)
+        }
+        let membersSendWelcomeEmail = {
+            tester.membersSendWelcomeEmail(membersSetAdminPermissions)
+        }
+        let membersList = {
+            tester.membersList(membersSendWelcomeEmail)
+        }
+        let membersGetInfo = {
+            tester.membersGetInfo(membersList)
+        }
+        let membersAdd = {
+            tester.membersAdd(membersGetInfo)
+        }
+        let groupsDelete = {
+            tester.groupsDelete(membersAdd)
+        }
+        let groupsUpdate = {
+            tester.groupsUpdate(groupsDelete)
+        }
+        let groupsMembersList = {
+            tester.groupsMembersList(groupsUpdate)
+        }
+        let groupsMembersAdd = {
+            tester.groupsMembersAdd(groupsMembersList)
+        }
+        let groupsList = {
+            tester.groupsList(groupsMembersAdd)
+        }
+        let groupsGetInfo = {
+            tester.groupsGetInfo(groupsList)
+        }
+        let groupsCreate = {
+            tester.groupsCreate(groupsGetInfo)
+        }
+        let initMembersGetInfo = {
+            tester.initMembersGetInfo(groupsCreate)
+        }
+        let start = {
+            initMembersGetInfo()
+        }
+
+        TestFormat.printTestBegin(#function)
+        start()
+    }
 }
 
 
@@ -238,7 +576,7 @@ open class FilesTests {
             }
         }
     }
- 
+
     func saveUrl(_ nextTest: @escaping (() -> Void), asMember: Bool = false) {
         if asMember {
             nextTest()
@@ -719,7 +1057,7 @@ open class TeamTests {
 
     func initMembersGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let userSelectArg = Team.UserSelectorArg.email(TestTeamData.teamMemberEmail)
+        let userSelectArg = Team.UserSelectorArg.email(TestData.teamMemberEmail)
         tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
             if let result = response {
                 print(result)
@@ -871,7 +1209,7 @@ open class TeamTests {
 
     func groupsCreate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.team.groupsCreate(groupName: TestTeamData.groupName, groupExternalId: TestTeamData.groupExternalId).response { response, error in
+        tester.team.groupsCreate(groupName: TestData.groupName, groupExternalId: TestData.groupExternalId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -884,7 +1222,7 @@ open class TeamTests {
 
     func groupsGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let groupsSelector = Team.GroupsSelector.groupExternalIds([TestTeamData.groupExternalId])
+        let groupsSelector = Team.GroupsSelector.groupExternalIds([TestData.groupExternalId])
         tester.team.groupsGetInfo(groupsSelector: groupsSelector).response { response, error in
             if let result = response {
                 print(result)
@@ -911,7 +1249,7 @@ open class TeamTests {
 
     func groupsMembersAdd(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let groupSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
+        let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
 
         let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
         let accessType = Team.GroupAccessType.member
@@ -931,7 +1269,7 @@ open class TeamTests {
 
     func groupsMembersList(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let groupSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
+        let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
 
         tester.team.groupsMembersList(group: groupSelector).response { response, error in
             if let result = response {
@@ -946,7 +1284,7 @@ open class TeamTests {
 
     func groupsUpdate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let groupSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
+        let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
 
         tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name").response { response, error in
             if let result = response {
@@ -980,7 +1318,7 @@ open class TeamTests {
             }
         }
 
-        let groupsSelector = Team.GroupSelector.groupExternalId(TestTeamData.groupExternalId)
+        let groupsSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
         self.tester.team.groupsDelete(groupSelector: groupsSelector).response { response, error in
             if let result = response {
                 print(result)
@@ -1030,7 +1368,7 @@ open class TeamTests {
             }
         }
 
-        let memberAddArg = Team.MemberAddArg(memberEmail: TestTeamData.newMemberEmail, memberGivenName: "FirstName", memberSurname: "LastName")
+        let memberAddArg = Team.MemberAddArg(memberEmail: TestData.newMemberEmail, memberGivenName: "FirstName", memberSurname: "LastName")
         tester.team.membersAdd(newMembers: [memberAddArg]).response { response, error in
             if let result = response {
                 print(result)
