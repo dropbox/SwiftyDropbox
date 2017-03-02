@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/scobbe/src/sdk/SwiftyDropbox/TestSwiftyOSX/TestSwifty_macOS.xcodeproj">
+      location = "self:/Users/scobbe/src/sdk/SwiftyDropbox/TestSwiftyDropbox/TestSwiftyDropbox.xcodeproj">
    </FileRef>
 </Workspace>

@@ -5,26 +5,22 @@
 import Cocoa
 import SwiftyDropbox
 
-public enum AppPermission {
-    case fullDropbox
-    case teamMemberFileAccess
-    case teamMemberManagement
-}
-
-let appPermission = AppPermission.fullDropbox
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     var viewController: ViewController? = nil;
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
+            print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
+            exit(0);
+        }
         switch(appPermission) {
         case .fullDropbox:
-            DropboxClientsManager.setupWithAppKeyDesktop("<FULL_DROPBOX_APP_KEY>")
+            DropboxClientsManager.setupWithAppKeyDesktop(TestData.fullDropboxAppKey)
         case .teamMemberFileAccess:
-            DropboxClientsManager.setupWithTeamAppKeyDesktop("<TEAM_MEMBER_FILE_ACCESS_APP_KEY>")
+            DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.teamMemberFileAccessAppKey)
         case .teamMemberManagement:
-            DropboxClientsManager.setupWithTeamAppKeyDesktop("<TEAM_MEMBER_MANAGEMENT_APP_KEY>")
+            DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.teamMemberManagementAppKey)
         }
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
     }

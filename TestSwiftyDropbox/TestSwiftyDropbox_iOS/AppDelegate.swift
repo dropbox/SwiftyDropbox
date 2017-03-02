@@ -5,28 +5,23 @@
 import UIKit
 import SwiftyDropbox
 
-public enum AppPermission {
-    case fullDropbox
-    case teamMemberFileAccess
-    case teamMemberManagement
-}
-
-let appPermission = AppPermission.fullDropbox
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
+            print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
+            exit(0);
+        }
         switch(appPermission) {
         case .fullDropbox:
-            DropboxClientsManager.setupWithAppKey("<FULL_DROPBOX_APP_KEY>")
+            DropboxClientsManager.setupWithAppKey(TestData.fullDropboxAppKey)
         case .teamMemberFileAccess:
-            DropboxClientsManager.setupWithTeamAppKey("<TEAM_MEMBER_FILE_ACCESS_APP_KEY>")
+            DropboxClientsManager.setupWithTeamAppKey(TestData.teamMemberFileAccessAppKey)
         case .teamMemberManagement:
-            DropboxClientsManager.setupWithTeamAppKey("<TEAM_MEMBER_MANAGEMENT_APP_KEY>")
+            DropboxClientsManager.setupWithTeamAppKey(TestData.teamMemberManagementAppKey)
         }
-
         return true
     }
 
