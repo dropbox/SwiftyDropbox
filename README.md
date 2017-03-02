@@ -816,7 +816,9 @@ If you're interested in modifying the SDK codebase, you should take the followin
 
 * clone this GitHub repository to your local filesystem
 * run `git submodule init` and then `git submodule update`
-* navigate to `TestSwifty_[iOS|macOS]` and run `pod install`
+* navigate to `TestSwifty_[iOS|macOS]`
+* check the CocoaPods version installed (via `pod --version`) is same as "locked" in `TestSwifty_[iOS|macOS]/Podfile.lock`
+* run `pod install`
 * open `TestSwifty_[iOS|macOS]/TestSwifty_[iOS|macOS].xcworkspace` in Xcode
 * implement your changes to the SDK source code.
 
