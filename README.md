@@ -822,8 +822,11 @@ If you're interested in modifying the SDK codebase, you should take the followin
 * open `TestSwifty_[iOS|macOS]/TestSwifty_[iOS|macOS].xcworkspace` in Xcode
 * implement your changes to the SDK source code.
 
-To ensure your changes have not broken any existing functionality, you can run a series of integration tests by
-following the instructions listed in the `ViewController.m` file.
+To ensure your changes have not broken any existing functionality, you can run a series of integration tests:
+* create a new app on https://www.dropbox.com/developers/apps/, with "Full Dropbox" access. Note the App key
+* open Info.plist and configure the "URL types > Item 0 (Editor) > URL Schemes > Item 0" key to db-"App key"
+* open AppDelegate.swift and replace "FULL_DROPBOX_APP_KEY" with the App key as well
+* run the test app on your device and follow the on-screen instructions
 
 ---
 
