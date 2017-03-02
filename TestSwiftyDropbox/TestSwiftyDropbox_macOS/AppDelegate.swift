@@ -23,12 +23,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.teamMemberManagementAppKey)
         }
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
-    }
-    
-    func applicationDidBecomeActive(_ notification: Notification) {
-        NSApp.activate(ignoringOtherApps: true)
-        viewController = NSApplication.shared().mainWindow?.contentViewController as? ViewController
-        viewController?.checkButtons()
+
+        viewController = NSApplication.shared().windows[0].contentViewController as? ViewController
+        self.checkButtons()
     }
 
     func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
@@ -73,11 +70,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
-        viewController!.checkButtons()
+        self.checkButtons()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+    }
+
+    func checkButtons() {
+        viewController?.checkButtons()
     }
 }
 
