@@ -537,7 +537,7 @@ open class SharingRoutes {
     }
 
     /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders will be completed
-    /// asynchronously. To make testing the async case repeatable, set `ShareFolderArg.force_async`. If a asyncJobId in
+    /// asynchronously. To make testing the async case repeatable, set `ShareFolderArg.force_async`. If an asyncJobId in
     /// ShareFolderLaunch is returned, you'll need to call checkShareJobStatus until the action completes to get the
     /// metadata for the folder. Apps must have full Dropbox access to use this endpoint.
     ///
@@ -561,7 +561,7 @@ open class SharingRoutes {
     /// access to the shared folder to perform a transfer. Apps must have full Dropbox access to use this endpoint.
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
-    /// - parameter toDropboxId: A account or team member ID to transfer ownership to.
+    /// - parameter toDropboxId: An account or team member ID to transfer ownership to.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.TransferFolderError` object on failure.
