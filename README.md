@@ -115,6 +115,8 @@ Once your project is integrated with the Dropbox Swift SDK, you can pull SDK upd
 $ pod update
 ```
 
+**Note**: SwiftyDropbox requires CocoaPods 1.0.0+ when using Alamofire 4.0.0+. Because of this requirement, the CocoaPods App (which uses CocoaPods 1.0.0) cannot be used.
+
 ---
 
 ### Carthage
