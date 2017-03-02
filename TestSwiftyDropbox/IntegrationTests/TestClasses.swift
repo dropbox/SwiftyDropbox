@@ -10,6 +10,12 @@ open class DropboxTester {
     let users = DropboxClientsManager.authorizedClient!.users!
     let files = DropboxClientsManager.authorizedClient!.files!
     let sharing = DropboxClientsManager.authorizedClient!.sharing!
+    
+    func testBatchUpload() {
+        let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+//        let writePath = documents.stringByAppendingPathComponent("file_to_upload")
+//        files.uplo
+    }
 
     // Test user app with 'Full Dropbox' permission
     func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {

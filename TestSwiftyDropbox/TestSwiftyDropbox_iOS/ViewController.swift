@@ -10,6 +10,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var linkButton: UIButton!
     @IBOutlet weak var linkBrowserButton: UIButton!
     @IBOutlet weak var unlinkButton: UIButton!
+    @IBOutlet weak var runBatchUploadTestsButton: UIButton!
     
     @IBAction func linkButtonPressed(_ sender: AnyObject) {
         DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: self, openURL: {(url: URL) -> Void in UIApplication.shared.openURL(url)})
@@ -39,6 +40,10 @@ class ViewController: UIViewController {
         case .teamMemberManagement:
             DropboxTeamTester().testTeamMemberManagementActions(unlink)
         }
+    }
+
+    @IBAction func runBatchUploadTestsButtonPressed(_ sender: Any) {
+        DropboxTester().testBatchUpload()
     }
 
     override func viewDidAppear(_ animated: Bool) {

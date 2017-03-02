@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TestSwifty" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TestSwiftyDropbox_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -18,36 +21,49 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Il-qF-Vab">
+                                <rect key="frame" x="104.5" y="438.5" width="166" height="30"/>
                                 <state key="normal" title="Unlink Dropbox Account"/>
                                 <connections>
                                     <action selector="unlinkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="v86-PT-XZe"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db5-aq-giW">
+                                <rect key="frame" x="140" y="118.5" width="95" height="30"/>
                                 <state key="normal" title="Run API Tests"/>
                                 <connections>
                                     <action selector="runTestsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kCH-Ax-VDT"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b9W-gk-MoP">
+                                <rect key="frame" x="42" y="258.5" width="291" height="30"/>
                                 <state key="normal" title="Link Dropbox Account via in-app web view"/>
                                 <connections>
                                     <action selector="linkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vg8-o3-SP8"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzo-xA-D2V">
+                                <rect key="frame" x="44.5" y="288.5" width="286" height="30"/>
                                 <state key="normal" title="Link Dropbox Account via default browser"/>
                                 <connections>
                                     <action selector="linkBrowserButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n7H-q0-tCT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q8N-GI-SJU">
+                                <rect key="frame" x="105" y="168.5" width="164" height="30"/>
+                                <state key="normal" title="Run Batch Upload Tests"/>
+                                <connections>
+                                    <action selector="runBatchUploadTestsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bfV-hX-Z6B"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="b9W-gk-MoP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-60" id="AKt-Sh-DWa"/>
+                            <constraint firstItem="q8N-GI-SJU" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-150" id="CFB-5a-asu"/>
                             <constraint firstItem="b9W-gk-MoP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JeO-KH-8c6"/>
                             <constraint firstItem="0Il-qF-Vab" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KZa-p9-Tp7"/>
                             <constraint firstItem="db5-aq-giW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="O8l-MN-ZX0"/>
+                            <constraint firstItem="q8N-GI-SJU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ogy-u9-GjO"/>
                             <constraint firstItem="hzo-xA-D2V" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="c1M-V5-Hgf"/>
                             <constraint firstItem="db5-aq-giW" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-200" id="g3I-ak-LGi"/>
                             <constraint firstItem="0Il-qF-Vab" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="120" id="jvu-7a-pCX"/>
@@ -57,6 +73,7 @@
                     <connections>
                         <outlet property="linkBrowserButton" destination="hzo-xA-D2V" id="80Z-Kn-1n8"/>
                         <outlet property="linkButton" destination="b9W-gk-MoP" id="cQR-h6-mH9"/>
+                        <outlet property="runBatchUploadTestsButton" destination="q8N-GI-SJU" id="fbR-us-3uk"/>
                         <outlet property="runTestsButton" destination="db5-aq-giW" id="Wtc-cp-UrB"/>
                         <outlet property="unlinkButton" destination="0Il-qF-Vab" id="KyD-lo-Q8w"/>
                     </connections>
