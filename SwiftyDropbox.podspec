@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
   s.osx.frameworks = 'AppKit', 'Webkit', 'SystemConfiguration', 'Foundation'
   s.ios.frameworks = 'UIKit', 'Webkit', 'SystemConfiguration', 'Foundation'
 
-  s.dependency       'Alamofire', '~> 4.3.0'
+  s.dependency       'Alamofire', '~> 4.4.0'
 end
