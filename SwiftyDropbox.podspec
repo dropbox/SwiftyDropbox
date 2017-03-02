@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.11'
   s.ios.deployment_target = '9.0'
 
-  s.osx.frameworks = 'AppKit', 'Webkit', 'SystemConfiguration', 'Foundation'
-  s.ios.frameworks = 'UIKit', 'Webkit', 'SystemConfiguration', 'Foundation'
+  s.osx.frameworks = 'AppKit', 'WebKit', 'SystemConfiguration', 'Foundation'
+  s.ios.frameworks = 'UIKit', 'WebKit', 'SystemConfiguration', 'Foundation'
 
   s.dependency       'Alamofire', '~> 4.4.0'
 end
