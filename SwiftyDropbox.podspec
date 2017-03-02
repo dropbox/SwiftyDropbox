@@ -7,8 +7,9 @@ Pod::Spec.new do |s|
   s.author       = { 'Stephen Cobbe' => 'scobbe@dropbox.com' }
   s.source       = { :git => 'https://github.com/dropbox/SwiftyDropbox.git', :tag => s.version }
 
-  s.osx.source_files = 'Source/SwiftyDropbox/PlatformNeutral/**/*.{swift,h}', 'Source/SwiftyDropbox/SwiftyDropbox_macOS/**/*.{swift,h}'
-  s.ios.source_files = 'Source/SwiftyDropbox/PlatformNeutral/**/*.{swift,h}', 'Source/SwiftyDropbox/SwiftyDropbox_iOS/**/*.{swift,h}'
+  s.source_files = 'Source/SwiftyDropbox/Shared/**/*.{swift,h}'
+  s.osx.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_macOS/**/*.{swift,h}'
+  s.ios.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_iOS/**/*.{swift,h}'
 
   s.requires_arc = true
 
