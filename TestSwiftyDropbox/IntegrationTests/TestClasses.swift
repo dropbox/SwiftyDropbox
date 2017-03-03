@@ -12,11 +12,30 @@ open class DropboxTester {
     let sharing = DropboxClientsManager.authorizedClient!.sharing!
     
     func testBatchUpload() {
-        let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-//        let writePath = documents.stringByAppendingPathComponent("file_to_upload")
-//        files.uplo
-    }
+        // create working folder
+        let fileManager = FileManager.default
+        let workingDirectoryName = "MyOutputFolder";
+        let workingDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
+        do {
+            try fileManager.createDirectory(at: workingDirectory, withIntermediateDirectories: true, attributes: nil)
+        } catch let error as NSError {
+            print(error.localizedDescription);
+        }
 
+        print("\n\nCreating files in: \(workingDirectory.path)\n\n");
+
+        let path = workingDirectory.appendingPathComponent("temp_100MB_file")
+
+        files.upload(path: "/Testing/SwiftyDropboxTests/UploadTesting", input: path).response { response, error in
+            if let response = response {
+                print(response)
+            } else if let error = error {
+                print(error)
+            }
+        } .progress { progress in
+            print(progress)
+        }
+    }
     // Test user app with 'Full Dropbox' permission
     func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
         let end = {

@@ -25,6 +25,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
             setupAuthorizedClient(token, transportClient:transportClient)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     /// Sets up access to the Dropbox User API
@@ -35,6 +36,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedClient(token, transportClient:transportClient)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     /// Sets up access to the Dropbox Business (Team) API
@@ -45,6 +47,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
             setupAuthorizedTeamClient(token, transportClient:transportClient)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     /// Sets up access to the Dropbox Business (Team) API in multi-user case
@@ -55,6 +58,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedTeamClient(token, transportClient:transportClient)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     open static func reauthorizeClient(_ tokenUid: String) {
@@ -63,6 +67,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedClient(token, transportClient:nil)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     open static func reauthorizeTeamClient(_ tokenUid: String) {
@@ -71,6 +76,7 @@ open class DropboxClientsManager {
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
             setupAuthorizedTeamClient(token, transportClient:nil)
         }
+        Keychain.checkAccessibilityMigrationOneTime
     }
 
     static func setupAuthorizedClient(_ accessToken: DropboxAccessToken?, transportClient: DropboxTransportClient?) {
