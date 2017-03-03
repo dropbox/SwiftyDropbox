@@ -53,6 +53,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkButtons()
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,11 +67,13 @@ class ViewController: UIViewController {
             linkBrowserButton.isHidden = true
             unlinkButton.isHidden = false
             runTestsButton.isHidden = false
+            runBatchUploadTestsButton.isHidden = false
         } else {
             linkButton.isHidden = false
             linkBrowserButton.isHidden = false
             unlinkButton.isHidden = true
             runTestsButton.isHidden = true
+            runBatchUploadTestsButton.isHidden = true
         }
     }
 

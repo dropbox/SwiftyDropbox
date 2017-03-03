@@ -463,6 +463,9 @@ public enum DropboxOAuthResult {
 }
 
 class Keychain {
+    static let checkAccessibilityMigrationOneTime: () = {
+       Keychain.checkAccessibilityMigration()
+    }()
 
     class func queryWithDict(_ query: [String : AnyObject]) -> CFDictionary {
         let bundleId = Bundle.main.bundleIdentifier ?? ""
@@ -470,6 +473,7 @@ class Keychain {
 
         queryDict[kSecClass as String]       = kSecClassGenericPassword
         queryDict[kSecAttrService as String] = "\(bundleId).dropbox.authv2" as AnyObject?
+        queryDict[kSecAttrService as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
 
         return queryDict as CFDictionary
     }
@@ -548,6 +552,19 @@ class Keychain {
     class func clear() -> Bool {
         let query = Keychain.queryWithDict([:])
         return SecItemDelete(query) == noErr
+    }
+
+    class func checkAccessibilityMigration() {
+        let kAccessibilityMigrationOccurredKey = "KeychainAccessibilityMigration"
+        let MigrationOccurred = UserDefaults.standard.string(forKey: kAccessibilityMigrationOccurredKey)
+
+        if (MigrationOccurred != "true") {
+            let bundleId = Bundle.main.bundleIdentifier ?? ""
+            var queryDict = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "\(bundleId).dropbox.authv2" as AnyObject?]
+            var attributesToUpdateDict = [kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
+            let status = SecItemUpdate(queryDict as CFDictionary, attributesToUpdateDict as CFDictionary)
+            UserDefaults.standard.set("true", forKey: kAccessibilityMigrationOccurredKey)
+        }
     }
 }
 
