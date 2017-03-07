@@ -7,7 +7,7 @@ import UIKit
 import WebKit
 
 extension DropboxClientsManager {
-    public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
+    public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL), browserAuth: browserAuth)
     }
@@ -32,10 +32,10 @@ extension DropboxClientsManager {
 
 open class MobileSharedApplication: SharedApplication {
     let sharedApplication: UIApplication
-    let controller: UIViewController
+    let controller: UIViewController?
     let openURL: ((URL) -> Void)
 
-    public init(sharedApplication: UIApplication, controller: UIViewController, openURL: @escaping ((URL) -> Void)) {
+    public init(sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void)) {
         // fields saved for app-extension safety
         self.sharedApplication = sharedApplication
         self.controller = controller
@@ -47,7 +47,9 @@ open class MobileSharedApplication: SharedApplication {
             title: title,
             message: message,
             preferredStyle: UIAlertControllerStyle.alert)
-        controller.present(alertController, animated: true, completion: { fatalError(message) })
+        if let controller = controller {
+            controller.present(alertController, animated: true, completion: { fatalError(message) })
+        }
     }
 
     open func presentErrorMessageWithHandlers(_ message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>) {
@@ -61,7 +63,9 @@ open class MobileSharedApplication: SharedApplication {
             buttonHandlers["Retry"]!()
         })
 
-        controller.present(alertController, animated: true, completion: {})
+        if let controller = controller {
+            controller.present(alertController, animated: true, completion: {})
+        }
     }
 
     open func presentPlatformSpecificAuth(_ authURL: URL) -> Bool {
@@ -76,7 +80,9 @@ open class MobileSharedApplication: SharedApplication {
             cancelHandler: cancelHandler
         )
         let navigationController = UINavigationController(rootViewController: web)
-        controller.present(navigationController, animated: true, completion: nil)
+        if let controller = controller {
+            controller.present(navigationController, animated: true, completion: nil)
+        }
     }
 
     open func presentBrowserAuth(_ authURL: URL) {
