@@ -7,7 +7,7 @@ import AppKit
 import WebKit
 
 extension DropboxClientsManager {
-    public static func authorizeFromController(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
+    public static func authorizeFromController(sharedWorkspace: NSWorkspace, controller: NSViewController?, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(DesktopSharedApplication(sharedWorkspace: sharedWorkspace, controller: controller, openURL: openURL), browserAuth: browserAuth)
     }
@@ -32,10 +32,10 @@ extension DropboxClientsManager {
 
 public class DesktopSharedApplication: SharedApplication {
     let sharedWorkspace: NSWorkspace
-    let controller: NSViewController
+    let controller: NSViewController?
     let openURL: ((URL) -> Void)
 
-    public init(sharedWorkspace: NSWorkspace, controller: NSViewController, openURL: @escaping ((URL) -> Void)) {
+    public init(sharedWorkspace: NSWorkspace, controller: NSViewController?, openURL: @escaping ((URL) -> Void)) {
         self.sharedWorkspace = sharedWorkspace
         self.controller = controller
         self.openURL = openURL
@@ -43,8 +43,9 @@ public class DesktopSharedApplication: SharedApplication {
 
     public func presentErrorMessage(_ message: String, title: String) {
         let error = NSError(domain: "", code: 123, userInfo: [NSLocalizedDescriptionKey:message])
-        controller.presentError(error)
-        fatalError(message)
+        if let controller = self.controller {
+            controller.presentError(error)
+        }
     }
 
     public func presentErrorMessageWithHandlers(_ message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>) {
@@ -63,7 +64,9 @@ public class DesktopSharedApplication: SharedApplication {
             cancelHandler: cancelHandler
         )
         let navigationController = web
-        self.controller.presentViewControllerAsModalWindow(navigationController)
+        if let controller = self.controller {
+           controller.presentViewControllerAsModalWindow(navigationController)
+        }
     }
 
     public func presentBrowserAuth(_ authURL: URL) {
