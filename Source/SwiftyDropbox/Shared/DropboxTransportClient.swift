@@ -257,6 +257,7 @@ public enum CallError<EType>: CustomStringConvertible {
     case rateLimitError(Auth.RateLimitError, String?)
     case httpError(Int?, String?, String?)
     case authError(Auth.AuthError, String?)
+    case accessError(Auth.AccessError, String?)
     case routeError(Box<EType>, String?)
     case clientError(Error?)
 
@@ -288,6 +289,13 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += "[request-id \(r)] "
             }
             ret += "API auth error - \(error)"
+            return ret
+        case let .accessError(error, requestId):
+            var ret = ""
+            if let r = requestId {
+                ret += "[request-id \(r)] "
+            }
+            ret += "API access error - \(error)"
             return ret
         case let .httpError(code, message, requestId):
             var ret = ""
@@ -394,7 +402,15 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 default:
                     fatalError("Failed to parse error type")
                 }
-            case 403, 404, 409:
+            case 403:
+                let json = SerializeUtil.parseJSON(data!)
+                switch json {
+                case .dictionary(let d):
+                    return .accessError(Auth.AccessErrorSerializer().deserialize(d["error"]!), requestId)
+                default:
+                    fatalError("Failed to parse error type")
+                }
+            case 404, 409:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
