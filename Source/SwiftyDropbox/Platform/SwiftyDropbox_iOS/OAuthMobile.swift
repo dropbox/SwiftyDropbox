@@ -118,6 +118,15 @@ open class DropboxConnectController: UIViewController, WKNavigationDelegate {
         self.startURL = URL
         self.tryIntercept = tryIntercept
         self.cancelHandler = cancelHandler
+
+        // clear persistent cookies
+        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+        let cookiesFolderPath = libraryPath + "/Cookies"
+        do {
+            try FileManager.default.removeItem(atPath: cookiesFolderPath)
+        } catch {
+            print("Error removing cookies")
+        }
     }
 
     required public init?(coder aDecoder: NSCoder) {
