@@ -10,6 +10,7 @@ open class DropboxTransportClient {
 
     open let manager: SessionManager
     open let backgroundManager: SessionManager
+    open let longpollManager: SessionManager
     open var accessToken: String
     open var selectUser: String?
     var baseHosts: [String: String]
@@ -19,7 +20,7 @@ open class DropboxTransportClient {
         self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
     }
 
-    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
+    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil) {
         let config = URLSessionConfiguration.default
         let delegate = sessionDelegate ?? SessionDelegate()
         let serverTrustPolicyManager = serverTrustPolicyManager ?? nil
@@ -29,13 +30,20 @@ open class DropboxTransportClient {
 
         let backgroundManager = { () -> SessionManager in
             let backgroundConfig = URLSessionConfiguration.background(withIdentifier: "com.dropbox.SwiftyDropbox." + UUID().uuidString)
-
+            if let sharedContainerIdentifier = sharedContainerIdentifier{
+                backgroundConfig.sharedContainerIdentifier = sharedContainerIdentifier
+            }
             if let backgroundSessionDelegate = backgroundSessionDelegate {
                 return SessionManager(configuration: backgroundConfig, delegate: backgroundSessionDelegate, serverTrustPolicyManager: serverTrustPolicyManager)
             }
             return SessionManager(configuration: backgroundConfig, serverTrustPolicyManager: serverTrustPolicyManager)
         }()
         backgroundManager.startRequestsImmediately = false
+
+        let longpollConfig = URLSessionConfiguration.default
+        longpollConfig.timeoutIntervalForRequest = 480.0
+
+        let longpollManager = SessionManager(configuration: longpollConfig, delegate: delegate, serverTrustPolicyManager: serverTrustPolicyManager)
 
         let defaultBaseHosts = [
             "api": "https://api.dropbox.com/2",
@@ -47,6 +55,7 @@ open class DropboxTransportClient {
 
         self.manager = manager
         self.backgroundManager = backgroundManager
+        self.longpollManager = longpollManager
         self.accessToken = accessToken
         self.selectUser = selectUser
         self.baseHosts = baseHosts ?? defaultBaseHosts
@@ -79,7 +88,16 @@ open class DropboxTransportClient {
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
 
         let customEncoding = SwiftyArgEncoding(rawJsonRequest: rawJsonRequest!)
-        let request = self.manager.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest!], encoding: customEncoding, headers: headers)
+
+        let managerToUse = { () -> SessionManager in
+            // longpoll requests have a much longer timeout period than other requests
+            if type(of: route) ==  type(of: Files.listFolderLongpoll) {
+                return longpollManager
+            }
+            return manager
+        }()
+
+        let request = managerToUse.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest!], encoding: customEncoding, headers: headers)
         request.task?.priority = URLSessionTask.highPriority
         let rpcRequestObj = RpcRequest(request: request, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer)
 
