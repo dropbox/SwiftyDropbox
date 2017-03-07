@@ -58,9 +58,16 @@ open class MobileSharedApplication: SharedApplication {
             message: message,
             preferredStyle: UIAlertControllerStyle.alert)
 
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            if let handler = buttonHandlers["Cancel"] {
+                handler()
+            }
+        })
+
         alertController.addAction(UIAlertAction(title: "Retry", style: .default) { (_) in
-            buttonHandlers["Retry"]!()
+            if let handler = buttonHandlers["Retry"] {
+                handler()
+            }
         })
 
         if let controller = controller {

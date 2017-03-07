@@ -191,11 +191,17 @@ open class DropboxOAuthManager {
     /// - parameter controller: The controller to present from
     ///
     open func authorizeFromSharedApplication(_ sharedApplication: SharedApplication, browserAuth: Bool = false) {
+        let cancelHandler: (() -> Void) = {
+            let cancelUrl = URL(string: "db-\(self.appKey)://2/cancel")!
+            sharedApplication.presentExternalApp(cancelUrl)
+        }
+
         if !Reachability.connectedToNetwork() {
             let message = "Try again once you have an internet connection"
             let title = "No internet connection"
 
             let buttonHandlers: [String: () -> Void] = [
+                "Cancel": { cancelHandler() },
                 "Retry": { self.authorizeFromSharedApplication(sharedApplication) },
             ]
             sharedApplication.presentErrorMessageWithHandlers(message, title: title, buttonHandlers: buttonHandlers)
@@ -229,12 +235,6 @@ open class DropboxOAuthManager {
                     return false
                 }
             }
-
-            let cancelHandler: (() -> Void) = {
-                let cancelUrl = URL(string: "db-\(self.appKey)://2/cancel")!
-                sharedApplication.presentExternalApp(cancelUrl)
-            }
-
             sharedApplication.presentWebViewAuth(url, tryIntercept: tryIntercept, cancelHandler: cancelHandler)
         }
     }
