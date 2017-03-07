@@ -131,7 +131,11 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
 /// Manages access token storage and authentication
 ///
 /// Use the `DropboxOAuthManager` to authenticate users through OAuth2, save access tokens, and retrieve access tokens.
+///
+/// @note OAuth flow webviews localize to enviroment locale.
+///
 open class DropboxOAuthManager {
+    open let locale: Locale?
     let appKey: String
     let redirectURL: URL
     let host: String
@@ -147,6 +151,7 @@ open class DropboxOAuthManager {
         self.redirectURL = URL(string: "db-\(self.appKey)://2/token")!
         self.host = host
         self.urls = [self.redirectURL]
+        self.locale = nil;
     }
 
     ///
@@ -266,6 +271,7 @@ open class DropboxOAuthManager {
             URLQueryItem(name: "client_id", value: self.appKey),
             URLQueryItem(name: "redirect_uri", value: self.redirectURL.absoluteString),
             URLQueryItem(name: "disable_signup", value: "true"),
+            URLQueryItem(name: "locale", value: self.locale?.identifier ?? Locale.current.identifier),
         ]
         return components.url!
     }
