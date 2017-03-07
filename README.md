@@ -599,7 +599,7 @@ client.files.delete(path: "/test/path/in/Dropbox/account").response { response, 
         print(response)
     } else if let error = error {
         switch error as CallError {
-        case .routeError(let boxed, let requestId):
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
             // a route-specific error occurred
             // see handling above
             ....
@@ -609,10 +609,12 @@ client.files.delete(path: "/test/path/in/Dropbox/account").response { response, 
             print("InternalServerError[\(requestId)]: \(code): \(message)")
         case .badInputError(let message, let requestId):
             print("BadInputError[\(requestId)]: \(message)")
-        case .authError(let authError, let requestId):
-            print("AuthError[\(requestId)]: \(authError)")
-        case .rateLimitError(let rateLimitError, let requestId):
-            print("RateLimitError[\(requestId)]: \(rateLimitError)")
+        case .authError(let authError, let userMessage, let errorSummary, let requestId):
+            print("AuthError[\(requestId)]: \(userMessage) \(errorSummary) \(authError)")
+        case .accessError(let accessError, let userMessage, let errorSummary, let requestId):
+            print("AccessError[\(requestId)]: \(userMessage) \(errorSummary) \(accessError)")
+        case .rateLimitError(let rateLimitError, let userMessage, let errorSummary, let requestId):
+            print("RateLimitError[\(requestId)]: \(userMessage) \(errorSummary) \(rateLimitError)")
         case .httpError(let code, let message, let requestId):
             print("HTTPError[\(requestId)]: \(code): \(message)")
         case .clientError(let error):

@@ -254,11 +254,11 @@ open class Box<T> {
 public enum CallError<EType>: CustomStringConvertible {
     case internalServerError(Int, String?, String?)
     case badInputError(String?, String?)
-    case rateLimitError(Auth.RateLimitError, String?)
+    case rateLimitError(Auth.RateLimitError, String?, String?, String?)
     case httpError(Int?, String?, String?)
-    case authError(Auth.AuthError, String?)
-    case accessError(Auth.AccessError, String?)
-    case routeError(Box<EType>, String?)
+    case authError(Auth.AuthError, String?, String?, String?)
+    case accessError(Auth.AccessError, String?, String?, String?)
+    case routeError(Box<EType>, String?, String?, String?)
     case clientError(Error?)
 
     public var description: String {
@@ -283,14 +283,14 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .authError(error, requestId):
+        case let .authError(error, userMessage, errorSummary, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API auth error - \(error)"
             return ret
-        case let .accessError(error, requestId):
+        case let .accessError(error, userMessage, errorSummary, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -310,14 +310,14 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .routeError(box, requestId):
+        case let .routeError(box, userMessage, errorSummary, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API route error - \(box.unboxed)"
             return ret
-        case let .rateLimitError(error, requestId):
+        case let .rateLimitError(error, userMessage, errorSummary, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -398,7 +398,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .authError(Auth.AuthErrorSerializer().deserialize(d["error"]!), requestId)
+                    return .authError(Auth.AuthErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String, requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -406,15 +406,15 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .accessError(Auth.AccessErrorSerializer().deserialize(d["error"]!), requestId)
+                    return .accessError(Auth.AccessErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String,requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
-            case 404, 409:
+            case 409:
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .routeError(Box(self.errorSerializer.deserialize(d["error"]!)), requestId)
+                    return .routeError(Box(self.errorSerializer.deserialize(d["error"]!)), d["user_message"] as? String, d["error_summary"] as? String, requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -422,7 +422,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .rateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), requestId)
+                    return .rateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String, requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
