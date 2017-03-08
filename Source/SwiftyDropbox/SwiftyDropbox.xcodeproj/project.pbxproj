@@ -71,6 +71,16 @@
 		F2C6FD391D89E37A00E0DD9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD381D89E37A00E0DD9E /* UIKit.framework */; };
 		F2C6FD3B1D89E38200E0DD9E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */; };
 		F2C6FD3D1D89E38800E0DD9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */; };
+		F2C888B61E6F6DC90006E6C3 /* CustomRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888B51E6F6DC90006E6C3 /* CustomRoutes.swift */; };
+		F2C888B71E6F6DC90006E6C3 /* CustomRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888B51E6F6DC90006E6C3 /* CustomRoutes.swift */; };
+		F2C888B91E6F6DDE0006E6C3 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888B81E6F6DDE0006E6C3 /* Custom.swift */; };
+		F2C888BA1E6F6DDE0006E6C3 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888B81E6F6DDE0006E6C3 /* Custom.swift */; };
+		F2C888BC1E6F6DFD0006E6C3 /* CustomTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888BB1E6F6DFD0006E6C3 /* CustomTasks.swift */; };
+		F2C888BD1E6F6DFD0006E6C3 /* CustomTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C888BB1E6F6DFD0006E6C3 /* CustomTasks.swift */; };
+		F2C888BF1E6F75640006E6C3 /* DBChunkInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C888BE1E6F75640006E6C3 /* DBChunkInputStream.m */; };
+		F2C888C01E6F75640006E6C3 /* DBChunkInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C888BE1E6F75640006E6C3 /* DBChunkInputStream.m */; };
+		F2C888C21E6F757D0006E6C3 /* DBChunkInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = F2C888C11E6F757D0006E6C3 /* DBChunkInputStream.h */; };
+		F2C888C31E6F757D0006E6C3 /* DBChunkInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = F2C888C11E6F757D0006E6C3 /* DBChunkInputStream.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,6 +124,11 @@
 		F2C6FD381D89E37A00E0DD9E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F2C888B51E6F6DC90006E6C3 /* CustomRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRoutes.swift; sourceTree = "<group>"; };
+		F2C888B81E6F6DDE0006E6C3 /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
+		F2C888BB1E6F6DFD0006E6C3 /* CustomTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTasks.swift; sourceTree = "<group>"; };
+		F2C888BE1E6F75640006E6C3 /* DBChunkInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBChunkInputStream.m; sourceTree = "<group>"; };
+		F2C888C11E6F757D0006E6C3 /* DBChunkInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBChunkInputStream.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +193,11 @@
 				F265BD151E68074A00CC38C8 /* Base.swift */,
 				F265BD161E68074A00CC38C8 /* BaseTeam.swift */,
 				F265BD171E68074A00CC38C8 /* Common.swift */,
+				F2C888B81E6F6DDE0006E6C3 /* Custom.swift */,
+				F2C888B51E6F6DC90006E6C3 /* CustomRoutes.swift */,
+				F2C888BB1E6F6DFD0006E6C3 /* CustomTasks.swift */,
+				F2C888C11E6F757D0006E6C3 /* DBChunkInputStream.h */,
+				F2C888BE1E6F75640006E6C3 /* DBChunkInputStream.m */,
 				F265BD181E68074A00CC38C8 /* DropboxClient.swift */,
 				F265BD191E68074A00CC38C8 /* DropboxClientsManager.swift */,
 				F265BD1A1E68074A00CC38C8 /* DropboxTeamClient.swift */,
@@ -244,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F265BD581E68074A00CC38C8 /* SwiftyDropbox.h in Headers */,
+				F2C888C21E6F757D0006E6C3 /* DBChunkInputStream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F265BD591E68074A00CC38C8 /* SwiftyDropbox.h in Headers */,
+				F2C888C31E6F757D0006E6C3 /* DBChunkInputStream.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,12 +327,12 @@
 				TargetAttributes = {
 					F2C6FCC41D89E16800E0DD9E = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					F2C6FCD41D89E1A900E0DD9E = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -365,11 +387,15 @@
 				F265BD441E68074A00CC38C8 /* FilesRoutes.swift in Sources */,
 				F265BD3E1E68074A00CC38C8 /* DropboxTeamClient.swift in Sources */,
 				F265BD401E68074A00CC38C8 /* DropboxTransportClient.swift in Sources */,
+				F2C888BF1E6F75640006E6C3 /* DBChunkInputStream.m in Sources */,
+				F2C888BC1E6F6DFD0006E6C3 /* CustomTasks.swift in Sources */,
 				F265BD4A1E68074A00CC38C8 /* PaperRoutes.swift in Sources */,
 				F265BD0B1E68072500CC38C8 /* OAuthMobile.swift in Sources */,
 				F265BD541E68074A00CC38C8 /* StoneSerializers.swift in Sources */,
 				F265BD421E68074A00CC38C8 /* Files.swift in Sources */,
+				F2C888B91E6F6DDE0006E6C3 /* Custom.swift in Sources */,
 				F265BD3A1E68074A00CC38C8 /* DropboxClient.swift in Sources */,
+				F2C888B61E6F6DC90006E6C3 /* CustomRoutes.swift in Sources */,
 				F265BD3C1E68074A00CC38C8 /* DropboxClientsManager.swift in Sources */,
 				F265BD4C1E68074A00CC38C8 /* Properties.swift in Sources */,
 				F265BD561E68074A00CC38C8 /* StoneValidators.swift in Sources */,
@@ -400,11 +426,15 @@
 				F265BD451E68074A00CC38C8 /* FilesRoutes.swift in Sources */,
 				F265BD3F1E68074A00CC38C8 /* DropboxTeamClient.swift in Sources */,
 				F265BD411E68074A00CC38C8 /* DropboxTransportClient.swift in Sources */,
+				F2C888C01E6F75640006E6C3 /* DBChunkInputStream.m in Sources */,
+				F2C888BD1E6F6DFD0006E6C3 /* CustomTasks.swift in Sources */,
 				F265BD4B1E68074A00CC38C8 /* PaperRoutes.swift in Sources */,
 				F265BD101E68073A00CC38C8 /* OAuthDesktop.swift in Sources */,
 				F265BD551E68074A00CC38C8 /* StoneSerializers.swift in Sources */,
 				F265BD431E68074A00CC38C8 /* Files.swift in Sources */,
+				F2C888BA1E6F6DDE0006E6C3 /* Custom.swift in Sources */,
 				F265BD3B1E68074A00CC38C8 /* DropboxClient.swift in Sources */,
+				F2C888B71E6F6DC90006E6C3 /* CustomRoutes.swift in Sources */,
 				F265BD3D1E68074A00CC38C8 /* DropboxClientsManager.swift in Sources */,
 				F265BD4D1E68074A00CC38C8 /* Properties.swift in Sources */,
 				F265BD571E68074A00CC38C8 /* StoneValidators.swift in Sources */,
@@ -532,6 +562,7 @@
 		F2C6FCCE1D89E16800E0DD9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -545,6 +576,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropbox.SwiftyDropbox;
 				PRODUCT_NAME = SwiftyDropbox;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -552,6 +584,7 @@
 		F2C6FCCF1D89E16800E0DD9E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -572,6 +605,7 @@
 		F2C6FCDB1D89E1A900E0DD9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -588,6 +622,7 @@
 				PRODUCT_NAME = SwiftyDropbox;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -595,6 +630,7 @@
 		F2C6FCDC1D89E1A900E0DD9E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
