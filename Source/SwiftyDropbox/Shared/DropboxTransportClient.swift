@@ -283,14 +283,14 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .authError(error, userMessage, errorSummary, requestId):
+        case let .authError(error, _, _, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API auth error - \(error)"
             return ret
-        case let .accessError(error, userMessage, errorSummary, requestId):
+        case let .accessError(error, _, _, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -310,14 +310,14 @@ public enum CallError<EType>: CustomStringConvertible {
                 ret += ": \(m)"
             }
             return ret
-        case let .routeError(box, userMessage, errorSummary, requestId):
+        case let .routeError(box, _, _, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
             }
             ret += "API route error - \(box.unboxed)"
             return ret
-        case let .rateLimitError(error, userMessage, errorSummary, requestId):
+        case let .rateLimitError(error, _, _, requestId):
             var ret = ""
             if let r = requestId {
                 ret += "[request-id \(r)] "
@@ -398,7 +398,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .authError(Auth.AuthErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String, requestId)
+                    return .authError(Auth.AuthErrorSerializer().deserialize(d["error"]!), getStringFromJson(json: d, key: "user_message"), getStringFromJson(json: d, key: "error_summary"), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -406,7 +406,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .accessError(Auth.AccessErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String,requestId)
+                    return .accessError(Auth.AccessErrorSerializer().deserialize(d["error"]!), getStringFromJson(json: d, key: "user_message"), getStringFromJson(json: d, key: "error_summary"),requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -414,7 +414,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .routeError(Box(self.errorSerializer.deserialize(d["error"]!)), d["user_message"] as? String, d["error_summary"] as? String, requestId)
+                    return .routeError(Box(self.errorSerializer.deserialize(d["error"]!)), getStringFromJson(json: d, key: "user_message"), getStringFromJson(json: d, key: "error_summary"), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -422,7 +422,7 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
                 let json = SerializeUtil.parseJSON(data!)
                 switch json {
                 case .dictionary(let d):
-                    return .rateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), d["user_message"] as? String, d["error_summary"] as? String, requestId)
+                    return .rateLimitError(Auth.RateLimitErrorSerializer().deserialize(d["error"]!), getStringFromJson(json: d, key: "user_message"), getStringFromJson(json: d, key: "error_summary"), requestId)
                 default:
                     fatalError("Failed to parse error type")
                 }
@@ -440,6 +440,19 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
             }
             return .httpError(nil, message, requestId)
         }
+    }
+    
+    func getStringFromJson(json: [String : JSON], key: String) -> String {
+        if let jsonStr = json[key] {
+            switch jsonStr {
+            case .str(let str):
+                return str;
+            default:
+                break;
+            }
+        }
+
+        return "";
     }
 }
 

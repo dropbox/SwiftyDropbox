@@ -10,32 +10,74 @@ open class DropboxTester {
     let users = DropboxClientsManager.authorizedClient!.users!
     let files = DropboxClientsManager.authorizedClient!.files!
     let sharing = DropboxClientsManager.authorizedClient!.sharing!
-    
+
     func testBatchUpload() {
+        TestFormat.printSubTestBegin(NSStringFromSelector(#function))
         // create working folder
-        let fileManager = FileManager.default
-        let workingDirectoryName = "MyOutputFolder";
-        let workingDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
+        let workingDirectoryName = "MyOutputFolder"
+        let workingDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
         do {
-            try fileManager.createDirectory(at: workingDirectory, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: workingDirectory.absoluteString, withIntermediateDirectories: false, attributes: nil)
         } catch let error as NSError {
             print(error.localizedDescription);
         }
+        
+        var uploadFilesUrlsToCommitInfo: [URL: Files.CommitInfo] = [:]
 
-        print("\n\nCreating files in: \(workingDirectory.path)\n\n");
-
-        let path = workingDirectory.appendingPathComponent("temp_100MB_file")
-
-        files.upload(path: "/Testing/SwiftyDropboxTests/UploadTesting", input: path).response { response, error in
-            if let response = response {
-                print(response)
-            } else if let error = error {
-                print(error)
+        print("\n\nCreating files in: \(workingDirectory.path)\n\n")
+        // create a bunch of fake files
+        for i in 0..<10 {
+            let fileName = "test_file_\(i)"
+            let fileContent = "\(fileName)'s content. Test content here."
+            let fileUrl = workingDirectory.appendingPathComponent(fileName)
+            // set to test large file
+            let testLargeFile: Bool = true
+            // don't create a file for the name test_file_5 so we use a custom large file
+            // there instead
+            if i != 5 || !testLargeFile {
+                do {
+                    try fileContent.write(to: fileUrl, atomically: false, encoding: String.Encoding.utf8)
+                }
+                catch {
+                    print("Error creating file")
+                    print("Terminating...")
+                    exit(0)
+                }
+            } else {
+                if !FileManager.default.fileExists(atPath: fileUrl.path) {
+                    print("\n\nPlease create a large file named \(fileUrl.lastPathComponent) to test chunked uploading\n\n")
+                    exit(0)
+                }
             }
-        } .progress { progress in
-            print(progress)
+            let commitInfo = Files.CommitInfo(path: "\(TestData.testFolderPath)/\(fileName)")
+            uploadFilesUrlsToCommitInfo[fileUrl] = commitInfo
         }
+
+        self.files.batchUploadFiles(fileUrlsToCommitInfo: uploadFilesUrlsToCommitInfo, progressBlock: { progress in
+            print("Progress: \(progress)")
+        }, responseBlock: { fileUrlsToBatchResultEntries, finishBatchRequestError, fileUrlsToRequestErrors in
+            if let fileUrlsToBatchResultEntries = fileUrlsToBatchResultEntries {
+                for (clientSideFileUrl, resultEntry) in fileUrlsToBatchResultEntries {
+                    switch resultEntry {
+                    case .success(let metadata):
+                        let dropboxFilePath = metadata.pathDisplay
+                        print("File successfully uploaded from \(clientSideFileUrl.absoluteString) on local machine to \(dropboxFilePath) in Dropbox.")
+                    case .failure(let error):
+                        // This particular file was not uploaded successfully, although the other
+                        // files may have been uploaded successfully. Perhaps implement some retry
+                        // logic here based on `uploadError`
+                        print("Error: \(error)")
+                    }
+                }
+            } else if let finishBatchRequestError = finishBatchRequestError {
+                print("Either bug in SDK code, or transient error on Dropbox server: \(finishBatchRequestError)")
+            } else if fileUrlsToRequestErrors.count > 0 {
+                print("Other additional errors (e.g. file doesn't exist client-side, etc.).")
+                print("\(fileUrlsToRequestErrors)")
+            }
+        })
     }
+
     // Test user app with 'Full Dropbox' permission
     func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
         let end = {
