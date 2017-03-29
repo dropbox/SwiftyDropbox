@@ -541,7 +541,7 @@ class Keychain {
 
     class func get(_ key: String) -> String? {
         if let data = getAsData(key) {
-            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as? String
+            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
         } else {
             return nil
         }
@@ -566,9 +566,9 @@ class Keychain {
 
         if (MigrationOccurred != "true") {
             let bundleId = Bundle.main.bundleIdentifier ?? ""
-            var queryDict = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "\(bundleId).dropbox.authv2" as AnyObject?]
-            var attributesToUpdateDict = [kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
-            let status = SecItemUpdate(queryDict as CFDictionary, attributesToUpdateDict as CFDictionary)
+            let queryDict = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "\(bundleId).dropbox.authv2" as AnyObject?]
+            let attributesToUpdateDict = [kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
+            SecItemUpdate(queryDict as CFDictionary, attributesToUpdateDict as CFDictionary)
             UserDefaults.standard.set("true", forKey: kAccessibilityMigrationOccurredKey)
         }
     }

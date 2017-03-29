@@ -33,6 +33,8 @@ extension FilesRoutes {
             }
         }
 
+        uploadData.totalUploadProgress = Progress(totalUnitCount: Int64(totalUploadSize));
+
         for fileUrl: URL in fileUrls {
             let fileSize = fileUrlsToFileSize[fileUrl]!
             if !uploadData.cancel {
@@ -129,7 +131,7 @@ extension FilesRoutes {
                 totalBytesSent += fileChunkSize
                 let cursor = Files.UploadSessionCursor(sessionId: sessionId, offset: (totalBytesSent))
                 let shouldClose = (i != numFileChunks - 1) ? false : true
-                var shouldContinue = true
+                let shouldContinue = true
                 self.appendFileChunk(uploadData: uploadData, fileUrl: fileUrl, cursor: cursor, shouldClose: shouldClose, fileChunkInputStream: fileChunkInputStream, chunkUploadResponseQueue: chunkUploadResponseQueue, chunkUploadFinished: chunkUploadFinished, retryCount: 0, startBytes: startBytes, endBytes: endBytes, shouldContinue: shouldContinue)
                 // wait until each chunk upload completes before resuming loop iteration
                 _ = chunkUploadFinished.wait(timeout: DispatchTime.now() + .seconds(480))
@@ -144,7 +146,7 @@ extension FilesRoutes {
     func appendFileChunk(uploadData: BatchUploadData, fileUrl: URL, cursor: Files.UploadSessionCursor, shouldClose: Bool, fileChunkInputStream: DBChunkInputStream, chunkUploadResponseQueue: DispatchQueue, chunkUploadFinished: DispatchSemaphore, retryCount: Int, startBytes: UInt64, endBytes: UInt64, shouldContinue: Bool) {
         // close session on final append call
         
-        self.uploadSessionAppendV2(cursor: cursor, close: shouldClose, input: fileChunkInputStream).response(queue: chunkUploadResponseQueue, completionHandler: { result, error in
+        self.uploadSessionAppendV2(cursor: cursor, close: shouldClose, input: fileChunkInputStream).response(queue: DispatchQueue(label: "testing"), completionHandler: { result, error in
             if result == nil {
                 if let error = error {
                     switch error as CallError {
@@ -162,9 +164,9 @@ extension FilesRoutes {
                         print("hi")
                     }
                     //            uploadData.taskStorage.remove(task)
-                    chunkUploadFinished.signal()
                 }
             }
+            chunkUploadFinished.signal()
         }) .progress { progress in
             if retryCount == 0 {
                 self.executeProgressHandler(uploadData:uploadData, progress: progress)
@@ -262,13 +264,14 @@ extension FilesRoutes {
     }
     
     func executeProgressHandler(uploadData: BatchUploadData, progress: Progress) {
-        print(progress)
-//        if !uploadData.progressBlock {
-//            return
-//        }
-//        uploadData.queue.addOperation {() -> Void in
-//            uploadData.totalUploadedSoFar += Int(amountUploaded)
-//            uploadData.progressBlock(amountUploaded, uploadData.totalUploadedSoFar, uploadData.totalUploadSize)
-//        }
+        if let progressBlock = uploadData.progressBlock {
+            uploadData.queue.async {
+                let workDone = progress.completedUnitCount - uploadData.totalUploadProgress!.completedUnitCount
+                uploadData.totalUploadProgress?.becomeCurrent(withPendingUnitCount: workDone)
+                uploadData.totalUploadProgress?.resignCurrent()
+                progressBlock(uploadData.totalUploadProgress!)
+//                progressBlock(progress.completedUnitCount, uploadData.totalUploadedSoFar, uploadData.totalUploadSize)
+            }
+        }
     }
 }
