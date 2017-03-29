@@ -266,12 +266,14 @@ open class DropboxOAuthManager {
         components.host = self.host
         components.path = "/oauth2/authorize"
 
+        let locale = Bundle.main.preferredLocalizations.first ?? "en"
+
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "token"),
             URLQueryItem(name: "client_id", value: self.appKey),
             URLQueryItem(name: "redirect_uri", value: self.redirectURL.absoluteString),
             URLQueryItem(name: "disable_signup", value: "true"),
-            URLQueryItem(name: "locale", value: self.locale?.identifier ?? Locale.current.identifier),
+            URLQueryItem(name: "locale", value: self.locale?.identifier ?? locale),
         ]
         return components.url!
     }

@@ -109,7 +109,6 @@ public class DropboxConnectController: NSViewController, NSWindowDelegate, WKNav
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Link to Dropbox"
         self.webView = WKWebView(frame: self.view.bounds)
 
         indicator.setFrameOrigin(NSMakePoint(

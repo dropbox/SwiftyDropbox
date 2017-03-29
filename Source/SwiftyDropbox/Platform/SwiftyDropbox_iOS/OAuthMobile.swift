@@ -142,7 +142,6 @@ open class DropboxConnectController: UIViewController, WKNavigationDelegate {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Link to Dropbox"
         self.webView = WKWebView(frame: self.view.bounds)
 
         indicator.center = view.center
