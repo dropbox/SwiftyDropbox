@@ -17,7 +17,7 @@ open class DropboxTester {
         let workingDirectoryName = "MyOutputFolder"
         let workingDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
         do {
-            try FileManager.default.createDirectory(atPath: workingDirectory.absoluteString, withIntermediateDirectories: false, attributes: nil)
+            try FileManager.default.createDirectory(atPath: workingDirectory.path, withIntermediateDirectories: false, attributes: nil)
         } catch let error as NSError {
             print(error.localizedDescription);
         }
@@ -60,7 +60,7 @@ open class DropboxTester {
                 for (clientSideFileUrl, resultEntry) in fileUrlsToBatchResultEntries {
                     switch resultEntry {
                     case .success(let metadata):
-                        let dropboxFilePath = metadata.pathDisplay
+                        let dropboxFilePath = metadata.pathDisplay!
                         print("File successfully uploaded from \(clientSideFileUrl.absoluteString) on local machine to \(dropboxFilePath) in Dropbox.")
                     case .failure(let error):
                         // This particular file was not uploaded successfully, although the other

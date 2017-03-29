@@ -39,9 +39,7 @@ open class BatchUploadData {
     /// The response block that is executed once all file uploads and the final batch commit is complete.
     let responseBlock: BatchUploadResponseBlock
     /// The total size of all the files to upload. Used to return progress data to the client.
-    let totalUploadSize: Int = 0
-    /// The total size of all the file content upload so far. Used to return progress data to the client.
-    let totalUploadedSoFar: Int = 0
+    var totalUploadProgress: Progress?
     /// The flag that determines whether upload continues or not.
     var cancel: Bool = false
     /// The container object that stores all upload / download task objects for cancelling.
@@ -60,6 +58,7 @@ open class BatchUploadData {
         self.finishArgs = []
         self.progressBlock = progressBlock
         self.responseBlock = responseBlock
+        self.totalUploadProgress = nil
 //        self.taskStorage = DBTasksStorage()
         
     }
