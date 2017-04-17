@@ -15,8 +15,8 @@ open class DropboxClient: DropboxBase {
         self.init(transportClient: transportClient)
     }
     
-    public convenience init(accessToken: String, selectUser: String? = nil, requestTimeout: TimeInterval? = nil) {
-        let transportClient = DropboxTransportClient(accessToken: accessToken, selectUser: selectUser)
+    public convenience init(accessToken: String, requestTimeout: TimeInterval) {
+        let transportClient = DropboxTransportClient(accessToken: accessToken, requestTimeout: requestTimeout)
         self.init(transportClient: transportClient)
     }
 

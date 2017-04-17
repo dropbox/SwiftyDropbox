@@ -20,8 +20,8 @@ open class DropboxTransportClient {
         self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
     }
     
-    public convenience init(accessToken: String, selectUser: String? = nil, requestTimeout: TimeInterval? = nil) {
-        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser, requestTimeout: requestTimeout)
+    public convenience init(accessToken: String, requestTimeout: TimeInterval) {
+        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: nil, requestTimeout: requestTimeout)
     }
 
     public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil, requestTimeout: TimeInterval? = nil) {
