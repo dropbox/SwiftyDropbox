@@ -19,11 +19,19 @@ open class DropboxTransportClient {
     public convenience init(accessToken: String, selectUser: String? = nil) {
         self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
     }
+    
+    public convenience init(accessToken: String, selectUser: String? = nil, requestTimeout: TimeInterval? = nil) {
+        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser, requestTimeout: requestTimeout)
+    }
 
-    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil) {
+    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil, requestTimeout: TimeInterval? = nil) {
         let config = URLSessionConfiguration.default
         let delegate = sessionDelegate ?? SessionDelegate()
         let serverTrustPolicyManager = serverTrustPolicyManager ?? nil
+        if let requestTimeout = requestTimeout
+        {
+            config.timeoutIntervalForRequest = requestTimeout
+        }
 
         let manager = SessionManager(configuration: config, delegate: delegate, serverTrustPolicyManager: serverTrustPolicyManager)
         manager.startRequestsImmediately = false
