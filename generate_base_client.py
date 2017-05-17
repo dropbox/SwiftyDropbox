@@ -5,6 +5,7 @@ import argparse
 import glob
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -52,7 +53,12 @@ def main():
     if args.stone:
         stone_path = args.stone
 
-    dropbox_pkg_path = os.path.abspath('Source/SwiftyDropbox/Shared')
+    dropbox_pkg_path = os.path.abspath('Source/SwiftyDropbox/Shared/Generated')
+
+    # clear out all old files
+    shutil.rmtree(dropbox_pkg_path)
+    os.makedirs(dropbox_pkg_path)
+
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
 
