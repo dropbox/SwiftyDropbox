@@ -7,7 +7,6 @@ import SwiftyDropbox
 
 class ViewController: NSViewController {
     @IBOutlet weak var oauthLinkButton: NSButton!
-    @IBOutlet weak var oauthLinkBrowserButton: NSButton!
     @IBOutlet weak var oauthUnlinkButton: NSButton!
     @IBOutlet weak var runApiTestsButton: NSButton!
     
@@ -22,11 +21,6 @@ class ViewController: NSViewController {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
             DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)})
         }
-    }
-
-    @IBAction func oauthLinkBrowserButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.unlinkClients()
-        DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)}, browserAuth: true)
     }
 
     @IBAction func oauthUnlinkButtonPressed(_ sender: AnyObject) {
@@ -54,12 +48,10 @@ class ViewController: NSViewController {
     func checkButtons() {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
             oauthLinkButton.isHidden = true
-            oauthLinkBrowserButton.isHidden = true
             oauthUnlinkButton.isHidden = false
             runApiTestsButton.isHidden = false
         } else {
             oauthLinkButton.isHidden = false
-            oauthLinkBrowserButton.isHidden = false
             oauthUnlinkButton.isHidden = true
             runApiTestsButton.isHidden = true
         }

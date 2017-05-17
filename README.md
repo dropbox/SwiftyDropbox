@@ -252,8 +252,8 @@ After you've made the above changes, your application's `.plist` file should loo
 There are three methods to programmatically retrieve an OAuth 2.0 access token:
 
 * **Direct auth** (iOS only): This launches the official Dropbox iOS app (if installed), authenticates via the official app, then redirects back into the SDK
-* **In-app webview auth** (iOS, macOS): This opens a pre-built in-app webview for authenticating via the Dropbox authorization page. This is convenient because the user is never redirected outside of your app.
-* **External browser auth** (iOS, macOS): This launches the platform's default browser for authenticating via the Dropbox authorization page. This is desirable because it is safer for the end-user, and pre-existing session data can be used to avoid requiring the user to re-enter their Dropbox credentials.
+* **Safari view controller auth** (iOS only): This launches a `SFSafariViewController` to facillitate the auth flow. This is desirable because it is safer for the end-user, and pre-existing session data can be used to avoid requiring the user to re-enter their Dropbox credentials.
+* **Redirect to external browser** (macOS only): This launches the user's default browser to facillitate the auth flow. This is also desirable because it is safer for the end-user, and pre-existing session data can be used to avoid requiring the user to re-enter their Dropbox credentials.
 
 To facilitate the above authorization flows, you should take the following steps:
 
@@ -288,8 +288,8 @@ func applicationDidFinishLaunching(_ aNotification: Notification) {
 
 #### Begin the authorization flow
 
-You can commence the auth flow by calling `authorizeFromController:controller:openURL:browserAuth` method in your application's
-view controller. If you wish to authenticate via the in-app webview, then set `browserAuth` to `NO`. Otherwise, authentication will be done via an external web browser.
+You can commence the auth flow by calling `authorizeFromController:controller:openURL` method in your application's
+view controller.
 
 From your view controller: 
 
@@ -384,6 +384,8 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
                     print("Error: \(description)")
                 }
             }
+            // this brings your application back the foreground on redirect
+            NSApp.activate(ignoringOtherApps: true)
         }
     }
 }

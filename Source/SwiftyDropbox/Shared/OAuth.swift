@@ -9,124 +9,10 @@ public protocol SharedApplication {
     func presentErrorMessage(_ message: String, title: String)
     func presentErrorMessageWithHandlers(_ message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>)
     func presentPlatformSpecificAuth(_ authURL: URL) -> Bool
-    func presentWebViewAuth(_ authURL: URL, tryIntercept: @escaping ((URL) -> Bool), cancelHandler: @escaping (() -> Void))
-    func presentBrowserAuth(_ authURL: URL)
+    func presentAuthChannel(_ authURL: URL, tryIntercept: @escaping ((URL) -> Bool), cancelHandler: @escaping (() -> Void))
     func presentExternalApp(_ url: URL)
     func canPresentExternalApp(_ url: URL) -> Bool
 }
-
-
-open class DropboxDesktopOAuthManager: DropboxOAuthManager {}
-
-
-open class DropboxMobileOAuthManager: DropboxOAuthManager {
-    var dauthRedirectURL: URL
-
-    public override init(appKey: String, host: String) {
-        self.dauthRedirectURL = URL(string: "db-\(appKey)://1/connect")!
-        super.init(appKey: appKey, host:host)
-        self.urls.append(self.dauthRedirectURL)
-    }
-
-    internal override func extractFromUrl(_ url: URL) -> DropboxOAuthResult {
-        let result: DropboxOAuthResult
-        if url.host == "1" { // dauth
-            result = extractfromDAuthURL(url)
-        } else {
-            result = extractFromRedirectURL(url)
-        }
-        return result
-    }
-
-    internal override func checkAndPresentPlatformSpecificAuth(_ sharedApplication: SharedApplication) -> Bool {
-        if !self.hasApplicationQueriesSchemes() {
-            let message = "DropboxSDK: unable to link; app isn't registered to query for URL schemes dbapi-2 and dbapi-8-emm. Add a dbapi-2 entry and a dbapi-8-emm entry to LSApplicationQueriesSchemes"
-            let title = "SwiftyDropbox Error"
-            sharedApplication.presentErrorMessage(message, title: title)
-            return true
-        }
-
-        if let scheme = dAuthScheme(sharedApplication) {
-            let nonce = UUID().uuidString
-            UserDefaults.standard.set(nonce, forKey: kDBLinkNonce)
-            UserDefaults.standard.synchronize()
-            sharedApplication.presentExternalApp(dAuthURL(scheme, nonce: nonce))
-            return true
-        }
-        return false
-    }
-
-    fileprivate func dAuthURL(_ scheme: String, nonce: String?) -> URL {
-        var components = URLComponents()
-        components.scheme =  scheme
-        components.host = "1"
-        components.path = "/connect"
-
-        if let n = nonce {
-            let state = "oauth2:\(n)"
-            components.queryItems = [
-                URLQueryItem(name: "k", value: self.appKey),
-                URLQueryItem(name: "s", value: ""),
-                URLQueryItem(name: "state", value: state),
-            ]
-        }
-        return components.url!
-    }
-
-    fileprivate func dAuthScheme(_ sharedApplication: SharedApplication) -> String? {
-        if sharedApplication.canPresentExternalApp(dAuthURL("dbapi-2", nonce: nil)) {
-            return "dbapi-2"
-        } else if sharedApplication.canPresentExternalApp(dAuthURL("dbapi-8-emm", nonce: nil)) {
-            return "dbapi-8-emm"
-        } else {
-            return nil
-        }
-    }
-
-    func extractfromDAuthURL(_ url: URL) -> DropboxOAuthResult {
-        switch url.path {
-        case "/connect":
-            var results = [String: String]()
-            let pairs  = url.query?.components(separatedBy: "&") ?? []
-
-            for pair in pairs {
-                let kv = pair.components(separatedBy: "=")
-                results.updateValue(kv[1], forKey: kv[0])
-            }
-            let state = results["state"]?.components(separatedBy: "%3A") ?? []
-
-            let nonce = UserDefaults.standard.object(forKey: kDBLinkNonce) as? String
-            if state.count == 2 && state[0] == "oauth2" && state[1] == nonce! {
-                let accessToken = results["oauth_token_secret"]!
-                let uid = results["uid"]!
-                return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
-            } else {
-                return .error(.unknown, "Unable to verify link request")
-            }
-        default:
-            return .error(.accessDenied, "User cancelled Dropbox link")
-        }
-    }
-
-    fileprivate func hasApplicationQueriesSchemes() -> Bool {
-        let queriesSchemes = Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? []
-
-        var foundApi2 = false
-        var foundApi8Emm = false
-        for scheme in queriesSchemes {
-            if scheme == "dbapi-2" {
-                foundApi2 = true
-            } else if scheme == "dbapi-8-emm" {
-                foundApi8Emm = true
-            }
-            if foundApi2 && foundApi8Emm {
-                return true
-            }
-        }
-        return false
-    }
-}
-
 
 /// Manages access token storage and authentication
 ///
@@ -195,7 +81,7 @@ open class DropboxOAuthManager {
     ///
     /// - parameter controller: The controller to present from
     ///
-    open func authorizeFromSharedApplication(_ sharedApplication: SharedApplication, browserAuth: Bool = false) {
+    open func authorizeFromSharedApplication(_ sharedApplication: SharedApplication) {
         let cancelHandler: (() -> Void) = {
             let cancelUrl = URL(string: "db-\(self.appKey)://2/cancel")!
             sharedApplication.presentExternalApp(cancelUrl)
@@ -229,19 +115,15 @@ open class DropboxOAuthManager {
             return
         }
 
-        if browserAuth {
-            sharedApplication.presentBrowserAuth(url)
-        } else {
-            let tryIntercept: ((URL) -> Bool) = { url in
-                if self.canHandleURL(url) {
-                    sharedApplication.presentExternalApp(url)
-                    return true
-                } else {
-                    return false
-                }
+        let tryIntercept: ((URL) -> Bool) = { url in
+            if self.canHandleURL(url) {
+                sharedApplication.presentExternalApp(url)
+                return true
+            } else {
+                return false
             }
-            sharedApplication.presentWebViewAuth(url, tryIntercept: tryIntercept, cancelHandler: cancelHandler)
         }
+        sharedApplication.presentAuthChannel(url, tryIntercept: tryIntercept, cancelHandler: cancelHandler)
     }
 
     fileprivate func conformsToAppScheme() -> Bool {
