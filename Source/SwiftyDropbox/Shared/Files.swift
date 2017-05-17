@@ -2248,8 +2248,6 @@ open class Files {
         /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
         /// restrictions due to copyright claims.
         case restrictedContent
-        /// The path root parameter provided is invalid.
-        case invalidPathRoot(Files.PathRootError)
         /// An unspecified error.
         case other
 
@@ -2281,10 +2279,6 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("restricted_content")
                     return .dictionary(d)
-                case .invalidPathRoot(let arg):
-                    var d = Serialization.getFields(Files.PathRootErrorSerializer().serialize(arg))
-                    d[".tag"] = .str("invalid_path_root")
-                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -2307,9 +2301,6 @@ open class Files {
                             return LookupError.notFolder
                         case "restricted_content":
                             return LookupError.restrictedContent
-                        case "invalid_path_root":
-                            let v = Files.PathRootErrorSerializer().deserialize(json)
-                            return LookupError.invalidPathRoot(v)
                         case "other":
                             return LookupError.other
                         default:
@@ -2417,37 +2408,6 @@ open class Files {
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The PathRootError struct
-    open class PathRootError: CustomStringConvertible {
-        /// The user's latest path root value. None if the user no longer has a path root.
-        open let pathRoot: String?
-        public init(pathRoot: String? = nil) {
-            nullableValidator(stringValidator())(pathRoot)
-            self.pathRoot = pathRoot
-        }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PathRootErrorSerializer().serialize(self)))"
-        }
-    }
-    open class PathRootErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PathRootError) -> JSON {
-            let output = [ 
-            "path_root": NullableSerializer(Serialization._StringSerializer).serialize(value.pathRoot),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> PathRootError {
-            switch json {
-                case .dictionary(let dict):
-                    let pathRoot = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_root"] ?? .null)
-                    return PathRootError(pathRoot: pathRoot)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4745,6 +4705,8 @@ open class Files {
         /// The batch request commits files into too many different shared folders. Please limit your batch request to
         /// files contained in a single shared folder.
         case tooManySharedFolderTargets
+        /// There are too many write operations happening in the user's Dropbox. You should retry uploading this file.
+        case tooManyWriteOperations
         /// An unspecified error.
         case other
 
@@ -4768,6 +4730,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("too_many_shared_folder_targets")
                     return .dictionary(d)
+                case .tooManyWriteOperations:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_write_operations")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4787,6 +4753,8 @@ open class Files {
                             return UploadSessionFinishError.path(v)
                         case "too_many_shared_folder_targets":
                             return UploadSessionFinishError.tooManySharedFolderTargets
+                        case "too_many_write_operations":
+                            return UploadSessionFinishError.tooManyWriteOperations
                         case "other":
                             return UploadSessionFinishError.other
                         default:
@@ -4800,7 +4768,7 @@ open class Files {
 
     /// The UploadSessionLookupError union
     public enum UploadSessionLookupError: CustomStringConvertible {
-        /// The upload session id was not found.
+        /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
         case notFound
         /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
         /// previous request was received and processed successfully but the client did not receive the response, e.g.
@@ -5106,6 +5074,8 @@ open class Files {
         case insufficientSpace
         /// Dropbox will not save the file or folder because of its name.
         case disallowedName
+        /// This endpoint cannot modify or delete team folders.
+        case teamFolder
         /// An unspecified error.
         case other
 
@@ -5137,6 +5107,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("disallowed_name")
                     return .dictionary(d)
+                case .teamFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_folder")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5160,6 +5134,8 @@ open class Files {
                             return WriteError.insufficientSpace
                         case "disallowed_name":
                             return WriteError.disallowedName
+                        case "team_folder":
+                            return WriteError.teamFolder
                         case "other":
                             return WriteError.other
                         default:

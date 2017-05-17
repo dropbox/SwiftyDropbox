@@ -10,6 +10,7 @@
         "PaperRoutes", 
         "SharingRoutes", 
         "TeamRoutes", 
+        "TeamLogRoutes", 
         "UsersRoutes"
       ]
     }, 
@@ -25,8 +26,10 @@
         "Sharing", 
         "Team", 
         "TeamCommon", 
+        "TeamLog", 
         "TeamPolicies", 
-        "Users"
+        "Users", 
+        "UsersCommon"
       ]
     }, 
     {
