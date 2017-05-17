@@ -6,8 +6,6 @@ import Foundation
 import Alamofire
 
 open class DropboxTransportClient {
-    static let version = "4.1.0"
-
     open let manager: SessionManager
     open let backgroundManager: SessionManager
     open let longpollManager: SessionManager
@@ -51,7 +49,7 @@ open class DropboxTransportClient {
             "notify": "https://notify.dropboxapi.com/2",
             ]
 
-        let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(DropboxTransportClient.version)"
+        let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(Constants.versionSDK)"
 
         self.manager = manager
         self.backgroundManager = backgroundManager
