@@ -247,8 +247,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
-    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf.
+    /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
+    /// .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML previews are generated
+    /// for files with the following extensions: .csv, .ods, .xls, .xlsm, .xlsx. Other formats will return an
+    /// unsupported extension error.
     ///
     /// - parameter path: The path of the file to preview.
     /// - parameter rev: Deprecated. Please specify revision in path instead.
@@ -266,8 +268,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
-    /// Get a preview for a file. Currently previews are only generated for the files with  the following extensions:
-    /// .doc, .docx, .docm, .ppt, .pps, .ppsx, .ppsm, .pptx, .pptm,  .xls, .xlsx, .xlsm, .rtf.
+    /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
+    /// .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML previews are generated
+    /// for files with the following extensions: .csv, .ods, .xls, .xlsm, .xlsx. Other formats will return an
+    /// unsupported extension error.
     ///
     /// - parameter path: The path of the file to preview.
     /// - parameter rev: Deprecated. Please specify revision in path instead.
@@ -340,7 +344,10 @@ open class FilesRoutes {
     /// don't exist yet, create them. If there's already something else at the given path, replace it but leave the
     /// children as they are. Check the new entry's readOnly in FolderSharingInfo and set all its children's read-only
     /// statuses to match. For each DeletedMetadata, if your local state has something at the given path, remove it and
-    /// all its children. If there's nothing at the given path, ignore this entry.
+    /// all its children. If there's nothing at the given path, ignore this entry. Note: auth.RateLimitError may be
+    /// returned if multiple listFolder or listFolderContinue calls with same parameters are made simultaneously by same
+    /// API app for same user. If your app implements retry logic, please hold off the retry until the previous request
+    /// finishes.
     ///
     /// - parameter path: The path to the folder you want to see the contents of.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
@@ -698,7 +705,7 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -714,7 +721,7 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -730,7 +737,7 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB of file contents.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -747,7 +754,7 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -763,7 +770,7 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -779,7 +786,7 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -795,7 +802,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB of file contents.
+    /// more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -810,7 +817,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB of file contents.
+    /// more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -825,7 +832,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB of file contents.
+    /// more than 150 MB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -876,7 +883,9 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
+    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
+    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -893,7 +902,9 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
+    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
+    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -910,7 +921,9 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB of file contents.
+    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
+    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
+    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.

@@ -52,7 +52,7 @@ def main():
     if args.stone:
         stone_path = args.stone
 
-    dropbox_pkg_path = os.path.abspath('Source/SwiftyDropbox/PlatformNeutral')
+    dropbox_pkg_path = os.path.abspath('Source/SwiftyDropbox/Shared')
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
 

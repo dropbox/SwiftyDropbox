@@ -141,7 +141,9 @@ open class SharingRoutes {
     /// Returns shared file metadata.
     ///
     /// - parameter file: The file to query.
-    /// - parameter actions: File actions to query.
+    /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can perform on
+    /// the file.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
     /// success or a `Sharing.GetFileMetadataError` object on failure.
@@ -154,7 +156,9 @@ open class SharingRoutes {
     /// Returns shared file metadata.
     ///
     /// - parameter files: The files to query.
-    /// - parameter actions: File actions to query.
+    /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can perform on
+    /// the file.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Sharing.GetFileMetadataBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
@@ -167,8 +171,9 @@ open class SharingRoutes {
     /// Returns shared folder metadata by its folder ID. Apps must have full Dropbox access to use this endpoint.
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
-    /// - parameter actions: This is a list indicating whether the returned folder data will include a boolean value
-    /// allow in FolderPermission that describes whether the current user can perform the  FolderAction on the folder.
+    /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
+    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
+    /// on the folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
@@ -317,9 +322,9 @@ open class SharingRoutes {
     /// this endpoint.
     ///
     /// - parameter limit: The maximum number of results to return per request.
-    /// - parameter actions: This is a list indicating whether each returned folder data entry will include a boolean
-    /// field allow in FolderPermission that describes whether the current user can perform the `FolderAction` on the
-    /// folder.
+    /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
+    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
+    /// on the folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
@@ -347,9 +352,9 @@ open class SharingRoutes {
     /// to use this endpoint.
     ///
     /// - parameter limit: The maximum number of results to return per request.
-    /// - parameter actions: This is a list indicating whether each returned folder data entry will include a boolean
-    /// field allow in FolderPermission that describes whether the current user can perform the `FolderAction` on the
-    /// folder.
+    /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
+    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
+    /// on the folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
@@ -377,7 +382,9 @@ open class SharingRoutes {
     /// folders, and does  not include unclaimed invitations.
     ///
     /// - parameter limit: Number of files to return max per query. Defaults to 100 if no limit is specified.
-    /// - parameter actions: File actions to query.
+    /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can perform on
+    /// the file.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.SharingUserError` object on failure.
@@ -549,9 +556,9 @@ open class SharingRoutes {
     /// - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
     /// - parameter forceAsync: Whether to force the share to happen asynchronously.
-    /// - parameter actions: This is a list indicating whether each returned folder data entry will include a boolean
-    /// field allow in FolderPermission that describes whether the current user can perform the `FolderAction` on the
-    /// folder.
+    /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
+    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
+    /// on the folder.
     /// - parameter linkSettings: Settings on the link for this folder.
     /// - parameter viewerInfoPolicy: Who can enable/disable viewer info for this shared folder.
     ///
@@ -656,12 +663,15 @@ open class SharingRoutes {
     /// - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
     /// - parameter linkSettings: Settings on the link for this folder.
+    /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
+    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
+    /// on the folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.UpdateFolderPolicyError` object on failure.
-    @discardableResult open func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, linkSettings: Sharing.LinkSettings? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
+    @discardableResult open func updateFolderPolicy(sharedFolderId: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, linkSettings: Sharing.LinkSettings? = nil, actions: Array<Sharing.FolderAction>? = nil) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer> {
         let route = Sharing.updateFolderPolicy
-        let serverArgs = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, viewerInfoPolicy: viewerInfoPolicy, sharedLinkPolicy: sharedLinkPolicy, linkSettings: linkSettings)
+        let serverArgs = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, viewerInfoPolicy: viewerInfoPolicy, sharedLinkPolicy: sharedLinkPolicy, linkSettings: linkSettings, actions: actions)
         return client.request(route, serverArgs: serverArgs)
     }
 

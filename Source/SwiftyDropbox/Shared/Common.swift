@@ -8,4 +8,168 @@ import Foundation
 
 /// Datatypes and serializers for the common namespace
 open class Common {
+    /// The InvalidPathRootError struct
+    open class InvalidPathRootError: CustomStringConvertible {
+        /// The latest path root id for user's team if the user is still in a team.
+        open let pathRoot: String?
+        public init(pathRoot: String? = nil) {
+            nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(pathRoot)
+            self.pathRoot = pathRoot
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(InvalidPathRootErrorSerializer().serialize(self)))"
+        }
+    }
+    open class InvalidPathRootErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: InvalidPathRootError) -> JSON {
+            let output = [ 
+            "path_root": NullableSerializer(Serialization._StringSerializer).serialize(value.pathRoot),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> InvalidPathRootError {
+            switch json {
+                case .dictionary(let dict):
+                    let pathRoot = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_root"] ?? .null)
+                    return InvalidPathRootError(pathRoot: pathRoot)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PathRoot union
+    public enum PathRoot: CustomStringConvertible {
+        /// Paths are relative to the authenticating user's home directory, whether or not that user belongs to a team.
+        case home
+        /// Paths are relative to the authenticating team member's home directory. (This results in
+        /// :field:`PathRootError.invalid' if the user does not belong to a team.)
+        case memberHome
+        /// Paths are relative to the given team directory. (This results in invalid in PathRootError if the user is not
+        /// a member of the team associated with that path root id.)
+        case team(String)
+        /// Paths are relative to the user's home directory. (This results in invalid in PathRootError if the belongs to
+        /// a team.)
+        case userHome
+        /// Paths are relative to given shared folder id (This results in noPermission in PathRootError if you don't
+        /// have access to  this shared folder.)
+        case sharedFolder(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PathRootSerializer().serialize(self)))"
+        }
+    }
+    open class PathRootSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PathRoot) -> JSON {
+            switch value {
+                case .home:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("home")
+                    return .dictionary(d)
+                case .memberHome:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("member_home")
+                    return .dictionary(d)
+                case .team(let arg):
+                    var d = ["team": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("team")
+                    return .dictionary(d)
+                case .userHome:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_home")
+                    return .dictionary(d)
+                case .sharedFolder(let arg):
+                    var d = ["shared_folder": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("shared_folder")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PathRoot {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "home":
+                            return PathRoot.home
+                        case "member_home":
+                            return PathRoot.memberHome
+                        case "team":
+                            let v = Serialization._StringSerializer.deserialize(d["team"] ?? .null)
+                            return PathRoot.team(v)
+                        case "user_home":
+                            return PathRoot.userHome
+                        case "shared_folder":
+                            let v = Serialization._StringSerializer.deserialize(d["shared_folder"] ?? .null)
+                            return PathRoot.sharedFolder(v)
+                        case "other":
+                            return PathRoot.other
+                        default:
+                            return PathRoot.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PathRootError union
+    public enum PathRootError: CustomStringConvertible {
+        /// The path root id value in Dropbox-API-Path-Root header is no longer valid.
+        case invalid(Common.InvalidPathRootError)
+        /// You don't have permission to access the path root id in Dropbox-API-Path-Root  header.
+        case noPermission
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PathRootErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PathRootErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PathRootError) -> JSON {
+            switch value {
+                case .invalid(let arg):
+                    var d = Serialization.getFields(Common.InvalidPathRootErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("invalid")
+                    return .dictionary(d)
+                case .noPermission:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_permission")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PathRootError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invalid":
+                            let v = Common.InvalidPathRootErrorSerializer().deserialize(json)
+                            return PathRootError.invalid(v)
+                        case "no_permission":
+                            return PathRootError.noPermission
+                        case "other":
+                            return PathRootError.other
+                        default:
+                            return PathRootError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
 }

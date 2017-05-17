@@ -12,7 +12,7 @@ open class Paper {
     open class AddMember: CustomStringConvertible {
         /// Permission for the user.
         open let permissionLevel: Paper.PaperDocPermissionLevel
-        /// User which should be added to the Paper doc. Specify only email or Dropbox account id.
+        /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
         open let member: Sharing.MemberSelector
         public init(member: Sharing.MemberSelector, permissionLevel: Paper.PaperDocPermissionLevel = .edit) {
             self.permissionLevel = permissionLevel
@@ -45,7 +45,7 @@ open class Paper {
 
     /// The RefPaperDoc struct
     open class RefPaperDoc: CustomStringConvertible {
-        /// (no description)
+        /// The Paper doc ID.
         open let docId: String
         public init(docId: String) {
             stringValidator()(docId)
@@ -76,11 +76,11 @@ open class Paper {
 
     /// The AddPaperDocUser struct
     open class AddPaperDocUser: Paper.RefPaperDoc {
-        /// User which should be added to the Paper doc. Specify only email or Dropbox account id.
+        /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
         open let members: Array<Paper.AddMember>
         /// A personal message that will be emailed to each successfully added member.
         open let customMessage: String?
-        /// Clients should set this to true if no email shall be sent to added users.
+        /// Clients should set this to true if no email message shall be sent to added users.
         open let quiet: Bool
         public init(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) {
             self.members = members
@@ -384,13 +384,13 @@ open class Paper {
 
     /// The subscription level of a Paper doc.
     public enum DocSubscriptionLevel: CustomStringConvertible {
-        /// No change e-mails unless you're the creator.
+        /// No change email messages unless you're the creator.
         case default_
-        /// Ignored: Not shown in pad lists or activity and no email is sent.
+        /// Ignored: Not shown in pad lists or activity and no email message is sent.
         case ignore
-        /// Subscribed: Shown in pad lists and activity and change e-mails are sent.
+        /// Subscribed: Shown in pad lists and activity and change email messages are sent.
         case every
-        /// Unsubscribed: Shown in pad lists, but not in activity and no change e-mails are sent.
+        /// Unsubscribed: Shown in pad lists, but not in activity and no change email messages are sent.
         case noEmail
 
         public var description: String {
@@ -494,7 +494,7 @@ open class Paper {
 
     /// Data structure representing a Paper folder.
     open class Folder: CustomStringConvertible {
-        /// Paper folder id. This id uniquely identifies the folder.
+        /// Paper folder ID. This ID uniquely identifies the folder.
         open let id: String
         /// Paper folder name.
         open let name: String
@@ -574,13 +574,13 @@ open class Paper {
 
     /// The subscription level of a Paper folder.
     public enum FolderSubscriptionLevel: CustomStringConvertible {
-        /// Not shown in activity, no e-mails.
+        /// Not shown in activity, no email messages.
         case none
-        /// Shown in activity, no e-mails.
+        /// Shown in activity, no email messages.
         case activityOnly
-        /// Shown in activity, daily e-mails.
+        /// Shown in activity, daily email messages.
         case dailyEmails
-        /// Shown in activity, weekly e-mails.
+        /// Shown in activity, weekly email messages.
         case weeklyEmails
 
         public var description: String {
@@ -668,7 +668,7 @@ open class Paper {
 
     /// The InviteeInfoWithPermissionLevel struct
     open class InviteeInfoWithPermissionLevel: CustomStringConvertible {
-        /// Email invited to the Paper doc.
+        /// Email address invited to the Paper doc.
         open let invitee: Sharing.InviteeInfo
         /// Permission level for the invitee.
         open let permissionLevel: Paper.PaperDocPermissionLevel
@@ -825,9 +825,9 @@ open class Paper {
 
     /// The ListPaperDocsFilterBy union
     public enum ListPaperDocsFilterBy: CustomStringConvertible {
-        /// Fetches all Paper doc ids that the user has ever accessed.
+        /// Fetches all Paper doc IDs that the user has ever accessed.
         case docsAccessed
-        /// Fetches only the Paper doc ids that the user has created.
+        /// Fetches only the Paper doc IDs that the user has created.
         case docsCreated
         /// An unspecified error.
         case other
@@ -876,7 +876,7 @@ open class Paper {
 
     /// The ListPaperDocsResponse struct
     open class ListPaperDocsResponse: CustomStringConvertible {
-        /// The list of Paper doc ids that can be used to access the given Paper docs or supplied to other API methods.
+        /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
         /// The list is sorted in the order specified by the initial call to docsList.
         open let docIds: Array<String>
         /// Pass the cursor into docsListContinue to paginate through all files. The cursor preserves all properties as
@@ -1435,7 +1435,7 @@ open class Paper {
 
     /// The PaperDocExportResult struct
     open class PaperDocExportResult: CustomStringConvertible {
-        /// The Paper doc owner's email.
+        /// The Paper doc owner's email address.
         open let owner: String
         /// The Paper doc title.
         open let title: String
@@ -1568,7 +1568,7 @@ open class Paper {
 
     /// The RemovePaperDocUser struct
     open class RemovePaperDocUser: Paper.RefPaperDoc {
-        /// User which should be removed from the Paper doc. Specify only email or Dropbox account id.
+        /// User which should be removed from the Paper doc. Specify only email address or Dropbox account ID.
         open let member: Sharing.MemberSelector
         public init(docId: String, member: Sharing.MemberSelector) {
             self.member = member

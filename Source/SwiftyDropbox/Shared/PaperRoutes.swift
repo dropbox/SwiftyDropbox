@@ -11,9 +11,10 @@ open class PaperRoutes {
         self.client = client
     }
 
-    /// Marks the given Paper doc as deleted. This operation is non-destructive and the doc can be revived by the owner.
-    /// Note: This action can be performed only by the doc owner.
+    /// Marks the given Paper doc as archived. Note: This action can be performed or undone by anyone with edit
+    /// permissions to the doc.
     ///
+    /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
@@ -84,6 +85,7 @@ open class PaperRoutes {
     /// folderName) from the root folder to the folder directly containing the Paper doc.  Note: If the Paper doc is not
     /// in any folder (aka unfiled) the response will be empty.
     ///
+    /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.FoldersContainingPaperDoc` object on
     /// success or a `Paper.DocLookupError` object on failure.
@@ -125,6 +127,7 @@ open class PaperRoutes {
     /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.  Note: This
     /// action can be performed only by the doc owner.
     ///
+    /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
@@ -136,6 +139,7 @@ open class PaperRoutes {
 
     /// Gets the default sharing policy for the given Paper doc.
     ///
+    /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.SharingPolicy` object on success or
     /// a `Paper.DocLookupError` object on failure.
@@ -159,12 +163,13 @@ open class PaperRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Allows an owner or editor to add users to a Paper doc or change their permissions using their email or Dropbox
-    /// account id.  Note: The Doc owner's permissions cannot be changed.
+    /// Allows an owner or editor to add users to a Paper doc or change their permissions using their email address or
+    /// Dropbox account ID.  Note: The Doc owner's permissions cannot be changed.
     ///
-    /// - parameter members: User which should be added to the Paper doc. Specify only email or Dropbox account id.
+    /// - parameter members: User which should be added to the Paper doc. Specify only email address or Dropbox account
+    /// ID.
     /// - parameter customMessage: A personal message that will be emailed to each successfully added member.
-    /// - parameter quiet: Clients should set this to true if no email shall be sent to added users.
+    /// - parameter quiet: Clients should set this to true if no email message shall be sent to added users.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Paper.AddPaperDocUserMemberResult>`
     /// object on success or a `Paper.DocLookupError` object on failure.
@@ -203,10 +208,11 @@ open class PaperRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Allows an owner or editor to remove users from a Paper doc using their email or Dropbox account id.  Note: Doc
-    /// owner cannot be removed.
+    /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox account ID.
+    /// Note: Doc owner cannot be removed.
     ///
-    /// - parameter member: User which should be removed from the Paper doc. Specify only email or Dropbox account id.
+    /// - parameter member: User which should be removed from the Paper doc. Specify only email address or Dropbox
+    /// account ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.

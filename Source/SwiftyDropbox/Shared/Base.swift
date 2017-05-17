@@ -17,6 +17,8 @@ open class DropboxBase {
     open var paper: PaperRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
     open var sharing: SharingRoutes!
+    /// Routes within the team_log namespace. See TeamLogRoutes for details.
+    open var team_log: TeamLogRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
     open var users: UsersRoutes!
 
@@ -25,6 +27,7 @@ open class DropboxBase {
         self.files = FilesRoutes(client: client)
         self.paper = PaperRoutes(client: client)
         self.sharing = SharingRoutes(client: client)
+        self.team_log = TeamLogRoutes(client: client)
         self.users = UsersRoutes(client: client)
     }
 }

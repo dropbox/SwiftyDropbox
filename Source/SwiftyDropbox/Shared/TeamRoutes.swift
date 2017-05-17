@@ -84,6 +84,20 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Get the values for one or more featues. This route allows you to check your account's capability for what
+    /// feature you can access or what value you have for certain features. Permission : Team information.
+    ///
+    /// - parameter features: A list of features in Feature. If the list is empty, this route will return
+    /// FeaturesGetValuesBatchError.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.FeaturesGetValuesBatchResult` object
+    /// on success or a `Team.FeaturesGetValuesBatchError` object on failure.
+    @discardableResult open func featuresGetValues(features: Array<Team.Feature>) -> RpcRequest<Team.FeaturesGetValuesBatchResultSerializer, Team.FeaturesGetValuesBatchErrorSerializer> {
+        let route = Team.featuresGetValues
+        let serverArgs = Team.FeaturesGetValuesBatchArg(features: features)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Retrieves information about a team.
     ///
     ///
@@ -700,6 +714,19 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Once a cursor has been retrieved from teamFolderList, use this to paginate through all team folders. Permission
+    /// : Team member file access.
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of team folders.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderListResult` object on
+    /// success or a `Team.TeamFolderListContinueError` object on failure.
+    @discardableResult open func teamFolderListContinue(cursor: String) -> RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListContinueErrorSerializer> {
+        let route = Team.teamFolderListContinue
+        let serverArgs = Team.TeamFolderListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Permanently deletes an archived team folder. Permission : Team member file access.
     ///
     /// - parameter teamFolderId: The ID of the team folder.
@@ -722,6 +749,16 @@ open class TeamRoutes {
         let route = Team.teamFolderRename
         let serverArgs = Team.TeamFolderRenameArg(teamFolderId: teamFolderId, name: name)
         return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the member profile of the admin who generated the team access token used to make the call.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TokenGetAuthenticatedAdminResult`
+    /// object on success or a `Team.TokenGetAuthenticatedAdminError` object on failure.
+    @discardableResult open func tokenGetAuthenticatedAdmin() -> RpcRequest<Team.TokenGetAuthenticatedAdminResultSerializer, Team.TokenGetAuthenticatedAdminErrorSerializer> {
+        let route = Team.tokenGetAuthenticatedAdmin
+        return client.request(route)
     }
 
 }
