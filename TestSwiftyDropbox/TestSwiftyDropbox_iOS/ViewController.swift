@@ -8,16 +8,11 @@ import SwiftyDropbox
 class ViewController: UIViewController {
     @IBOutlet weak var runTestsButton: UIButton!
     @IBOutlet weak var linkButton: UIButton!
-    @IBOutlet weak var linkBrowserButton: UIButton!
     @IBOutlet weak var unlinkButton: UIButton!
     @IBOutlet weak var runBatchUploadTestsButton: UIButton!
     
     @IBAction func linkButtonPressed(_ sender: AnyObject) {
         DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: self, openURL: {(url: URL) -> Void in UIApplication.shared.openURL(url)})
-    }
-
-    @IBAction func linkBrowserButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: self, openURL: {(url: URL) -> Void in UIApplication.shared.openURL(url)}, browserAuth: true)
     }
 
     @IBAction func unlinkButtonPressed(_ sender: AnyObject) {
@@ -64,13 +59,11 @@ class ViewController: UIViewController {
     func checkButtons() {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
             linkButton.isHidden = true
-            linkBrowserButton.isHidden = true
             unlinkButton.isHidden = false
             runTestsButton.isHidden = false
             runBatchUploadTestsButton.isHidden = false
         } else {
             linkButton.isHidden = false
-            linkBrowserButton.isHidden = false
             unlinkButton.isHidden = true
             runTestsButton.isHidden = true
             runBatchUploadTestsButton.isHidden = true

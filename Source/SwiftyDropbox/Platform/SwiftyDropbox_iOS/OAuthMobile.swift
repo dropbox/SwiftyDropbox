@@ -3,13 +3,16 @@
 ///
 
 import Foundation
+import SafariServices
 import UIKit
 import WebKit
 
 extension DropboxClientsManager {
-    public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void), browserAuth: Bool = false) {
+    public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void)) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
-        DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL), browserAuth: browserAuth)
+        let sharedMobileApplication = MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL)
+        MobileSharedApplication.sharedMobileApplication = sharedMobileApplication
+        DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(sharedMobileApplication)
     }
 
     public static func setupWithAppKey(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
@@ -29,8 +32,125 @@ extension DropboxClientsManager {
     }
 }
 
+open class DropboxMobileOAuthManager: DropboxOAuthManager {
+    var dauthRedirectURL: URL
+    
+    public override init(appKey: String, host: String) {
+        self.dauthRedirectURL = URL(string: "db-\(appKey)://1/connect")!
+        super.init(appKey: appKey, host:host)
+        self.urls.append(self.dauthRedirectURL)
+    }
+    
+    internal override func extractFromUrl(_ url: URL) -> DropboxOAuthResult {
+        let result: DropboxOAuthResult
+        if url.host == "1" { // dauth
+            result = extractfromDAuthURL(url)
+        } else {
+            result = extractFromRedirectURL(url)
+        }
+        return result
+    }
+    
+    internal override func checkAndPresentPlatformSpecificAuth(_ sharedApplication: SharedApplication) -> Bool {
+        if !self.hasApplicationQueriesSchemes() {
+            let message = "DropboxSDK: unable to link; app isn't registered to query for URL schemes dbapi-2 and dbapi-8-emm. Add a dbapi-2 entry and a dbapi-8-emm entry to LSApplicationQueriesSchemes"
+            let title = "SwiftyDropbox Error"
+            sharedApplication.presentErrorMessage(message, title: title)
+            return true
+        }
+        
+        if let scheme = dAuthScheme(sharedApplication) {
+            let nonce = UUID().uuidString
+            UserDefaults.standard.set(nonce, forKey: kDBLinkNonce)
+            UserDefaults.standard.synchronize()
+            sharedApplication.presentExternalApp(dAuthURL(scheme, nonce: nonce))
+            return true
+        }
+        return false
+    }
+    
+    open override func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
+        if let sharedMobileApplication = MobileSharedApplication.sharedMobileApplication {
+            sharedMobileApplication.dismissAuthController()
+        }
+        let result = super.handleRedirectURL(url)
+        return result
+    }
+
+    fileprivate func dAuthURL(_ scheme: String, nonce: String?) -> URL {
+        var components = URLComponents()
+        components.scheme =  scheme
+        components.host = "1"
+        components.path = "/connect"
+        
+        if let n = nonce {
+            let state = "oauth2:\(n)"
+            components.queryItems = [
+                URLQueryItem(name: "k", value: self.appKey),
+                URLQueryItem(name: "s", value: ""),
+                URLQueryItem(name: "state", value: state),
+            ]
+        }
+        return components.url!
+    }
+    
+    fileprivate func dAuthScheme(_ sharedApplication: SharedApplication) -> String? {
+        if sharedApplication.canPresentExternalApp(dAuthURL("dbapi-2", nonce: nil)) {
+            return "dbapi-2"
+        } else if sharedApplication.canPresentExternalApp(dAuthURL("dbapi-8-emm", nonce: nil)) {
+            return "dbapi-8-emm"
+        } else {
+            return nil
+        }
+    }
+    
+    func extractfromDAuthURL(_ url: URL) -> DropboxOAuthResult {
+        switch url.path {
+        case "/connect":
+            var results = [String: String]()
+            let pairs  = url.query?.components(separatedBy: "&") ?? []
+            
+            for pair in pairs {
+                let kv = pair.components(separatedBy: "=")
+                results.updateValue(kv[1], forKey: kv[0])
+            }
+            let state = results["state"]?.components(separatedBy: "%3A") ?? []
+            
+            let nonce = UserDefaults.standard.object(forKey: kDBLinkNonce) as? String
+            if state.count == 2 && state[0] == "oauth2" && state[1] == nonce! {
+                let accessToken = results["oauth_token_secret"]!
+                let uid = results["uid"]!
+                return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
+            } else {
+                return .error(.unknown, "Unable to verify link request")
+            }
+        default:
+            return .error(.accessDenied, "User cancelled Dropbox link")
+        }
+    }
+    
+    fileprivate func hasApplicationQueriesSchemes() -> Bool {
+        let queriesSchemes = Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? []
+        
+        var foundApi2 = false
+        var foundApi8Emm = false
+        for scheme in queriesSchemes {
+            if scheme == "dbapi-2" {
+                foundApi2 = true
+            } else if scheme == "dbapi-8-emm" {
+                foundApi8Emm = true
+            }
+            if foundApi2 && foundApi8Emm {
+                return true
+            }
+        }
+        return false
+    }
+}
 
 open class MobileSharedApplication: SharedApplication {
+    open static var sharedMobileApplication: MobileSharedApplication?
+
     let sharedApplication: UIApplication
     let controller: UIViewController?
     let openURL: ((URL) -> Void)
@@ -80,20 +200,11 @@ open class MobileSharedApplication: SharedApplication {
         return true
     }
 
-    open func presentWebViewAuth(_ authURL: URL, tryIntercept: @escaping ((URL) -> Bool), cancelHandler: @escaping (() -> Void)) {
-        let web = DropboxConnectController(
-            URL: authURL,
-            tryIntercept: tryIntercept,
-            cancelHandler: cancelHandler
-        )
-        let navigationController = UINavigationController(rootViewController: web)
-        if let controller = controller {
-            controller.present(navigationController, animated: true, completion: nil)
+    open func presentAuthChannel(_ authURL: URL, tryIntercept: @escaping ((URL) -> Bool), cancelHandler: @escaping (() -> Void)) {
+        if let controller = self.controller {
+            let safariViewController = MobileSafariViewController(url: authURL, cancelHandler: cancelHandler)
+            controller.present(safariViewController, animated: true, completion: nil)
         }
-    }
-
-    open func presentBrowserAuth(_ authURL: URL) {
-        presentExternalApp(authURL)
     }
 
     open func presentExternalApp(_ url: URL) {
@@ -103,123 +214,37 @@ open class MobileSharedApplication: SharedApplication {
     open func canPresentExternalApp(_ url: URL) -> Bool {
         return self.sharedApplication.canOpenURL(url)
     }
+
+    open func dismissAuthController() {
+        if let controller = self.controller {
+            if let presentedViewController = controller.presentedViewController {
+                if presentedViewController.isBeingDismissed == false && presentedViewController is MobileSafariViewController {
+                    controller.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+    }
 }
 
-open class DropboxConnectController: UIViewController, WKNavigationDelegate {
-    var webView: WKWebView!
-
-    var onWillDismiss: ((_ didCancel: Bool) -> Void)?
-    var tryIntercept: ((_ url: URL) -> Bool)?
-
-    var cancelButton: UIBarButtonItem?
+open class MobileSafariViewController: SFSafariViewController, SFSafariViewControllerDelegate {
     var cancelHandler: (() -> Void) = {}
 
-    var indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    public init(url: URL, cancelHandler: @escaping (() -> Void)) {
+        super.init(url: url, entersReaderIfAvailable: false)
 
-    public init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    public init(URL: Foundation.URL, tryIntercept: @escaping ((_ url: Foundation.URL) -> Bool), cancelHandler: @escaping (() -> Void)) {
-        super.init(nibName: nil, bundle: nil)
-        self.startURL = URL
-        self.tryIntercept = tryIntercept
         self.cancelHandler = cancelHandler
+        self.delegate = self;
+    }
 
-        // clear persistent cookies
-        let libraryPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-        let cookiesFolderPath = libraryPath + "/Cookies"
-        do {
-            try FileManager.default.removeItem(atPath: cookiesFolderPath)
-        } catch {
-            print("Error removing cookies")
+    public func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+        if (!didLoadSuccessfully) {
+            controller.dismiss(animated: true, completion: nil)
         }
     }
 
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        self.webView = WKWebView(frame: self.view.bounds)
-
-        indicator.center = view.center
-        self.webView.addSubview(indicator)
-        indicator.startAnimating()
-
-        self.view.addSubview(self.webView)
-
-        self.webView.navigationDelegate = self
-
-        self.view.backgroundColor = UIColor.white
-
-        self.cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(DropboxConnectController.cancel(_:)))
-        self.navigationItem.rightBarButtonItem = self.cancelButton
-    }
-
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !webView.canGoBack {
-            if nil != startURL {
-                loadURL(startURL!)
-            } else {
-                webView.loadHTMLString("There is no `startURL`", baseURL: nil)
-            }
-        }
-    }
-
-    open func webView(_ webView: WKWebView,
-                        decidePolicyFor navigationAction: WKNavigationAction,
-                                                        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.url, let callback = self.tryIntercept {
-            if callback(url) {
-                self.dismiss(true)
-                return decisionHandler(.cancel)
-            }
-        }
-        return decisionHandler(.allow)
-    }
-
-    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        indicator.stopAnimating()
-        indicator.removeFromSuperview()
-    }
-
-    open var startURL: URL? {
-        didSet(oldURL) {
-            if nil != startURL && nil == oldURL && isViewLoaded {
-                loadURL(startURL!)
-            }
-        }
-    }
-
-    open func loadURL(_ url: URL) {
-        webView.load(URLRequest(url: url))
-    }
-
-    func showHideBackButton(_ show: Bool) {
-        navigationItem.leftBarButtonItem = show ? UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DropboxConnectController.goBack(_:))) : nil
-    }
-
-    func goBack(_ sender: AnyObject?) {
-        webView.goBack()
-    }
-
-    func cancel(_ sender: AnyObject?) {
-        dismiss(true, animated: (sender != nil))
-
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         self.cancelHandler()
     }
-
-    func dismiss(_ animated: Bool) {
-        dismiss(false, animated: animated)
-    }
-
-    func dismiss(_ asCancel: Bool, animated: Bool) {
-        webView.stopLoading()
-
-        self.onWillDismiss?(asCancel)
-        presentingViewController?.dismiss(animated: animated, completion: nil)
-    }
+    
 }
+
