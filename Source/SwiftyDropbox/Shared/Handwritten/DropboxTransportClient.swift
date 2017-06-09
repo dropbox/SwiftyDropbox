@@ -90,9 +90,9 @@ open class DropboxTransportClient {
         let managerToUse = { () -> SessionManager in
             // longpoll requests have a much longer timeout period than other requests
             if type(of: route) ==  type(of: Files.listFolderLongpoll) {
-                return longpollManager
+				return self.longpollManager
             }
-            return manager
+			return self.manager
         }()
 
         let request = managerToUse.request(url, method: .post, parameters: ["jsonRequest": rawJsonRequest!], encoding: customEncoding, headers: headers)
