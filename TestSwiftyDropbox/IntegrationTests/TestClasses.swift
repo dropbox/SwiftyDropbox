@@ -148,11 +148,11 @@ open class DropboxTester {
         let copyReferenceGet = {
             tester.copyReferenceGet(getMetadata)
         }
-        let copy = {
-            tester.copy(copyReferenceGet)
+        let copyV2 = {
+            tester.copyV2(copyReferenceGet)
         }
         let uploadDataSession = {
-            tester.uploadDataSession(copy)
+            tester.uploadDataSession(copyV2)
         }
         let uploadData = {
             tester.uploadData(uploadDataSession)
@@ -160,14 +160,14 @@ open class DropboxTester {
         let listFolder = {
             tester.listFolder(uploadData)
         }
-        let createFolder = {
-            tester.createFolder(listFolder)
+        let createFolderV2 = {
+            tester.createFolderV2(listFolder)
         }
-        let delete = {
-            tester.delete(createFolder)
+        let deleteV2 = {
+            tester.deleteV2(createFolderV2)
         }
         let start = {
-            delete()
+            deleteV2()
         }
 
         TestFormat.printTestBegin(#function)
@@ -455,9 +455,9 @@ open class FilesTests {
         self.tester = tester
     }
 
-    func delete(_ nextTest: @escaping (() -> Void)) {
+    func deleteV2(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.delete(path: TestData.baseFolder).response { response, error in
+        tester.files.deleteV2(path: TestData.baseFolder).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -470,9 +470,9 @@ open class FilesTests {
         }
     }
 
-    func createFolder(_ nextTest: @escaping (() -> Void)) {
+    func createFolderV2(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.createFolder(path: TestData.testFolderPath).response { response, error in
+        tester.files.createFolderV2(path: TestData.testFolderPath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -546,10 +546,10 @@ open class FilesTests {
         }
     }
 
-    func copy(_ nextTest: @escaping (() -> Void)) {
+    func copyV2(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let copyOutputPath = TestData.testFilePath + "_duplicate" + "_" + TestData.testId
-        tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
+        tester.files.copyV2(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -624,12 +624,12 @@ open class FilesTests {
 
     func move(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.createFolder(path: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
+        tester.files.createFolderV2(path: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printOffset("Created destination folder")
 
-                self.tester.files.move(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
+                self.tester.files.moveV2(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
                     if let result = response {
                         print(result)
                         TestFormat.printSubTestEnd(#function)
@@ -651,7 +651,7 @@ open class FilesTests {
         }
 
         TestFormat.printSubTestBegin(#function)
-        tester.files.saveUrl(path: TestData.testFolderPath + "/" + "dbx-test.html", url: "https://www.dropbox.com/help/5").response { response, error in
+        tester.files.saveUrl(path: TestData.testFolderPath + "/" + "dbx-test.html", url: "https://www.google.com").response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -750,7 +750,7 @@ open class FilesTests {
         let copy = {
             TestFormat.printOffset("Making change that longpoll will detect (copy file)")
             let copyOutputPath = TestData.testFilePath + "_duplicate2" + "_" + TestData.testId
-            self.tester.files.copy(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
+            self.tester.files.copyV2(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
                 if let result = response {
                     print(result)
                 } else if let callError = error {
