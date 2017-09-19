@@ -43,18 +43,18 @@ open class Common {
     public enum PathRoot: CustomStringConvertible {
         /// Paths are relative to the authenticating user's home directory, whether or not that user belongs to a team.
         case home
-        /// Paths are relative to the authenticating team member's home directory. (This results in
-        /// :field:`PathRootError.invalid' if the user does not belong to a team.)
+        /// Paths are relative to the authenticating team member's home directory. (This results in invalid in
+        /// PathRootError if the user does not belong to a team.).
         case memberHome
         /// Paths are relative to the given team directory. (This results in invalid in PathRootError if the user is not
-        /// a member of the team associated with that path root id.)
+        /// a member of the team associated with that path root id.).
         case team(String)
         /// Paths are relative to the user's home directory. (This results in invalid in PathRootError if the belongs to
-        /// a team.)
+        /// a team.).
         case userHome
-        /// Paths are relative to given shared folder id (This results in noPermission in PathRootError if you don't
-        /// have access to  this shared folder.)
-        case sharedFolder(String)
+        /// Paths are relative to given namespace id (This results in noPermission in PathRootError if you don't have
+        /// access to this namespace.).
+        case namespaceId(String)
         /// An unspecified error.
         case other
 
@@ -82,9 +82,9 @@ open class Common {
                     var d = [String: JSON]()
                     d[".tag"] = .str("user_home")
                     return .dictionary(d)
-                case .sharedFolder(let arg):
-                    var d = ["shared_folder": Serialization._StringSerializer.serialize(arg)]
-                    d[".tag"] = .str("shared_folder")
+                case .namespaceId(let arg):
+                    var d = ["namespace_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("namespace_id")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -106,9 +106,9 @@ open class Common {
                             return PathRoot.team(v)
                         case "user_home":
                             return PathRoot.userHome
-                        case "shared_folder":
-                            let v = Serialization._StringSerializer.deserialize(d["shared_folder"] ?? .null)
-                            return PathRoot.sharedFolder(v)
+                        case "namespace_id":
+                            let v = Serialization._StringSerializer.deserialize(d["namespace_id"] ?? .null)
+                            return PathRoot.namespaceId(v)
                         case "other":
                             return PathRoot.other
                         default:

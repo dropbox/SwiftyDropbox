@@ -239,8 +239,11 @@ open class Users {
     open class FullTeam: Users.Team {
         /// Team policies governing sharing.
         open let sharingPolicies: TeamPolicies.TeamSharingPolicies
-        public init(id: String, name: String, sharingPolicies: TeamPolicies.TeamSharingPolicies) {
+        /// Team policy governing the use of the Office Add-In.
+        open let officeAddinPolicy: TeamPolicies.OfficeAddInPolicy
+        public init(id: String, name: String, sharingPolicies: TeamPolicies.TeamSharingPolicies, officeAddinPolicy: TeamPolicies.OfficeAddInPolicy) {
             self.sharingPolicies = sharingPolicies
+            self.officeAddinPolicy = officeAddinPolicy
             super.init(id: id, name: name)
         }
         open override var description: String {
@@ -254,6 +257,7 @@ open class Users {
             "id": Serialization._StringSerializer.serialize(value.id),
             "name": Serialization._StringSerializer.serialize(value.name),
             "sharing_policies": TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharingPolicies),
+            "office_addin_policy": TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddinPolicy),
             ]
             return .dictionary(output)
         }
@@ -263,7 +267,8 @@ open class Users {
                     let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
                     let sharingPolicies = TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing_policies"] ?? .null)
-                    return FullTeam(id: id, name: name, sharingPolicies: sharingPolicies)
+                    let officeAddinPolicy = TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin_policy"] ?? .null)
+                    return FullTeam(id: id, name: name, sharingPolicies: sharingPolicies, officeAddinPolicy: officeAddinPolicy)
                 default:
                     fatalError("Type error deserializing")
             }

@@ -11,6 +11,10 @@ import Alamofire
 open class DropboxBase {
     /// Routes within the auth namespace. See AuthRoutes for details.
     open var auth: AuthRoutes!
+    /// Routes within the file_properties namespace. See FilePropertiesRoutes for details.
+    open var file_properties: FilePropertiesRoutes!
+    /// Routes within the file_requests namespace. See FileRequestsRoutes for details.
+    open var file_requests: FileRequestsRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
     open var files: FilesRoutes!
     /// Routes within the paper namespace. See PaperRoutes for details.
@@ -24,6 +28,8 @@ open class DropboxBase {
 
     public init(client: DropboxTransportClient) {
         self.auth = AuthRoutes(client: client)
+        self.file_properties = FilePropertiesRoutes(client: client)
+        self.file_requests = FileRequestsRoutes(client: client)
         self.files = FilesRoutes(client: client)
         self.paper = PaperRoutes(client: client)
         self.sharing = SharingRoutes(client: client)

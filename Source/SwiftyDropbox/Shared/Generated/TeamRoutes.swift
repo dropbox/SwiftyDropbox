@@ -13,10 +13,10 @@ open class TeamRoutes {
 
     /// List all device sessions of a team's member.
     ///
-    /// - parameter teamMemberId: The team's member id
-    /// - parameter includeWebSessions: Whether to list web sessions of the team's member
-    /// - parameter includeDesktopClients: Whether to list linked desktop devices of the team's member
-    /// - parameter includeMobileClients: Whether to list linked mobile devices of the team's member
+    /// - parameter teamMemberId: The team's member id.
+    /// - parameter includeWebSessions: Whether to list web sessions of the team's member.
+    /// - parameter includeDesktopClients: Whether to list linked desktop devices of the team's member.
+    /// - parameter includeMobileClients: Whether to list linked mobile devices of the team's member.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListMemberDevicesResult` object on
     /// success or a `Team.ListMemberDevicesError` object on failure.
@@ -30,10 +30,10 @@ open class TeamRoutes {
     ///
     /// - parameter cursor: At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if
     /// the result of the call includes a cursor, the following requests should include the received cursors in order to
-    /// receive the next sub list of team devices
-    /// - parameter includeWebSessions: Whether to list web sessions of the team members
-    /// - parameter includeDesktopClients: Whether to list desktop clients of the team members
-    /// - parameter includeMobileClients: Whether to list mobile clients of the team members
+    /// receive the next sub list of team devices.
+    /// - parameter includeWebSessions: Whether to list web sessions of the team members.
+    /// - parameter includeDesktopClients: Whether to list desktop clients of the team members.
+    /// - parameter includeMobileClients: Whether to list mobile clients of the team members.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListMembersDevicesResult` object on
     /// success or a `Team.ListMembersDevicesError` object on failure.
@@ -47,10 +47,10 @@ open class TeamRoutes {
     ///
     /// - parameter cursor: At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the
     /// result of the call includes a cursor, the following requests should include the received cursors in order to
-    /// receive the next sub list of team devices
-    /// - parameter includeWebSessions: Whether to list web sessions of the team members
-    /// - parameter includeDesktopClients: Whether to list desktop clients of the team members
-    /// - parameter includeMobileClients: Whether to list mobile clients of the team members
+    /// receive the next sub list of team devices.
+    /// - parameter includeWebSessions: Whether to list web sessions of the team members.
+    /// - parameter includeDesktopClients: Whether to list desktop clients of the team members.
+    /// - parameter includeMobileClients: Whether to list mobile clients of the team members.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamDevicesResult` object on
     /// success or a `Team.ListTeamDevicesError` object on failure.
@@ -61,7 +61,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Revoke a device session of a team's member
+    /// Revoke a device session of a team's member.
     ///
     /// - parameter revokeDeviceSessionArg: The RevokeDeviceSessionArg union
     ///
@@ -73,7 +73,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Revoke a list of device sessions of team members
+    /// Revoke a list of device sessions of team members.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.RevokeDeviceSessionBatchResult`
@@ -278,7 +278,7 @@ open class TeamRoutes {
 
     /// List all linked applications of the team member. Note, this endpoint does not list any team-linked applications.
     ///
-    /// - parameter teamMemberId: The team member id
+    /// - parameter teamMemberId: The team member id.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListMemberAppsResult` object on
     /// success or a `Team.ListMemberAppsError` object on failure.
@@ -293,7 +293,7 @@ open class TeamRoutes {
     ///
     /// - parameter cursor: At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed.
     /// Then, if the result of the call includes a cursor, the following requests should include the received cursors in
-    /// order to receive the next sub list of the team applications
+    /// order to receive the next sub list of the team applications.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListMembersAppsResult` object on
     /// success or a `Team.ListMembersAppsError` object on failure.
@@ -308,7 +308,7 @@ open class TeamRoutes {
     ///
     /// - parameter cursor: At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then,
     /// if the result of the call includes a cursor, the following requests should include the received cursors in order
-    /// to receive the next sub list of the team applications
+    /// to receive the next sub list of the team applications.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamAppsResult` object on success
     /// or a `Team.ListTeamAppsError` object on failure.
@@ -319,11 +319,11 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Revoke a linked application of the team member
+    /// Revoke a linked application of the team member.
     ///
-    /// - parameter appId: The application's unique id
-    /// - parameter teamMemberId: The unique id of the member owning the device
-    /// - parameter keepAppFolder: Whether to keep the application dedicated folder (in case the application uses  one)
+    /// - parameter appId: The application's unique id.
+    /// - parameter teamMemberId: The unique id of the member owning the device.
+    /// - parameter keepAppFolder: Whether to keep the application dedicated folder (in case the application uses  one).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeLinkedAppError` object on failure.
@@ -333,7 +333,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Revoke a list of linked applications of the team members
+    /// Revoke a list of linked applications of the team members.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.RevokeLinkedAppBatchResult` object on
@@ -341,6 +341,44 @@ open class TeamRoutes {
     @discardableResult open func linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) -> RpcRequest<Team.RevokeLinkedAppBatchResultSerializer, Team.RevokeLinkedAppBatchErrorSerializer> {
         let route = Team.linkedAppsRevokeLinkedAppBatch
         let serverArgs = Team.RevokeLinkedApiAppBatchArg(revokeLinkedApp: revokeLinkedApp)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000 members can be
+    /// specified in a single call.
+    ///
+    /// - parameter users: List of users.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
+    /// success or a `Team.CustomQuotaError` object on failure.
+    @discardableResult open func memberSpaceLimitsGetCustomQuota(users: Array<Team.UserSelectorArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+        let route = Team.memberSpaceLimitsGetCustomQuota
+        let serverArgs = Team.CustomQuotaUsersArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
+    ///
+    /// - parameter users: List of users.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Array<Team.RemoveCustomQuotaResult>`
+    /// object on success or a `Team.CustomQuotaError` object on failure.
+    @discardableResult open func memberSpaceLimitsRemoveCustomQuota(users: Array<Team.UserSelectorArg>) -> RpcRequest<ArraySerializer<Team.RemoveCustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+        let route = Team.memberSpaceLimitsRemoveCustomQuota
+        let serverArgs = Team.CustomQuotaUsersArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be specified in a
+    /// single call.
+    ///
+    /// - parameter usersAndQuotas: List of users and their custom quotas.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
+    /// success or a `Team.CustomQuotaError` object on failure.
+    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+        let route = Team.memberSpaceLimitsSetCustomQuota
+        let serverArgs = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -364,7 +402,7 @@ open class TeamRoutes {
     }
 
     /// Once an async_job_id is returned from membersAdd , use this to poll the status of the asynchronous request.
-    /// Permission : Team member management
+    /// Permission : Team member management.
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
@@ -390,7 +428,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Lists members of a team. Permission : Team information
+    /// Lists members of a team. Permission : Team information.
     ///
     /// - parameter limit: Number of results to return per call.
     /// - parameter includeRemoved: Whether to return removed members.
@@ -404,7 +442,7 @@ open class TeamRoutes {
     }
 
     /// Once a cursor has been retrieved from membersList, use this to paginate through all team members. Permission :
-    /// Team information
+    /// Team information.
     ///
     /// - parameter cursor: Indicates from what point to get the next set of members.
     ///
@@ -433,8 +471,10 @@ open class TeamRoutes {
     /// external_id must be provided to identify the user account. Accounts can be recovered via membersRecover for a 7
     /// day period or until the account has been permanently deleted or transferred to another account (whichever comes
     /// first). Calling membersAdd while a user is still recoverable on your team will return with userAlreadyOnTeam in
-    /// MemberAddResult. This endpoint may initiate an asynchronous job. To obtain the final result of the job, the
-    /// client should periodically poll membersRemoveJobStatusGet.
+    /// MemberAddResult. Accounts can have their files transferred via the admin console for a limited time, based on
+    /// the version history length associated with the team (120 days for most teams). This endpoint may initiate an
+    /// asynchronous job. To obtain the final result of the job, the client should periodically poll
+    /// membersRemoveJobStatusGet.
     ///
     /// - parameter transferDestId: If provided, files from the deleted member account will be transferred to this user.
     /// - parameter transferAdminId: If provided, errors during the transfer process will be sent via email to this
@@ -452,7 +492,7 @@ open class TeamRoutes {
     }
 
     /// Once an async_job_id is returned from membersRemove , use this to poll the status of the asynchronous request.
-    /// Permission : Team member management
+    /// Permission : Team member management.
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
@@ -479,7 +519,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Updates a team member's permissions. Permission : Team member management
+    /// Updates a team member's permissions. Permission : Team member management.
     ///
     /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRole: The new role of the member.
@@ -492,7 +532,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Updates a team member's profile. Permission : Team member management
+    /// Updates a team member's profile. Permission : Team member management.
     ///
     /// - parameter user: Identity of user whose profile will be set.
     /// - parameter newEmail: New email for member.
@@ -537,61 +577,92 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Add a property template. See route files/properties/add to add properties to a file.
+    /// Returns a list of all team-accessible namespaces. This list includes team folders, shared folders containing
+    /// team members, team members' home namespaces, and team members' app folders. Home namespaces and app folders are
+    /// always owned by this team or members of the team, but shared folders may be owned by other users or other teams.
+    /// Duplicates may occur in the list.
+    ///
+    /// - parameter limit: Specifying a value here has no effect.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func namespacesList(limit: UInt32 = 1000) -> RpcRequest<Team.TeamNamespacesListResultSerializer, VoidSerializer> {
+        let route = Team.namespacesList
+        let serverArgs = Team.TeamNamespacesListArg(limit: limit)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once a cursor has been retrieved from namespacesList, use this to paginate through all team-accessible
+    /// namespaces. Duplicates may occur in the list.
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of team-accessible namespaces.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
+    /// success or a `Team.TeamNamespacesListContinueError` object on failure.
+    @discardableResult open func namespacesListContinue(cursor: String) -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListContinueErrorSerializer> {
+        let route = Team.namespacesListContinue
+        let serverArgs = Team.TeamNamespacesListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// The propertiesTemplateAdd route
     ///
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AddPropertyTemplateResult` object on
-    /// success or a `Properties.ModifyPropertyTemplateError` object on failure.
-    @discardableResult open func propertiesTemplateAdd(name: String, description_: String, fields: Array<Properties.PropertyFieldTemplate>) -> RpcRequest<Team.AddPropertyTemplateResultSerializer, Properties.ModifyPropertyTemplateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
+    /// on success or a `FileProperties.ModifyTemplateError` object on failure.
+    @available(*, unavailable, message:"properties/template/add is deprecated.")
+    @discardableResult open func propertiesTemplateAdd(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateAdd
-        let serverArgs = Team.AddPropertyTemplateArg(name: name, description_: description_, fields: fields)
+        let serverArgs = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get the schema for a specified template.
+    /// The propertiesTemplateGet route
     ///
-    /// - parameter templateId: An identifier for property template added by route properties/template/add.
+    /// - parameter templateId: An identifier for template added by route  See templatesAddForUser or
+    /// templatesAddForTeam.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Properties.GetPropertyTemplateResult`
-    /// object on success or a `Properties.PropertyTemplateError` object on failure.
-    @discardableResult open func propertiesTemplateGet(templateId: String) -> RpcRequest<Properties.GetPropertyTemplateResultSerializer, Properties.PropertyTemplateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object
+    /// on success or a `FileProperties.TemplateError` object on failure.
+    @available(*, unavailable, message:"properties/template/get is deprecated.")
+    @discardableResult open func propertiesTemplateGet(templateId: String) -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateGet
-        let serverArgs = Properties.GetPropertyTemplateArg(templateId: templateId)
+        let serverArgs = FileProperties.GetTemplateArg(templateId: templateId)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get the property template identifiers for a team. To get the schema of each template use propertiesTemplateGet.
+    /// The propertiesTemplateList route
     ///
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Properties.ListPropertyTemplateIds` object
-    /// on success or a `Properties.PropertyTemplateError` object on failure.
-    @discardableResult open func propertiesTemplateList() -> RpcRequest<Properties.ListPropertyTemplateIdsSerializer, Properties.PropertyTemplateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
+    /// on success or a `FileProperties.TemplateError` object on failure.
+    @available(*, unavailable, message:"properties/template/list is deprecated.")
+    @discardableResult open func propertiesTemplateList() -> RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateList
         return client.request(route)
     }
 
-    /// Update a property template. This route can update the template name, the template description and add optional
-    /// properties to templates.
+    /// The propertiesTemplateUpdate route
     ///
-    /// - parameter templateId: An identifier for property template added by propertiesTemplateAdd.
-    /// - parameter name: A display name for the property template. Property template names can be up to 256 bytes.
-    /// - parameter description_: Description for new property template. Property template descriptions can be up to
-    /// 1024 bytes.
-    /// - parameter addFields: This is a list of custom properties to add to the property template. There can be up to
-    /// 64 properties in a single property template.
+    /// - parameter templateId: An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
+    /// - parameter name: A display name for the template. template names can be up to 256 bytes.
+    /// - parameter description_: Description for the new template. Template descriptions can be up to 1024 bytes.
+    /// - parameter addFields: Property field templates to be added to the group template. There can be up to 32
+    /// properties in a single template.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.UpdatePropertyTemplateResult` object
-    /// on success or a `Properties.ModifyPropertyTemplateError` object on failure.
-    @discardableResult open func propertiesTemplateUpdate(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<Properties.PropertyFieldTemplate>? = nil) -> RpcRequest<Team.UpdatePropertyTemplateResultSerializer, Properties.ModifyPropertyTemplateErrorSerializer> {
+    ///  - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult`
+    /// object on success or a `FileProperties.ModifyTemplateError` object on failure.
+    @available(*, unavailable, message:"properties/template/update is deprecated.")
+    @discardableResult open func propertiesTemplateUpdate(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateUpdate
-        let serverArgs = Team.UpdatePropertyTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
+        let serverArgs = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Retrieves reporting data about a team's user activity.
     ///
-    /// - parameter startDate: Optional starting date (inclusive)
-    /// - parameter endDate: Optional ending date (exclusive)
+    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetActivityReport` object on success
     /// or a `Team.DateRangeError` object on failure.
@@ -603,8 +674,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's linked devices.
     ///
-    /// - parameter startDate: Optional starting date (inclusive)
-    /// - parameter endDate: Optional ending date (exclusive)
+    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetDevicesReport` object on success
     /// or a `Team.DateRangeError` object on failure.
@@ -616,8 +687,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's membership.
     ///
-    /// - parameter startDate: Optional starting date (inclusive)
-    /// - parameter endDate: Optional ending date (exclusive)
+    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetMembershipReport` object on
     /// success or a `Team.DateRangeError` object on failure.
@@ -629,8 +700,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's storage usage.
     ///
-    /// - parameter startDate: Optional starting date (inclusive)
-    /// - parameter endDate: Optional ending date (exclusive)
+    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetStorageReport` object on success
     /// or a `Team.DateRangeError` object on failure.

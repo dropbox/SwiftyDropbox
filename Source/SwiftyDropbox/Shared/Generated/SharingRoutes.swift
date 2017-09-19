@@ -127,8 +127,8 @@ open class SharingRoutes {
     /// RequestedVisibility (The resolved visibility, though, may depend on other aspects such as team and shared folder
     /// settings).
     ///
-    /// - parameter path: The path to be shared by the shared link
-    /// - parameter settings: The requested settings for the newly created shared link
+    /// - parameter path: The path to be shared by the shared link.
+    /// - parameter settings: The requested settings for the newly created shared link.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkWithSettingsError` object on failure.
@@ -234,9 +234,9 @@ open class SharingRoutes {
     }
 
     /// Returns a list of LinkMetadata objects for this user, including collection links. If no path is given, returns a
-    /// list of all shared links for the current user, including collection links. If a non-empty path is given, returns
-    /// a list of all shared links that allow access to the given path.  Collection links are never returned in this
-    /// case. Note that the url field in the response is never the shortened URL.
+    /// list of all shared links for the current user, including collection links, up to a maximum of 1000 links. If a
+    /// non-empty path is given, returns a list of all shared links that allow access to the given path.  Collection
+    /// links are never returned in this case. Note that the url field in the response is never the shortened URL.
     ///
     /// - parameter path: See getSharedLinks description.
     ///
@@ -428,7 +428,7 @@ open class SharingRoutes {
     /// LinkPermissions of the returned SharedLinkMetadata will reflect the actual visibility of the shared link and the
     /// requestedVisibility in LinkPermissions will reflect the requested visibility.
     ///
-    /// - parameter url: URL of the shared link to change its settings
+    /// - parameter url: URL of the shared link to change its settings.
     /// - parameter settings: Set of settings for the shared link.
     /// - parameter removeExpiration: If set to true, removes the expiration of the shared link.
     ///
@@ -549,24 +549,16 @@ open class SharingRoutes {
     /// ShareFolderLaunch is returned, you'll need to call checkShareJobStatus until the action completes to get the
     /// metadata for the folder. Apps must have full Dropbox access to use this endpoint.
     ///
-    /// - parameter path: The path to the folder to share. If it does not exist, then a new one is created.
-    /// - parameter memberPolicy: Who can be a member of this shared folder. Only applicable if the current user is on a
-    /// team.
-    /// - parameter aclUpdatePolicy: Who can add and remove members of this shared folder.
-    /// - parameter sharedLinkPolicy: The policy to apply to shared links created for content inside this shared folder.
-    /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
-    /// - parameter forceAsync: Whether to force the share to happen asynchronously.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform
     /// on the folder.
     /// - parameter linkSettings: Settings on the link for this folder.
-    /// - parameter viewerInfoPolicy: Who can enable/disable viewer info for this shared folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.ShareFolderError` object on failure.
-    @discardableResult open func shareFolder(path: String, memberPolicy: Sharing.MemberPolicy? = nil, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, forceAsync: Bool = false, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
+    @discardableResult open func shareFolder(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
         let route = Sharing.shareFolder
-        let serverArgs = Sharing.ShareFolderArg(path: path, memberPolicy: memberPolicy, aclUpdatePolicy: aclUpdatePolicy, sharedLinkPolicy: sharedLinkPolicy, forceAsync: forceAsync, actions: actions, linkSettings: linkSettings, viewerInfoPolicy: viewerInfoPolicy)
+        let serverArgs = Sharing.ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, actions: actions, linkSettings: linkSettings)
         return client.request(route, serverArgs: serverArgs)
     }
 

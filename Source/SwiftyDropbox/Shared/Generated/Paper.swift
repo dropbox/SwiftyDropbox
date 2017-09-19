@@ -666,6 +666,67 @@ open class Paper {
         }
     }
 
+    /// The import format of the incoming data.
+    public enum ImportFormat: CustomStringConvertible {
+        /// The provided data is interpreted as standard HTML.
+        case html
+        /// The provided data is interpreted as markdown. Note: The first line of the provided document will be used as
+        /// the doc title.
+        case markdown
+        /// The provided data is interpreted as plain text. Note: The first line of the provided document will be used
+        /// as the doc title.
+        case plainText
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ImportFormatSerializer().serialize(self)))"
+        }
+    }
+    open class ImportFormatSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ImportFormat) -> JSON {
+            switch value {
+                case .html:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("html")
+                    return .dictionary(d)
+                case .markdown:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("markdown")
+                    return .dictionary(d)
+                case .plainText:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("plain_text")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ImportFormat {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "html":
+                            return ImportFormat.html
+                        case "markdown":
+                            return ImportFormat.markdown
+                        case "plain_text":
+                            return ImportFormat.plainText
+                        case "other":
+                            return ImportFormat.other
+                        default:
+                            return ImportFormat.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The InviteeInfoWithPermissionLevel struct
     open class InviteeInfoWithPermissionLevel: CustomStringConvertible {
         /// Email address invited to the Paper doc.
@@ -1400,6 +1461,162 @@ open class Paper {
         }
     }
 
+    /// The PaperDocCreateArgs struct
+    open class PaperDocCreateArgs: CustomStringConvertible {
+        /// The Paper folder ID where the Paper document should be created. The API user has to have write access to
+        /// this folder or error is thrown.
+        open let parentFolderId: String?
+        /// The format of provided data.
+        open let importFormat: Paper.ImportFormat
+        public init(importFormat: Paper.ImportFormat, parentFolderId: String? = nil) {
+            nullableValidator(stringValidator())(parentFolderId)
+            self.parentFolderId = parentFolderId
+            self.importFormat = importFormat
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateArgsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocCreateArgsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocCreateArgs) -> JSON {
+            let output = [ 
+            "import_format": Paper.ImportFormatSerializer().serialize(value.importFormat),
+            "parent_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDocCreateArgs {
+            switch json {
+                case .dictionary(let dict):
+                    let importFormat = Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    let parentFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                    return PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDocCreateError union
+    public enum PaperDocCreateError: CustomStringConvertible {
+        /// Your account does not have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// The provided content was malformed and cannot be imported to Paper.
+        case contentMalformed
+        /// The specified Paper folder is cannot be found.
+        case folderNotFound
+        /// The newly created Paper doc would be too large. Please split the content into multiple docs.
+        case docLengthExceeded
+        /// The imported document contains an image that is too large. The current limit is 1MB. Note: This only applies
+        /// to HTML with data uri.
+        case imageSizeExceeded
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocCreateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocCreateError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .folderNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_not_found")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDocCreateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperDocCreateError.insufficientPermissions
+                        case "other":
+                            return PaperDocCreateError.other
+                        case "content_malformed":
+                            return PaperDocCreateError.contentMalformed
+                        case "folder_not_found":
+                            return PaperDocCreateError.folderNotFound
+                        case "doc_length_exceeded":
+                            return PaperDocCreateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperDocCreateError.imageSizeExceeded
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperDocCreateUpdateResult struct
+    open class PaperDocCreateUpdateResult: CustomStringConvertible {
+        /// Doc ID of the newly created doc.
+        open let docId: String
+        /// The Paper doc revision. Simply an ever increasing number.
+        open let revision: Int64
+        /// The Paper doc title.
+        open let title: String
+        public init(docId: String, revision: Int64, title: String) {
+            stringValidator()(docId)
+            self.docId = docId
+            comparableValidator()(revision)
+            self.revision = revision
+            stringValidator()(title)
+            self.title = title
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateUpdateResultSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocCreateUpdateResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocCreateUpdateResult) -> JSON {
+            let output = [ 
+            "doc_id": Serialization._StringSerializer.serialize(value.docId),
+            "revision": Serialization._Int64Serializer.serialize(value.revision),
+            "title": Serialization._StringSerializer.serialize(value.title),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDocCreateUpdateResult {
+            switch json {
+                case .dictionary(let dict):
+                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let revision = Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let title = Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                    return PaperDocCreateUpdateResult(docId: docId, revision: revision, title: title)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The PaperDocExport struct
     open class PaperDocExport: Paper.RefPaperDoc {
         /// (no description)
@@ -1562,6 +1779,210 @@ open class Paper {
                     return PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDocUpdateArgs struct
+    open class PaperDocUpdateArgs: Paper.RefPaperDoc {
+        /// The policy used for the current update call.
+        open let docUpdatePolicy: Paper.PaperDocUpdatePolicy
+        /// The latest doc revision. This value must match the head revision or an error code will be returned. This is
+        /// to prevent colliding writes.
+        open let revision: Int64
+        /// The format of provided data.
+        open let importFormat: Paper.ImportFormat
+        public init(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat) {
+            self.docUpdatePolicy = docUpdatePolicy
+            comparableValidator()(revision)
+            self.revision = revision
+            self.importFormat = importFormat
+            super.init(docId: docId)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdateArgsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocUpdateArgsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocUpdateArgs) -> JSON {
+            let output = [ 
+            "doc_id": Serialization._StringSerializer.serialize(value.docId),
+            "doc_update_policy": Paper.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
+            "revision": Serialization._Int64Serializer.serialize(value.revision),
+            "import_format": Paper.ImportFormatSerializer().serialize(value.importFormat),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDocUpdateArgs {
+            switch json {
+                case .dictionary(let dict):
+                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let docUpdatePolicy = Paper.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
+                    let revision = Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let importFormat = Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    return PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDocUpdateError union
+    public enum PaperDocUpdateError: CustomStringConvertible {
+        /// Your account does not have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// The required doc was not found.
+        case docNotFound
+        /// The provided content was malformed and cannot be imported to Paper.
+        case contentMalformed
+        /// The provided revision does not match the document head.
+        case revisionMismatch
+        /// The newly created Paper doc would be too large, split the content into multiple docs.
+        case docLengthExceeded
+        /// The imported document contains an image that is too large. The current limit is 1MB. Note: This only applies
+        /// to HTML with data uri.
+        case imageSizeExceeded
+        /// This operation is not allowed on archived Paper docs.
+        case docArchived
+        /// This operation is not allowed on deleted Paper docs.
+        case docDeleted
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocUpdateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocUpdateError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .docNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_not_found")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .revisionMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("revision_mismatch")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+                case .docArchived:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_archived")
+                    return .dictionary(d)
+                case .docDeleted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_deleted")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDocUpdateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperDocUpdateError.insufficientPermissions
+                        case "other":
+                            return PaperDocUpdateError.other
+                        case "doc_not_found":
+                            return PaperDocUpdateError.docNotFound
+                        case "content_malformed":
+                            return PaperDocUpdateError.contentMalformed
+                        case "revision_mismatch":
+                            return PaperDocUpdateError.revisionMismatch
+                        case "doc_length_exceeded":
+                            return PaperDocUpdateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperDocUpdateError.imageSizeExceeded
+                        case "doc_archived":
+                            return PaperDocUpdateError.docArchived
+                        case "doc_deleted":
+                            return PaperDocUpdateError.docDeleted
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperDocUpdatePolicy union
+    public enum PaperDocUpdatePolicy: CustomStringConvertible {
+        /// The content will be appended to the doc.
+        case append
+        /// The content will be prepended to the doc. Note: the doc title will not be affected.
+        case prepend
+        /// The document will be overwitten at the head with the provided content.
+        case overwriteAll
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdatePolicySerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocUpdatePolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocUpdatePolicy) -> JSON {
+            switch value {
+                case .append:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("append")
+                    return .dictionary(d)
+                case .prepend:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("prepend")
+                    return .dictionary(d)
+                case .overwriteAll:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("overwrite_all")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDocUpdatePolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "append":
+                            return PaperDocUpdatePolicy.append
+                        case "prepend":
+                            return PaperDocUpdatePolicy.prepend
+                        case "overwrite_all":
+                            return PaperDocUpdatePolicy.overwriteAll
+                        case "other":
+                            return PaperDocUpdatePolicy.other
+                        default:
+                            return PaperDocUpdatePolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -1844,6 +2265,16 @@ open class Paper {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let docsCreate = Route(
+        name: "docs/create",
+        namespace: "paper",
+        deprecated: false,
+        argSerializer: Paper.PaperDocCreateArgsSerializer(),
+        responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
+        errorSerializer: Paper.PaperDocCreateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "upload"]
+    )
     static let docsDownload = Route(
         name: "docs/download",
         namespace: "paper",
@@ -1933,6 +2364,16 @@ open class Paper {
         errorSerializer: Paper.DocLookupErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
+    )
+    static let docsUpdate = Route(
+        name: "docs/update",
+        namespace: "paper",
+        deprecated: false,
+        argSerializer: Paper.PaperDocUpdateArgsSerializer(),
+        responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
+        errorSerializer: Paper.PaperDocUpdateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "upload"]
     )
     static let docsUsersAdd = Route(
         name: "docs/users/add",
