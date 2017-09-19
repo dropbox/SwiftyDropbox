@@ -17,12 +17,13 @@ open class TeamLogRoutes {
     /// - parameter accountId: Filter the events by account ID. Return ony events with this account_id as either Actor,
     /// Context, or Participants.
     /// - parameter time: Filter by time range.
+    /// - parameter category: Filter the returned events to a single category.
     ///
     ///  - returns: Through the response callback, the caller will receive a `TeamLog.GetTeamEventsResult` object on
     /// success or a `TeamLog.GetTeamEventsError` object on failure.
-    @discardableResult open func getEvents(limit: UInt32 = 1000, accountId: String? = nil, time: TeamCommon.TimeRange? = nil) -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsErrorSerializer> {
+    @discardableResult open func getEvents(limit: UInt32 = 1000, accountId: String? = nil, time: TeamCommon.TimeRange? = nil, category: TeamLog.EventCategory? = nil) -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsErrorSerializer> {
         let route = TeamLog.getEvents
-        let serverArgs = TeamLog.GetTeamEventsArg(limit: limit, accountId: accountId, time: time)
+        let serverArgs = TeamLog.GetTeamEventsArg(limit: limit, accountId: accountId, time: time, category: category)
         return client.request(route, serverArgs: serverArgs)
     }
 

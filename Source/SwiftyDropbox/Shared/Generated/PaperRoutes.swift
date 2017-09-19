@@ -24,6 +24,51 @@ open class PaperRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Creates a new Paper doc with the provided content.
+    ///
+    /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
+    /// have write access to this folder or error is thrown.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an Data object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+        let route = Paper.docsCreate
+        let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+        return client.request(route, serverArgs: serverArgs, input: .data(input))
+    }
+
+    /// Creates a new Paper doc with the provided content.
+    ///
+    /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
+    /// have write access to this folder or error is thrown.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an URL object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+        let route = Paper.docsCreate
+        let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+        return client.request(route, serverArgs: serverArgs, input: .file(input))
+    }
+
+    /// Creates a new Paper doc with the provided content.
+    ///
+    /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
+    /// have write access to this folder or error is thrown.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an InputStream object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+        let route = Paper.docsCreate
+        let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+        return client.request(route, serverArgs: serverArgs, input: .stream(input))
+    }
+
     /// Exports and downloads Paper doc either as HTML or markdown.
     ///
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
@@ -161,6 +206,54 @@ open class PaperRoutes {
         let route = Paper.docsSharingPolicySet
         let serverArgs = Paper.PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
         return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates an existing Paper doc with the provided content.
+    ///
+    /// - parameter docUpdatePolicy: The policy used for the current update call.
+    /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
+    /// returned. This is to prevent colliding writes.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an Data object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+        let route = Paper.docsUpdate
+        let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+        return client.request(route, serverArgs: serverArgs, input: .data(input))
+    }
+
+    /// Updates an existing Paper doc with the provided content.
+    ///
+    /// - parameter docUpdatePolicy: The policy used for the current update call.
+    /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
+    /// returned. This is to prevent colliding writes.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an URL object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+        let route = Paper.docsUpdate
+        let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+        return client.request(route, serverArgs: serverArgs, input: .file(input))
+    }
+
+    /// Updates an existing Paper doc with the provided content.
+    ///
+    /// - parameter docUpdatePolicy: The policy used for the current update call.
+    /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
+    /// returned. This is to prevent colliding writes.
+    /// - parameter importFormat: The format of provided data.
+    /// - parameter input: The file to upload, as an InputStream object.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
+    /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+        let route = Paper.docsUpdate
+        let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+        return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
     /// Allows an owner or editor to add users to a Paper doc or change their permissions using their email address or
