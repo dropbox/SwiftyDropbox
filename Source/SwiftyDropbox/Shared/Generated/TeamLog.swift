@@ -2201,13 +2201,9 @@ open class TeamLog {
     open class DomainVerificationRemoveDomainDetails: CustomStringConvertible {
         /// Domain names.
         open let domainNames: Array<String>
-        /// Domain name verification method. Might be missing due to historical data gap.
-        open let verificationMethod: String?
-        public init(domainNames: Array<String>, verificationMethod: String? = nil) {
+        public init(domainNames: Array<String>) {
             arrayValidator(itemValidator: stringValidator())(domainNames)
             self.domainNames = domainNames
-            nullableValidator(stringValidator())(verificationMethod)
-            self.verificationMethod = verificationMethod
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DomainVerificationRemoveDomainDetailsSerializer().serialize(self)))"
@@ -2218,7 +2214,6 @@ open class TeamLog {
         open func serialize(_ value: DomainVerificationRemoveDomainDetails) -> JSON {
             let output = [ 
             "domain_names": ArraySerializer(Serialization._StringSerializer).serialize(value.domainNames),
-            "verification_method": NullableSerializer(Serialization._StringSerializer).serialize(value.verificationMethod),
             ]
             return .dictionary(output)
         }
@@ -2226,8 +2221,7 @@ open class TeamLog {
             switch json {
                 case .dictionary(let dict):
                     let domainNames = ArraySerializer(Serialization._StringSerializer).deserialize(dict["domain_names"] ?? .null)
-                    let verificationMethod = NullableSerializer(Serialization._StringSerializer).deserialize(dict["verification_method"] ?? .null)
-                    return DomainVerificationRemoveDomainDetails(domainNames: domainNames, verificationMethod: verificationMethod)
+                    return DomainVerificationRemoveDomainDetails(domainNames: domainNames)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3166,6 +3160,8 @@ open class TeamLog {
         case shmodelVisibilityPublicDetails(TeamLog.ShmodelVisibilityPublicDetails)
         /// Made a file/folder visible only to team members with the link.
         case shmodelVisibilityTeamOnlyDetails(TeamLog.ShmodelVisibilityTeamOnlyDetails)
+        /// Added the X.509 certificate for SSO.
+        case ssoAddCertDetails(TeamLog.SsoAddCertDetails)
         /// Added sign-in URL for SSO.
         case ssoAddLoginUrlDetails(TeamLog.SsoAddLoginUrlDetails)
         /// Added sign-out URL for SSO.
@@ -3178,6 +3174,8 @@ open class TeamLog {
         case ssoChangeLogoutUrlDetails(TeamLog.SsoChangeLogoutUrlDetails)
         /// Changed the SAML identity mode for SSO.
         case ssoChangeSamlIdentityModeDetails(TeamLog.SsoChangeSamlIdentityModeDetails)
+        /// Removed the X.509 certificate for SSO.
+        case ssoRemoveCertDetails(TeamLog.SsoRemoveCertDetails)
         /// Removed the sign-in URL for SSO.
         case ssoRemoveLoginUrlDetails(TeamLog.SsoRemoveLoginUrlDetails)
         /// Removed single sign-on logout URL.
@@ -3252,6 +3250,8 @@ open class TeamLog {
         case networkControlChangePolicyDetails(TeamLog.NetworkControlChangePolicyDetails)
         /// Changed whether Dropbox Paper, when enabled, is deployed to all teams or to specific members of the team.
         case paperChangeDeploymentPolicyDetails(TeamLog.PaperChangeDeploymentPolicyDetails)
+        /// Changed whether non team members can view Paper documents using a link.
+        case paperChangeMemberLinkPolicyDetails(TeamLog.PaperChangeMemberLinkPolicyDetails)
         /// Changed whether team members can share Paper documents externally (i.e. outside the team), and if so,
         /// whether they should be accessible only by team members or anyone by default.
         case paperChangeMemberPolicyDetails(TeamLog.PaperChangeMemberPolicyDetails)
@@ -3285,6 +3285,8 @@ open class TeamLog {
         case webSessionsChangeIdleLengthPolicyDetails(TeamLog.WebSessionsChangeIdleLengthPolicyDetails)
         /// Added a team logo to be displayed on shared link headers.
         case teamProfileAddLogoDetails(TeamLog.TeamProfileAddLogoDetails)
+        /// Changed the default language for the team.
+        case teamProfileChangeDefaultLanguageDetails(TeamLog.TeamProfileChangeDefaultLanguageDetails)
         /// Changed the team logo to be displayed on shared link headers.
         case teamProfileChangeLogoDetails(TeamLog.TeamProfileChangeLogoDetails)
         /// Changed the team name.
@@ -4122,6 +4124,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.ShmodelVisibilityTeamOnlyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("shmodel_visibility_team_only_details")
                     return .dictionary(d)
+                case .ssoAddCertDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.SsoAddCertDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("sso_add_cert_details")
+                    return .dictionary(d)
                 case .ssoAddLoginUrlDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SsoAddLoginUrlDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sso_add_login_url_details")
@@ -4145,6 +4151,10 @@ open class TeamLog {
                 case .ssoChangeSamlIdentityModeDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SsoChangeSamlIdentityModeDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sso_change_saml_identity_mode_details")
+                    return .dictionary(d)
+                case .ssoRemoveCertDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.SsoRemoveCertDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("sso_remove_cert_details")
                     return .dictionary(d)
                 case .ssoRemoveLoginUrlDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SsoRemoveLoginUrlDetailsSerializer().serialize(arg))
@@ -4282,6 +4292,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.PaperChangeDeploymentPolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_change_deployment_policy_details")
                     return .dictionary(d)
+                case .paperChangeMemberLinkPolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperChangeMemberLinkPolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_change_member_link_policy_details")
+                    return .dictionary(d)
                 case .paperChangeMemberPolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.PaperChangeMemberPolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_change_member_policy_details")
@@ -4341,6 +4355,10 @@ open class TeamLog {
                 case .teamProfileAddLogoDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamProfileAddLogoDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("team_profile_add_logo_details")
+                    return .dictionary(d)
+                case .teamProfileChangeDefaultLanguageDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamProfileChangeDefaultLanguageDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_profile_change_default_language_details")
                     return .dictionary(d)
                 case .teamProfileChangeLogoDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamProfileChangeLogoDetailsSerializer().serialize(arg))
@@ -5000,6 +5018,9 @@ open class TeamLog {
                         case "shmodel_visibility_team_only_details":
                             let v = TeamLog.ShmodelVisibilityTeamOnlyDetailsSerializer().deserialize(json)
                             return EventDetails.shmodelVisibilityTeamOnlyDetails(v)
+                        case "sso_add_cert_details":
+                            let v = TeamLog.SsoAddCertDetailsSerializer().deserialize(json)
+                            return EventDetails.ssoAddCertDetails(v)
                         case "sso_add_login_url_details":
                             let v = TeamLog.SsoAddLoginUrlDetailsSerializer().deserialize(json)
                             return EventDetails.ssoAddLoginUrlDetails(v)
@@ -5018,6 +5039,9 @@ open class TeamLog {
                         case "sso_change_saml_identity_mode_details":
                             let v = TeamLog.SsoChangeSamlIdentityModeDetailsSerializer().deserialize(json)
                             return EventDetails.ssoChangeSamlIdentityModeDetails(v)
+                        case "sso_remove_cert_details":
+                            let v = TeamLog.SsoRemoveCertDetailsSerializer().deserialize(json)
+                            return EventDetails.ssoRemoveCertDetails(v)
                         case "sso_remove_login_url_details":
                             let v = TeamLog.SsoRemoveLoginUrlDetailsSerializer().deserialize(json)
                             return EventDetails.ssoRemoveLoginUrlDetails(v)
@@ -5120,6 +5144,9 @@ open class TeamLog {
                         case "paper_change_deployment_policy_details":
                             let v = TeamLog.PaperChangeDeploymentPolicyDetailsSerializer().deserialize(json)
                             return EventDetails.paperChangeDeploymentPolicyDetails(v)
+                        case "paper_change_member_link_policy_details":
+                            let v = TeamLog.PaperChangeMemberLinkPolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.paperChangeMemberLinkPolicyDetails(v)
                         case "paper_change_member_policy_details":
                             let v = TeamLog.PaperChangeMemberPolicyDetailsSerializer().deserialize(json)
                             return EventDetails.paperChangeMemberPolicyDetails(v)
@@ -5165,6 +5192,9 @@ open class TeamLog {
                         case "team_profile_add_logo_details":
                             let v = TeamLog.TeamProfileAddLogoDetailsSerializer().deserialize(json)
                             return EventDetails.teamProfileAddLogoDetails(v)
+                        case "team_profile_change_default_language_details":
+                            let v = TeamLog.TeamProfileChangeDefaultLanguageDetailsSerializer().deserialize(json)
+                            return EventDetails.teamProfileChangeDefaultLanguageDetails(v)
                         case "team_profile_change_logo_details":
                             let v = TeamLog.TeamProfileChangeLogoDetailsSerializer().deserialize(json)
                             return EventDetails.teamProfileChangeLogoDetails(v)
@@ -5651,6 +5681,8 @@ open class TeamLog {
         case shmodelVisibilityPublic
         /// Made a file/folder visible only to team members with the link.
         case shmodelVisibilityTeamOnly
+        /// Added the X.509 certificate for SSO.
+        case ssoAddCert
         /// Added sign-in URL for SSO.
         case ssoAddLoginUrl
         /// Added sign-out URL for SSO.
@@ -5663,6 +5695,8 @@ open class TeamLog {
         case ssoChangeLogoutUrl
         /// Changed the SAML identity mode for SSO.
         case ssoChangeSamlIdentityMode
+        /// Removed the X.509 certificate for SSO.
+        case ssoRemoveCert
         /// Removed the sign-in URL for SSO.
         case ssoRemoveLoginUrl
         /// Removed single sign-on logout URL.
@@ -5741,6 +5775,9 @@ open class TeamLog {
         case networkControlChangePolicy
         /// Changed whether Dropbox Paper, when enabled, is deployed to all teams or to specific members of the team.
         case paperChangeDeploymentPolicy
+        /// Changed whether non team members can view Paper documents using a link. This event is deprecated and will
+        /// not be logged going forward as the associated product functionality no longer exists.
+        case paperChangeMemberLinkPolicy
         /// Changed whether team members can share Paper documents externally (i.e. outside the team), and if so,
         /// whether they should be accessible only by team members or anyone by default.
         case paperChangeMemberPolicy
@@ -5774,6 +5811,8 @@ open class TeamLog {
         case webSessionsChangeIdleLengthPolicy
         /// Added a team logo to be displayed on shared link headers.
         case teamProfileAddLogo
+        /// Changed the default language for the team.
+        case teamProfileChangeDefaultLanguage
         /// Changed the team logo to be displayed on shared link headers.
         case teamProfileChangeLogo
         /// Changed the team name.
@@ -6609,6 +6648,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("shmodel_visibility_team_only")
                     return .dictionary(d)
+                case .ssoAddCert:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("sso_add_cert")
+                    return .dictionary(d)
                 case .ssoAddLoginUrl:
                     var d = [String: JSON]()
                     d[".tag"] = .str("sso_add_login_url")
@@ -6632,6 +6675,10 @@ open class TeamLog {
                 case .ssoChangeSamlIdentityMode:
                     var d = [String: JSON]()
                     d[".tag"] = .str("sso_change_saml_identity_mode")
+                    return .dictionary(d)
+                case .ssoRemoveCert:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("sso_remove_cert")
                     return .dictionary(d)
                 case .ssoRemoveLoginUrl:
                     var d = [String: JSON]()
@@ -6769,6 +6816,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("paper_change_deployment_policy")
                     return .dictionary(d)
+                case .paperChangeMemberLinkPolicy:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("paper_change_member_link_policy")
+                    return .dictionary(d)
                 case .paperChangeMemberPolicy:
                     var d = [String: JSON]()
                     d[".tag"] = .str("paper_change_member_policy")
@@ -6828,6 +6879,10 @@ open class TeamLog {
                 case .teamProfileAddLogo:
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_profile_add_logo")
+                    return .dictionary(d)
+                case .teamProfileChangeDefaultLanguage:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_profile_change_default_language")
                     return .dictionary(d)
                 case .teamProfileChangeLogo:
                     var d = [String: JSON]()
@@ -7282,6 +7337,8 @@ open class TeamLog {
                             return EventType.shmodelVisibilityPublic
                         case "shmodel_visibility_team_only":
                             return EventType.shmodelVisibilityTeamOnly
+                        case "sso_add_cert":
+                            return EventType.ssoAddCert
                         case "sso_add_login_url":
                             return EventType.ssoAddLoginUrl
                         case "sso_add_logout_url":
@@ -7294,6 +7351,8 @@ open class TeamLog {
                             return EventType.ssoChangeLogoutUrl
                         case "sso_change_saml_identity_mode":
                             return EventType.ssoChangeSamlIdentityMode
+                        case "sso_remove_cert":
+                            return EventType.ssoRemoveCert
                         case "sso_remove_login_url":
                             return EventType.ssoRemoveLoginUrl
                         case "sso_remove_logout_url":
@@ -7362,6 +7421,8 @@ open class TeamLog {
                             return EventType.networkControlChangePolicy
                         case "paper_change_deployment_policy":
                             return EventType.paperChangeDeploymentPolicy
+                        case "paper_change_member_link_policy":
+                            return EventType.paperChangeMemberLinkPolicy
                         case "paper_change_member_policy":
                             return EventType.paperChangeMemberPolicy
                         case "paper_change_policy":
@@ -7392,6 +7453,8 @@ open class TeamLog {
                             return EventType.webSessionsChangeIdleLengthPolicy
                         case "team_profile_add_logo":
                             return EventType.teamProfileAddLogo
+                        case "team_profile_change_default_language":
+                            return EventType.teamProfileChangeDefaultLanguage
                         case "team_profile_change_logo":
                             return EventType.teamProfileChangeLogo
                         case "team_profile_change_name":
@@ -9317,12 +9380,12 @@ open class TeamLog {
 
     /// Created a group.
     open class GroupCreateDetails: CustomStringConvertible {
-        /// Is admin managed group. Might be missing due to historical data gap.
-        open let isAdminManaged: Bool?
+        /// Is company managed group. Might be missing due to historical data gap.
+        open let isCompanyManaged: Bool?
         /// Group join policy.
         open let joinPolicy: TeamLog.GroupJoinPolicy
-        public init(joinPolicy: TeamLog.GroupJoinPolicy, isAdminManaged: Bool? = nil) {
-            self.isAdminManaged = isAdminManaged
+        public init(joinPolicy: TeamLog.GroupJoinPolicy, isCompanyManaged: Bool? = nil) {
+            self.isCompanyManaged = isCompanyManaged
             self.joinPolicy = joinPolicy
         }
         open var description: String {
@@ -9334,7 +9397,7 @@ open class TeamLog {
         open func serialize(_ value: GroupCreateDetails) -> JSON {
             let output = [ 
             "join_policy": TeamLog.GroupJoinPolicySerializer().serialize(value.joinPolicy),
-            "is_admin_managed": NullableSerializer(Serialization._BoolSerializer).serialize(value.isAdminManaged),
+            "is_company_managed": NullableSerializer(Serialization._BoolSerializer).serialize(value.isCompanyManaged),
             ]
             return .dictionary(output)
         }
@@ -9342,8 +9405,8 @@ open class TeamLog {
             switch json {
                 case .dictionary(let dict):
                     let joinPolicy = TeamLog.GroupJoinPolicySerializer().deserialize(dict["join_policy"] ?? .null)
-                    let isAdminManaged = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_admin_managed"] ?? .null)
-                    return GroupCreateDetails(joinPolicy: joinPolicy, isAdminManaged: isAdminManaged)
+                    let isCompanyManaged = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_company_managed"] ?? .null)
+                    return GroupCreateDetails(joinPolicy: joinPolicy, isCompanyManaged: isCompanyManaged)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9352,10 +9415,10 @@ open class TeamLog {
 
     /// Deleted a group.
     open class GroupDeleteDetails: CustomStringConvertible {
-        /// Is admin managed group. Might be missing due to historical data gap.
-        open let isAdminManaged: Bool?
-        public init(isAdminManaged: Bool? = nil) {
-            self.isAdminManaged = isAdminManaged
+        /// Is company managed group. Might be missing due to historical data gap.
+        open let isCompanyManaged: Bool?
+        public init(isCompanyManaged: Bool? = nil) {
+            self.isCompanyManaged = isCompanyManaged
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GroupDeleteDetailsSerializer().serialize(self)))"
@@ -9365,15 +9428,15 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: GroupDeleteDetails) -> JSON {
             let output = [ 
-            "is_admin_managed": NullableSerializer(Serialization._BoolSerializer).serialize(value.isAdminManaged),
+            "is_company_managed": NullableSerializer(Serialization._BoolSerializer).serialize(value.isCompanyManaged),
             ]
             return .dictionary(output)
         }
         open func deserialize(_ json: JSON) -> GroupDeleteDetails {
             switch json {
                 case .dictionary(let dict):
-                    let isAdminManaged = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_admin_managed"] ?? .null)
-                    return GroupDeleteDetails(isAdminManaged: isAdminManaged)
+                    let isCompanyManaged = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_company_managed"] ?? .null)
+                    return GroupDeleteDetails(isCompanyManaged: isCompanyManaged)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -11156,6 +11219,36 @@ open class TeamLog {
                     let newValue = TeamPolicies.PaperDeploymentPolicySerializer().deserialize(dict["new_value"] ?? .null)
                     let previousValue = NullableSerializer(TeamPolicies.PaperDeploymentPolicySerializer()).deserialize(dict["previous_value"] ?? .null)
                     return PaperChangeDeploymentPolicyDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Changed whether non team members can view Paper documents using a link.
+    open class PaperChangeMemberLinkPolicyDetails: CustomStringConvertible {
+        /// New paper external link accessibility policy.
+        open let newValue: TeamLog.PaperMemberPolicy
+        public init(newValue: TeamLog.PaperMemberPolicy) {
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperChangeMemberLinkPolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperChangeMemberLinkPolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperChangeMemberLinkPolicyDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.PaperMemberPolicySerializer().serialize(value.newValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperChangeMemberLinkPolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.PaperMemberPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    return PaperChangeMemberLinkPolicyDetails(newValue: newValue)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -16288,6 +16381,36 @@ open class TeamLog {
         }
     }
 
+    /// Added the X.509 certificate for SSO.
+    open class SsoAddCertDetails: CustomStringConvertible {
+        /// SSO certificate details.
+        open let certificateDetails: TeamLog.Certificate
+        public init(certificateDetails: TeamLog.Certificate) {
+            self.certificateDetails = certificateDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SsoAddCertDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SsoAddCertDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SsoAddCertDetails) -> JSON {
+            let output = [ 
+            "certificate_details": TeamLog.CertificateSerializer().serialize(value.certificateDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SsoAddCertDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let certificateDetails = TeamLog.CertificateSerializer().deserialize(dict["certificate_details"] ?? .null)
+                    return SsoAddCertDetails(certificateDetails: certificateDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Added sign-in URL for SSO.
     open class SsoAddLoginUrlDetails: CustomStringConvertible {
         /// New single sign-on login URL.
@@ -16352,10 +16475,13 @@ open class TeamLog {
 
     /// Changed the X.509 certificate for SSO.
     open class SsoChangeCertDetails: CustomStringConvertible {
-        /// SSO certificate details.
-        open let certificateDetails: TeamLog.Certificate
-        public init(certificateDetails: TeamLog.Certificate) {
-            self.certificateDetails = certificateDetails
+        /// Previous SSO certificate details.
+        open let previousCertificateDetails: TeamLog.Certificate?
+        /// New SSO certificate details.
+        open let newCertificateDetails: TeamLog.Certificate
+        public init(newCertificateDetails: TeamLog.Certificate, previousCertificateDetails: TeamLog.Certificate? = nil) {
+            self.previousCertificateDetails = previousCertificateDetails
+            self.newCertificateDetails = newCertificateDetails
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SsoChangeCertDetailsSerializer().serialize(self)))"
@@ -16365,15 +16491,17 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: SsoChangeCertDetails) -> JSON {
             let output = [ 
-            "certificate_details": TeamLog.CertificateSerializer().serialize(value.certificateDetails),
+            "new_certificate_details": TeamLog.CertificateSerializer().serialize(value.newCertificateDetails),
+            "previous_certificate_details": NullableSerializer(TeamLog.CertificateSerializer()).serialize(value.previousCertificateDetails),
             ]
             return .dictionary(output)
         }
         open func deserialize(_ json: JSON) -> SsoChangeCertDetails {
             switch json {
                 case .dictionary(let dict):
-                    let certificateDetails = TeamLog.CertificateSerializer().deserialize(dict["certificate_details"] ?? .null)
-                    return SsoChangeCertDetails(certificateDetails: certificateDetails)
+                    let newCertificateDetails = TeamLog.CertificateSerializer().deserialize(dict["new_certificate_details"] ?? .null)
+                    let previousCertificateDetails = NullableSerializer(TeamLog.CertificateSerializer()).deserialize(dict["previous_certificate_details"] ?? .null)
+                    return SsoChangeCertDetails(newCertificateDetails: newCertificateDetails, previousCertificateDetails: previousCertificateDetails)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -16550,6 +16678,30 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let errorDetails = TeamLog.FailureDetailsLogInfoSerializer().deserialize(dict["error_details"] ?? .null)
                     return SsoLoginFailDetails(errorDetails: errorDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Removed the X.509 certificate for SSO.
+    open class SsoRemoveCertDetails: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SsoRemoveCertDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SsoRemoveCertDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SsoRemoveCertDetails) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SsoRemoveCertDetails {
+            switch json {
+                case .dictionary(_):
+                    return SsoRemoveCertDetails()
                 default:
                     fatalError("Type error deserializing")
             }
@@ -17172,6 +17324,43 @@ open class TeamLog {
         }
     }
 
+    /// Changed the default language for the team.
+    open class TeamProfileChangeDefaultLanguageDetails: CustomStringConvertible {
+        /// New team's default language.
+        open let newValue: String
+        /// Previous team's default language.
+        open let previousValue: String
+        public init(newValue: String, previousValue: String) {
+            stringValidator(minLength: 2)(newValue)
+            self.newValue = newValue
+            stringValidator(minLength: 2)(previousValue)
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamProfileChangeDefaultLanguageDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamProfileChangeDefaultLanguageDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamProfileChangeDefaultLanguageDetails) -> JSON {
+            let output = [ 
+            "new_value": Serialization._StringSerializer.serialize(value.newValue),
+            "previous_value": Serialization._StringSerializer.serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamProfileChangeDefaultLanguageDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = Serialization._StringSerializer.deserialize(dict["new_value"] ?? .null)
+                    let previousValue = Serialization._StringSerializer.deserialize(dict["previous_value"] ?? .null)
+                    return TeamProfileChangeDefaultLanguageDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Changed the team logo to be displayed on shared link headers.
     open class TeamProfileChangeLogoDetails: CustomStringConvertible {
         public init() {
@@ -17330,10 +17519,10 @@ open class TeamLog {
     /// Change two-step verification policy for the team.
     open class TfaChangePolicyDetails: CustomStringConvertible {
         /// New change policy.
-        open let newValue: TeamLog.TfaPolicy
+        open let newValue: TeamPolicies.TwoStepVerificationPolicy
         /// Previous change policy. Might be missing due to historical data gap.
-        open let previousValue: TeamLog.TfaPolicy?
-        public init(newValue: TeamLog.TfaPolicy, previousValue: TeamLog.TfaPolicy? = nil) {
+        open let previousValue: TeamPolicies.TwoStepVerificationPolicy?
+        public init(newValue: TeamPolicies.TwoStepVerificationPolicy, previousValue: TeamPolicies.TwoStepVerificationPolicy? = nil) {
             self.newValue = newValue
             self.previousValue = previousValue
         }
@@ -17345,16 +17534,16 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TfaChangePolicyDetails) -> JSON {
             let output = [ 
-            "new_value": TeamLog.TfaPolicySerializer().serialize(value.newValue),
-            "previous_value": NullableSerializer(TeamLog.TfaPolicySerializer()).serialize(value.previousValue),
+            "new_value": TeamPolicies.TwoStepVerificationPolicySerializer().serialize(value.newValue),
+            "previous_value": NullableSerializer(TeamPolicies.TwoStepVerificationPolicySerializer()).serialize(value.previousValue),
             ]
             return .dictionary(output)
         }
         open func deserialize(_ json: JSON) -> TfaChangePolicyDetails {
             switch json {
                 case .dictionary(let dict):
-                    let newValue = TeamLog.TfaPolicySerializer().deserialize(dict["new_value"] ?? .null)
-                    let previousValue = NullableSerializer(TeamLog.TfaPolicySerializer()).deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamPolicies.TwoStepVerificationPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = NullableSerializer(TeamPolicies.TwoStepVerificationPolicySerializer()).deserialize(dict["previous_value"] ?? .null)
                     return TfaChangePolicyDetails(newValue: newValue, previousValue: previousValue)
                 default:
                     fatalError("Type error deserializing")
@@ -17463,57 +17652,6 @@ open class TeamLog {
                             return TfaConfiguration.other
                         default:
                             return TfaConfiguration.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// Two factor authentication policy
-    public enum TfaPolicy: CustomStringConvertible {
-        /// An unspecified error.
-        case allowDisable
-        /// An unspecified error.
-        case stickyEnable
-        /// An unspecified error.
-        case other
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(TfaPolicySerializer().serialize(self)))"
-        }
-    }
-    open class TfaPolicySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: TfaPolicy) -> JSON {
-            switch value {
-                case .allowDisable:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("allow_disable")
-                    return .dictionary(d)
-                case .stickyEnable:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("sticky_enable")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> TfaPolicy {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "allow_disable":
-                            return TfaPolicy.allowDisable
-                        case "sticky_enable":
-                            return TfaPolicy.stickyEnable
-                        case "other":
-                            return TfaPolicy.other
-                        default:
-                            return TfaPolicy.other
                     }
                 default:
                     fatalError("Failed to deserialize")

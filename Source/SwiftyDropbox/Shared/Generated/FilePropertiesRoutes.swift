@@ -40,7 +40,7 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Remove the specified property group from the file. To remove specific property field key value pairs, see route
+    /// Remove the specified property group from the file. To remove specific property field key value pairs, see
     /// propertiesUpdate. To update a template, see templatesUpdateForUser or templatesUpdateForTeam. Templates can't be
     /// removed once created.
     ///
@@ -85,7 +85,7 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Add a template associated with a team. See route propertiesAdd to add properties to a file or folder.
+    /// Add a template associated with a team. See propertiesAdd to add properties to a file or folder.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
@@ -96,7 +96,8 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Add a template associated with a user. See route propertiesAdd to add properties to a file.
+    /// Add a template associated with a user. See propertiesAdd to add properties to a file. This endpoint can't be
+    /// called on a team member or admin's behalf.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
@@ -120,7 +121,7 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get the schema for a specified template.
+    /// Get the schema for a specified template. This endpoint can't be called on a team member or admin's behalf.
     ///
     /// - parameter templateId: An identifier for template added by route  See templatesAddForUser or
     /// templatesAddForTeam.
@@ -143,7 +144,8 @@ open class FilePropertiesRoutes {
         return client.request(route)
     }
 
-    /// Get the template identifiers for a team. To get the schema of each template use templatesGetForUser.
+    /// Get the template identifiers for a team. To get the schema of each template use templatesGetForUser. This
+    /// endpoint can't be called on a team member or admin's behalf.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
@@ -171,7 +173,7 @@ open class FilePropertiesRoutes {
     }
 
     /// Update a template associated with a user. This route can update the template name, the template description and
-    /// add optional properties to templates.
+    /// add optional properties to templates. This endpoint can't be called on a team member or admin's behalf.
     ///
     /// - parameter templateId: An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
     /// - parameter name: A display name for the template. template names can be up to 256 bytes.
