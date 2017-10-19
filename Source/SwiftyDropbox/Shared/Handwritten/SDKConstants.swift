@@ -5,5 +5,5 @@
 import Foundation
 
 struct Constants {
-    static let versionSDK = "4.2.1"
+    static let versionSDK = "4.2.2"
 }
