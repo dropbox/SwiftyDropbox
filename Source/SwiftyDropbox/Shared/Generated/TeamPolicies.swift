@@ -646,4 +646,55 @@ open class TeamPolicies {
         }
     }
 
+    /// The TwoStepVerificationPolicy union
+    public enum TwoStepVerificationPolicy: CustomStringConvertible {
+        /// Enabled require two factor authorization.
+        case requireTfaEnable
+        /// Disabled require two factor authorization.
+        case requireTfaDisable
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TwoStepVerificationPolicySerializer().serialize(self)))"
+        }
+    }
+    open class TwoStepVerificationPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TwoStepVerificationPolicy) -> JSON {
+            switch value {
+                case .requireTfaEnable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("require_tfa_enable")
+                    return .dictionary(d)
+                case .requireTfaDisable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("require_tfa_disable")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TwoStepVerificationPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "require_tfa_enable":
+                            return TwoStepVerificationPolicy.requireTfaEnable
+                        case "require_tfa_disable":
+                            return TwoStepVerificationPolicy.requireTfaDisable
+                        case "other":
+                            return TwoStepVerificationPolicy.other
+                        default:
+                            return TwoStepVerificationPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
 }

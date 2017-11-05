@@ -6289,7 +6289,7 @@ open class Sharing {
     /// listFileMembersContinue, and used as part of the results for listFileMembersBatch.
     open class SharedFileMembers: CustomStringConvertible {
         /// The list of user members of the shared file.
-        open let users: Array<Sharing.UserMembershipInfo>
+        open let users: Array<Sharing.UserFileMembershipInfo>
         /// The list of group members of the shared file.
         open let groups: Array<Sharing.GroupMembershipInfo>
         /// The list of invited members of a file, but have not logged in and claimed this.
@@ -6297,7 +6297,7 @@ open class Sharing {
         /// Present if there are additional shared file members that have not been returned yet. Pass the cursor into
         /// listFileMembersContinue to list additional members.
         open let cursor: String?
-        public init(users: Array<Sharing.UserMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, invitees: Array<Sharing.InviteeMembershipInfo>, cursor: String? = nil) {
+        public init(users: Array<Sharing.UserFileMembershipInfo>, groups: Array<Sharing.GroupMembershipInfo>, invitees: Array<Sharing.InviteeMembershipInfo>, cursor: String? = nil) {
             self.users = users
             self.groups = groups
             self.invitees = invitees
@@ -6312,7 +6312,7 @@ open class Sharing {
         public init() { }
         open func serialize(_ value: SharedFileMembers) -> JSON {
             let output = [ 
-            "users": ArraySerializer(Sharing.UserMembershipInfoSerializer()).serialize(value.users),
+            "users": ArraySerializer(Sharing.UserFileMembershipInfoSerializer()).serialize(value.users),
             "groups": ArraySerializer(Sharing.GroupMembershipInfoSerializer()).serialize(value.groups),
             "invitees": ArraySerializer(Sharing.InviteeMembershipInfoSerializer()).serialize(value.invitees),
             "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
@@ -6322,7 +6322,7 @@ open class Sharing {
         open func deserialize(_ json: JSON) -> SharedFileMembers {
             switch json {
                 case .dictionary(let dict):
-                    let users = ArraySerializer(Sharing.UserMembershipInfoSerializer()).deserialize(dict["users"] ?? .null)
+                    let users = ArraySerializer(Sharing.UserFileMembershipInfoSerializer()).deserialize(dict["users"] ?? .null)
                     let groups = ArraySerializer(Sharing.GroupMembershipInfoSerializer()).deserialize(dict["groups"] ?? .null)
                     let invitees = ArraySerializer(Sharing.InviteeMembershipInfoSerializer()).deserialize(dict["invitees"] ?? .null)
                     let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
@@ -7855,6 +7855,86 @@ open class Sharing {
         }
     }
 
+    /// The information about a user member of the shared content.
+    open class UserMembershipInfo: Sharing.MembershipInfo {
+        /// The account information for the membership user.
+        open let user: Sharing.UserInfo
+        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
+            self.user = user
+            super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserMembershipInfoSerializer().serialize(self)))"
+        }
+    }
+    open class UserMembershipInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserMembershipInfo) -> JSON {
+            let output = [ 
+            "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
+            "user": Sharing.UserInfoSerializer().serialize(value.user),
+            "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserMembershipInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .null)
+                    let user = Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
+                    let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .number(0))
+                    return UserMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The information about a user member of the shared content with an appended last seen timestamp.
+    open class UserFileMembershipInfo: Sharing.UserMembershipInfo {
+        /// The UTC timestamp of when the user has last seen the content, if they have.
+        open let timeLastSeen: Date?
+        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false, timeLastSeen: Date? = nil) {
+            self.timeLastSeen = timeLastSeen
+            super.init(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFileMembershipInfoSerializer().serialize(self)))"
+        }
+    }
+    open class UserFileMembershipInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFileMembershipInfo) -> JSON {
+            let output = [ 
+            "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
+            "user": Sharing.UserInfoSerializer().serialize(value.user),
+            "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
+            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
+            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
+            "time_last_seen": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeLastSeen),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserFileMembershipInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .null)
+                    let user = Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
+                    let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
+                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .null)
+                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .number(0))
+                    let timeLastSeen = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_last_seen"] ?? .null)
+                    return UserFileMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited, timeLastSeen: timeLastSeen)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Basic information about a user. Use usersAccount and usersAccountBatch to obtain more detailed information.
     open class UserInfo: CustomStringConvertible {
         /// The account ID of the user.
@@ -7891,45 +7971,6 @@ open class Sharing {
                     let sameTeam = Serialization._BoolSerializer.deserialize(dict["same_team"] ?? .null)
                     let teamMemberId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_member_id"] ?? .null)
                     return UserInfo(accountId: accountId, sameTeam: sameTeam, teamMemberId: teamMemberId)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
-    /// The information about a user member of the shared content.
-    open class UserMembershipInfo: Sharing.MembershipInfo {
-        /// The account information for the membership user.
-        open let user: Sharing.UserInfo
-        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false) {
-            self.user = user
-            super.init(accessType: accessType, permissions: permissions, initials: initials, isInherited: isInherited)
-        }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserMembershipInfoSerializer().serialize(self)))"
-        }
-    }
-    open class UserMembershipInfoSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserMembershipInfo) -> JSON {
-            let output = [ 
-            "access_type": Sharing.AccessLevelSerializer().serialize(value.accessType),
-            "user": Sharing.UserInfoSerializer().serialize(value.user),
-            "permissions": NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).serialize(value.permissions),
-            "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
-            "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> UserMembershipInfo {
-            switch json {
-                case .dictionary(let dict):
-                    let accessType = Sharing.AccessLevelSerializer().deserialize(dict["access_type"] ?? .null)
-                    let user = Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
-                    let permissions = NullableSerializer(ArraySerializer(Sharing.MemberPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
-                    let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .null)
-                    let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .number(0))
-                    return UserMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited)
                 default:
                     fatalError("Type error deserializing")
             }

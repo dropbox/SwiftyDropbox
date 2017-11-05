@@ -1805,7 +1805,11 @@ open class Files {
         /// The maximum number of results to return per request. Note: This is an approximate number and there can be
         /// slightly more entries returned in some cases.
         open let limit: UInt32?
-        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil) {
+        /// A shared link to list the contents of. If the link is password-protected, the password must be provided. If
+        /// this field is present, path in ListFolderArg will be relative to root of the shared link. Only non-recursive
+        /// mode is supported for shared link.
+        open let sharedLink: Files.SharedLink?
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.recursive = recursive
@@ -1815,6 +1819,7 @@ open class Files {
             self.includeMountedFolders = includeMountedFolders
             nullableValidator(comparableValidator(minValue: 1, maxValue: 2000))(limit)
             self.limit = limit
+            self.sharedLink = sharedLink
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -1831,6 +1836,7 @@ open class Files {
             "include_has_explicit_shared_members": Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
             "include_mounted_folders": Serialization._BoolSerializer.serialize(value.includeMountedFolders),
             "limit": NullableSerializer(Serialization._UInt32Serializer).serialize(value.limit),
+            "shared_link": NullableSerializer(Files.SharedLinkSerializer()).serialize(value.sharedLink),
             ]
             return .dictionary(output)
         }
@@ -1844,7 +1850,8 @@ open class Files {
                     let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     let includeMountedFolders = Serialization._BoolSerializer.deserialize(dict["include_mounted_folders"] ?? .number(1))
                     let limit = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["limit"] ?? .null)
-                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit)
+                    let sharedLink = NullableSerializer(Files.SharedLinkSerializer()).deserialize(dict["shared_link"] ?? .null)
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2173,11 +2180,14 @@ open class Files {
     open class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
         open let path: String
+        /// Determines the behavior of the API in listing the revisions for a given file path or id.
+        open let mode: Files.ListRevisionsMode
         /// The maximum number of revision entries returned.
         open let limit: UInt64
-        public init(path: String, limit: UInt64 = 10) {
+        public init(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
+            self.mode = mode
             comparableValidator(minValue: 1, maxValue: 100)(limit)
             self.limit = limit
         }
@@ -2190,6 +2200,7 @@ open class Files {
         open func serialize(_ value: ListRevisionsArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
+            "mode": Files.ListRevisionsModeSerializer().serialize(value.mode),
             "limit": Serialization._UInt64Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
@@ -2198,8 +2209,9 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let mode = Files.ListRevisionsModeSerializer().deserialize(dict["mode"] ?? Files.ListRevisionsModeSerializer().serialize(.path))
                     let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(10))
-                    return ListRevisionsArg(path: path, limit: limit)
+                    return ListRevisionsArg(path: path, mode: mode, limit: limit)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2250,9 +2262,61 @@ open class Files {
         }
     }
 
+    /// The ListRevisionsMode union
+    public enum ListRevisionsMode: CustomStringConvertible {
+        /// Returns revisions with the same file path as identified by the latest file entry at the given file path or
+        /// id.
+        case path
+        /// Returns revisions with the same file id as identified by the latest file entry at the given file path or id.
+        case id
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ListRevisionsModeSerializer().serialize(self)))"
+        }
+    }
+    open class ListRevisionsModeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ListRevisionsMode) -> JSON {
+            switch value {
+                case .path:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .id:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("id")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ListRevisionsMode {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            return ListRevisionsMode.path
+                        case "id":
+                            return ListRevisionsMode.id
+                        case "other":
+                            return ListRevisionsMode.other
+                        default:
+                            return ListRevisionsMode.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ListRevisionsResult struct
     open class ListRevisionsResult: CustomStringConvertible {
-        /// If the file is deleted.
+        /// If the file identified by the latest revision in the response is either deleted or moved.
         open let isDeleted: Bool
         /// The time of deletion if the file was deleted.
         open let serverDeleted: Date?
@@ -3883,6 +3947,43 @@ open class Files {
         }
     }
 
+    /// The SharedLink struct
+    open class SharedLink: CustomStringConvertible {
+        /// Shared link url.
+        open let url: String
+        /// Password for the shared link.
+        open let password: String?
+        public init(url: String, password: String? = nil) {
+            stringValidator()(url)
+            self.url = url
+            nullableValidator(stringValidator())(password)
+            self.password = password
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkSerializer().serialize(self)))"
+        }
+    }
+    open class SharedLinkSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharedLink) -> JSON {
+            let output = [ 
+            "url": Serialization._StringSerializer.serialize(value.url),
+            "password": NullableSerializer(Serialization._StringSerializer).serialize(value.password),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharedLink {
+            switch json {
+                case .dictionary(let dict):
+                    let url = Serialization._StringSerializer.deserialize(dict["url"] ?? .null)
+                    let password = NullableSerializer(Serialization._StringSerializer).deserialize(dict["password"] ?? .null)
+                    return SharedLink(url: url, password: password)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The ThumbnailArg struct
     open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
@@ -4883,7 +4984,7 @@ open class Files {
         case insufficientSpace
         /// Dropbox will not save the file or folder because of its name.
         case disallowedName
-        /// This endpoint cannot modify or delete team folders.
+        /// This endpoint cannot move or delete team folders.
         case teamFolder
         /// An unspecified error.
         case other
