@@ -106,7 +106,7 @@ open class FileProperties {
         case other
         /// An unspecified error.
         case path(FileProperties.LookupError)
-        /// This folder cannot be tagged. Shared folders and team folders are not supported for team-owned tags.
+        /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
 
         public var description: String {
@@ -175,7 +175,7 @@ open class FileProperties {
         case other
         /// An unspecified error.
         case path(FileProperties.LookupError)
-        /// This folder cannot be tagged. Shared folders and team folders are not supported for team-owned tags.
+        /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
         /// One or more of the supplied property field values is too large.
         case propertyFieldTooLarge
@@ -260,7 +260,7 @@ open class FileProperties {
         case other
         /// An unspecified error.
         case path(FileProperties.LookupError)
-        /// This folder cannot be tagged. Shared folders and team folders are not supported for team-owned tags.
+        /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
         /// One or more of the supplied property field values is too large.
         case propertyFieldTooLarge
@@ -1308,7 +1308,7 @@ open class FileProperties {
         case other
         /// An unspecified error.
         case path(FileProperties.LookupError)
-        /// This folder cannot be tagged. Shared folders and team folders are not supported for team-owned tags.
+        /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
         /// An unspecified error.
         case propertyGroupLookup(FileProperties.LookUpPropertiesError)
@@ -1525,7 +1525,7 @@ open class FileProperties {
         case other
         /// An unspecified error.
         case path(FileProperties.LookupError)
-        /// This folder cannot be tagged. Shared folders and team folders are not supported for team-owned tags.
+        /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
         /// One or more of the supplied property field values is too large.
         case propertyFieldTooLarge

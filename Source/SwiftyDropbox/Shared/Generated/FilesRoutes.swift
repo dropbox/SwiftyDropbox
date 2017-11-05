@@ -428,12 +428,15 @@ open class FilesRoutes {
     /// includes app folder, shared folder and team folder.
     /// - parameter limit: The maximum number of results to return per request. Note: This is an approximate number and
     /// there can be slightly more entries returned in some cases.
+    /// - parameter sharedLink: A shared link to list the contents of. If the link is password-protected, the password
+    /// must be provided. If this field is present, path in ListFolderArg will be relative to root of the shared link.
+    /// Only non-recursive mode is supported for shared link.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolder
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -466,12 +469,15 @@ open class FilesRoutes {
     /// includes app folder, shared folder and team folder.
     /// - parameter limit: The maximum number of results to return per request. Note: This is an approximate number and
     /// there can be slightly more entries returned in some cases.
+    /// - parameter sharedLink: A shared link to list the contents of. If the link is password-protected, the password
+    /// must be provided. If this field is present, path in ListFolderArg will be relative to root of the shared link.
+    /// Only non-recursive mode is supported for shared link.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
     /// object on success or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolderGetLatestCursor
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -495,16 +501,22 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Return revisions of a file.
+    /// Returns revisions for files based on a file path or a file id. The file path or file id is identified from the
+    /// latest file entry at the given file path or id. This end point allows your app to query either by file path or
+    /// file id by setting the mode parameter appropriately. In the path in ListRevisionsMode (default) mode, all
+    /// revisions at the same file path as the latest file entry are returned. If revisions with the same file id are
+    /// desired, then mode must be set to id in ListRevisionsMode. The id in ListRevisionsMode mode is useful to
+    /// retrieve revisions for a given file across moves or renames.
     ///
     /// - parameter path: The path to the file you want to see the revisions of.
+    /// - parameter mode: Determines the behavior of the API in listing the revisions for a given file path or id.
     /// - parameter limit: The maximum number of revision entries returned.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListRevisionsResult` object on
     /// success or a `Files.ListRevisionsError` object on failure.
-    @discardableResult open func listRevisions(path: String, limit: UInt64 = 10) -> RpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
+    @discardableResult open func listRevisions(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10) -> RpcRequest<Files.ListRevisionsResultSerializer, Files.ListRevisionsErrorSerializer> {
         let route = Files.listRevisions
-        let serverArgs = Files.ListRevisionsArg(path: path, limit: limit)
+        let serverArgs = Files.ListRevisionsArg(path: path, mode: mode, limit: limit)
         return client.request(route, serverArgs: serverArgs)
     }
 
