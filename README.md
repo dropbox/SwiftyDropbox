@@ -77,7 +77,7 @@ All requests need to be made with an OAuth 2.0 access token. An OAuth token repr
 a Dropbox user account or team.
 
 Once you've created an app, you can go to the App Console and manually generate an access token to authorize your app to access your own Dropbox account.
-Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-defined auth flow. For more information, [see below](https://github.com/dropbox/SwiftyDropbox#handling-authorization-flow).
+Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-defined auth flow. For more information, [see below](https://github.com/dropbox/SwiftyDropbox#handling-the-authorization-flow).
 
 ---
 
