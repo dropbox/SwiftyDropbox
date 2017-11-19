@@ -425,7 +425,7 @@ class Keychain {
 
     class func get(_ key: String) -> String? {
         if let data = getAsData(key) {
-            return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
+            return String(data: data, encoding: .utf8)
         } else {
             return nil
         }
