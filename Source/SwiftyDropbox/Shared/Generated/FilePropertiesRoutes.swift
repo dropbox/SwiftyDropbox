@@ -40,9 +40,9 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Remove the specified property group from the file. To remove specific property field key value pairs, see
-    /// propertiesUpdate. To update a template, see templatesUpdateForUser or templatesUpdateForTeam. Templates can't be
-    /// removed once created.
+    /// Permanently removes the specified property group from the file. To remove specific property field key value
+    /// pairs, see propertiesUpdate. To update a template, see templatesUpdateForUser or templatesUpdateForTeam.
+    /// Templates can't be removed once created.
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyTemplateIds: A list of identifiers for a template created by templatesAddForUser or
@@ -69,6 +69,18 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Once a cursor has been retrieved from propertiesSearch, use this to paginate through all search results.
+    ///
+    /// - parameter cursor: The cursor returned by your last call to propertiesSearch or propertiesSearchContinue.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
+    /// object on success or a `FileProperties.PropertiesSearchContinueError` object on failure.
+    @discardableResult open func propertiesSearchContinue(cursor: String) -> RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchContinueErrorSerializer> {
+        let route = FileProperties.propertiesSearchContinue
+        let serverArgs = FileProperties.PropertiesSearchContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Add, update or remove properties associated with the supplied file and templates. This endpoint should be used
     /// instead of propertiesOverwrite when property groups are being updated via a "delta" instead of via a "snapshot"
     /// . In other words, this endpoint will not delete any omitted fields from a property group, whereas
@@ -85,7 +97,8 @@ open class FilePropertiesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Add a template associated with a team. See propertiesAdd to add properties to a file or folder.
+    /// Add a template associated with a team. See propertiesAdd to add properties to a file or folder. Note: this
+    /// endpoint will create team-owned templates.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
@@ -153,6 +166,32 @@ open class FilePropertiesRoutes {
     @discardableResult open func templatesListForUser() -> RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = FileProperties.templatesListForUser
         return client.request(route)
+    }
+
+    /// Permanently removes the specified template created from templatesAddForUser. All properties associated with the
+    /// template will also be removed. This action cannot be undone.
+    ///
+    /// - parameter templateId: An identifier for a template created by templatesAddForUser or templatesAddForTeam.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `FileProperties.TemplateError` object on failure.
+    @discardableResult open func templatesRemoveForTeam(templateId: String) -> RpcRequest<VoidSerializer, FileProperties.TemplateErrorSerializer> {
+        let route = FileProperties.templatesRemoveForTeam
+        let serverArgs = FileProperties.RemoveTemplateArg(templateId: templateId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Permanently removes the specified template created from templatesAddForUser. All properties associated with the
+    /// template will also be removed. This action cannot be undone.
+    ///
+    /// - parameter templateId: An identifier for a template created by templatesAddForUser or templatesAddForTeam.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `FileProperties.TemplateError` object on failure.
+    @discardableResult open func templatesRemoveForUser(templateId: String) -> RpcRequest<VoidSerializer, FileProperties.TemplateErrorSerializer> {
+        let route = FileProperties.templatesRemoveForUser
+        let serverArgs = FileProperties.RemoveTemplateArg(templateId: templateId)
+        return client.request(route, serverArgs: serverArgs)
     }
 
     /// Update a template associated with a team. This route can update the template name, the template description and

@@ -19,9 +19,10 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.AlphaGetMetadataError` object on failure.
-    @discardableResult open func alphaGetMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) -> RpcRequest<Files.MetadataSerializer, Files.AlphaGetMetadataErrorSerializer> {
+    @available(*, unavailable, message:"alpha/get_metadata is deprecated. Use get_metadata.")
+    @discardableResult open func alphaGetMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includePropertyTemplates: Array<String>? = nil) -> RpcRequest<Files.MetadataSerializer, Files.AlphaGetMetadataErrorSerializer> {
         let route = Files.alphaGetMetadata
-        let serverArgs = Files.AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
+        let serverArgs = Files.AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups, includePropertyTemplates: includePropertyTemplates)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -29,11 +30,11 @@ open class FilesRoutes {
     /// API alpha and is slightly different from upload. Do not use this to upload a file larger than 150 MB. Instead,
     /// create an upload session with uploadSessionStart.
     ///
-    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an Data object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
+    @available(*, unavailable, message:"alpha/upload is deprecated. Use alpha/upload.")
     @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
@@ -44,11 +45,11 @@ open class FilesRoutes {
     /// API alpha and is slightly different from upload. Do not use this to upload a file larger than 150 MB. Instead,
     /// create an upload session with uploadSessionStart.
     ///
-    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an URL object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
+    @available(*, unavailable, message:"alpha/upload is deprecated. Use alpha/upload.")
     @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
@@ -59,11 +60,11 @@ open class FilesRoutes {
     /// API alpha and is slightly different from upload. Do not use this to upload a file larger than 150 MB. Instead,
     /// create an upload session with uploadSessionStart.
     ///
-    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadErrorWithProperties` object on failure.
+    @available(*, unavailable, message:"alpha/upload is deprecated. Use alpha/upload.")
     @discardableResult open func alphaUpload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorWithPropertiesSerializer> {
         let route = Files.alphaUpload
         let serverArgs = Files.CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
@@ -291,12 +292,14 @@ open class FilesRoutes {
     /// notFound in LookupError will be returned.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
     /// whether or not  that file has any explicit members.
+    /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
+    /// if there exists property data associated with the file and each of the listed templates.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.GetMetadataError` object on failure.
-    @discardableResult open func getMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) -> RpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
+    @discardableResult open func getMetadata(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) -> RpcRequest<Files.MetadataSerializer, Files.GetMetadataErrorSerializer> {
         let route = Files.getMetadata
-        let serverArgs = Files.GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
+        let serverArgs = Files.GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -431,12 +434,14 @@ open class FilesRoutes {
     /// - parameter sharedLink: A shared link to list the contents of. If the link is password-protected, the password
     /// must be provided. If this field is present, path in ListFolderArg will be relative to root of the shared link.
     /// Only non-recursive mode is supported for shared link.
+    /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
+    /// if there exists property data associated with the file and each of the listed templates.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolder
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -472,12 +477,14 @@ open class FilesRoutes {
     /// - parameter sharedLink: A shared link to list the contents of. If the link is password-protected, the password
     /// must be provided. If this field is present, path in ListFolderArg will be relative to root of the shared link.
     /// Only non-recursive mode is supported for shared link.
+    /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
+    /// if there exists property data associated with the file and each of the listed templates.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
     /// object on success or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolderGetLatestCursor
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -760,13 +767,14 @@ open class FilesRoutes {
     /// - parameter mute: Normally, users are made aware of any file modifications in their Dropbox account via
     /// notifications in the client software. If true, this tells the clients that this modification shouldn't result in
     /// a user notification.
+    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an Data object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: Data) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
-        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
@@ -784,13 +792,14 @@ open class FilesRoutes {
     /// - parameter mute: Normally, users are made aware of any file modifications in their Dropbox account via
     /// notifications in the client software. If true, this tells the clients that this modification shouldn't result in
     /// a user notification.
+    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an URL object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: URL) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
-        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
@@ -808,13 +817,14 @@ open class FilesRoutes {
     /// - parameter mute: Normally, users are made aware of any file modifications in their Dropbox account via
     /// notifications in the client software. If true, this tells the clients that this modification shouldn't result in
     /// a user notification.
+    /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadError` object on failure.
-    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
+    @discardableResult open func upload(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, input: InputStream) -> UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer> {
         let route = Files.upload
-        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+        let serverArgs = Files.CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
