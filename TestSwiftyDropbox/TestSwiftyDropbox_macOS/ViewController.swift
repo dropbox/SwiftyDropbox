@@ -19,7 +19,7 @@ class ViewController: NSViewController {
 
     @IBAction func oauthLinkButtonPressed(_ sender: AnyObject) {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
-            DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared(), controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared().open(url)})
+            DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared, controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)})
         }
     }
 
