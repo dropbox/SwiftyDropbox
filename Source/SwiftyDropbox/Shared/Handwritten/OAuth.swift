@@ -150,12 +150,16 @@ open class DropboxOAuthManager {
 
         let locale = Bundle.main.preferredLocalizations.first ?? "en"
 
+        let state = ProcessInfo.processInfo.globallyUniqueString
+        UserDefaults.standard.setValue(state, forKey: Constants.kCSERFKey)
+
         components.queryItems = [
             URLQueryItem(name: "response_type", value: "token"),
             URLQueryItem(name: "client_id", value: self.appKey),
             URLQueryItem(name: "redirect_uri", value: self.redirectURL.absoluteString),
             URLQueryItem(name: "disable_signup", value: "true"),
             URLQueryItem(name: "locale", value: self.locale?.identifier ?? locale),
+            URLQueryItem(name: "state", value: state),
         ]
         return components.url!
     }
@@ -180,11 +184,20 @@ open class DropboxOAuthManager {
 
         if let error = results["error"] {
             let desc = results["error_description"]?.replacingOccurrences(of: "+", with: " ").removingPercentEncoding
-            if results["error"]! == "access_denied" {
+            if results["error"] != "access_denied" {
                 return .cancel
             }
             return .error(OAuth2Error(errorCode: error), desc ?? "")
         } else {
+            let state = results["state"]
+            let storedState = UserDefaults.standard.string(forKey: Constants.kCSERFKey)
+
+            if state == nil || storedState == nil || state != storedState {
+                return .error(OAuth2Error(errorCode: "inconsistent_state"), "Auth flow failed because of inconsistent state.")
+            } else {
+                // reset upon success
+                UserDefaults.standard.setValue(nil, forKey: Constants.kCSERFKey)
+            }
             let accessToken = results["access_token"]!
             let uid = results["uid"]!
             return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
@@ -321,6 +334,9 @@ public enum OAuth2Error {
     /// The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
     case temporarilyUnavailable
 
+    /// The state param received from the authorization server does not match the state param stored by the SDK.
+    case inconsistentState
+
     /// Some other error (outside of the OAuth2 specification)
     case unknown
 
@@ -333,6 +349,7 @@ public enum OAuth2Error {
             case "invalid_scope": self = .invalidScope
             case "server_error": self = .serverError
             case "temporarily_unavailable": self = .temporarilyUnavailable
+            case "inconsistent_state": self = .inconsistentState
             default: self = .unknown
         }
     }
