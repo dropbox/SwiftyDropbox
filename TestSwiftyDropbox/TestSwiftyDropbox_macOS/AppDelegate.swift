@@ -24,11 +24,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
 
-        viewController = NSApplication.shared().windows[0].contentViewController as? ViewController
+        viewController = NSApplication.shared.windows[0].contentViewController as? ViewController
         self.checkButtons()
     }
 
-    func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
+    @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
         if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
             if let urlStr = aeEventDescriptor.stringValue {
                 let url = URL(string: urlStr)!

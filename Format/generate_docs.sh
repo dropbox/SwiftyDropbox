@@ -1,11 +1,12 @@
+#!/bin/sh
 # Script for generating jazzy docs
 
-if [ "$#" -ne 3 ]; then
-    echo "Script requires three arguments: 1. version number and 2. path to docs repo checkout 3. path to updated SDK checkout."
+if [ "$#" -ne 2 ]; then
+    echo "Script requires two arguments: 1. path to docs repo checkout 2. path to updated SDK checkout."
 else
-    sdk_version="$1"
-    docs_repo_location="$2"
-    sdk_repo_location="$3"
+    sdk_version="$(git describe --abbrev=0 --tags)"
+    docs_repo_location="$1"
+    sdk_repo_location="$2"
 
     echo "Checking doc repo exists..."
 
