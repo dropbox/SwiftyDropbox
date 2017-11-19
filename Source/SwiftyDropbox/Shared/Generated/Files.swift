@@ -20,12 +20,16 @@ open class Files {
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
         open let includeHasExplicitSharedMembers: Bool
-        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) {
+        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
+        /// associated with the file and each of the listed templates.
+        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.includeMediaInfo = includeMediaInfo
             self.includeDeleted = includeDeleted
             self.includeHasExplicitSharedMembers = includeHasExplicitSharedMembers
+            self.includePropertyGroups = includePropertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
@@ -39,6 +43,7 @@ open class Files {
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
             "include_has_explicit_shared_members": Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             ]
             return .dictionary(output)
         }
@@ -49,7 +54,8 @@ open class Files {
                     let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                     let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
                     let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
-                    return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
+                    return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -61,10 +67,10 @@ open class Files {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
         open let includePropertyTemplates: Array<String>?
-        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) {
+        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
             self.includePropertyTemplates = includePropertyTemplates
-            super.init(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
+            super.init(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataArgSerializer().serialize(self)))"
@@ -78,6 +84,7 @@ open class Files {
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
             "include_has_explicit_shared_members": Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             "include_property_templates": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.includePropertyTemplates),
             ]
             return .dictionary(output)
@@ -89,8 +96,9 @@ open class Files {
                     let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                     let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
                     let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
                     let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .null)
-                    return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
+                    return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups, includePropertyTemplates: includePropertyTemplates)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -195,13 +203,16 @@ open class Files {
         /// client software. If true, this tells the clients that this modification shouldn't result in a user
         /// notification.
         open let mute: Bool
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false) {
+        /// List of custom properties to add to file.
+        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
             self.mode = mode
             self.autorename = autorename
             self.clientModified = clientModified
             self.mute = mute
+            self.propertyGroups = propertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
@@ -216,6 +227,7 @@ open class Files {
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
+            "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
@@ -227,7 +239,8 @@ open class Files {
                     let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
-                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+                    let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
+                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -236,12 +249,6 @@ open class Files {
 
     /// The CommitInfoWithProperties struct
     open class CommitInfoWithProperties: Files.CommitInfo {
-        /// List of custom properties to add to file.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
-            self.propertyGroups = propertyGroups
-            super.init(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoWithPropertiesSerializer().serialize(self)))"
         }
@@ -1228,7 +1235,8 @@ open class Files {
         open let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
         open let sharingInfo: Files.FolderSharingInfo?
-        /// Additional information if the file has custom properties with the property template specified.
+        /// Additional information if the file has custom properties with the property template specified. Note that
+        /// only properties associated with user-owned templates, not team-owned templates, can be attached to folders.
         open let propertyGroups: Array<FileProperties.PropertyGroup>?
         public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
@@ -1809,7 +1817,10 @@ open class Files {
         /// this field is present, path in ListFolderArg will be relative to root of the shared link. Only non-recursive
         /// mode is supported for shared link.
         open let sharedLink: Files.SharedLink?
-        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) {
+        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
+        /// associated with the file and each of the listed templates.
+        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.recursive = recursive
@@ -1820,6 +1831,7 @@ open class Files {
             nullableValidator(comparableValidator(minValue: 1, maxValue: 2000))(limit)
             self.limit = limit
             self.sharedLink = sharedLink
+            self.includePropertyGroups = includePropertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -1837,6 +1849,7 @@ open class Files {
             "include_mounted_folders": Serialization._BoolSerializer.serialize(value.includeMountedFolders),
             "limit": NullableSerializer(Serialization._UInt32Serializer).serialize(value.limit),
             "shared_link": NullableSerializer(Files.SharedLinkSerializer()).serialize(value.sharedLink),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             ]
             return .dictionary(output)
         }
@@ -1851,7 +1864,8 @@ open class Files {
                     let includeMountedFolders = Serialization._BoolSerializer.deserialize(dict["include_mounted_folders"] ?? .number(1))
                     let limit = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["limit"] ?? .null)
                     let sharedLink = NullableSerializer(Files.SharedLinkSerializer()).deserialize(dict["shared_link"] ?? .null)
-                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2813,6 +2827,8 @@ open class Files {
         /// Your move operation would result in an ownership transfer. You may reissue the request with the field
         /// allowOwnershipTransfer in RelocationArg to true.
         case cantTransferOwnership
+        /// The current user does not have enough space to move or copy the files.
+        case insufficientQuota
         /// An unspecified error.
         case other
 
@@ -2860,6 +2876,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("cant_transfer_ownership")
                     return .dictionary(d)
+                case .insufficientQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_quota")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -2892,6 +2912,8 @@ open class Files {
                             return RelocationError.duplicatedOrNestedPaths
                         case "cant_transfer_ownership":
                             return RelocationError.cantTransferOwnership
+                        case "insufficient_quota":
+                            return RelocationError.insufficientQuota
                         case "other":
                             return RelocationError.other
                         default:
@@ -2924,6 +2946,8 @@ open class Files {
         /// Your move operation would result in an ownership transfer. You may reissue the request with the field
         /// allowOwnershipTransfer in RelocationArg to true.
         case cantTransferOwnership
+        /// The current user does not have enough space to move or copy the files.
+        case insufficientQuota
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -2973,6 +2997,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("cant_transfer_ownership")
                     return .dictionary(d)
+                case .insufficientQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_quota")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3009,6 +3037,8 @@ open class Files {
                             return RelocationBatchError.duplicatedOrNestedPaths
                         case "cant_transfer_ownership":
                             return RelocationBatchError.cantTransferOwnership
+                        case "insufficient_quota":
+                            return RelocationBatchError.insufficientQuota
                         case "other":
                             return RelocationBatchError.other
                         case "too_many_write_operations":
@@ -5123,7 +5153,7 @@ open class Files {
     static let alphaGetMetadata = Route(
         name: "alpha/get_metadata",
         namespace: "files",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Files.AlphaGetMetadataArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.AlphaGetMetadataErrorSerializer(),
@@ -5133,7 +5163,7 @@ open class Files {
     static let alphaUpload = Route(
         name: "alpha/upload",
         namespace: "files",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Files.CommitInfoWithPropertiesSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadErrorWithPropertiesSerializer(),

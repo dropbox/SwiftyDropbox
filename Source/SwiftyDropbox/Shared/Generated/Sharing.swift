@@ -1684,7 +1684,7 @@ open class Sharing {
         case unshare
         /// Keep a copy of the contents upon leaving or being kicked from the folder.
         case leaveACopy
-        /// This action is deprecated. Use create_link instead.
+        /// Use create_link instead.
         case shareLink
         /// Create a shared link for folder.
         case createLink
@@ -5390,6 +5390,9 @@ open class Sharing {
         case teamFolder
         /// The current user does not have permission to perform this action.
         case noPermission
+        /// This shared folder has too many files for leaving a copy. You can still remove this user without leaving a
+        /// copy.
+        case tooManyFiles
         /// An unspecified error.
         case other
 
@@ -5425,6 +5428,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("no_permission")
                     return .dictionary(d)
+                case .tooManyFiles:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_files")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5450,6 +5457,8 @@ open class Sharing {
                             return RemoveFolderMemberError.teamFolder
                         case "no_permission":
                             return RemoveFolderMemberError.noPermission
+                        case "too_many_files":
+                            return RemoveFolderMemberError.tooManyFiles
                         case "other":
                             return RemoveFolderMemberError.other
                         default:

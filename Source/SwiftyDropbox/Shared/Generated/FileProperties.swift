@@ -855,6 +855,80 @@ open class FileProperties {
         }
     }
 
+    /// The PropertiesSearchContinueArg struct
+    open class PropertiesSearchContinueArg: CustomStringConvertible {
+        /// The cursor returned by your last call to propertiesSearch or propertiesSearchContinue.
+        open let cursor: String
+        public init(cursor: String) {
+            stringValidator(minLength: 1)(cursor)
+            self.cursor = cursor
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PropertiesSearchContinueArgSerializer().serialize(self)))"
+        }
+    }
+    open class PropertiesSearchContinueArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PropertiesSearchContinueArg) -> JSON {
+            let output = [ 
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PropertiesSearchContinueArg {
+            switch json {
+                case .dictionary(let dict):
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return PropertiesSearchContinueArg(cursor: cursor)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PropertiesSearchContinueError union
+    public enum PropertiesSearchContinueError: CustomStringConvertible {
+        /// Indicates that the cursor has been invalidated. Call propertiesSearch to obtain a new cursor.
+        case reset
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PropertiesSearchContinueErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PropertiesSearchContinueErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PropertiesSearchContinueError) -> JSON {
+            switch value {
+                case .reset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("reset")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PropertiesSearchContinueError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "reset":
+                            return PropertiesSearchContinueError.reset
+                        case "other":
+                            return PropertiesSearchContinueError.other
+                        default:
+                            return PropertiesSearchContinueError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The PropertiesSearchError union
     public enum PropertiesSearchError: CustomStringConvertible {
         /// An unspecified error.
@@ -905,13 +979,16 @@ open class FileProperties {
         open let id: String
         /// The path for the matched file or folder.
         open let path: String
+        /// Whether the file or folder is deleted.
+        open let isDeleted: Bool
         /// List of custom property groups associated with the file.
         open let propertyGroups: Array<FileProperties.PropertyGroup>
-        public init(id: String, path: String, propertyGroups: Array<FileProperties.PropertyGroup>) {
+        public init(id: String, path: String, isDeleted: Bool, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(minLength: 1)(id)
             self.id = id
             stringValidator()(path)
             self.path = path
+            self.isDeleted = isDeleted
             self.propertyGroups = propertyGroups
         }
         open var description: String {
@@ -924,6 +1001,7 @@ open class FileProperties {
             let output = [ 
             "id": Serialization._StringSerializer.serialize(value.id),
             "path": Serialization._StringSerializer.serialize(value.path),
+            "is_deleted": Serialization._BoolSerializer.serialize(value.isDeleted),
             "property_groups": ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
@@ -933,8 +1011,9 @@ open class FileProperties {
                 case .dictionary(let dict):
                     let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let isDeleted = Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
                     let propertyGroups = ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
-                    return PropertiesSearchMatch(id: id, path: path, propertyGroups: propertyGroups)
+                    return PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1030,8 +1109,13 @@ open class FileProperties {
     open class PropertiesSearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
         open let matches: Array<FileProperties.PropertiesSearchMatch>
-        public init(matches: Array<FileProperties.PropertiesSearchMatch>) {
+        /// Pass the cursor into propertiesSearchContinue to continue to receive search results. Cursor will be null
+        /// when there are no more results.
+        open let cursor: String?
+        public init(matches: Array<FileProperties.PropertiesSearchMatch>, cursor: String? = nil) {
             self.matches = matches
+            nullableValidator(stringValidator(minLength: 1))(cursor)
+            self.cursor = cursor
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(PropertiesSearchResultSerializer().serialize(self)))"
@@ -1042,6 +1126,7 @@ open class FileProperties {
         open func serialize(_ value: PropertiesSearchResult) -> JSON {
             let output = [ 
             "matches": ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).serialize(value.matches),
+            "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
         }
@@ -1049,7 +1134,8 @@ open class FileProperties {
             switch json {
                 case .dictionary(let dict):
                     let matches = ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).deserialize(dict["matches"] ?? .null)
-                    return PropertiesSearchResult(matches: matches)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    return PropertiesSearchResult(matches: matches, cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1376,27 +1462,52 @@ open class FileProperties {
         }
     }
 
-    /// The TemplateFilter union
-    public enum TemplateFilter: CustomStringConvertible {
-        /// No templates will be filtered from the result (all templates will be returned).
-        case filterNone
+    /// The RemoveTemplateArg struct
+    open class RemoveTemplateArg: CustomStringConvertible {
+        /// An identifier for a template created by templatesAddForUser or templatesAddForTeam.
+        open let templateId: String
+        public init(templateId: String) {
+            stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
+            self.templateId = templateId
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RemoveTemplateArgSerializer().serialize(self)))"
+        }
+    }
+    open class RemoveTemplateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RemoveTemplateArg) -> JSON {
+            let output = [ 
+            "template_id": Serialization._StringSerializer.serialize(value.templateId),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> RemoveTemplateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    return RemoveTemplateArg(templateId: templateId)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TemplateFilterBase union
+    public enum TemplateFilterBase: CustomStringConvertible {
         /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
         case filterSome(Array<String>)
         /// An unspecified error.
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(TemplateFilterSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(TemplateFilterBaseSerializer().serialize(self)))"
         }
     }
-    open class TemplateFilterSerializer: JSONSerializer {
+    open class TemplateFilterBaseSerializer: JSONSerializer {
         public init() { }
-        open func serialize(_ value: TemplateFilter) -> JSON {
+        open func serialize(_ value: TemplateFilterBase) -> JSON {
             switch value {
-                case .filterNone:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("filter_none")
-                    return .dictionary(d)
                 case .filterSome(let arg):
                     var d = ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
                     d[".tag"] = .str("filter_some")
@@ -1407,20 +1518,70 @@ open class FileProperties {
                     return .dictionary(d)
             }
         }
+        open func deserialize(_ json: JSON) -> TemplateFilterBase {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "filter_some":
+                            let v = ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
+                            return TemplateFilterBase.filterSome(v)
+                        case "other":
+                            return TemplateFilterBase.other
+                        default:
+                            return TemplateFilterBase.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TemplateFilter union
+    public enum TemplateFilter: CustomStringConvertible {
+        /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
+        case filterSome(Array<String>)
+        /// An unspecified error.
+        case other
+        /// No templates will be filtered from the result (all templates will be returned).
+        case filterNone
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TemplateFilterSerializer().serialize(self)))"
+        }
+    }
+    open class TemplateFilterSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TemplateFilter) -> JSON {
+            switch value {
+                case .filterSome(let arg):
+                    var d = ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                    d[".tag"] = .str("filter_some")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .filterNone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("filter_none")
+                    return .dictionary(d)
+            }
+        }
         open func deserialize(_ json: JSON) -> TemplateFilter {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "filter_none":
-                            return TemplateFilter.filterNone
                         case "filter_some":
                             let v = ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
                             return TemplateFilter.filterSome(v)
                         case "other":
                             return TemplateFilter.other
+                        case "filter_none":
+                            return TemplateFilter.filterNone
                         default:
-                            return TemplateFilter.other
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -1732,6 +1893,16 @@ open class FileProperties {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let propertiesSearchContinue = Route(
+        name: "properties/search/continue",
+        namespace: "file_properties",
+        deprecated: false,
+        argSerializer: FileProperties.PropertiesSearchContinueArgSerializer(),
+        responseSerializer: FileProperties.PropertiesSearchResultSerializer(),
+        errorSerializer: FileProperties.PropertiesSearchContinueErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let propertiesUpdate = Route(
         name: "properties/update",
         namespace: "file_properties",
@@ -1798,6 +1969,26 @@ open class FileProperties {
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
+        errorSerializer: FileProperties.TemplateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let templatesRemoveForTeam = Route(
+        name: "templates/remove_for_team",
+        namespace: "file_properties",
+        deprecated: false,
+        argSerializer: FileProperties.RemoveTemplateArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: FileProperties.TemplateErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let templatesRemoveForUser = Route(
+        name: "templates/remove_for_user",
+        namespace: "file_properties",
+        deprecated: false,
+        argSerializer: FileProperties.RemoveTemplateArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.TemplateErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]

@@ -344,6 +344,54 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Add users to member space limits excluded users list.
+    ///
+    /// - parameter users: List of users to be added/removed.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// success or a `Team.ExcludedUsersUpdateError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersAdd(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersAdd
+        let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// List member space limits excluded users.
+    ///
+    /// - parameter limit: Number of results to return per call.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// success or a `Team.ExcludedUsersListError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersList(limit: UInt32 = 1000) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersList
+        let serverArgs = Team.ExcludedUsersListArg(limit: limit)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Continue listing member space limits excluded users.
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of users.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// success or a `Team.ExcludedUsersListContinueError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersListContinue(cursor: String) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListContinueErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersListContinue
+        let serverArgs = Team.ExcludedUsersListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Remove users from member space limits excluded users list.
+    ///
+    /// - parameter users: List of users to be added/removed.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// success or a `Team.ExcludedUsersUpdateError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersRemove(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersRemove
+        let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000 members can be
     /// specified in a single call.
     ///
@@ -369,14 +417,14 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be specified in a
+    /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be specified in a
     /// single call.
     ///
     /// - parameter usersAndQuotas: List of users and their custom quotas.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
-    /// success or a `Team.CustomQuotaError` object on failure.
-    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+    /// success or a `Team.SetCustomQuotaError` object on failure.
+    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.SetCustomQuotaErrorSerializer> {
         let route = Team.memberSpaceLimitsSetCustomQuota
         let serverArgs = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas)
         return client.request(route, serverArgs: serverArgs)

@@ -67,6 +67,49 @@ open class TeamPolicies {
         }
     }
 
+    /// The GroupCreation union
+    public enum GroupCreation: CustomStringConvertible {
+        /// Team admins and members can create groups.
+        case adminsAndMembers
+        /// Only team admins can create groups.
+        case adminsOnly
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GroupCreationSerializer().serialize(self)))"
+        }
+    }
+    open class GroupCreationSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GroupCreation) -> JSON {
+            switch value {
+                case .adminsAndMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("admins_and_members")
+                    return .dictionary(d)
+                case .adminsOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("admins_only")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> GroupCreation {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "admins_and_members":
+                            return GroupCreation.adminsAndMembers
+                        case "admins_only":
+                            return GroupCreation.adminsOnly
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The OfficeAddInPolicy union
     public enum OfficeAddInPolicy: CustomStringConvertible {
         /// Office Add-In is disabled.
@@ -497,6 +540,57 @@ open class TeamPolicies {
                             return SharedLinkCreatePolicy.other
                         default:
                             return SharedLinkCreatePolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The SmartSyncPolicy union
+    public enum SmartSyncPolicy: CustomStringConvertible {
+        /// The specified content will be synced as local files by default.
+        case local
+        /// The specified content will be synced as on-demand files by default.
+        case onDemand
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SmartSyncPolicySerializer().serialize(self)))"
+        }
+    }
+    open class SmartSyncPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SmartSyncPolicy) -> JSON {
+            switch value {
+                case .local:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("local")
+                    return .dictionary(d)
+                case .onDemand:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("on_demand")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SmartSyncPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "local":
+                            return SmartSyncPolicy.local
+                        case "on_demand":
+                            return SmartSyncPolicy.onDemand
+                        case "other":
+                            return SmartSyncPolicy.other
+                        default:
+                            return SmartSyncPolicy.other
                     }
                 default:
                     fatalError("Failed to deserialize")
