@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.osx.deployment_target = '10.11'
+  s.osx.deployment_target = '10.10'
   s.ios.deployment_target = '9.0'
 
   s.osx.frameworks = 'AppKit', 'WebKit', 'SystemConfiguration', 'Foundation'
