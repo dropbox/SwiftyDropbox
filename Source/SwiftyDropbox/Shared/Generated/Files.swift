@@ -1061,6 +1061,127 @@ open class Files {
         }
     }
 
+    /// The DownloadZipArg struct
+    open class DownloadZipArg: CustomStringConvertible {
+        /// The path of the folder to download.
+        open let path: String
+        public init(path: String) {
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            self.path = path
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipArgSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    return DownloadZipArg(path: path)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DownloadZipError union
+    public enum DownloadZipError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// The folder is too large to download.
+        case tooLarge
+        /// The folder has too many files to download.
+        case tooManyFiles
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipErrorSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
+                case .tooManyFiles:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_files")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return DownloadZipError.path(v)
+                        case "too_large":
+                            return DownloadZipError.tooLarge
+                        case "too_many_files":
+                            return DownloadZipError.tooManyFiles
+                        case "other":
+                            return DownloadZipError.other
+                        default:
+                            return DownloadZipError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The DownloadZipResult struct
+    open class DownloadZipResult: CustomStringConvertible {
+        /// (no description)
+        open let metadata: Files.FolderMetadata
+        public init(metadata: Files.FolderMetadata) {
+            self.metadata = metadata
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipResultSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipResult) -> JSON {
+            let output = [ 
+            "metadata": Files.FolderMetadataSerializer().serialize(value.metadata),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipResult {
+            switch json {
+                case .dictionary(let dict):
+                    let metadata = Files.FolderMetadataSerializer().deserialize(dict["metadata"] ?? .null)
+                    return DownloadZipResult(metadata: metadata)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The FileMetadata struct
     open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
@@ -4230,6 +4351,8 @@ open class Files {
     public enum UploadError: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
+        /// The supplied property group is invalid.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
 
@@ -4245,6 +4368,10 @@ open class Files {
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
                     d[".tag"] = .str("path")
                     return .dictionary(d)
+                case .propertiesError(let arg):
+                    var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("properties_error")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4259,6 +4386,9 @@ open class Files {
                         case "path":
                             let v = Files.UploadWriteFailedSerializer().deserialize(json)
                             return UploadError.path(v)
+                        case "properties_error":
+                            let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
+                            return UploadError.propertiesError(v)
                         case "other":
                             return UploadError.other
                         default:
@@ -4274,10 +4404,10 @@ open class Files {
     public enum UploadErrorWithProperties: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
+        /// The supplied property group is invalid.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
-        /// An unspecified error.
-        case propertiesError(FileProperties.InvalidPropertyGroupError)
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorWithPropertiesSerializer().serialize(self)))"
@@ -4291,13 +4421,13 @@ open class Files {
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
                     d[".tag"] = .str("path")
                     return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
                 case .propertiesError(let arg):
                     var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("properties_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
                     return .dictionary(d)
             }
         }
@@ -4309,11 +4439,11 @@ open class Files {
                         case "path":
                             let v = Files.UploadWriteFailedSerializer().deserialize(json)
                             return UploadErrorWithProperties.path(v)
-                        case "other":
-                            return UploadErrorWithProperties.other
                         case "properties_error":
                             let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
                             return UploadErrorWithProperties.propertiesError(v)
+                        case "other":
+                            return UploadErrorWithProperties.other
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -5297,6 +5427,16 @@ open class Files {
         argSerializer: Files.DownloadArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.DownloadErrorSerializer(),
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let downloadZip = Route(
+        name: "download_zip",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.DownloadZipArgSerializer(),
+        responseSerializer: Files.DownloadZipResultSerializer(),
+        errorSerializer: Files.DownloadZipErrorSerializer(),
         attrs: ["host": "content",
                 "style": "download"]
     )

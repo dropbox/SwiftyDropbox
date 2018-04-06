@@ -5286,6 +5286,8 @@ open class Team {
         case cannotKeepAccountAndDeleteData
         /// The email address of the user is too long to be disabled.
         case emailAddressTooLongToBeDisabled
+        /// Cannot keep account of an invited user.
+        case cannotKeepInvitedUserAccount
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveErrorSerializer().serialize(self)))"
@@ -5355,6 +5357,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("email_address_too_long_to_be_disabled")
                     return .dictionary(d)
+                case .cannotKeepInvitedUserAccount:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_keep_invited_user_account")
+                    return .dictionary(d)
             }
         }
         open func deserialize(_ json: JSON) -> MembersRemoveError {
@@ -5392,6 +5398,8 @@ open class Team {
                             return MembersRemoveError.cannotKeepAccountAndDeleteData
                         case "email_address_too_long_to_be_disabled":
                             return MembersRemoveError.emailAddressTooLongToBeDisabled
+                        case "cannot_keep_invited_user_account":
+                            return MembersRemoveError.cannotKeepInvitedUserAccount
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -6095,7 +6103,8 @@ open class Team {
         open let namespaceId: String
         /// The type of this namespace.
         open let namespaceType: Team.NamespaceType
-        /// If this is a team member folder, the ID of the team member. Otherwise, this field is not present.
+        /// If this is a team member or app folder, the ID of the owning team member. Otherwise, this field is not
+        /// present.
         open let teamMemberId: String?
         public init(name: String, namespaceId: String, namespaceType: Team.NamespaceType, teamMemberId: String? = nil) {
             stringValidator()(name)
