@@ -284,6 +284,37 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 1 GB in size and have
+    /// fewer than 10,000 total files. The input cannot be a single file.
+    ///
+    /// - parameter path: The path of the folder to download.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+    /// NSError will be thrown).
+    /// - parameter destination: A closure used to compute the destination, given the temporary file location and the
+    /// response.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.DownloadZipResult` object on success
+    /// or a `Files.DownloadZipError` object on failure.
+    @discardableResult open func downloadZip(path: String, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer> {
+        let route = Files.downloadZip
+        let serverArgs = Files.DownloadZipArg(path: path)
+        return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+
+    /// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 1 GB in size and have
+    /// fewer than 10,000 total files. The input cannot be a single file.
+    ///
+    /// - parameter path: The path of the folder to download.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.DownloadZipResult` object on success
+    /// or a `Files.DownloadZipError` object on failure.
+    @discardableResult open func downloadZip(path: String) -> DownloadRequestMemory<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer> {
+        let route = Files.downloadZip
+        let serverArgs = Files.DownloadZipArg(path: path)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
     ///
     /// - parameter path: The path of a file or folder on Dropbox.
