@@ -544,6 +544,21 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in a shared team
+    /// root. If a asyncJobId in ShareFolderLaunch is returned, you'll need to call checkShareJobStatus until the action
+    /// completes to get the metadata for the folder.
+    ///
+    /// - parameter accessInheritance: The access inheritance settings for the folder.
+    /// - parameter sharedFolderId: The ID for the shared folder.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
+    /// success or a `Sharing.SetAccessInheritanceError` object on failure.
+    @discardableResult open func setAccessInheritance(sharedFolderId: String, accessInheritance: Sharing.AccessInheritance = .inherit) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.SetAccessInheritanceErrorSerializer> {
+        let route = Sharing.setAccessInheritance
+        let serverArgs = Sharing.SetAccessInheritanceArg(sharedFolderId: sharedFolderId, accessInheritance: accessInheritance)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders will be completed
     /// asynchronously. To make testing the async case repeatable, set `ShareFolderArg.force_async`. If a asyncJobId in
     /// ShareFolderLaunch is returned, you'll need to call checkShareJobStatus until the action completes to get the

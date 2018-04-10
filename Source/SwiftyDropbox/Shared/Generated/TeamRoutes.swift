@@ -800,12 +800,14 @@ open class TeamRoutes {
     /// Creates a new, active, team folder with no members. Permission : Team member file access.
     ///
     /// - parameter name: Name for the new team folder.
+    /// - parameter syncSetting: The sync setting to apply to this team folder. Only permitted if the team has team
+    /// selective sync enabled.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderCreateError` object on failure.
-    @discardableResult open func teamFolderCreate(name: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
+    @discardableResult open func teamFolderCreate(name: String, syncSetting: Files.SyncSettingArg? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
         let route = Team.teamFolderCreate
-        let serverArgs = Team.TeamFolderCreateArg(name: name)
+        let serverArgs = Team.TeamFolderCreateArg(name: name, syncSetting: syncSetting)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -867,6 +869,21 @@ open class TeamRoutes {
     @discardableResult open func teamFolderRename(teamFolderId: String, name: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRenameErrorSerializer> {
         let route = Team.teamFolderRename
         let serverArgs = Team.TeamFolderRenameArg(teamFolderId: teamFolderId, name: name)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that the team has
+    /// team selective sync enabled.
+    ///
+    /// - parameter syncSetting: Sync setting to apply to the team folder itself. Only meaningful if the team folder is
+    /// not a shared team root.
+    /// - parameter contentSyncSettings: Sync settings to apply to contents of this team folder.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// or a `Team.TeamFolderUpdateSyncSettingsError` object on failure.
+    @discardableResult open func teamFolderUpdateSyncSettings(teamFolderId: String, syncSetting: Files.SyncSettingArg? = nil, contentSyncSettings: Array<Files.ContentSyncSettingArg>? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderUpdateSyncSettingsErrorSerializer> {
+        let route = Team.teamFolderUpdateSyncSettings
+        let serverArgs = Team.TeamFolderUpdateSyncSettingsArg(teamFolderId: teamFolderId, syncSetting: syncSetting, contentSyncSettings: contentSyncSettings)
         return client.request(route, serverArgs: serverArgs)
     }
 
