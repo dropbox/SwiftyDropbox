@@ -185,6 +185,39 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Create multiple folders at once. This route is asynchronous for large batches, which returns a job ID
+    /// immediately and runs the create folder batch asynchronously. Otherwise, creates the folders and returns the
+    /// result synchronously for smaller inputs. You can force asynchronous behaviour by using the forceAsync in
+    /// CreateFolderBatchArg flag.  Use createFolderBatchCheck to check the job status.
+    ///
+    /// - parameter paths: List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are
+    /// considered only once.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
+    /// conflict.
+    /// - parameter forceAsync: Whether to force the create to happen asynchronously.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.CreateFolderBatchLaunch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func createFolderBatch(paths: Array<String>, autorename: Bool = false, forceAsync: Bool = false) -> RpcRequest<Files.CreateFolderBatchLaunchSerializer, VoidSerializer> {
+        let route = Files.createFolderBatch
+        let serverArgs = Files.CreateFolderBatchArg(paths: paths, autorename: autorename, forceAsync: forceAsync)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for createFolderBatch. If success, it returns list of result for each
+    /// entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.CreateFolderBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult open func createFolderBatchCheck(asyncJobId: String) -> RpcRequest<Files.CreateFolderBatchJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.createFolderBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Create a folder at a given path.
     ///
     /// - parameter path: Path in the user's Dropbox to create.
@@ -204,13 +237,15 @@ open class FilesRoutes {
     /// corresponding FileMetadata or FolderMetadata for the item at time of deletion, and not a DeletedMetadata object.
     ///
     /// - parameter path: Path in the user's Dropbox to delete.
+    /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
+    /// not support deleting a folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.DeleteError` object on failure.
     @available(*, unavailable, message:"delete is deprecated. Use delete_v2.")
-    @discardableResult open func delete(path: String) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
+    @discardableResult open func delete(path: String, parentRev: String? = nil) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
         let route = Files.delete
-        let serverArgs = Files.DeleteArg(path: path)
+        let serverArgs = Files.DeleteArg(path: path, parentRev: parentRev)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -244,12 +279,14 @@ open class FilesRoutes {
     /// corresponding FileMetadata or FolderMetadata for the item at time of deletion, and not a DeletedMetadata object.
     ///
     /// - parameter path: Path in the user's Dropbox to delete.
+    /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
+    /// not support deleting a folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.DeleteResult` object on success or a
     /// `Files.DeleteError` object on failure.
-    @discardableResult open func deleteV2(path: String) -> RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer> {
+    @discardableResult open func deleteV2(path: String, parentRev: String? = nil) -> RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer> {
         let route = Files.deleteV2
-        let serverArgs = Files.DeleteArg(path: path)
+        let serverArgs = Files.DeleteArg(path: path, parentRev: parentRev)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -391,6 +428,7 @@ open class FilesRoutes {
     /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
     /// should be preferred, while png is  better for screenshots and digital arts.
     /// - parameter size: The size for the thumbnail image.
+    /// - parameter mode: How to resize and crop the image to achieve the desired size.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
     /// NSError will be thrown).
@@ -399,9 +437,9 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.ThumbnailError` object on failure.
-    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
-        let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
+        let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size, mode: mode)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
@@ -412,12 +450,13 @@ open class FilesRoutes {
     /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
     /// should be preferred, while png is  better for screenshots and digital arts.
     /// - parameter size: The size for the thumbnail image.
+    /// - parameter mode: How to resize and crop the image to achieve the desired size.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.ThumbnailError` object on failure.
-    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
+    @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
-        let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size)
+        let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size, mode: mode)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -633,12 +672,14 @@ open class FilesRoutes {
     /// endpoint is only available for Dropbox Business apps.
     ///
     /// - parameter path: Path in the user's Dropbox to delete.
+    /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
+    /// not support deleting a folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.DeleteError` object on failure.
-    @discardableResult open func permanentlyDelete(path: String) -> RpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
+    @discardableResult open func permanentlyDelete(path: String, parentRev: String? = nil) -> RpcRequest<VoidSerializer, Files.DeleteErrorSerializer> {
         let route = Files.permanentlyDelete
-        let serverArgs = Files.DeleteArg(path: path)
+        let serverArgs = Files.DeleteArg(path: path, parentRev: parentRev)
         return client.request(route, serverArgs: serverArgs)
     }
 

@@ -97,6 +97,8 @@
 		F2C6FD391D89E37A00E0DD9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD381D89E37A00E0DD9E /* UIKit.framework */; };
 		F2C6FD3B1D89E38200E0DD9E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */; };
 		F2C6FD3D1D89E38800E0DD9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */; };
+		F9077920207D7BE2003580DB /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F907791F207D7BE2003580DB /* SeenState.swift */; };
+		F9077921207D7F9F003580DB /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F907791F207D7BE2003580DB /* SeenState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -153,6 +155,7 @@
 		F2C6FD381D89E37A00E0DD9E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F907791F207D7BE2003580DB /* SeenState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +257,7 @@
 				F29F652D1F710C5800C71400 /* FilesRoutes.swift */,
 				F29F652E1F710C5800C71400 /* Paper.swift */,
 				F29F652F1F710C5800C71400 /* PaperRoutes.swift */,
+				F907791F207D7BE2003580DB /* SeenState.swift */,
 				F29F65301F710C5800C71400 /* Sharing.swift */,
 				F29F65311F710C5800C71400 /* SharingRoutes.swift */,
 				F29F65321F710C5800C71400 /* StoneBase.swift */,
@@ -431,6 +435,7 @@
 				F29F65511F710C6700C71400 /* StoneBase.swift in Sources */,
 				F29F654C1F710C6700C71400 /* FilesRoutes.swift in Sources */,
 				F2478F2C1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
+				F9077920207D7BE2003580DB /* SeenState.swift in Sources */,
 				F29F65551F710C6700C71400 /* TeamCommon.swift in Sources */,
 				F2478F361ECCD0B300BAF014 /* TransportConfig.swift in Sources */,
 				F29F655C1F710C6700C71400 /* UsersRoutes.swift in Sources */,
@@ -472,6 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9077921207D7F9F003580DB /* SeenState.swift in Sources */,
 				F29F655D1F710C6700C71400 /* Base.swift in Sources */,
 				F29F656C1F710C6700C71400 /* StoneValidators.swift in Sources */,
 				F29F65661F710C6700C71400 /* Paper.swift in Sources */,
