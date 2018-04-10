@@ -126,10 +126,10 @@ open class Common {
 
     /// Information about current user's root.
     open class RootInfo: CustomStringConvertible {
-        /// The namespace id for user's root namespace. It will be the namespace id of the shared team root if the user
-        /// is member of a CDM team. Otherwise it will be same as homeNamespaceId in RootInfo.
+        /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
+        /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in RootInfo.
         open let rootNamespaceId: String
-        /// The namespace id for user's home namespace.
+        /// The namespace ID for user's home namespace.
         open let homeNamespaceId: String
         public init(rootNamespaceId: String, homeNamespaceId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(rootNamespaceId)
@@ -183,7 +183,7 @@ open class Common {
         }
     }
 
-    /// Root info when user is member of a CDM team.
+    /// Root info when user is member of a team with a separate root namespace ID.
     open class TeamRootInfo: Common.RootInfo {
         /// The path for user's home directory under the shared team root.
         open let homePath: String
@@ -219,7 +219,8 @@ open class Common {
         }
     }
 
-    /// Root info when user is not member of a CDM team.
+    /// Root info when user is not member of a team or the user is a member of a team and the team does not have a
+    /// separate root namespace.
     open class UserRootInfo: Common.RootInfo {
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UserRootInfoSerializer().serialize(self)))"

@@ -173,6 +173,65 @@ open class TeamCommon {
         }
     }
 
+    /// The type of the space limit imposed on a team member.
+    public enum MemberSpaceLimitType: CustomStringConvertible {
+        /// The team member does not have imposed space limit.
+        case off
+        /// The team member has soft imposed space limit - the limit is used for display and for notifications.
+        case alertOnly
+        /// The team member has hard imposed space limit - Dropbox file sync will stop after the limit is reached.
+        case stopSync
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberSpaceLimitTypeSerializer().serialize(self)))"
+        }
+    }
+    open class MemberSpaceLimitTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberSpaceLimitType) -> JSON {
+            switch value {
+                case .off:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("off")
+                    return .dictionary(d)
+                case .alertOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("alert_only")
+                    return .dictionary(d)
+                case .stopSync:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("stop_sync")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MemberSpaceLimitType {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "off":
+                            return MemberSpaceLimitType.off
+                        case "alert_only":
+                            return MemberSpaceLimitType.alertOnly
+                        case "stop_sync":
+                            return MemberSpaceLimitType.stopSync
+                        case "other":
+                            return MemberSpaceLimitType.other
+                        default:
+                            return MemberSpaceLimitType.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Time range.
     open class TimeRange: CustomStringConvertible {
         /// Optional starting time (inclusive).

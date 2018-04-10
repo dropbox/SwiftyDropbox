@@ -611,11 +611,19 @@ open class Users {
         open let used: UInt64
         /// The total space allocated to the user's team (bytes).
         open let allocated: UInt64
-        public init(used: UInt64, allocated: UInt64) {
+        /// The total space allocated to the user within its team allocated space (0 means that no restriction is
+        /// imposed on the user's quota within its team).
+        open let userWithinTeamSpaceAllocated: UInt64
+        /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
+        open let userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType
+        public init(used: UInt64, allocated: UInt64, userWithinTeamSpaceAllocated: UInt64, userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType) {
             comparableValidator()(used)
             self.used = used
             comparableValidator()(allocated)
             self.allocated = allocated
+            comparableValidator()(userWithinTeamSpaceAllocated)
+            self.userWithinTeamSpaceAllocated = userWithinTeamSpaceAllocated
+            self.userWithinTeamSpaceLimitType = userWithinTeamSpaceLimitType
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
@@ -627,6 +635,8 @@ open class Users {
             let output = [ 
             "used": Serialization._UInt64Serializer.serialize(value.used),
             "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
+            "user_within_team_space_allocated": Serialization._UInt64Serializer.serialize(value.userWithinTeamSpaceAllocated),
+            "user_within_team_space_limit_type": TeamCommon.MemberSpaceLimitTypeSerializer().serialize(value.userWithinTeamSpaceLimitType),
             ]
             return .dictionary(output)
         }
@@ -635,7 +645,9 @@ open class Users {
                 case .dictionary(let dict):
                     let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .null)
                     let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .null)
-                    return TeamSpaceAllocation(used: used, allocated: allocated)
+                    let userWithinTeamSpaceAllocated = Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_allocated"] ?? .null)
+                    let userWithinTeamSpaceLimitType = TeamCommon.MemberSpaceLimitTypeSerializer().deserialize(dict["user_within_team_space_limit_type"] ?? .null)
+                    return TeamSpaceAllocation(used: used, allocated: allocated, userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated, userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType)
                 default:
                     fatalError("Type error deserializing")
             }

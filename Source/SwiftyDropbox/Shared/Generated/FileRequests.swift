@@ -381,7 +381,7 @@ open class FileRequests {
     open class FileRequestDeadline: CustomStringConvertible {
         /// The deadline for this file request.
         open let deadline: Date
-        /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
+        /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
         open let allowLateUploads: FileRequests.GracePeriod?
         public init(deadline: Date, allowLateUploads: FileRequests.GracePeriod? = nil) {
             self.deadline = deadline
