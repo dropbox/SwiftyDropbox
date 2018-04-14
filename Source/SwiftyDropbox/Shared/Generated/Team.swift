@@ -1100,14 +1100,16 @@ open class Team {
         }
     }
 
-    /// A set of features that Dropbox for Business account support.
+    /// A set of features that a Dropbox Business account may support.
     public enum Feature: CustomStringConvertible {
         /// The number of upload API calls allowed per month.
         case uploadApiRateLimit
-        /// Does this team have a have a company shared dropbox.
+        /// Does this team have a shared team root.
         case hasTeamSharedDropbox
         /// Does this team have file events.
         case hasTeamFileEvents
+        /// Does this team have team selective sync enabled.
+        case hasTeamSelectiveSync
         /// An unspecified error.
         case other
 
@@ -1131,6 +1133,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("has_team_file_events")
                     return .dictionary(d)
+                case .hasTeamSelectiveSync:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("has_team_selective_sync")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1148,6 +1154,8 @@ open class Team {
                             return Feature.hasTeamSharedDropbox
                         case "has_team_file_events":
                             return Feature.hasTeamFileEvents
+                        case "has_team_selective_sync":
+                            return Feature.hasTeamSelectiveSync
                         case "other":
                             return Feature.other
                         default:
@@ -1159,7 +1167,7 @@ open class Team {
         }
     }
 
-    /// The values correspond to entries in Feature. You may get different value according to your Dropbox for Business
+    /// The values correspond to entries in Feature. You may get different value according to your Dropbox Business
     /// plan.
     public enum FeatureValue: CustomStringConvertible {
         /// An unspecified error.
@@ -1168,6 +1176,8 @@ open class Team {
         case hasTeamSharedDropbox(Team.HasTeamSharedDropboxValue)
         /// An unspecified error.
         case hasTeamFileEvents(Team.HasTeamFileEventsValue)
+        /// An unspecified error.
+        case hasTeamSelectiveSync(Team.HasTeamSelectiveSyncValue)
         /// An unspecified error.
         case other
 
@@ -1191,6 +1201,10 @@ open class Team {
                     var d = ["has_team_file_events": Team.HasTeamFileEventsValueSerializer().serialize(arg)]
                     d[".tag"] = .str("has_team_file_events")
                     return .dictionary(d)
+                case .hasTeamSelectiveSync(let arg):
+                    var d = ["has_team_selective_sync": Team.HasTeamSelectiveSyncValueSerializer().serialize(arg)]
+                    d[".tag"] = .str("has_team_selective_sync")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1211,6 +1225,9 @@ open class Team {
                         case "has_team_file_events":
                             let v = Team.HasTeamFileEventsValueSerializer().deserialize(d["has_team_file_events"] ?? .null)
                             return FeatureValue.hasTeamFileEvents(v)
+                        case "has_team_selective_sync":
+                            let v = Team.HasTeamSelectiveSyncValueSerializer().deserialize(d["has_team_selective_sync"] ?? .null)
+                            return FeatureValue.hasTeamSelectiveSync(v)
                         case "other":
                             return FeatureValue.other
                         default:
@@ -3330,9 +3347,53 @@ open class Team {
         }
     }
 
+    /// The value for hasTeamSelectiveSync in Feature.
+    public enum HasTeamSelectiveSyncValue: CustomStringConvertible {
+        /// Does this team have team selective sync enabled.
+        case hasTeamSelectiveSync(Bool)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(HasTeamSelectiveSyncValueSerializer().serialize(self)))"
+        }
+    }
+    open class HasTeamSelectiveSyncValueSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: HasTeamSelectiveSyncValue) -> JSON {
+            switch value {
+                case .hasTeamSelectiveSync(let arg):
+                    var d = ["has_team_selective_sync": Serialization._BoolSerializer.serialize(arg)]
+                    d[".tag"] = .str("has_team_selective_sync")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> HasTeamSelectiveSyncValue {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "has_team_selective_sync":
+                            let v = Serialization._BoolSerializer.deserialize(d["has_team_selective_sync"] ?? .null)
+                            return HasTeamSelectiveSyncValue.hasTeamSelectiveSync(v)
+                        case "other":
+                            return HasTeamSelectiveSyncValue.other
+                        default:
+                            return HasTeamSelectiveSyncValue.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The value for hasTeamSharedDropbox in Feature.
     public enum HasTeamSharedDropboxValue: CustomStringConvertible {
-        /// Does this team have a team shared dropbox.
+        /// Does this team have a shared team root.
         case hasTeamSharedDropbox(Bool)
         /// An unspecified error.
         case other
@@ -7248,9 +7309,12 @@ open class Team {
     open class TeamFolderCreateArg: CustomStringConvertible {
         /// Name for the new team folder.
         open let name: String
-        public init(name: String) {
+        /// The sync setting to apply to this team folder. Only permitted if the team has team selective sync enabled.
+        open let syncSetting: Files.SyncSettingArg?
+        public init(name: String, syncSetting: Files.SyncSettingArg? = nil) {
             stringValidator()(name)
             self.name = name
+            self.syncSetting = syncSetting
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderCreateArgSerializer().serialize(self)))"
@@ -7261,6 +7325,7 @@ open class Team {
         open func serialize(_ value: TeamFolderCreateArg) -> JSON {
             let output = [ 
             "name": Serialization._StringSerializer.serialize(value.name),
+            "sync_setting": NullableSerializer(Files.SyncSettingArgSerializer()).serialize(value.syncSetting),
             ]
             return .dictionary(output)
         }
@@ -7268,7 +7333,8 @@ open class Team {
             switch json {
                 case .dictionary(let dict):
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                    return TeamFolderCreateArg(name: name)
+                    let syncSetting = NullableSerializer(Files.SyncSettingArgSerializer()).deserialize(dict["sync_setting"] ?? .null)
+                    return TeamFolderCreateArg(name: name, syncSetting: syncSetting)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7283,6 +7349,8 @@ open class Team {
         case folderNameAlreadyUsed
         /// The provided name cannot be used because it is reserved.
         case folderNameReserved
+        /// An error occurred setting the sync settings.
+        case syncSettingsError(Files.SyncSettingsError)
         /// An unspecified error.
         case other
 
@@ -7306,6 +7374,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("folder_name_reserved")
                     return .dictionary(d)
+                case .syncSettingsError(let arg):
+                    var d = ["sync_settings_error": Files.SyncSettingsErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("sync_settings_error")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -7323,6 +7395,9 @@ open class Team {
                             return TeamFolderCreateError.folderNameAlreadyUsed
                         case "folder_name_reserved":
                             return TeamFolderCreateError.folderNameReserved
+                        case "sync_settings_error":
+                            let v = Files.SyncSettingsErrorSerializer().deserialize(d["sync_settings_error"] ?? .null)
+                            return TeamFolderCreateError.syncSettingsError(v)
                         case "other":
                             return TeamFolderCreateError.other
                         default:
@@ -7654,15 +7729,21 @@ open class Team {
         open let name: String
         /// The status of the team folder.
         open let status: Team.TeamFolderStatus
-        /// True if this team folder is the team shared dropbox.
+        /// True if this team folder is a shared team root.
         open let isTeamSharedDropbox: Bool
-        public init(teamFolderId: String, name: String, status: Team.TeamFolderStatus, isTeamSharedDropbox: Bool) {
+        /// The sync setting applied to this team folder.
+        open let syncSetting: Files.SyncSetting
+        /// Sync settings applied to contents of this team folder.
+        open let contentSyncSettings: Array<Files.ContentSyncSetting>
+        public init(teamFolderId: String, name: String, status: Team.TeamFolderStatus, isTeamSharedDropbox: Bool, syncSetting: Files.SyncSetting, contentSyncSettings: Array<Files.ContentSyncSetting>) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(teamFolderId)
             self.teamFolderId = teamFolderId
             stringValidator()(name)
             self.name = name
             self.status = status
             self.isTeamSharedDropbox = isTeamSharedDropbox
+            self.syncSetting = syncSetting
+            self.contentSyncSettings = contentSyncSettings
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderMetadataSerializer().serialize(self)))"
@@ -7676,6 +7757,8 @@ open class Team {
             "name": Serialization._StringSerializer.serialize(value.name),
             "status": Team.TeamFolderStatusSerializer().serialize(value.status),
             "is_team_shared_dropbox": Serialization._BoolSerializer.serialize(value.isTeamSharedDropbox),
+            "sync_setting": Files.SyncSettingSerializer().serialize(value.syncSetting),
+            "content_sync_settings": ArraySerializer(Files.ContentSyncSettingSerializer()).serialize(value.contentSyncSettings),
             ]
             return .dictionary(output)
         }
@@ -7686,7 +7769,9 @@ open class Team {
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
                     let status = Team.TeamFolderStatusSerializer().deserialize(dict["status"] ?? .null)
                     let isTeamSharedDropbox = Serialization._BoolSerializer.deserialize(dict["is_team_shared_dropbox"] ?? .null)
-                    return TeamFolderMetadata(teamFolderId: teamFolderId, name: name, status: status, isTeamSharedDropbox: isTeamSharedDropbox)
+                    let syncSetting = Files.SyncSettingSerializer().deserialize(dict["sync_setting"] ?? .null)
+                    let contentSyncSettings = ArraySerializer(Files.ContentSyncSettingSerializer()).deserialize(dict["content_sync_settings"] ?? .null)
+                    return TeamFolderMetadata(teamFolderId: teamFolderId, name: name, status: status, isTeamSharedDropbox: isTeamSharedDropbox, syncSetting: syncSetting, contentSyncSettings: contentSyncSettings)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7936,7 +8021,7 @@ open class Team {
 
     /// The TeamFolderTeamSharedDropboxError union
     public enum TeamFolderTeamSharedDropboxError: CustomStringConvertible {
-        /// This action is not allowed for a team shared dropbox.
+        /// This action is not allowed for a shared team root.
         case disallowed
         /// An unspecified error.
         case other
@@ -7970,6 +8055,116 @@ open class Team {
                             return TeamFolderTeamSharedDropboxError.other
                         default:
                             return TeamFolderTeamSharedDropboxError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamFolderUpdateSyncSettingsArg struct
+    open class TeamFolderUpdateSyncSettingsArg: Team.TeamFolderIdArg {
+        /// Sync setting to apply to the team folder itself. Only meaningful if the team folder is not a shared team
+        /// root.
+        open let syncSetting: Files.SyncSettingArg?
+        /// Sync settings to apply to contents of this team folder.
+        open let contentSyncSettings: Array<Files.ContentSyncSettingArg>?
+        public init(teamFolderId: String, syncSetting: Files.SyncSettingArg? = nil, contentSyncSettings: Array<Files.ContentSyncSettingArg>? = nil) {
+            self.syncSetting = syncSetting
+            self.contentSyncSettings = contentSyncSettings
+            super.init(teamFolderId: teamFolderId)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderUpdateSyncSettingsArgSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderUpdateSyncSettingsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderUpdateSyncSettingsArg) -> JSON {
+            let output = [ 
+            "team_folder_id": Serialization._StringSerializer.serialize(value.teamFolderId),
+            "sync_setting": NullableSerializer(Files.SyncSettingArgSerializer()).serialize(value.syncSetting),
+            "content_sync_settings": NullableSerializer(ArraySerializer(Files.ContentSyncSettingArgSerializer())).serialize(value.contentSyncSettings),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderUpdateSyncSettingsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let teamFolderId = Serialization._StringSerializer.deserialize(dict["team_folder_id"] ?? .null)
+                    let syncSetting = NullableSerializer(Files.SyncSettingArgSerializer()).deserialize(dict["sync_setting"] ?? .null)
+                    let contentSyncSettings = NullableSerializer(ArraySerializer(Files.ContentSyncSettingArgSerializer())).deserialize(dict["content_sync_settings"] ?? .null)
+                    return TeamFolderUpdateSyncSettingsArg(teamFolderId: teamFolderId, syncSetting: syncSetting, contentSyncSettings: contentSyncSettings)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamFolderUpdateSyncSettingsError union
+    public enum TeamFolderUpdateSyncSettingsError: CustomStringConvertible {
+        /// An unspecified error.
+        case accessError(Team.TeamFolderAccessError)
+        /// An unspecified error.
+        case statusError(Team.TeamFolderInvalidStatusError)
+        /// An unspecified error.
+        case teamSharedDropboxError(Team.TeamFolderTeamSharedDropboxError)
+        /// An unspecified error.
+        case other
+        /// An error occurred setting the sync settings.
+        case syncSettingsError(Files.SyncSettingsError)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamFolderUpdateSyncSettingsErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamFolderUpdateSyncSettingsErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamFolderUpdateSyncSettingsError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Team.TeamFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .statusError(let arg):
+                    var d = ["status_error": Team.TeamFolderInvalidStatusErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("status_error")
+                    return .dictionary(d)
+                case .teamSharedDropboxError(let arg):
+                    var d = ["team_shared_dropbox_error": Team.TeamFolderTeamSharedDropboxErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("team_shared_dropbox_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .syncSettingsError(let arg):
+                    var d = ["sync_settings_error": Files.SyncSettingsErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("sync_settings_error")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamFolderUpdateSyncSettingsError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Team.TeamFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return TeamFolderUpdateSyncSettingsError.accessError(v)
+                        case "status_error":
+                            let v = Team.TeamFolderInvalidStatusErrorSerializer().deserialize(d["status_error"] ?? .null)
+                            return TeamFolderUpdateSyncSettingsError.statusError(v)
+                        case "team_shared_dropbox_error":
+                            let v = Team.TeamFolderTeamSharedDropboxErrorSerializer().deserialize(d["team_shared_dropbox_error"] ?? .null)
+                            return TeamFolderUpdateSyncSettingsError.teamSharedDropboxError(v)
+                        case "other":
+                            return TeamFolderUpdateSyncSettingsError.other
+                        case "sync_settings_error":
+                            let v = Files.SyncSettingsErrorSerializer().deserialize(d["sync_settings_error"] ?? .null)
+                            return TeamFolderUpdateSyncSettingsError.syncSettingsError(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -9322,6 +9517,16 @@ open class Team {
         argSerializer: Team.TeamFolderRenameArgSerializer(),
         responseSerializer: Team.TeamFolderMetadataSerializer(),
         errorSerializer: Team.TeamFolderRenameErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let teamFolderUpdateSyncSettings = Route(
+        name: "team_folder/update_sync_settings",
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.TeamFolderUpdateSyncSettingsArgSerializer(),
+        responseSerializer: Team.TeamFolderMetadataSerializer(),
+        errorSerializer: Team.TeamFolderUpdateSyncSettingsErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )

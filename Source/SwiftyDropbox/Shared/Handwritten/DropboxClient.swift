@@ -9,14 +9,22 @@ import Alamofire
 
 open class DropboxClient: DropboxBase {
     fileprivate var transportClient: DropboxTransportClient
+    fileprivate var accessToken: String;
+    fileprivate var selectUser: String?
 
-    public convenience init(accessToken: String, selectUser: String? = nil) {
-        let transportClient = DropboxTransportClient(accessToken: accessToken, selectUser: selectUser)
+    public convenience init(accessToken: String, selectUser: String? = nil, pathRoot: Common.PathRoot? = nil) {
+        let transportClient = DropboxTransportClient(accessToken: accessToken, pathRoot: pathRoot)
         self.init(transportClient: transportClient)
     }
 
     public init(transportClient: DropboxTransportClient) {
         self.transportClient = transportClient
+        self.selectUser = transportClient.selectUser
+        self.accessToken = transportClient.accessToken
         super.init(client: transportClient)
+    }
+
+    open func withPathRoot(_ pathRoot: Common.PathRoot) -> DropboxClient {
+        return DropboxClient(accessToken: self.accessToken, selectUser: self.selectUser, pathRoot: pathRoot)
     }
 }

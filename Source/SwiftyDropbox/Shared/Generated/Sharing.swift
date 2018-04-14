@@ -8,6 +8,57 @@ import Foundation
 
 /// Datatypes and serializers for the sharing namespace
 open class Sharing {
+    /// Information about the inheritance policy of a shared folder.
+    public enum AccessInheritance: CustomStringConvertible {
+        /// The shared folder inherits its members from the parent folder.
+        case inherit
+        /// The shared folder does not inherit its members from the parent folder.
+        case noInherit
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AccessInheritanceSerializer().serialize(self)))"
+        }
+    }
+    open class AccessInheritanceSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AccessInheritance) -> JSON {
+            switch value {
+                case .inherit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("inherit")
+                    return .dictionary(d)
+                case .noInherit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_inherit")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> AccessInheritance {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "inherit":
+                            return AccessInheritance.inherit
+                        case "no_inherit":
+                            return AccessInheritance.noInherit
+                        case "other":
+                            return AccessInheritance.other
+                        default:
+                            return AccessInheritance.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Defines the access levels for collaborators.
     public enum AccessLevel: CustomStringConvertible {
         /// The collaborator is the owner of the shared folder. Owners can view and edit the shared folder as well as
@@ -1688,6 +1739,8 @@ open class Sharing {
         case shareLink
         /// Create a shared link for folder.
         case createLink
+        /// Set whether the folder inherits permissions from its parent.
+        case setAccessInheritance
         /// An unspecified error.
         case other
 
@@ -1751,6 +1804,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("create_link")
                     return .dictionary(d)
+                case .setAccessInheritance:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("set_access_inheritance")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1788,6 +1845,8 @@ open class Sharing {
                             return FolderAction.shareLink
                         case "create_link":
                             return FolderAction.createLink
+                        case "set_access_inheritance":
+                            return FolderAction.setAccessInheritance
                         case "other":
                             return FolderAction.other
                         default:
@@ -2525,7 +2584,7 @@ open class Sharing {
         /// The permissions that requesting user has on this member. The set of permissions corresponds to the
         /// MemberActions in the request.
         open let permissions: Array<Sharing.MemberPermission>?
-        /// Suggested name initials for a member.
+        /// Never set.
         open let initials: String?
         /// True if the member has access from a parent folder.
         open let isInherited: Bool
@@ -5752,6 +5811,94 @@ open class Sharing {
         }
     }
 
+    /// The SetAccessInheritanceArg struct
+    open class SetAccessInheritanceArg: CustomStringConvertible {
+        /// The access inheritance settings for the folder.
+        open let accessInheritance: Sharing.AccessInheritance
+        /// The ID for the shared folder.
+        open let sharedFolderId: String
+        public init(sharedFolderId: String, accessInheritance: Sharing.AccessInheritance = .inherit) {
+            self.accessInheritance = accessInheritance
+            stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
+            self.sharedFolderId = sharedFolderId
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SetAccessInheritanceArgSerializer().serialize(self)))"
+        }
+    }
+    open class SetAccessInheritanceArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SetAccessInheritanceArg) -> JSON {
+            let output = [ 
+            "shared_folder_id": Serialization._StringSerializer.serialize(value.sharedFolderId),
+            "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SetAccessInheritanceArg {
+            switch json {
+                case .dictionary(let dict):
+                    let sharedFolderId = Serialization._StringSerializer.deserialize(dict["shared_folder_id"] ?? .null)
+                    let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
+                    return SetAccessInheritanceArg(sharedFolderId: sharedFolderId, accessInheritance: accessInheritance)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SetAccessInheritanceError union
+    public enum SetAccessInheritanceError: CustomStringConvertible {
+        /// Unable to access shared folder.
+        case accessError(Sharing.SharedFolderAccessError)
+        /// The current user does not have permission to perform this action.
+        case noPermission
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SetAccessInheritanceErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SetAccessInheritanceErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SetAccessInheritanceError) -> JSON {
+            switch value {
+                case .accessError(let arg):
+                    var d = ["access_error": Sharing.SharedFolderAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("access_error")
+                    return .dictionary(d)
+                case .noPermission:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_permission")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SetAccessInheritanceError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "access_error":
+                            let v = Sharing.SharedFolderAccessErrorSerializer().deserialize(d["access_error"] ?? .null)
+                            return SetAccessInheritanceError.accessError(v)
+                        case "no_permission":
+                            return SetAccessInheritanceError.noPermission
+                        case "other":
+                            return SetAccessInheritanceError.other
+                        default:
+                            return SetAccessInheritanceError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ShareFolderArgBase struct
     open class ShareFolderArgBase: CustomStringConvertible {
         /// Who can add and remove members of this shared folder.
@@ -6383,7 +6530,7 @@ open class Sharing {
         open let timeInvited: Date?
         public init(id: String, name: String, policy: Sharing.FolderPolicy, previewUrl: String, accessType: Sharing.AccessLevel? = nil, expectedLinkMetadata: Sharing.ExpectedSharedContentLinkMetadata? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathDisplay: String? = nil, pathLower: String? = nil, permissions: Array<Sharing.FilePermission>? = nil, timeInvited: Date? = nil) {
             self.accessType = accessType
-            stringValidator(minLength: 1, pattern: "id:.*")(id)
+            stringValidator(minLength: 4, pattern: "id:.+")(id)
             self.id = id
             self.expectedLinkMetadata = expectedLinkMetadata
             self.linkMetadata = linkMetadata
@@ -6459,7 +6606,7 @@ open class Sharing {
         case invalidId
         /// The user is not a member of the shared folder thus cannot access it.
         case notAMember
-        /// The current user's e-mail address is unverified.
+        /// Never set.
         case emailUnverified
         /// The shared folder is unmounted.
         case unmounted
@@ -6710,7 +6857,9 @@ open class Sharing {
         open let sharedFolderId: String
         /// Timestamp indicating when the current user was invited to this shared folder.
         open let timeInvited: Date
-        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil) {
+        /// Whether the folder inherits its members from its parent.
+        open let accessInheritance: Sharing.AccessInheritance
+        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
             self.linkMetadata = linkMetadata
             stringValidator()(name)
             self.name = name
@@ -6721,6 +6870,7 @@ open class Sharing {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.timeInvited = timeInvited
+            self.accessInheritance = accessInheritance
             super.init(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
         }
         open override var description: String {
@@ -6745,6 +6895,7 @@ open class Sharing {
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "link_metadata": NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).serialize(value.linkMetadata),
             "permissions": NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).serialize(value.permissions),
+            "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
             ]
             return .dictionary(output)
         }
@@ -6765,7 +6916,8 @@ open class Sharing {
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                     let linkMetadata = NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).deserialize(dict["link_metadata"] ?? .null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
-                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, linkMetadata: linkMetadata, permissions: permissions)
+                    let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
+                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, linkMetadata: linkMetadata, permissions: permissions, accessInheritance: accessInheritance)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7907,8 +8059,11 @@ open class Sharing {
     open class UserFileMembershipInfo: Sharing.UserMembershipInfo {
         /// The UTC timestamp of when the user has last seen the content, if they have.
         open let timeLastSeen: Date?
-        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false, timeLastSeen: Date? = nil) {
+        /// The platform on which the user has last seen the content, or unknown.
+        open let platformType: SeenState.PlatformType?
+        public init(accessType: Sharing.AccessLevel, user: Sharing.UserInfo, permissions: Array<Sharing.MemberPermission>? = nil, initials: String? = nil, isInherited: Bool = false, timeLastSeen: Date? = nil, platformType: SeenState.PlatformType? = nil) {
             self.timeLastSeen = timeLastSeen
+            self.platformType = platformType
             super.init(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited)
         }
         open override var description: String {
@@ -7925,6 +8080,7 @@ open class Sharing {
             "initials": NullableSerializer(Serialization._StringSerializer).serialize(value.initials),
             "is_inherited": Serialization._BoolSerializer.serialize(value.isInherited),
             "time_last_seen": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.timeLastSeen),
+            "platform_type": NullableSerializer(SeenState.PlatformTypeSerializer()).serialize(value.platformType),
             ]
             return .dictionary(output)
         }
@@ -7937,7 +8093,8 @@ open class Sharing {
                     let initials = NullableSerializer(Serialization._StringSerializer).deserialize(dict["initials"] ?? .null)
                     let isInherited = Serialization._BoolSerializer.deserialize(dict["is_inherited"] ?? .number(0))
                     let timeLastSeen = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_last_seen"] ?? .null)
-                    return UserFileMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited, timeLastSeen: timeLastSeen)
+                    let platformType = NullableSerializer(SeenState.PlatformTypeSerializer()).deserialize(dict["platform_type"] ?? .null)
+                    return UserFileMembershipInfo(accessType: accessType, user: user, permissions: permissions, initials: initials, isInherited: isInherited, timeLastSeen: timeLastSeen, platformType: platformType)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7948,13 +8105,21 @@ open class Sharing {
     open class UserInfo: CustomStringConvertible {
         /// The account ID of the user.
         open let accountId: String
+        /// Email address of user.
+        open let email: String
+        /// The display name of the user.
+        open let displayName: String
         /// If the user is in the same team as current user.
         open let sameTeam: Bool
         /// The team member ID of the shared folder member. Only present if sameTeam is true.
         open let teamMemberId: String?
-        public init(accountId: String, sameTeam: Bool, teamMemberId: String? = nil) {
+        public init(accountId: String, email: String, displayName: String, sameTeam: Bool, teamMemberId: String? = nil) {
             stringValidator(minLength: 40, maxLength: 40)(accountId)
             self.accountId = accountId
+            stringValidator()(email)
+            self.email = email
+            stringValidator()(displayName)
+            self.displayName = displayName
             self.sameTeam = sameTeam
             nullableValidator(stringValidator())(teamMemberId)
             self.teamMemberId = teamMemberId
@@ -7968,6 +8133,8 @@ open class Sharing {
         open func serialize(_ value: UserInfo) -> JSON {
             let output = [ 
             "account_id": Serialization._StringSerializer.serialize(value.accountId),
+            "email": Serialization._StringSerializer.serialize(value.email),
+            "display_name": Serialization._StringSerializer.serialize(value.displayName),
             "same_team": Serialization._BoolSerializer.serialize(value.sameTeam),
             "team_member_id": NullableSerializer(Serialization._StringSerializer).serialize(value.teamMemberId),
             ]
@@ -7977,9 +8144,11 @@ open class Sharing {
             switch json {
                 case .dictionary(let dict):
                     let accountId = Serialization._StringSerializer.deserialize(dict["account_id"] ?? .null)
+                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
+                    let displayName = Serialization._StringSerializer.deserialize(dict["display_name"] ?? .null)
                     let sameTeam = Serialization._BoolSerializer.deserialize(dict["same_team"] ?? .null)
                     let teamMemberId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_member_id"] ?? .null)
-                    return UserInfo(accountId: accountId, sameTeam: sameTeam, teamMemberId: teamMemberId)
+                    return UserInfo(accountId: accountId, email: email, displayName: displayName, sameTeam: sameTeam, teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8453,6 +8622,16 @@ open class Sharing {
         argSerializer: Sharing.RevokeSharedLinkArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.RevokeSharedLinkErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let setAccessInheritance = Route(
+        name: "set_access_inheritance",
+        namespace: "sharing",
+        deprecated: false,
+        argSerializer: Sharing.SetAccessInheritanceArgSerializer(),
+        responseSerializer: Sharing.ShareFolderLaunchSerializer(),
+        errorSerializer: Sharing.SetAccessInheritanceErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
