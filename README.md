@@ -17,7 +17,6 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
   * [Manually add subproject](#manually-add-subproject)
-  * [Swift 2.3](#swift-23)
 * [Configure your project](#configure-your-project)
   * [Application `.plist` file](#application-plist-file)
   * [Handling the authorization flow](#handling-the-authorization-flow)
