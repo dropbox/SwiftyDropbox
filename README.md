@@ -12,7 +12,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [Swift 3 Keychain bug](#swift-3-keychain-bug)
 * [Get started](#get-started)
   * [Register your application](#register-your-application)
-  * [Obtain an OAuth 2.0 token](#obtain-an-OAuth 2.0-token)
+  * [Obtain an OAuth 2.0 token](#obtain-an-oauth-20-token)
 * [SDK distribution](#sdk-distribution)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
