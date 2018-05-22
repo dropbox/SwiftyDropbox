@@ -10,4 +10,4 @@ public enum AppPermission {
     case teamMemberManagement
 }
 
-let appPermission = AppPermission.fullDropbox
+let appPermission = AppPermission.teamMemberFileAccess
