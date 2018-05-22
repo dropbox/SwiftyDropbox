@@ -127,8 +127,8 @@ open class PaperRoutes {
 
     /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy; permissions for
     /// subfolders are set by the top-level folder.   - full 'filepath', i.e. the list of folders (both folderId and
-    /// folderName) from the root folder to the folder directly containing the Paper doc.  Note: If the Paper doc is not
-    /// in any folder (aka unfiled) the response will be empty.
+    /// folderName) from     the root folder to the folder directly containing the Paper doc.  Note: If the Paper doc is
+    /// not in any folder (aka unfiled) the response will be empty.
     ///
     /// - parameter docId: The Paper doc ID.
     ///

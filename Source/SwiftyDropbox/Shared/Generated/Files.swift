@@ -5077,7 +5077,7 @@ open class Files {
     public enum UploadError: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
-        /// The supplied property group is invalid.
+        /// The supplied property group is invalid. The file has uploaded without property groups.
         case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
@@ -5130,7 +5130,7 @@ open class Files {
     public enum UploadErrorWithProperties: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
-        /// The supplied property group is invalid.
+        /// The supplied property group is invalid. The file has uploaded without property groups.
         case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
@@ -5496,8 +5496,11 @@ open class Files {
     public enum UploadSessionFinishError: CustomStringConvertible {
         /// The session arguments are incorrect; the value explains the reason.
         case lookupFailed(Files.UploadSessionLookupError)
-        /// Unable to save the uploaded contents to a file.
+        /// Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please
+        /// retry with empty data body and updated offset.
         case path(Files.WriteError)
+        /// The supplied property group is invalid. The file has uploaded without property groups.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// The batch request commits files into too many different shared folders. Please limit your batch request to
         /// files contained in a single shared folder.
         case tooManySharedFolderTargets
@@ -5521,6 +5524,10 @@ open class Files {
                 case .path(let arg):
                     var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .propertiesError(let arg):
+                    var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("properties_error")
                     return .dictionary(d)
                 case .tooManySharedFolderTargets:
                     var d = [String: JSON]()
@@ -5547,6 +5554,9 @@ open class Files {
                         case "path":
                             let v = Files.WriteErrorSerializer().deserialize(d["path"] ?? .null)
                             return UploadSessionFinishError.path(v)
+                        case "properties_error":
+                            let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
+                            return UploadSessionFinishError.propertiesError(v)
                         case "too_many_shared_folder_targets":
                             return UploadSessionFinishError.tooManySharedFolderTargets
                         case "too_many_write_operations":
@@ -5574,6 +5584,9 @@ open class Files {
         case closed
         /// The session must be closed before calling upload_session/finish_batch.
         case notClosed
+        /// You can not append to the upload session because the size of a file should not reach the max file size limit
+        /// (i.e. 350GB).
+        case tooLarge
         /// An unspecified error.
         case other
 
@@ -5601,6 +5614,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("not_closed")
                     return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5621,6 +5638,8 @@ open class Files {
                             return UploadSessionLookupError.closed
                         case "not_closed":
                             return UploadSessionLookupError.notClosed
+                        case "too_large":
+                            return UploadSessionLookupError.tooLarge
                         case "other":
                             return UploadSessionLookupError.other
                         default:
@@ -5729,7 +5748,8 @@ open class Files {
     open class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
         open let reason: Files.WriteError
-        /// The upload session ID; this may be used to retry the commit.
+        /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
+        /// used to retry the commit with uploadSessionFinish.
         open let uploadSessionId: String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason

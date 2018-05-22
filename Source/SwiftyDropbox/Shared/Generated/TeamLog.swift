@@ -2968,6 +2968,116 @@ open class TeamLog {
         }
     }
 
+    /// Added members to directory restrictions list.
+    open class DirectoryRestrictionsAddMembersDetails: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DirectoryRestrictionsAddMembersDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DirectoryRestrictionsAddMembersDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DirectoryRestrictionsAddMembersDetails) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DirectoryRestrictionsAddMembersDetails {
+            switch json {
+                case .dictionary(_):
+                    return DirectoryRestrictionsAddMembersDetails()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DirectoryRestrictionsAddMembersType struct
+    open class DirectoryRestrictionsAddMembersType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DirectoryRestrictionsAddMembersTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DirectoryRestrictionsAddMembersTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DirectoryRestrictionsAddMembersType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DirectoryRestrictionsAddMembersType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DirectoryRestrictionsAddMembersType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Removed members from directory restrictions list.
+    open class DirectoryRestrictionsRemoveMembersDetails: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DirectoryRestrictionsRemoveMembersDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DirectoryRestrictionsRemoveMembersDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DirectoryRestrictionsRemoveMembersDetails) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DirectoryRestrictionsRemoveMembersDetails {
+            switch json {
+                case .dictionary(_):
+                    return DirectoryRestrictionsRemoveMembersDetails()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DirectoryRestrictionsRemoveMembersType struct
+    open class DirectoryRestrictionsRemoveMembersType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DirectoryRestrictionsRemoveMembersTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DirectoryRestrictionsRemoveMembersTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DirectoryRestrictionsRemoveMembersType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DirectoryRestrictionsRemoveMembersType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DirectoryRestrictionsRemoveMembersType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Disabled domain invites.
     open class DisabledDomainInvitesDetails: CustomStringConvertible {
         public init() {
@@ -4482,6 +4592,8 @@ open class TeamLog {
         /// An unspecified error.
         case memberTransferAccountContentsDetails(TeamLog.MemberTransferAccountContentsDetails)
         /// An unspecified error.
+        case secondaryMailsPolicyChangedDetails(TeamLog.SecondaryMailsPolicyChangedDetails)
+        /// An unspecified error.
         case paperContentAddMemberDetails(TeamLog.PaperContentAddMemberDetails)
         /// An unspecified error.
         case paperContentAddToFolderDetails(TeamLog.PaperContentAddToFolderDetails)
@@ -4738,9 +4850,13 @@ open class TeamLog {
         /// An unspecified error.
         case showcaseTrashedDetails(TeamLog.ShowcaseTrashedDetails)
         /// An unspecified error.
+        case showcaseTrashedDeprecatedDetails(TeamLog.ShowcaseTrashedDeprecatedDetails)
+        /// An unspecified error.
         case showcaseUnresolveCommentDetails(TeamLog.ShowcaseUnresolveCommentDetails)
         /// An unspecified error.
         case showcaseUntrashedDetails(TeamLog.ShowcaseUntrashedDetails)
+        /// An unspecified error.
+        case showcaseUntrashedDeprecatedDetails(TeamLog.ShowcaseUntrashedDeprecatedDetails)
         /// An unspecified error.
         case showcaseViewDetails(TeamLog.ShowcaseViewDetails)
         /// An unspecified error.
@@ -4793,6 +4909,10 @@ open class TeamLog {
         case deviceApprovalsChangeOverageActionDetails(TeamLog.DeviceApprovalsChangeOverageActionDetails)
         /// An unspecified error.
         case deviceApprovalsChangeUnlinkActionDetails(TeamLog.DeviceApprovalsChangeUnlinkActionDetails)
+        /// An unspecified error.
+        case directoryRestrictionsAddMembersDetails(TeamLog.DirectoryRestrictionsAddMembersDetails)
+        /// An unspecified error.
+        case directoryRestrictionsRemoveMembersDetails(TeamLog.DirectoryRestrictionsRemoveMembersDetails)
         /// An unspecified error.
         case emmAddExceptionDetails(TeamLog.EmmAddExceptionDetails)
         /// An unspecified error.
@@ -4849,6 +4969,12 @@ open class TeamLog {
         case sharingChangeLinkPolicyDetails(TeamLog.SharingChangeLinkPolicyDetails)
         /// An unspecified error.
         case sharingChangeMemberPolicyDetails(TeamLog.SharingChangeMemberPolicyDetails)
+        /// An unspecified error.
+        case showcaseChangeDownloadPolicyDetails(TeamLog.ShowcaseChangeDownloadPolicyDetails)
+        /// An unspecified error.
+        case showcaseChangeEnabledPolicyDetails(TeamLog.ShowcaseChangeEnabledPolicyDetails)
+        /// An unspecified error.
+        case showcaseChangeExternalSharingPolicyDetails(TeamLog.ShowcaseChangeExternalSharingPolicyDetails)
         /// An unspecified error.
         case smartSyncChangePolicyDetails(TeamLog.SmartSyncChangePolicyDetails)
         /// An unspecified error.
@@ -5269,6 +5395,10 @@ open class TeamLog {
                 case .memberTransferAccountContentsDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberTransferAccountContentsDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("member_transfer_account_contents_details")
+                    return .dictionary(d)
+                case .secondaryMailsPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryMailsPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_mails_policy_changed_details")
                     return .dictionary(d)
                 case .paperContentAddMemberDetails(let arg):
                     var d = Serialization.getFields(TeamLog.PaperContentAddMemberDetailsSerializer().serialize(arg))
@@ -5782,6 +5912,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.ShowcaseTrashedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_trashed_details")
                     return .dictionary(d)
+                case .showcaseTrashedDeprecatedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseTrashedDeprecatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_trashed_deprecated_details")
+                    return .dictionary(d)
                 case .showcaseUnresolveCommentDetails(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseUnresolveCommentDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_unresolve_comment_details")
@@ -5789,6 +5923,10 @@ open class TeamLog {
                 case .showcaseUntrashedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseUntrashedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_untrashed_details")
+                    return .dictionary(d)
+                case .showcaseUntrashedDeprecatedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseUntrashedDeprecatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_untrashed_deprecated_details")
                     return .dictionary(d)
                 case .showcaseViewDetails(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseViewDetailsSerializer().serialize(arg))
@@ -5893,6 +6031,14 @@ open class TeamLog {
                 case .deviceApprovalsChangeUnlinkActionDetails(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceApprovalsChangeUnlinkActionDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("device_approvals_change_unlink_action_details")
+                    return .dictionary(d)
+                case .directoryRestrictionsAddMembersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DirectoryRestrictionsAddMembersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("directory_restrictions_add_members_details")
+                    return .dictionary(d)
+                case .directoryRestrictionsRemoveMembersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DirectoryRestrictionsRemoveMembersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("directory_restrictions_remove_members_details")
                     return .dictionary(d)
                 case .emmAddExceptionDetails(let arg):
                     var d = Serialization.getFields(TeamLog.EmmAddExceptionDetailsSerializer().serialize(arg))
@@ -6005,6 +6151,18 @@ open class TeamLog {
                 case .sharingChangeMemberPolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SharingChangeMemberPolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sharing_change_member_policy_details")
+                    return .dictionary(d)
+                case .showcaseChangeDownloadPolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeDownloadPolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_download_policy_details")
+                    return .dictionary(d)
+                case .showcaseChangeEnabledPolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeEnabledPolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_enabled_policy_details")
+                    return .dictionary(d)
+                case .showcaseChangeExternalSharingPolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeExternalSharingPolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_external_sharing_policy_details")
                     return .dictionary(d)
                 case .smartSyncChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SmartSyncChangePolicyDetailsSerializer().serialize(arg))
@@ -6382,6 +6540,9 @@ open class TeamLog {
                         case "member_transfer_account_contents_details":
                             let v = TeamLog.MemberTransferAccountContentsDetailsSerializer().deserialize(json)
                             return EventDetails.memberTransferAccountContentsDetails(v)
+                        case "secondary_mails_policy_changed_details":
+                            let v = TeamLog.SecondaryMailsPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.secondaryMailsPolicyChangedDetails(v)
                         case "paper_content_add_member_details":
                             let v = TeamLog.PaperContentAddMemberDetailsSerializer().deserialize(json)
                             return EventDetails.paperContentAddMemberDetails(v)
@@ -6766,12 +6927,18 @@ open class TeamLog {
                         case "showcase_trashed_details":
                             let v = TeamLog.ShowcaseTrashedDetailsSerializer().deserialize(json)
                             return EventDetails.showcaseTrashedDetails(v)
+                        case "showcase_trashed_deprecated_details":
+                            let v = TeamLog.ShowcaseTrashedDeprecatedDetailsSerializer().deserialize(json)
+                            return EventDetails.showcaseTrashedDeprecatedDetails(v)
                         case "showcase_unresolve_comment_details":
                             let v = TeamLog.ShowcaseUnresolveCommentDetailsSerializer().deserialize(json)
                             return EventDetails.showcaseUnresolveCommentDetails(v)
                         case "showcase_untrashed_details":
                             let v = TeamLog.ShowcaseUntrashedDetailsSerializer().deserialize(json)
                             return EventDetails.showcaseUntrashedDetails(v)
+                        case "showcase_untrashed_deprecated_details":
+                            let v = TeamLog.ShowcaseUntrashedDeprecatedDetailsSerializer().deserialize(json)
+                            return EventDetails.showcaseUntrashedDeprecatedDetails(v)
                         case "showcase_view_details":
                             let v = TeamLog.ShowcaseViewDetailsSerializer().deserialize(json)
                             return EventDetails.showcaseViewDetails(v)
@@ -6850,6 +7017,12 @@ open class TeamLog {
                         case "device_approvals_change_unlink_action_details":
                             let v = TeamLog.DeviceApprovalsChangeUnlinkActionDetailsSerializer().deserialize(json)
                             return EventDetails.deviceApprovalsChangeUnlinkActionDetails(v)
+                        case "directory_restrictions_add_members_details":
+                            let v = TeamLog.DirectoryRestrictionsAddMembersDetailsSerializer().deserialize(json)
+                            return EventDetails.directoryRestrictionsAddMembersDetails(v)
+                        case "directory_restrictions_remove_members_details":
+                            let v = TeamLog.DirectoryRestrictionsRemoveMembersDetailsSerializer().deserialize(json)
+                            return EventDetails.directoryRestrictionsRemoveMembersDetails(v)
                         case "emm_add_exception_details":
                             let v = TeamLog.EmmAddExceptionDetailsSerializer().deserialize(json)
                             return EventDetails.emmAddExceptionDetails(v)
@@ -6934,6 +7107,15 @@ open class TeamLog {
                         case "sharing_change_member_policy_details":
                             let v = TeamLog.SharingChangeMemberPolicyDetailsSerializer().deserialize(json)
                             return EventDetails.sharingChangeMemberPolicyDetails(v)
+                        case "showcase_change_download_policy_details":
+                            let v = TeamLog.ShowcaseChangeDownloadPolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.showcaseChangeDownloadPolicyDetails(v)
+                        case "showcase_change_enabled_policy_details":
+                            let v = TeamLog.ShowcaseChangeEnabledPolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.showcaseChangeEnabledPolicyDetails(v)
+                        case "showcase_change_external_sharing_policy_details":
+                            let v = TeamLog.ShowcaseChangeExternalSharingPolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.showcaseChangeExternalSharingPolicyDetails(v)
                         case "smart_sync_change_policy_details":
                             let v = TeamLog.SmartSyncChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.smartSyncChangePolicyDetails(v)
@@ -7074,7 +7256,7 @@ open class TeamLog {
         case domainInvitesApproveRequestToJoinTeam(TeamLog.DomainInvitesApproveRequestToJoinTeamType)
         /// (domains) Declined user's request to join team
         case domainInvitesDeclineRequestToJoinTeam(TeamLog.DomainInvitesDeclineRequestToJoinTeamType)
-        /// (domains) Sent domain invites to existing domain accounts
+        /// (domains) Sent domain invites to existing domain accounts (deprecated, no longer logged)
         case domainInvitesEmailExistingUsers(TeamLog.DomainInvitesEmailExistingUsersType)
         /// (domains) Requested to join team
         case domainInvitesRequestToJoinTeam(TeamLog.DomainInvitesRequestToJoinTeamType)
@@ -7182,7 +7364,7 @@ open class TeamLog {
         case memberChangeMembershipType(TeamLog.MemberChangeMembershipTypeType)
         /// (members) Changed team member name
         case memberChangeName(TeamLog.MemberChangeNameType)
-        /// (members) Changed membership status of team member
+        /// (members) Changed member status (invited, joined, suspended, etc.)
         case memberChangeStatus(TeamLog.MemberChangeStatusType)
         /// (members) Permanently deleted contents of deleted team member account
         case memberPermanentlyDeleteAccountContents(TeamLog.MemberPermanentlyDeleteAccountContentsType)
@@ -7198,6 +7380,8 @@ open class TeamLog {
         case memberSuggest(TeamLog.MemberSuggestType)
         /// (members) Transferred contents of deleted member account to another member
         case memberTransferAccountContents(TeamLog.MemberTransferAccountContentsType)
+        /// (members) Secondary mails policy changed
+        case secondaryMailsPolicyChanged(TeamLog.SecondaryMailsPolicyChangedType)
         /// (paper) Added team member to Paper doc/folder
         case paperContentAddMember(TeamLog.PaperContentAddMemberType)
         /// (paper) Added Paper doc/folder to folder
@@ -7328,7 +7512,7 @@ open class TeamLog {
         /// (sharing) Joined team member's shared folder from link (deprecated, no longer logged)
         case sfTeamJoinFromOobLink(TeamLog.SfTeamJoinFromOobLinkType)
         /// (sharing) Unshared folder with team member (deprecated, replaced by 'Removed invitee from shared file/folder
-        /// before invite accepted')
+        /// before invite was accepted')
         case sfTeamUninvite(TeamLog.SfTeamUninviteType)
         /// (sharing) Invited user to Dropbox and added them to shared file/folder
         case sharedContentAddInvitees(TeamLog.SharedContentAddInviteesType)
@@ -7340,7 +7524,7 @@ open class TeamLog {
         case sharedContentAddMember(TeamLog.SharedContentAddMemberType)
         /// (sharing) Changed whether members can download shared file/folder
         case sharedContentChangeDownloadsPolicy(TeamLog.SharedContentChangeDownloadsPolicyType)
-        /// (sharing) Changed access type of invitee to shared file/folder before invite accepted
+        /// (sharing) Changed access type of invitee to shared file/folder before invite was accepted
         case sharedContentChangeInviteeRole(TeamLog.SharedContentChangeInviteeRoleType)
         /// (sharing) Changed link audience of shared file/folder
         case sharedContentChangeLinkAudience(TeamLog.SharedContentChangeLinkAudienceType)
@@ -7360,7 +7544,7 @@ open class TeamLog {
         case sharedContentDownload(TeamLog.SharedContentDownloadType)
         /// (sharing) Left shared file/folder
         case sharedContentRelinquishMembership(TeamLog.SharedContentRelinquishMembershipType)
-        /// (sharing) Removed invitee from shared file/folder before invite accepted
+        /// (sharing) Removed invitee from shared file/folder before invite was accepted
         case sharedContentRemoveInvitees(TeamLog.SharedContentRemoveInviteesType)
         /// (sharing) Removed link expiration date of shared file/folder
         case sharedContentRemoveLinkExpiry(TeamLog.SharedContentRemoveLinkExpiryType)
@@ -7456,10 +7640,14 @@ open class TeamLog {
         case showcaseRestored(TeamLog.ShowcaseRestoredType)
         /// (showcase) Deleted showcase
         case showcaseTrashed(TeamLog.ShowcaseTrashedType)
+        /// (showcase) Deleted showcase (old version) (deprecated, replaced by 'Deleted showcase')
+        case showcaseTrashedDeprecated(TeamLog.ShowcaseTrashedDeprecatedType)
         /// (showcase) Unresolved showcase comment
         case showcaseUnresolveComment(TeamLog.ShowcaseUnresolveCommentType)
         /// (showcase) Restored showcase
         case showcaseUntrashed(TeamLog.ShowcaseUntrashedType)
+        /// (showcase) Restored showcase (old version) (deprecated, replaced by 'Restored showcase')
+        case showcaseUntrashedDeprecated(TeamLog.ShowcaseUntrashedDeprecatedType)
         /// (showcase) Viewed showcase
         case showcaseView(TeamLog.ShowcaseViewType)
         /// (sso) Added X.509 certificate for SSO
@@ -7512,6 +7700,10 @@ open class TeamLog {
         case deviceApprovalsChangeOverageAction(TeamLog.DeviceApprovalsChangeOverageActionType)
         /// (team_policies) Changed device approvals setting when member unlinks approved device
         case deviceApprovalsChangeUnlinkAction(TeamLog.DeviceApprovalsChangeUnlinkActionType)
+        /// (team_policies) Added members to directory restrictions list
+        case directoryRestrictionsAddMembers(TeamLog.DirectoryRestrictionsAddMembersType)
+        /// (team_policies) Removed members from directory restrictions list
+        case directoryRestrictionsRemoveMembers(TeamLog.DirectoryRestrictionsRemoveMembersType)
         /// (team_policies) Added members to EMM exception list
         case emmAddException(TeamLog.EmmAddExceptionType)
         /// (team_policies) Enabled/disabled enterprise mobility management for members
@@ -7571,6 +7763,12 @@ open class TeamLog {
         case sharingChangeLinkPolicy(TeamLog.SharingChangeLinkPolicyType)
         /// (team_policies) Changed whether members can share files/folders outside team
         case sharingChangeMemberPolicy(TeamLog.SharingChangeMemberPolicyType)
+        /// (team_policies) Enabled/disabled downloading files from Dropbox Showcase for team
+        case showcaseChangeDownloadPolicy(TeamLog.ShowcaseChangeDownloadPolicyType)
+        /// (team_policies) Enabled/disabled Dropbox Showcase for team
+        case showcaseChangeEnabledPolicy(TeamLog.ShowcaseChangeEnabledPolicyType)
+        /// (team_policies) Enabled/disabled sharing Dropbox Showcase externally for team
+        case showcaseChangeExternalSharingPolicy(TeamLog.ShowcaseChangeExternalSharingPolicyType)
         /// (team_policies) Changed default Smart Sync setting for team members
         case smartSyncChangePolicy(TeamLog.SmartSyncChangePolicyType)
         /// (team_policies) Opted team into Smart Sync
@@ -7990,6 +8188,10 @@ open class TeamLog {
                 case .memberTransferAccountContents(let arg):
                     var d = Serialization.getFields(TeamLog.MemberTransferAccountContentsTypeSerializer().serialize(arg))
                     d[".tag"] = .str("member_transfer_account_contents")
+                    return .dictionary(d)
+                case .secondaryMailsPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryMailsPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_mails_policy_changed")
                     return .dictionary(d)
                 case .paperContentAddMember(let arg):
                     var d = Serialization.getFields(TeamLog.PaperContentAddMemberTypeSerializer().serialize(arg))
@@ -8503,6 +8705,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.ShowcaseTrashedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_trashed")
                     return .dictionary(d)
+                case .showcaseTrashedDeprecated(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseTrashedDeprecatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_trashed_deprecated")
+                    return .dictionary(d)
                 case .showcaseUnresolveComment(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseUnresolveCommentTypeSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_unresolve_comment")
@@ -8510,6 +8716,10 @@ open class TeamLog {
                 case .showcaseUntrashed(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseUntrashedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("showcase_untrashed")
+                    return .dictionary(d)
+                case .showcaseUntrashedDeprecated(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseUntrashedDeprecatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_untrashed_deprecated")
                     return .dictionary(d)
                 case .showcaseView(let arg):
                     var d = Serialization.getFields(TeamLog.ShowcaseViewTypeSerializer().serialize(arg))
@@ -8614,6 +8824,14 @@ open class TeamLog {
                 case .deviceApprovalsChangeUnlinkAction(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceApprovalsChangeUnlinkActionTypeSerializer().serialize(arg))
                     d[".tag"] = .str("device_approvals_change_unlink_action")
+                    return .dictionary(d)
+                case .directoryRestrictionsAddMembers(let arg):
+                    var d = Serialization.getFields(TeamLog.DirectoryRestrictionsAddMembersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("directory_restrictions_add_members")
+                    return .dictionary(d)
+                case .directoryRestrictionsRemoveMembers(let arg):
+                    var d = Serialization.getFields(TeamLog.DirectoryRestrictionsRemoveMembersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("directory_restrictions_remove_members")
                     return .dictionary(d)
                 case .emmAddException(let arg):
                     var d = Serialization.getFields(TeamLog.EmmAddExceptionTypeSerializer().serialize(arg))
@@ -8726,6 +8944,18 @@ open class TeamLog {
                 case .sharingChangeMemberPolicy(let arg):
                     var d = Serialization.getFields(TeamLog.SharingChangeMemberPolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("sharing_change_member_policy")
+                    return .dictionary(d)
+                case .showcaseChangeDownloadPolicy(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeDownloadPolicyTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_download_policy")
+                    return .dictionary(d)
+                case .showcaseChangeEnabledPolicy(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeEnabledPolicyTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_enabled_policy")
+                    return .dictionary(d)
+                case .showcaseChangeExternalSharingPolicy(let arg):
+                    var d = Serialization.getFields(TeamLog.ShowcaseChangeExternalSharingPolicyTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("showcase_change_external_sharing_policy")
                     return .dictionary(d)
                 case .smartSyncChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.SmartSyncChangePolicyTypeSerializer().serialize(arg))
@@ -9099,6 +9329,9 @@ open class TeamLog {
                         case "member_transfer_account_contents":
                             let v = TeamLog.MemberTransferAccountContentsTypeSerializer().deserialize(json)
                             return EventType.memberTransferAccountContents(v)
+                        case "secondary_mails_policy_changed":
+                            let v = TeamLog.SecondaryMailsPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.secondaryMailsPolicyChanged(v)
                         case "paper_content_add_member":
                             let v = TeamLog.PaperContentAddMemberTypeSerializer().deserialize(json)
                             return EventType.paperContentAddMember(v)
@@ -9483,12 +9716,18 @@ open class TeamLog {
                         case "showcase_trashed":
                             let v = TeamLog.ShowcaseTrashedTypeSerializer().deserialize(json)
                             return EventType.showcaseTrashed(v)
+                        case "showcase_trashed_deprecated":
+                            let v = TeamLog.ShowcaseTrashedDeprecatedTypeSerializer().deserialize(json)
+                            return EventType.showcaseTrashedDeprecated(v)
                         case "showcase_unresolve_comment":
                             let v = TeamLog.ShowcaseUnresolveCommentTypeSerializer().deserialize(json)
                             return EventType.showcaseUnresolveComment(v)
                         case "showcase_untrashed":
                             let v = TeamLog.ShowcaseUntrashedTypeSerializer().deserialize(json)
                             return EventType.showcaseUntrashed(v)
+                        case "showcase_untrashed_deprecated":
+                            let v = TeamLog.ShowcaseUntrashedDeprecatedTypeSerializer().deserialize(json)
+                            return EventType.showcaseUntrashedDeprecated(v)
                         case "showcase_view":
                             let v = TeamLog.ShowcaseViewTypeSerializer().deserialize(json)
                             return EventType.showcaseView(v)
@@ -9567,6 +9806,12 @@ open class TeamLog {
                         case "device_approvals_change_unlink_action":
                             let v = TeamLog.DeviceApprovalsChangeUnlinkActionTypeSerializer().deserialize(json)
                             return EventType.deviceApprovalsChangeUnlinkAction(v)
+                        case "directory_restrictions_add_members":
+                            let v = TeamLog.DirectoryRestrictionsAddMembersTypeSerializer().deserialize(json)
+                            return EventType.directoryRestrictionsAddMembers(v)
+                        case "directory_restrictions_remove_members":
+                            let v = TeamLog.DirectoryRestrictionsRemoveMembersTypeSerializer().deserialize(json)
+                            return EventType.directoryRestrictionsRemoveMembers(v)
                         case "emm_add_exception":
                             let v = TeamLog.EmmAddExceptionTypeSerializer().deserialize(json)
                             return EventType.emmAddException(v)
@@ -9651,6 +9896,15 @@ open class TeamLog {
                         case "sharing_change_member_policy":
                             let v = TeamLog.SharingChangeMemberPolicyTypeSerializer().deserialize(json)
                             return EventType.sharingChangeMemberPolicy(v)
+                        case "showcase_change_download_policy":
+                            let v = TeamLog.ShowcaseChangeDownloadPolicyTypeSerializer().deserialize(json)
+                            return EventType.showcaseChangeDownloadPolicy(v)
+                        case "showcase_change_enabled_policy":
+                            let v = TeamLog.ShowcaseChangeEnabledPolicyTypeSerializer().deserialize(json)
+                            return EventType.showcaseChangeEnabledPolicy(v)
+                        case "showcase_change_external_sharing_policy":
+                            let v = TeamLog.ShowcaseChangeExternalSharingPolicyTypeSerializer().deserialize(json)
+                            return EventType.showcaseChangeExternalSharingPolicy(v)
                         case "smart_sync_change_policy":
                             let v = TeamLog.SmartSyncChangePolicyTypeSerializer().deserialize(json)
                             return EventType.smartSyncChangePolicy(v)
@@ -14253,7 +14507,7 @@ open class TeamLog {
         }
     }
 
-    /// Changed membership status of team member.
+    /// Changed member status (invited, joined, suspended, etc.).
     open class MemberChangeStatusDetails: CustomStringConvertible {
         /// Previous member status. Might be missing due to historical data gap.
         open let previousValue: TeamLog.MemberStatus?
@@ -19782,6 +20036,123 @@ open class TeamLog {
         }
     }
 
+    /// The SecondaryMailsPolicy union
+    public enum SecondaryMailsPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryMailsPolicySerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryMailsPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryMailsPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SecondaryMailsPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return SecondaryMailsPolicy.disabled
+                        case "enabled":
+                            return SecondaryMailsPolicy.enabled
+                        case "other":
+                            return SecondaryMailsPolicy.other
+                        default:
+                            return SecondaryMailsPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Secondary mails policy changed.
+    open class SecondaryMailsPolicyChangedDetails: CustomStringConvertible {
+        /// Previous secondary mails policy.
+        open let previousValue: TeamLog.SecondaryMailsPolicy
+        /// New secondary mails policy.
+        open let newValue: TeamLog.SecondaryMailsPolicy
+        public init(previousValue: TeamLog.SecondaryMailsPolicy, newValue: TeamLog.SecondaryMailsPolicy) {
+            self.previousValue = previousValue
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryMailsPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryMailsPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryMailsPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "previous_value": TeamLog.SecondaryMailsPolicySerializer().serialize(value.previousValue),
+            "new_value": TeamLog.SecondaryMailsPolicySerializer().serialize(value.newValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryMailsPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let previousValue = TeamLog.SecondaryMailsPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamLog.SecondaryMailsPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    return SecondaryMailsPolicyChangedDetails(previousValue: previousValue, newValue: newValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SecondaryMailsPolicyChangedType struct
+    open class SecondaryMailsPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryMailsPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryMailsPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryMailsPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryMailsPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return SecondaryMailsPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Added team to shared folder.
     open class SfAddGroupDetails: CustomStringConvertible {
         /// Target asset position in the Assets list.
@@ -21048,7 +21419,7 @@ open class TeamLog {
         }
     }
 
-    /// Changed access type of invitee to shared file/folder before invite accepted.
+    /// Changed access type of invitee to shared file/folder before invite was accepted.
     open class SharedContentChangeInviteeRoleDetails: CustomStringConvertible {
         /// Previous access level. Might be missing due to historical data gap.
         open let previousAccessLevel: Sharing.AccessLevel?
@@ -21706,7 +22077,7 @@ open class TeamLog {
         }
     }
 
-    /// Removed invitee from shared file/folder before invite accepted.
+    /// Removed invitee from shared file/folder before invite was accepted.
     open class SharedContentRemoveInviteesDetails: CustomStringConvertible {
         /// A list of invitees.
         open let invitees: Array<String>
@@ -24211,6 +24582,204 @@ open class TeamLog {
         }
     }
 
+    /// Enabled/disabled downloading files from Dropbox Showcase for team.
+    open class ShowcaseChangeDownloadPolicyDetails: CustomStringConvertible {
+        /// New Dropbox Showcase download policy.
+        open let newValue: TeamLog.ShowcaseDownloadPolicy
+        /// Previous Dropbox Showcase download policy.
+        open let previousValue: TeamLog.ShowcaseDownloadPolicy
+        public init(newValue: TeamLog.ShowcaseDownloadPolicy, previousValue: TeamLog.ShowcaseDownloadPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeDownloadPolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeDownloadPolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeDownloadPolicyDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.ShowcaseDownloadPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.ShowcaseDownloadPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeDownloadPolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.ShowcaseDownloadPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.ShowcaseDownloadPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return ShowcaseChangeDownloadPolicyDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShowcaseChangeDownloadPolicyType struct
+    open class ShowcaseChangeDownloadPolicyType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeDownloadPolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeDownloadPolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeDownloadPolicyType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeDownloadPolicyType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShowcaseChangeDownloadPolicyType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Enabled/disabled Dropbox Showcase for team.
+    open class ShowcaseChangeEnabledPolicyDetails: CustomStringConvertible {
+        /// New Dropbox Showcase policy.
+        open let newValue: TeamLog.ShowcaseEnabledPolicy
+        /// Previous Dropbox Showcase policy.
+        open let previousValue: TeamLog.ShowcaseEnabledPolicy
+        public init(newValue: TeamLog.ShowcaseEnabledPolicy, previousValue: TeamLog.ShowcaseEnabledPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeEnabledPolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeEnabledPolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeEnabledPolicyDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.ShowcaseEnabledPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.ShowcaseEnabledPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeEnabledPolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.ShowcaseEnabledPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.ShowcaseEnabledPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return ShowcaseChangeEnabledPolicyDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShowcaseChangeEnabledPolicyType struct
+    open class ShowcaseChangeEnabledPolicyType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeEnabledPolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeEnabledPolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeEnabledPolicyType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeEnabledPolicyType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShowcaseChangeEnabledPolicyType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Enabled/disabled sharing Dropbox Showcase externally for team.
+    open class ShowcaseChangeExternalSharingPolicyDetails: CustomStringConvertible {
+        /// New Dropbox Showcase external sharing policy.
+        open let newValue: TeamLog.ShowcaseExternalSharingPolicy
+        /// Previous Dropbox Showcase external sharing policy.
+        open let previousValue: TeamLog.ShowcaseExternalSharingPolicy
+        public init(newValue: TeamLog.ShowcaseExternalSharingPolicy, previousValue: TeamLog.ShowcaseExternalSharingPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeExternalSharingPolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeExternalSharingPolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeExternalSharingPolicyDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.ShowcaseExternalSharingPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.ShowcaseExternalSharingPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeExternalSharingPolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.ShowcaseExternalSharingPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.ShowcaseExternalSharingPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return ShowcaseChangeExternalSharingPolicyDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShowcaseChangeExternalSharingPolicyType struct
+    open class ShowcaseChangeExternalSharingPolicyType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseChangeExternalSharingPolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseChangeExternalSharingPolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseChangeExternalSharingPolicyType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseChangeExternalSharingPolicyType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShowcaseChangeExternalSharingPolicyType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Created showcase.
     open class ShowcaseCreatedDetails: CustomStringConvertible {
         /// Event unique identifier.
@@ -24378,6 +24947,57 @@ open class TeamLog {
         }
     }
 
+    /// Policy for controlling if files can be downloaded from Showcases by team members
+    public enum ShowcaseDownloadPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseDownloadPolicySerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseDownloadPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseDownloadPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseDownloadPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseDownloadPolicy.disabled
+                        case "enabled":
+                            return ShowcaseDownloadPolicy.enabled
+                        case "other":
+                            return ShowcaseDownloadPolicy.other
+                        default:
+                            return ShowcaseDownloadPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Edited showcase comment.
     open class ShowcaseEditCommentDetails: CustomStringConvertible {
         /// Event unique identifier.
@@ -24504,6 +25124,108 @@ open class TeamLog {
                     return ShowcaseEditedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling whether Showcase is enabled.
+    public enum ShowcaseEnabledPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseEnabledPolicySerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseEnabledPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseEnabledPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseEnabledPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseEnabledPolicy.disabled
+                        case "enabled":
+                            return ShowcaseEnabledPolicy.enabled
+                        case "other":
+                            return ShowcaseEnabledPolicy.other
+                        default:
+                            return ShowcaseEnabledPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Policy for controlling if team members can share Showcases externally.
+    public enum ShowcaseExternalSharingPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseExternalSharingPolicySerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseExternalSharingPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseExternalSharingPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseExternalSharingPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseExternalSharingPolicy.disabled
+                        case "enabled":
+                            return ShowcaseExternalSharingPolicy.enabled
+                        case "other":
+                            return ShowcaseExternalSharingPolicy.other
+                        default:
+                            return ShowcaseExternalSharingPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -25208,6 +25930,68 @@ open class TeamLog {
         }
     }
 
+    /// Deleted showcase (old version).
+    open class ShowcaseTrashedDeprecatedDetails: CustomStringConvertible {
+        /// Event unique identifier.
+        open let eventUuid: String
+        public init(eventUuid: String) {
+            stringValidator()(eventUuid)
+            self.eventUuid = eventUuid
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseTrashedDeprecatedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseTrashedDeprecatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseTrashedDeprecatedDetails) -> JSON {
+            let output = [ 
+            "event_uuid": Serialization._StringSerializer.serialize(value.eventUuid),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseTrashedDeprecatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let eventUuid = Serialization._StringSerializer.deserialize(dict["event_uuid"] ?? .null)
+                    return ShowcaseTrashedDeprecatedDetails(eventUuid: eventUuid)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShowcaseTrashedDeprecatedType struct
+    open class ShowcaseTrashedDeprecatedType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseTrashedDeprecatedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseTrashedDeprecatedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseTrashedDeprecatedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseTrashedDeprecatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShowcaseTrashedDeprecatedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Deleted showcase.
     open class ShowcaseTrashedDetails: CustomStringConvertible {
         /// Event unique identifier.
@@ -25332,6 +26116,68 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return ShowcaseUnresolveCommentType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Restored showcase (old version).
+    open class ShowcaseUntrashedDeprecatedDetails: CustomStringConvertible {
+        /// Event unique identifier.
+        open let eventUuid: String
+        public init(eventUuid: String) {
+            stringValidator()(eventUuid)
+            self.eventUuid = eventUuid
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseUntrashedDeprecatedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseUntrashedDeprecatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseUntrashedDeprecatedDetails) -> JSON {
+            let output = [ 
+            "event_uuid": Serialization._StringSerializer.serialize(value.eventUuid),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseUntrashedDeprecatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let eventUuid = Serialization._StringSerializer.deserialize(dict["event_uuid"] ?? .null)
+                    return ShowcaseUntrashedDeprecatedDetails(eventUuid: eventUuid)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShowcaseUntrashedDeprecatedType struct
+    open class ShowcaseUntrashedDeprecatedType: CustomStringConvertible {
+        /// (no description)
+        open let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShowcaseUntrashedDeprecatedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShowcaseUntrashedDeprecatedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShowcaseUntrashedDeprecatedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShowcaseUntrashedDeprecatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShowcaseUntrashedDeprecatedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }

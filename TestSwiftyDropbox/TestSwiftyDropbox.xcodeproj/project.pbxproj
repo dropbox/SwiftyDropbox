@@ -163,7 +163,6 @@
 				E76F577F1BB5C18600FE5EFB /* Frameworks */,
 				E76F57801BB5C18600FE5EFB /* Resources */,
 				6C0B9302BFAB30378D49BFF7 /* [CP] Embed Pods Frameworks */,
-				C792CDEB4872A626AA0AE8CB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,7 +182,6 @@
 				F2D0EA411E67B5E00076A119 /* Frameworks */,
 				F2D0EA421E67B5E00076A119 /* Resources */,
 				53B515F8C08D4D6837D2593F /* [CP] Embed Pods Frameworks */,
-				0C9D8FE5E7B39B294A2BA70C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -264,21 +262,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0C9D8FE5E7B39B294A2BA70C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		53B515F8C08D4D6837D2593F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -335,21 +318,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C792CDEB4872A626AA0AE8CB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F8BFAD87A60A2AEAE7EAA7DF /* [CP] Check Pods Manifest.lock */ = {
