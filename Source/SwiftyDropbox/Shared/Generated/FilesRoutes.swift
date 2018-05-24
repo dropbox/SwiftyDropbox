@@ -900,7 +900,8 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -916,7 +917,8 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -932,7 +934,8 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
     /// - parameter offset: The amount of data that has been uploaded so far. We use this to make sure upload data isn't
@@ -949,7 +952,8 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -965,7 +969,8 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -981,7 +986,8 @@ open class FilesRoutes {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
@@ -997,7 +1003,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB.
+    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -1012,7 +1018,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB.
+    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -1027,7 +1033,7 @@ open class FilesRoutes {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB.
+    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB.
     ///
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
@@ -1045,11 +1051,11 @@ open class FilesRoutes {
     /// uploadSessionAppendV2 to upload file contents. We recommend uploading many files in parallel to increase
     /// throughput. Once the file contents have been uploaded, rather than calling uploadSessionFinish, use this route
     /// to finish all your upload sessions in a single request. close in UploadSessionStartArg or close in
-    /// UploadSessionAppendArg needs to be true for the last uploadSessionStart or uploadSessionAppendV2 call. This
-    /// route will return a job_id immediately and do the async commit job in background. Use
-    /// uploadSessionFinishBatchCheck to check the job status. For the same account, this route should be executed
-    /// serially. That means you should not start the next job before current job finishes. We allow up to 1000 entries
-    /// in a single request.
+    /// UploadSessionAppendArg needs to be true for the last uploadSessionStart or uploadSessionAppendV2 call. The
+    /// maximum size of a file one can upload to an upload session is 350 GB. This route will return a job_id
+    /// immediately and do the async commit job in background. Use uploadSessionFinishBatchCheck to check the job
+    /// status. For the same account, this route should be executed serially. That means you should not start the next
+    /// job before current job finishes. We allow up to 1000 entries in a single request.
     ///
     /// - parameter entries: Commit information for each file in the batch.
     ///
@@ -1078,9 +1084,10 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
-    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
-    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. An upload session can be used for a maximum of 48 hours. Attempting to use an sessionId in
+    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 48 hours after its creation
+    /// will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -1097,9 +1104,10 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
-    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
-    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. An upload session can be used for a maximum of 48 hours. Attempting to use an sessionId in
+    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 48 hours after its creation
+    /// will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
@@ -1116,9 +1124,10 @@ open class FilesRoutes {
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
     /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
     /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
-    /// Attempting to use an sessionId in UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish
-    /// more than 48 hours after its creation will return a notFound in UploadSessionLookupError.
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. An upload session can be used for a maximum of 48 hours. Attempting to use an sessionId in
+    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 48 hours after its creation
+    /// will return a notFound in UploadSessionLookupError.
     ///
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
