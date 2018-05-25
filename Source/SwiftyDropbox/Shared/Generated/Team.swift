@@ -4227,7 +4227,9 @@ open class Team {
         open let sendWelcomeEmail: Bool
         /// (no description)
         open let role: Team.AdminTier
-        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly) {
+        /// Whether a user is directory restricted.
+        open let isDirectoryRestricted: Bool?
+        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly, isDirectoryRestricted: Bool? = nil) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
             nullableValidator(stringValidator(maxLength: 100, pattern: "[^/:?*<>\"|]*"))(memberGivenName)
@@ -4240,6 +4242,7 @@ open class Team {
             self.memberPersistentId = memberPersistentId
             self.sendWelcomeEmail = sendWelcomeEmail
             self.role = role
+            self.isDirectoryRestricted = isDirectoryRestricted
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddArgSerializer().serialize(self)))"
@@ -4256,6 +4259,7 @@ open class Team {
             "member_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberPersistentId),
             "send_welcome_email": Serialization._BoolSerializer.serialize(value.sendWelcomeEmail),
             "role": Team.AdminTierSerializer().serialize(value.role),
+            "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
             ]
             return .dictionary(output)
         }
@@ -4269,7 +4273,8 @@ open class Team {
                     let memberPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_persistent_id"] ?? .null)
                     let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
                     let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
-                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, role: role)
+                    let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
+                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, role: role, isDirectoryRestricted: isDirectoryRestricted)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4514,7 +4519,9 @@ open class Team {
         /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used for SAML
         /// authentication.
         open let persistentId: String?
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil) {
+        /// Whether the user is a directory restricted user.
+        open let isDirectoryRestricted: Bool?
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             nullableValidator(stringValidator())(externalId)
@@ -4530,6 +4537,7 @@ open class Team {
             self.joinedOn = joinedOn
             nullableValidator(stringValidator())(persistentId)
             self.persistentId = persistentId
+            self.isDirectoryRestricted = isDirectoryRestricted
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberProfileSerializer().serialize(self)))"
@@ -4549,6 +4557,7 @@ open class Team {
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
+            "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
             ]
             return .dictionary(output)
         }
@@ -4565,7 +4574,8 @@ open class Team {
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
-                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
+                    let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
+                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5682,7 +5692,9 @@ open class Team {
         open let newSurname: String?
         /// New persistent ID. This field only available to teams using persistent ID SAML configuration.
         open let newPersistentId: String?
-        public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil) {
+        /// New value for whether the user is a directory restricted user.
+        open let newIsDirectoryRestricted: Bool?
+        public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) {
             self.user = user
             nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$"))(newEmail)
             self.newEmail = newEmail
@@ -5694,6 +5706,7 @@ open class Team {
             self.newSurname = newSurname
             nullableValidator(stringValidator())(newPersistentId)
             self.newPersistentId = newPersistentId
+            self.newIsDirectoryRestricted = newIsDirectoryRestricted
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfileArgSerializer().serialize(self)))"
@@ -5709,6 +5722,7 @@ open class Team {
             "new_given_name": NullableSerializer(Serialization._StringSerializer).serialize(value.newGivenName),
             "new_surname": NullableSerializer(Serialization._StringSerializer).serialize(value.newSurname),
             "new_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.newPersistentId),
+            "new_is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.newIsDirectoryRestricted),
             ]
             return .dictionary(output)
         }
@@ -5721,7 +5735,8 @@ open class Team {
                     let newGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_given_name"] ?? .null)
                     let newSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_surname"] ?? .null)
                     let newPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_persistent_id"] ?? .null)
-                    return MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId)
+                    let newIsDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["new_is_directory_restricted"] ?? .null)
+                    return MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5751,6 +5766,8 @@ open class Team {
         case persistentIdDisabled
         /// The persistent ID is already in use by another team member.
         case persistentIdUsedByOtherUser
+        /// Directory Restrictions option is not available.
+        case directoryRestrictedOff
         /// An unspecified error.
         case other
 
@@ -5802,6 +5819,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("persistent_id_used_by_other_user")
                     return .dictionary(d)
+                case .directoryRestrictedOff:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("directory_restricted_off")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5833,6 +5854,8 @@ open class Team {
                             return MembersSetProfileError.persistentIdDisabled
                         case "persistent_id_used_by_other_user":
                             return MembersSetProfileError.persistentIdUsedByOtherUser
+                        case "directory_restricted_off":
+                            return MembersSetProfileError.directoryRestrictedOff
                         case "other":
                             return MembersSetProfileError.other
                         default:
@@ -8267,12 +8290,12 @@ open class Team {
         open let groups: Array<String>
         /// The namespace id of the user's root folder.
         open let memberFolderId: String
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil) {
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil) {
             arrayValidator(itemValidator: stringValidator())(groups)
             self.groups = groups
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(memberFolderId)
             self.memberFolderId = memberFolderId
-            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
+            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
@@ -8294,6 +8317,7 @@ open class Team {
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
+            "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
             ]
             return .dictionary(output)
         }
@@ -8312,7 +8336,8 @@ open class Team {
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
-                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId)
+                    let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
+                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
                 default:
                     fatalError("Type error deserializing")
             }
