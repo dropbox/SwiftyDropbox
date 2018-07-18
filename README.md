@@ -544,12 +544,12 @@ To properly handle union types, you should pass each union through a switch stat
 
 #### Route-specific errors
 ```Swift
-client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
         switch error as CallError {
-        case .routeError(let boxed, let requestId):
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
             print("RouteError[\(requestId)]:")
             
             switch boxed.unboxed as Files.DeleteError {
@@ -571,6 +571,10 @@ client.files.delete(path: "/test/path/in/Dropbox/account").response { response, 
             case .pathWrite(let writeError):
                 print("WriteError: \(writeError)")
                 // you can handle each `WriteError` case like the `DeleteError` cases above
+            case .tooManyWriteOperations:
+                print("Another write operation occurring at the same time prevented this from succeeding.")
+            case .tooManyFiles:
+                print("There are too many files to delete.")
             case .other:
                 print("Unknown")
             }
@@ -595,7 +599,7 @@ In the case of a network error, errors are either specific to the endpoint (as s
 To determine if an error is route-specific or not, the error object should be cast as a `CallError`, and depending on the type of error, handled in the appropriate switch statement. 
 
 ```Swift
-client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         print(response)
     } else if let error = error {
@@ -638,7 +642,7 @@ For example, the [/delete](https://www.dropbox.com/developers/documentation/http
 To determine at runtime which subtype the `Metadata` type exists as, pass the object through a switch statement, and check for each possible class, with the result casted accordingly. See below:
 
 ```Swift
-client.files.delete(path: "/test/path/in/Dropbox/account").response { response, error in
+client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
     if let response = response {
         switch response {
         case let fileMetadata as Files.FileMetadata:
@@ -650,7 +654,7 @@ client.files.delete(path: "/test/path/in/Dropbox/account").response { response, 
         }
     } else if let error = error {
         switch error as CallError {
-        case .routeError(let boxed, let requestId):
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
             // a route-specific error occurred
             // see handling above
         case .internalServerError(let code, let message, let requestId):
