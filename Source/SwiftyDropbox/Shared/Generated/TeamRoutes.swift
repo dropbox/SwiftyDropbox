@@ -589,12 +589,13 @@ open class TeamRoutes {
     /// - parameter newSurname: New surname for member.
     /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
     /// configuration.
+    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
     /// a `Team.MembersSetProfileError` object on failure.
-    @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
+    @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfile
-        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId)
+        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
         return client.request(route, serverArgs: serverArgs)
     }
 
