@@ -166,7 +166,7 @@ open class MobileSharedApplication: SharedApplication {
         let alertController = UIAlertController(
             title: title,
             message: message,
-            preferredStyle: UIAlertControllerStyle.alert)
+            preferredStyle: UIAlertController.Style.alert)
         if let controller = controller {
             controller.present(alertController, animated: true, completion: { fatalError(message) })
         }
@@ -176,7 +176,7 @@ open class MobileSharedApplication: SharedApplication {
         let alertController = UIAlertController(
             title: title,
             message: message,
-            preferredStyle: UIAlertControllerStyle.alert)
+            preferredStyle: UIAlertController.Style.alert)
 
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { (_) in
             if let handler = buttonHandlers["Cancel"] {
