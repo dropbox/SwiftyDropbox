@@ -2257,6 +2257,7 @@ open class Paper {
 
     static let docsArchive = Route(
         name: "docs/archive",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.RefPaperDocSerializer(),
@@ -2267,6 +2268,7 @@ open class Paper {
     )
     static let docsCreate = Route(
         name: "docs/create",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.PaperDocCreateArgsSerializer(),
@@ -2277,6 +2279,7 @@ open class Paper {
     )
     static let docsDownload = Route(
         name: "docs/download",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.PaperDocExportSerializer(),
@@ -2287,6 +2290,7 @@ open class Paper {
     )
     static let docsFolderUsersList = Route(
         name: "docs/folder_users/list",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListUsersOnFolderArgsSerializer(),
@@ -2297,6 +2301,7 @@ open class Paper {
     )
     static let docsFolderUsersListContinue = Route(
         name: "docs/folder_users/list/continue",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListUsersOnFolderContinueArgsSerializer(),
@@ -2307,6 +2312,7 @@ open class Paper {
     )
     static let docsGetFolderInfo = Route(
         name: "docs/get_folder_info",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.RefPaperDocSerializer(),
@@ -2317,6 +2323,7 @@ open class Paper {
     )
     static let docsList = Route(
         name: "docs/list",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListPaperDocsArgsSerializer(),
@@ -2327,6 +2334,7 @@ open class Paper {
     )
     static let docsListContinue = Route(
         name: "docs/list/continue",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListPaperDocsContinueArgsSerializer(),
@@ -2337,6 +2345,7 @@ open class Paper {
     )
     static let docsPermanentlyDelete = Route(
         name: "docs/permanently_delete",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.RefPaperDocSerializer(),
@@ -2347,6 +2356,7 @@ open class Paper {
     )
     static let docsSharingPolicyGet = Route(
         name: "docs/sharing_policy/get",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.RefPaperDocSerializer(),
@@ -2357,6 +2367,7 @@ open class Paper {
     )
     static let docsSharingPolicySet = Route(
         name: "docs/sharing_policy/set",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.PaperDocSharingPolicySerializer(),
@@ -2367,6 +2378,7 @@ open class Paper {
     )
     static let docsUpdate = Route(
         name: "docs/update",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.PaperDocUpdateArgsSerializer(),
@@ -2377,6 +2389,7 @@ open class Paper {
     )
     static let docsUsersAdd = Route(
         name: "docs/users/add",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.AddPaperDocUserSerializer(),
@@ -2387,6 +2400,7 @@ open class Paper {
     )
     static let docsUsersList = Route(
         name: "docs/users/list",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListUsersOnPaperDocArgsSerializer(),
@@ -2397,6 +2411,7 @@ open class Paper {
     )
     static let docsUsersListContinue = Route(
         name: "docs/users/list/continue",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.ListUsersOnPaperDocContinueArgsSerializer(),
@@ -2407,6 +2422,7 @@ open class Paper {
     )
     static let docsUsersRemove = Route(
         name: "docs/users/remove",
+        version: 1,
         namespace: "paper",
         deprecated: false,
         argSerializer: Paper.RemovePaperDocUserSerializer(),

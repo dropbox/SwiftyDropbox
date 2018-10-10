@@ -71,6 +71,8 @@ open class Auth {
         case invalidSelectAdmin
         /// The user has been suspended.
         case userSuspended
+        /// The access token has expired.
+        case expiredAccessToken
         /// An unspecified error.
         case other
 
@@ -98,6 +100,10 @@ open class Auth {
                     var d = [String: JSON]()
                     d[".tag"] = .str("user_suspended")
                     return .dictionary(d)
+                case .expiredAccessToken:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired_access_token")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -117,6 +123,8 @@ open class Auth {
                             return AuthError.invalidSelectAdmin
                         case "user_suspended":
                             return AuthError.userSuspended
+                        case "expired_access_token":
+                            return AuthError.expiredAccessToken
                         case "other":
                             return AuthError.other
                         default:
@@ -441,6 +449,7 @@ open class Auth {
 
     static let tokenFromOauth1 = Route(
         name: "token/from_oauth1",
+        version: 1,
         namespace: "auth",
         deprecated: false,
         argSerializer: Auth.TokenFromOAuth1ArgSerializer(),
@@ -451,6 +460,7 @@ open class Auth {
     )
     static let tokenRevoke = Route(
         name: "token/revoke",
+        version: 1,
         namespace: "auth",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,

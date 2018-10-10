@@ -54,7 +54,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamDevicesResult` object on
     /// success or a `Team.ListTeamDevicesError` object on failure.
-    @available(*, unavailable, message:"devices/list_team_devices is deprecated. Use devices/list_members_devices.")
+    @available(*, unavailable, message:"devicesListTeamDevices is deprecated. Use devicesListMembersDevices.")
     @discardableResult open func devicesListTeamDevices(cursor: String? = nil, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) -> RpcRequest<Team.ListTeamDevicesResultSerializer, Team.ListTeamDevicesErrorSerializer> {
         let route = Team.devicesListTeamDevices
         let serverArgs = Team.ListTeamDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
@@ -312,7 +312,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamAppsResult` object on success
     /// or a `Team.ListTeamAppsError` object on failure.
-    @available(*, unavailable, message:"linked_apps/list_team_linked_apps is deprecated. Use linked_apps/list_members_linked_apps.")
+    @available(*, unavailable, message:"linkedAppsListTeamLinkedApps is deprecated. Use linkedAppsListMembersLinkedApps.")
     @discardableResult open func linkedAppsListTeamLinkedApps(cursor: String? = nil) -> RpcRequest<Team.ListTeamAppsResultSerializer, Team.ListTeamAppsErrorSerializer> {
         let route = Team.linkedAppsListTeamLinkedApps
         let serverArgs = Team.ListTeamAppsArg(cursor: cursor)
@@ -502,6 +502,35 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Moves removed member's files to a different member. This endpoint initiates an asynchronous job. To obtain the
+    /// final result of the job, the client should periodically poll membersMoveFormerMemberFilesJobStatusCheck.
+    /// Permission : Team member management.
+    ///
+    /// - parameter transferDestId: Files from the deleted member account will be transferred to this user.
+    /// - parameter transferAdminId: Errors during the transfer process will be sent via email to this user.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// or a `Team.MembersTransferFormerMembersFilesError` object on failure.
+    @discardableResult open func membersMoveFormerMemberFiles(user: Team.UserSelectorArg, transferDestId: Team.UserSelectorArg, transferAdminId: Team.UserSelectorArg) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersTransferFormerMembersFilesErrorSerializer> {
+        let route = Team.membersMoveFormerMemberFiles
+        let serverArgs = Team.MembersDataTransferArg(user: user, transferDestId: transferDestId, transferAdminId: transferAdminId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once an async_job_id is returned from membersMoveFormerMemberFiles , use this to poll the status of the
+    /// asynchronous request. Permission : Team member management.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success
+    /// or a `Async.PollError` object on failure.
+    @discardableResult open func membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
+        let route = Team.membersMoveFormerMemberFilesJobStatusCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
@@ -602,7 +631,6 @@ open class TeamRoutes {
     /// Suspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
-    /// - parameter user: Identity of user to remove/suspend.
     /// - parameter wipeData: If provided, controls if the user's data will be deleted on their linked devices.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
@@ -659,7 +687,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
     /// on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @available(*, unavailable, message:"properties/template/add is deprecated.")
+    @available(*, unavailable, message:"propertiesTemplateAdd is deprecated.")
     @discardableResult open func propertiesTemplateAdd(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateAdd
         let serverArgs = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields)
@@ -673,7 +701,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object
     /// on success or a `FileProperties.TemplateError` object on failure.
-    @available(*, unavailable, message:"properties/template/get is deprecated.")
+    @available(*, unavailable, message:"propertiesTemplateGet is deprecated.")
     @discardableResult open func propertiesTemplateGet(templateId: String) -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateGet
         let serverArgs = FileProperties.GetTemplateArg(templateId: templateId)
@@ -685,7 +713,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
     /// on success or a `FileProperties.TemplateError` object on failure.
-    @available(*, unavailable, message:"properties/template/list is deprecated.")
+    @available(*, unavailable, message:"propertiesTemplateList is deprecated.")
     @discardableResult open func propertiesTemplateList() -> RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateList
         return client.request(route)
@@ -701,7 +729,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult`
     /// object on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @available(*, unavailable, message:"properties/template/update is deprecated.")
+    @available(*, unavailable, message:"propertiesTemplateUpdate is deprecated.")
     @discardableResult open func propertiesTemplateUpdate(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateUpdate
         let serverArgs = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
