@@ -17,7 +17,9 @@ open class TeamLogRoutes {
     /// features/get_values /developers/documentation/http/teams#team-features-get_values to check for this feature.
     /// Permission : Team Auditing.
     ///
-    /// - parameter limit: Number of results to return per call.
+    /// - parameter limit: The maximal number of results to return per call. Note that some calls may not return limit
+    /// number of events, and may even return no events, even with `has_more` set to true. In this case, callers should
+    /// fetch again using getEventsContinue.
     /// - parameter accountId: Filter the events by account ID. Return ony events with this account_id as either Actor,
     /// Context, or Participants.
     /// - parameter time: Filter by time range.

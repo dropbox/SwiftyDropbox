@@ -72,7 +72,12 @@ open class DropboxTransportClient {
     open func request<ASerial, RSerial, ESerial>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType? = nil) -> RpcRequest<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
-        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
+        var routeName = route.name
+        if route.version > 1 {
+            routeName = String(format: "%@_v%d", route.name, route.version)
+        }
+        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(routeName)"
+        
         let routeStyle: RouteStyle = RouteStyle(rawValue: route.attrs["style"]!!)!
 
         var rawJsonRequest: Data?
@@ -125,7 +130,11 @@ open class DropboxTransportClient {
     open func request<ASerial, RSerial, ESerial>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType, input: UploadBody) -> UploadRequest<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
-        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
+        var routeName = route.name
+        if route.version > 1 {
+            routeName = String(format: "%@_v%d", route.name, route.version)
+        }
+        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(routeName)"
         let routeStyle: RouteStyle = RouteStyle(rawValue: route.attrs["style"]!!)!
 
         let jsonRequestObj = route.argSerializer.serialize(serverArgs)
@@ -152,7 +161,11 @@ open class DropboxTransportClient {
     open func request<ASerial, RSerial, ESerial>(_ route: Route<ASerial, RSerial, ESerial>,
                         serverArgs: ASerial.ValueType, overwrite: Bool, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<RSerial, ESerial> {
         let host = route.attrs["host"]! ?? "api"
-        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(route.name)"
+        var routeName = route.name
+        if route.version > 1 {
+            routeName = String(format: "%@_v%d", route.name, route.version)
+        }
+        let url = "\(self.baseHosts[host]!)/\(route.namespace)/\(routeName)"
         let routeStyle: RouteStyle = RouteStyle(rawValue: route.attrs["style"]!!)!
 
         let jsonRequestObj = route.argSerializer.serialize(serverArgs)

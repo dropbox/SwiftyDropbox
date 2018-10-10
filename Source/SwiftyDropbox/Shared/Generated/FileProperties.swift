@@ -1855,6 +1855,7 @@ open class FileProperties {
 
     static let propertiesAdd = Route(
         name: "properties/add",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
@@ -1865,6 +1866,7 @@ open class FileProperties {
     )
     static let propertiesOverwrite = Route(
         name: "properties/overwrite",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
@@ -1875,6 +1877,7 @@ open class FileProperties {
     )
     static let propertiesRemove = Route(
         name: "properties/remove",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
@@ -1885,6 +1888,7 @@ open class FileProperties {
     )
     static let propertiesSearch = Route(
         name: "properties/search",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.PropertiesSearchArgSerializer(),
@@ -1895,6 +1899,7 @@ open class FileProperties {
     )
     static let propertiesSearchContinue = Route(
         name: "properties/search/continue",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.PropertiesSearchContinueArgSerializer(),
@@ -1905,6 +1910,7 @@ open class FileProperties {
     )
     static let propertiesUpdate = Route(
         name: "properties/update",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
@@ -1915,6 +1921,7 @@ open class FileProperties {
     )
     static let templatesAddForTeam = Route(
         name: "templates/add_for_team",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.AddTemplateArgSerializer(),
@@ -1925,6 +1932,7 @@ open class FileProperties {
     )
     static let templatesAddForUser = Route(
         name: "templates/add_for_user",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.AddTemplateArgSerializer(),
@@ -1935,6 +1943,7 @@ open class FileProperties {
     )
     static let templatesGetForTeam = Route(
         name: "templates/get_for_team",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.GetTemplateArgSerializer(),
@@ -1945,6 +1954,7 @@ open class FileProperties {
     )
     static let templatesGetForUser = Route(
         name: "templates/get_for_user",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.GetTemplateArgSerializer(),
@@ -1955,6 +1965,7 @@ open class FileProperties {
     )
     static let templatesListForTeam = Route(
         name: "templates/list_for_team",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
@@ -1965,6 +1976,7 @@ open class FileProperties {
     )
     static let templatesListForUser = Route(
         name: "templates/list_for_user",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
@@ -1975,6 +1987,7 @@ open class FileProperties {
     )
     static let templatesRemoveForTeam = Route(
         name: "templates/remove_for_team",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
@@ -1985,6 +1998,7 @@ open class FileProperties {
     )
     static let templatesRemoveForUser = Route(
         name: "templates/remove_for_user",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
@@ -1995,6 +2009,7 @@ open class FileProperties {
     )
     static let templatesUpdateForTeam = Route(
         name: "templates/update_for_team",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
@@ -2005,6 +2020,7 @@ open class FileProperties {
     )
     static let templatesUpdateForUser = Route(
         name: "templates/update_for_user",
+        version: 1,
         namespace: "file_properties",
         deprecated: false,
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),

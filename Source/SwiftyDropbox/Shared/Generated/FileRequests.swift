@@ -891,6 +891,7 @@ open class FileRequests {
 
     static let create = Route(
         name: "create",
+        version: 1,
         namespace: "file_requests",
         deprecated: false,
         argSerializer: FileRequests.CreateFileRequestArgsSerializer(),
@@ -901,6 +902,7 @@ open class FileRequests {
     )
     static let get = Route(
         name: "get",
+        version: 1,
         namespace: "file_requests",
         deprecated: false,
         argSerializer: FileRequests.GetFileRequestArgsSerializer(),
@@ -911,6 +913,7 @@ open class FileRequests {
     )
     static let list_ = Route(
         name: "list",
+        version: 1,
         namespace: "file_requests",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
@@ -921,6 +924,7 @@ open class FileRequests {
     )
     static let update = Route(
         name: "update",
+        version: 1,
         namespace: "file_requests",
         deprecated: false,
         argSerializer: FileRequests.UpdateFileRequestArgsSerializer(),

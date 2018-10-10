@@ -8,6 +8,57 @@ import Foundation
 
 /// Datatypes and serializers for the team_policies namespace
 open class TeamPolicies {
+    /// The CameraUploadsPolicyState union
+    public enum CameraUploadsPolicyState: CustomStringConvertible {
+        /// Background camera uploads are disabled.
+        case disabled
+        /// Background camera uploads are allowed.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CameraUploadsPolicyStateSerializer().serialize(self)))"
+        }
+    }
+    open class CameraUploadsPolicyStateSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CameraUploadsPolicyState) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CameraUploadsPolicyState {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return CameraUploadsPolicyState.disabled
+                        case "enabled":
+                            return CameraUploadsPolicyState.enabled
+                        case "other":
+                            return CameraUploadsPolicyState.other
+                        default:
+                            return CameraUploadsPolicyState.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The EmmState union
     public enum EmmState: CustomStringConvertible {
         /// Emm token is disabled.

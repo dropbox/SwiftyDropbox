@@ -659,6 +659,7 @@ open class Users {
 
     static let getAccount = Route(
         name: "get_account",
+        version: 1,
         namespace: "users",
         deprecated: false,
         argSerializer: Users.GetAccountArgSerializer(),
@@ -669,6 +670,7 @@ open class Users {
     )
     static let getAccountBatch = Route(
         name: "get_account_batch",
+        version: 1,
         namespace: "users",
         deprecated: false,
         argSerializer: Users.GetAccountBatchArgSerializer(),
@@ -679,6 +681,7 @@ open class Users {
     )
     static let getCurrentAccount = Route(
         name: "get_current_account",
+        version: 1,
         namespace: "users",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
@@ -689,6 +692,7 @@ open class Users {
     )
     static let getSpaceUsage = Route(
         name: "get_space_usage",
+        version: 1,
         namespace: "users",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,

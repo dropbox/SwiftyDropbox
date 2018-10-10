@@ -55,7 +55,7 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.
-    @available(*, unavailable, message:"change_file_member_access is deprecated. Use update_file_member.")
+    @available(*, unavailable, message:"changeFileMemberAccess is deprecated. Use updateFileMember.")
     @discardableResult open func changeFileMemberAccess(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
         let route = Sharing.changeFileMemberAccess
         let serverArgs = Sharing.ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
@@ -116,7 +116,7 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.PathLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkError` object on failure.
-    @available(*, unavailable, message:"create_shared_link is deprecated. Use create_shared_link_with_settings.")
+    @available(*, unavailable, message:"createSharedLink is deprecated. Use createSharedLinkWithSettings.")
     @discardableResult open func createSharedLink(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) -> RpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer> {
         let route = Sharing.createSharedLink
         let serverArgs = Sharing.CreateSharedLinkArg(path: path, shortUrl: shortUrl, pendingUpload: pendingUpload)
@@ -242,7 +242,7 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.GetSharedLinksResult` object on
     /// success or a `Sharing.GetSharedLinksError` object on failure.
-    @available(*, unavailable, message:"get_shared_links is deprecated. Use list_shared_links.")
+    @available(*, unavailable, message:"getSharedLinks is deprecated. Use listSharedLinks.")
     @discardableResult open func getSharedLinks(path: String? = nil) -> RpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer> {
         let route = Sharing.getSharedLinks
         let serverArgs = Sharing.GetSharedLinksArg(path: path)
@@ -492,7 +492,7 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionIndividualResult`
     /// object on success or a `Sharing.RemoveFileMemberError` object on failure.
-    @available(*, unavailable, message:"remove_file_member is deprecated. Use remove_file_member_2.")
+    @available(*, unavailable, message:"removeFileMember is deprecated. Use removeFileMember2.")
     @discardableResult open func removeFileMember(file: String, member: Sharing.MemberSelector) -> RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
         let route = Sharing.removeFileMember
         let serverArgs = Sharing.RemoveFileMemberArg(file: file, member: member)
@@ -571,9 +571,9 @@ open class SharingRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.ShareFolderError` object on failure.
-    @discardableResult open func shareFolder(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
+    @discardableResult open func shareFolder(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, accessInheritance: Sharing.AccessInheritance = .inherit, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer> {
         let route = Sharing.shareFolder
-        let serverArgs = Sharing.ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, actions: actions, linkSettings: linkSettings)
+        let serverArgs = Sharing.ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, accessInheritance: accessInheritance, actions: actions, linkSettings: linkSettings)
         return client.request(route, serverArgs: serverArgs)
     }
 

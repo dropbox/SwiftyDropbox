@@ -205,7 +205,11 @@ open class Files {
         open let mute: Bool
         /// List of custom properties to add to file.
         open let propertyGroups: Array<FileProperties.PropertyGroup>?
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
+        /// Be more strict about how each WriteMode detects conflict. For example, always return a conflict error when
+        /// mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev", even if the existing
+        /// file has been deleted.
+        open let strictConflict: Bool
+        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, strictConflict: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
             self.mode = mode
@@ -213,6 +217,7 @@ open class Files {
             self.clientModified = clientModified
             self.mute = mute
             self.propertyGroups = propertyGroups
+            self.strictConflict = strictConflict
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
@@ -228,6 +233,7 @@ open class Files {
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
+            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
             ]
             return .dictionary(output)
         }
@@ -240,7 +246,8 @@ open class Files {
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
+                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
+                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -263,6 +270,7 @@ open class Files {
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
+            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
             ]
             return .dictionary(output)
         }
@@ -275,7 +283,8 @@ open class Files {
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
+                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
+                    return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1525,7 +1534,7 @@ open class Files {
     public enum DownloadZipError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
-        /// The folder is too large to download.
+        /// The folder or a file is too large to download.
         case tooLarge
         /// The folder has too many files to download.
         case tooManyFiles
@@ -1641,7 +1650,7 @@ open class Files {
         /// contained within  a shared folder.
         open let hasExplicitSharedMembers: Bool?
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
-        /// Content hash /developers/reference/content-hash page.
+        /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
         open let contentHash: String?
         public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
             stringValidator(minLength: 1)(id)
@@ -2119,6 +2128,75 @@ open class Files {
         }
     }
 
+    /// The GetTemporaryUploadLinkArg struct
+    open class GetTemporaryUploadLinkArg: CustomStringConvertible {
+        /// Contains the path and other optional modifiers for the future upload commit. Equivalent to the parameters
+        /// provided to upload.
+        open let commitInfo: Files.CommitInfo
+        /// How long before this link expires, in seconds.  Attempting to start an upload with this link longer than
+        /// this period  of time after link creation will result in an error.
+        open let duration: Double
+        public init(commitInfo: Files.CommitInfo, duration: Double = 14400.0) {
+            self.commitInfo = commitInfo
+            comparableValidator(minValue: 60.0, maxValue: 14400.0)(duration)
+            self.duration = duration
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryUploadLinkArgSerializer().serialize(self)))"
+        }
+    }
+    open class GetTemporaryUploadLinkArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTemporaryUploadLinkArg) -> JSON {
+            let output = [ 
+            "commit_info": Files.CommitInfoSerializer().serialize(value.commitInfo),
+            "duration": Serialization._DoubleSerializer.serialize(value.duration),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTemporaryUploadLinkArg {
+            switch json {
+                case .dictionary(let dict):
+                    let commitInfo = Files.CommitInfoSerializer().deserialize(dict["commit_info"] ?? .null)
+                    let duration = Serialization._DoubleSerializer.deserialize(dict["duration"] ?? .number(14400.0))
+                    return GetTemporaryUploadLinkArg(commitInfo: commitInfo, duration: duration)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GetTemporaryUploadLinkResult struct
+    open class GetTemporaryUploadLinkResult: CustomStringConvertible {
+        /// The temporary link which can be used to stream a file to a Dropbox location.
+        open let link: String
+        public init(link: String) {
+            stringValidator()(link)
+            self.link = link
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTemporaryUploadLinkResultSerializer().serialize(self)))"
+        }
+    }
+    open class GetTemporaryUploadLinkResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTemporaryUploadLinkResult) -> JSON {
+            let output = [ 
+            "link": Serialization._StringSerializer.serialize(value.link),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTemporaryUploadLinkResult {
+            switch json {
+                case .dictionary(let dict):
+                    let link = Serialization._StringSerializer.deserialize(dict["link"] ?? .null)
+                    return GetTemporaryUploadLinkResult(link: link)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Arguments for getThumbnailBatch.
     open class GetThumbnailBatchArg: CustomStringConvertible {
         /// List of files to get thumbnails.
@@ -2226,7 +2304,7 @@ open class Files {
     open class GetThumbnailBatchResultData: CustomStringConvertible {
         /// (no description)
         open let metadata: Files.FileMetadata
-        /// (no description)
+        /// A string containing the base64-encoded thumbnail data for this file.
         open let thumbnail: String
         public init(metadata: Files.FileMetadata, thumbnail: String) {
             self.metadata = metadata
@@ -2925,7 +3003,8 @@ open class Files {
 
     /// The LookupError union
     public enum LookupError: CustomStringConvertible {
-        /// An unspecified error.
+        /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
+        /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more information.
         case malformedPath(String?)
         /// There is nothing at the given path.
         case notFound
@@ -3808,9 +3887,9 @@ open class Files {
 
     /// The RestoreArg struct
     open class RestoreArg: CustomStringConvertible {
-        /// The path to the file you want to restore.
+        /// The path to save the restored file.
         open let path: String
-        /// The revision to restore for the file.
+        /// The revision to restore.
         open let rev: String
         public init(path: String, rev: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
@@ -3849,7 +3928,7 @@ open class Files {
         case pathLookup(Files.LookupError)
         /// An error occurs when trying to restore the file to that path.
         case pathWrite(Files.WriteError)
-        /// The revision is invalid. It may point to a different file.
+        /// The revision is invalid. It may not exist.
         case invalidRevision
         /// An unspecified error.
         case other
@@ -5880,7 +5959,8 @@ open class Files {
 
     /// The WriteError union
     public enum WriteError: CustomStringConvertible {
-        /// An unspecified error.
+        /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
+        /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more information.
         case malformedPath(String?)
         /// Couldn't write to the target path because there was something in the way.
         case conflict(Files.WriteConflictError)
@@ -6036,6 +6116,7 @@ open class Files {
 
     static let alphaGetMetadata = Route(
         name: "alpha/get_metadata",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.AlphaGetMetadataArgSerializer(),
@@ -6046,6 +6127,7 @@ open class Files {
     )
     static let alphaUpload = Route(
         name: "alpha/upload",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.CommitInfoWithPropertiesSerializer(),
@@ -6054,8 +6136,20 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
+    static let copyV2 = Route(
+        name: "copy",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.RelocationResultSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let copy = Route(
         name: "copy",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.RelocationArgSerializer(),
@@ -6066,6 +6160,7 @@ open class Files {
     )
     static let copyBatch = Route(
         name: "copy_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.RelocationBatchArgSerializer(),
@@ -6076,6 +6171,7 @@ open class Files {
     )
     static let copyBatchCheck = Route(
         name: "copy_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6086,6 +6182,7 @@ open class Files {
     )
     static let copyReferenceGet = Route(
         name: "copy_reference/get",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetCopyReferenceArgSerializer(),
@@ -6096,6 +6193,7 @@ open class Files {
     )
     static let copyReferenceSave = Route(
         name: "copy_reference/save",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SaveCopyReferenceArgSerializer(),
@@ -6104,18 +6202,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let copyV2 = Route(
-        name: "copy_v2",
+    static let createFolderV2 = Route(
+        name: "create_folder",
+        version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.RelocationResultSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
+        argSerializer: Files.CreateFolderArgSerializer(),
+        responseSerializer: Files.CreateFolderResultSerializer(),
+        errorSerializer: Files.CreateFolderErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
     static let createFolder = Route(
         name: "create_folder",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.CreateFolderArgSerializer(),
@@ -6126,6 +6226,7 @@ open class Files {
     )
     static let createFolderBatch = Route(
         name: "create_folder_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.CreateFolderBatchArgSerializer(),
@@ -6136,6 +6237,7 @@ open class Files {
     )
     static let createFolderBatchCheck = Route(
         name: "create_folder_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6144,18 +6246,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let createFolderV2 = Route(
-        name: "create_folder_v2",
+    static let deleteV2 = Route(
+        name: "delete",
+        version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.CreateFolderArgSerializer(),
-        responseSerializer: Files.CreateFolderResultSerializer(),
-        errorSerializer: Files.CreateFolderErrorSerializer(),
+        argSerializer: Files.DeleteArgSerializer(),
+        responseSerializer: Files.DeleteResultSerializer(),
+        errorSerializer: Files.DeleteErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
     static let delete = Route(
         name: "delete",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.DeleteArgSerializer(),
@@ -6166,6 +6270,7 @@ open class Files {
     )
     static let deleteBatch = Route(
         name: "delete_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DeleteBatchArgSerializer(),
@@ -6176,6 +6281,7 @@ open class Files {
     )
     static let deleteBatchCheck = Route(
         name: "delete_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6184,18 +6290,9 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let deleteV2 = Route(
-        name: "delete_v2",
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.DeleteArgSerializer(),
-        responseSerializer: Files.DeleteResultSerializer(),
-        errorSerializer: Files.DeleteErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
     static let download = Route(
         name: "download",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DownloadArgSerializer(),
@@ -6206,6 +6303,7 @@ open class Files {
     )
     static let downloadZip = Route(
         name: "download_zip",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DownloadZipArgSerializer(),
@@ -6216,6 +6314,7 @@ open class Files {
     )
     static let getMetadata = Route(
         name: "get_metadata",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetMetadataArgSerializer(),
@@ -6226,6 +6325,7 @@ open class Files {
     )
     static let getPreview = Route(
         name: "get_preview",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.PreviewArgSerializer(),
@@ -6236,6 +6336,7 @@ open class Files {
     )
     static let getTemporaryLink = Route(
         name: "get_temporary_link",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetTemporaryLinkArgSerializer(),
@@ -6244,8 +6345,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let getTemporaryUploadLink = Route(
+        name: "get_temporary_upload_link",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.GetTemporaryUploadLinkArgSerializer(),
+        responseSerializer: Files.GetTemporaryUploadLinkResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let getThumbnail = Route(
         name: "get_thumbnail",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ThumbnailArgSerializer(),
@@ -6256,6 +6369,7 @@ open class Files {
     )
     static let getThumbnailBatch = Route(
         name: "get_thumbnail_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.GetThumbnailBatchArgSerializer(),
@@ -6266,6 +6380,7 @@ open class Files {
     )
     static let listFolder = Route(
         name: "list_folder",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderArgSerializer(),
@@ -6276,6 +6391,7 @@ open class Files {
     )
     static let listFolderContinue = Route(
         name: "list_folder/continue",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderContinueArgSerializer(),
@@ -6286,6 +6402,7 @@ open class Files {
     )
     static let listFolderGetLatestCursor = Route(
         name: "list_folder/get_latest_cursor",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderArgSerializer(),
@@ -6296,6 +6413,7 @@ open class Files {
     )
     static let listFolderLongpoll = Route(
         name: "list_folder/longpoll",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListFolderLongpollArgSerializer(),
@@ -6306,6 +6424,7 @@ open class Files {
     )
     static let listRevisions = Route(
         name: "list_revisions",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.ListRevisionsArgSerializer(),
@@ -6314,8 +6433,20 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let moveV2 = Route(
+        name: "move",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.RelocationResultSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let move = Route(
         name: "move",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Files.RelocationArgSerializer(),
@@ -6326,6 +6457,7 @@ open class Files {
     )
     static let moveBatch = Route(
         name: "move_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.RelocationBatchArgSerializer(),
@@ -6336,6 +6468,7 @@ open class Files {
     )
     static let moveBatchCheck = Route(
         name: "move_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6344,18 +6477,9 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
-    static let moveV2 = Route(
-        name: "move_v2",
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.RelocationResultSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
-                "style": "rpc"]
-    )
     static let permanentlyDelete = Route(
         name: "permanently_delete",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.DeleteArgSerializer(),
@@ -6366,6 +6490,7 @@ open class Files {
     )
     static let propertiesAdd = Route(
         name: "properties/add",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
@@ -6376,6 +6501,7 @@ open class Files {
     )
     static let propertiesOverwrite = Route(
         name: "properties/overwrite",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
@@ -6386,6 +6512,7 @@ open class Files {
     )
     static let propertiesRemove = Route(
         name: "properties/remove",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
@@ -6396,6 +6523,7 @@ open class Files {
     )
     static let propertiesTemplateGet = Route(
         name: "properties/template/get",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.GetTemplateArgSerializer(),
@@ -6406,6 +6534,7 @@ open class Files {
     )
     static let propertiesTemplateList = Route(
         name: "properties/template/list",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: Serialization._VoidSerializer,
@@ -6416,6 +6545,7 @@ open class Files {
     )
     static let propertiesUpdate = Route(
         name: "properties/update",
+        version: 1,
         namespace: "files",
         deprecated: true,
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
@@ -6426,6 +6556,7 @@ open class Files {
     )
     static let restore = Route(
         name: "restore",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.RestoreArgSerializer(),
@@ -6436,6 +6567,7 @@ open class Files {
     )
     static let saveUrl = Route(
         name: "save_url",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SaveUrlArgSerializer(),
@@ -6446,6 +6578,7 @@ open class Files {
     )
     static let saveUrlCheckJobStatus = Route(
         name: "save_url/check_job_status",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6456,6 +6589,7 @@ open class Files {
     )
     static let search = Route(
         name: "search",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.SearchArgSerializer(),
@@ -6466,6 +6600,7 @@ open class Files {
     )
     static let upload = Route(
         name: "upload",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.CommitInfoSerializer(),
@@ -6474,18 +6609,9 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
-    static let uploadSessionAppend = Route(
-        name: "upload_session/append",
-        namespace: "files",
-        deprecated: true,
-        argSerializer: Files.UploadSessionCursorSerializer(),
-        responseSerializer: Serialization._VoidSerializer,
-        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
-        attrs: ["host": "content",
-                "style": "upload"]
-    )
     static let uploadSessionAppendV2 = Route(
-        name: "upload_session/append_v2",
+        name: "upload_session/append",
+        version: 2,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionAppendArgSerializer(),
@@ -6494,8 +6620,20 @@ open class Files {
         attrs: ["host": "content",
                 "style": "upload"]
     )
+    static let uploadSessionAppend = Route(
+        name: "upload_session/append",
+        version: 1,
+        namespace: "files",
+        deprecated: true,
+        argSerializer: Files.UploadSessionCursorSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
+        attrs: ["host": "content",
+                "style": "upload"]
+    )
     static let uploadSessionFinish = Route(
         name: "upload_session/finish",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionFinishArgSerializer(),
@@ -6506,6 +6644,7 @@ open class Files {
     )
     static let uploadSessionFinishBatch = Route(
         name: "upload_session/finish_batch",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
@@ -6516,6 +6655,7 @@ open class Files {
     )
     static let uploadSessionFinishBatchCheck = Route(
         name: "upload_session/finish_batch/check",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -6526,6 +6666,7 @@ open class Files {
     )
     static let uploadSessionStart = Route(
         name: "upload_session/start",
+        version: 1,
         namespace: "files",
         deprecated: false,
         argSerializer: Files.UploadSessionStartArgSerializer(),

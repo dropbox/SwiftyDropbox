@@ -4796,16 +4796,82 @@ open class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    open class MembersDeactivateArg: CustomStringConvertible {
-        /// Identity of user to remove/suspend.
+    open class MembersDeactivateBaseArg: CustomStringConvertible {
+        /// Identity of user to remove/suspend/have their files moved.
         open let user: Team.UserSelectorArg
+        public init(user: Team.UserSelectorArg) {
+            self.user = user
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateBaseArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersDeactivateBaseArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersDeactivateBaseArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersDeactivateBaseArg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    return MembersDeactivateBaseArg(user: user)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersDataTransferArg struct
+    open class MembersDataTransferArg: Team.MembersDeactivateBaseArg {
+        /// Files from the deleted member account will be transferred to this user.
+        open let transferDestId: Team.UserSelectorArg
+        /// Errors during the transfer process will be sent via email to this user.
+        open let transferAdminId: Team.UserSelectorArg
+        public init(user: Team.UserSelectorArg, transferDestId: Team.UserSelectorArg, transferAdminId: Team.UserSelectorArg) {
+            self.transferDestId = transferDestId
+            self.transferAdminId = transferAdminId
+            super.init(user: user)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersDataTransferArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersDataTransferArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersDataTransferArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "transfer_dest_id": Team.UserSelectorArgSerializer().serialize(value.transferDestId),
+            "transfer_admin_id": Team.UserSelectorArgSerializer().serialize(value.transferAdminId),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersDataTransferArg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let transferDestId = Team.UserSelectorArgSerializer().deserialize(dict["transfer_dest_id"] ?? .null)
+                    let transferAdminId = Team.UserSelectorArgSerializer().deserialize(dict["transfer_admin_id"] ?? .null)
+                    return MembersDataTransferArg(user: user, transferDestId: transferDestId, transferAdminId: transferAdminId)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersDeactivateArg struct
+    open class MembersDeactivateArg: Team.MembersDeactivateBaseArg {
         /// If provided, controls if the user's data will be deleted on their linked devices.
         open let wipeData: Bool
         public init(user: Team.UserSelectorArg, wipeData: Bool = true) {
-            self.user = user
             self.wipeData = wipeData
+            super.init(user: user)
         }
-        open var description: String {
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersDeactivateArgSerializer().serialize(self)))"
         }
     }
@@ -5324,16 +5390,14 @@ open class Team {
         }
     }
 
-    /// The MembersRemoveError union
-    public enum MembersRemoveError: CustomStringConvertible {
+    /// The MembersTransferFilesError union
+    public enum MembersTransferFilesError: CustomStringConvertible {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
         case userNotInTeam
         /// An unspecified error.
         case other
-        /// The user is the last admin of the team, so it cannot be removed from it.
-        case removeLastAdmin
         /// Expected removed user and transfer_dest user to be different.
         case removedAndTransferDestShouldDiffer
         /// Expected removed user and transfer_admin user to be different.
@@ -5342,14 +5406,141 @@ open class Team {
         case transferDestUserNotFound
         /// The provided transfer_dest_id does not exist on this team.
         case transferDestUserNotInTeam
-        /// No matching user found for the argument transfer_admin_id.
-        case transferAdminUserNotFound
         /// The provided transfer_admin_id does not exist on this team.
         case transferAdminUserNotInTeam
+        /// No matching user found for the argument transfer_admin_id.
+        case transferAdminUserNotFound
         /// The transfer_admin_id argument must be provided when file transfer is requested.
         case unspecifiedTransferAdminId
         /// Specified transfer_admin user is not a team admin.
         case transferAdminIsNotAdmin
+        /// The recipient user's email is not verified.
+        case recipientNotVerified
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersTransferFilesErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MembersTransferFilesErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersTransferFilesError) -> JSON {
+            switch value {
+                case .userNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_found")
+                    return .dictionary(d)
+                case .userNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_in_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .removedAndTransferDestShouldDiffer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("removed_and_transfer_dest_should_differ")
+                    return .dictionary(d)
+                case .removedAndTransferAdminShouldDiffer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("removed_and_transfer_admin_should_differ")
+                    return .dictionary(d)
+                case .transferDestUserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_dest_user_not_found")
+                    return .dictionary(d)
+                case .transferDestUserNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_dest_user_not_in_team")
+                    return .dictionary(d)
+                case .transferAdminUserNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_user_not_in_team")
+                    return .dictionary(d)
+                case .transferAdminUserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_user_not_found")
+                    return .dictionary(d)
+                case .unspecifiedTransferAdminId:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unspecified_transfer_admin_id")
+                    return .dictionary(d)
+                case .transferAdminIsNotAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_is_not_admin")
+                    return .dictionary(d)
+                case .recipientNotVerified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("recipient_not_verified")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersTransferFilesError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersTransferFilesError.userNotFound
+                        case "user_not_in_team":
+                            return MembersTransferFilesError.userNotInTeam
+                        case "other":
+                            return MembersTransferFilesError.other
+                        case "removed_and_transfer_dest_should_differ":
+                            return MembersTransferFilesError.removedAndTransferDestShouldDiffer
+                        case "removed_and_transfer_admin_should_differ":
+                            return MembersTransferFilesError.removedAndTransferAdminShouldDiffer
+                        case "transfer_dest_user_not_found":
+                            return MembersTransferFilesError.transferDestUserNotFound
+                        case "transfer_dest_user_not_in_team":
+                            return MembersTransferFilesError.transferDestUserNotInTeam
+                        case "transfer_admin_user_not_in_team":
+                            return MembersTransferFilesError.transferAdminUserNotInTeam
+                        case "transfer_admin_user_not_found":
+                            return MembersTransferFilesError.transferAdminUserNotFound
+                        case "unspecified_transfer_admin_id":
+                            return MembersTransferFilesError.unspecifiedTransferAdminId
+                        case "transfer_admin_is_not_admin":
+                            return MembersTransferFilesError.transferAdminIsNotAdmin
+                        case "recipient_not_verified":
+                            return MembersTransferFilesError.recipientNotVerified
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersRemoveError union
+    public enum MembersRemoveError: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+        /// Expected removed user and transfer_dest user to be different.
+        case removedAndTransferDestShouldDiffer
+        /// Expected removed user and transfer_admin user to be different.
+        case removedAndTransferAdminShouldDiffer
+        /// No matching user found for the argument transfer_dest_id.
+        case transferDestUserNotFound
+        /// The provided transfer_dest_id does not exist on this team.
+        case transferDestUserNotInTeam
+        /// The provided transfer_admin_id does not exist on this team.
+        case transferAdminUserNotInTeam
+        /// No matching user found for the argument transfer_admin_id.
+        case transferAdminUserNotFound
+        /// The transfer_admin_id argument must be provided when file transfer is requested.
+        case unspecifiedTransferAdminId
+        /// Specified transfer_admin user is not a team admin.
+        case transferAdminIsNotAdmin
+        /// The recipient user's email is not verified.
+        case recipientNotVerified
+        /// The user is the last admin of the team, so it cannot be removed from it.
+        case removeLastAdmin
         /// Cannot keep account and transfer the data to another user at the same time.
         case cannotKeepAccountAndTransfer
         /// Cannot keep account and delete the data at the same time. To keep the account the argument wipe_data should
@@ -5380,10 +5571,6 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
                     return .dictionary(d)
-                case .removeLastAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("remove_last_admin")
-                    return .dictionary(d)
                 case .removedAndTransferDestShouldDiffer:
                     var d = [String: JSON]()
                     d[".tag"] = .str("removed_and_transfer_dest_should_differ")
@@ -5400,13 +5587,13 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("transfer_dest_user_not_in_team")
                     return .dictionary(d)
-                case .transferAdminUserNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("transfer_admin_user_not_found")
-                    return .dictionary(d)
                 case .transferAdminUserNotInTeam:
                     var d = [String: JSON]()
                     d[".tag"] = .str("transfer_admin_user_not_in_team")
+                    return .dictionary(d)
+                case .transferAdminUserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_user_not_found")
                     return .dictionary(d)
                 case .unspecifiedTransferAdminId:
                     var d = [String: JSON]()
@@ -5415,6 +5602,14 @@ open class Team {
                 case .transferAdminIsNotAdmin:
                     var d = [String: JSON]()
                     d[".tag"] = .str("transfer_admin_is_not_admin")
+                    return .dictionary(d)
+                case .recipientNotVerified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("recipient_not_verified")
+                    return .dictionary(d)
+                case .removeLastAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("remove_last_admin")
                     return .dictionary(d)
                 case .cannotKeepAccountAndTransfer:
                     var d = [String: JSON]()
@@ -5445,8 +5640,6 @@ open class Team {
                             return MembersRemoveError.userNotInTeam
                         case "other":
                             return MembersRemoveError.other
-                        case "remove_last_admin":
-                            return MembersRemoveError.removeLastAdmin
                         case "removed_and_transfer_dest_should_differ":
                             return MembersRemoveError.removedAndTransferDestShouldDiffer
                         case "removed_and_transfer_admin_should_differ":
@@ -5455,14 +5648,18 @@ open class Team {
                             return MembersRemoveError.transferDestUserNotFound
                         case "transfer_dest_user_not_in_team":
                             return MembersRemoveError.transferDestUserNotInTeam
-                        case "transfer_admin_user_not_found":
-                            return MembersRemoveError.transferAdminUserNotFound
                         case "transfer_admin_user_not_in_team":
                             return MembersRemoveError.transferAdminUserNotInTeam
+                        case "transfer_admin_user_not_found":
+                            return MembersRemoveError.transferAdminUserNotFound
                         case "unspecified_transfer_admin_id":
                             return MembersRemoveError.unspecifiedTransferAdminId
                         case "transfer_admin_is_not_admin":
                             return MembersRemoveError.transferAdminIsNotAdmin
+                        case "recipient_not_verified":
+                            return MembersRemoveError.recipientNotVerified
+                        case "remove_last_admin":
+                            return MembersRemoveError.removeLastAdmin
                         case "cannot_keep_account_and_transfer":
                             return MembersRemoveError.cannotKeepAccountAndTransfer
                         case "cannot_keep_account_and_delete_data":
@@ -5933,6 +6130,161 @@ open class Team {
                             return MembersSuspendError.suspendLastAdmin
                         case "team_license_limit":
                             return MembersSuspendError.teamLicenseLimit
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersTransferFormerMembersFilesError union
+    public enum MembersTransferFormerMembersFilesError: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+        /// Expected removed user and transfer_dest user to be different.
+        case removedAndTransferDestShouldDiffer
+        /// Expected removed user and transfer_admin user to be different.
+        case removedAndTransferAdminShouldDiffer
+        /// No matching user found for the argument transfer_dest_id.
+        case transferDestUserNotFound
+        /// The provided transfer_dest_id does not exist on this team.
+        case transferDestUserNotInTeam
+        /// The provided transfer_admin_id does not exist on this team.
+        case transferAdminUserNotInTeam
+        /// No matching user found for the argument transfer_admin_id.
+        case transferAdminUserNotFound
+        /// The transfer_admin_id argument must be provided when file transfer is requested.
+        case unspecifiedTransferAdminId
+        /// Specified transfer_admin user is not a team admin.
+        case transferAdminIsNotAdmin
+        /// The recipient user's email is not verified.
+        case recipientNotVerified
+        /// The user's data is being transferred. Please wait some time before retrying.
+        case userDataIsBeingTransferred
+        /// No matching removed user found for the argument user.
+        case userNotRemoved
+        /// User files aren't transferable anymore.
+        case userDataCannotBeTransferred
+        /// User's data has already been transferred to another user.
+        case userDataAlreadyTransferred
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersTransferFormerMembersFilesErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MembersTransferFormerMembersFilesErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersTransferFormerMembersFilesError) -> JSON {
+            switch value {
+                case .userNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_found")
+                    return .dictionary(d)
+                case .userNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_in_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .removedAndTransferDestShouldDiffer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("removed_and_transfer_dest_should_differ")
+                    return .dictionary(d)
+                case .removedAndTransferAdminShouldDiffer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("removed_and_transfer_admin_should_differ")
+                    return .dictionary(d)
+                case .transferDestUserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_dest_user_not_found")
+                    return .dictionary(d)
+                case .transferDestUserNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_dest_user_not_in_team")
+                    return .dictionary(d)
+                case .transferAdminUserNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_user_not_in_team")
+                    return .dictionary(d)
+                case .transferAdminUserNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_user_not_found")
+                    return .dictionary(d)
+                case .unspecifiedTransferAdminId:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unspecified_transfer_admin_id")
+                    return .dictionary(d)
+                case .transferAdminIsNotAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transfer_admin_is_not_admin")
+                    return .dictionary(d)
+                case .recipientNotVerified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("recipient_not_verified")
+                    return .dictionary(d)
+                case .userDataIsBeingTransferred:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_data_is_being_transferred")
+                    return .dictionary(d)
+                case .userNotRemoved:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_removed")
+                    return .dictionary(d)
+                case .userDataCannotBeTransferred:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_data_cannot_be_transferred")
+                    return .dictionary(d)
+                case .userDataAlreadyTransferred:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_data_already_transferred")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersTransferFormerMembersFilesError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersTransferFormerMembersFilesError.userNotFound
+                        case "user_not_in_team":
+                            return MembersTransferFormerMembersFilesError.userNotInTeam
+                        case "other":
+                            return MembersTransferFormerMembersFilesError.other
+                        case "removed_and_transfer_dest_should_differ":
+                            return MembersTransferFormerMembersFilesError.removedAndTransferDestShouldDiffer
+                        case "removed_and_transfer_admin_should_differ":
+                            return MembersTransferFormerMembersFilesError.removedAndTransferAdminShouldDiffer
+                        case "transfer_dest_user_not_found":
+                            return MembersTransferFormerMembersFilesError.transferDestUserNotFound
+                        case "transfer_dest_user_not_in_team":
+                            return MembersTransferFormerMembersFilesError.transferDestUserNotInTeam
+                        case "transfer_admin_user_not_in_team":
+                            return MembersTransferFormerMembersFilesError.transferAdminUserNotInTeam
+                        case "transfer_admin_user_not_found":
+                            return MembersTransferFormerMembersFilesError.transferAdminUserNotFound
+                        case "unspecified_transfer_admin_id":
+                            return MembersTransferFormerMembersFilesError.unspecifiedTransferAdminId
+                        case "transfer_admin_is_not_admin":
+                            return MembersTransferFormerMembersFilesError.transferAdminIsNotAdmin
+                        case "recipient_not_verified":
+                            return MembersTransferFormerMembersFilesError.recipientNotVerified
+                        case "user_data_is_being_transferred":
+                            return MembersTransferFormerMembersFilesError.userDataIsBeingTransferred
+                        case "user_not_removed":
+                            return MembersTransferFormerMembersFilesError.userNotRemoved
+                        case "user_data_cannot_be_transferred":
+                            return MembersTransferFormerMembersFilesError.userDataCannotBeTransferred
+                        case "user_data_already_transferred":
+                            return MembersTransferFormerMembersFilesError.userDataAlreadyTransferred
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -8917,6 +9269,7 @@ open class Team {
 
     static let devicesListMemberDevices = Route(
         name: "devices/list_member_devices",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ListMemberDevicesArgSerializer(),
@@ -8927,6 +9280,7 @@ open class Team {
     )
     static let devicesListMembersDevices = Route(
         name: "devices/list_members_devices",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ListMembersDevicesArgSerializer(),
@@ -8937,6 +9291,7 @@ open class Team {
     )
     static let devicesListTeamDevices = Route(
         name: "devices/list_team_devices",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: Team.ListTeamDevicesArgSerializer(),
@@ -8947,6 +9302,7 @@ open class Team {
     )
     static let devicesRevokeDeviceSession = Route(
         name: "devices/revoke_device_session",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.RevokeDeviceSessionArgSerializer(),
@@ -8957,6 +9313,7 @@ open class Team {
     )
     static let devicesRevokeDeviceSessionBatch = Route(
         name: "devices/revoke_device_session_batch",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.RevokeDeviceSessionBatchArgSerializer(),
@@ -8967,6 +9324,7 @@ open class Team {
     )
     static let featuresGetValues = Route(
         name: "features/get_values",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.FeaturesGetValuesBatchArgSerializer(),
@@ -8977,6 +9335,7 @@ open class Team {
     )
     static let getInfo = Route(
         name: "get_info",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
@@ -8987,6 +9346,7 @@ open class Team {
     )
     static let groupsCreate = Route(
         name: "groups/create",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupCreateArgSerializer(),
@@ -8997,6 +9357,7 @@ open class Team {
     )
     static let groupsDelete = Route(
         name: "groups/delete",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupSelectorSerializer(),
@@ -9007,6 +9368,7 @@ open class Team {
     )
     static let groupsGetInfo = Route(
         name: "groups/get_info",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsSelectorSerializer(),
@@ -9017,6 +9379,7 @@ open class Team {
     )
     static let groupsJobStatusGet = Route(
         name: "groups/job_status/get",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -9027,6 +9390,7 @@ open class Team {
     )
     static let groupsList = Route(
         name: "groups/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsListArgSerializer(),
@@ -9037,6 +9401,7 @@ open class Team {
     )
     static let groupsListContinue = Route(
         name: "groups/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsListContinueArgSerializer(),
@@ -9047,6 +9412,7 @@ open class Team {
     )
     static let groupsMembersAdd = Route(
         name: "groups/members/add",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupMembersAddArgSerializer(),
@@ -9057,6 +9423,7 @@ open class Team {
     )
     static let groupsMembersList = Route(
         name: "groups/members/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsMembersListArgSerializer(),
@@ -9067,6 +9434,7 @@ open class Team {
     )
     static let groupsMembersListContinue = Route(
         name: "groups/members/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupsMembersListContinueArgSerializer(),
@@ -9077,6 +9445,7 @@ open class Team {
     )
     static let groupsMembersRemove = Route(
         name: "groups/members/remove",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupMembersRemoveArgSerializer(),
@@ -9087,6 +9456,7 @@ open class Team {
     )
     static let groupsMembersSetAccessType = Route(
         name: "groups/members/set_access_type",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupMembersSetAccessTypeArgSerializer(),
@@ -9097,6 +9467,7 @@ open class Team {
     )
     static let groupsUpdate = Route(
         name: "groups/update",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.GroupUpdateArgsSerializer(),
@@ -9107,6 +9478,7 @@ open class Team {
     )
     static let linkedAppsListMemberLinkedApps = Route(
         name: "linked_apps/list_member_linked_apps",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ListMemberAppsArgSerializer(),
@@ -9117,6 +9489,7 @@ open class Team {
     )
     static let linkedAppsListMembersLinkedApps = Route(
         name: "linked_apps/list_members_linked_apps",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ListMembersAppsArgSerializer(),
@@ -9127,6 +9500,7 @@ open class Team {
     )
     static let linkedAppsListTeamLinkedApps = Route(
         name: "linked_apps/list_team_linked_apps",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: Team.ListTeamAppsArgSerializer(),
@@ -9137,6 +9511,7 @@ open class Team {
     )
     static let linkedAppsRevokeLinkedApp = Route(
         name: "linked_apps/revoke_linked_app",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.RevokeLinkedApiAppArgSerializer(),
@@ -9147,6 +9522,7 @@ open class Team {
     )
     static let linkedAppsRevokeLinkedAppBatch = Route(
         name: "linked_apps/revoke_linked_app_batch",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.RevokeLinkedApiAppBatchArgSerializer(),
@@ -9157,6 +9533,7 @@ open class Team {
     )
     static let memberSpaceLimitsExcludedUsersAdd = Route(
         name: "member_space_limits/excluded_users/add",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ExcludedUsersUpdateArgSerializer(),
@@ -9167,6 +9544,7 @@ open class Team {
     )
     static let memberSpaceLimitsExcludedUsersList = Route(
         name: "member_space_limits/excluded_users/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ExcludedUsersListArgSerializer(),
@@ -9177,6 +9555,7 @@ open class Team {
     )
     static let memberSpaceLimitsExcludedUsersListContinue = Route(
         name: "member_space_limits/excluded_users/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ExcludedUsersListContinueArgSerializer(),
@@ -9187,6 +9566,7 @@ open class Team {
     )
     static let memberSpaceLimitsExcludedUsersRemove = Route(
         name: "member_space_limits/excluded_users/remove",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.ExcludedUsersUpdateArgSerializer(),
@@ -9197,6 +9577,7 @@ open class Team {
     )
     static let memberSpaceLimitsGetCustomQuota = Route(
         name: "member_space_limits/get_custom_quota",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.CustomQuotaUsersArgSerializer(),
@@ -9207,6 +9588,7 @@ open class Team {
     )
     static let memberSpaceLimitsRemoveCustomQuota = Route(
         name: "member_space_limits/remove_custom_quota",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.CustomQuotaUsersArgSerializer(),
@@ -9217,6 +9599,7 @@ open class Team {
     )
     static let memberSpaceLimitsSetCustomQuota = Route(
         name: "member_space_limits/set_custom_quota",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.SetCustomQuotaArgSerializer(),
@@ -9227,6 +9610,7 @@ open class Team {
     )
     static let membersAdd = Route(
         name: "members/add",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersAddArgSerializer(),
@@ -9237,6 +9621,7 @@ open class Team {
     )
     static let membersAddJobStatusGet = Route(
         name: "members/add/job_status/get",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -9247,6 +9632,7 @@ open class Team {
     )
     static let membersGetInfo = Route(
         name: "members/get_info",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersGetInfoArgsSerializer(),
@@ -9257,6 +9643,7 @@ open class Team {
     )
     static let membersList = Route(
         name: "members/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersListArgSerializer(),
@@ -9267,6 +9654,7 @@ open class Team {
     )
     static let membersListContinue = Route(
         name: "members/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersListContinueArgSerializer(),
@@ -9275,8 +9663,31 @@ open class Team {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let membersMoveFormerMemberFiles = Route(
+        name: "members/move_former_member_files",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersDataTransferArgSerializer(),
+        responseSerializer: Async.LaunchEmptyResultSerializer(),
+        errorSerializer: Team.MembersTransferFormerMembersFilesErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let membersMoveFormerMemberFilesJobStatusCheck = Route(
+        name: "members/move_former_member_files/job_status/check",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Async.PollEmptyResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let membersRecover = Route(
         name: "members/recover",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersRecoverArgSerializer(),
@@ -9287,6 +9698,7 @@ open class Team {
     )
     static let membersRemove = Route(
         name: "members/remove",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersRemoveArgSerializer(),
@@ -9297,6 +9709,7 @@ open class Team {
     )
     static let membersRemoveJobStatusGet = Route(
         name: "members/remove/job_status/get",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -9307,6 +9720,7 @@ open class Team {
     )
     static let membersSendWelcomeEmail = Route(
         name: "members/send_welcome_email",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.UserSelectorArgSerializer(),
@@ -9317,6 +9731,7 @@ open class Team {
     )
     static let membersSetAdminPermissions = Route(
         name: "members/set_admin_permissions",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersSetPermissionsArgSerializer(),
@@ -9327,6 +9742,7 @@ open class Team {
     )
     static let membersSetProfile = Route(
         name: "members/set_profile",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersSetProfileArgSerializer(),
@@ -9337,6 +9753,7 @@ open class Team {
     )
     static let membersSuspend = Route(
         name: "members/suspend",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersDeactivateArgSerializer(),
@@ -9347,6 +9764,7 @@ open class Team {
     )
     static let membersUnsuspend = Route(
         name: "members/unsuspend",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.MembersUnsuspendArgSerializer(),
@@ -9357,6 +9775,7 @@ open class Team {
     )
     static let namespacesList = Route(
         name: "namespaces/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamNamespacesListArgSerializer(),
@@ -9367,6 +9786,7 @@ open class Team {
     )
     static let namespacesListContinue = Route(
         name: "namespaces/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamNamespacesListContinueArgSerializer(),
@@ -9377,6 +9797,7 @@ open class Team {
     )
     static let propertiesTemplateAdd = Route(
         name: "properties/template/add",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: FileProperties.AddTemplateArgSerializer(),
@@ -9387,6 +9808,7 @@ open class Team {
     )
     static let propertiesTemplateGet = Route(
         name: "properties/template/get",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: FileProperties.GetTemplateArgSerializer(),
@@ -9397,6 +9819,7 @@ open class Team {
     )
     static let propertiesTemplateList = Route(
         name: "properties/template/list",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: Serialization._VoidSerializer,
@@ -9407,6 +9830,7 @@ open class Team {
     )
     static let propertiesTemplateUpdate = Route(
         name: "properties/template/update",
+        version: 1,
         namespace: "team",
         deprecated: true,
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
@@ -9417,6 +9841,7 @@ open class Team {
     )
     static let reportsGetActivity = Route(
         name: "reports/get_activity",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.DateRangeSerializer(),
@@ -9427,6 +9852,7 @@ open class Team {
     )
     static let reportsGetDevices = Route(
         name: "reports/get_devices",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.DateRangeSerializer(),
@@ -9437,6 +9863,7 @@ open class Team {
     )
     static let reportsGetMembership = Route(
         name: "reports/get_membership",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.DateRangeSerializer(),
@@ -9447,6 +9874,7 @@ open class Team {
     )
     static let reportsGetStorage = Route(
         name: "reports/get_storage",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.DateRangeSerializer(),
@@ -9457,6 +9885,7 @@ open class Team {
     )
     static let teamFolderActivate = Route(
         name: "team_folder/activate",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderIdArgSerializer(),
@@ -9467,6 +9896,7 @@ open class Team {
     )
     static let teamFolderArchive = Route(
         name: "team_folder/archive",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderArchiveArgSerializer(),
@@ -9477,6 +9907,7 @@ open class Team {
     )
     static let teamFolderArchiveCheck = Route(
         name: "team_folder/archive/check",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -9487,6 +9918,7 @@ open class Team {
     )
     static let teamFolderCreate = Route(
         name: "team_folder/create",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderCreateArgSerializer(),
@@ -9497,6 +9929,7 @@ open class Team {
     )
     static let teamFolderGetInfo = Route(
         name: "team_folder/get_info",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderIdListArgSerializer(),
@@ -9507,6 +9940,7 @@ open class Team {
     )
     static let teamFolderList = Route(
         name: "team_folder/list",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderListArgSerializer(),
@@ -9517,6 +9951,7 @@ open class Team {
     )
     static let teamFolderListContinue = Route(
         name: "team_folder/list/continue",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderListContinueArgSerializer(),
@@ -9527,6 +9962,7 @@ open class Team {
     )
     static let teamFolderPermanentlyDelete = Route(
         name: "team_folder/permanently_delete",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderIdArgSerializer(),
@@ -9537,6 +9973,7 @@ open class Team {
     )
     static let teamFolderRename = Route(
         name: "team_folder/rename",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderRenameArgSerializer(),
@@ -9547,6 +9984,7 @@ open class Team {
     )
     static let teamFolderUpdateSyncSettings = Route(
         name: "team_folder/update_sync_settings",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Team.TeamFolderUpdateSyncSettingsArgSerializer(),
@@ -9557,6 +9995,7 @@ open class Team {
     )
     static let tokenGetAuthenticatedAdmin = Route(
         name: "token/get_authenticated_admin",
+        version: 1,
         namespace: "team",
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,

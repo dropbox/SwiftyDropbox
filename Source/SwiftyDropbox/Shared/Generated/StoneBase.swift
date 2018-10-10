@@ -8,6 +8,7 @@ import Foundation
 
 open class Route<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer> {
     open let name: String
+    open let version: Int32
     open let namespace: String
     open let deprecated: Bool
     open let argSerializer: ASerial
@@ -15,9 +16,11 @@ open class Route<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSON
     open let errorSerializer: ESerial
     open let attrs: [String: String?]
 
-    public init(name: String, namespace: String, deprecated: Bool, argSerializer: ASerial,
-                responseSerializer: RSerial, errorSerializer: ESerial, attrs: [String: String?]) {
+    public init(name: String, version: Int32, namespace: String, deprecated: Bool,
+                argSerializer: ASerial, responseSerializer: RSerial, errorSerializer: ESerial,
+                attrs: [String: String?]) {
         self.name = name
+        self.version = version
         self.namespace = namespace
         self.deprecated = deprecated
         self.argSerializer = argSerializer

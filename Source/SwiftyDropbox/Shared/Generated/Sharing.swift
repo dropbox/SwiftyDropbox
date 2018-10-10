@@ -1150,6 +1150,8 @@ open class Sharing {
         case inviteViewer
         /// Add a member with view permissions but no comment permissions.
         case inviteViewerNoComment
+        /// Add a member with edit permissions.
+        case inviteEditor
         /// Stop sharing this file.
         case unshare
         /// Relinquish one's own membership to the file.
@@ -1189,6 +1191,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("invite_viewer_no_comment")
                     return .dictionary(d)
+                case .inviteEditor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_editor")
+                    return .dictionary(d)
                 case .unshare:
                     var d = [String: JSON]()
                     d[".tag"] = .str("unshare")
@@ -1226,6 +1232,8 @@ open class Sharing {
                             return FileAction.inviteViewer
                         case "invite_viewer_no_comment":
                             return FileAction.inviteViewerNoComment
+                        case "invite_editor":
+                            return FileAction.inviteEditor
                         case "unshare":
                             return FileAction.unshare
                         case "relinquish_membership":
@@ -2579,7 +2587,8 @@ open class Sharing {
 
     /// The information about a member of the shared content.
     open class MembershipInfo: CustomStringConvertible {
-        /// The access type for this member.
+        /// The access type for this member. It contains inherited access type from parent folder, and acquired access
+        /// type from this folder.
         open let accessType: Sharing.AccessLevel
         /// The permissions that requesting user has on this member. The set of permissions corresponds to the
         /// MemberActions in the request.
@@ -5914,7 +5923,9 @@ open class Sharing {
         open let sharedLinkPolicy: Sharing.SharedLinkPolicy?
         /// Who can enable/disable viewer info for this shared folder.
         open let viewerInfoPolicy: Sharing.ViewerInfoPolicy?
-        public init(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil) {
+        /// The access inheritance settings for the folder.
+        open let accessInheritance: Sharing.AccessInheritance
+        public init(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
             self.aclUpdatePolicy = aclUpdatePolicy
             self.forceAsync = forceAsync
             self.memberPolicy = memberPolicy
@@ -5922,6 +5933,7 @@ open class Sharing {
             self.path = path
             self.sharedLinkPolicy = sharedLinkPolicy
             self.viewerInfoPolicy = viewerInfoPolicy
+            self.accessInheritance = accessInheritance
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderArgBaseSerializer().serialize(self)))"
@@ -5937,6 +5949,7 @@ open class Sharing {
             "member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.memberPolicy),
             "shared_link_policy": NullableSerializer(Sharing.SharedLinkPolicySerializer()).serialize(value.sharedLinkPolicy),
             "viewer_info_policy": NullableSerializer(Sharing.ViewerInfoPolicySerializer()).serialize(value.viewerInfoPolicy),
+            "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
             ]
             return .dictionary(output)
         }
@@ -5949,7 +5962,8 @@ open class Sharing {
                     let memberPolicy = NullableSerializer(Sharing.MemberPolicySerializer()).deserialize(dict["member_policy"] ?? .null)
                     let sharedLinkPolicy = NullableSerializer(Sharing.SharedLinkPolicySerializer()).deserialize(dict["shared_link_policy"] ?? .null)
                     let viewerInfoPolicy = NullableSerializer(Sharing.ViewerInfoPolicySerializer()).deserialize(dict["viewer_info_policy"] ?? .null)
-                    return ShareFolderArgBase(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy)
+                    let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
+                    return ShareFolderArgBase(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, accessInheritance: accessInheritance)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5964,10 +5978,10 @@ open class Sharing {
         open let actions: Array<Sharing.FolderAction>?
         /// Settings on the link for this folder.
         open let linkSettings: Sharing.LinkSettings?
-        public init(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil) {
+        public init(path: String, aclUpdatePolicy: Sharing.AclUpdatePolicy? = nil, forceAsync: Bool = false, memberPolicy: Sharing.MemberPolicy? = nil, sharedLinkPolicy: Sharing.SharedLinkPolicy? = nil, viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil, accessInheritance: Sharing.AccessInheritance = .inherit, actions: Array<Sharing.FolderAction>? = nil, linkSettings: Sharing.LinkSettings? = nil) {
             self.actions = actions
             self.linkSettings = linkSettings
-            super.init(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy)
+            super.init(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, accessInheritance: accessInheritance)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ShareFolderArgSerializer().serialize(self)))"
@@ -5983,6 +5997,7 @@ open class Sharing {
             "member_policy": NullableSerializer(Sharing.MemberPolicySerializer()).serialize(value.memberPolicy),
             "shared_link_policy": NullableSerializer(Sharing.SharedLinkPolicySerializer()).serialize(value.sharedLinkPolicy),
             "viewer_info_policy": NullableSerializer(Sharing.ViewerInfoPolicySerializer()).serialize(value.viewerInfoPolicy),
+            "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
             "actions": NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).serialize(value.actions),
             "link_settings": NullableSerializer(Sharing.LinkSettingsSerializer()).serialize(value.linkSettings),
             ]
@@ -5997,9 +6012,10 @@ open class Sharing {
                     let memberPolicy = NullableSerializer(Sharing.MemberPolicySerializer()).deserialize(dict["member_policy"] ?? .null)
                     let sharedLinkPolicy = NullableSerializer(Sharing.SharedLinkPolicySerializer()).deserialize(dict["shared_link_policy"] ?? .null)
                     let viewerInfoPolicy = NullableSerializer(Sharing.ViewerInfoPolicySerializer()).deserialize(dict["viewer_info_policy"] ?? .null)
+                    let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
                     let actions = NullableSerializer(ArraySerializer(Sharing.FolderActionSerializer())).deserialize(dict["actions"] ?? .null)
                     let linkSettings = NullableSerializer(Sharing.LinkSettingsSerializer()).deserialize(dict["link_settings"] ?? .null)
-                    return ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, actions: actions, linkSettings: linkSettings)
+                    return ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy, forceAsync: forceAsync, memberPolicy: memberPolicy, sharedLinkPolicy: sharedLinkPolicy, viewerInfoPolicy: viewerInfoPolicy, accessInheritance: accessInheritance, actions: actions, linkSettings: linkSettings)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8287,6 +8303,7 @@ open class Sharing {
 
     static let addFileMember = Route(
         name: "add_file_member",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.AddFileMemberArgsSerializer(),
@@ -8297,6 +8314,7 @@ open class Sharing {
     )
     static let addFolderMember = Route(
         name: "add_folder_member",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.AddFolderMemberArgSerializer(),
@@ -8307,6 +8325,7 @@ open class Sharing {
     )
     static let changeFileMemberAccess = Route(
         name: "change_file_member_access",
+        version: 1,
         namespace: "sharing",
         deprecated: true,
         argSerializer: Sharing.ChangeFileMemberAccessArgsSerializer(),
@@ -8317,6 +8336,7 @@ open class Sharing {
     )
     static let checkJobStatus = Route(
         name: "check_job_status",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -8327,6 +8347,7 @@ open class Sharing {
     )
     static let checkRemoveMemberJobStatus = Route(
         name: "check_remove_member_job_status",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -8337,6 +8358,7 @@ open class Sharing {
     )
     static let checkShareJobStatus = Route(
         name: "check_share_job_status",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
@@ -8347,6 +8369,7 @@ open class Sharing {
     )
     static let createSharedLink = Route(
         name: "create_shared_link",
+        version: 1,
         namespace: "sharing",
         deprecated: true,
         argSerializer: Sharing.CreateSharedLinkArgSerializer(),
@@ -8357,6 +8380,7 @@ open class Sharing {
     )
     static let createSharedLinkWithSettings = Route(
         name: "create_shared_link_with_settings",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.CreateSharedLinkWithSettingsArgSerializer(),
@@ -8367,6 +8391,7 @@ open class Sharing {
     )
     static let getFileMetadata = Route(
         name: "get_file_metadata",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.GetFileMetadataArgSerializer(),
@@ -8377,6 +8402,7 @@ open class Sharing {
     )
     static let getFileMetadataBatch = Route(
         name: "get_file_metadata/batch",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.GetFileMetadataBatchArgSerializer(),
@@ -8387,6 +8413,7 @@ open class Sharing {
     )
     static let getFolderMetadata = Route(
         name: "get_folder_metadata",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.GetMetadataArgsSerializer(),
@@ -8397,6 +8424,7 @@ open class Sharing {
     )
     static let getSharedLinkFile = Route(
         name: "get_shared_link_file",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
@@ -8407,6 +8435,7 @@ open class Sharing {
     )
     static let getSharedLinkMetadata = Route(
         name: "get_shared_link_metadata",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
@@ -8417,6 +8446,7 @@ open class Sharing {
     )
     static let getSharedLinks = Route(
         name: "get_shared_links",
+        version: 1,
         namespace: "sharing",
         deprecated: true,
         argSerializer: Sharing.GetSharedLinksArgSerializer(),
@@ -8427,6 +8457,7 @@ open class Sharing {
     )
     static let listFileMembers = Route(
         name: "list_file_members",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFileMembersArgSerializer(),
@@ -8437,6 +8468,7 @@ open class Sharing {
     )
     static let listFileMembersBatch = Route(
         name: "list_file_members/batch",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFileMembersBatchArgSerializer(),
@@ -8447,6 +8479,7 @@ open class Sharing {
     )
     static let listFileMembersContinue = Route(
         name: "list_file_members/continue",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFileMembersContinueArgSerializer(),
@@ -8457,6 +8490,7 @@ open class Sharing {
     )
     static let listFolderMembers = Route(
         name: "list_folder_members",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFolderMembersArgsSerializer(),
@@ -8467,6 +8501,7 @@ open class Sharing {
     )
     static let listFolderMembersContinue = Route(
         name: "list_folder_members/continue",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFolderMembersContinueArgSerializer(),
@@ -8477,6 +8512,7 @@ open class Sharing {
     )
     static let listFolders = Route(
         name: "list_folders",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFoldersArgsSerializer(),
@@ -8487,6 +8523,7 @@ open class Sharing {
     )
     static let listFoldersContinue = Route(
         name: "list_folders/continue",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
@@ -8497,6 +8534,7 @@ open class Sharing {
     )
     static let listMountableFolders = Route(
         name: "list_mountable_folders",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFoldersArgsSerializer(),
@@ -8507,6 +8545,7 @@ open class Sharing {
     )
     static let listMountableFoldersContinue = Route(
         name: "list_mountable_folders/continue",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
@@ -8517,6 +8556,7 @@ open class Sharing {
     )
     static let listReceivedFiles = Route(
         name: "list_received_files",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFilesArgSerializer(),
@@ -8527,6 +8567,7 @@ open class Sharing {
     )
     static let listReceivedFilesContinue = Route(
         name: "list_received_files/continue",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListFilesContinueArgSerializer(),
@@ -8537,6 +8578,7 @@ open class Sharing {
     )
     static let listSharedLinks = Route(
         name: "list_shared_links",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ListSharedLinksArgSerializer(),
@@ -8547,6 +8589,7 @@ open class Sharing {
     )
     static let modifySharedLinkSettings = Route(
         name: "modify_shared_link_settings",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ModifySharedLinkSettingsArgsSerializer(),
@@ -8557,6 +8600,7 @@ open class Sharing {
     )
     static let mountFolder = Route(
         name: "mount_folder",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.MountFolderArgSerializer(),
@@ -8567,6 +8611,7 @@ open class Sharing {
     )
     static let relinquishFileMembership = Route(
         name: "relinquish_file_membership",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.RelinquishFileMembershipArgSerializer(),
@@ -8577,6 +8622,7 @@ open class Sharing {
     )
     static let relinquishFolderMembership = Route(
         name: "relinquish_folder_membership",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.RelinquishFolderMembershipArgSerializer(),
@@ -8587,6 +8633,7 @@ open class Sharing {
     )
     static let removeFileMember = Route(
         name: "remove_file_member",
+        version: 1,
         namespace: "sharing",
         deprecated: true,
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
@@ -8597,6 +8644,7 @@ open class Sharing {
     )
     static let removeFileMember2 = Route(
         name: "remove_file_member_2",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
@@ -8607,6 +8655,7 @@ open class Sharing {
     )
     static let removeFolderMember = Route(
         name: "remove_folder_member",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.RemoveFolderMemberArgSerializer(),
@@ -8617,6 +8666,7 @@ open class Sharing {
     )
     static let revokeSharedLink = Route(
         name: "revoke_shared_link",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.RevokeSharedLinkArgSerializer(),
@@ -8627,6 +8677,7 @@ open class Sharing {
     )
     static let setAccessInheritance = Route(
         name: "set_access_inheritance",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.SetAccessInheritanceArgSerializer(),
@@ -8637,6 +8688,7 @@ open class Sharing {
     )
     static let shareFolder = Route(
         name: "share_folder",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.ShareFolderArgSerializer(),
@@ -8647,6 +8699,7 @@ open class Sharing {
     )
     static let transferFolder = Route(
         name: "transfer_folder",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.TransferFolderArgSerializer(),
@@ -8657,6 +8710,7 @@ open class Sharing {
     )
     static let unmountFolder = Route(
         name: "unmount_folder",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UnmountFolderArgSerializer(),
@@ -8667,6 +8721,7 @@ open class Sharing {
     )
     static let unshareFile = Route(
         name: "unshare_file",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UnshareFileArgSerializer(),
@@ -8677,6 +8732,7 @@ open class Sharing {
     )
     static let unshareFolder = Route(
         name: "unshare_folder",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UnshareFolderArgSerializer(),
@@ -8687,6 +8743,7 @@ open class Sharing {
     )
     static let updateFileMember = Route(
         name: "update_file_member",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UpdateFileMemberArgsSerializer(),
@@ -8697,6 +8754,7 @@ open class Sharing {
     )
     static let updateFolderMember = Route(
         name: "update_folder_member",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UpdateFolderMemberArgSerializer(),
@@ -8707,6 +8765,7 @@ open class Sharing {
     )
     static let updateFolderPolicy = Route(
         name: "update_folder_policy",
+        version: 1,
         namespace: "sharing",
         deprecated: false,
         argSerializer: Sharing.UpdateFolderPolicyArgSerializer(),
