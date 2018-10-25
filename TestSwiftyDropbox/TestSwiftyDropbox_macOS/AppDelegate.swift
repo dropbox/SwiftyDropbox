@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
 
-        viewController = NSApplication.shared().windows[0].contentViewController as? ViewController
+        viewController = NSApplication.shared.windows[0].contentViewController as? ViewController
         self.checkButtons()
     }
 

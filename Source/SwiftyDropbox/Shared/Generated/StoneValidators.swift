@@ -30,7 +30,7 @@ public func arrayValidator<T>(minItems: Int? = nil, maxItems: Int? = nil, itemVa
 
 public func stringValidator(minLength: Int? = nil, maxLength: Int? = nil, pattern: String? = nil) -> (String) -> Void {
     return { (value: String) -> Void in
-        let length = value.characters.count
+        let length = value.count
         if let minLength = minLength {
             _assertFunc(length >= minLength, "\"\(value)\" must be at least \(minLength) characters")
         }
