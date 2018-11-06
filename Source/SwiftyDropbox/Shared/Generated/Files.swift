@@ -11,18 +11,18 @@ open class Files {
     /// The GetMetadataArg struct
     open class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
-        open let path: String
+        public let path: String
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        open let includeMediaInfo: Bool
+        public let includeMediaInfo: Bool
         /// If true, DeletedMetadata will be returned for deleted file or folder, otherwise notFound in LookupError will
         /// be returned.
-        open let includeDeleted: Bool
+        public let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        open let includeHasExplicitSharedMembers: Bool
+        public let includeHasExplicitSharedMembers: Bool
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
         /// associated with the file and each of the listed templates.
-        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public let includePropertyGroups: FileProperties.TemplateFilterBase?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -66,7 +66,7 @@ open class Files {
     open class AlphaGetMetadataArg: Files.GetMetadataArg {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
-        open let includePropertyTemplates: Array<String>?
+        public let includePropertyTemplates: Array<String>?
         public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
             self.includePropertyTemplates = includePropertyTemplates
@@ -189,26 +189,26 @@ open class Files {
     /// The CommitInfo struct
     open class CommitInfo: CustomStringConvertible {
         /// Path in the user's Dropbox to save the file.
-        open let path: String
+        public let path: String
         /// Selects what to do if the file already exists.
-        open let mode: Files.WriteMode
+        public let mode: Files.WriteMode
         /// If there's a conflict, as determined by mode, have the Dropbox server try to autorename the file to avoid
         /// conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// The value to store as the clientModified timestamp. Dropbox automatically records the time at which the file
         /// was written to the Dropbox servers. It can also record an additional timestamp, provided by Dropbox desktop
         /// clients, mobile clients, and API apps of when the file was actually created or modified.
-        open let clientModified: Date?
+        public let clientModified: Date?
         /// Normally, users are made aware of any file modifications in their Dropbox account via notifications in the
         /// client software. If true, this tells the clients that this modification shouldn't result in a user
         /// notification.
-        open let mute: Bool
+        public let mute: Bool
         /// List of custom properties to add to file.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
         /// Be more strict about how each WriteMode detects conflict. For example, always return a conflict error when
         /// mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev", even if the existing
         /// file has been deleted.
-        open let strictConflict: Bool
+        public let strictConflict: Bool
         public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, strictConflict: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
@@ -294,9 +294,9 @@ open class Files {
     /// The ContentSyncSetting struct
     open class ContentSyncSetting: CustomStringConvertible {
         /// Id of the item this setting is applied to.
-        open let id: String
+        public let id: String
         /// Setting for this item.
-        open let syncSetting: Files.SyncSetting
+        public let syncSetting: Files.SyncSetting
         public init(id: String, syncSetting: Files.SyncSetting) {
             stringValidator(minLength: 4, pattern: "id:.+")(id)
             self.id = id
@@ -330,9 +330,9 @@ open class Files {
     /// The ContentSyncSettingArg struct
     open class ContentSyncSettingArg: CustomStringConvertible {
         /// Id of the item this setting is applied to.
-        open let id: String
+        public let id: String
         /// Setting for this item.
-        open let syncSetting: Files.SyncSettingArg
+        public let syncSetting: Files.SyncSettingArg
         public init(id: String, syncSetting: Files.SyncSettingArg) {
             stringValidator(minLength: 4, pattern: "id:.+")(id)
             self.id = id
@@ -366,9 +366,9 @@ open class Files {
     /// The CreateFolderArg struct
     open class CreateFolderArg: CustomStringConvertible {
         /// Path in the user's Dropbox to create.
-        open let path: String
+        public let path: String
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         public init(path: String, autorename: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -403,11 +403,11 @@ open class Files {
     open class CreateFolderBatchArg: CustomStringConvertible {
         /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are considered only
         /// once.
-        open let paths: Array<String>
+        public let paths: Array<String>
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// Whether to force the create to happen asynchronously.
-        open let forceAsync: Bool
+        public let forceAsync: Bool
         public init(paths: Array<String>, autorename: Bool = false, forceAsync: Bool = false) {
             arrayValidator(itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
             self.paths = paths
@@ -626,7 +626,7 @@ open class Files {
     /// The CreateFolderBatchResult struct
     open class CreateFolderBatchResult: Files.FileOpsResult {
         /// (no description)
-        open let entries: Array<Files.CreateFolderBatchResultEntry>
+        public let entries: Array<Files.CreateFolderBatchResultEntry>
         public init(entries: Array<Files.CreateFolderBatchResultEntry>) {
             self.entries = entries
             super.init()
@@ -746,7 +746,7 @@ open class Files {
     /// The CreateFolderEntryResult struct
     open class CreateFolderEntryResult: CustomStringConvertible {
         /// Metadata of the created folder.
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
@@ -812,7 +812,7 @@ open class Files {
     /// The CreateFolderResult struct
     open class CreateFolderResult: Files.FileOpsResult {
         /// Metadata of the created folder.
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
             super.init()
@@ -843,10 +843,10 @@ open class Files {
     /// The DeleteArg struct
     open class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
-        open let path: String
+        public let path: String
         /// Perform delete if given "rev" matches the existing file's latest "rev". This field does not support deleting
         /// a folder.
-        open let parentRev: String?
+        public let parentRev: String?
         public init(path: String, parentRev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
@@ -881,7 +881,7 @@ open class Files {
     /// The DeleteBatchArg struct
     open class DeleteBatchArg: CustomStringConvertible {
         /// (no description)
-        open let entries: Array<Files.DeleteArg>
+        public let entries: Array<Files.DeleteArg>
         public init(entries: Array<Files.DeleteArg>) {
             self.entries = entries
         }
@@ -1070,7 +1070,7 @@ open class Files {
     /// The DeleteBatchResult struct
     open class DeleteBatchResult: Files.FileOpsResult {
         /// (no description)
-        open let entries: Array<Files.DeleteBatchResultEntry>
+        public let entries: Array<Files.DeleteBatchResultEntry>
         public init(entries: Array<Files.DeleteBatchResultEntry>) {
             self.entries = entries
             super.init()
@@ -1101,7 +1101,7 @@ open class Files {
     /// The DeleteBatchResultData struct
     open class DeleteBatchResultData: CustomStringConvertible {
         /// Metadata of the deleted object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -1245,7 +1245,7 @@ open class Files {
     /// The DeleteResult struct
     open class DeleteResult: Files.FileOpsResult {
         /// Metadata of the deleted object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
             super.init()
@@ -1276,17 +1276,17 @@ open class Files {
     /// Metadata for a file or folder.
     open class Metadata: CustomStringConvertible {
         /// The last component of the path (including extension). This never contains a slash.
-        open let name: String
+        public let name: String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will be null if
         /// the file or folder is not mounted.
-        open let pathLower: String?
+        public let pathLower: String?
         /// The cased path to be used for display purposes only. In rare instances the casing will not correctly match
         /// the user's filesystem, but this behavior will match the path provided in the Core API v1, and at least the
         /// last path component will have the correct casing. Changes to only the casing of paths won't be returned by
         /// listFolderContinue. This field will be null if the file or folder is not mounted.
-        open let pathDisplay: String?
+        public let pathDisplay: String?
         /// Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo instead.
-        open let parentSharedFolderId: String?
+        public let parentSharedFolderId: String?
         public init(name: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil) {
             stringValidator()(name)
             self.name = name
@@ -1384,9 +1384,9 @@ open class Files {
     /// Dimensions for a photo or video.
     open class Dimensions: CustomStringConvertible {
         /// Height of the photo/video.
-        open let height: UInt64
+        public let height: UInt64
         /// Width of the photo/video.
-        open let width: UInt64
+        public let width: UInt64
         public init(height: UInt64, width: UInt64) {
             comparableValidator()(height)
             self.height = height
@@ -1421,9 +1421,9 @@ open class Files {
     /// The DownloadArg struct
     open class DownloadArg: CustomStringConvertible {
         /// The path of the file to download.
-        open let path: String
+        public let path: String
         /// Please specify revision in path instead.
-        open let rev: String?
+        public let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1502,7 +1502,7 @@ open class Files {
     /// The DownloadZipArg struct
     open class DownloadZipArg: CustomStringConvertible {
         /// The path of the folder to download.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1593,7 +1593,7 @@ open class Files {
     /// The DownloadZipResult struct
     open class DownloadZipResult: CustomStringConvertible {
         /// (no description)
-        open let metadata: Files.FolderMetadata
+        public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
@@ -1623,35 +1623,35 @@ open class Files {
     /// The FileMetadata struct
     open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
-        open let id: String
+        public let id: String
         /// For files, this is the modification time set by the desktop client when the file was added to Dropbox. Since
         /// this time is not verified (the Dropbox server stores whatever the desktop client sends up), this should only
         /// be used for display purposes (such as sorting) and not, for example, to determine if a file has changed or
         /// not.
-        open let clientModified: Date
+        public let clientModified: Date
         /// The last time the file was modified on Dropbox.
-        open let serverModified: Date
+        public let serverModified: Date
         /// A unique identifier for the current revision of a file. This field is the same rev as elsewhere in the API
         /// and can be used to detect changes and avoid conflicts.
-        open let rev: String
+        public let rev: String
         /// The file size in bytes.
-        open let size: UInt64
+        public let size: UInt64
         /// Additional information if the file is a photo or video.
-        open let mediaInfo: Files.MediaInfo?
+        public let mediaInfo: Files.MediaInfo?
         /// Set if this file is a symlink.
-        open let symlinkInfo: Files.SymlinkInfo?
+        public let symlinkInfo: Files.SymlinkInfo?
         /// Set if this file is contained in a shared folder.
-        open let sharingInfo: Files.FileSharingInfo?
+        public let sharingInfo: Files.FileSharingInfo?
         /// Additional information if the file has custom properties with the property template specified.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
         /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
         /// If this  flag is present, it will be true if this file has any explicit shared  members. This is different
         /// from sharing_info in that this could be true  in the case where a file has explicit members but is not
         /// contained within  a shared folder.
-        open let hasExplicitSharedMembers: Bool?
+        public let hasExplicitSharedMembers: Bool?
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
         /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
-        open let contentHash: String?
+        public let contentHash: String?
         public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -1724,7 +1724,7 @@ open class Files {
     /// Sharing info for a file or folder.
     open class SharingInfo: CustomStringConvertible {
         /// True if the file or folder is inside a read-only shared folder.
-        open let readOnly: Bool
+        public let readOnly: Bool
         public init(readOnly: Bool) {
             self.readOnly = readOnly
         }
@@ -1754,9 +1754,9 @@ open class Files {
     /// Sharing info for a file which is contained by a shared folder.
     open class FileSharingInfo: Files.SharingInfo {
         /// ID of shared folder that holds this file.
-        open let parentSharedFolderId: String
+        public let parentSharedFolderId: String
         /// The last user who modified the file. This field will be null if the user's account has been deleted.
-        open let modifiedBy: String?
+        public let modifiedBy: String?
         public init(readOnly: Bool, parentSharedFolderId: String, modifiedBy: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1794,14 +1794,14 @@ open class Files {
     /// The FolderMetadata struct
     open class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
-        open let id: String
+        public let id: String
         /// Please use sharingInfo instead.
-        open let sharedFolderId: String?
+        public let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
-        open let sharingInfo: Files.FolderSharingInfo?
+        public let sharingInfo: Files.FolderSharingInfo?
         /// Additional information if the file has custom properties with the property template specified. Note that
         /// only properties associated with user-owned templates, not team-owned templates, can be attached to folders.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public let propertyGroups: Array<FileProperties.PropertyGroup>?
         public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -1851,15 +1851,15 @@ open class Files {
     /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount point.
     open class FolderSharingInfo: Files.SharingInfo {
         /// Set if the folder is contained by a shared folder.
-        open let parentSharedFolderId: String?
+        public let parentSharedFolderId: String?
         /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this location.
-        open let sharedFolderId: String?
+        public let sharedFolderId: String?
         /// Specifies that the folder can only be traversed and the user can only see a limited subset of the contents
         /// of this folder because they don't have read access to this folder. They do, however, have access to some sub
         /// folder.
-        open let traverseOnly: Bool
+        public let traverseOnly: Bool
         /// Specifies that the folder cannot be accessed by the user.
-        open let noAccess: Bool
+        public let noAccess: Bool
         public init(readOnly: Bool, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, traverseOnly: Bool = false, noAccess: Bool = false) {
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
@@ -1903,7 +1903,7 @@ open class Files {
     /// The GetCopyReferenceArg struct
     open class GetCopyReferenceArg: CustomStringConvertible {
         /// The path to the file or folder you want to get a copy reference to.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -1978,12 +1978,12 @@ open class Files {
     /// The GetCopyReferenceResult struct
     open class GetCopyReferenceResult: CustomStringConvertible {
         /// Metadata of the file or folder.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         /// A copy reference to the file or folder.
-        open let copyReference: String
+        public let copyReference: String
         /// The expiration date of the copy reference. This value is currently set to be far enough in the future so
         /// that expiration is effectively not an issue.
-        open let expires: Date
+        public let expires: Date
         public init(metadata: Files.Metadata, copyReference: String, expires: Date) {
             self.metadata = metadata
             stringValidator()(copyReference)
@@ -2020,7 +2020,7 @@ open class Files {
     /// The GetTemporaryLinkArg struct
     open class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
-        open let path: String
+        public let path: String
         public init(path: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2095,9 +2095,9 @@ open class Files {
     /// The GetTemporaryLinkResult struct
     open class GetTemporaryLinkResult: CustomStringConvertible {
         /// Metadata of the file.
-        open let metadata: Files.FileMetadata
+        public let metadata: Files.FileMetadata
         /// The temporary link which can be used to stream content the file.
-        open let link: String
+        public let link: String
         public init(metadata: Files.FileMetadata, link: String) {
             self.metadata = metadata
             stringValidator()(link)
@@ -2132,10 +2132,10 @@ open class Files {
     open class GetTemporaryUploadLinkArg: CustomStringConvertible {
         /// Contains the path and other optional modifiers for the future upload commit. Equivalent to the parameters
         /// provided to upload.
-        open let commitInfo: Files.CommitInfo
+        public let commitInfo: Files.CommitInfo
         /// How long before this link expires, in seconds.  Attempting to start an upload with this link longer than
         /// this period  of time after link creation will result in an error.
-        open let duration: Double
+        public let duration: Double
         public init(commitInfo: Files.CommitInfo, duration: Double = 14400.0) {
             self.commitInfo = commitInfo
             comparableValidator(minValue: 60.0, maxValue: 14400.0)(duration)
@@ -2169,7 +2169,7 @@ open class Files {
     /// The GetTemporaryUploadLinkResult struct
     open class GetTemporaryUploadLinkResult: CustomStringConvertible {
         /// The temporary link which can be used to stream a file to a Dropbox location.
-        open let link: String
+        public let link: String
         public init(link: String) {
             stringValidator()(link)
             self.link = link
@@ -2200,7 +2200,7 @@ open class Files {
     /// Arguments for getThumbnailBatch.
     open class GetThumbnailBatchArg: CustomStringConvertible {
         /// List of files to get thumbnails.
-        open let entries: Array<Files.ThumbnailArg>
+        public let entries: Array<Files.ThumbnailArg>
         public init(entries: Array<Files.ThumbnailArg>) {
             self.entries = entries
         }
@@ -2273,7 +2273,7 @@ open class Files {
     /// The GetThumbnailBatchResult struct
     open class GetThumbnailBatchResult: CustomStringConvertible {
         /// List of files and their thumbnails.
-        open let entries: Array<Files.GetThumbnailBatchResultEntry>
+        public let entries: Array<Files.GetThumbnailBatchResultEntry>
         public init(entries: Array<Files.GetThumbnailBatchResultEntry>) {
             self.entries = entries
         }
@@ -2303,9 +2303,9 @@ open class Files {
     /// The GetThumbnailBatchResultData struct
     open class GetThumbnailBatchResultData: CustomStringConvertible {
         /// (no description)
-        open let metadata: Files.FileMetadata
+        public let metadata: Files.FileMetadata
         /// A string containing the base64-encoded thumbnail data for this file.
-        open let thumbnail: String
+        public let thumbnail: String
         public init(metadata: Files.FileMetadata, thumbnail: String) {
             self.metadata = metadata
             stringValidator()(thumbnail)
@@ -2392,9 +2392,9 @@ open class Files {
     /// GPS coordinates for a photo or video.
     open class GpsCoordinates: CustomStringConvertible {
         /// Latitude of the GPS coordinates.
-        open let latitude: Double
+        public let latitude: Double
         /// Longitude of the GPS coordinates.
-        open let longitude: Double
+        public let longitude: Double
         public init(latitude: Double, longitude: Double) {
             comparableValidator()(latitude)
             self.latitude = latitude
@@ -2429,30 +2429,30 @@ open class Files {
     /// The ListFolderArg struct
     open class ListFolderArg: CustomStringConvertible {
         /// A unique identifier for the file.
-        open let path: String
+        public let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
         /// contain contents of all subfolders.
-        open let recursive: Bool
+        public let recursive: Bool
         /// If true, mediaInfo in FileMetadata is set for photo and video.
-        open let includeMediaInfo: Bool
+        public let includeMediaInfo: Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
-        open let includeDeleted: Bool
+        public let includeDeleted: Bool
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
-        open let includeHasExplicitSharedMembers: Bool
+        public let includeHasExplicitSharedMembers: Bool
         /// If true, the results will include entries under mounted folders which includes app folder, shared folder and
         /// team folder.
-        open let includeMountedFolders: Bool
+        public let includeMountedFolders: Bool
         /// The maximum number of results to return per request. Note: This is an approximate number and there can be
         /// slightly more entries returned in some cases.
-        open let limit: UInt32?
+        public let limit: UInt32?
         /// A shared link to list the contents of. If the link is password-protected, the password must be provided. If
         /// this field is present, path in ListFolderArg will be relative to root of the shared link. Only non-recursive
         /// mode is supported for shared link.
-        open let sharedLink: Files.SharedLink?
+        public let sharedLink: Files.SharedLink?
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
         /// associated with the file and each of the listed templates.
-        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public let includePropertyGroups: FileProperties.TemplateFilterBase?
         public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2508,7 +2508,7 @@ open class Files {
     /// The ListFolderContinueArg struct
     open class ListFolderContinueArg: CustomStringConvertible {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
-        open let cursor: String
+        public let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2635,7 +2635,7 @@ open class Files {
     /// The ListFolderGetLatestCursorResult struct
     open class ListFolderGetLatestCursorResult: CustomStringConvertible {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        open let cursor: String
+        public let cursor: String
         public init(cursor: String) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2667,11 +2667,11 @@ open class Files {
     open class ListFolderLongpollArg: CustomStringConvertible {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
-        open let cursor: String
+        public let cursor: String
         /// A timeout in seconds. The request will block for at most this length of time, plus up to 90 seconds of
         /// random jitter added to avoid the thundering herd problem. Care should be taken when using this parameter, as
         /// some network infrastructure does not support long timeouts.
-        open let timeout: UInt64
+        public let timeout: UInt64
         public init(cursor: String, timeout: UInt64 = 30) {
             stringValidator(minLength: 1)(cursor)
             self.cursor = cursor
@@ -2749,9 +2749,9 @@ open class Files {
     /// The ListFolderLongpollResult struct
     open class ListFolderLongpollResult: CustomStringConvertible {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
-        open let changes: Bool
+        public let changes: Bool
         /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
-        open let backoff: UInt64?
+        public let backoff: UInt64?
         public init(changes: Bool, backoff: UInt64? = nil) {
             self.changes = changes
             nullableValidator(comparableValidator())(backoff)
@@ -2785,11 +2785,11 @@ open class Files {
     /// The ListFolderResult struct
     open class ListFolderResult: CustomStringConvertible {
         /// The files and (direct) subfolders in the folder.
-        open let entries: Array<Files.Metadata>
+        public let entries: Array<Files.Metadata>
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
-        open let cursor: String
+        public let cursor: String
         /// If true, then there are more entries available. Pass the cursor to listFolderContinue to retrieve the rest.
-        open let hasMore: Bool
+        public let hasMore: Bool
         public init(entries: Array<Files.Metadata>, cursor: String, hasMore: Bool) {
             self.entries = entries
             stringValidator(minLength: 1)(cursor)
@@ -2826,11 +2826,11 @@ open class Files {
     /// The ListRevisionsArg struct
     open class ListRevisionsArg: CustomStringConvertible {
         /// The path to the file you want to see the revisions of.
-        open let path: String
+        public let path: String
         /// Determines the behavior of the API in listing the revisions for a given file path or id.
-        open let mode: Files.ListRevisionsMode
+        public let mode: Files.ListRevisionsMode
         /// The maximum number of revision entries returned.
-        open let limit: UInt64
+        public let limit: UInt64
         public init(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -2964,11 +2964,11 @@ open class Files {
     /// The ListRevisionsResult struct
     open class ListRevisionsResult: CustomStringConvertible {
         /// If the file identified by the latest revision in the response is either deleted or moved.
-        open let isDeleted: Bool
+        public let isDeleted: Bool
         /// The time of deletion if the file was deleted.
-        open let serverDeleted: Date?
+        public let serverDeleted: Date?
         /// The revisions for the file. Only revisions that are not deleted will show up here.
-        open let entries: Array<Files.FileMetadata>
+        public let entries: Array<Files.FileMetadata>
         public init(isDeleted: Bool, entries: Array<Files.FileMetadata>, serverDeleted: Date? = nil) {
             self.isDeleted = isDeleted
             self.serverDeleted = serverDeleted
@@ -3126,11 +3126,11 @@ open class Files {
     /// Metadata for a photo or video.
     open class MediaMetadata: CustomStringConvertible {
         /// Dimension of the photo/video.
-        open let dimensions: Files.Dimensions?
+        public let dimensions: Files.Dimensions?
         /// The GPS coordinate of the photo/video.
-        open let location: Files.GpsCoordinates?
+        public let location: Files.GpsCoordinates?
         /// The timestamp when the photo/video is taken.
-        open let timeTaken: Date?
+        public let timeTaken: Date?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil) {
             self.dimensions = dimensions
             self.location = location
@@ -3213,9 +3213,9 @@ open class Files {
     /// The PreviewArg struct
     open class PreviewArg: CustomStringConvertible {
         /// The path of the file to preview.
-        open let path: String
+        public let path: String
         /// Please specify revision in path instead.
-        open let rev: String?
+        public let rev: String?
         public init(path: String, rev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -3310,9 +3310,9 @@ open class Files {
     /// The RelocationPath struct
     open class RelocationPath: CustomStringConvertible {
         /// Path in the user's Dropbox to be copied or moved.
-        open let fromPath: String
+        public let fromPath: String
         /// Path in the user's Dropbox that is the destination.
-        open let toPath: String
+        public let toPath: String
         public init(fromPath: String, toPath: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(fromPath)
             self.fromPath = fromPath
@@ -3348,12 +3348,12 @@ open class Files {
     open class RelocationArg: Files.RelocationPath {
         /// If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError will be
         /// returned if fromPath contains shared folder. This field is always true for move.
-        open let allowSharedFolder: Bool
+        public let allowSharedFolder: Bool
         /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
-        open let allowOwnershipTransfer: Bool
+        public let allowOwnershipTransfer: Bool
         public init(fromPath: String, toPath: String, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) {
             self.allowSharedFolder = allowSharedFolder
             self.autorename = autorename
@@ -3394,17 +3394,17 @@ open class Files {
     /// The RelocationBatchArg struct
     open class RelocationBatchArg: CustomStringConvertible {
         /// List of entries to be moved or copied. Each entry is RelocationPath.
-        open let entries: Array<Files.RelocationPath>
+        public let entries: Array<Files.RelocationPath>
         /// If true, copyBatch will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError
         /// will be returned if fromPath in RelocationPath contains shared folder.  This field is always true for
         /// moveBatch.
-        open let allowSharedFolder: Bool
+        public let allowSharedFolder: Bool
         /// If there's a conflict with any file, have the Dropbox server try to autorename that file to avoid the
         /// conflict.
-        open let autorename: Bool
+        public let autorename: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
-        open let allowOwnershipTransfer: Bool
+        public let allowOwnershipTransfer: Bool
         public init(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) {
             self.entries = entries
             self.allowSharedFolder = allowSharedFolder
@@ -3796,7 +3796,7 @@ open class Files {
     /// The RelocationBatchResult struct
     open class RelocationBatchResult: Files.FileOpsResult {
         /// (no description)
-        open let entries: Array<Files.RelocationBatchResultData>
+        public let entries: Array<Files.RelocationBatchResultData>
         public init(entries: Array<Files.RelocationBatchResultData>) {
             self.entries = entries
             super.init()
@@ -3827,7 +3827,7 @@ open class Files {
     /// The RelocationBatchResultData struct
     open class RelocationBatchResultData: CustomStringConvertible {
         /// Metadata of the relocated object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -3857,7 +3857,7 @@ open class Files {
     /// The RelocationResult struct
     open class RelocationResult: Files.FileOpsResult {
         /// Metadata of the relocated object.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
             super.init()
@@ -3888,9 +3888,9 @@ open class Files {
     /// The RestoreArg struct
     open class RestoreArg: CustomStringConvertible {
         /// The path to save the restored file.
-        open let path: String
+        public let path: String
         /// The revision to restore.
-        open let rev: String
+        public let rev: String
         public init(path: String, rev: String) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -3986,9 +3986,9 @@ open class Files {
     /// The SaveCopyReferenceArg struct
     open class SaveCopyReferenceArg: CustomStringConvertible {
         /// A copy reference returned by copyReferenceGet.
-        open let copyReference: String
+        public let copyReference: String
         /// Path in the user's Dropbox that is the destination.
-        open let path: String
+        public let path: String
         public init(copyReference: String, path: String) {
             stringValidator()(copyReference)
             self.copyReference = copyReference
@@ -4100,7 +4100,7 @@ open class Files {
     /// The SaveCopyReferenceResult struct
     open class SaveCopyReferenceResult: CustomStringConvertible {
         /// The metadata of the saved file or folder in the user's Dropbox.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
@@ -4130,9 +4130,9 @@ open class Files {
     /// The SaveUrlArg struct
     open class SaveUrlArg: CustomStringConvertible {
         /// The path in Dropbox where the URL will be saved to.
-        open let path: String
+        public let path: String
         /// The URL to be saved.
-        open let url: String
+        public let url: String
         public init(path: String, url: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
@@ -4334,18 +4334,18 @@ open class Files {
     /// The SearchArg struct
     open class SearchArg: CustomStringConvertible {
         /// The path in the user's Dropbox to search. Should probably be a folder.
-        open let path: String
+        public let path: String
         /// The string to search for. The search string is split on spaces into multiple tokens. For file name
         /// searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
         /// car").
-        open let query: String
+        public let query: String
         /// The starting index within the search results (used for paging).
-        open let start: UInt64
+        public let start: UInt64
         /// The maximum number of search results to return.
-        open let maxResults: UInt64
+        public let maxResults: UInt64
         /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is
         /// only available for Dropbox Business accounts.
-        open let mode: Files.SearchMode
+        public let mode: Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -4435,9 +4435,9 @@ open class Files {
     /// The SearchMatch struct
     open class SearchMatch: CustomStringConvertible {
         /// The type of the match.
-        open let matchType: Files.SearchMatchType
+        public let matchType: Files.SearchMatchType
         /// The metadata for the matched file or folder.
-        open let metadata: Files.Metadata
+        public let metadata: Files.Metadata
         public init(matchType: Files.SearchMatchType, metadata: Files.Metadata) {
             self.matchType = matchType
             self.metadata = metadata
@@ -4572,12 +4572,12 @@ open class Files {
     /// The SearchResult struct
     open class SearchResult: CustomStringConvertible {
         /// A list (possibly empty) of matches for the query.
-        open let matches: Array<Files.SearchMatch>
+        public let matches: Array<Files.SearchMatch>
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
         /// calling search again.
-        open let more: Bool
+        public let more: Bool
         /// Used for paging. Value to set the start argument to when calling search to fetch the next page of results.
-        open let start: UInt64
+        public let start: UInt64
         public init(matches: Array<Files.SearchMatch>, more: Bool, start: UInt64) {
             self.matches = matches
             self.more = more
@@ -4614,9 +4614,9 @@ open class Files {
     /// The SharedLink struct
     open class SharedLink: CustomStringConvertible {
         /// Shared link url.
-        open let url: String
+        public let url: String
         /// Password for the shared link.
-        open let password: String?
+        public let password: String?
         public init(url: String, password: String? = nil) {
             stringValidator()(url)
             self.url = url
@@ -4651,7 +4651,7 @@ open class Files {
     /// The SymlinkInfo struct
     open class SymlinkInfo: CustomStringConvertible {
         /// The target this symlink points to.
-        open let target: String
+        public let target: String
         public init(target: String) {
             stringValidator()(target)
             self.target = target
@@ -4855,14 +4855,14 @@ open class Files {
     /// The ThumbnailArg struct
     open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
-        open let path: String
+        public let path: String
         /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
         /// preferred, while png is  better for screenshots and digital arts.
-        open let format: Files.ThumbnailFormat
+        public let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
-        open let size: Files.ThumbnailSize
+        public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
-        open let mode: Files.ThumbnailMode
+        public let mode: Files.ThumbnailMode
         public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
@@ -5261,10 +5261,10 @@ open class Files {
     /// The UploadSessionAppendArg struct
     open class UploadSessionAppendArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        open let cursor: Files.UploadSessionCursor
+        public let cursor: Files.UploadSessionCursor
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        open let close: Bool
+        public let close: Bool
         public init(cursor: Files.UploadSessionCursor, close: Bool = false) {
             self.cursor = cursor
             self.close = close
@@ -5297,10 +5297,10 @@ open class Files {
     /// The UploadSessionCursor struct
     open class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
-        open let sessionId: String
+        public let sessionId: String
         /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
         /// duplicated in the event of a network error.
-        open let offset: UInt64
+        public let offset: UInt64
         public init(sessionId: String, offset: UInt64) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
@@ -5335,9 +5335,9 @@ open class Files {
     /// The UploadSessionFinishArg struct
     open class UploadSessionFinishArg: CustomStringConvertible {
         /// Contains the upload session ID and the offset.
-        open let cursor: Files.UploadSessionCursor
+        public let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
-        open let commit: Files.CommitInfo
+        public let commit: Files.CommitInfo
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
             self.cursor = cursor
             self.commit = commit
@@ -5370,7 +5370,7 @@ open class Files {
     /// The UploadSessionFinishBatchArg struct
     open class UploadSessionFinishBatchArg: CustomStringConvertible {
         /// Commit information for each file in the batch.
-        open let entries: Array<Files.UploadSessionFinishArg>
+        public let entries: Array<Files.UploadSessionFinishArg>
         public init(entries: Array<Files.UploadSessionFinishArg>) {
             self.entries = entries
         }
@@ -5499,7 +5499,7 @@ open class Files {
     /// The UploadSessionFinishBatchResult struct
     open class UploadSessionFinishBatchResult: CustomStringConvertible {
         /// Commit result for each file in the batch.
-        open let entries: Array<Files.UploadSessionFinishBatchResultEntry>
+        public let entries: Array<Files.UploadSessionFinishBatchResultEntry>
         public init(entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
             self.entries = entries
         }
@@ -5733,7 +5733,7 @@ open class Files {
     /// The UploadSessionOffsetError struct
     open class UploadSessionOffsetError: CustomStringConvertible {
         /// The offset up to which data has been collected.
-        open let correctOffset: UInt64
+        public let correctOffset: UInt64
         public init(correctOffset: UInt64) {
             comparableValidator()(correctOffset)
             self.correctOffset = correctOffset
@@ -5765,7 +5765,7 @@ open class Files {
     open class UploadSessionStartArg: CustomStringConvertible {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
-        open let close: Bool
+        public let close: Bool
         public init(close: Bool = false) {
             self.close = close
         }
@@ -5795,7 +5795,7 @@ open class Files {
     /// The UploadSessionStartResult struct
     open class UploadSessionStartResult: CustomStringConvertible {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
-        open let sessionId: String
+        public let sessionId: String
         public init(sessionId: String) {
             stringValidator()(sessionId)
             self.sessionId = sessionId
@@ -5826,10 +5826,10 @@ open class Files {
     /// The UploadWriteFailed struct
     open class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
-        open let reason: Files.WriteError
+        public let reason: Files.WriteError
         /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
         /// used to retry the commit with uploadSessionFinish.
-        open let uploadSessionId: String
+        public let uploadSessionId: String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
             stringValidator()(uploadSessionId)
@@ -5863,7 +5863,7 @@ open class Files {
     /// Metadata for a video.
     open class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
-        open let duration: UInt64?
+        public let duration: UInt64?
         public init(dimensions: Files.Dimensions? = nil, location: Files.GpsCoordinates? = nil, timeTaken: Date? = nil, duration: UInt64? = nil) {
             nullableValidator(comparableValidator())(duration)
             self.duration = duration

@@ -864,14 +864,14 @@ open class TeamPolicies {
     /// Policies governing team members.
     open class TeamMemberPolicies: CustomStringConvertible {
         /// Policies governing sharing.
-        open let sharing: TeamPolicies.TeamSharingPolicies
+        public let sharing: TeamPolicies.TeamSharingPolicies
         /// This describes the Enterprise Mobility Management (EMM) state for this team. This information can be used to
         /// understand if an organization is integrating with a third-party EMM vendor to further manage and apply
         /// restrictions upon the team's Dropbox usage on mobile devices. This is a new feature and in the future we'll
         /// be adding more new fields and additional documentation.
-        open let emmState: TeamPolicies.EmmState
+        public let emmState: TeamPolicies.EmmState
         /// The admin policy around the Dropbox Office Add-In for this team.
-        open let officeAddin: TeamPolicies.OfficeAddInPolicy
+        public let officeAddin: TeamPolicies.OfficeAddInPolicy
         public init(sharing: TeamPolicies.TeamSharingPolicies, emmState: TeamPolicies.EmmState, officeAddin: TeamPolicies.OfficeAddInPolicy) {
             self.sharing = sharing
             self.emmState = emmState
@@ -907,11 +907,11 @@ open class TeamPolicies {
     /// Policies governing sharing within and outside of the team.
     open class TeamSharingPolicies: CustomStringConvertible {
         /// Who can join folders shared by team members.
-        open let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
+        public let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
         /// Which shared folders team members can join.
-        open let sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy
+        public let sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy
         /// Who can view shared links owned by team members.
-        open let sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy
+        public let sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy
         public init(sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy, sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy, sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
             self.sharedFolderJoinPolicy = sharedFolderJoinPolicy

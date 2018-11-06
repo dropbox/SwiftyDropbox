@@ -128,9 +128,9 @@ open class Common {
     open class RootInfo: CustomStringConvertible {
         /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
         /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in RootInfo.
-        open let rootNamespaceId: String
+        public let rootNamespaceId: String
         /// The namespace ID for user's home namespace.
-        open let homeNamespaceId: String
+        public let homeNamespaceId: String
         public init(rootNamespaceId: String, homeNamespaceId: String) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(rootNamespaceId)
             self.rootNamespaceId = rootNamespaceId
@@ -186,7 +186,7 @@ open class Common {
     /// Root info when user is member of a team with a separate root namespace ID.
     open class TeamRootInfo: Common.RootInfo {
         /// The path for user's home directory under the shared team root.
-        open let homePath: String
+        public let homePath: String
         public init(rootNamespaceId: String, homeNamespaceId: String, homePath: String) {
             stringValidator()(homePath)
             self.homePath = homePath

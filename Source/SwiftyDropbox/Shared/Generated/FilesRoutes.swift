@@ -6,7 +6,7 @@
 
 /// Routes for the files namespace
 open class FilesRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

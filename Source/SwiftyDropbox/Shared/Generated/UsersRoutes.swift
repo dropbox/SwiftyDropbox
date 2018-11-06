@@ -6,7 +6,7 @@
 
 /// Routes for the users namespace
 open class UsersRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

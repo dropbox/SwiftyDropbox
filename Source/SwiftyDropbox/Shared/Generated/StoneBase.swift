@@ -7,14 +7,14 @@ import Foundation
 // The objects in this file are used by generated code and should not need to be invoked manually.
 
 open class Route<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer> {
-    open let name: String
-    open let version: Int32
-    open let namespace: String
-    open let deprecated: Bool
-    open let argSerializer: ASerial
-    open let responseSerializer: RSerial
-    open let errorSerializer: ESerial
-    open let attrs: [String: String?]
+    public let name: String
+    public let version: Int32
+    public let namespace: String
+    public let deprecated: Bool
+    public let argSerializer: ASerial
+    public let responseSerializer: RSerial
+    public let errorSerializer: ESerial
+    public let attrs: [String: String?]
 
     public init(name: String, version: Int32, namespace: String, deprecated: Bool,
                 argSerializer: ASerial, responseSerializer: RSerial, errorSerializer: ESerial,

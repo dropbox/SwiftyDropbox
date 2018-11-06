@@ -6,7 +6,7 @@
 
 /// Routes for the team_log namespace
 open class TeamLogRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

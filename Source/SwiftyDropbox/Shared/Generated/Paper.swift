@@ -11,9 +11,9 @@ open class Paper {
     /// The AddMember struct
     open class AddMember: CustomStringConvertible {
         /// Permission for the user.
-        open let permissionLevel: Paper.PaperDocPermissionLevel
+        public let permissionLevel: Paper.PaperDocPermissionLevel
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
-        open let member: Sharing.MemberSelector
+        public let member: Sharing.MemberSelector
         public init(member: Sharing.MemberSelector, permissionLevel: Paper.PaperDocPermissionLevel = .edit) {
             self.permissionLevel = permissionLevel
             self.member = member
@@ -46,7 +46,7 @@ open class Paper {
     /// The RefPaperDoc struct
     open class RefPaperDoc: CustomStringConvertible {
         /// The Paper doc ID.
-        open let docId: String
+        public let docId: String
         public init(docId: String) {
             stringValidator()(docId)
             self.docId = docId
@@ -77,11 +77,11 @@ open class Paper {
     /// The AddPaperDocUser struct
     open class AddPaperDocUser: Paper.RefPaperDoc {
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
-        open let members: Array<Paper.AddMember>
+        public let members: Array<Paper.AddMember>
         /// A personal message that will be emailed to each successfully added member.
-        open let customMessage: String?
+        public let customMessage: String?
         /// Clients should set this to true if no email message shall be sent to added users.
-        open let quiet: Bool
+        public let quiet: Bool
         public init(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) {
             self.members = members
             nullableValidator(stringValidator())(customMessage)
@@ -121,9 +121,9 @@ open class Paper {
     /// Per-member result for docsUsersAdd.
     open class AddPaperDocUserMemberResult: CustomStringConvertible {
         /// One of specified input members.
-        open let member: Sharing.MemberSelector
+        public let member: Sharing.MemberSelector
         /// The outcome of the action on this member.
-        open let result: Paper.AddPaperDocUserResult
+        public let result: Paper.AddPaperDocUserResult
         public init(member: Sharing.MemberSelector, result: Paper.AddPaperDocUserResult) {
             self.member = member
             self.result = result
@@ -247,7 +247,7 @@ open class Paper {
     /// The Cursor struct
     open class Cursor: CustomStringConvertible {
         /// The actual cursor value.
-        open let value: String
+        public let value: String
         /// Expiration time of value. Some cursors might have expiration time assigned. This is a UTC value after which
         /// the cursor is no longer valid and the API starts returning an error. If cursor expires a new one needs to be
         /// obtained and pagination needs to be restarted. Some cursors might be short-lived some cursors might be
@@ -257,7 +257,7 @@ open class Paper {
         /// other hand, listing docs sorted by the last modified time will have a very short expiration as docs do get
         /// modified very often and the modified time can be changed while the iteration is happening thus altering the
         /// results.
-        open let expiration: Date?
+        public let expiration: Date?
         public init(value: String, expiration: Date? = nil) {
             stringValidator()(value)
             self.value = value
@@ -495,9 +495,9 @@ open class Paper {
     /// Data structure representing a Paper folder.
     open class Folder: CustomStringConvertible {
         /// Paper folder ID. This ID uniquely identifies the folder.
-        open let id: String
+        public let id: String
         /// Paper folder name.
-        open let name: String
+        public let name: String
         public init(id: String, name: String) {
             stringValidator()(id)
             self.id = id
@@ -634,9 +634,9 @@ open class Paper {
     /// Metadata about Paper folders containing the specififed Paper doc.
     open class FoldersContainingPaperDoc: CustomStringConvertible {
         /// The sharing policy of the folder containing the Paper doc.
-        open let folderSharingPolicyType: Paper.FolderSharingPolicyType?
+        public let folderSharingPolicyType: Paper.FolderSharingPolicyType?
         /// The folder path. If present the first folder is the root folder.
-        open let folders: Array<Paper.Folder>?
+        public let folders: Array<Paper.Folder>?
         public init(folderSharingPolicyType: Paper.FolderSharingPolicyType? = nil, folders: Array<Paper.Folder>? = nil) {
             self.folderSharingPolicyType = folderSharingPolicyType
             self.folders = folders
@@ -730,9 +730,9 @@ open class Paper {
     /// The InviteeInfoWithPermissionLevel struct
     open class InviteeInfoWithPermissionLevel: CustomStringConvertible {
         /// Email address invited to the Paper doc.
-        open let invitee: Sharing.InviteeInfo
+        public let invitee: Sharing.InviteeInfo
         /// Permission level for the invitee.
-        open let permissionLevel: Paper.PaperDocPermissionLevel
+        public let permissionLevel: Paper.PaperDocPermissionLevel
         public init(invitee: Sharing.InviteeInfo, permissionLevel: Paper.PaperDocPermissionLevel) {
             self.invitee = invitee
             self.permissionLevel = permissionLevel
@@ -809,14 +809,14 @@ open class Paper {
     /// The ListPaperDocsArgs struct
     open class ListPaperDocsArgs: CustomStringConvertible {
         /// Allows user to specify how the Paper docs should be filtered.
-        open let filterBy: Paper.ListPaperDocsFilterBy
+        public let filterBy: Paper.ListPaperDocsFilterBy
         /// Allows user to specify how the Paper docs should be sorted.
-        open let sortBy: Paper.ListPaperDocsSortBy
+        public let sortBy: Paper.ListPaperDocsSortBy
         /// Allows user to specify the sort order of the result.
-        open let sortOrder: Paper.ListPaperDocsSortOrder
+        public let sortOrder: Paper.ListPaperDocsSortOrder
         /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
-        open let limit: Int32
+        public let limit: Int32
         public init(filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed, sortBy: Paper.ListPaperDocsSortBy = .accessed, sortOrder: Paper.ListPaperDocsSortOrder = .ascending, limit: Int32 = 1000) {
             self.filterBy = filterBy
             self.sortBy = sortBy
@@ -856,7 +856,7 @@ open class Paper {
     /// The ListPaperDocsContinueArgs struct
     open class ListPaperDocsContinueArgs: CustomStringConvertible {
         /// The cursor obtained from docsList or docsListContinue. Allows for pagination.
-        open let cursor: String
+        public let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
@@ -939,13 +939,13 @@ open class Paper {
     open class ListPaperDocsResponse: CustomStringConvertible {
         /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
         /// The list is sorted in the order specified by the initial call to docsList.
-        open let docIds: Array<String>
+        public let docIds: Array<String>
         /// Pass the cursor into docsListContinue to paginate through all files. The cursor preserves all properties as
         /// specified in the original call to docsList.
-        open let cursor: Paper.Cursor
+        public let cursor: Paper.Cursor
         /// Will be set to True if a subsequent call with the provided cursor to docsListContinue returns immediately
         /// with some results. If set to False please allow some delay before making another call to docsListContinue.
-        open let hasMore: Bool
+        public let hasMore: Bool
         public init(docIds: Array<String>, cursor: Paper.Cursor, hasMore: Bool) {
             arrayValidator(itemValidator: stringValidator())(docIds)
             self.docIds = docIds
@@ -1153,7 +1153,7 @@ open class Paper {
     open class ListUsersOnFolderArgs: Paper.RefPaperDoc {
         /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
-        open let limit: Int32
+        public let limit: Int32
         public init(docId: String, limit: Int32 = 1000) {
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
@@ -1187,7 +1187,7 @@ open class Paper {
     /// The ListUsersOnFolderContinueArgs struct
     open class ListUsersOnFolderContinueArgs: Paper.RefPaperDoc {
         /// The cursor obtained from docsFolderUsersList or docsFolderUsersListContinue. Allows for pagination.
-        open let cursor: String
+        public let cursor: String
         public init(docId: String, cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
@@ -1221,16 +1221,16 @@ open class Paper {
     /// The ListUsersOnFolderResponse struct
     open class ListUsersOnFolderResponse: CustomStringConvertible {
         /// List of email addresses that are invited on the Paper folder.
-        open let invitees: Array<Sharing.InviteeInfo>
+        public let invitees: Array<Sharing.InviteeInfo>
         /// List of users that are invited on the Paper folder.
-        open let users: Array<Sharing.UserInfo>
+        public let users: Array<Sharing.UserInfo>
         /// Pass the cursor into docsFolderUsersListContinue to paginate through all users. The cursor preserves all
         /// properties as specified in the original call to docsFolderUsersList.
-        open let cursor: Paper.Cursor
+        public let cursor: Paper.Cursor
         /// Will be set to True if a subsequent call with the provided cursor to docsFolderUsersListContinue returns
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsFolderUsersListContinue.
-        open let hasMore: Bool
+        public let hasMore: Bool
         public init(invitees: Array<Sharing.InviteeInfo>, users: Array<Sharing.UserInfo>, cursor: Paper.Cursor, hasMore: Bool) {
             self.invitees = invitees
             self.users = users
@@ -1270,9 +1270,9 @@ open class Paper {
     open class ListUsersOnPaperDocArgs: Paper.RefPaperDoc {
         /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
-        open let limit: Int32
+        public let limit: Int32
         /// Specify this attribute if you want to obtain users that have already accessed the Paper doc.
-        open let filterBy: Paper.UserOnPaperDocFilter
+        public let filterBy: Paper.UserOnPaperDocFilter
         public init(docId: String, limit: Int32 = 1000, filterBy: Paper.UserOnPaperDocFilter = .shared) {
             comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
@@ -1309,7 +1309,7 @@ open class Paper {
     /// The ListUsersOnPaperDocContinueArgs struct
     open class ListUsersOnPaperDocContinueArgs: Paper.RefPaperDoc {
         /// The cursor obtained from docsUsersList or docsUsersListContinue. Allows for pagination.
-        open let cursor: String
+        public let cursor: String
         public init(docId: String, cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
@@ -1343,18 +1343,18 @@ open class Paper {
     /// The ListUsersOnPaperDocResponse struct
     open class ListUsersOnPaperDocResponse: CustomStringConvertible {
         /// List of email addresses with their respective permission levels that are invited on the Paper doc.
-        open let invitees: Array<Paper.InviteeInfoWithPermissionLevel>
+        public let invitees: Array<Paper.InviteeInfoWithPermissionLevel>
         /// List of users with their respective permission levels that are invited on the Paper folder.
-        open let users: Array<Paper.UserInfoWithPermissionLevel>
+        public let users: Array<Paper.UserInfoWithPermissionLevel>
         /// The Paper doc owner. This field is populated on every single response.
-        open let docOwner: Sharing.UserInfo
+        public let docOwner: Sharing.UserInfo
         /// Pass the cursor into docsUsersListContinue to paginate through all users. The cursor preserves all
         /// properties as specified in the original call to docsUsersList.
-        open let cursor: Paper.Cursor
+        public let cursor: Paper.Cursor
         /// Will be set to True if a subsequent call with the provided cursor to docsUsersListContinue returns
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsUsersListContinue.
-        open let hasMore: Bool
+        public let hasMore: Bool
         public init(invitees: Array<Paper.InviteeInfoWithPermissionLevel>, users: Array<Paper.UserInfoWithPermissionLevel>, docOwner: Sharing.UserInfo, cursor: Paper.Cursor, hasMore: Bool) {
             self.invitees = invitees
             self.users = users
@@ -1465,9 +1465,9 @@ open class Paper {
     open class PaperDocCreateArgs: CustomStringConvertible {
         /// The Paper folder ID where the Paper document should be created. The API user has to have write access to
         /// this folder or error is thrown.
-        open let parentFolderId: String?
+        public let parentFolderId: String?
         /// The format of provided data.
-        open let importFormat: Paper.ImportFormat
+        public let importFormat: Paper.ImportFormat
         public init(importFormat: Paper.ImportFormat, parentFolderId: String? = nil) {
             nullableValidator(stringValidator())(parentFolderId)
             self.parentFolderId = parentFolderId
@@ -1577,11 +1577,11 @@ open class Paper {
     /// The PaperDocCreateUpdateResult struct
     open class PaperDocCreateUpdateResult: CustomStringConvertible {
         /// Doc ID of the newly created doc.
-        open let docId: String
+        public let docId: String
         /// The Paper doc revision. Simply an ever increasing number.
-        open let revision: Int64
+        public let revision: Int64
         /// The Paper doc title.
-        open let title: String
+        public let title: String
         public init(docId: String, revision: Int64, title: String) {
             stringValidator()(docId)
             self.docId = docId
@@ -1620,7 +1620,7 @@ open class Paper {
     /// The PaperDocExport struct
     open class PaperDocExport: Paper.RefPaperDoc {
         /// (no description)
-        open let exportFormat: Paper.ExportFormat
+        public let exportFormat: Paper.ExportFormat
         public init(docId: String, exportFormat: Paper.ExportFormat) {
             self.exportFormat = exportFormat
             super.init(docId: docId)
@@ -1653,13 +1653,13 @@ open class Paper {
     /// The PaperDocExportResult struct
     open class PaperDocExportResult: CustomStringConvertible {
         /// The Paper doc owner's email address.
-        open let owner: String
+        public let owner: String
         /// The Paper doc title.
-        open let title: String
+        public let title: String
         /// The Paper doc revision. Simply an ever increasing number.
-        open let revision: Int64
+        public let revision: Int64
         /// MIME type of the export. This corresponds to ExportFormat specified in the request.
-        open let mimeType: String
+        public let mimeType: String
         public init(owner: String, title: String, revision: Int64, mimeType: String) {
             stringValidator()(owner)
             self.owner = owner
@@ -1753,7 +1753,7 @@ open class Paper {
     /// The PaperDocSharingPolicy struct
     open class PaperDocSharingPolicy: Paper.RefPaperDoc {
         /// The default sharing policy to be set for the Paper doc.
-        open let sharingPolicy: Paper.SharingPolicy
+        public let sharingPolicy: Paper.SharingPolicy
         public init(docId: String, sharingPolicy: Paper.SharingPolicy) {
             self.sharingPolicy = sharingPolicy
             super.init(docId: docId)
@@ -1786,12 +1786,12 @@ open class Paper {
     /// The PaperDocUpdateArgs struct
     open class PaperDocUpdateArgs: Paper.RefPaperDoc {
         /// The policy used for the current update call.
-        open let docUpdatePolicy: Paper.PaperDocUpdatePolicy
+        public let docUpdatePolicy: Paper.PaperDocUpdatePolicy
         /// The latest doc revision. This value must match the head revision or an error code will be returned. This is
         /// to prevent colliding writes.
-        open let revision: Int64
+        public let revision: Int64
         /// The format of provided data.
-        open let importFormat: Paper.ImportFormat
+        public let importFormat: Paper.ImportFormat
         public init(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat) {
             self.docUpdatePolicy = docUpdatePolicy
             comparableValidator()(revision)
@@ -1990,7 +1990,7 @@ open class Paper {
     /// The RemovePaperDocUser struct
     open class RemovePaperDocUser: Paper.RefPaperDoc {
         /// User which should be removed from the Paper doc. Specify only email address or Dropbox account ID.
-        open let member: Sharing.MemberSelector
+        public let member: Sharing.MemberSelector
         public init(docId: String, member: Sharing.MemberSelector) {
             self.member = member
             super.init(docId: docId)
@@ -2023,9 +2023,9 @@ open class Paper {
     /// Sharing policy of Paper doc.
     open class SharingPolicy: CustomStringConvertible {
         /// This value applies to the non-team members.
-        open let publicSharingPolicy: Paper.SharingPublicPolicyType?
+        public let publicSharingPolicy: Paper.SharingPublicPolicyType?
         /// This value applies to the team members only. The value is null for all personal accounts.
-        open let teamSharingPolicy: Paper.SharingTeamPolicyType?
+        public let teamSharingPolicy: Paper.SharingTeamPolicyType?
         public init(publicSharingPolicy: Paper.SharingPublicPolicyType? = nil, teamSharingPolicy: Paper.SharingTeamPolicyType? = nil) {
             self.publicSharingPolicy = publicSharingPolicy
             self.teamSharingPolicy = teamSharingPolicy
@@ -2168,9 +2168,9 @@ open class Paper {
     /// The UserInfoWithPermissionLevel struct
     open class UserInfoWithPermissionLevel: CustomStringConvertible {
         /// User shared on the Paper doc.
-        open let user: Sharing.UserInfo
+        public let user: Sharing.UserInfo
         /// Permission level for the user.
-        open let permissionLevel: Paper.PaperDocPermissionLevel
+        public let permissionLevel: Paper.PaperDocPermissionLevel
         public init(user: Sharing.UserInfo, permissionLevel: Paper.PaperDocPermissionLevel) {
             self.user = user
             self.permissionLevel = permissionLevel

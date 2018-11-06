@@ -6,7 +6,7 @@
 
 /// Routes for the sharing namespace
 open class SharingRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

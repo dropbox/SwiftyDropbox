@@ -11,15 +11,15 @@ open class FileRequests {
     /// Arguments for create.
     open class CreateFileRequestArgs: CustomStringConvertible {
         /// The title of the file request. Must not be empty.
-        open let title: String
+        public let title: String
         /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
         /// permission, this will be relative to the app folder.
-        open let destination: String
+        public let destination: String
         /// The deadline for the file request. Deadlines can only be set by Pro and Business accounts.
-        open let deadline: FileRequests.FileRequestDeadline?
+        public let deadline: FileRequests.FileRequestDeadline?
         /// Whether or not the file request should be open. If the file request is closed, it will not accept any file
         /// submissions, but it can be opened later.
-        open let open: Bool
+        public let open: Bool
         public init(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true) {
             stringValidator(minLength: 1)(title)
             self.title = title
@@ -308,23 +308,23 @@ open class FileRequests {
     /// A file request https://www.dropbox.com/help/9090 for receiving files into the user's Dropbox account.
     open class FileRequest: CustomStringConvertible {
         /// The ID of the file request.
-        open let id: String
+        public let id: String
         /// The URL of the file request.
-        open let url: String
+        public let url: String
         /// The title of the file request.
-        open let title: String
+        public let title: String
         /// The path of the folder in the Dropbox where uploaded files will be sent. This can be null if the destination
         /// was removed. For apps with the app folder permission, this will be relative to the app folder.
-        open let destination: String?
+        public let destination: String?
         /// When this file request was created.
-        open let created: Date
+        public let created: Date
         /// The deadline for this file request. Only set if the request has a deadline.
-        open let deadline: FileRequests.FileRequestDeadline?
+        public let deadline: FileRequests.FileRequestDeadline?
         /// Whether or not the file request is open. If the file request is closed, it will not accept any more file
         /// submissions.
-        open let isOpen: Bool
+        public let isOpen: Bool
         /// The number of files this file request has received.
-        open let fileCount: Int64
+        public let fileCount: Int64
         public init(id: String, url: String, title: String, created: Date, isOpen: Bool, fileCount: Int64, destination: String? = nil, deadline: FileRequests.FileRequestDeadline? = nil) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
@@ -380,9 +380,9 @@ open class FileRequests {
     /// The FileRequestDeadline struct
     open class FileRequestDeadline: CustomStringConvertible {
         /// The deadline for this file request.
-        open let deadline: Date
+        public let deadline: Date
         /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
-        open let allowLateUploads: FileRequests.GracePeriod?
+        public let allowLateUploads: FileRequests.GracePeriod?
         public init(deadline: Date, allowLateUploads: FileRequests.GracePeriod? = nil) {
             self.deadline = deadline
             self.allowLateUploads = allowLateUploads
@@ -415,7 +415,7 @@ open class FileRequests {
     /// Arguments for get.
     open class GetFileRequestArgs: CustomStringConvertible {
         /// The ID of the file request to retrieve.
-        open let id: String
+        public let id: String
         public init(id: String) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
@@ -659,7 +659,7 @@ open class FileRequests {
     open class ListFileRequestsResult: CustomStringConvertible {
         /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
         /// their app folder.
-        open let fileRequests: Array<FileRequests.FileRequest>
+        public let fileRequests: Array<FileRequests.FileRequest>
         public init(fileRequests: Array<FileRequests.FileRequest>) {
             self.fileRequests = fileRequests
         }
@@ -689,16 +689,16 @@ open class FileRequests {
     /// Arguments for update.
     open class UpdateFileRequestArgs: CustomStringConvertible {
         /// The ID of the file request to update.
-        open let id: String
+        public let id: String
         /// The new title of the file request. Must not be empty.
-        open let title: String?
+        public let title: String?
         /// The new path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
         /// permission, this will be relative to the app folder.
-        open let destination: String?
+        public let destination: String?
         /// The new deadline for the file request.
-        open let deadline: FileRequests.UpdateFileRequestDeadline
+        public let deadline: FileRequests.UpdateFileRequestDeadline
         /// Whether to set this file request as open or closed.
-        open let open: Bool?
+        public let open: Bool?
         public init(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id

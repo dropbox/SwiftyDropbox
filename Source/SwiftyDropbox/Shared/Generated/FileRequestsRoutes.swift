@@ -6,7 +6,7 @@
 
 /// Routes for the file_requests namespace
 open class FileRequestsRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

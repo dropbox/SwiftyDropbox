@@ -241,9 +241,9 @@ open class Auth {
     /// Error occurred because the app is being rate limited.
     open class RateLimitError: CustomStringConvertible {
         /// The reason why the app is being rate limited.
-        open let reason: Auth.RateLimitReason
+        public let reason: Auth.RateLimitReason
         /// The number of seconds that the app should wait before making another request.
-        open let retryAfter: UInt64
+        public let retryAfter: UInt64
         public init(reason: Auth.RateLimitReason, retryAfter: UInt64 = 1) {
             self.reason = reason
             comparableValidator()(retryAfter)
@@ -328,9 +328,9 @@ open class Auth {
     /// The TokenFromOAuth1Arg struct
     open class TokenFromOAuth1Arg: CustomStringConvertible {
         /// The supplied OAuth 1.0 access token.
-        open let oauth1Token: String
+        public let oauth1Token: String
         /// The token secret associated with the supplied access token.
-        open let oauth1TokenSecret: String
+        public let oauth1TokenSecret: String
         public init(oauth1Token: String, oauth1TokenSecret: String) {
             stringValidator(minLength: 1)(oauth1Token)
             self.oauth1Token = oauth1Token
@@ -416,7 +416,7 @@ open class Auth {
     /// The TokenFromOAuth1Result struct
     open class TokenFromOAuth1Result: CustomStringConvertible {
         /// The OAuth 2.0 token generated from the supplied OAuth 1.0 token.
-        open let oauth2Token: String
+        public let oauth2Token: String
         public init(oauth2Token: String) {
             stringValidator(minLength: 1)(oauth2Token)
             self.oauth2Token = oauth2Token

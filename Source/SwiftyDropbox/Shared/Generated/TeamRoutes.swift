@@ -6,7 +6,7 @@
 
 /// Routes for the team namespace
 open class TeamRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

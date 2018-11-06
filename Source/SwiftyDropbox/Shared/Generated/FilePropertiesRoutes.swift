@@ -6,7 +6,7 @@
 
 /// Routes for the file_properties namespace
 open class FilePropertiesRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }

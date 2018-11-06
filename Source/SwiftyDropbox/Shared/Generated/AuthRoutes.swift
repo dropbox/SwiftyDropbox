@@ -6,7 +6,7 @@
 
 /// Routes for the auth namespace
 open class AuthRoutes {
-    open let client: DropboxTransportClient
+    public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
         self.client = client
     }
