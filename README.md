@@ -131,7 +131,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.8.1
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.8.2
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:

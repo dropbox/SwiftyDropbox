@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropbox'
-  s.version      = '4.8.1'
+  s.version      = '4.8.2'
   s.summary      = 'Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
