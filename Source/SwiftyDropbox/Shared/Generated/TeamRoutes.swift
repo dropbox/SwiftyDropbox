@@ -26,7 +26,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// List all device sessions of a team.
+    /// List all device sessions of a team. Permission : Team member file access.
     ///
     /// - parameter cursor: At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if
     /// the result of the call includes a cursor, the following requests should include the received cursors in order to
@@ -43,7 +43,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// List all device sessions of a team.
+    /// List all device sessions of a team. Permission : Team member file access.
     ///
     /// - parameter cursor: At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the
     /// result of the call includes a cursor, the following requests should include the received cursors in order to
@@ -662,8 +662,8 @@ open class TeamRoutes {
     /// - parameter limit: Specifying a value here has no effect.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
-    /// success or a `Void` object on failure.
-    @discardableResult open func namespacesList(limit: UInt32 = 1000) -> RpcRequest<Team.TeamNamespacesListResultSerializer, VoidSerializer> {
+    /// success or a `Team.TeamNamespacesListError` object on failure.
+    @discardableResult open func namespacesList(limit: UInt32 = 1000) -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListErrorSerializer> {
         let route = Team.namespacesList
         let serverArgs = Team.TeamNamespacesListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -682,7 +682,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// The propertiesTemplateAdd route
+    /// Permission : Team member file access.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
@@ -694,7 +694,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// The propertiesTemplateGet route
+    /// Permission : Team member file access.
     ///
     /// - parameter templateId: An identifier for template added by route  See templatesAddForUser or
     /// templatesAddForTeam.
@@ -708,7 +708,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// The propertiesTemplateList route
+    /// Permission : Team member file access.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
@@ -719,7 +719,7 @@ open class TeamRoutes {
         return client.request(route)
     }
 
-    /// The propertiesTemplateUpdate route
+    /// Permission : Team member file access.
     ///
     /// - parameter templateId: An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
     /// - parameter name: A display name for the template. template names can be up to 256 bytes.

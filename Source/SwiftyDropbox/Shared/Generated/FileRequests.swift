@@ -15,7 +15,7 @@ open class FileRequests {
         /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
         /// permission, this will be relative to the app folder.
         public let destination: String
-        /// The deadline for the file request. Deadlines can only be set by Pro and Business accounts.
+        /// The deadline for the file request. Deadlines can only be set by Professional and Business accounts.
         public let deadline: FileRequests.FileRequestDeadline?
         /// Whether or not the file request should be open. If the file request is closed, it will not accept any file
         /// submissions, but it can be opened later.
@@ -695,7 +695,7 @@ open class FileRequests {
         /// The new path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
         /// permission, this will be relative to the app folder.
         public let destination: String?
-        /// The new deadline for the file request.
+        /// The new deadline for the file request. Deadlines can only be set by Professional and Business accounts.
         public let deadline: FileRequests.UpdateFileRequestDeadline
         /// Whether to set this file request as open or closed.
         public let open: Bool?

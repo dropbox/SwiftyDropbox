@@ -108,26 +108,54 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route will replace
+    /// copyBatch. The main difference is this route will return stutus for each entry, while copyBatch raises failure
+    /// if any entry fails. This route will either finish synchronously, or return a job ID and do the async copy job in
+    /// background. Please use copyBatchCheckV2 to check the job status.
+    ///
+    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
+    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
+    /// to avoid the conflict.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func copyBatchV2(entries: Array<Files.RelocationPath>, autorename: Bool = false) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
+        let route = Files.copyBatchV2
+        let serverArgs = Files.RelocationBatchArgBase(entries: entries, autorename: autorename)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Copy multiple files or folders to different locations at once in the user's Dropbox. If allowSharedFolder in
     /// RelocationBatchArg is false, this route is atomic. If one entry fails, the whole transaction will abort. If
     /// allowSharedFolder in RelocationBatchArg is true, atomicity is not guaranteed, but it allows you to copy the
     /// contents of shared folders to new locations. This route will return job ID immediately and do the async copy job
     /// in background. Please use copyBatchCheck to check the job status.
     ///
-    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
     /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
     /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
     /// This field is always true for moveBatch.
-    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
-    /// to avoid the conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchLaunch` object on
     /// success or a `Void` object on failure.
-    @discardableResult open func copyBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
+    @available(*, unavailable, message:"copyBatch is deprecated. Use copyBatchV2.")
+    @discardableResult open func copyBatch(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowSharedFolder: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
         let route = Files.copyBatch
-        let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+        let serverArgs = Files.RelocationBatchArg(entries: entries, autorename: autorename, allowSharedFolder: allowSharedFolder, allowOwnershipTransfer: allowOwnershipTransfer)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for copyBatchV2. It returns list of results for each entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult open func copyBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.copyBatchCheckV2
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -138,6 +166,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchJobStatus` object on
     /// success or a `Async.PollError` object on failure.
+    @available(*, unavailable, message:"copyBatchCheck is deprecated. Use copyBatchCheckV2.")
     @discardableResult open func copyBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.copyBatchCheck
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
@@ -667,24 +696,50 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Move multiple files or folders to different locations at once in the user's Dropbox. This route will replace
+    /// moveBatchV2. The main difference is this route will return stutus for each entry, while moveBatch raises failure
+    /// if any entry fails. This route will either finish synchronously, or return a job ID and do the async move job in
+    /// background. Please use moveBatchCheckV2 to check the job status.
+    ///
+    /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
+    /// the content being moved. This does not apply to copies.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func moveBatchV2(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
+        let route = Files.moveBatchV2
+        let serverArgs = Files.MoveBatchArg(entries: entries, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Move multiple files or folders to different locations at once in the user's Dropbox. This route is 'all or
     /// nothing', which means if one entry fails, the whole transaction will abort. This route will return job ID
     /// immediately and do the async moving job in background. Please use moveBatchCheck to check the job status.
     ///
-    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
     /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
     /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
     /// This field is always true for moveBatch.
-    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
-    /// to avoid the conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchLaunch` object on
     /// success or a `Void` object on failure.
-    @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, allowSharedFolder: Bool = false, autorename: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
+    @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowSharedFolder: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
         let route = Files.moveBatch
-        let serverArgs = Files.RelocationBatchArg(entries: entries, allowSharedFolder: allowSharedFolder, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+        let serverArgs = Files.RelocationBatchArg(entries: entries, autorename: autorename, allowSharedFolder: allowSharedFolder, allowOwnershipTransfer: allowOwnershipTransfer)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for moveBatchV2. It returns list of results for each entry.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult open func moveBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.moveBatchCheckV2
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -811,8 +866,9 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Save a specified URL into a file in user's Dropbox. If the given path already exists, the file will be renamed
-    /// to avoid the conflict (e.g. myfile (1).txt).
+    /// Save the data from a specified URL into a file in user's Dropbox. Note that the transfer from the URL must
+    /// complete within 5 minutes, or the operation will time out and the job will fail. If the given path already
+    /// exists, the file will be renamed to avoid the conflict (e.g. myfile (1).txt).
     ///
     /// - parameter path: The path in Dropbox where the URL will be saved to.
     /// - parameter url: The URL to be saved.

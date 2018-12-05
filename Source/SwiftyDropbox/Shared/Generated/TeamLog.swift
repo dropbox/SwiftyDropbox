@@ -1261,6 +1261,123 @@ open class TeamLog {
         }
     }
 
+    /// Policy for controlling if team members can activate camera uploads
+    public enum CameraUploadsPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CameraUploadsPolicySerializer().serialize(self)))"
+        }
+    }
+    open class CameraUploadsPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CameraUploadsPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CameraUploadsPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return CameraUploadsPolicy.disabled
+                        case "enabled":
+                            return CameraUploadsPolicy.enabled
+                        case "other":
+                            return CameraUploadsPolicy.other
+                        default:
+                            return CameraUploadsPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed camera uploads setting for team.
+    open class CameraUploadsPolicyChangedDetails: CustomStringConvertible {
+        /// New camera uploads setting.
+        public let newValue: TeamLog.CameraUploadsPolicy
+        /// Previous camera uploads setting.
+        public let previousValue: TeamLog.CameraUploadsPolicy
+        public init(newValue: TeamLog.CameraUploadsPolicy, previousValue: TeamLog.CameraUploadsPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CameraUploadsPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class CameraUploadsPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CameraUploadsPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.CameraUploadsPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.CameraUploadsPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> CameraUploadsPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.CameraUploadsPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.CameraUploadsPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return CameraUploadsPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The CameraUploadsPolicyChangedType struct
+    open class CameraUploadsPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CameraUploadsPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class CameraUploadsPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CameraUploadsPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> CameraUploadsPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return CameraUploadsPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Certificate details.
     open class Certificate: CustomStringConvertible {
         /// Certificate subject.
@@ -1451,6 +1568,8 @@ open class TeamLog {
         case anonymous
         /// Action was done on behalf of the team.
         case team
+        /// Action was done on behalf of a trusted non team member.
+        case trustedNonTeamMember(TeamLog.TrustedNonTeamMemberLogInfo)
         /// An unspecified error.
         case other
 
@@ -1478,6 +1597,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("team")
                     return .dictionary(d)
+                case .trustedNonTeamMember(let arg):
+                    var d = Serialization.getFields(TeamLog.TrustedNonTeamMemberLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("trusted_non_team_member")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1499,6 +1622,9 @@ open class TeamLog {
                             return ContextLogInfo.anonymous
                         case "team":
                             return ContextLogInfo.team
+                        case "trusted_non_team_member":
+                            let v = TeamLog.TrustedNonTeamMemberLogInfoSerializer().deserialize(json)
+                            return ContextLogInfo.trustedNonTeamMember(v)
                         case "other":
                             return ContextLogInfo.other
                         default:
@@ -4424,6 +4550,8 @@ open class TeamLog {
         /// An unspecified error.
         case fileDeleteCommentDetails(TeamLog.FileDeleteCommentDetails)
         /// An unspecified error.
+        case fileEditCommentDetails(TeamLog.FileEditCommentDetails)
+        /// An unspecified error.
         case fileLikeCommentDetails(TeamLog.FileLikeCommentDetails)
         /// An unspecified error.
         case fileResolveCommentDetails(TeamLog.FileResolveCommentDetails)
@@ -4902,6 +5030,8 @@ open class TeamLog {
         /// An unspecified error.
         case allowDownloadEnabledDetails(TeamLog.AllowDownloadEnabledDetails)
         /// An unspecified error.
+        case cameraUploadsPolicyChangedDetails(TeamLog.CameraUploadsPolicyChangedDetails)
+        /// An unspecified error.
         case dataPlacementRestrictionChangePolicyDetails(TeamLog.DataPlacementRestrictionChangePolicyDetails)
         /// An unspecified error.
         case dataPlacementRestrictionSatisfyPolicyDetails(TeamLog.DataPlacementRestrictionSatisfyPolicyDetails)
@@ -5067,6 +5197,10 @@ open class TeamLog {
                 case .fileDeleteCommentDetails(let arg):
                     var d = Serialization.getFields(TeamLog.FileDeleteCommentDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_delete_comment_details")
+                    return .dictionary(d)
+                case .fileEditCommentDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.FileEditCommentDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("file_edit_comment_details")
                     return .dictionary(d)
                 case .fileLikeCommentDetails(let arg):
                     var d = Serialization.getFields(TeamLog.FileLikeCommentDetailsSerializer().serialize(arg))
@@ -6024,6 +6158,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.AllowDownloadEnabledDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("allow_download_enabled_details")
                     return .dictionary(d)
+                case .cameraUploadsPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.CameraUploadsPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("camera_uploads_policy_changed_details")
+                    return .dictionary(d)
                 case .dataPlacementRestrictionChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.DataPlacementRestrictionChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("data_placement_restriction_change_policy_details")
@@ -6312,6 +6450,9 @@ open class TeamLog {
                         case "file_delete_comment_details":
                             let v = TeamLog.FileDeleteCommentDetailsSerializer().deserialize(json)
                             return EventDetails.fileDeleteCommentDetails(v)
+                        case "file_edit_comment_details":
+                            let v = TeamLog.FileEditCommentDetailsSerializer().deserialize(json)
+                            return EventDetails.fileEditCommentDetails(v)
                         case "file_like_comment_details":
                             let v = TeamLog.FileLikeCommentDetailsSerializer().deserialize(json)
                             return EventDetails.fileLikeCommentDetails(v)
@@ -7029,6 +7170,9 @@ open class TeamLog {
                         case "allow_download_enabled_details":
                             let v = TeamLog.AllowDownloadEnabledDetailsSerializer().deserialize(json)
                             return EventDetails.allowDownloadEnabledDetails(v)
+                        case "camera_uploads_policy_changed_details":
+                            let v = TeamLog.CameraUploadsPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.cameraUploadsPolicyChangedDetails(v)
                         case "data_placement_restriction_change_policy_details":
                             let v = TeamLog.DataPlacementRestrictionChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.dataPlacementRestrictionChangePolicyDetails(v)
@@ -7248,6 +7392,8 @@ open class TeamLog {
         case fileChangeCommentSubscription(TeamLog.FileChangeCommentSubscriptionType)
         /// (comments) Deleted file comment
         case fileDeleteComment(TeamLog.FileDeleteCommentType)
+        /// (comments) Edited file comment
+        case fileEditComment(TeamLog.FileEditCommentType)
         /// (comments) Liked file comment (deprecated, no longer logged)
         case fileLikeComment(TeamLog.FileLikeCommentType)
         /// (comments) Resolved file comment
@@ -7402,7 +7548,7 @@ open class TeamLog {
         case memberChangeName(TeamLog.MemberChangeNameType)
         /// (members) Changed member status (invited, joined, suspended, etc.)
         case memberChangeStatus(TeamLog.MemberChangeStatusType)
-        /// (members) Cleared saved contacts
+        /// (members) Cleared manually added contacts
         case memberDeleteManualContacts(TeamLog.MemberDeleteManualContactsType)
         /// (members) Permanently deleted contents of deleted team member account
         case memberPermanentlyDeleteAccountContents(TeamLog.MemberPermanentlyDeleteAccountContentsType)
@@ -7728,6 +7874,8 @@ open class TeamLog {
         case allowDownloadDisabled(TeamLog.AllowDownloadDisabledType)
         /// (team_policies) Enabled downloads (deprecated, no longer logged)
         case allowDownloadEnabled(TeamLog.AllowDownloadEnabledType)
+        /// (team_policies) Changed camera uploads setting for team
+        case cameraUploadsPolicyChanged(TeamLog.CameraUploadsPolicyChangedType)
         /// (team_policies) Set restrictions on data center locations where team data resides
         case dataPlacementRestrictionChangePolicy(TeamLog.DataPlacementRestrictionChangePolicyType)
         /// (team_policies) Completed restrictions on data center locations where team data resides
@@ -7896,6 +8044,10 @@ open class TeamLog {
                 case .fileDeleteComment(let arg):
                     var d = Serialization.getFields(TeamLog.FileDeleteCommentTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_delete_comment")
+                    return .dictionary(d)
+                case .fileEditComment(let arg):
+                    var d = Serialization.getFields(TeamLog.FileEditCommentTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("file_edit_comment")
                     return .dictionary(d)
                 case .fileLikeComment(let arg):
                     var d = Serialization.getFields(TeamLog.FileLikeCommentTypeSerializer().serialize(arg))
@@ -8853,6 +9005,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.AllowDownloadEnabledTypeSerializer().serialize(arg))
                     d[".tag"] = .str("allow_download_enabled")
                     return .dictionary(d)
+                case .cameraUploadsPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.CameraUploadsPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("camera_uploads_policy_changed")
+                    return .dictionary(d)
                 case .dataPlacementRestrictionChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.DataPlacementRestrictionChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("data_placement_restriction_change_policy")
@@ -9137,6 +9293,9 @@ open class TeamLog {
                         case "file_delete_comment":
                             let v = TeamLog.FileDeleteCommentTypeSerializer().deserialize(json)
                             return EventType.fileDeleteComment(v)
+                        case "file_edit_comment":
+                            let v = TeamLog.FileEditCommentTypeSerializer().deserialize(json)
+                            return EventType.fileEditComment(v)
                         case "file_like_comment":
                             let v = TeamLog.FileLikeCommentTypeSerializer().deserialize(json)
                             return EventType.fileLikeComment(v)
@@ -9854,6 +10013,9 @@ open class TeamLog {
                         case "allow_download_enabled":
                             let v = TeamLog.AllowDownloadEnabledTypeSerializer().deserialize(json)
                             return EventType.allowDownloadEnabled(v)
+                        case "camera_uploads_policy_changed":
+                            let v = TeamLog.CameraUploadsPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.cameraUploadsPolicyChanged(v)
                         case "data_placement_restriction_change_policy":
                             let v = TeamLog.DataPlacementRestrictionChangePolicyTypeSerializer().deserialize(json)
                             return EventType.dataPlacementRestrictionChangePolicy(v)
@@ -10899,6 +11061,74 @@ open class TeamLog {
         }
     }
 
+    /// Edited file comment.
+    open class FileEditCommentDetails: CustomStringConvertible {
+        /// Comment text. Might be missing due to historical data gap.
+        public let commentText: String?
+        /// Previous comment text.
+        public let previousCommentText: String
+        public init(previousCommentText: String, commentText: String? = nil) {
+            nullableValidator(stringValidator())(commentText)
+            self.commentText = commentText
+            stringValidator()(previousCommentText)
+            self.previousCommentText = previousCommentText
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileEditCommentDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class FileEditCommentDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileEditCommentDetails) -> JSON {
+            let output = [ 
+            "previous_comment_text": Serialization._StringSerializer.serialize(value.previousCommentText),
+            "comment_text": NullableSerializer(Serialization._StringSerializer).serialize(value.commentText),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileEditCommentDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let previousCommentText = Serialization._StringSerializer.deserialize(dict["previous_comment_text"] ?? .null)
+                    let commentText = NullableSerializer(Serialization._StringSerializer).deserialize(dict["comment_text"] ?? .null)
+                    return FileEditCommentDetails(previousCommentText: previousCommentText, commentText: commentText)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The FileEditCommentType struct
+    open class FileEditCommentType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileEditCommentTypeSerializer().serialize(self)))"
+        }
+    }
+    open class FileEditCommentTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileEditCommentType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileEditCommentType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return FileEditCommentType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Edited files.
     open class FileEditDetails: CustomStringConvertible {
         public init() {
@@ -11670,7 +11900,7 @@ open class TeamLog {
             self.fileRequestDetails = fileRequestDetails
             arrayValidator(itemValidator: stringValidator())(submittedFileNames)
             self.submittedFileNames = submittedFileNames
-            nullableValidator(stringValidator(minLength: 1))(submitterName)
+            nullableValidator(stringValidator())(submitterName)
             self.submitterName = submitterName
             nullableValidator(stringValidator(maxLength: 255))(submitterEmail)
             self.submitterEmail = submitterEmail
@@ -14668,7 +14898,7 @@ open class TeamLog {
         }
     }
 
-    /// Cleared saved contacts.
+    /// Cleared manually added contacts.
     open class MemberDeleteManualContactsDetails: CustomStringConvertible {
         public init() {
         }
@@ -16171,7 +16401,7 @@ open class TeamLog {
         public init(accountId: String? = nil, displayName: String? = nil, email: String? = nil) {
             nullableValidator(stringValidator(minLength: 40, maxLength: 40))(accountId)
             self.accountId = accountId
-            nullableValidator(stringValidator(minLength: 1))(displayName)
+            nullableValidator(stringValidator())(displayName)
             self.displayName = displayName
             nullableValidator(stringValidator(maxLength: 255))(email)
             self.email = email
@@ -16194,6 +16424,11 @@ open class TeamLog {
                         output[k] = v
                     }
                     output[".tag"] = .str("team_member")
+                case let trustedNonTeamMember as TeamLog.TrustedNonTeamMemberLogInfo:
+                    for (k, v) in Serialization.getFields(TeamLog.TrustedNonTeamMemberLogInfoSerializer().serialize(trustedNonTeamMember)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .str("trusted_non_team_member")
                 case let nonTeamMember as TeamLog.NonTeamMemberLogInfo:
                     for (k, v) in Serialization.getFields(TeamLog.NonTeamMemberLogInfoSerializer().serialize(nonTeamMember)) {
                         output[k] = v
@@ -16210,6 +16445,8 @@ open class TeamLog {
                     switch tag {
                         case "team_member":
                             return TeamLog.TeamMemberLogInfoSerializer().deserialize(json)
+                        case "trusted_non_team_member":
+                            return TeamLog.TrustedNonTeamMemberLogInfoSerializer().deserialize(json)
                         case "non_team_member":
                             return TeamLog.NonTeamMemberLogInfoSerializer().deserialize(json)
                         default:
@@ -18998,6 +19235,8 @@ open class TeamLog {
         /// An unspecified error.
         case markdown
         /// An unspecified error.
+        case pdf
+        /// An unspecified error.
         case other
 
         public var description: String {
@@ -19020,6 +19259,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("markdown")
                     return .dictionary(d)
+                case .pdf:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("pdf")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -19037,6 +19280,8 @@ open class TeamLog {
                             return PaperDownloadFormat.html
                         case "markdown":
                             return PaperDownloadFormat.markdown
+                        case "pdf":
+                            return PaperDownloadFormat.pdf
                         case "other":
                             return PaperDownloadFormat.other
                         default:
@@ -24630,8 +24875,6 @@ open class TeamLog {
         /// An unspecified error.
         case forbid
         /// An unspecified error.
-        case teamMembersAndWhitelist
-        /// An unspecified error.
         case other
 
         public var description: String {
@@ -24650,10 +24893,6 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("forbid")
                     return .dictionary(d)
-                case .teamMembersAndWhitelist:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team_members_and_whitelist")
-                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -24669,8 +24908,6 @@ open class TeamLog {
                             return SharingMemberPolicy.allow
                         case "forbid":
                             return SharingMemberPolicy.forbid
-                        case "team_members_and_whitelist":
-                            return SharingMemberPolicy.teamMembersAndWhitelist
                         case "other":
                             return SharingMemberPolicy.other
                         default:
@@ -29787,6 +30024,86 @@ open class TeamLog {
                             return TimeUnit.other
                         default:
                             return TimeUnit.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// User that is not a member of the team but considered trusted.
+    open class TrustedNonTeamMemberLogInfo: TeamLog.UserLogInfo {
+        /// Indicates the type of the trusted non team member user.
+        public let trustedNonTeamMemberType: TeamLog.TrustedNonTeamMemberType
+        public init(trustedNonTeamMemberType: TeamLog.TrustedNonTeamMemberType, accountId: String? = nil, displayName: String? = nil, email: String? = nil) {
+            self.trustedNonTeamMemberType = trustedNonTeamMemberType
+            super.init(accountId: accountId, displayName: displayName, email: email)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TrustedNonTeamMemberLogInfoSerializer().serialize(self)))"
+        }
+    }
+    open class TrustedNonTeamMemberLogInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TrustedNonTeamMemberLogInfo) -> JSON {
+            let output = [ 
+            "trusted_non_team_member_type": TeamLog.TrustedNonTeamMemberTypeSerializer().serialize(value.trustedNonTeamMemberType),
+            "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
+            "display_name": NullableSerializer(Serialization._StringSerializer).serialize(value.displayName),
+            "email": NullableSerializer(Serialization._StringSerializer).serialize(value.email),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TrustedNonTeamMemberLogInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let trustedNonTeamMemberType = TeamLog.TrustedNonTeamMemberTypeSerializer().deserialize(dict["trusted_non_team_member_type"] ?? .null)
+                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
+                    let displayName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["display_name"] ?? .null)
+                    let email = NullableSerializer(Serialization._StringSerializer).deserialize(dict["email"] ?? .null)
+                    return TrustedNonTeamMemberLogInfo(trustedNonTeamMemberType: trustedNonTeamMemberType, accountId: accountId, displayName: displayName, email: email)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TrustedNonTeamMemberType union
+    public enum TrustedNonTeamMemberType: CustomStringConvertible {
+        /// An unspecified error.
+        case multiInstanceAdmin
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TrustedNonTeamMemberTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TrustedNonTeamMemberTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TrustedNonTeamMemberType) -> JSON {
+            switch value {
+                case .multiInstanceAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("multi_instance_admin")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TrustedNonTeamMemberType {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "multi_instance_admin":
+                            return TrustedNonTeamMemberType.multiInstanceAdmin
+                        case "other":
+                            return TrustedNonTeamMemberType.other
+                        default:
+                            return TrustedNonTeamMemberType.other
                     }
                 default:
                     fatalError("Failed to deserialize")

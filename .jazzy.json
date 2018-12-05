@@ -6,6 +6,7 @@
       "name": "Routes", 
       "children": [
         "AuthRoutes", 
+        "ContactsRoutes", 
         "FilePropertiesRoutes", 
         "FileRequestsRoutes", 
         "FilesRoutes", 
@@ -22,6 +23,7 @@
         "Async", 
         "Auth", 
         "Common", 
+        "Contacts", 
         "FileProperties", 
         "FileRequests", 
         "Files", 
