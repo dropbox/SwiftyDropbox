@@ -16,7 +16,8 @@ open class FileRequestsRoutes {
     /// - parameter title: The title of the file request. Must not be empty.
     /// - parameter destination: The path of the folder in the Dropbox where uploaded files will be sent. For apps with
     /// the app folder permission, this will be relative to the app folder.
-    /// - parameter deadline: The deadline for the file request. Deadlines can only be set by Pro and Business accounts.
+    /// - parameter deadline: The deadline for the file request. Deadlines can only be set by Professional and Business
+    /// accounts.
     /// - parameter open: Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
     ///
@@ -57,7 +58,8 @@ open class FileRequestsRoutes {
     /// - parameter title: The new title of the file request. Must not be empty.
     /// - parameter destination: The new path of the folder in the Dropbox where uploaded files will be sent. For apps
     /// with the app folder permission, this will be relative to the app folder.
-    /// - parameter deadline: The new deadline for the file request.
+    /// - parameter deadline: The new deadline for the file request. Deadlines can only be set by Professional and
+    /// Business accounts.
     /// - parameter open: Whether to set this file request as open or closed.
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on

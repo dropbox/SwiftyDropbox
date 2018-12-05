@@ -3044,6 +3044,10 @@ open class Sharing {
         case public_
         /// Link is accessible only by team members.
         case team
+        /// The link can be used by no one. The link merely points the user to the content, and does not grant
+        /// additional rights to the user. Members of the content who use this link can only access the content with
+        /// their pre-existing access rights.
+        case noOne
         /// Link is accessible only by members of the content.
         case members
         /// An unspecified error.
@@ -3065,6 +3069,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("team")
                     return .dictionary(d)
+                case .noOne:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_one")
+                    return .dictionary(d)
                 case .members:
                     var d = [String: JSON]()
                     d[".tag"] = .str("members")
@@ -3084,6 +3092,8 @@ open class Sharing {
                             return LinkAudience.public_
                         case "team":
                             return LinkAudience.team
+                        case "no_one":
+                            return LinkAudience.noOne
                         case "members":
                             return LinkAudience.members
                         case "other":

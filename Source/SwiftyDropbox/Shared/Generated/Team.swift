@@ -4230,7 +4230,7 @@ open class Team {
         /// Whether a user is directory restricted.
         public let isDirectoryRestricted: Bool?
         public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly, isDirectoryRestricted: Bool? = nil) {
-            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$")(memberEmail)
+            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
             nullableValidator(stringValidator(maxLength: 100, pattern: "[^/:?*<>\"|]*"))(memberGivenName)
             self.memberGivenName = memberGivenName
@@ -5893,7 +5893,7 @@ open class Team {
         public let newIsDirectoryRestricted: Bool?
         public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) {
             self.user = user
-            nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*.[A-Za-z]{2,15}$"))(newEmail)
+            nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(newEmail)
             self.newEmail = newEmail
             nullableValidator(stringValidator(maxLength: 64))(newExternalId)
             self.newExternalId = newExternalId
@@ -6704,8 +6704,11 @@ open class Team {
     open class RemovedStatus: CustomStringConvertible {
         /// True if the removed team member is recoverable.
         public let isRecoverable: Bool
-        public init(isRecoverable: Bool) {
+        /// True if the team member's account was converted to individual account.
+        public let isDisconnected: Bool
+        public init(isRecoverable: Bool, isDisconnected: Bool) {
             self.isRecoverable = isRecoverable
+            self.isDisconnected = isDisconnected
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(RemovedStatusSerializer().serialize(self)))"
@@ -6716,6 +6719,7 @@ open class Team {
         open func serialize(_ value: RemovedStatus) -> JSON {
             let output = [ 
             "is_recoverable": Serialization._BoolSerializer.serialize(value.isRecoverable),
+            "is_disconnected": Serialization._BoolSerializer.serialize(value.isDisconnected),
             ]
             return .dictionary(output)
         }
@@ -6723,7 +6727,8 @@ open class Team {
             switch json {
                 case .dictionary(let dict):
                     let isRecoverable = Serialization._BoolSerializer.deserialize(dict["is_recoverable"] ?? .null)
-                    return RemovedStatus(isRecoverable: isRecoverable)
+                    let isDisconnected = Serialization._BoolSerializer.deserialize(dict["is_disconnected"] ?? .null)
+                    return RemovedStatus(isRecoverable: isRecoverable, isDisconnected: isDisconnected)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8863,12 +8868,57 @@ open class Team {
         }
     }
 
-    /// The TeamNamespacesListContinueError union
-    public enum TeamNamespacesListContinueError: CustomStringConvertible {
-        /// The cursor is invalid.
-        case invalidCursor
+    /// The TeamNamespacesListError union
+    public enum TeamNamespacesListError: CustomStringConvertible {
+        /// Argument passed in is invalid.
+        case invalidArg
         /// An unspecified error.
         case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamNamespacesListErrorSerializer().serialize(self)))"
+        }
+    }
+    open class TeamNamespacesListErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamNamespacesListError) -> JSON {
+            switch value {
+                case .invalidArg:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_arg")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamNamespacesListError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_arg":
+                            return TeamNamespacesListError.invalidArg
+                        case "other":
+                            return TeamNamespacesListError.other
+                        default:
+                            return TeamNamespacesListError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TeamNamespacesListContinueError union
+    public enum TeamNamespacesListContinueError: CustomStringConvertible {
+        /// Argument passed in is invalid.
+        case invalidArg
+        /// An unspecified error.
+        case other
+        /// The cursor is invalid.
+        case invalidCursor
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamNamespacesListContinueErrorSerializer().serialize(self)))"
@@ -8878,13 +8928,17 @@ open class Team {
         public init() { }
         open func serialize(_ value: TeamNamespacesListContinueError) -> JSON {
             switch value {
-                case .invalidCursor:
+                case .invalidArg:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_cursor")
+                    d[".tag"] = .str("invalid_arg")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .invalidCursor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_cursor")
                     return .dictionary(d)
             }
         }
@@ -8893,12 +8947,14 @@ open class Team {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "invalid_cursor":
-                            return TeamNamespacesListContinueError.invalidCursor
+                        case "invalid_arg":
+                            return TeamNamespacesListContinueError.invalidArg
                         case "other":
                             return TeamNamespacesListContinueError.other
+                        case "invalid_cursor":
+                            return TeamNamespacesListContinueError.invalidCursor
                         default:
-                            return TeamNamespacesListContinueError.other
+                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -9780,7 +9836,7 @@ open class Team {
         deprecated: false,
         argSerializer: Team.TeamNamespacesListArgSerializer(),
         responseSerializer: Team.TeamNamespacesListResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        errorSerializer: Team.TeamNamespacesListErrorSerializer(),
         attrs: ["host": "api",
                 "style": "rpc"]
     )
