@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		823F9B3BF919B2C886D194B1 /* Pods_TestSwiftyDropbox_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C022A789F3066D74C4AFFEF /* Pods_TestSwiftyDropbox_iOS.framework */; };
-		B34BE6A534C9076C6BD264FC /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B8F0920940CFC5D2381C7F /* Pods_TestSwiftyDropbox_macOS.framework */; };
 		F290789A1D8B7D0F00E6DD71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29078901D8B7D0F00E6DD71 /* AppDelegate.swift */; };
 		F290789B1D8B7D0F00E6DD71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F29078911D8B7D0F00E6DD71 /* Assets.xcassets */; };
 		F290789C1D8B7D0F00E6DD71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F29078921D8B7D0F00E6DD71 /* LaunchScreen.storyboard */; };
@@ -24,17 +22,18 @@
 		F2D0EA591E67B7140076A119 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D0EA551E67B7140076A119 /* TestData.swift */; };
 		F2D0EA5D1E67B7E30076A119 /* TestAppType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D0EA5C1E67B7E30076A119 /* TestAppType.swift */; };
 		F2D0EA5E1E67B7E30076A119 /* TestAppType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D0EA5C1E67B7E30076A119 /* TestAppType.swift */; };
+		F67BA3E07645BA0BDD67D0C8 /* Pods_TestSwiftyDropbox_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E97640DDC4A490D55BEBB20E /* Pods_TestSwiftyDropbox_iOS.framework */; };
+		F8E76D64CE9CA1FC6AA2728F /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4138CDE8EA81313D397A3C /* Pods_TestSwiftyDropbox_macOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		13B8F0920940CFC5D2381C7F /* Pods_TestSwiftyDropbox_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestSwiftyDropbox_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C022A789F3066D74C4AFFEF /* Pods_TestSwiftyDropbox_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestSwiftyDropbox_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		674ABA8F4C579376EEA6A2E4 /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS.release.xcconfig"; sourceTree = "<group>"; };
+		16369027F930D25F66DD88AA /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		7A4138CDE8EA81313D397A3C /* Pods_TestSwiftyDropbox_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestSwiftyDropbox_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E017741F2C531C3E0C021A0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8359D90085F44ED8DDD0A939 /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		B2078FAB65F840717AE6AE73 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS.release.xcconfig"; sourceTree = "<group>"; };
-		D33DC27B2A50D254C291F738 /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		C80757739BB3B02BD36ECF4E /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		E76F57821BB5C18600FE5EFB /* TestSwiftyDropbox_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestSwiftyDropbox_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E97640DDC4A490D55BEBB20E /* Pods_TestSwiftyDropbox_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestSwiftyDropbox_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1B156AEF951F10811B955A7 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		F29078901D8B7D0F00E6DD71 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F29078911D8B7D0F00E6DD71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F29078931D8B7D0F00E6DD71 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -51,6 +50,7 @@
 		F2D0EA541E67B7140076A119 /* TestClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestClasses.swift; sourceTree = "<group>"; };
 		F2D0EA551E67B7140076A119 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		F2D0EA5C1E67B7E30076A119 /* TestAppType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppType.swift; sourceTree = "<group>"; };
+		FD634227A6DF5488E51AF98C /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				823F9B3BF919B2C886D194B1 /* Pods_TestSwiftyDropbox_iOS.framework in Frameworks */,
+				F67BA3E07645BA0BDD67D0C8 /* Pods_TestSwiftyDropbox_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,20 +66,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34BE6A534C9076C6BD264FC /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */,
+				F8E76D64CE9CA1FC6AA2728F /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B9A173DC8457FFCE8989A392 /* Pods */ = {
+		7303CE65D832603F59B80A75 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D33DC27B2A50D254C291F738 /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */,
-				674ABA8F4C579376EEA6A2E4 /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */,
-				8359D90085F44ED8DDD0A939 /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */,
-				B2078FAB65F840717AE6AE73 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */,
+				C80757739BB3B02BD36ECF4E /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */,
+				FD634227A6DF5488E51AF98C /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */,
+				16369027F930D25F66DD88AA /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */,
+				F1B156AEF951F10811B955A7 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -92,7 +92,7 @@
 				F2D0EA451E67B5E00076A119 /* TestSwiftyDropbox_macOS */,
 				E76F57831BB5C18600FE5EFB /* Products */,
 				F2444B703F600656DC6CD408 /* Frameworks */,
-				B9A173DC8457FFCE8989A392 /* Pods */,
+				7303CE65D832603F59B80A75 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,8 +109,8 @@
 			isa = PBXGroup;
 			children = (
 				7E017741F2C531C3E0C021A0 /* Pods.framework */,
-				3C022A789F3066D74C4AFFEF /* Pods_TestSwiftyDropbox_iOS.framework */,
-				13B8F0920940CFC5D2381C7F /* Pods_TestSwiftyDropbox_macOS.framework */,
+				E97640DDC4A490D55BEBB20E /* Pods_TestSwiftyDropbox_iOS.framework */,
+				7A4138CDE8EA81313D397A3C /* Pods_TestSwiftyDropbox_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -158,11 +158,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E76F57AA1BB5C18700FE5EFB /* Build configuration list for PBXNativeTarget "TestSwiftyDropbox_iOS" */;
 			buildPhases = (
-				AA42C7523896CF632B6E69AC /* [CP] Check Pods Manifest.lock */,
+				4623A7D0910A618AB0C83D1A /* [CP] Check Pods Manifest.lock */,
 				E76F577E1BB5C18600FE5EFB /* Sources */,
 				E76F577F1BB5C18600FE5EFB /* Frameworks */,
 				E76F57801BB5C18600FE5EFB /* Resources */,
-				6C0B9302BFAB30378D49BFF7 /* [CP] Embed Pods Frameworks */,
+				CA42C58617FDF7A849EBF8A6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -177,11 +177,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F2D0EA501E67B5E00076A119 /* Build configuration list for PBXNativeTarget "TestSwiftyDropbox_macOS" */;
 			buildPhases = (
-				F8BFAD87A60A2AEAE7EAA7DF /* [CP] Check Pods Manifest.lock */,
+				A52DBC70C69718E62328FFEE /* [CP] Check Pods Manifest.lock */,
 				F2D0EA401E67B5E00076A119 /* Sources */,
 				F2D0EA411E67B5E00076A119 /* Frameworks */,
 				F2D0EA421E67B5E00076A119 /* Resources */,
-				53B515F8C08D4D6837D2593F /* [CP] Embed Pods Frameworks */,
+				CD92B8D88C534899C75F6CBF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -200,13 +200,13 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Dropbox;
 				TargetAttributes = {
 					E76F57811BB5C18600FE5EFB = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = G7HH3F8CAK;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -262,30 +262,56 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		53B515F8C08D4D6837D2593F /* [CP] Embed Pods Frameworks */ = {
+		4623A7D0910A618AB0C83D1A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire-macOS/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox-macOS/SwiftyDropbox.framework",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
+				"$(DERIVED_FILE_DIR)/Pods-TestSwiftyDropbox_iOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6C0B9302BFAB30378D49BFF7 /* [CP] Embed Pods Frameworks */ = {
+		A52DBC70C69718E62328FFEE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TestSwiftyDropbox_macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA42C58617FDF7A849EBF8A6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh",
@@ -293,6 +319,8 @@
 				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox-iOS/SwiftyDropbox.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
@@ -302,40 +330,28 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AA42C7523896CF632B6E69AC /* [CP] Check Pods Manifest.lock */ = {
+		CD92B8D88C534899C75F6CBF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+			inputFileListPaths = (
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire-macOS/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox-macOS/SwiftyDropbox.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TestSwiftyDropbox_iOS-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F8BFAD87A60A2AEAE7EAA7DF /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TestSwiftyDropbox_macOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -400,12 +416,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -437,6 +455,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -454,12 +473,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -484,6 +505,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -491,7 +513,7 @@
 		};
 		E76F57AB1BB5C18700FE5EFB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D33DC27B2A50D254C291F738 /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */;
+			baseConfigurationReference = C80757739BB3B02BD36ECF4E /* Pods-TestSwiftyDropbox_iOS.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -505,13 +527,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		E76F57AC1BB5C18700FE5EFB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 674ABA8F4C579376EEA6A2E4 /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */;
+			baseConfigurationReference = FD634227A6DF5488E51AF98C /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -523,13 +544,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwiftyDropbox-iOS-Test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 		F2D0EA511E67B5E00076A119 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8359D90085F44ED8DDD0A939 /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */;
+			baseConfigurationReference = 16369027F930D25F66DD88AA /* Pods-TestSwiftyDropbox_macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -543,13 +563,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		F2D0EA521E67B5E00076A119 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2078FAB65F840717AE6AE73 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */;
+			baseConfigurationReference = F1B156AEF951F10811B955A7 /* Pods-TestSwiftyDropbox_macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -562,7 +581,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwiftyDropbox-macOS-Test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
