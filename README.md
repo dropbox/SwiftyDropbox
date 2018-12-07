@@ -9,7 +9,6 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 ## Table of Contents
 
 * [System requirements](#system-requirements)
-  * [Swift 3 Keychain bug](#swift-3-keychain-bug)
 * [Get started](#get-started)
   * [Register your application](#register-your-application)
   * [Obtain an OAuth 2.0 token](#obtain-an-oauth-20-token)
@@ -52,17 +51,8 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 - iOS 9.0+
 - macOS 10.11+
-- Xcode 8.0+
-
-### Swift 3 Keychain bug
-
-> SwiftyDropbox currently supports Swift 3, Xcode 8 and iOS 10. However, there appears to be a bug with the Keychain in the iOS simulator environment where data is not persistently saved to the Keychain.
->
-> As a temporary workaround, in the Project Navigator, select **your project** > **Capabilities** > **Keychain Sharing** > **ON**.
->
-> You can read more about the bug [here](https://forums.developer.apple.com/message/170381#170381).
-
----
+- Xcode 10.0+
+- Swift 4.2+
 
 ## Get Started
 
@@ -131,7 +121,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.8.2
+github "https://github.com/dropbox/SwiftyDropbox" ~> 5.0.0
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
