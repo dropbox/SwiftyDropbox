@@ -135,9 +135,6 @@ extension FilesRoutes {
                 self.appendFileChunk(uploadData: uploadData, fileUrl: fileUrl, cursor: cursor, shouldClose: shouldClose, fileChunkInputStream: fileChunkInputStream, chunkUploadResponseQueue: chunkUploadResponseQueue, chunkUploadFinished: chunkUploadFinished, retryCount: 0, startBytes: startBytes, endBytes: endBytes, shouldContinue: shouldContinue)
                 // wait until each chunk upload completes before resuming loop iteration
                 _ = chunkUploadFinished.wait(timeout: DispatchTime.now() + .seconds(480))
-                if !shouldContinue {
-                    break
-                }
             }
             uploadData.uploadGroup.leave()
         }
