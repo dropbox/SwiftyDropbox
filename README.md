@@ -452,7 +452,7 @@ client.files.createFolder(path: "/test/path/in/Dropbox/account").response { resp
 ```Swift
 let fileData = "testing data example".data(using: String.Encoding.utf8, allowLossyConversion: false)!
 
-let request = client.files.upload(path: "/test/path/in/Dropbox/account", input: TestData.fileData)
+let request = client.files.upload(path: "/test/path/in/Dropbox/account", input: fileData)
     .response { response, error in
         if let response = response {
             print(response)
