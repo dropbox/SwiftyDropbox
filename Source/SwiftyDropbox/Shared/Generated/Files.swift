@@ -1461,6 +1461,8 @@ open class Files {
     public enum DownloadError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
+        /// This file type cannot be downloaded directly; use export instead.
+        case unsupportedFile
         /// An unspecified error.
         case other
 
@@ -1476,6 +1478,10 @@ open class Files {
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("path")
                     return .dictionary(d)
+                case .unsupportedFile:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_file")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1490,6 +1496,8 @@ open class Files {
                         case "path":
                             let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
                             return DownloadError.path(v)
+                        case "unsupported_file":
+                            return DownloadError.unsupportedFile
                         case "other":
                             return DownloadError.other
                         default:
@@ -1622,6 +1630,200 @@ open class Files {
         }
     }
 
+    /// The ExportArg struct
+    open class ExportArg: CustomStringConvertible {
+        /// The path of the file to be exported.
+        public let path: String
+        public init(path: String) {
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            self.path = path
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ExportArgSerializer().serialize(self)))"
+        }
+    }
+    open class ExportArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ExportArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ExportArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    return ExportArg(path: path)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ExportError union
+    public enum ExportError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// This file type cannot be exported. Use download instead.
+        case nonExportable
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ExportErrorSerializer().serialize(self)))"
+        }
+    }
+    open class ExportErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ExportError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .nonExportable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("non_exportable")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ExportError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return ExportError.path(v)
+                        case "non_exportable":
+                            return ExportError.nonExportable
+                        case "other":
+                            return ExportError.other
+                        default:
+                            return ExportError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Export information for a file.
+    open class ExportInfo: CustomStringConvertible {
+        /// Format to which the file can be exported to.
+        public let exportAs: String?
+        public init(exportAs: String? = nil) {
+            nullableValidator(stringValidator())(exportAs)
+            self.exportAs = exportAs
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ExportInfoSerializer().serialize(self)))"
+        }
+    }
+    open class ExportInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ExportInfo) -> JSON {
+            let output = [ 
+            "export_as": NullableSerializer(Serialization._StringSerializer).serialize(value.exportAs),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ExportInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let exportAs = NullableSerializer(Serialization._StringSerializer).deserialize(dict["export_as"] ?? .null)
+                    return ExportInfo(exportAs: exportAs)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ExportMetadata struct
+    open class ExportMetadata: CustomStringConvertible {
+        /// The last component of the path (including extension). This never contains a slash.
+        public let name: String
+        /// The file size in bytes.
+        public let size: UInt64
+        /// A hash based on the exported file content. This field can be used to verify data integrity. Similar to
+        /// content hash. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
+        public let exportHash: String?
+        public init(name: String, size: UInt64, exportHash: String? = nil) {
+            stringValidator()(name)
+            self.name = name
+            comparableValidator()(size)
+            self.size = size
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(exportHash)
+            self.exportHash = exportHash
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ExportMetadataSerializer().serialize(self)))"
+        }
+    }
+    open class ExportMetadataSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ExportMetadata) -> JSON {
+            let output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "size": Serialization._UInt64Serializer.serialize(value.size),
+            "export_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.exportHash),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ExportMetadata {
+            switch json {
+                case .dictionary(let dict):
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .null)
+                    let exportHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["export_hash"] ?? .null)
+                    return ExportMetadata(name: name, size: size, exportHash: exportHash)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ExportResult struct
+    open class ExportResult: CustomStringConvertible {
+        /// Metadata for the exported version of the file.
+        public let exportMetadata: Files.ExportMetadata
+        /// Metadata for the original file.
+        public let fileMetadata: Files.FileMetadata
+        public init(exportMetadata: Files.ExportMetadata, fileMetadata: Files.FileMetadata) {
+            self.exportMetadata = exportMetadata
+            self.fileMetadata = fileMetadata
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ExportResultSerializer().serialize(self)))"
+        }
+    }
+    open class ExportResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ExportResult) -> JSON {
+            let output = [ 
+            "export_metadata": Files.ExportMetadataSerializer().serialize(value.exportMetadata),
+            "file_metadata": Files.FileMetadataSerializer().serialize(value.fileMetadata),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ExportResult {
+            switch json {
+                case .dictionary(let dict):
+                    let exportMetadata = Files.ExportMetadataSerializer().deserialize(dict["export_metadata"] ?? .null)
+                    let fileMetadata = Files.FileMetadataSerializer().deserialize(dict["file_metadata"] ?? .null)
+                    return ExportResult(exportMetadata: exportMetadata, fileMetadata: fileMetadata)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The FileMetadata struct
     open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
@@ -1638,12 +1840,18 @@ open class Files {
         public let rev: String
         /// The file size in bytes.
         public let size: UInt64
-        /// Additional information if the file is a photo or video.
+        /// Additional information if the file is a photo or video. This field will not be set on entries returned by
+        /// listFolder, listFolderContinue, or getThumbnailBatch, starting December 2, 2019.
         public let mediaInfo: Files.MediaInfo?
         /// Set if this file is a symlink.
         public let symlinkInfo: Files.SymlinkInfo?
         /// Set if this file is contained in a shared folder.
         public let sharingInfo: Files.FileSharingInfo?
+        /// If true, file can be downloaded directly; else the file must be exported.
+        public let isDownloadable: Bool
+        /// Information about format this file can be exported to. This filed must be set if isDownloadable is set to
+        /// false.
+        public let exportInfo: Files.ExportInfo?
         /// Additional information if the file has custom properties with the property template specified.
         public let propertyGroups: Array<FileProperties.PropertyGroup>?
         /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
@@ -1654,7 +1862,7 @@ open class Files {
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
         /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
-        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
+        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, isDownloadable: Bool = true, exportInfo: Files.ExportInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
             self.clientModified = clientModified
@@ -1666,6 +1874,8 @@ open class Files {
             self.mediaInfo = mediaInfo
             self.symlinkInfo = symlinkInfo
             self.sharingInfo = sharingInfo
+            self.isDownloadable = isDownloadable
+            self.exportInfo = exportInfo
             self.propertyGroups = propertyGroups
             self.hasExplicitSharedMembers = hasExplicitSharedMembers
             nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
@@ -1692,6 +1902,8 @@ open class Files {
             "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
             "symlink_info": NullableSerializer(Files.SymlinkInfoSerializer()).serialize(value.symlinkInfo),
             "sharing_info": NullableSerializer(Files.FileSharingInfoSerializer()).serialize(value.sharingInfo),
+            "is_downloadable": Serialization._BoolSerializer.serialize(value.isDownloadable),
+            "export_info": NullableSerializer(Files.ExportInfoSerializer()).serialize(value.exportInfo),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
             "has_explicit_shared_members": NullableSerializer(Serialization._BoolSerializer).serialize(value.hasExplicitSharedMembers),
             "content_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
@@ -1713,10 +1925,12 @@ open class Files {
                     let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .null)
                     let symlinkInfo = NullableSerializer(Files.SymlinkInfoSerializer()).deserialize(dict["symlink_info"] ?? .null)
                     let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
+                    let isDownloadable = Serialization._BoolSerializer.deserialize(dict["is_downloadable"] ?? .number(1))
+                    let exportInfo = NullableSerializer(Files.ExportInfoSerializer()).deserialize(dict["export_info"] ?? .null)
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     let hasExplicitSharedMembers = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .null)
                     let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
-                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, symlinkInfo: symlinkInfo, sharingInfo: sharingInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash)
+                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, symlinkInfo: symlinkInfo, sharingInfo: sharingInfo, isDownloadable: isDownloadable, exportInfo: exportInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2054,6 +2268,10 @@ open class Files {
     public enum GetTemporaryLinkError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
+        /// The user's email address needs to be verified to use this functionality.
+        case emailNotVerified
+        /// Cannot get temporary link to this file type; use export instead.
+        case unsupportedFile
         /// An unspecified error.
         case other
 
@@ -2069,6 +2287,14 @@ open class Files {
                     var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("path")
                     return .dictionary(d)
+                case .emailNotVerified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("email_not_verified")
+                    return .dictionary(d)
+                case .unsupportedFile:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_file")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -2083,6 +2309,10 @@ open class Files {
                         case "path":
                             let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
                             return GetTemporaryLinkError.path(v)
+                        case "email_not_verified":
+                            return GetTemporaryLinkError.emailNotVerified
+                        case "unsupported_file":
+                            return GetTemporaryLinkError.unsupportedFile
                         case "other":
                             return GetTemporaryLinkError.other
                         default:
@@ -2435,7 +2665,8 @@ open class Files {
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
         /// contain contents of all subfolders.
         public let recursive: Bool
-        /// If true, mediaInfo in FileMetadata is set for photo and video.
+        /// If true, mediaInfo in FileMetadata is set for photo and video. This parameter will no longer have an effect
+        /// starting December 2, 2019.
         public let includeMediaInfo: Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
         public let includeDeleted: Bool
@@ -2455,7 +2686,9 @@ open class Files {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
         /// associated with the file and each of the listed templates.
         public let includePropertyGroups: FileProperties.TemplateFilterBase?
-        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
+        /// If true, include files that are not downloadable, i.e. Google Docs.
+        public let includeNonDownloadableFiles: Bool
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includeNonDownloadableFiles: Bool = true) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.recursive = recursive
@@ -2467,6 +2700,7 @@ open class Files {
             self.limit = limit
             self.sharedLink = sharedLink
             self.includePropertyGroups = includePropertyGroups
+            self.includeNonDownloadableFiles = includeNonDownloadableFiles
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -2485,6 +2719,7 @@ open class Files {
             "limit": NullableSerializer(Serialization._UInt32Serializer).serialize(value.limit),
             "shared_link": NullableSerializer(Files.SharedLinkSerializer()).serialize(value.sharedLink),
             "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
+            "include_non_downloadable_files": Serialization._BoolSerializer.serialize(value.includeNonDownloadableFiles),
             ]
             return .dictionary(output)
         }
@@ -2500,7 +2735,8 @@ open class Files {
                     let limit = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["limit"] ?? .null)
                     let sharedLink = NullableSerializer(Files.SharedLinkSerializer()).deserialize(dict["shared_link"] ?? .null)
                     let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
-                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
+                    let includeNonDownloadableFiles = Serialization._BoolSerializer.deserialize(dict["include_non_downloadable_files"] ?? .number(1))
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups, includeNonDownloadableFiles: includeNonDownloadableFiles)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -3017,6 +3253,8 @@ open class Files {
         /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
         /// restrictions due to copyright claims.
         case restrictedContent
+        /// This operation is not supported for this content type.
+        case unsupportedContentType
         /// An unspecified error.
         case other
 
@@ -3048,6 +3286,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("restricted_content")
                     return .dictionary(d)
+                case .unsupportedContentType:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_content_type")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3070,6 +3312,8 @@ open class Files {
                             return LookupError.notFolder
                         case "restricted_content":
                             return LookupError.restrictedContent
+                        case "unsupported_content_type":
+                            return LookupError.unsupportedContentType
                         case "other":
                             return LookupError.other
                         default:
@@ -3534,6 +3778,8 @@ open class Files {
         /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
         /// succeeded, and if not, try again. This should happen very rarely.
         case internalError
+        /// Can't move the shared folder to the given destination.
+        case cantMoveSharedFolder
         /// An unspecified error.
         case other
 
@@ -3589,6 +3835,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("internal_error")
                     return .dictionary(d)
+                case .cantMoveSharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cant_move_shared_folder")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3625,6 +3875,8 @@ open class Files {
                             return RelocationError.insufficientQuota
                         case "internal_error":
                             return RelocationError.internalError
+                        case "cant_move_shared_folder":
+                            return RelocationError.cantMoveSharedFolder
                         case "other":
                             return RelocationError.other
                         default:
@@ -3662,6 +3914,8 @@ open class Files {
         /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
         /// succeeded, and if not, try again. This should happen very rarely.
         case internalError
+        /// Can't move the shared folder to the given destination.
+        case cantMoveSharedFolder
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -3719,6 +3973,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("internal_error")
                     return .dictionary(d)
+                case .cantMoveSharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cant_move_shared_folder")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3759,6 +4017,8 @@ open class Files {
                             return RelocationBatchError.insufficientQuota
                         case "internal_error":
                             return RelocationBatchError.internalError
+                        case "cant_move_shared_folder":
+                            return RelocationBatchError.cantMoveSharedFolder
                         case "other":
                             return RelocationBatchError.other
                         case "too_many_write_operations":
@@ -4054,8 +4314,8 @@ open class Files {
         }
     }
 
-    /// Result returned by copyBatchV2 or moveBatchV2 that may either launch an asynchronous job or complete
-    /// synchronously.
+    /// Result returned by copyBatchCheckV2 or moveBatchCheckV2 that may either be in progress or completed with result
+    /// for each entry.
     public enum RelocationBatchV2JobStatus: CustomStringConvertible {
         /// The asynchronous job is still in progress.
         case inProgress
@@ -4492,7 +4752,7 @@ open class Files {
     public enum SaveUrlError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.WriteError)
-        /// Failed downloading the given URL.
+        /// Failed downloading the given URL. The url may be password-protected / the password provided was incorrect.
         case downloadFailed
         /// The given URL is invalid.
         case invalidUrl
@@ -4675,7 +4935,7 @@ open class Files {
             self.path = path
             stringValidator()(query)
             self.query = query
-            comparableValidator()(start)
+            comparableValidator(maxValue: 9999)(start)
             self.start = start
             comparableValidator(minValue: 1, maxValue: 1000)(maxResults)
             self.maxResults = maxResults
@@ -5984,7 +6244,7 @@ open class Files {
         /// previous request was received and processed successfully but the client did not receive the response, e.g.
         /// due to a network error.
         case incorrectOffset(Files.UploadSessionOffsetError)
-        /// You are attempting to append data to an upload session that has alread been closed (i.e. committed).
+        /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
         case closed
         /// The session must be closed before calling upload_session/finish_batch.
         case notClosed
@@ -6656,6 +6916,17 @@ open class Files {
         argSerializer: Files.DownloadZipArgSerializer(),
         responseSerializer: Files.DownloadZipResultSerializer(),
         errorSerializer: Files.DownloadZipErrorSerializer(),
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let export = Route(
+        name: "export",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.ExportArgSerializer(),
+        responseSerializer: Files.ExportResultSerializer(),
+        errorSerializer: Files.ExportErrorSerializer(),
         attrs: ["host": "content",
                 "style": "download"]
     )

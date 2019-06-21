@@ -4516,12 +4516,17 @@ open class Team {
         public let membershipType: Team.TeamMembershipType
         /// The date and time the user joined as a member of a specific team.
         public let joinedOn: Date?
+        /// The date and time the user was suspended from the team (contains value only when the member's status matches
+        /// suspended in TeamMemberStatus.
+        public let suspendedOn: Date?
         /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used for SAML
         /// authentication.
         public let persistentId: String?
         /// Whether the user is a directory restricted user.
         public let isDirectoryRestricted: Bool?
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil) {
+        /// URL for the photo representing the user, if one is set.
+        public let profilePhotoUrl: String?
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             nullableValidator(stringValidator())(externalId)
@@ -4535,9 +4540,12 @@ open class Team {
             self.name = name
             self.membershipType = membershipType
             self.joinedOn = joinedOn
+            self.suspendedOn = suspendedOn
             nullableValidator(stringValidator())(persistentId)
             self.persistentId = persistentId
             self.isDirectoryRestricted = isDirectoryRestricted
+            nullableValidator(stringValidator())(profilePhotoUrl)
+            self.profilePhotoUrl = profilePhotoUrl
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberProfileSerializer().serialize(self)))"
@@ -4556,8 +4564,10 @@ open class Team {
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
+            "suspended_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.suspendedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
             "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
+            "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
             ]
             return .dictionary(output)
         }
@@ -4573,9 +4583,11 @@ open class Team {
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
+                    let suspendedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["suspended_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
-                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
+                    let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
+                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8647,12 +8659,12 @@ open class Team {
         public let groups: Array<String>
         /// The namespace id of the user's root folder.
         public let memberFolderId: String
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil) {
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
             arrayValidator(itemValidator: stringValidator())(groups)
             self.groups = groups
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(memberFolderId)
             self.memberFolderId = memberFolderId
-            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
+            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
@@ -8673,8 +8685,10 @@ open class Team {
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
+            "suspended_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.suspendedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
             "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
+            "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
             ]
             return .dictionary(output)
         }
@@ -8692,9 +8706,11 @@ open class Team {
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
+                    let suspendedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["suspended_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
-                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, joinedOn: joinedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted)
+                    let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
+                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9000,6 +9016,65 @@ open class Team {
                     return TeamNamespacesListResult(namespaces: namespaces, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamReportFailureReason union
+    public enum TeamReportFailureReason: CustomStringConvertible {
+        /// We couldn't create the report, but we think this was a fluke. Everything should work if you try it again.
+        case temporaryError
+        /// Too many other reports are being created right now. Try creating this report again once the others finish.
+        case manyReportsAtOnce
+        /// We couldn't create the report. Try creating the report again with less data.
+        case tooMuchData
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamReportFailureReasonSerializer().serialize(self)))"
+        }
+    }
+    open class TeamReportFailureReasonSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamReportFailureReason) -> JSON {
+            switch value {
+                case .temporaryError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("temporary_error")
+                    return .dictionary(d)
+                case .manyReportsAtOnce:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("many_reports_at_once")
+                    return .dictionary(d)
+                case .tooMuchData:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_much_data")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamReportFailureReason {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "temporary_error":
+                            return TeamReportFailureReason.temporaryError
+                        case "many_reports_at_once":
+                            return TeamReportFailureReason.manyReportsAtOnce
+                        case "too_much_data":
+                            return TeamReportFailureReason.tooMuchData
+                        case "other":
+                            return TeamReportFailureReason.other
+                        default:
+                            return TeamReportFailureReason.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }

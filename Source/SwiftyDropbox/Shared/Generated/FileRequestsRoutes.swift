@@ -11,6 +11,16 @@ open class FileRequestsRoutes {
         self.client = client
     }
 
+    /// Returns the total number of file requests owned by this user. Includes both open and closed file requests.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `FileRequests.CountFileRequestsResult`
+    /// object on success or a `FileRequests.CountFileRequestsError` object on failure.
+    @discardableResult open func count() -> RpcRequest<FileRequests.CountFileRequestsResultSerializer, FileRequests.CountFileRequestsErrorSerializer> {
+        let route = FileRequests.count
+        return client.request(route)
+    }
+
     /// Creates a file request for this user.
     ///
     /// - parameter title: The title of the file request. Must not be empty.
@@ -29,6 +39,29 @@ open class FileRequestsRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Delete a batch of closed file requests.
+    ///
+    /// - parameter ids: List IDs of the file requests to delete.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `FileRequests.DeleteFileRequestsResult`
+    /// object on success or a `FileRequests.DeleteFileRequestError` object on failure.
+    @discardableResult open func delete(ids: Array<String>) -> RpcRequest<FileRequests.DeleteFileRequestsResultSerializer, FileRequests.DeleteFileRequestErrorSerializer> {
+        let route = FileRequests.delete
+        let serverArgs = FileRequests.DeleteFileRequestArgs(ids: ids)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Delete all closed file requests owned by this user.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a
+    /// `FileRequests.DeleteAllClosedFileRequestsResult` object on success or a
+    /// `FileRequests.DeleteAllClosedFileRequestsError` object on failure.
+    @discardableResult open func deleteAllClosed() -> RpcRequest<FileRequests.DeleteAllClosedFileRequestsResultSerializer, FileRequests.DeleteAllClosedFileRequestsErrorSerializer> {
+        let route = FileRequests.deleteAllClosed
+        return client.request(route)
+    }
+
     /// Returns the specified file request.
     ///
     /// - parameter id: The ID of the file request to retrieve.
@@ -44,12 +77,38 @@ open class FileRequestsRoutes {
     /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
     /// return file requests with destinations in the app folder.
     ///
+    /// - parameter limit: The maximum number of file requests that should be returned per request.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
+    /// object on success or a `FileRequests.ListFileRequestsError` object on failure.
+    @discardableResult open func listV2(limit: UInt64 = 1000) -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
+        let route = FileRequests.listV2
+        let serverArgs = FileRequests.ListFileRequestsArg(limit: limit)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
+    /// return file requests with destinations in the app folder.
+    ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsResult`
     /// object on success or a `FileRequests.ListFileRequestsError` object on failure.
     @discardableResult open func list_() -> RpcRequest<FileRequests.ListFileRequestsResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
         let route = FileRequests.list_
         return client.request(route)
+    }
+
+    /// Once a cursor has been retrieved from listV2, use this to paginate through all file requests. The cursor must
+    /// come from a previous call to listV2 or listContinue.
+    ///
+    /// - parameter cursor: The cursor returned by the previous API call specified in the endpoint description.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
+    /// object on success or a `FileRequests.ListFileRequestsContinueError` object on failure.
+    @discardableResult open func listContinue(cursor: String) -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsContinueErrorSerializer> {
+        let route = FileRequests.listContinue
+        let serverArgs = FileRequests.ListFileRequestsContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
     }
 
     /// Update a file request.

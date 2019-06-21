@@ -7,6 +7,6 @@ import PackageDescription
 let package = Package(
     name: "SwiftyDropbox",
     dependencies: [
-        .Package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMinor(from: "4.7.3")),
+        .Package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMinor(from: "4.8.2")),
     ]
 )

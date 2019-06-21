@@ -12,12 +12,18 @@ open class SeenState {
     public enum PlatformType: CustomStringConvertible {
         /// The content was viewed on the web.
         case web
-        /// The content was viewed on a mobile client.
-        case mobile
         /// The content was viewed on a desktop client.
         case desktop
+        /// The content was viewed on a mobile iOS client.
+        case mobileIos
+        /// The content was viewed on a mobile android client.
+        case mobileAndroid
+        /// The content was viewed from an API client.
+        case api
         /// The content was viewed on an unknown platform.
         case unknown
+        /// The content was viewed on a mobile client. DEPRECATED: Use mobile_ios or mobile_android instead.
+        case mobile
         /// An unspecified error.
         case other
 
@@ -33,17 +39,29 @@ open class SeenState {
                     var d = [String: JSON]()
                     d[".tag"] = .str("web")
                     return .dictionary(d)
-                case .mobile:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("mobile")
-                    return .dictionary(d)
                 case .desktop:
                     var d = [String: JSON]()
                     d[".tag"] = .str("desktop")
                     return .dictionary(d)
+                case .mobileIos:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile_ios")
+                    return .dictionary(d)
+                case .mobileAndroid:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile_android")
+                    return .dictionary(d)
+                case .api:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("api")
+                    return .dictionary(d)
                 case .unknown:
                     var d = [String: JSON]()
                     d[".tag"] = .str("unknown")
+                    return .dictionary(d)
+                case .mobile:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -58,12 +76,18 @@ open class SeenState {
                     switch tag {
                         case "web":
                             return PlatformType.web
-                        case "mobile":
-                            return PlatformType.mobile
                         case "desktop":
                             return PlatformType.desktop
+                        case "mobile_ios":
+                            return PlatformType.mobileIos
+                        case "mobile_android":
+                            return PlatformType.mobileAndroid
+                        case "api":
+                            return PlatformType.api
                         case "unknown":
                             return PlatformType.unknown
+                        case "mobile":
+                            return PlatformType.mobile
                         case "other":
                             return PlatformType.other
                         default:

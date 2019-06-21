@@ -359,6 +359,8 @@ open class Sharing {
         case accessError(Sharing.SharedFolderAccessError)
         /// The current user's e-mail address is unverified.
         case emailUnverified
+        /// The current user has been banned.
+        case bannedMember
         /// members in AddFolderMemberArg contains a bad invitation recipient.
         case badMember(Sharing.AddMemberSelectorError)
         /// Your team policy does not allow sharing outside of the team.
@@ -396,6 +398,10 @@ open class Sharing {
                 case .emailUnverified:
                     var d = [String: JSON]()
                     d[".tag"] = .str("email_unverified")
+                    return .dictionary(d)
+                case .bannedMember:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("banned_member")
                     return .dictionary(d)
                 case .badMember(let arg):
                     var d = ["bad_member": Sharing.AddMemberSelectorErrorSerializer().serialize(arg)]
@@ -449,6 +455,8 @@ open class Sharing {
                             return AddFolderMemberError.accessError(v)
                         case "email_unverified":
                             return AddFolderMemberError.emailUnverified
+                        case "banned_member":
+                            return AddFolderMemberError.bannedMember
                         case "bad_member":
                             let v = Sharing.AddMemberSelectorErrorSerializer().deserialize(d["bad_member"] ?? .null)
                             return AddFolderMemberError.badMember(v)
@@ -974,8 +982,9 @@ open class Sharing {
         case path(Files.LookupError)
         /// User's email should be verified.
         case emailNotVerified
-        /// The shared link already exists. You can call listSharedLinks to get the existing link.
-        case sharedLinkAlreadyExists
+        /// The shared link already exists. You can call listSharedLinks to get the  existing link, or use the provided
+        /// metadata if it is returned.
+        case sharedLinkAlreadyExists(Sharing.SharedLinkAlreadyExistsMetadata?)
         /// There is an error with the given settings.
         case settingsError(Sharing.SharedLinkSettingsError)
         /// Access to the requested path is forbidden.
@@ -997,8 +1006,8 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("email_not_verified")
                     return .dictionary(d)
-                case .sharedLinkAlreadyExists:
-                    var d = [String: JSON]()
+                case .sharedLinkAlreadyExists(let arg):
+                    var d = ["shared_link_already_exists": NullableSerializer(Sharing.SharedLinkAlreadyExistsMetadataSerializer()).serialize(arg)]
                     d[".tag"] = .str("shared_link_already_exists")
                     return .dictionary(d)
                 case .settingsError(let arg):
@@ -1022,7 +1031,8 @@ open class Sharing {
                         case "email_not_verified":
                             return CreateSharedLinkWithSettingsError.emailNotVerified
                         case "shared_link_already_exists":
-                            return CreateSharedLinkWithSettingsError.sharedLinkAlreadyExists
+                            let v = NullableSerializer(Sharing.SharedLinkAlreadyExistsMetadataSerializer()).deserialize(d["shared_link_already_exists"] ?? .null)
+                            return CreateSharedLinkWithSettingsError.sharedLinkAlreadyExists(v)
                         case "settings_error":
                             let v = Sharing.SharedLinkSettingsErrorSerializer().deserialize(d["settings_error"] ?? .null)
                             return CreateSharedLinkWithSettingsError.settingsError(v)
@@ -1156,10 +1166,14 @@ open class Sharing {
         case unshare
         /// Relinquish one's own membership to the file.
         case relinquishMembership
-        /// Use create_link instead.
+        /// Use create_view_link and create_edit_link instead.
         case shareLink
-        /// Create a shared link to the file.
+        /// Use create_view_link and create_edit_link instead.
         case createLink
+        /// Create a shared link to a file that only allows users to view the content.
+        case createViewLink
+        /// Create a shared link to a file that allows users to edit the content.
+        case createEditLink
         /// An unspecified error.
         case other
 
@@ -1211,6 +1225,14 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("create_link")
                     return .dictionary(d)
+                case .createViewLink:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("create_view_link")
+                    return .dictionary(d)
+                case .createEditLink:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("create_edit_link")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -1242,6 +1264,10 @@ open class Sharing {
                             return FileAction.shareLink
                         case "create_link":
                             return FileAction.createLink
+                        case "create_view_link":
+                            return FileAction.createViewLink
+                        case "create_edit_link":
+                            return FileAction.createEditLink
                         case "other":
                             return FileAction.other
                         default:
@@ -2259,7 +2285,7 @@ open class Sharing {
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
         case sharedLinkAccessDenied
-        /// This type of link is not supported.
+        /// This type of link is not supported; use files instead.
         case unsupportedLinkType
         /// An unspecified error.
         case other
@@ -2318,7 +2344,7 @@ open class Sharing {
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
         case sharedLinkAccessDenied
-        /// This type of link is not supported.
+        /// This type of link is not supported; use files instead.
         case unsupportedLinkType
         /// An unspecified error.
         case other
@@ -2955,6 +2981,57 @@ open class Sharing {
         }
     }
 
+    /// The LinkAccessLevel union
+    public enum LinkAccessLevel: CustomStringConvertible {
+        /// Users who use the link can view and comment on the content.
+        case viewer
+        /// Users who use the link can edit, view and comment on the content.
+        case editor
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LinkAccessLevelSerializer().serialize(self)))"
+        }
+    }
+    open class LinkAccessLevelSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LinkAccessLevel) -> JSON {
+            switch value {
+                case .viewer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("viewer")
+                    return .dictionary(d)
+                case .editor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("editor")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LinkAccessLevel {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "viewer":
+                            return LinkAccessLevel.viewer
+                        case "editor":
+                            return LinkAccessLevel.editor
+                        case "other":
+                            return LinkAccessLevel.other
+                        default:
+                            return LinkAccessLevel.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Actions that can be performed on a link.
     public enum LinkAction: CustomStringConvertible {
         /// Change the access level of the link.
@@ -3048,6 +3125,8 @@ open class Sharing {
         /// additional rights to the user. Members of the content who use this link can only access the content with
         /// their pre-existing access rights.
         case noOne
+        /// A link-specific password is required to access the link. Login is not required.
+        case password
         /// Link is accessible only by members of the content.
         case members
         /// An unspecified error.
@@ -3073,6 +3152,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("no_one")
                     return .dictionary(d)
+                case .password:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("password")
+                    return .dictionary(d)
                 case .members:
                     var d = [String: JSON]()
                     d[".tag"] = .str("members")
@@ -3094,6 +3177,8 @@ open class Sharing {
                             return LinkAudience.team
                         case "no_one":
                             return LinkAudience.noOne
+                        case "password":
+                            return LinkAudience.password
                         case "members":
                             return LinkAudience.members
                         case "other":
@@ -3256,21 +3341,31 @@ open class Sharing {
         /// The current visibility of the link after considering the shared links policies of the the team (in case the
         /// link's owner is part of a team) and the shared folder (in case the linked file is part of a shared folder).
         /// This field is shown only if the caller has access to this info (the link's owner always has access to this
-        /// data).
+        /// data). For some links, an effective_audience value is returned instead.
         public let resolvedVisibility: Sharing.ResolvedVisibility?
         /// The shared link's requested visibility. This can be overridden by the team and shared folder policies. The
         /// final visibility, after considering these policies, can be found in resolvedVisibility. This is shown only
-        /// if the caller is the link's owner.
+        /// if the caller is the link's owner and resolved_visibility is returned instead of effective_audience.
         public let requestedVisibility: Sharing.RequestedVisibility?
         /// Whether the caller can revoke the shared link.
         public let canRevoke: Bool
         /// The failure reason for revoking the link. This field will only be present if the canRevoke is false.
         public let revokeFailureReason: Sharing.SharedLinkAccessFailureReason?
-        public init(canRevoke: Bool, resolvedVisibility: Sharing.ResolvedVisibility? = nil, requestedVisibility: Sharing.RequestedVisibility? = nil, revokeFailureReason: Sharing.SharedLinkAccessFailureReason? = nil) {
+        /// The type of audience who can benefit from the access level specified by the `link_access_level` field.
+        public let effectiveAudience: Sharing.LinkAudience?
+        /// The access level that the link will grant to its users. A link can grant additional rights to a user beyond
+        /// their current access level. For example, if a user was invited as a viewer to a file, and then opens a link
+        /// with `link_access_level` set to `editor`, then they will gain editor privileges. The `link_access_level` is
+        /// a property of the link, and does not depend on who is calling this API. In particular, `link_access_level`
+        /// does not take into account the API caller's current permissions to the content.
+        public let linkAccessLevel: Sharing.LinkAccessLevel?
+        public init(canRevoke: Bool, resolvedVisibility: Sharing.ResolvedVisibility? = nil, requestedVisibility: Sharing.RequestedVisibility? = nil, revokeFailureReason: Sharing.SharedLinkAccessFailureReason? = nil, effectiveAudience: Sharing.LinkAudience? = nil, linkAccessLevel: Sharing.LinkAccessLevel? = nil) {
             self.resolvedVisibility = resolvedVisibility
             self.requestedVisibility = requestedVisibility
             self.canRevoke = canRevoke
             self.revokeFailureReason = revokeFailureReason
+            self.effectiveAudience = effectiveAudience
+            self.linkAccessLevel = linkAccessLevel
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(LinkPermissionsSerializer().serialize(self)))"
@@ -3284,6 +3379,8 @@ open class Sharing {
             "resolved_visibility": NullableSerializer(Sharing.ResolvedVisibilitySerializer()).serialize(value.resolvedVisibility),
             "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
             "revoke_failure_reason": NullableSerializer(Sharing.SharedLinkAccessFailureReasonSerializer()).serialize(value.revokeFailureReason),
+            "effective_audience": NullableSerializer(Sharing.LinkAudienceSerializer()).serialize(value.effectiveAudience),
+            "link_access_level": NullableSerializer(Sharing.LinkAccessLevelSerializer()).serialize(value.linkAccessLevel),
             ]
             return .dictionary(output)
         }
@@ -3294,7 +3391,9 @@ open class Sharing {
                     let resolvedVisibility = NullableSerializer(Sharing.ResolvedVisibilitySerializer()).deserialize(dict["resolved_visibility"] ?? .null)
                     let requestedVisibility = NullableSerializer(Sharing.RequestedVisibilitySerializer()).deserialize(dict["requested_visibility"] ?? .null)
                     let revokeFailureReason = NullableSerializer(Sharing.SharedLinkAccessFailureReasonSerializer()).deserialize(dict["revoke_failure_reason"] ?? .null)
-                    return LinkPermissions(canRevoke: canRevoke, resolvedVisibility: resolvedVisibility, requestedVisibility: requestedVisibility, revokeFailureReason: revokeFailureReason)
+                    let effectiveAudience = NullableSerializer(Sharing.LinkAudienceSerializer()).deserialize(dict["effective_audience"] ?? .null)
+                    let linkAccessLevel = NullableSerializer(Sharing.LinkAccessLevelSerializer()).deserialize(dict["link_access_level"] ?? .null)
+                    return LinkPermissions(canRevoke: canRevoke, resolvedVisibility: resolvedVisibility, requestedVisibility: requestedVisibility, revokeFailureReason: revokeFailureReason, effectiveAudience: effectiveAudience, linkAccessLevel: linkAccessLevel)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4616,7 +4715,7 @@ open class Sharing {
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
         case sharedLinkAccessDenied
-        /// This type of link is not supported.
+        /// This type of link is not supported; use files instead.
         case unsupportedLinkType
         /// An unspecified error.
         case other
@@ -5602,6 +5701,65 @@ open class Sharing {
         }
     }
 
+    /// The RequestedLinkAccessLevel union
+    public enum RequestedLinkAccessLevel: CustomStringConvertible {
+        /// Users who use the link can view and comment on the content.
+        case viewer
+        /// Users who use the link can edit, view and comment on the content.
+        case editor
+        /// Request for the maximum access level you can set the link to.
+        case max
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RequestedLinkAccessLevelSerializer().serialize(self)))"
+        }
+    }
+    open class RequestedLinkAccessLevelSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RequestedLinkAccessLevel) -> JSON {
+            switch value {
+                case .viewer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("viewer")
+                    return .dictionary(d)
+                case .editor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("editor")
+                    return .dictionary(d)
+                case .max:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("max")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RequestedLinkAccessLevel {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "viewer":
+                            return RequestedLinkAccessLevel.viewer
+                        case "editor":
+                            return RequestedLinkAccessLevel.editor
+                        case "max":
+                            return RequestedLinkAccessLevel.max
+                        case "other":
+                            return RequestedLinkAccessLevel.other
+                        default:
+                            return RequestedLinkAccessLevel.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The access permission that can be requested by the caller for the shared link. Note that the final resolved
     /// visibility of the shared link takes into account other aspects, such as team and shared folder settings. Check
     /// the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
@@ -5769,7 +5927,7 @@ open class Sharing {
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
         case sharedLinkAccessDenied
-        /// This type of link is not supported.
+        /// This type of link is not supported; use files instead.
         case unsupportedLinkType
         /// An unspecified error.
         case other
@@ -7025,6 +7183,50 @@ open class Sharing {
         }
     }
 
+    /// The SharedLinkAlreadyExistsMetadata union
+    public enum SharedLinkAlreadyExistsMetadata: CustomStringConvertible {
+        /// Metadata of the shared link that already exists.
+        case metadata(Sharing.SharedLinkMetadata)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkAlreadyExistsMetadataSerializer().serialize(self)))"
+        }
+    }
+    open class SharedLinkAlreadyExistsMetadataSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharedLinkAlreadyExistsMetadata) -> JSON {
+            switch value {
+                case .metadata(let arg):
+                    var d = ["metadata": Sharing.SharedLinkMetadataSerializer().serialize(arg)]
+                    d[".tag"] = .str("metadata")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SharedLinkAlreadyExistsMetadata {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "metadata":
+                            let v = Sharing.SharedLinkMetadataSerializer().deserialize(d["metadata"] ?? .null)
+                            return SharedLinkAlreadyExistsMetadata.metadata(v)
+                        case "other":
+                            return SharedLinkAlreadyExistsMetadata.other
+                        default:
+                            return SharedLinkAlreadyExistsMetadata.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Who can view shared links in this folder.
     public enum SharedLinkPolicy: CustomStringConvertible {
         /// Links can be shared with anyone.
@@ -7093,11 +7295,20 @@ open class Sharing {
         public let linkPassword: String?
         /// Expiration time of the shared link. By default the link won't expire.
         public let expires: Date?
-        public init(requestedVisibility: Sharing.RequestedVisibility? = nil, linkPassword: String? = nil, expires: Date? = nil) {
+        /// The new audience who can benefit from the access level specified by the link's access level specified in the
+        /// `link_access_level` field of `LinkPermissions`. This is used in conjunction with team policies and shared
+        /// folder policies to determine the final effective audience type in the `effective_audience` field of
+        /// `LinkPermissions.
+        public let audience: Sharing.LinkAudience?
+        /// Requested access level you want the audience to gain from this link.
+        public let access: Sharing.RequestedLinkAccessLevel?
+        public init(requestedVisibility: Sharing.RequestedVisibility? = nil, linkPassword: String? = nil, expires: Date? = nil, audience: Sharing.LinkAudience? = nil, access: Sharing.RequestedLinkAccessLevel? = nil) {
             self.requestedVisibility = requestedVisibility
             nullableValidator(stringValidator())(linkPassword)
             self.linkPassword = linkPassword
             self.expires = expires
+            self.audience = audience
+            self.access = access
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkSettingsSerializer().serialize(self)))"
@@ -7110,6 +7321,8 @@ open class Sharing {
             "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
             "link_password": NullableSerializer(Serialization._StringSerializer).serialize(value.linkPassword),
             "expires": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expires),
+            "audience": NullableSerializer(Sharing.LinkAudienceSerializer()).serialize(value.audience),
+            "access": NullableSerializer(Sharing.RequestedLinkAccessLevelSerializer()).serialize(value.access),
             ]
             return .dictionary(output)
         }
@@ -7119,7 +7332,9 @@ open class Sharing {
                     let requestedVisibility = NullableSerializer(Sharing.RequestedVisibilitySerializer()).deserialize(dict["requested_visibility"] ?? .null)
                     let linkPassword = NullableSerializer(Serialization._StringSerializer).deserialize(dict["link_password"] ?? .null)
                     let expires = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expires"] ?? .null)
-                    return SharedLinkSettings(requestedVisibility: requestedVisibility, linkPassword: linkPassword, expires: expires)
+                    let audience = NullableSerializer(Sharing.LinkAudienceSerializer()).deserialize(dict["audience"] ?? .null)
+                    let access = NullableSerializer(Sharing.RequestedLinkAccessLevelSerializer()).deserialize(dict["access"] ?? .null)
+                    return SharedLinkSettings(requestedVisibility: requestedVisibility, linkPassword: linkPassword, expires: expires, audience: audience, access: access)
                 default:
                     fatalError("Type error deserializing")
             }

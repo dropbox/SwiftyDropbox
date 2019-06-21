@@ -1187,7 +1187,7 @@ open class TeamLog {
         case file(TeamLog.FileLogInfo)
         /// Folder's details.
         case folder(TeamLog.FolderLogInfo)
-        /// Paper docuement's details.
+        /// Paper document's details.
         case paperDocument(TeamLog.PaperDocumentLogInfo)
         /// Paper folder's details.
         case paperFolder(TeamLog.PaperFolderLogInfo)
@@ -4179,7 +4179,7 @@ open class TeamLog {
         }
     }
 
-    /// Refreshed auth token used for setting up enterprise mobility management.
+    /// Refreshed auth token used for setting up EMM.
     open class EmmRefreshAuthTokenDetails: CustomStringConvertible {
         public init() {
         }
@@ -4386,6 +4386,8 @@ open class TeamLog {
         /// Events that involve using or configuring two factor authentication as well as administrative policies
         /// concerning two factor authentication.
         case tfa
+        /// Events that apply to cross-team trust establishment.
+        case trustedTeams
         /// An unspecified error.
         case other
 
@@ -4473,6 +4475,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("tfa")
                     return .dictionary(d)
+                case .trustedTeams:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("trusted_teams")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4522,6 +4528,8 @@ open class TeamLog {
                             return EventCategory.teamProfile
                         case "tfa":
                             return EventCategory.tfa
+                        case "trusted_teams":
+                            return EventCategory.trustedTeams
                         case "other":
                             return EventCategory.other
                         default:
@@ -4543,6 +4551,10 @@ open class TeamLog {
         case appUnlinkTeamDetails(TeamLog.AppUnlinkTeamDetails)
         /// An unspecified error.
         case appUnlinkUserDetails(TeamLog.AppUnlinkUserDetails)
+        /// An unspecified error.
+        case integrationConnectedDetails(TeamLog.IntegrationConnectedDetails)
+        /// An unspecified error.
+        case integrationDisconnectedDetails(TeamLog.IntegrationDisconnectedDetails)
         /// An unspecified error.
         case fileAddCommentDetails(TeamLog.FileAddCommentDetails)
         /// An unspecified error.
@@ -4648,6 +4660,8 @@ open class TeamLog {
         /// An unspecified error.
         case fileRequestCreateDetails(TeamLog.FileRequestCreateDetails)
         /// An unspecified error.
+        case fileRequestDeleteDetails(TeamLog.FileRequestDeleteDetails)
+        /// An unspecified error.
         case fileRequestReceiveFileDetails(TeamLog.FileRequestReceiveFileDetails)
         /// An unspecified error.
         case groupAddExternalIdDetails(TeamLog.GroupAddExternalIdDetails)
@@ -4678,6 +4692,10 @@ open class TeamLog {
         /// An unspecified error.
         case emmErrorDetails(TeamLog.EmmErrorDetails)
         /// An unspecified error.
+        case guestAdminSignedInViaTrustedTeamsDetails(TeamLog.GuestAdminSignedInViaTrustedTeamsDetails)
+        /// An unspecified error.
+        case guestAdminSignedOutViaTrustedTeamsDetails(TeamLog.GuestAdminSignedOutViaTrustedTeamsDetails)
+        /// An unspecified error.
         case loginFailDetails(TeamLog.LoginFailDetails)
         /// An unspecified error.
         case loginSuccessDetails(TeamLog.LoginSuccessDetails)
@@ -4694,11 +4712,15 @@ open class TeamLog {
         /// An unspecified error.
         case ssoErrorDetails(TeamLog.SsoErrorDetails)
         /// An unspecified error.
+        case memberAddExternalIdDetails(TeamLog.MemberAddExternalIdDetails)
+        /// An unspecified error.
         case memberAddNameDetails(TeamLog.MemberAddNameDetails)
         /// An unspecified error.
         case memberChangeAdminRoleDetails(TeamLog.MemberChangeAdminRoleDetails)
         /// An unspecified error.
         case memberChangeEmailDetails(TeamLog.MemberChangeEmailDetails)
+        /// An unspecified error.
+        case memberChangeExternalIdDetails(TeamLog.MemberChangeExternalIdDetails)
         /// An unspecified error.
         case memberChangeMembershipTypeDetails(TeamLog.MemberChangeMembershipTypeDetails)
         /// An unspecified error.
@@ -4709,6 +4731,8 @@ open class TeamLog {
         case memberDeleteManualContactsDetails(TeamLog.MemberDeleteManualContactsDetails)
         /// An unspecified error.
         case memberPermanentlyDeleteAccountContentsDetails(TeamLog.MemberPermanentlyDeleteAccountContentsDetails)
+        /// An unspecified error.
+        case memberRemoveExternalIdDetails(TeamLog.MemberRemoveExternalIdDetails)
         /// An unspecified error.
         case memberSpaceLimitsAddCustomQuotaDetails(TeamLog.MemberSpaceLimitsAddCustomQuotaDetails)
         /// An unspecified error.
@@ -4798,6 +4822,12 @@ open class TeamLog {
         /// An unspecified error.
         case paperFolderTeamInviteDetails(TeamLog.PaperFolderTeamInviteDetails)
         /// An unspecified error.
+        case paperPublishedLinkCreateDetails(TeamLog.PaperPublishedLinkCreateDetails)
+        /// An unspecified error.
+        case paperPublishedLinkDisabledDetails(TeamLog.PaperPublishedLinkDisabledDetails)
+        /// An unspecified error.
+        case paperPublishedLinkViewDetails(TeamLog.PaperPublishedLinkViewDetails)
+        /// An unspecified error.
         case passwordChangeDetails(TeamLog.PasswordChangeDetails)
         /// An unspecified error.
         case passwordResetDetails(TeamLog.PasswordResetDetails)
@@ -4815,6 +4845,8 @@ open class TeamLog {
         case smartSyncCreateAdminPrivilegeReportDetails(TeamLog.SmartSyncCreateAdminPrivilegeReportDetails)
         /// An unspecified error.
         case teamActivityCreateReportDetails(TeamLog.TeamActivityCreateReportDetails)
+        /// An unspecified error.
+        case teamActivityCreateReportFailDetails(TeamLog.TeamActivityCreateReportFailDetails)
         /// An unspecified error.
         case collectionShareDetails(TeamLog.CollectionShareDetails)
         /// An unspecified error.
@@ -5068,6 +5100,8 @@ open class TeamLog {
         /// An unspecified error.
         case groupUserManagementChangePolicyDetails(TeamLog.GroupUserManagementChangePolicyDetails)
         /// An unspecified error.
+        case integrationPolicyChangedDetails(TeamLog.IntegrationPolicyChangedDetails)
+        /// An unspecified error.
         case memberRequestsChangePolicyDetails(TeamLog.MemberRequestsChangePolicyDetails)
         /// An unspecified error.
         case memberSpaceLimitsAddExceptionDetails(TeamLog.MemberSpaceLimitsAddExceptionDetails)
@@ -5092,11 +5126,17 @@ open class TeamLog {
         /// An unspecified error.
         case paperChangePolicyDetails(TeamLog.PaperChangePolicyDetails)
         /// An unspecified error.
+        case paperDefaultFolderPolicyChangedDetails(TeamLog.PaperDefaultFolderPolicyChangedDetails)
+        /// An unspecified error.
+        case paperDesktopPolicyChangedDetails(TeamLog.PaperDesktopPolicyChangedDetails)
+        /// An unspecified error.
         case paperEnabledUsersGroupAdditionDetails(TeamLog.PaperEnabledUsersGroupAdditionDetails)
         /// An unspecified error.
         case paperEnabledUsersGroupRemovalDetails(TeamLog.PaperEnabledUsersGroupRemovalDetails)
         /// An unspecified error.
         case permanentDeleteChangePolicyDetails(TeamLog.PermanentDeleteChangePolicyDetails)
+        /// An unspecified error.
+        case resellerSupportChangePolicyDetails(TeamLog.ResellerSupportChangePolicyDetails)
         /// An unspecified error.
         case sharingChangeFolderJoinPolicyDetails(TeamLog.SharingChangeFolderJoinPolicyDetails)
         /// An unspecified error.
@@ -5117,6 +5157,8 @@ open class TeamLog {
         case smartSyncOptOutDetails(TeamLog.SmartSyncOptOutDetails)
         /// An unspecified error.
         case ssoChangePolicyDetails(TeamLog.SsoChangePolicyDetails)
+        /// An unspecified error.
+        case teamExtensionsPolicyChangedDetails(TeamLog.TeamExtensionsPolicyChangedDetails)
         /// An unspecified error.
         case teamSelectiveSyncPolicyChangedDetails(TeamLog.TeamSelectiveSyncPolicyChangedDetails)
         /// An unspecified error.
@@ -5157,6 +5199,44 @@ open class TeamLog {
         case tfaRemoveSecurityKeyDetails(TeamLog.TfaRemoveSecurityKeyDetails)
         /// An unspecified error.
         case tfaResetDetails(TeamLog.TfaResetDetails)
+        /// An unspecified error.
+        case guestAdminChangeStatusDetails(TeamLog.GuestAdminChangeStatusDetails)
+        /// An unspecified error.
+        case teamMergeRequestAcceptedDetails(TeamLog.TeamMergeRequestAcceptedDetails)
+        /// An unspecified error.
+        case teamMergeRequestAcceptedShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestAcceptedShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestAutoCanceledDetails(TeamLog.TeamMergeRequestAutoCanceledDetails)
+        /// An unspecified error.
+        case teamMergeRequestCanceledDetails(TeamLog.TeamMergeRequestCanceledDetails)
+        /// An unspecified error.
+        case teamMergeRequestCanceledShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestCanceledShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestExpiredDetails(TeamLog.TeamMergeRequestExpiredDetails)
+        /// An unspecified error.
+        case teamMergeRequestExpiredShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestExpiredShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestRejectedShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestRejectedShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestReminderDetails(TeamLog.TeamMergeRequestReminderDetails)
+        /// An unspecified error.
+        case teamMergeRequestReminderShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestReminderShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestRevokedDetails(TeamLog.TeamMergeRequestRevokedDetails)
+        /// An unspecified error.
+        case teamMergeRequestSentShownToPrimaryTeamDetails(TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetails)
+        /// An unspecified error.
+        case teamMergeRequestSentShownToSecondaryTeamDetails(TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetails)
         /// Hints that this event was returned with missing details due to an internal error.
         case missingDetails(TeamLog.MissingDetails)
         /// An unspecified error.
@@ -5185,6 +5265,14 @@ open class TeamLog {
                 case .appUnlinkUserDetails(let arg):
                     var d = Serialization.getFields(TeamLog.AppUnlinkUserDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("app_unlink_user_details")
+                    return .dictionary(d)
+                case .integrationConnectedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationConnectedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_connected_details")
+                    return .dictionary(d)
+                case .integrationDisconnectedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationDisconnectedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_disconnected_details")
                     return .dictionary(d)
                 case .fileAddCommentDetails(let arg):
                     var d = Serialization.getFields(TeamLog.FileAddCommentDetailsSerializer().serialize(arg))
@@ -5394,6 +5482,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileRequestCreateDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_request_create_details")
                     return .dictionary(d)
+                case .fileRequestDeleteDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.FileRequestDeleteDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("file_request_delete_details")
+                    return .dictionary(d)
                 case .fileRequestReceiveFileDetails(let arg):
                     var d = Serialization.getFields(TeamLog.FileRequestReceiveFileDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_request_receive_file_details")
@@ -5454,6 +5546,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.EmmErrorDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("emm_error_details")
                     return .dictionary(d)
+                case .guestAdminSignedInViaTrustedTeamsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminSignedInViaTrustedTeamsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_signed_in_via_trusted_teams_details")
+                    return .dictionary(d)
+                case .guestAdminSignedOutViaTrustedTeamsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminSignedOutViaTrustedTeamsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_signed_out_via_trusted_teams_details")
+                    return .dictionary(d)
                 case .loginFailDetails(let arg):
                     var d = Serialization.getFields(TeamLog.LoginFailDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("login_fail_details")
@@ -5486,6 +5586,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.SsoErrorDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sso_error_details")
                     return .dictionary(d)
+                case .memberAddExternalIdDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberAddExternalIdDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("member_add_external_id_details")
+                    return .dictionary(d)
                 case .memberAddNameDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberAddNameDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("member_add_name_details")
@@ -5497,6 +5601,10 @@ open class TeamLog {
                 case .memberChangeEmailDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberChangeEmailDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("member_change_email_details")
+                    return .dictionary(d)
+                case .memberChangeExternalIdDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberChangeExternalIdDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("member_change_external_id_details")
                     return .dictionary(d)
                 case .memberChangeMembershipTypeDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberChangeMembershipTypeDetailsSerializer().serialize(arg))
@@ -5517,6 +5625,10 @@ open class TeamLog {
                 case .memberPermanentlyDeleteAccountContentsDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberPermanentlyDeleteAccountContentsDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("member_permanently_delete_account_contents_details")
+                    return .dictionary(d)
+                case .memberRemoveExternalIdDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberRemoveExternalIdDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("member_remove_external_id_details")
                     return .dictionary(d)
                 case .memberSpaceLimitsAddCustomQuotaDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberSpaceLimitsAddCustomQuotaDetailsSerializer().serialize(arg))
@@ -5694,6 +5806,18 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.PaperFolderTeamInviteDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_folder_team_invite_details")
                     return .dictionary(d)
+                case .paperPublishedLinkCreateDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkCreateDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_create_details")
+                    return .dictionary(d)
+                case .paperPublishedLinkDisabledDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkDisabledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_disabled_details")
+                    return .dictionary(d)
+                case .paperPublishedLinkViewDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkViewDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_view_details")
+                    return .dictionary(d)
                 case .passwordChangeDetails(let arg):
                     var d = Serialization.getFields(TeamLog.PasswordChangeDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("password_change_details")
@@ -5729,6 +5853,10 @@ open class TeamLog {
                 case .teamActivityCreateReportDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamActivityCreateReportDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("team_activity_create_report_details")
+                    return .dictionary(d)
+                case .teamActivityCreateReportFailDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamActivityCreateReportFailDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_activity_create_report_fail_details")
                     return .dictionary(d)
                 case .collectionShareDetails(let arg):
                     var d = Serialization.getFields(TeamLog.CollectionShareDetailsSerializer().serialize(arg))
@@ -6234,6 +6362,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.GroupUserManagementChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("group_user_management_change_policy_details")
                     return .dictionary(d)
+                case .integrationPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_policy_changed_details")
+                    return .dictionary(d)
                 case .memberRequestsChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MemberRequestsChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("member_requests_change_policy_details")
@@ -6282,6 +6414,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.PaperChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_change_policy_details")
                     return .dictionary(d)
+                case .paperDefaultFolderPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperDefaultFolderPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_default_folder_policy_changed_details")
+                    return .dictionary(d)
+                case .paperDesktopPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperDesktopPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_desktop_policy_changed_details")
+                    return .dictionary(d)
                 case .paperEnabledUsersGroupAdditionDetails(let arg):
                     var d = Serialization.getFields(TeamLog.PaperEnabledUsersGroupAdditionDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_enabled_users_group_addition_details")
@@ -6293,6 +6433,10 @@ open class TeamLog {
                 case .permanentDeleteChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.PermanentDeleteChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("permanent_delete_change_policy_details")
+                    return .dictionary(d)
+                case .resellerSupportChangePolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ResellerSupportChangePolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("reseller_support_change_policy_details")
                     return .dictionary(d)
                 case .sharingChangeFolderJoinPolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SharingChangeFolderJoinPolicyDetailsSerializer().serialize(arg))
@@ -6333,6 +6477,10 @@ open class TeamLog {
                 case .ssoChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SsoChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sso_change_policy_details")
+                    return .dictionary(d)
+                case .teamExtensionsPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_extensions_policy_changed_details")
                     return .dictionary(d)
                 case .teamSelectiveSyncPolicyChangedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamSelectiveSyncPolicyChangedDetailsSerializer().serialize(arg))
@@ -6414,6 +6562,82 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.TfaResetDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("tfa_reset_details")
                     return .dictionary(d)
+                case .guestAdminChangeStatusDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminChangeStatusDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_change_status_details")
+                    return .dictionary(d)
+                case .teamMergeRequestAcceptedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted_details")
+                    return .dictionary(d)
+                case .teamMergeRequestAcceptedShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestAcceptedShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted_shown_to_secondary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestAutoCanceledDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAutoCanceledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_auto_canceled_details")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceledDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled_details")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceledShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceledShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled_shown_to_secondary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestExpiredDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired_details")
+                    return .dictionary(d)
+                case .teamMergeRequestExpiredShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestExpiredShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired_shown_to_secondary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestRejectedShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_rejected_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestRejectedShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_rejected_shown_to_secondary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestReminderDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder_details")
+                    return .dictionary(d)
+                case .teamMergeRequestReminderShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestReminderShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder_shown_to_secondary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestRevokedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRevokedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_revoked_details")
+                    return .dictionary(d)
+                case .teamMergeRequestSentShownToPrimaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_sent_shown_to_primary_team_details")
+                    return .dictionary(d)
+                case .teamMergeRequestSentShownToSecondaryTeamDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_sent_shown_to_secondary_team_details")
+                    return .dictionary(d)
                 case .missingDetails(let arg):
                     var d = Serialization.getFields(TeamLog.MissingDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("missing_details")
@@ -6441,6 +6665,12 @@ open class TeamLog {
                         case "app_unlink_user_details":
                             let v = TeamLog.AppUnlinkUserDetailsSerializer().deserialize(json)
                             return EventDetails.appUnlinkUserDetails(v)
+                        case "integration_connected_details":
+                            let v = TeamLog.IntegrationConnectedDetailsSerializer().deserialize(json)
+                            return EventDetails.integrationConnectedDetails(v)
+                        case "integration_disconnected_details":
+                            let v = TeamLog.IntegrationDisconnectedDetailsSerializer().deserialize(json)
+                            return EventDetails.integrationDisconnectedDetails(v)
                         case "file_add_comment_details":
                             let v = TeamLog.FileAddCommentDetailsSerializer().deserialize(json)
                             return EventDetails.fileAddCommentDetails(v)
@@ -6597,6 +6827,9 @@ open class TeamLog {
                         case "file_request_create_details":
                             let v = TeamLog.FileRequestCreateDetailsSerializer().deserialize(json)
                             return EventDetails.fileRequestCreateDetails(v)
+                        case "file_request_delete_details":
+                            let v = TeamLog.FileRequestDeleteDetailsSerializer().deserialize(json)
+                            return EventDetails.fileRequestDeleteDetails(v)
                         case "file_request_receive_file_details":
                             let v = TeamLog.FileRequestReceiveFileDetailsSerializer().deserialize(json)
                             return EventDetails.fileRequestReceiveFileDetails(v)
@@ -6642,6 +6875,12 @@ open class TeamLog {
                         case "emm_error_details":
                             let v = TeamLog.EmmErrorDetailsSerializer().deserialize(json)
                             return EventDetails.emmErrorDetails(v)
+                        case "guest_admin_signed_in_via_trusted_teams_details":
+                            let v = TeamLog.GuestAdminSignedInViaTrustedTeamsDetailsSerializer().deserialize(json)
+                            return EventDetails.guestAdminSignedInViaTrustedTeamsDetails(v)
+                        case "guest_admin_signed_out_via_trusted_teams_details":
+                            let v = TeamLog.GuestAdminSignedOutViaTrustedTeamsDetailsSerializer().deserialize(json)
+                            return EventDetails.guestAdminSignedOutViaTrustedTeamsDetails(v)
                         case "login_fail_details":
                             let v = TeamLog.LoginFailDetailsSerializer().deserialize(json)
                             return EventDetails.loginFailDetails(v)
@@ -6666,6 +6905,9 @@ open class TeamLog {
                         case "sso_error_details":
                             let v = TeamLog.SsoErrorDetailsSerializer().deserialize(json)
                             return EventDetails.ssoErrorDetails(v)
+                        case "member_add_external_id_details":
+                            let v = TeamLog.MemberAddExternalIdDetailsSerializer().deserialize(json)
+                            return EventDetails.memberAddExternalIdDetails(v)
                         case "member_add_name_details":
                             let v = TeamLog.MemberAddNameDetailsSerializer().deserialize(json)
                             return EventDetails.memberAddNameDetails(v)
@@ -6675,6 +6917,9 @@ open class TeamLog {
                         case "member_change_email_details":
                             let v = TeamLog.MemberChangeEmailDetailsSerializer().deserialize(json)
                             return EventDetails.memberChangeEmailDetails(v)
+                        case "member_change_external_id_details":
+                            let v = TeamLog.MemberChangeExternalIdDetailsSerializer().deserialize(json)
+                            return EventDetails.memberChangeExternalIdDetails(v)
                         case "member_change_membership_type_details":
                             let v = TeamLog.MemberChangeMembershipTypeDetailsSerializer().deserialize(json)
                             return EventDetails.memberChangeMembershipTypeDetails(v)
@@ -6690,6 +6935,9 @@ open class TeamLog {
                         case "member_permanently_delete_account_contents_details":
                             let v = TeamLog.MemberPermanentlyDeleteAccountContentsDetailsSerializer().deserialize(json)
                             return EventDetails.memberPermanentlyDeleteAccountContentsDetails(v)
+                        case "member_remove_external_id_details":
+                            let v = TeamLog.MemberRemoveExternalIdDetailsSerializer().deserialize(json)
+                            return EventDetails.memberRemoveExternalIdDetails(v)
                         case "member_space_limits_add_custom_quota_details":
                             let v = TeamLog.MemberSpaceLimitsAddCustomQuotaDetailsSerializer().deserialize(json)
                             return EventDetails.memberSpaceLimitsAddCustomQuotaDetails(v)
@@ -6822,6 +7070,15 @@ open class TeamLog {
                         case "paper_folder_team_invite_details":
                             let v = TeamLog.PaperFolderTeamInviteDetailsSerializer().deserialize(json)
                             return EventDetails.paperFolderTeamInviteDetails(v)
+                        case "paper_published_link_create_details":
+                            let v = TeamLog.PaperPublishedLinkCreateDetailsSerializer().deserialize(json)
+                            return EventDetails.paperPublishedLinkCreateDetails(v)
+                        case "paper_published_link_disabled_details":
+                            let v = TeamLog.PaperPublishedLinkDisabledDetailsSerializer().deserialize(json)
+                            return EventDetails.paperPublishedLinkDisabledDetails(v)
+                        case "paper_published_link_view_details":
+                            let v = TeamLog.PaperPublishedLinkViewDetailsSerializer().deserialize(json)
+                            return EventDetails.paperPublishedLinkViewDetails(v)
                         case "password_change_details":
                             let v = TeamLog.PasswordChangeDetailsSerializer().deserialize(json)
                             return EventDetails.passwordChangeDetails(v)
@@ -6849,6 +7106,9 @@ open class TeamLog {
                         case "team_activity_create_report_details":
                             let v = TeamLog.TeamActivityCreateReportDetailsSerializer().deserialize(json)
                             return EventDetails.teamActivityCreateReportDetails(v)
+                        case "team_activity_create_report_fail_details":
+                            let v = TeamLog.TeamActivityCreateReportFailDetailsSerializer().deserialize(json)
+                            return EventDetails.teamActivityCreateReportFailDetails(v)
                         case "collection_share_details":
                             let v = TeamLog.CollectionShareDetailsSerializer().deserialize(json)
                             return EventDetails.collectionShareDetails(v)
@@ -7227,6 +7487,9 @@ open class TeamLog {
                         case "group_user_management_change_policy_details":
                             let v = TeamLog.GroupUserManagementChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.groupUserManagementChangePolicyDetails(v)
+                        case "integration_policy_changed_details":
+                            let v = TeamLog.IntegrationPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.integrationPolicyChangedDetails(v)
                         case "member_requests_change_policy_details":
                             let v = TeamLog.MemberRequestsChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.memberRequestsChangePolicyDetails(v)
@@ -7263,6 +7526,12 @@ open class TeamLog {
                         case "paper_change_policy_details":
                             let v = TeamLog.PaperChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.paperChangePolicyDetails(v)
+                        case "paper_default_folder_policy_changed_details":
+                            let v = TeamLog.PaperDefaultFolderPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.paperDefaultFolderPolicyChangedDetails(v)
+                        case "paper_desktop_policy_changed_details":
+                            let v = TeamLog.PaperDesktopPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.paperDesktopPolicyChangedDetails(v)
                         case "paper_enabled_users_group_addition_details":
                             let v = TeamLog.PaperEnabledUsersGroupAdditionDetailsSerializer().deserialize(json)
                             return EventDetails.paperEnabledUsersGroupAdditionDetails(v)
@@ -7272,6 +7541,9 @@ open class TeamLog {
                         case "permanent_delete_change_policy_details":
                             let v = TeamLog.PermanentDeleteChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.permanentDeleteChangePolicyDetails(v)
+                        case "reseller_support_change_policy_details":
+                            let v = TeamLog.ResellerSupportChangePolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.resellerSupportChangePolicyDetails(v)
                         case "sharing_change_folder_join_policy_details":
                             let v = TeamLog.SharingChangeFolderJoinPolicyDetailsSerializer().deserialize(json)
                             return EventDetails.sharingChangeFolderJoinPolicyDetails(v)
@@ -7302,6 +7574,9 @@ open class TeamLog {
                         case "sso_change_policy_details":
                             let v = TeamLog.SsoChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.ssoChangePolicyDetails(v)
+                        case "team_extensions_policy_changed_details":
+                            let v = TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamExtensionsPolicyChangedDetails(v)
                         case "team_selective_sync_policy_changed_details":
                             let v = TeamLog.TeamSelectiveSyncPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.teamSelectiveSyncPolicyChangedDetails(v)
@@ -7362,6 +7637,63 @@ open class TeamLog {
                         case "tfa_reset_details":
                             let v = TeamLog.TfaResetDetailsSerializer().deserialize(json)
                             return EventDetails.tfaResetDetails(v)
+                        case "guest_admin_change_status_details":
+                            let v = TeamLog.GuestAdminChangeStatusDetailsSerializer().deserialize(json)
+                            return EventDetails.guestAdminChangeStatusDetails(v)
+                        case "team_merge_request_accepted_details":
+                            let v = TeamLog.TeamMergeRequestAcceptedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestAcceptedDetails(v)
+                        case "team_merge_request_accepted_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestAcceptedShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_accepted_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestAcceptedShownToSecondaryTeamDetails(v)
+                        case "team_merge_request_auto_canceled_details":
+                            let v = TeamLog.TeamMergeRequestAutoCanceledDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestAutoCanceledDetails(v)
+                        case "team_merge_request_canceled_details":
+                            let v = TeamLog.TeamMergeRequestCanceledDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestCanceledDetails(v)
+                        case "team_merge_request_canceled_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestCanceledShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_canceled_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestCanceledShownToSecondaryTeamDetails(v)
+                        case "team_merge_request_expired_details":
+                            let v = TeamLog.TeamMergeRequestExpiredDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestExpiredDetails(v)
+                        case "team_merge_request_expired_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestExpiredShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_expired_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestExpiredShownToSecondaryTeamDetails(v)
+                        case "team_merge_request_rejected_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestRejectedShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_rejected_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestRejectedShownToSecondaryTeamDetails(v)
+                        case "team_merge_request_reminder_details":
+                            let v = TeamLog.TeamMergeRequestReminderDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestReminderDetails(v)
+                        case "team_merge_request_reminder_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestReminderShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_reminder_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestReminderShownToSecondaryTeamDetails(v)
+                        case "team_merge_request_revoked_details":
+                            let v = TeamLog.TeamMergeRequestRevokedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestRevokedDetails(v)
+                        case "team_merge_request_sent_shown_to_primary_team_details":
+                            let v = TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestSentShownToPrimaryTeamDetails(v)
+                        case "team_merge_request_sent_shown_to_secondary_team_details":
+                            let v = TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetailsSerializer().deserialize(json)
+                            return EventDetails.teamMergeRequestSentShownToSecondaryTeamDetails(v)
                         case "missing_details":
                             let v = TeamLog.MissingDetailsSerializer().deserialize(json)
                             return EventDetails.missingDetails(v)
@@ -7386,6 +7718,10 @@ open class TeamLog {
         case appUnlinkTeam(TeamLog.AppUnlinkTeamType)
         /// (apps) Unlinked app for member
         case appUnlinkUser(TeamLog.AppUnlinkUserType)
+        /// (apps) Connected integration for member
+        case integrationConnected(TeamLog.IntegrationConnectedType)
+        /// (apps) Disconnected integration for member
+        case integrationDisconnected(TeamLog.IntegrationDisconnectedType)
         /// (comments) Added file comment
         case fileAddComment(TeamLog.FileAddCommentType)
         /// (comments) Subscribed to or unsubscribed from comment notifications for file
@@ -7422,7 +7758,7 @@ open class TeamLog {
         case deviceManagementEnabled(TeamLog.DeviceManagementEnabledType)
         /// (devices) Disconnected device
         case deviceUnlink(TeamLog.DeviceUnlinkType)
-        /// (devices) Refreshed auth token used for setting up enterprise mobility management
+        /// (devices) Refreshed auth token used for setting up EMM
         case emmRefreshAuthToken(TeamLog.EmmRefreshAuthTokenType)
         /// (domains) Granted/revoked option to enable account capture on team domains
         case accountCaptureChangeAvailability(TeamLog.AccountCaptureChangeAvailabilityType)
@@ -7490,6 +7826,8 @@ open class TeamLog {
         case fileRequestClose(TeamLog.FileRequestCloseType)
         /// (file_requests) Created file request
         case fileRequestCreate(TeamLog.FileRequestCreateType)
+        /// (file_requests) Delete file request
+        case fileRequestDelete(TeamLog.FileRequestDeleteType)
         /// (file_requests) Received files for file request
         case fileRequestReceiveFile(TeamLog.FileRequestReceiveFileType)
         /// (groups) Added external ID for group
@@ -7520,6 +7858,10 @@ open class TeamLog {
         case groupRename(TeamLog.GroupRenameType)
         /// (logins) Failed to sign in via EMM (deprecated, replaced by 'Failed to sign in')
         case emmError(TeamLog.EmmErrorType)
+        /// (logins) Started trusted team admin session
+        case guestAdminSignedInViaTrustedTeams(TeamLog.GuestAdminSignedInViaTrustedTeamsType)
+        /// (logins) Ended trusted team admin session
+        case guestAdminSignedOutViaTrustedTeams(TeamLog.GuestAdminSignedOutViaTrustedTeamsType)
         /// (logins) Failed to sign in
         case loginFail(TeamLog.LoginFailType)
         /// (logins) Signed in
@@ -7536,12 +7878,16 @@ open class TeamLog {
         case signInAsSessionStart(TeamLog.SignInAsSessionStartType)
         /// (logins) Failed to sign in via SSO (deprecated, replaced by 'Failed to sign in')
         case ssoError(TeamLog.SsoErrorType)
+        /// (members) Added an external ID for team member
+        case memberAddExternalId(TeamLog.MemberAddExternalIdType)
         /// (members) Added team member name
         case memberAddName(TeamLog.MemberAddNameType)
         /// (members) Changed team member admin role
         case memberChangeAdminRole(TeamLog.MemberChangeAdminRoleType)
         /// (members) Changed team member email
         case memberChangeEmail(TeamLog.MemberChangeEmailType)
+        /// (members) Changed the external ID for team member
+        case memberChangeExternalId(TeamLog.MemberChangeExternalIdType)
         /// (members) Changed membership type (limited/full) of member (deprecated, no longer logged)
         case memberChangeMembershipType(TeamLog.MemberChangeMembershipTypeType)
         /// (members) Changed team member name
@@ -7552,6 +7898,8 @@ open class TeamLog {
         case memberDeleteManualContacts(TeamLog.MemberDeleteManualContactsType)
         /// (members) Permanently deleted contents of deleted team member account
         case memberPermanentlyDeleteAccountContents(TeamLog.MemberPermanentlyDeleteAccountContentsType)
+        /// (members) Removed the external ID for team member
+        case memberRemoveExternalId(TeamLog.MemberRemoveExternalIdType)
         /// (members) Set custom member space limit
         case memberSpaceLimitsAddCustomQuota(TeamLog.MemberSpaceLimitsAddCustomQuotaType)
         /// (members) Changed custom member space limit
@@ -7640,6 +7988,12 @@ open class TeamLog {
         case paperFolderFollowed(TeamLog.PaperFolderFollowedType)
         /// (paper) Shared Paper folder with member (deprecated, no longer logged)
         case paperFolderTeamInvite(TeamLog.PaperFolderTeamInviteType)
+        /// (paper) Published doc
+        case paperPublishedLinkCreate(TeamLog.PaperPublishedLinkCreateType)
+        /// (paper) Unpublished doc
+        case paperPublishedLinkDisabled(TeamLog.PaperPublishedLinkDisabledType)
+        /// (paper) Viewed published doc
+        case paperPublishedLinkView(TeamLog.PaperPublishedLinkViewType)
         /// (passwords) Changed password
         case passwordChange(TeamLog.PasswordChangeType)
         /// (passwords) Reset password
@@ -7658,6 +8012,8 @@ open class TeamLog {
         case smartSyncCreateAdminPrivilegeReport(TeamLog.SmartSyncCreateAdminPrivilegeReportType)
         /// (reports) Created team activity report
         case teamActivityCreateReport(TeamLog.TeamActivityCreateReportType)
+        /// (reports) Couldn't generate team activity report
+        case teamActivityCreateReportFail(TeamLog.TeamActivityCreateReportFailType)
         /// (sharing) Shared album
         case collectionShare(TeamLog.CollectionShareType)
         /// (sharing) Changed Paper doc to invite-only (deprecated, no longer logged)
@@ -7912,6 +8268,8 @@ open class TeamLog {
         case googleSsoChangePolicy(TeamLog.GoogleSsoChangePolicyType)
         /// (team_policies) Changed who can create groups
         case groupUserManagementChangePolicy(TeamLog.GroupUserManagementChangePolicyType)
+        /// (team_policies) Changed integration policy for team
+        case integrationPolicyChanged(TeamLog.IntegrationPolicyChangedType)
         /// (team_policies) Changed whether users can find team when not invited
         case memberRequestsChangePolicy(TeamLog.MemberRequestsChangePolicyType)
         /// (team_policies) Added members to member space limit exception list
@@ -7938,12 +8296,18 @@ open class TeamLog {
         case paperChangeMemberPolicy(TeamLog.PaperChangeMemberPolicyType)
         /// (team_policies) Enabled/disabled Dropbox Paper for team
         case paperChangePolicy(TeamLog.PaperChangePolicyType)
+        /// (team_policies) Changed Paper Default Folder Policy setting for team
+        case paperDefaultFolderPolicyChanged(TeamLog.PaperDefaultFolderPolicyChangedType)
+        /// (team_policies) Enabled/disabled Paper Desktop for team
+        case paperDesktopPolicyChanged(TeamLog.PaperDesktopPolicyChangedType)
         /// (team_policies) Added users to Paper-enabled users list
         case paperEnabledUsersGroupAddition(TeamLog.PaperEnabledUsersGroupAdditionType)
         /// (team_policies) Removed users from Paper-enabled users list
         case paperEnabledUsersGroupRemoval(TeamLog.PaperEnabledUsersGroupRemovalType)
         /// (team_policies) Enabled/disabled ability of team members to permanently delete content
         case permanentDeleteChangePolicy(TeamLog.PermanentDeleteChangePolicyType)
+        /// (team_policies) Enabled/disabled reseller support
+        case resellerSupportChangePolicy(TeamLog.ResellerSupportChangePolicyType)
         /// (team_policies) Changed whether team members can join shared folders owned outside team
         case sharingChangeFolderJoinPolicy(TeamLog.SharingChangeFolderJoinPolicyType)
         /// (team_policies) Changed whether members can share links outside team, and if links are accessible only by
@@ -7965,6 +8329,8 @@ open class TeamLog {
         case smartSyncOptOut(TeamLog.SmartSyncOptOutType)
         /// (team_policies) Changed single sign-on setting for team
         case ssoChangePolicy(TeamLog.SsoChangePolicyType)
+        /// (team_policies) Changed App Integrations setting for team
+        case teamExtensionsPolicyChanged(TeamLog.TeamExtensionsPolicyChangedType)
         /// (team_policies) Enabled/disabled Team Selective Sync for team
         case teamSelectiveSyncPolicyChanged(TeamLog.TeamSelectiveSyncPolicyChangedType)
         /// (team_policies) Changed two-step verification setting for team
@@ -8006,6 +8372,46 @@ open class TeamLog {
         case tfaRemoveSecurityKey(TeamLog.TfaRemoveSecurityKeyType)
         /// (tfa) Reset two-step verification for team member
         case tfaReset(TeamLog.TfaResetType)
+        /// (trusted_teams) Changed guest team admin status
+        case guestAdminChangeStatus(TeamLog.GuestAdminChangeStatusType)
+        /// (trusted_teams) Accepted a team merge request
+        case teamMergeRequestAccepted(TeamLog.TeamMergeRequestAcceptedType)
+        /// (trusted_teams) Accepted a team merge request (deprecated, replaced by 'Accepted a team merge request')
+        case teamMergeRequestAcceptedShownToPrimaryTeam(TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamType)
+        /// (trusted_teams) Accepted a team merge request (deprecated, replaced by 'Accepted a team merge request')
+        case teamMergeRequestAcceptedShownToSecondaryTeam(TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamType)
+        /// (trusted_teams) Automatically canceled team merge request
+        case teamMergeRequestAutoCanceled(TeamLog.TeamMergeRequestAutoCanceledType)
+        /// (trusted_teams) Canceled a team merge request
+        case teamMergeRequestCanceled(TeamLog.TeamMergeRequestCanceledType)
+        /// (trusted_teams) Canceled a team merge request (deprecated, replaced by 'Canceled a team merge request')
+        case teamMergeRequestCanceledShownToPrimaryTeam(TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamType)
+        /// (trusted_teams) Canceled a team merge request (deprecated, replaced by 'Canceled a team merge request')
+        case teamMergeRequestCanceledShownToSecondaryTeam(TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamType)
+        /// (trusted_teams) Team merge request expired
+        case teamMergeRequestExpired(TeamLog.TeamMergeRequestExpiredType)
+        /// (trusted_teams) Team merge request expired (deprecated, replaced by 'Team merge request expired')
+        case teamMergeRequestExpiredShownToPrimaryTeam(TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamType)
+        /// (trusted_teams) Team merge request expired (deprecated, replaced by 'Team merge request expired')
+        case teamMergeRequestExpiredShownToSecondaryTeam(TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamType)
+        /// (trusted_teams) Rejected a team merge request (deprecated, no longer logged)
+        case teamMergeRequestRejectedShownToPrimaryTeam(TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamType)
+        /// (trusted_teams) Rejected a team merge request (deprecated, no longer logged)
+        case teamMergeRequestRejectedShownToSecondaryTeam(TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamType)
+        /// (trusted_teams) Sent a team merge request reminder
+        case teamMergeRequestReminder(TeamLog.TeamMergeRequestReminderType)
+        /// (trusted_teams) Sent a team merge request reminder (deprecated, replaced by 'Sent a team merge request
+        /// reminder')
+        case teamMergeRequestReminderShownToPrimaryTeam(TeamLog.TeamMergeRequestReminderShownToPrimaryTeamType)
+        /// (trusted_teams) Sent a team merge request reminder (deprecated, replaced by 'Sent a team merge request
+        /// reminder')
+        case teamMergeRequestReminderShownToSecondaryTeam(TeamLog.TeamMergeRequestReminderShownToSecondaryTeamType)
+        /// (trusted_teams) Canceled the team merge
+        case teamMergeRequestRevoked(TeamLog.TeamMergeRequestRevokedType)
+        /// (trusted_teams) Requested to merge their Dropbox team into yours
+        case teamMergeRequestSentShownToPrimaryTeam(TeamLog.TeamMergeRequestSentShownToPrimaryTeamType)
+        /// (trusted_teams) Requested to merge your team into another Dropbox team
+        case teamMergeRequestSentShownToSecondaryTeam(TeamLog.TeamMergeRequestSentShownToSecondaryTeamType)
         /// An unspecified error.
         case other
 
@@ -8032,6 +8438,14 @@ open class TeamLog {
                 case .appUnlinkUser(let arg):
                     var d = Serialization.getFields(TeamLog.AppUnlinkUserTypeSerializer().serialize(arg))
                     d[".tag"] = .str("app_unlink_user")
+                    return .dictionary(d)
+                case .integrationConnected(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationConnectedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_connected")
+                    return .dictionary(d)
+                case .integrationDisconnected(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationDisconnectedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_disconnected")
                     return .dictionary(d)
                 case .fileAddComment(let arg):
                     var d = Serialization.getFields(TeamLog.FileAddCommentTypeSerializer().serialize(arg))
@@ -8241,6 +8655,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileRequestCreateTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_request_create")
                     return .dictionary(d)
+                case .fileRequestDelete(let arg):
+                    var d = Serialization.getFields(TeamLog.FileRequestDeleteTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("file_request_delete")
+                    return .dictionary(d)
                 case .fileRequestReceiveFile(let arg):
                     var d = Serialization.getFields(TeamLog.FileRequestReceiveFileTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_request_receive_file")
@@ -8301,6 +8719,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.EmmErrorTypeSerializer().serialize(arg))
                     d[".tag"] = .str("emm_error")
                     return .dictionary(d)
+                case .guestAdminSignedInViaTrustedTeams(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminSignedInViaTrustedTeamsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_signed_in_via_trusted_teams")
+                    return .dictionary(d)
+                case .guestAdminSignedOutViaTrustedTeams(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminSignedOutViaTrustedTeamsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_signed_out_via_trusted_teams")
+                    return .dictionary(d)
                 case .loginFail(let arg):
                     var d = Serialization.getFields(TeamLog.LoginFailTypeSerializer().serialize(arg))
                     d[".tag"] = .str("login_fail")
@@ -8333,6 +8759,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.SsoErrorTypeSerializer().serialize(arg))
                     d[".tag"] = .str("sso_error")
                     return .dictionary(d)
+                case .memberAddExternalId(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberAddExternalIdTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("member_add_external_id")
+                    return .dictionary(d)
                 case .memberAddName(let arg):
                     var d = Serialization.getFields(TeamLog.MemberAddNameTypeSerializer().serialize(arg))
                     d[".tag"] = .str("member_add_name")
@@ -8344,6 +8774,10 @@ open class TeamLog {
                 case .memberChangeEmail(let arg):
                     var d = Serialization.getFields(TeamLog.MemberChangeEmailTypeSerializer().serialize(arg))
                     d[".tag"] = .str("member_change_email")
+                    return .dictionary(d)
+                case .memberChangeExternalId(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberChangeExternalIdTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("member_change_external_id")
                     return .dictionary(d)
                 case .memberChangeMembershipType(let arg):
                     var d = Serialization.getFields(TeamLog.MemberChangeMembershipTypeTypeSerializer().serialize(arg))
@@ -8364,6 +8798,10 @@ open class TeamLog {
                 case .memberPermanentlyDeleteAccountContents(let arg):
                     var d = Serialization.getFields(TeamLog.MemberPermanentlyDeleteAccountContentsTypeSerializer().serialize(arg))
                     d[".tag"] = .str("member_permanently_delete_account_contents")
+                    return .dictionary(d)
+                case .memberRemoveExternalId(let arg):
+                    var d = Serialization.getFields(TeamLog.MemberRemoveExternalIdTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("member_remove_external_id")
                     return .dictionary(d)
                 case .memberSpaceLimitsAddCustomQuota(let arg):
                     var d = Serialization.getFields(TeamLog.MemberSpaceLimitsAddCustomQuotaTypeSerializer().serialize(arg))
@@ -8541,6 +8979,18 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.PaperFolderTeamInviteTypeSerializer().serialize(arg))
                     d[".tag"] = .str("paper_folder_team_invite")
                     return .dictionary(d)
+                case .paperPublishedLinkCreate(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkCreateTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_create")
+                    return .dictionary(d)
+                case .paperPublishedLinkDisabled(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkDisabledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_disabled")
+                    return .dictionary(d)
+                case .paperPublishedLinkView(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperPublishedLinkViewTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_published_link_view")
+                    return .dictionary(d)
                 case .passwordChange(let arg):
                     var d = Serialization.getFields(TeamLog.PasswordChangeTypeSerializer().serialize(arg))
                     d[".tag"] = .str("password_change")
@@ -8576,6 +9026,10 @@ open class TeamLog {
                 case .teamActivityCreateReport(let arg):
                     var d = Serialization.getFields(TeamLog.TeamActivityCreateReportTypeSerializer().serialize(arg))
                     d[".tag"] = .str("team_activity_create_report")
+                    return .dictionary(d)
+                case .teamActivityCreateReportFail(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamActivityCreateReportFailTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_activity_create_report_fail")
                     return .dictionary(d)
                 case .collectionShare(let arg):
                     var d = Serialization.getFields(TeamLog.CollectionShareTypeSerializer().serialize(arg))
@@ -9081,6 +9535,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.GroupUserManagementChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("group_user_management_change_policy")
                     return .dictionary(d)
+                case .integrationPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.IntegrationPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("integration_policy_changed")
+                    return .dictionary(d)
                 case .memberRequestsChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.MemberRequestsChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("member_requests_change_policy")
@@ -9129,6 +9587,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.PaperChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("paper_change_policy")
                     return .dictionary(d)
+                case .paperDefaultFolderPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperDefaultFolderPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_default_folder_policy_changed")
+                    return .dictionary(d)
+                case .paperDesktopPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.PaperDesktopPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_desktop_policy_changed")
+                    return .dictionary(d)
                 case .paperEnabledUsersGroupAddition(let arg):
                     var d = Serialization.getFields(TeamLog.PaperEnabledUsersGroupAdditionTypeSerializer().serialize(arg))
                     d[".tag"] = .str("paper_enabled_users_group_addition")
@@ -9140,6 +9606,10 @@ open class TeamLog {
                 case .permanentDeleteChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.PermanentDeleteChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("permanent_delete_change_policy")
+                    return .dictionary(d)
+                case .resellerSupportChangePolicy(let arg):
+                    var d = Serialization.getFields(TeamLog.ResellerSupportChangePolicyTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("reseller_support_change_policy")
                     return .dictionary(d)
                 case .sharingChangeFolderJoinPolicy(let arg):
                     var d = Serialization.getFields(TeamLog.SharingChangeFolderJoinPolicyTypeSerializer().serialize(arg))
@@ -9180,6 +9650,10 @@ open class TeamLog {
                 case .ssoChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.SsoChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("sso_change_policy")
+                    return .dictionary(d)
+                case .teamExtensionsPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_extensions_policy_changed")
                     return .dictionary(d)
                 case .teamSelectiveSyncPolicyChanged(let arg):
                     var d = Serialization.getFields(TeamLog.TeamSelectiveSyncPolicyChangedTypeSerializer().serialize(arg))
@@ -9261,6 +9735,82 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.TfaResetTypeSerializer().serialize(arg))
                     d[".tag"] = .str("tfa_reset")
                     return .dictionary(d)
+                case .guestAdminChangeStatus(let arg):
+                    var d = Serialization.getFields(TeamLog.GuestAdminChangeStatusTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("guest_admin_change_status")
+                    return .dictionary(d)
+                case .teamMergeRequestAccepted(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted")
+                    return .dictionary(d)
+                case .teamMergeRequestAcceptedShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestAcceptedShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_accepted_shown_to_secondary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestAutoCanceled(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestAutoCanceledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_auto_canceled")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceled(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceledShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestCanceledShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_canceled_shown_to_secondary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestExpired(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired")
+                    return .dictionary(d)
+                case .teamMergeRequestExpiredShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestExpiredShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_expired_shown_to_secondary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestRejectedShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_rejected_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestRejectedShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_rejected_shown_to_secondary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestReminder(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder")
+                    return .dictionary(d)
+                case .teamMergeRequestReminderShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestReminderShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestReminderShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_reminder_shown_to_secondary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestRevoked(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestRevokedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_revoked")
+                    return .dictionary(d)
+                case .teamMergeRequestSentShownToPrimaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestSentShownToPrimaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_sent_shown_to_primary_team")
+                    return .dictionary(d)
+                case .teamMergeRequestSentShownToSecondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMergeRequestSentShownToSecondaryTeamTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_merge_request_sent_shown_to_secondary_team")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -9284,6 +9834,12 @@ open class TeamLog {
                         case "app_unlink_user":
                             let v = TeamLog.AppUnlinkUserTypeSerializer().deserialize(json)
                             return EventType.appUnlinkUser(v)
+                        case "integration_connected":
+                            let v = TeamLog.IntegrationConnectedTypeSerializer().deserialize(json)
+                            return EventType.integrationConnected(v)
+                        case "integration_disconnected":
+                            let v = TeamLog.IntegrationDisconnectedTypeSerializer().deserialize(json)
+                            return EventType.integrationDisconnected(v)
                         case "file_add_comment":
                             let v = TeamLog.FileAddCommentTypeSerializer().deserialize(json)
                             return EventType.fileAddComment(v)
@@ -9440,6 +9996,9 @@ open class TeamLog {
                         case "file_request_create":
                             let v = TeamLog.FileRequestCreateTypeSerializer().deserialize(json)
                             return EventType.fileRequestCreate(v)
+                        case "file_request_delete":
+                            let v = TeamLog.FileRequestDeleteTypeSerializer().deserialize(json)
+                            return EventType.fileRequestDelete(v)
                         case "file_request_receive_file":
                             let v = TeamLog.FileRequestReceiveFileTypeSerializer().deserialize(json)
                             return EventType.fileRequestReceiveFile(v)
@@ -9485,6 +10044,12 @@ open class TeamLog {
                         case "emm_error":
                             let v = TeamLog.EmmErrorTypeSerializer().deserialize(json)
                             return EventType.emmError(v)
+                        case "guest_admin_signed_in_via_trusted_teams":
+                            let v = TeamLog.GuestAdminSignedInViaTrustedTeamsTypeSerializer().deserialize(json)
+                            return EventType.guestAdminSignedInViaTrustedTeams(v)
+                        case "guest_admin_signed_out_via_trusted_teams":
+                            let v = TeamLog.GuestAdminSignedOutViaTrustedTeamsTypeSerializer().deserialize(json)
+                            return EventType.guestAdminSignedOutViaTrustedTeams(v)
                         case "login_fail":
                             let v = TeamLog.LoginFailTypeSerializer().deserialize(json)
                             return EventType.loginFail(v)
@@ -9509,6 +10074,9 @@ open class TeamLog {
                         case "sso_error":
                             let v = TeamLog.SsoErrorTypeSerializer().deserialize(json)
                             return EventType.ssoError(v)
+                        case "member_add_external_id":
+                            let v = TeamLog.MemberAddExternalIdTypeSerializer().deserialize(json)
+                            return EventType.memberAddExternalId(v)
                         case "member_add_name":
                             let v = TeamLog.MemberAddNameTypeSerializer().deserialize(json)
                             return EventType.memberAddName(v)
@@ -9518,6 +10086,9 @@ open class TeamLog {
                         case "member_change_email":
                             let v = TeamLog.MemberChangeEmailTypeSerializer().deserialize(json)
                             return EventType.memberChangeEmail(v)
+                        case "member_change_external_id":
+                            let v = TeamLog.MemberChangeExternalIdTypeSerializer().deserialize(json)
+                            return EventType.memberChangeExternalId(v)
                         case "member_change_membership_type":
                             let v = TeamLog.MemberChangeMembershipTypeTypeSerializer().deserialize(json)
                             return EventType.memberChangeMembershipType(v)
@@ -9533,6 +10104,9 @@ open class TeamLog {
                         case "member_permanently_delete_account_contents":
                             let v = TeamLog.MemberPermanentlyDeleteAccountContentsTypeSerializer().deserialize(json)
                             return EventType.memberPermanentlyDeleteAccountContents(v)
+                        case "member_remove_external_id":
+                            let v = TeamLog.MemberRemoveExternalIdTypeSerializer().deserialize(json)
+                            return EventType.memberRemoveExternalId(v)
                         case "member_space_limits_add_custom_quota":
                             let v = TeamLog.MemberSpaceLimitsAddCustomQuotaTypeSerializer().deserialize(json)
                             return EventType.memberSpaceLimitsAddCustomQuota(v)
@@ -9665,6 +10239,15 @@ open class TeamLog {
                         case "paper_folder_team_invite":
                             let v = TeamLog.PaperFolderTeamInviteTypeSerializer().deserialize(json)
                             return EventType.paperFolderTeamInvite(v)
+                        case "paper_published_link_create":
+                            let v = TeamLog.PaperPublishedLinkCreateTypeSerializer().deserialize(json)
+                            return EventType.paperPublishedLinkCreate(v)
+                        case "paper_published_link_disabled":
+                            let v = TeamLog.PaperPublishedLinkDisabledTypeSerializer().deserialize(json)
+                            return EventType.paperPublishedLinkDisabled(v)
+                        case "paper_published_link_view":
+                            let v = TeamLog.PaperPublishedLinkViewTypeSerializer().deserialize(json)
+                            return EventType.paperPublishedLinkView(v)
                         case "password_change":
                             let v = TeamLog.PasswordChangeTypeSerializer().deserialize(json)
                             return EventType.passwordChange(v)
@@ -9692,6 +10275,9 @@ open class TeamLog {
                         case "team_activity_create_report":
                             let v = TeamLog.TeamActivityCreateReportTypeSerializer().deserialize(json)
                             return EventType.teamActivityCreateReport(v)
+                        case "team_activity_create_report_fail":
+                            let v = TeamLog.TeamActivityCreateReportFailTypeSerializer().deserialize(json)
+                            return EventType.teamActivityCreateReportFail(v)
                         case "collection_share":
                             let v = TeamLog.CollectionShareTypeSerializer().deserialize(json)
                             return EventType.collectionShare(v)
@@ -10070,6 +10656,9 @@ open class TeamLog {
                         case "group_user_management_change_policy":
                             let v = TeamLog.GroupUserManagementChangePolicyTypeSerializer().deserialize(json)
                             return EventType.groupUserManagementChangePolicy(v)
+                        case "integration_policy_changed":
+                            let v = TeamLog.IntegrationPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.integrationPolicyChanged(v)
                         case "member_requests_change_policy":
                             let v = TeamLog.MemberRequestsChangePolicyTypeSerializer().deserialize(json)
                             return EventType.memberRequestsChangePolicy(v)
@@ -10106,6 +10695,12 @@ open class TeamLog {
                         case "paper_change_policy":
                             let v = TeamLog.PaperChangePolicyTypeSerializer().deserialize(json)
                             return EventType.paperChangePolicy(v)
+                        case "paper_default_folder_policy_changed":
+                            let v = TeamLog.PaperDefaultFolderPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.paperDefaultFolderPolicyChanged(v)
+                        case "paper_desktop_policy_changed":
+                            let v = TeamLog.PaperDesktopPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.paperDesktopPolicyChanged(v)
                         case "paper_enabled_users_group_addition":
                             let v = TeamLog.PaperEnabledUsersGroupAdditionTypeSerializer().deserialize(json)
                             return EventType.paperEnabledUsersGroupAddition(v)
@@ -10115,6 +10710,9 @@ open class TeamLog {
                         case "permanent_delete_change_policy":
                             let v = TeamLog.PermanentDeleteChangePolicyTypeSerializer().deserialize(json)
                             return EventType.permanentDeleteChangePolicy(v)
+                        case "reseller_support_change_policy":
+                            let v = TeamLog.ResellerSupportChangePolicyTypeSerializer().deserialize(json)
+                            return EventType.resellerSupportChangePolicy(v)
                         case "sharing_change_folder_join_policy":
                             let v = TeamLog.SharingChangeFolderJoinPolicyTypeSerializer().deserialize(json)
                             return EventType.sharingChangeFolderJoinPolicy(v)
@@ -10145,6 +10743,9 @@ open class TeamLog {
                         case "sso_change_policy":
                             let v = TeamLog.SsoChangePolicyTypeSerializer().deserialize(json)
                             return EventType.ssoChangePolicy(v)
+                        case "team_extensions_policy_changed":
+                            let v = TeamLog.TeamExtensionsPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.teamExtensionsPolicyChanged(v)
                         case "team_selective_sync_policy_changed":
                             let v = TeamLog.TeamSelectiveSyncPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.teamSelectiveSyncPolicyChanged(v)
@@ -10205,6 +10806,63 @@ open class TeamLog {
                         case "tfa_reset":
                             let v = TeamLog.TfaResetTypeSerializer().deserialize(json)
                             return EventType.tfaReset(v)
+                        case "guest_admin_change_status":
+                            let v = TeamLog.GuestAdminChangeStatusTypeSerializer().deserialize(json)
+                            return EventType.guestAdminChangeStatus(v)
+                        case "team_merge_request_accepted":
+                            let v = TeamLog.TeamMergeRequestAcceptedTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestAccepted(v)
+                        case "team_merge_request_accepted_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestAcceptedShownToPrimaryTeam(v)
+                        case "team_merge_request_accepted_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestAcceptedShownToSecondaryTeam(v)
+                        case "team_merge_request_auto_canceled":
+                            let v = TeamLog.TeamMergeRequestAutoCanceledTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestAutoCanceled(v)
+                        case "team_merge_request_canceled":
+                            let v = TeamLog.TeamMergeRequestCanceledTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestCanceled(v)
+                        case "team_merge_request_canceled_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestCanceledShownToPrimaryTeam(v)
+                        case "team_merge_request_canceled_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestCanceledShownToSecondaryTeam(v)
+                        case "team_merge_request_expired":
+                            let v = TeamLog.TeamMergeRequestExpiredTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestExpired(v)
+                        case "team_merge_request_expired_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestExpiredShownToPrimaryTeam(v)
+                        case "team_merge_request_expired_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestExpiredShownToSecondaryTeam(v)
+                        case "team_merge_request_rejected_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestRejectedShownToPrimaryTeam(v)
+                        case "team_merge_request_rejected_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestRejectedShownToSecondaryTeam(v)
+                        case "team_merge_request_reminder":
+                            let v = TeamLog.TeamMergeRequestReminderTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestReminder(v)
+                        case "team_merge_request_reminder_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestReminderShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestReminderShownToPrimaryTeam(v)
+                        case "team_merge_request_reminder_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestReminderShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestReminderShownToSecondaryTeam(v)
+                        case "team_merge_request_revoked":
+                            let v = TeamLog.TeamMergeRequestRevokedTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestRevoked(v)
+                        case "team_merge_request_sent_shown_to_primary_team":
+                            let v = TeamLog.TeamMergeRequestSentShownToPrimaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestSentShownToPrimaryTeam(v)
+                        case "team_merge_request_sent_shown_to_secondary_team":
+                            let v = TeamLog.TeamMergeRequestSentShownToSecondaryTeamTypeSerializer().deserialize(json)
+                            return EventType.teamMergeRequestSentShownToSecondaryTeam(v)
                         case "other":
                             return EventType.other
                         default:
@@ -11840,6 +12498,73 @@ open class TeamLog {
                     let deadline = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["deadline"] ?? .null)
                     let allowLateUploads = NullableSerializer(Serialization._StringSerializer).deserialize(dict["allow_late_uploads"] ?? .null)
                     return FileRequestDeadline(deadline: deadline, allowLateUploads: allowLateUploads)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Delete file request.
+    open class FileRequestDeleteDetails: CustomStringConvertible {
+        /// File request id. Might be missing due to historical data gap.
+        public let fileRequestId: String?
+        /// Previous file request details. Might be missing due to historical data gap.
+        public let previousDetails: TeamLog.FileRequestDetails?
+        public init(fileRequestId: String? = nil, previousDetails: TeamLog.FileRequestDetails? = nil) {
+            nullableValidator(stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+"))(fileRequestId)
+            self.fileRequestId = fileRequestId
+            self.previousDetails = previousDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileRequestDeleteDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class FileRequestDeleteDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileRequestDeleteDetails) -> JSON {
+            let output = [ 
+            "file_request_id": NullableSerializer(Serialization._StringSerializer).serialize(value.fileRequestId),
+            "previous_details": NullableSerializer(TeamLog.FileRequestDetailsSerializer()).serialize(value.previousDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileRequestDeleteDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let fileRequestId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["file_request_id"] ?? .null)
+                    let previousDetails = NullableSerializer(TeamLog.FileRequestDetailsSerializer()).deserialize(dict["previous_details"] ?? .null)
+                    return FileRequestDeleteDetails(fileRequestId: fileRequestId, previousDetails: previousDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The FileRequestDeleteType struct
+    open class FileRequestDeleteType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileRequestDeleteTypeSerializer().serialize(self)))"
+        }
+    }
+    open class FileRequestDeleteTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileRequestDeleteType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileRequestDeleteType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return FileRequestDeleteType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -14000,6 +14725,230 @@ open class TeamLog {
         }
     }
 
+    /// Changed guest team admin status.
+    open class GuestAdminChangeStatusDetails: CustomStringConvertible {
+        /// True for guest, false for host.
+        public let isGuest: Bool
+        /// The name of the guest team.
+        public let guestTeamName: String?
+        /// The name of the host team.
+        public let hostTeamName: String?
+        /// Previous request state.
+        public let previousValue: TeamLog.TrustedTeamsRequestState
+        /// New request state.
+        public let newValue: TeamLog.TrustedTeamsRequestState
+        /// Action details.
+        public let actionDetails: TeamLog.TrustedTeamsRequestAction
+        public init(isGuest: Bool, previousValue: TeamLog.TrustedTeamsRequestState, newValue: TeamLog.TrustedTeamsRequestState, actionDetails: TeamLog.TrustedTeamsRequestAction, guestTeamName: String? = nil, hostTeamName: String? = nil) {
+            self.isGuest = isGuest
+            nullableValidator(stringValidator())(guestTeamName)
+            self.guestTeamName = guestTeamName
+            nullableValidator(stringValidator())(hostTeamName)
+            self.hostTeamName = hostTeamName
+            self.previousValue = previousValue
+            self.newValue = newValue
+            self.actionDetails = actionDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminChangeStatusDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminChangeStatusDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminChangeStatusDetails) -> JSON {
+            let output = [ 
+            "is_guest": Serialization._BoolSerializer.serialize(value.isGuest),
+            "previous_value": TeamLog.TrustedTeamsRequestStateSerializer().serialize(value.previousValue),
+            "new_value": TeamLog.TrustedTeamsRequestStateSerializer().serialize(value.newValue),
+            "action_details": TeamLog.TrustedTeamsRequestActionSerializer().serialize(value.actionDetails),
+            "guest_team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.guestTeamName),
+            "host_team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.hostTeamName),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminChangeStatusDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let isGuest = Serialization._BoolSerializer.deserialize(dict["is_guest"] ?? .null)
+                    let previousValue = TeamLog.TrustedTeamsRequestStateSerializer().deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamLog.TrustedTeamsRequestStateSerializer().deserialize(dict["new_value"] ?? .null)
+                    let actionDetails = TeamLog.TrustedTeamsRequestActionSerializer().deserialize(dict["action_details"] ?? .null)
+                    let guestTeamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["guest_team_name"] ?? .null)
+                    let hostTeamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["host_team_name"] ?? .null)
+                    return GuestAdminChangeStatusDetails(isGuest: isGuest, previousValue: previousValue, newValue: newValue, actionDetails: actionDetails, guestTeamName: guestTeamName, hostTeamName: hostTeamName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GuestAdminChangeStatusType struct
+    open class GuestAdminChangeStatusType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminChangeStatusTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminChangeStatusTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminChangeStatusType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminChangeStatusType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GuestAdminChangeStatusType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Started trusted team admin session.
+    open class GuestAdminSignedInViaTrustedTeamsDetails: CustomStringConvertible {
+        /// Host team name.
+        public let teamName: String?
+        /// Trusted team name.
+        public let trustedTeamName: String?
+        public init(teamName: String? = nil, trustedTeamName: String? = nil) {
+            nullableValidator(stringValidator())(teamName)
+            self.teamName = teamName
+            nullableValidator(stringValidator())(trustedTeamName)
+            self.trustedTeamName = trustedTeamName
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminSignedInViaTrustedTeamsDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminSignedInViaTrustedTeamsDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminSignedInViaTrustedTeamsDetails) -> JSON {
+            let output = [ 
+            "team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.teamName),
+            "trusted_team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.trustedTeamName),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminSignedInViaTrustedTeamsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let teamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_name"] ?? .null)
+                    let trustedTeamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["trusted_team_name"] ?? .null)
+                    return GuestAdminSignedInViaTrustedTeamsDetails(teamName: teamName, trustedTeamName: trustedTeamName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GuestAdminSignedInViaTrustedTeamsType struct
+    open class GuestAdminSignedInViaTrustedTeamsType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminSignedInViaTrustedTeamsTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminSignedInViaTrustedTeamsTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminSignedInViaTrustedTeamsType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminSignedInViaTrustedTeamsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GuestAdminSignedInViaTrustedTeamsType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Ended trusted team admin session.
+    open class GuestAdminSignedOutViaTrustedTeamsDetails: CustomStringConvertible {
+        /// Host team name.
+        public let teamName: String?
+        /// Trusted team name.
+        public let trustedTeamName: String?
+        public init(teamName: String? = nil, trustedTeamName: String? = nil) {
+            nullableValidator(stringValidator())(teamName)
+            self.teamName = teamName
+            nullableValidator(stringValidator())(trustedTeamName)
+            self.trustedTeamName = trustedTeamName
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminSignedOutViaTrustedTeamsDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminSignedOutViaTrustedTeamsDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminSignedOutViaTrustedTeamsDetails) -> JSON {
+            let output = [ 
+            "team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.teamName),
+            "trusted_team_name": NullableSerializer(Serialization._StringSerializer).serialize(value.trustedTeamName),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminSignedOutViaTrustedTeamsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let teamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_name"] ?? .null)
+                    let trustedTeamName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["trusted_team_name"] ?? .null)
+                    return GuestAdminSignedOutViaTrustedTeamsDetails(teamName: teamName, trustedTeamName: trustedTeamName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GuestAdminSignedOutViaTrustedTeamsType struct
+    open class GuestAdminSignedOutViaTrustedTeamsType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GuestAdminSignedOutViaTrustedTeamsTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GuestAdminSignedOutViaTrustedTeamsTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GuestAdminSignedOutViaTrustedTeamsType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GuestAdminSignedOutViaTrustedTeamsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GuestAdminSignedOutViaTrustedTeamsType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The IdentifierType union
     public enum IdentifierType: CustomStringConvertible {
         /// An unspecified error.
@@ -14047,6 +14996,253 @@ open class TeamLog {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Connected integration for member.
+    open class IntegrationConnectedDetails: CustomStringConvertible {
+        /// Name of the third-party integration.
+        public let integrationName: String
+        public init(integrationName: String) {
+            stringValidator()(integrationName)
+            self.integrationName = integrationName
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationConnectedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationConnectedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationConnectedDetails) -> JSON {
+            let output = [ 
+            "integration_name": Serialization._StringSerializer.serialize(value.integrationName),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationConnectedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let integrationName = Serialization._StringSerializer.deserialize(dict["integration_name"] ?? .null)
+                    return IntegrationConnectedDetails(integrationName: integrationName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The IntegrationConnectedType struct
+    open class IntegrationConnectedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationConnectedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationConnectedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationConnectedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationConnectedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return IntegrationConnectedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Disconnected integration for member.
+    open class IntegrationDisconnectedDetails: CustomStringConvertible {
+        /// Name of the third-party integration.
+        public let integrationName: String
+        public init(integrationName: String) {
+            stringValidator()(integrationName)
+            self.integrationName = integrationName
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationDisconnectedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationDisconnectedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationDisconnectedDetails) -> JSON {
+            let output = [ 
+            "integration_name": Serialization._StringSerializer.serialize(value.integrationName),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationDisconnectedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let integrationName = Serialization._StringSerializer.deserialize(dict["integration_name"] ?? .null)
+                    return IntegrationDisconnectedDetails(integrationName: integrationName)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The IntegrationDisconnectedType struct
+    open class IntegrationDisconnectedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationDisconnectedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationDisconnectedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationDisconnectedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationDisconnectedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return IntegrationDisconnectedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling whether a service integration is enabled for the team.
+    public enum IntegrationPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationPolicySerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> IntegrationPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return IntegrationPolicy.disabled
+                        case "enabled":
+                            return IntegrationPolicy.enabled
+                        case "other":
+                            return IntegrationPolicy.other
+                        default:
+                            return IntegrationPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed integration policy for team.
+    open class IntegrationPolicyChangedDetails: CustomStringConvertible {
+        /// Name of the third-party integration.
+        public let integrationName: String
+        /// New integration policy.
+        public let newValue: TeamLog.IntegrationPolicy
+        /// Previous integration policy.
+        public let previousValue: TeamLog.IntegrationPolicy
+        public init(integrationName: String, newValue: TeamLog.IntegrationPolicy, previousValue: TeamLog.IntegrationPolicy) {
+            stringValidator()(integrationName)
+            self.integrationName = integrationName
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "integration_name": Serialization._StringSerializer.serialize(value.integrationName),
+            "new_value": TeamLog.IntegrationPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.IntegrationPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let integrationName = Serialization._StringSerializer.deserialize(dict["integration_name"] ?? .null)
+                    let newValue = TeamLog.IntegrationPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.IntegrationPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return IntegrationPolicyChangedDetails(integrationName: integrationName, newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The IntegrationPolicyChangedType struct
+    open class IntegrationPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(IntegrationPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class IntegrationPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: IntegrationPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> IntegrationPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return IntegrationPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -14327,6 +15523,8 @@ open class TeamLog {
         /// An unspecified error.
         case saml
         /// An unspecified error.
+        case googleOauth
+        /// An unspecified error.
         case other
 
         public var description: String {
@@ -14349,6 +15547,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("saml")
                     return .dictionary(d)
+                case .googleOauth:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("google_oauth")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -14366,6 +15568,8 @@ open class TeamLog {
                             return LoginMethod.twoFactorAuthentication
                         case "saml":
                             return LoginMethod.saml
+                        case "google_oauth":
+                            return LoginMethod.googleOauth
                         case "other":
                             return LoginMethod.other
                         default:
@@ -14492,6 +15696,68 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return LogoutType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Added an external ID for team member.
+    open class MemberAddExternalIdDetails: CustomStringConvertible {
+        /// Current external id.
+        public let newValue: String
+        public init(newValue: String) {
+            stringValidator(maxLength: 64)(newValue)
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddExternalIdDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddExternalIdDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddExternalIdDetails) -> JSON {
+            let output = [ 
+            "new_value": Serialization._StringSerializer.serialize(value.newValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberAddExternalIdDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = Serialization._StringSerializer.deserialize(dict["new_value"] ?? .null)
+                    return MemberAddExternalIdDetails(newValue: newValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MemberAddExternalIdType struct
+    open class MemberAddExternalIdType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddExternalIdTypeSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddExternalIdTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddExternalIdType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberAddExternalIdType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return MemberAddExternalIdType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -14689,6 +15955,74 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return MemberChangeEmailType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Changed the external ID for team member.
+    open class MemberChangeExternalIdDetails: CustomStringConvertible {
+        /// Current external id.
+        public let newValue: String
+        /// Old external id.
+        public let previousValue: String
+        public init(newValue: String, previousValue: String) {
+            stringValidator(maxLength: 64)(newValue)
+            self.newValue = newValue
+            stringValidator(maxLength: 64)(previousValue)
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberChangeExternalIdDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class MemberChangeExternalIdDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberChangeExternalIdDetails) -> JSON {
+            let output = [ 
+            "new_value": Serialization._StringSerializer.serialize(value.newValue),
+            "previous_value": Serialization._StringSerializer.serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberChangeExternalIdDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = Serialization._StringSerializer.deserialize(dict["new_value"] ?? .null)
+                    let previousValue = Serialization._StringSerializer.deserialize(dict["previous_value"] ?? .null)
+                    return MemberChangeExternalIdDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MemberChangeExternalIdType struct
+    open class MemberChangeExternalIdType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberChangeExternalIdTypeSerializer().serialize(self)))"
+        }
+    }
+    open class MemberChangeExternalIdTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberChangeExternalIdType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberChangeExternalIdType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return MemberChangeExternalIdType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -15017,6 +16351,8 @@ open class TeamLog {
         /// An unspecified error.
         case leave
         /// An unspecified error.
+        case offboardAndRetainTeamFolders
+        /// An unspecified error.
         case other
 
         public var description: String {
@@ -15039,6 +16375,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("leave")
                     return .dictionary(d)
+                case .offboardAndRetainTeamFolders:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("offboard_and_retain_team_folders")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -15056,6 +16396,8 @@ open class TeamLog {
                             return MemberRemoveActionType.offboard
                         case "leave":
                             return MemberRemoveActionType.leave
+                        case "offboard_and_retain_team_folders":
+                            return MemberRemoveActionType.offboardAndRetainTeamFolders
                         case "other":
                             return MemberRemoveActionType.other
                         default:
@@ -15063,6 +16405,68 @@ open class TeamLog {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Removed the external ID for team member.
+    open class MemberRemoveExternalIdDetails: CustomStringConvertible {
+        /// Old external id.
+        public let previousValue: String
+        public init(previousValue: String) {
+            stringValidator(maxLength: 64)(previousValue)
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberRemoveExternalIdDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class MemberRemoveExternalIdDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberRemoveExternalIdDetails) -> JSON {
+            let output = [ 
+            "previous_value": Serialization._StringSerializer.serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberRemoveExternalIdDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let previousValue = Serialization._StringSerializer.deserialize(dict["previous_value"] ?? .null)
+                    return MemberRemoveExternalIdDetails(previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MemberRemoveExternalIdType struct
+    open class MemberRemoveExternalIdType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberRemoveExternalIdTypeSerializer().serialize(self)))"
+        }
+    }
+    open class MemberRemoveExternalIdTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberRemoveExternalIdType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberRemoveExternalIdType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return MemberRemoveExternalIdType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -17811,6 +19215,240 @@ open class TeamLog {
         }
     }
 
+    /// Policy to set default access for newly created Paper folders.
+    public enum PaperDefaultFolderPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case everyoneInTeam
+        /// An unspecified error.
+        case inviteOnly
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDefaultFolderPolicySerializer().serialize(self)))"
+        }
+    }
+    open class PaperDefaultFolderPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDefaultFolderPolicy) -> JSON {
+            switch value {
+                case .everyoneInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("everyone_in_team")
+                    return .dictionary(d)
+                case .inviteOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_only")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDefaultFolderPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "everyone_in_team":
+                            return PaperDefaultFolderPolicy.everyoneInTeam
+                        case "invite_only":
+                            return PaperDefaultFolderPolicy.inviteOnly
+                        case "other":
+                            return PaperDefaultFolderPolicy.other
+                        default:
+                            return PaperDefaultFolderPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed Paper Default Folder Policy setting for team.
+    open class PaperDefaultFolderPolicyChangedDetails: CustomStringConvertible {
+        /// New Paper Default Folder Policy.
+        public let newValue: TeamLog.PaperDefaultFolderPolicy
+        /// Previous Paper Default Folder Policy.
+        public let previousValue: TeamLog.PaperDefaultFolderPolicy
+        public init(newValue: TeamLog.PaperDefaultFolderPolicy, previousValue: TeamLog.PaperDefaultFolderPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDefaultFolderPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDefaultFolderPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDefaultFolderPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.PaperDefaultFolderPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.PaperDefaultFolderPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDefaultFolderPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.PaperDefaultFolderPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.PaperDefaultFolderPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return PaperDefaultFolderPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDefaultFolderPolicyChangedType struct
+    open class PaperDefaultFolderPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDefaultFolderPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDefaultFolderPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDefaultFolderPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDefaultFolderPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperDefaultFolderPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling if team members can use Paper Desktop
+    public enum PaperDesktopPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDesktopPolicySerializer().serialize(self)))"
+        }
+    }
+    open class PaperDesktopPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDesktopPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDesktopPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return PaperDesktopPolicy.disabled
+                        case "enabled":
+                            return PaperDesktopPolicy.enabled
+                        case "other":
+                            return PaperDesktopPolicy.other
+                        default:
+                            return PaperDesktopPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Enabled/disabled Paper Desktop for team.
+    open class PaperDesktopPolicyChangedDetails: CustomStringConvertible {
+        /// New Paper Desktop policy.
+        public let newValue: TeamLog.PaperDesktopPolicy
+        /// Previous Paper Desktop policy.
+        public let previousValue: TeamLog.PaperDesktopPolicy
+        public init(newValue: TeamLog.PaperDesktopPolicy, previousValue: TeamLog.PaperDesktopPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDesktopPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDesktopPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDesktopPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.PaperDesktopPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.PaperDesktopPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDesktopPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.PaperDesktopPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.PaperDesktopPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return PaperDesktopPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDesktopPolicyChangedType struct
+    open class PaperDesktopPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDesktopPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PaperDesktopPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDesktopPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperDesktopPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperDesktopPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Added Paper doc comment.
     open class PaperDocAddCommentDetails: CustomStringConvertible {
         /// Event unique identifier.
@@ -19945,6 +21583,192 @@ open class TeamLog {
         }
     }
 
+    /// Published doc.
+    open class PaperPublishedLinkCreateDetails: CustomStringConvertible {
+        /// Event unique identifier.
+        public let eventUuid: String
+        public init(eventUuid: String) {
+            stringValidator()(eventUuid)
+            self.eventUuid = eventUuid
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkCreateDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkCreateDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkCreateDetails) -> JSON {
+            let output = [ 
+            "event_uuid": Serialization._StringSerializer.serialize(value.eventUuid),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkCreateDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let eventUuid = Serialization._StringSerializer.deserialize(dict["event_uuid"] ?? .null)
+                    return PaperPublishedLinkCreateDetails(eventUuid: eventUuid)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperPublishedLinkCreateType struct
+    open class PaperPublishedLinkCreateType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkCreateTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkCreateTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkCreateType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkCreateType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperPublishedLinkCreateType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Unpublished doc.
+    open class PaperPublishedLinkDisabledDetails: CustomStringConvertible {
+        /// Event unique identifier.
+        public let eventUuid: String
+        public init(eventUuid: String) {
+            stringValidator()(eventUuid)
+            self.eventUuid = eventUuid
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkDisabledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkDisabledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkDisabledDetails) -> JSON {
+            let output = [ 
+            "event_uuid": Serialization._StringSerializer.serialize(value.eventUuid),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkDisabledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let eventUuid = Serialization._StringSerializer.deserialize(dict["event_uuid"] ?? .null)
+                    return PaperPublishedLinkDisabledDetails(eventUuid: eventUuid)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperPublishedLinkDisabledType struct
+    open class PaperPublishedLinkDisabledType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkDisabledTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkDisabledTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkDisabledType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkDisabledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperPublishedLinkDisabledType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Viewed published doc.
+    open class PaperPublishedLinkViewDetails: CustomStringConvertible {
+        /// Event unique identifier.
+        public let eventUuid: String
+        public init(eventUuid: String) {
+            stringValidator()(eventUuid)
+            self.eventUuid = eventUuid
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkViewDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkViewDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkViewDetails) -> JSON {
+            let output = [ 
+            "event_uuid": Serialization._StringSerializer.serialize(value.eventUuid),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkViewDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let eventUuid = Serialization._StringSerializer.deserialize(dict["event_uuid"] ?? .null)
+                    return PaperPublishedLinkViewDetails(eventUuid: eventUuid)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperPublishedLinkViewType struct
+    open class PaperPublishedLinkViewType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperPublishedLinkViewTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PaperPublishedLinkViewTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperPublishedLinkViewType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperPublishedLinkViewType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperPublishedLinkViewType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// A user or group
     public enum ParticipantLogInfo: CustomStringConvertible {
         /// A user with a Dropbox account.
@@ -20327,7 +22151,11 @@ open class TeamLog {
     /// The PlacementRestriction union
     public enum PlacementRestriction: CustomStringConvertible {
         /// An unspecified error.
+        case australiaOnly
+        /// An unspecified error.
         case europeOnly
+        /// An unspecified error.
+        case japanOnly
         /// An unspecified error.
         case none
         /// An unspecified error.
@@ -20341,9 +22169,17 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: PlacementRestriction) -> JSON {
             switch value {
+                case .australiaOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("australia_only")
+                    return .dictionary(d)
                 case .europeOnly:
                     var d = [String: JSON]()
                     d[".tag"] = .str("europe_only")
+                    return .dictionary(d)
+                case .japanOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("japan_only")
                     return .dictionary(d)
                 case .none:
                     var d = [String: JSON]()
@@ -20360,8 +22196,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "australia_only":
+                            return PlacementRestriction.australiaOnly
                         case "europe_only":
                             return PlacementRestriction.europeOnly
+                        case "japan_only":
+                            return PlacementRestriction.japanOnly
                         case "none":
                             return PlacementRestriction.none
                         case "other":
@@ -20375,10 +22215,166 @@ open class TeamLog {
         }
     }
 
+    /// Team merge request acceptance details shown to the primary team
+    open class PrimaryTeamRequestAcceptedDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PrimaryTeamRequestAcceptedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PrimaryTeamRequestAcceptedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PrimaryTeamRequestAcceptedDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PrimaryTeamRequestAcceptedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return PrimaryTeamRequestAcceptedDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request cancellation details shown to the primary team
+    open class PrimaryTeamRequestCanceledDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PrimaryTeamRequestCanceledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PrimaryTeamRequestCanceledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PrimaryTeamRequestCanceledDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PrimaryTeamRequestCanceledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return PrimaryTeamRequestCanceledDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request expiration details shown to the primary team
+    open class PrimaryTeamRequestExpiredDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PrimaryTeamRequestExpiredDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PrimaryTeamRequestExpiredDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PrimaryTeamRequestExpiredDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PrimaryTeamRequestExpiredDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return PrimaryTeamRequestExpiredDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request reminder details shown to the primary team
+    open class PrimaryTeamRequestReminderDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(secondaryTeam: String, sentTo: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PrimaryTeamRequestReminderDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class PrimaryTeamRequestReminderDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PrimaryTeamRequestReminderDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PrimaryTeamRequestReminderDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return PrimaryTeamRequestReminderDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Quick action type.
     public enum QuickActionType: CustomStringConvertible {
         /// An unspecified error.
         case deleteSharedLink
+        /// An unspecified error.
+        case resetPassword
+        /// An unspecified error.
+        case restoreFileOrFolder
+        /// An unspecified error.
+        case unlinkApp
+        /// An unspecified error.
+        case unlinkSession
         /// An unspecified error.
         case other
 
@@ -20394,6 +22390,22 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("delete_shared_link")
                     return .dictionary(d)
+                case .resetPassword:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("reset_password")
+                    return .dictionary(d)
+                case .restoreFileOrFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restore_file_or_folder")
+                    return .dictionary(d)
+                case .unlinkApp:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlink_app")
+                    return .dictionary(d)
+                case .unlinkSession:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlink_session")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -20407,6 +22419,14 @@ open class TeamLog {
                     switch tag {
                         case "delete_shared_link":
                             return QuickActionType.deleteSharedLink
+                        case "reset_password":
+                            return QuickActionType.resetPassword
+                        case "restore_file_or_folder":
+                            return QuickActionType.restoreFileOrFolder
+                        case "unlink_app":
+                            return QuickActionType.unlinkApp
+                        case "unlink_session":
+                            return QuickActionType.unlinkSession
                         case "other":
                             return QuickActionType.other
                         default:
@@ -20488,6 +22508,123 @@ open class TeamLog {
                     return ResellerLogInfo(resellerName: resellerName, resellerEmail: resellerEmail)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Enabled/disabled reseller support.
+    open class ResellerSupportChangePolicyDetails: CustomStringConvertible {
+        /// New Reseller support policy.
+        public let newValue: TeamLog.ResellerSupportPolicy
+        /// Previous Reseller support policy.
+        public let previousValue: TeamLog.ResellerSupportPolicy
+        public init(newValue: TeamLog.ResellerSupportPolicy, previousValue: TeamLog.ResellerSupportPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResellerSupportChangePolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ResellerSupportChangePolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResellerSupportChangePolicyDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.ResellerSupportPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.ResellerSupportPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ResellerSupportChangePolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.ResellerSupportPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.ResellerSupportPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return ResellerSupportChangePolicyDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ResellerSupportChangePolicyType struct
+    open class ResellerSupportChangePolicyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResellerSupportChangePolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ResellerSupportChangePolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResellerSupportChangePolicyType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ResellerSupportChangePolicyType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ResellerSupportChangePolicyType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling if reseller can access the admin console as administrator
+    public enum ResellerSupportPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResellerSupportPolicySerializer().serialize(self)))"
+        }
+    }
+    open class ResellerSupportPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResellerSupportPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ResellerSupportPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ResellerSupportPolicy.disabled
+                        case "enabled":
+                            return ResellerSupportPolicy.enabled
+                        case "other":
+                            return ResellerSupportPolicy.other
+                        default:
+                            return ResellerSupportPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -20713,6 +22850,142 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return SecondaryMailsPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request acceptance details shown to the secondary team
+    open class SecondaryTeamRequestAcceptedDetails: CustomStringConvertible {
+        /// The primary team name.
+        public let primaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(primaryTeam: String, sentBy: String) {
+            stringValidator()(primaryTeam)
+            self.primaryTeam = primaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryTeamRequestAcceptedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryTeamRequestAcceptedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryTeamRequestAcceptedDetails) -> JSON {
+            let output = [ 
+            "primary_team": Serialization._StringSerializer.serialize(value.primaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryTeamRequestAcceptedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let primaryTeam = Serialization._StringSerializer.deserialize(dict["primary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return SecondaryTeamRequestAcceptedDetails(primaryTeam: primaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request cancellation details shown to the secondary team
+    open class SecondaryTeamRequestCanceledDetails: CustomStringConvertible {
+        /// The email of the primary team admin that the request was sent to.
+        public let sentTo: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(sentTo: String, sentBy: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryTeamRequestCanceledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryTeamRequestCanceledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryTeamRequestCanceledDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryTeamRequestCanceledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return SecondaryTeamRequestCanceledDetails(sentTo: sentTo, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request expiration details shown to the secondary team
+    open class SecondaryTeamRequestExpiredDetails: CustomStringConvertible {
+        /// The email of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(sentTo: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryTeamRequestExpiredDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryTeamRequestExpiredDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryTeamRequestExpiredDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryTeamRequestExpiredDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return SecondaryTeamRequestExpiredDetails(sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request reminder details shown to the secondary team
+    open class SecondaryTeamRequestReminderDetails: CustomStringConvertible {
+        /// The email of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(sentTo: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryTeamRequestReminderDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class SecondaryTeamRequestReminderDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SecondaryTeamRequestReminderDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SecondaryTeamRequestReminderDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return SecondaryTeamRequestReminderDetails(sentTo: sentTo)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -28214,6 +30487,67 @@ open class TeamLog {
         }
     }
 
+    /// Couldn't generate team activity report.
+    open class TeamActivityCreateReportFailDetails: CustomStringConvertible {
+        /// Failure reason.
+        public let failureReason: Team.TeamReportFailureReason
+        public init(failureReason: Team.TeamReportFailureReason) {
+            self.failureReason = failureReason
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamActivityCreateReportFailDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamActivityCreateReportFailDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamActivityCreateReportFailDetails) -> JSON {
+            let output = [ 
+            "failure_reason": Team.TeamReportFailureReasonSerializer().serialize(value.failureReason),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamActivityCreateReportFailDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let failureReason = Team.TeamReportFailureReasonSerializer().deserialize(dict["failure_reason"] ?? .null)
+                    return TeamActivityCreateReportFailDetails(failureReason: failureReason)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamActivityCreateReportFailType struct
+    open class TeamActivityCreateReportFailType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamActivityCreateReportFailTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamActivityCreateReportFailTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamActivityCreateReportFailType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamActivityCreateReportFailType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamActivityCreateReportFailType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The TeamActivityCreateReportType struct
     open class TeamActivityCreateReportType: CustomStringConvertible {
         /// (no description)
@@ -28320,6 +30654,123 @@ open class TeamLog {
                     let participants = NullableSerializer(ArraySerializer(TeamLog.ParticipantLogInfoSerializer())).deserialize(dict["participants"] ?? .null)
                     let assets = NullableSerializer(ArraySerializer(TeamLog.AssetLogInfoSerializer())).deserialize(dict["assets"] ?? .null)
                     return TeamEvent(timestamp_: timestamp_, eventCategory: eventCategory, eventType: eventType, details: details, actor: actor, origin: origin, involveNonTeamMember: involveNonTeamMember, context: context, participants: participants, assets: assets)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling whether App Integrations are enabled for the team.
+    public enum TeamExtensionsPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamExtensionsPolicySerializer().serialize(self)))"
+        }
+    }
+    open class TeamExtensionsPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamExtensionsPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamExtensionsPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return TeamExtensionsPolicy.disabled
+                        case "enabled":
+                            return TeamExtensionsPolicy.enabled
+                        case "other":
+                            return TeamExtensionsPolicy.other
+                        default:
+                            return TeamExtensionsPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed App Integrations setting for team.
+    open class TeamExtensionsPolicyChangedDetails: CustomStringConvertible {
+        /// New Extensions policy.
+        public let newValue: TeamLog.TeamExtensionsPolicy
+        /// Previous Extensions policy.
+        public let previousValue: TeamLog.TeamExtensionsPolicy
+        public init(newValue: TeamLog.TeamExtensionsPolicy, previousValue: TeamLog.TeamExtensionsPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamExtensionsPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamExtensionsPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamExtensionsPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.TeamExtensionsPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.TeamExtensionsPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamExtensionsPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.TeamExtensionsPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.TeamExtensionsPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return TeamExtensionsPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamExtensionsPolicyChangedType struct
+    open class TeamExtensionsPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamExtensionsPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamExtensionsPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamExtensionsPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamExtensionsPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamExtensionsPolicyChangedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -28810,6 +31261,1378 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return TeamMergeFromType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Accepted a team merge request.
+    open class TeamMergeRequestAcceptedDetails: CustomStringConvertible {
+        /// Team merge request acceptance details.
+        public let requestAcceptedDetails: TeamLog.TeamMergeRequestAcceptedExtraDetails
+        public init(requestAcceptedDetails: TeamLog.TeamMergeRequestAcceptedExtraDetails) {
+            self.requestAcceptedDetails = requestAcceptedDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedDetails) -> JSON {
+            let output = [ 
+            "request_accepted_details": TeamLog.TeamMergeRequestAcceptedExtraDetailsSerializer().serialize(value.requestAcceptedDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let requestAcceptedDetails = TeamLog.TeamMergeRequestAcceptedExtraDetailsSerializer().deserialize(dict["request_accepted_details"] ?? .null)
+                    return TeamMergeRequestAcceptedDetails(requestAcceptedDetails: requestAcceptedDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request acceptance details
+    public enum TeamMergeRequestAcceptedExtraDetails: CustomStringConvertible {
+        /// Team merge request accepted details shown to the primary team.
+        case primaryTeam(TeamLog.PrimaryTeamRequestAcceptedDetails)
+        /// Team merge request accepted details shown to the secondary team.
+        case secondaryTeam(TeamLog.SecondaryTeamRequestAcceptedDetails)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedExtraDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedExtraDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedExtraDetails) -> JSON {
+            switch value {
+                case .primaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.PrimaryTeamRequestAcceptedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("primary_team")
+                    return .dictionary(d)
+                case .secondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryTeamRequestAcceptedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedExtraDetails {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "primary_team":
+                            let v = TeamLog.PrimaryTeamRequestAcceptedDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestAcceptedExtraDetails.primaryTeam(v)
+                        case "secondary_team":
+                            let v = TeamLog.SecondaryTeamRequestAcceptedDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestAcceptedExtraDetails.secondaryTeam(v)
+                        case "other":
+                            return TeamMergeRequestAcceptedExtraDetails.other
+                        default:
+                            return TeamMergeRequestAcceptedExtraDetails.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Accepted a team merge request.
+    open class TeamMergeRequestAcceptedShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestAcceptedShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestAcceptedShownToPrimaryTeamType struct
+    open class TeamMergeRequestAcceptedShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestAcceptedShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Accepted a team merge request.
+    open class TeamMergeRequestAcceptedShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The primary team name.
+        public let primaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(primaryTeam: String, sentBy: String) {
+            stringValidator()(primaryTeam)
+            self.primaryTeam = primaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "primary_team": Serialization._StringSerializer.serialize(value.primaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let primaryTeam = Serialization._StringSerializer.deserialize(dict["primary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestAcceptedShownToSecondaryTeamDetails(primaryTeam: primaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestAcceptedShownToSecondaryTeamType struct
+    open class TeamMergeRequestAcceptedShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestAcceptedShownToSecondaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestAcceptedType struct
+    open class TeamMergeRequestAcceptedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAcceptedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAcceptedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAcceptedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAcceptedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestAcceptedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Automatically canceled team merge request.
+    open class TeamMergeRequestAutoCanceledDetails: CustomStringConvertible {
+        /// The cancellation reason.
+        public let details: String?
+        public init(details: String? = nil) {
+            nullableValidator(stringValidator())(details)
+            self.details = details
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAutoCanceledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAutoCanceledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAutoCanceledDetails) -> JSON {
+            let output = [ 
+            "details": NullableSerializer(Serialization._StringSerializer).serialize(value.details),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAutoCanceledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let details = NullableSerializer(Serialization._StringSerializer).deserialize(dict["details"] ?? .null)
+                    return TeamMergeRequestAutoCanceledDetails(details: details)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestAutoCanceledType struct
+    open class TeamMergeRequestAutoCanceledType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestAutoCanceledTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestAutoCanceledTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestAutoCanceledType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestAutoCanceledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestAutoCanceledType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Canceled a team merge request.
+    open class TeamMergeRequestCanceledDetails: CustomStringConvertible {
+        /// Team merge request cancellation details.
+        public let requestCanceledDetails: TeamLog.TeamMergeRequestCanceledExtraDetails
+        public init(requestCanceledDetails: TeamLog.TeamMergeRequestCanceledExtraDetails) {
+            self.requestCanceledDetails = requestCanceledDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledDetails) -> JSON {
+            let output = [ 
+            "request_canceled_details": TeamLog.TeamMergeRequestCanceledExtraDetailsSerializer().serialize(value.requestCanceledDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let requestCanceledDetails = TeamLog.TeamMergeRequestCanceledExtraDetailsSerializer().deserialize(dict["request_canceled_details"] ?? .null)
+                    return TeamMergeRequestCanceledDetails(requestCanceledDetails: requestCanceledDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request cancellation details
+    public enum TeamMergeRequestCanceledExtraDetails: CustomStringConvertible {
+        /// Team merge request cancellation details shown to the primary team.
+        case primaryTeam(TeamLog.PrimaryTeamRequestCanceledDetails)
+        /// Team merge request cancellation details shown to the secondary team.
+        case secondaryTeam(TeamLog.SecondaryTeamRequestCanceledDetails)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledExtraDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledExtraDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledExtraDetails) -> JSON {
+            switch value {
+                case .primaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.PrimaryTeamRequestCanceledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("primary_team")
+                    return .dictionary(d)
+                case .secondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryTeamRequestCanceledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledExtraDetails {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "primary_team":
+                            let v = TeamLog.PrimaryTeamRequestCanceledDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestCanceledExtraDetails.primaryTeam(v)
+                        case "secondary_team":
+                            let v = TeamLog.SecondaryTeamRequestCanceledDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestCanceledExtraDetails.secondaryTeam(v)
+                        case "other":
+                            return TeamMergeRequestCanceledExtraDetails.other
+                        default:
+                            return TeamMergeRequestCanceledExtraDetails.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Canceled a team merge request.
+    open class TeamMergeRequestCanceledShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestCanceledShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestCanceledShownToPrimaryTeamType struct
+    open class TeamMergeRequestCanceledShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestCanceledShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Canceled a team merge request.
+    open class TeamMergeRequestCanceledShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The email of the primary team admin that the request was sent to.
+        public let sentTo: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(sentTo: String, sentBy: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestCanceledShownToSecondaryTeamDetails(sentTo: sentTo, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestCanceledShownToSecondaryTeamType struct
+    open class TeamMergeRequestCanceledShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestCanceledShownToSecondaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestCanceledType struct
+    open class TeamMergeRequestCanceledType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestCanceledTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestCanceledTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestCanceledType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestCanceledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestCanceledType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request expired.
+    open class TeamMergeRequestExpiredDetails: CustomStringConvertible {
+        /// Team merge request expiration details.
+        public let requestExpiredDetails: TeamLog.TeamMergeRequestExpiredExtraDetails
+        public init(requestExpiredDetails: TeamLog.TeamMergeRequestExpiredExtraDetails) {
+            self.requestExpiredDetails = requestExpiredDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredDetails) -> JSON {
+            let output = [ 
+            "request_expired_details": TeamLog.TeamMergeRequestExpiredExtraDetailsSerializer().serialize(value.requestExpiredDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let requestExpiredDetails = TeamLog.TeamMergeRequestExpiredExtraDetailsSerializer().deserialize(dict["request_expired_details"] ?? .null)
+                    return TeamMergeRequestExpiredDetails(requestExpiredDetails: requestExpiredDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request expiration details
+    public enum TeamMergeRequestExpiredExtraDetails: CustomStringConvertible {
+        /// Team merge request canceled details shown to the primary team.
+        case primaryTeam(TeamLog.PrimaryTeamRequestExpiredDetails)
+        /// Team merge request canceled details shown to the secondary team.
+        case secondaryTeam(TeamLog.SecondaryTeamRequestExpiredDetails)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredExtraDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredExtraDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredExtraDetails) -> JSON {
+            switch value {
+                case .primaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.PrimaryTeamRequestExpiredDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("primary_team")
+                    return .dictionary(d)
+                case .secondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryTeamRequestExpiredDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredExtraDetails {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "primary_team":
+                            let v = TeamLog.PrimaryTeamRequestExpiredDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestExpiredExtraDetails.primaryTeam(v)
+                        case "secondary_team":
+                            let v = TeamLog.SecondaryTeamRequestExpiredDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestExpiredExtraDetails.secondaryTeam(v)
+                        case "other":
+                            return TeamMergeRequestExpiredExtraDetails.other
+                        default:
+                            return TeamMergeRequestExpiredExtraDetails.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Team merge request expired.
+    open class TeamMergeRequestExpiredShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestExpiredShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestExpiredShownToPrimaryTeamType struct
+    open class TeamMergeRequestExpiredShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestExpiredShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request expired.
+    open class TeamMergeRequestExpiredShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The email of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(sentTo: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return TeamMergeRequestExpiredShownToSecondaryTeamDetails(sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestExpiredShownToSecondaryTeamType struct
+    open class TeamMergeRequestExpiredShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestExpiredShownToSecondaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestExpiredType struct
+    open class TeamMergeRequestExpiredType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestExpiredTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestExpiredTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestExpiredType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestExpiredType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestExpiredType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Rejected a team merge request.
+    open class TeamMergeRequestRejectedShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(secondaryTeam: String, sentBy: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRejectedShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRejectedShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRejectedShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRejectedShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestRejectedShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestRejectedShownToPrimaryTeamType struct
+    open class TeamMergeRequestRejectedShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRejectedShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRejectedShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRejectedShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRejectedShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestRejectedShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Rejected a team merge request.
+    open class TeamMergeRequestRejectedShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The name of the secondary team admin who sent the request originally.
+        public let sentBy: String
+        public init(sentBy: String) {
+            stringValidator()(sentBy)
+            self.sentBy = sentBy
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRejectedShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRejectedShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRejectedShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "sent_by": Serialization._StringSerializer.serialize(value.sentBy),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRejectedShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentBy = Serialization._StringSerializer.deserialize(dict["sent_by"] ?? .null)
+                    return TeamMergeRequestRejectedShownToSecondaryTeamDetails(sentBy: sentBy)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestRejectedShownToSecondaryTeamType struct
+    open class TeamMergeRequestRejectedShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRejectedShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRejectedShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRejectedShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRejectedShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestRejectedShownToSecondaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Sent a team merge request reminder.
+    open class TeamMergeRequestReminderDetails: CustomStringConvertible {
+        /// Team merge request reminder details.
+        public let requestReminderDetails: TeamLog.TeamMergeRequestReminderExtraDetails
+        public init(requestReminderDetails: TeamLog.TeamMergeRequestReminderExtraDetails) {
+            self.requestReminderDetails = requestReminderDetails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderDetails) -> JSON {
+            let output = [ 
+            "request_reminder_details": TeamLog.TeamMergeRequestReminderExtraDetailsSerializer().serialize(value.requestReminderDetails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let requestReminderDetails = TeamLog.TeamMergeRequestReminderExtraDetailsSerializer().deserialize(dict["request_reminder_details"] ?? .null)
+                    return TeamMergeRequestReminderDetails(requestReminderDetails: requestReminderDetails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Team merge request reminder details
+    public enum TeamMergeRequestReminderExtraDetails: CustomStringConvertible {
+        /// Team merge request reminder details shown to the primary team.
+        case primaryTeam(TeamLog.PrimaryTeamRequestReminderDetails)
+        /// Team merge request reminder details shown to the secondary team.
+        case secondaryTeam(TeamLog.SecondaryTeamRequestReminderDetails)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderExtraDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderExtraDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderExtraDetails) -> JSON {
+            switch value {
+                case .primaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.PrimaryTeamRequestReminderDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("primary_team")
+                    return .dictionary(d)
+                case .secondaryTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.SecondaryTeamRequestReminderDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("secondary_team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderExtraDetails {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "primary_team":
+                            let v = TeamLog.PrimaryTeamRequestReminderDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestReminderExtraDetails.primaryTeam(v)
+                        case "secondary_team":
+                            let v = TeamLog.SecondaryTeamRequestReminderDetailsSerializer().deserialize(json)
+                            return TeamMergeRequestReminderExtraDetails.secondaryTeam(v)
+                        case "other":
+                            return TeamMergeRequestReminderExtraDetails.other
+                        default:
+                            return TeamMergeRequestReminderExtraDetails.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Sent a team merge request reminder.
+    open class TeamMergeRequestReminderShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(secondaryTeam: String, sentTo: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return TeamMergeRequestReminderShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestReminderShownToPrimaryTeamType struct
+    open class TeamMergeRequestReminderShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestReminderShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Sent a team merge request reminder.
+    open class TeamMergeRequestReminderShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The email of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(sentTo: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return TeamMergeRequestReminderShownToSecondaryTeamDetails(sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestReminderShownToSecondaryTeamType struct
+    open class TeamMergeRequestReminderShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestReminderShownToSecondaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestReminderType struct
+    open class TeamMergeRequestReminderType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestReminderTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestReminderTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestReminderType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestReminderType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestReminderType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Canceled the team merge.
+    open class TeamMergeRequestRevokedDetails: CustomStringConvertible {
+        /// The name of the other team.
+        public let team: String
+        public init(team: String) {
+            stringValidator()(team)
+            self.team = team
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRevokedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRevokedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRevokedDetails) -> JSON {
+            let output = [ 
+            "team": Serialization._StringSerializer.serialize(value.team),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRevokedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let team = Serialization._StringSerializer.deserialize(dict["team"] ?? .null)
+                    return TeamMergeRequestRevokedDetails(team: team)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestRevokedType struct
+    open class TeamMergeRequestRevokedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestRevokedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestRevokedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestRevokedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestRevokedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestRevokedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Requested to merge their Dropbox team into yours.
+    open class TeamMergeRequestSentShownToPrimaryTeamDetails: CustomStringConvertible {
+        /// The secondary team name.
+        public let secondaryTeam: String
+        /// The name of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(secondaryTeam: String, sentTo: String) {
+            stringValidator()(secondaryTeam)
+            self.secondaryTeam = secondaryTeam
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestSentShownToPrimaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestSentShownToPrimaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestSentShownToPrimaryTeamDetails) -> JSON {
+            let output = [ 
+            "secondary_team": Serialization._StringSerializer.serialize(value.secondaryTeam),
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestSentShownToPrimaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let secondaryTeam = Serialization._StringSerializer.deserialize(dict["secondary_team"] ?? .null)
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return TeamMergeRequestSentShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestSentShownToPrimaryTeamType struct
+    open class TeamMergeRequestSentShownToPrimaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestSentShownToPrimaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestSentShownToPrimaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestSentShownToPrimaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestSentShownToPrimaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestSentShownToPrimaryTeamType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Requested to merge your team into another Dropbox team.
+    open class TeamMergeRequestSentShownToSecondaryTeamDetails: CustomStringConvertible {
+        /// The email of the primary team admin the request was sent to.
+        public let sentTo: String
+        public init(sentTo: String) {
+            stringValidator()(sentTo)
+            self.sentTo = sentTo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestSentShownToSecondaryTeamDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestSentShownToSecondaryTeamDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestSentShownToSecondaryTeamDetails) -> JSON {
+            let output = [ 
+            "sent_to": Serialization._StringSerializer.serialize(value.sentTo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestSentShownToSecondaryTeamDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sentTo = Serialization._StringSerializer.deserialize(dict["sent_to"] ?? .null)
+                    return TeamMergeRequestSentShownToSecondaryTeamDetails(sentTo: sentTo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamMergeRequestSentShownToSecondaryTeamType struct
+    open class TeamMergeRequestSentShownToSecondaryTeamType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMergeRequestSentShownToSecondaryTeamTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMergeRequestSentShownToSecondaryTeamTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMergeRequestSentShownToSecondaryTeamType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMergeRequestSentShownToSecondaryTeamType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMergeRequestSentShownToSecondaryTeamType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -30104,6 +33927,140 @@ open class TeamLog {
                             return TrustedNonTeamMemberType.other
                         default:
                             return TrustedNonTeamMemberType.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TrustedTeamsRequestAction union
+    public enum TrustedTeamsRequestAction: CustomStringConvertible {
+        /// An unspecified error.
+        case invited
+        /// An unspecified error.
+        case expired
+        /// An unspecified error.
+        case revoked
+        /// An unspecified error.
+        case accepted
+        /// An unspecified error.
+        case declined
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TrustedTeamsRequestActionSerializer().serialize(self)))"
+        }
+    }
+    open class TrustedTeamsRequestActionSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TrustedTeamsRequestAction) -> JSON {
+            switch value {
+                case .invited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invited")
+                    return .dictionary(d)
+                case .expired:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired")
+                    return .dictionary(d)
+                case .revoked:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("revoked")
+                    return .dictionary(d)
+                case .accepted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("accepted")
+                    return .dictionary(d)
+                case .declined:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("declined")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TrustedTeamsRequestAction {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invited":
+                            return TrustedTeamsRequestAction.invited
+                        case "expired":
+                            return TrustedTeamsRequestAction.expired
+                        case "revoked":
+                            return TrustedTeamsRequestAction.revoked
+                        case "accepted":
+                            return TrustedTeamsRequestAction.accepted
+                        case "declined":
+                            return TrustedTeamsRequestAction.declined
+                        case "other":
+                            return TrustedTeamsRequestAction.other
+                        default:
+                            return TrustedTeamsRequestAction.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The TrustedTeamsRequestState union
+    public enum TrustedTeamsRequestState: CustomStringConvertible {
+        /// An unspecified error.
+        case invited
+        /// An unspecified error.
+        case linked
+        /// An unspecified error.
+        case unlinked
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TrustedTeamsRequestStateSerializer().serialize(self)))"
+        }
+    }
+    open class TrustedTeamsRequestStateSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TrustedTeamsRequestState) -> JSON {
+            switch value {
+                case .invited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invited")
+                    return .dictionary(d)
+                case .linked:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("linked")
+                    return .dictionary(d)
+                case .unlinked:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlinked")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TrustedTeamsRequestState {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invited":
+                            return TrustedTeamsRequestState.invited
+                        case "linked":
+                            return TrustedTeamsRequestState.linked
+                        case "unlinked":
+                            return TrustedTeamsRequestState.unlinked
+                        case "other":
+                            return TrustedTeamsRequestState.other
+                        default:
+                            return TrustedTeamsRequestState.other
                     }
                 default:
                     fatalError("Failed to deserialize")

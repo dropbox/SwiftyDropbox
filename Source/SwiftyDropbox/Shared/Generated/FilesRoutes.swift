@@ -109,7 +109,7 @@ open class FilesRoutes {
     }
 
     /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route will replace
-    /// copyBatch. The main difference is this route will return stutus for each entry, while copyBatch raises failure
+    /// copyBatch. The main difference is this route will return status for each entry, while copyBatch raises failure
     /// if any entry fails. This route will either finish synchronously, or return a job ID and do the async copy job in
     /// background. Please use copyBatchCheckV2 to check the job status.
     ///
@@ -381,6 +381,37 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
+    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    ///
+    /// - parameter path: The path of the file to be exported.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+    /// NSError will be thrown).
+    /// - parameter destination: A closure used to compute the destination, given the temporary file location and the
+    /// response.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.ExportResult` object on success or a
+    /// `Files.ExportError` object on failure.
+    @discardableResult open func export(path: String, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.ExportResultSerializer, Files.ExportErrorSerializer> {
+        let route = Files.export
+        let serverArgs = Files.ExportArg(path: path)
+        return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+
+    /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
+    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    ///
+    /// - parameter path: The path of the file to be exported.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.ExportResult` object on success or a
+    /// `Files.ExportError` object on failure.
+    @discardableResult open func export(path: String) -> DownloadRequestMemory<Files.ExportResultSerializer, Files.ExportErrorSerializer> {
+        let route = Files.export
+        let serverArgs = Files.ExportArg(path: path)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
     ///
     /// - parameter path: The path of a file or folder on Dropbox.
@@ -401,9 +432,9 @@ open class FilesRoutes {
     }
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
-    /// .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML previews are generated
-    /// for files with the following extensions: .csv, .ods, .xls, .xlsm, .xlsx. Other formats will return an
-    /// unsupported extension error.
+    /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
+    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other
+    /// formats will return an unsupported extension error.
     ///
     /// - parameter path: The path of the file to preview.
     /// - parameter rev: Please specify revision in path instead.
@@ -422,9 +453,9 @@ open class FilesRoutes {
     }
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
-    /// .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML previews are generated
-    /// for files with the following extensions: .csv, .ods, .xls, .xlsm, .xlsx. Other formats will return an
-    /// unsupported extension error.
+    /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
+    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other
+    /// formats will return an unsupported extension error.
     ///
     /// - parameter path: The path of the file to preview.
     /// - parameter rev: Please specify revision in path instead.
@@ -438,7 +469,7 @@ open class FilesRoutes {
     }
 
     /// Get a temporary link to stream content of a file. This link will expire in four hours and afterwards you will
-    /// get 410 Gone. So this URL should not be used to display content directly in the browser.  Content-Type of the
+    /// get 410 Gone. This URL should not be used to display content directly in the browser. The Content-Type of the
     /// link is determined automatically by the file's mime type.
     ///
     /// - parameter path: The path to the file you want a temporary link to.
@@ -554,7 +585,8 @@ open class FilesRoutes {
     /// - parameter path: A unique identifier for the file.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
     /// response will contain contents of all subfolders.
-    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video.
+    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video. This parameter will
+    /// no longer have an effect starting December 2, 2019.
     /// - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
     /// but were deleted.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
@@ -568,12 +600,13 @@ open class FilesRoutes {
     /// Only non-recursive mode is supported for shared link.
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
+    /// - parameter includeNonDownloadableFiles: If true, include files that are not downloadable, i.e. Google Docs.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includeNonDownloadableFiles: Bool = true) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolder
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups, includeNonDownloadableFiles: includeNonDownloadableFiles)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -597,7 +630,8 @@ open class FilesRoutes {
     /// - parameter path: A unique identifier for the file.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
     /// response will contain contents of all subfolders.
-    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video.
+    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video. This parameter will
+    /// no longer have an effect starting December 2, 2019.
     /// - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
     /// but were deleted.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
@@ -611,12 +645,13 @@ open class FilesRoutes {
     /// Only non-recursive mode is supported for shared link.
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
+    /// - parameter includeNonDownloadableFiles: If true, include files that are not downloadable, i.e. Google Docs.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
     /// object on success or a `Files.ListFolderError` object on failure.
-    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult open func listFolderGetLatestCursor(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includeNonDownloadableFiles: Bool = true) -> RpcRequest<Files.ListFolderGetLatestCursorResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolderGetLatestCursor
-        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups, includeNonDownloadableFiles: includeNonDownloadableFiles)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -697,7 +732,7 @@ open class FilesRoutes {
     }
 
     /// Move multiple files or folders to different locations at once in the user's Dropbox. This route will replace
-    /// moveBatchV2. The main difference is this route will return stutus for each entry, while moveBatch raises failure
+    /// moveBatch. The main difference is this route will return status for each entry, while moveBatch raises failure
     /// if any entry fails. This route will either finish synchronously, or return a job ID and do the async move job in
     /// background. Please use moveBatchCheckV2 to check the job status.
     ///
