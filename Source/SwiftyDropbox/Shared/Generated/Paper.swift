@@ -2263,7 +2263,8 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsCreate = Route(
@@ -2274,7 +2275,8 @@ open class Paper {
         argSerializer: Paper.PaperDocCreateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocCreateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "upload"]
     )
     static let docsDownload = Route(
@@ -2285,7 +2287,8 @@ open class Paper {
         argSerializer: Paper.PaperDocExportSerializer(),
         responseSerializer: Paper.PaperDocExportResultSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "download"]
     )
     static let docsFolderUsersList = Route(
@@ -2296,7 +2299,8 @@ open class Paper {
         argSerializer: Paper.ListUsersOnFolderArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsFolderUsersListContinue = Route(
@@ -2307,7 +2311,8 @@ open class Paper {
         argSerializer: Paper.ListUsersOnFolderContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsGetFolderInfo = Route(
@@ -2318,7 +2323,8 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.FoldersContainingPaperDocSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsList = Route(
@@ -2329,7 +2335,8 @@ open class Paper {
         argSerializer: Paper.ListPaperDocsArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsListContinue = Route(
@@ -2340,7 +2347,8 @@ open class Paper {
         argSerializer: Paper.ListPaperDocsContinueArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Paper.ListDocsCursorErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsPermanentlyDelete = Route(
@@ -2351,7 +2359,8 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsSharingPolicyGet = Route(
@@ -2362,7 +2371,8 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.SharingPolicySerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsSharingPolicySet = Route(
@@ -2373,7 +2383,8 @@ open class Paper {
         argSerializer: Paper.PaperDocSharingPolicySerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsUpdate = Route(
@@ -2384,7 +2395,8 @@ open class Paper {
         argSerializer: Paper.PaperDocUpdateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocUpdateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "upload"]
     )
     static let docsUsersAdd = Route(
@@ -2395,7 +2407,8 @@ open class Paper {
         argSerializer: Paper.AddPaperDocUserSerializer(),
         responseSerializer: ArraySerializer(Paper.AddPaperDocUserMemberResultSerializer()),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsUsersList = Route(
@@ -2406,7 +2419,8 @@ open class Paper {
         argSerializer: Paper.ListUsersOnPaperDocArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsUsersListContinue = Route(
@@ -2417,7 +2431,8 @@ open class Paper {
         argSerializer: Paper.ListUsersOnPaperDocContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let docsUsersRemove = Route(
@@ -2428,7 +2443,8 @@ open class Paper {
         argSerializer: Paper.RemovePaperDocUserSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

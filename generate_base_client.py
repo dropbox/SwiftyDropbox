@@ -33,13 +33,6 @@ _cmdline_parser.add_argument(
     help='Path to clone of stone repository.',
 )
 _cmdline_parser.add_argument(
-    '-d',
-    '--documentation',
-    action='store_false',
-    help='Sets whether documentation config file should be generated.',
-    default=True,
-)
-_cmdline_parser.add_argument(
     '-o',
     '--output-path',
     type=str,
@@ -104,9 +97,6 @@ def main():
         stone_cmd_prefix += ['-r', args.route_whitelist_filter]
 
     types_cmd = stone_cmd_prefix + ['swift_types', dropbox_pkg_path] + specs
-
-    if args.documentation:
-        types_cmd += ['--', '-d']
 
     o = subprocess.check_output(
         (types_cmd),

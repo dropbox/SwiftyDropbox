@@ -34675,7 +34675,8 @@ open class TeamLog {
         argSerializer: TeamLog.GetTeamEventsArgSerializer(),
         responseSerializer: TeamLog.GetTeamEventsResultSerializer(),
         errorSerializer: TeamLog.GetTeamEventsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getEventsContinue = Route(
@@ -34686,7 +34687,8 @@ open class TeamLog {
         argSerializer: TeamLog.GetTeamEventsContinueArgSerializer(),
         responseSerializer: TeamLog.GetTeamEventsResultSerializer(),
         errorSerializer: TeamLog.GetTeamEventsContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
 }

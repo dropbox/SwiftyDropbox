@@ -311,23 +311,19 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire-iOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox-iOS/SwiftyDropbox.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CD92B8D88C534899C75F6CBF /* [CP] Embed Pods Frameworks */ = {
@@ -335,23 +331,19 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire-macOS/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyDropbox-macOS/SwiftyDropbox.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyDropbox.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TestSwiftyDropbox_macOS/Pods-TestSwiftyDropbox_macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

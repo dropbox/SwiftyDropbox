@@ -1861,7 +1861,8 @@ open class FileProperties {
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.AddPropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesOverwrite = Route(
@@ -1872,7 +1873,8 @@ open class FileProperties {
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.InvalidPropertyGroupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesRemove = Route(
@@ -1883,7 +1885,8 @@ open class FileProperties {
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.RemovePropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesSearch = Route(
@@ -1894,7 +1897,8 @@ open class FileProperties {
         argSerializer: FileProperties.PropertiesSearchArgSerializer(),
         responseSerializer: FileProperties.PropertiesSearchResultSerializer(),
         errorSerializer: FileProperties.PropertiesSearchErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesSearchContinue = Route(
@@ -1905,7 +1909,8 @@ open class FileProperties {
         argSerializer: FileProperties.PropertiesSearchContinueArgSerializer(),
         responseSerializer: FileProperties.PropertiesSearchResultSerializer(),
         errorSerializer: FileProperties.PropertiesSearchContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesUpdate = Route(
@@ -1916,7 +1921,8 @@ open class FileProperties {
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.UpdatePropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesAddForTeam = Route(
@@ -1927,7 +1933,8 @@ open class FileProperties {
         argSerializer: FileProperties.AddTemplateArgSerializer(),
         responseSerializer: FileProperties.AddTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesAddForUser = Route(
@@ -1938,7 +1945,8 @@ open class FileProperties {
         argSerializer: FileProperties.AddTemplateArgSerializer(),
         responseSerializer: FileProperties.AddTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesGetForTeam = Route(
@@ -1949,7 +1957,8 @@ open class FileProperties {
         argSerializer: FileProperties.GetTemplateArgSerializer(),
         responseSerializer: FileProperties.GetTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesGetForUser = Route(
@@ -1960,7 +1969,8 @@ open class FileProperties {
         argSerializer: FileProperties.GetTemplateArgSerializer(),
         responseSerializer: FileProperties.GetTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesListForTeam = Route(
@@ -1971,7 +1981,8 @@ open class FileProperties {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesListForUser = Route(
@@ -1982,7 +1993,8 @@ open class FileProperties {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesRemoveForTeam = Route(
@@ -1993,7 +2005,8 @@ open class FileProperties {
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesRemoveForUser = Route(
@@ -2004,7 +2017,8 @@ open class FileProperties {
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesUpdateForTeam = Route(
@@ -2015,7 +2029,8 @@ open class FileProperties {
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
         responseSerializer: FileProperties.UpdateTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "team",
+                "host": "api",
                 "style": "rpc"]
     )
     static let templatesUpdateForUser = Route(
@@ -2026,7 +2041,8 @@ open class FileProperties {
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
         responseSerializer: FileProperties.UpdateTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

@@ -1414,7 +1414,8 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.CountFileRequestsResultSerializer(),
         errorSerializer: FileRequests.CountFileRequestsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let create = Route(
@@ -1425,7 +1426,8 @@ open class FileRequests {
         argSerializer: FileRequests.CreateFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.CreateFileRequestErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let delete = Route(
@@ -1436,7 +1438,8 @@ open class FileRequests {
         argSerializer: FileRequests.DeleteFileRequestArgsSerializer(),
         responseSerializer: FileRequests.DeleteFileRequestsResultSerializer(),
         errorSerializer: FileRequests.DeleteFileRequestErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let deleteAllClosed = Route(
@@ -1447,7 +1450,8 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.DeleteAllClosedFileRequestsResultSerializer(),
         errorSerializer: FileRequests.DeleteAllClosedFileRequestsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let get = Route(
@@ -1458,7 +1462,8 @@ open class FileRequests {
         argSerializer: FileRequests.GetFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.GetFileRequestErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listV2 = Route(
@@ -1469,7 +1474,8 @@ open class FileRequests {
         argSerializer: FileRequests.ListFileRequestsArgSerializer(),
         responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let list_ = Route(
@@ -1480,7 +1486,8 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.ListFileRequestsResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listContinue = Route(
@@ -1491,7 +1498,8 @@ open class FileRequests {
         argSerializer: FileRequests.ListFileRequestsContinueArgSerializer(),
         responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let update = Route(
@@ -1502,7 +1510,8 @@ open class FileRequests {
         argSerializer: FileRequests.UpdateFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.UpdateFileRequestErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }
