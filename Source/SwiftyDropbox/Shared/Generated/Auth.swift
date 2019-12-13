@@ -495,7 +495,8 @@ open class Auth {
         argSerializer: Auth.TokenFromOAuth1ArgSerializer(),
         responseSerializer: Auth.TokenFromOAuth1ResultSerializer(),
         errorSerializer: Auth.TokenFromOAuth1ErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "app",
+                "host": "api",
                 "style": "rpc"]
     )
     static let tokenRevoke = Route(
@@ -506,7 +507,8 @@ open class Auth {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

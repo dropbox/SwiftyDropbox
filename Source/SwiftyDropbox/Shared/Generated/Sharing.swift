@@ -8534,7 +8534,8 @@ open class Sharing {
         argSerializer: Sharing.AddFileMemberArgsSerializer(),
         responseSerializer: ArraySerializer(Sharing.FileMemberActionResultSerializer()),
         errorSerializer: Sharing.AddFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let addFolderMember = Route(
@@ -8545,7 +8546,8 @@ open class Sharing {
         argSerializer: Sharing.AddFolderMemberArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.AddFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let changeFileMemberAccess = Route(
@@ -8556,7 +8558,8 @@ open class Sharing {
         argSerializer: Sharing.ChangeFileMemberAccessArgsSerializer(),
         responseSerializer: Sharing.FileMemberActionResultSerializer(),
         errorSerializer: Sharing.FileMemberActionErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkJobStatus = Route(
@@ -8567,7 +8570,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkRemoveMemberJobStatus = Route(
@@ -8578,7 +8582,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.RemoveMemberJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkShareJobStatus = Route(
@@ -8589,7 +8594,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.ShareFolderJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createSharedLink = Route(
@@ -8600,7 +8606,8 @@ open class Sharing {
         argSerializer: Sharing.CreateSharedLinkArgSerializer(),
         responseSerializer: Sharing.PathLinkMetadataSerializer(),
         errorSerializer: Sharing.CreateSharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createSharedLinkWithSettings = Route(
@@ -8611,7 +8618,8 @@ open class Sharing {
         argSerializer: Sharing.CreateSharedLinkWithSettingsArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.CreateSharedLinkWithSettingsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFileMetadata = Route(
@@ -8622,7 +8630,8 @@ open class Sharing {
         argSerializer: Sharing.GetFileMetadataArgSerializer(),
         responseSerializer: Sharing.SharedFileMetadataSerializer(),
         errorSerializer: Sharing.GetFileMetadataErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFileMetadataBatch = Route(
@@ -8633,7 +8642,8 @@ open class Sharing {
         argSerializer: Sharing.GetFileMetadataBatchArgSerializer(),
         responseSerializer: ArraySerializer(Sharing.GetFileMetadataBatchResultSerializer()),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFolderMetadata = Route(
@@ -8644,7 +8654,8 @@ open class Sharing {
         argSerializer: Sharing.GetMetadataArgsSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.SharedFolderAccessErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getSharedLinkFile = Route(
@@ -8655,7 +8666,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let getSharedLinkMetadata = Route(
@@ -8666,7 +8678,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.SharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getSharedLinks = Route(
@@ -8677,7 +8690,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinksArgSerializer(),
         responseSerializer: Sharing.GetSharedLinksResultSerializer(),
         errorSerializer: Sharing.GetSharedLinksErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembers = Route(
@@ -8688,7 +8702,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersArgSerializer(),
         responseSerializer: Sharing.SharedFileMembersSerializer(),
         errorSerializer: Sharing.ListFileMembersErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembersBatch = Route(
@@ -8699,7 +8714,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersBatchArgSerializer(),
         responseSerializer: ArraySerializer(Sharing.ListFileMembersBatchResultSerializer()),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembersContinue = Route(
@@ -8710,7 +8726,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersContinueArgSerializer(),
         responseSerializer: Sharing.SharedFileMembersSerializer(),
         errorSerializer: Sharing.ListFileMembersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderMembers = Route(
@@ -8721,7 +8738,8 @@ open class Sharing {
         argSerializer: Sharing.ListFolderMembersArgsSerializer(),
         responseSerializer: Sharing.SharedFolderMembersSerializer(),
         errorSerializer: Sharing.SharedFolderAccessErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderMembersContinue = Route(
@@ -8732,7 +8750,8 @@ open class Sharing {
         argSerializer: Sharing.ListFolderMembersContinueArgSerializer(),
         responseSerializer: Sharing.SharedFolderMembersSerializer(),
         errorSerializer: Sharing.ListFolderMembersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolders = Route(
@@ -8743,7 +8762,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersArgsSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFoldersContinue = Route(
@@ -8754,7 +8774,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Sharing.ListFoldersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listMountableFolders = Route(
@@ -8765,7 +8786,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersArgsSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listMountableFoldersContinue = Route(
@@ -8776,7 +8798,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Sharing.ListFoldersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listReceivedFiles = Route(
@@ -8787,7 +8810,8 @@ open class Sharing {
         argSerializer: Sharing.ListFilesArgSerializer(),
         responseSerializer: Sharing.ListFilesResultSerializer(),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listReceivedFilesContinue = Route(
@@ -8798,7 +8822,8 @@ open class Sharing {
         argSerializer: Sharing.ListFilesContinueArgSerializer(),
         responseSerializer: Sharing.ListFilesResultSerializer(),
         errorSerializer: Sharing.ListFilesContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listSharedLinks = Route(
@@ -8809,7 +8834,8 @@ open class Sharing {
         argSerializer: Sharing.ListSharedLinksArgSerializer(),
         responseSerializer: Sharing.ListSharedLinksResultSerializer(),
         errorSerializer: Sharing.ListSharedLinksErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let modifySharedLinkSettings = Route(
@@ -8820,7 +8846,8 @@ open class Sharing {
         argSerializer: Sharing.ModifySharedLinkSettingsArgsSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.ModifySharedLinkSettingsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let mountFolder = Route(
@@ -8831,7 +8858,8 @@ open class Sharing {
         argSerializer: Sharing.MountFolderArgSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.MountFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let relinquishFileMembership = Route(
@@ -8842,7 +8870,8 @@ open class Sharing {
         argSerializer: Sharing.RelinquishFileMembershipArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.RelinquishFileMembershipErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let relinquishFolderMembership = Route(
@@ -8853,7 +8882,8 @@ open class Sharing {
         argSerializer: Sharing.RelinquishFolderMembershipArgSerializer(),
         responseSerializer: Async.LaunchEmptyResultSerializer(),
         errorSerializer: Sharing.RelinquishFolderMembershipErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFileMember = Route(
@@ -8864,7 +8894,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
         responseSerializer: Sharing.FileMemberActionIndividualResultSerializer(),
         errorSerializer: Sharing.RemoveFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFileMember2 = Route(
@@ -8875,7 +8906,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
         responseSerializer: Sharing.FileMemberRemoveActionResultSerializer(),
         errorSerializer: Sharing.RemoveFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFolderMember = Route(
@@ -8886,7 +8918,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFolderMemberArgSerializer(),
         responseSerializer: Async.LaunchResultBaseSerializer(),
         errorSerializer: Sharing.RemoveFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let revokeSharedLink = Route(
@@ -8897,7 +8930,8 @@ open class Sharing {
         argSerializer: Sharing.RevokeSharedLinkArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.RevokeSharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let setAccessInheritance = Route(
@@ -8908,7 +8942,8 @@ open class Sharing {
         argSerializer: Sharing.SetAccessInheritanceArgSerializer(),
         responseSerializer: Sharing.ShareFolderLaunchSerializer(),
         errorSerializer: Sharing.SetAccessInheritanceErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let shareFolder = Route(
@@ -8919,7 +8954,8 @@ open class Sharing {
         argSerializer: Sharing.ShareFolderArgSerializer(),
         responseSerializer: Sharing.ShareFolderLaunchSerializer(),
         errorSerializer: Sharing.ShareFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let transferFolder = Route(
@@ -8930,7 +8966,8 @@ open class Sharing {
         argSerializer: Sharing.TransferFolderArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.TransferFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unmountFolder = Route(
@@ -8941,7 +8978,8 @@ open class Sharing {
         argSerializer: Sharing.UnmountFolderArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.UnmountFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unshareFile = Route(
@@ -8952,7 +8990,8 @@ open class Sharing {
         argSerializer: Sharing.UnshareFileArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.UnshareFileErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unshareFolder = Route(
@@ -8963,7 +9002,8 @@ open class Sharing {
         argSerializer: Sharing.UnshareFolderArgSerializer(),
         responseSerializer: Async.LaunchEmptyResultSerializer(),
         errorSerializer: Sharing.UnshareFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFileMember = Route(
@@ -8974,7 +9014,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFileMemberArgsSerializer(),
         responseSerializer: Sharing.MemberAccessLevelResultSerializer(),
         errorSerializer: Sharing.FileMemberActionErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFolderMember = Route(
@@ -8985,7 +9026,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFolderMemberArgSerializer(),
         responseSerializer: Sharing.MemberAccessLevelResultSerializer(),
         errorSerializer: Sharing.UpdateFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFolderPolicy = Route(
@@ -8996,7 +9038,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFolderPolicyArgSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.UpdateFolderPolicyErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

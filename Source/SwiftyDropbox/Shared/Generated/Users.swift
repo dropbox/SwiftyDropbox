@@ -665,7 +665,8 @@ open class Users {
         argSerializer: Users.GetAccountArgSerializer(),
         responseSerializer: Users.BasicAccountSerializer(),
         errorSerializer: Users.GetAccountErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getAccountBatch = Route(
@@ -676,7 +677,8 @@ open class Users {
         argSerializer: Users.GetAccountBatchArgSerializer(),
         responseSerializer: ArraySerializer(Users.BasicAccountSerializer()),
         errorSerializer: Users.GetAccountBatchErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getCurrentAccount = Route(
@@ -687,7 +689,8 @@ open class Users {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Users.FullAccountSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getSpaceUsage = Route(
@@ -698,7 +701,8 @@ open class Users {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Users.SpaceUsageSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

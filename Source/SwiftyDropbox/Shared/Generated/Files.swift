@@ -6707,7 +6707,8 @@ open class Files {
         argSerializer: Files.AlphaGetMetadataArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.AlphaGetMetadataErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let alphaUpload = Route(
@@ -6718,7 +6719,8 @@ open class Files {
         argSerializer: Files.CommitInfoWithPropertiesSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadErrorWithPropertiesSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
     static let copyV2 = Route(
@@ -6729,7 +6731,8 @@ open class Files {
         argSerializer: Files.RelocationArgSerializer(),
         responseSerializer: Files.RelocationResultSerializer(),
         errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copy = Route(
@@ -6740,7 +6743,8 @@ open class Files {
         argSerializer: Files.RelocationArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyBatchV2 = Route(
@@ -6751,7 +6755,8 @@ open class Files {
         argSerializer: Files.RelocationBatchArgBaseSerializer(),
         responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyBatch = Route(
@@ -6762,7 +6767,8 @@ open class Files {
         argSerializer: Files.RelocationBatchArgSerializer(),
         responseSerializer: Files.RelocationBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyBatchCheckV2 = Route(
@@ -6773,7 +6779,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyBatchCheck = Route(
@@ -6784,7 +6791,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyReferenceGet = Route(
@@ -6795,7 +6803,8 @@ open class Files {
         argSerializer: Files.GetCopyReferenceArgSerializer(),
         responseSerializer: Files.GetCopyReferenceResultSerializer(),
         errorSerializer: Files.GetCopyReferenceErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let copyReferenceSave = Route(
@@ -6806,7 +6815,8 @@ open class Files {
         argSerializer: Files.SaveCopyReferenceArgSerializer(),
         responseSerializer: Files.SaveCopyReferenceResultSerializer(),
         errorSerializer: Files.SaveCopyReferenceErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createFolderV2 = Route(
@@ -6817,7 +6827,8 @@ open class Files {
         argSerializer: Files.CreateFolderArgSerializer(),
         responseSerializer: Files.CreateFolderResultSerializer(),
         errorSerializer: Files.CreateFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createFolder = Route(
@@ -6828,7 +6839,8 @@ open class Files {
         argSerializer: Files.CreateFolderArgSerializer(),
         responseSerializer: Files.FolderMetadataSerializer(),
         errorSerializer: Files.CreateFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createFolderBatch = Route(
@@ -6839,7 +6851,8 @@ open class Files {
         argSerializer: Files.CreateFolderBatchArgSerializer(),
         responseSerializer: Files.CreateFolderBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createFolderBatchCheck = Route(
@@ -6850,7 +6863,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.CreateFolderBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let deleteV2 = Route(
@@ -6861,7 +6875,8 @@ open class Files {
         argSerializer: Files.DeleteArgSerializer(),
         responseSerializer: Files.DeleteResultSerializer(),
         errorSerializer: Files.DeleteErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let delete = Route(
@@ -6872,7 +6887,8 @@ open class Files {
         argSerializer: Files.DeleteArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.DeleteErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let deleteBatch = Route(
@@ -6883,7 +6899,8 @@ open class Files {
         argSerializer: Files.DeleteBatchArgSerializer(),
         responseSerializer: Files.DeleteBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let deleteBatchCheck = Route(
@@ -6894,7 +6911,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.DeleteBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let download = Route(
@@ -6905,7 +6923,8 @@ open class Files {
         argSerializer: Files.DownloadArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.DownloadErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let downloadZip = Route(
@@ -6916,7 +6935,8 @@ open class Files {
         argSerializer: Files.DownloadZipArgSerializer(),
         responseSerializer: Files.DownloadZipResultSerializer(),
         errorSerializer: Files.DownloadZipErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let export = Route(
@@ -6927,7 +6947,8 @@ open class Files {
         argSerializer: Files.ExportArgSerializer(),
         responseSerializer: Files.ExportResultSerializer(),
         errorSerializer: Files.ExportErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let getMetadata = Route(
@@ -6938,7 +6959,8 @@ open class Files {
         argSerializer: Files.GetMetadataArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.GetMetadataErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getPreview = Route(
@@ -6949,7 +6971,8 @@ open class Files {
         argSerializer: Files.PreviewArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.PreviewErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let getTemporaryLink = Route(
@@ -6960,7 +6983,8 @@ open class Files {
         argSerializer: Files.GetTemporaryLinkArgSerializer(),
         responseSerializer: Files.GetTemporaryLinkResultSerializer(),
         errorSerializer: Files.GetTemporaryLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getTemporaryUploadLink = Route(
@@ -6971,7 +6995,8 @@ open class Files {
         argSerializer: Files.GetTemporaryUploadLinkArgSerializer(),
         responseSerializer: Files.GetTemporaryUploadLinkResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getThumbnail = Route(
@@ -6982,7 +7007,8 @@ open class Files {
         argSerializer: Files.ThumbnailArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.ThumbnailErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let getThumbnailBatch = Route(
@@ -6993,7 +7019,8 @@ open class Files {
         argSerializer: Files.GetThumbnailBatchArgSerializer(),
         responseSerializer: Files.GetThumbnailBatchResultSerializer(),
         errorSerializer: Files.GetThumbnailBatchErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "rpc"]
     )
     static let listFolder = Route(
@@ -7004,7 +7031,8 @@ open class Files {
         argSerializer: Files.ListFolderArgSerializer(),
         responseSerializer: Files.ListFolderResultSerializer(),
         errorSerializer: Files.ListFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderContinue = Route(
@@ -7015,7 +7043,8 @@ open class Files {
         argSerializer: Files.ListFolderContinueArgSerializer(),
         responseSerializer: Files.ListFolderResultSerializer(),
         errorSerializer: Files.ListFolderContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderGetLatestCursor = Route(
@@ -7026,7 +7055,8 @@ open class Files {
         argSerializer: Files.ListFolderArgSerializer(),
         responseSerializer: Files.ListFolderGetLatestCursorResultSerializer(),
         errorSerializer: Files.ListFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderLongpoll = Route(
@@ -7037,7 +7067,8 @@ open class Files {
         argSerializer: Files.ListFolderLongpollArgSerializer(),
         responseSerializer: Files.ListFolderLongpollResultSerializer(),
         errorSerializer: Files.ListFolderLongpollErrorSerializer(),
-        attrs: ["host": "notify",
+        attrs: ["auth": "noauth",
+                "host": "notify",
                 "style": "rpc"]
     )
     static let listRevisions = Route(
@@ -7048,7 +7079,8 @@ open class Files {
         argSerializer: Files.ListRevisionsArgSerializer(),
         responseSerializer: Files.ListRevisionsResultSerializer(),
         errorSerializer: Files.ListRevisionsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let moveV2 = Route(
@@ -7059,7 +7091,8 @@ open class Files {
         argSerializer: Files.RelocationArgSerializer(),
         responseSerializer: Files.RelocationResultSerializer(),
         errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let move = Route(
@@ -7070,7 +7103,8 @@ open class Files {
         argSerializer: Files.RelocationArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.RelocationErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let moveBatchV2 = Route(
@@ -7081,7 +7115,8 @@ open class Files {
         argSerializer: Files.MoveBatchArgSerializer(),
         responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let moveBatch = Route(
@@ -7092,7 +7127,8 @@ open class Files {
         argSerializer: Files.RelocationBatchArgSerializer(),
         responseSerializer: Files.RelocationBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let moveBatchCheckV2 = Route(
@@ -7103,7 +7139,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let moveBatchCheck = Route(
@@ -7114,7 +7151,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let permanentlyDelete = Route(
@@ -7125,7 +7163,8 @@ open class Files {
         argSerializer: Files.DeleteArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.DeleteErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesAdd = Route(
@@ -7136,7 +7175,8 @@ open class Files {
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.AddPropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesOverwrite = Route(
@@ -7147,7 +7187,8 @@ open class Files {
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.InvalidPropertyGroupErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesRemove = Route(
@@ -7158,7 +7199,8 @@ open class Files {
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.RemovePropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesTemplateGet = Route(
@@ -7169,7 +7211,8 @@ open class Files {
         argSerializer: FileProperties.GetTemplateArgSerializer(),
         responseSerializer: FileProperties.GetTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesTemplateList = Route(
@@ -7180,7 +7223,8 @@ open class Files {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let propertiesUpdate = Route(
@@ -7191,7 +7235,8 @@ open class Files {
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.UpdatePropertiesErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let restore = Route(
@@ -7202,7 +7247,8 @@ open class Files {
         argSerializer: Files.RestoreArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.RestoreErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let saveUrl = Route(
@@ -7213,7 +7259,8 @@ open class Files {
         argSerializer: Files.SaveUrlArgSerializer(),
         responseSerializer: Files.SaveUrlResultSerializer(),
         errorSerializer: Files.SaveUrlErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let saveUrlCheckJobStatus = Route(
@@ -7224,7 +7271,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.SaveUrlJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let search = Route(
@@ -7235,7 +7283,8 @@ open class Files {
         argSerializer: Files.SearchArgSerializer(),
         responseSerializer: Files.SearchResultSerializer(),
         errorSerializer: Files.SearchErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let upload = Route(
@@ -7246,7 +7295,8 @@ open class Files {
         argSerializer: Files.CommitInfoSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
     static let uploadSessionAppendV2 = Route(
@@ -7257,7 +7307,8 @@ open class Files {
         argSerializer: Files.UploadSessionAppendArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.UploadSessionLookupErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
     static let uploadSessionAppend = Route(
@@ -7268,7 +7319,8 @@ open class Files {
         argSerializer: Files.UploadSessionCursorSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.UploadSessionLookupErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
     static let uploadSessionFinish = Route(
@@ -7279,7 +7331,8 @@ open class Files {
         argSerializer: Files.UploadSessionFinishArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadSessionFinishErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
     static let uploadSessionFinishBatch = Route(
@@ -7290,7 +7343,8 @@ open class Files {
         argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
         responseSerializer: Files.UploadSessionFinishBatchLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let uploadSessionFinishBatchCheck = Route(
@@ -7301,7 +7355,8 @@ open class Files {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.UploadSessionFinishBatchJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let uploadSessionStart = Route(
@@ -7312,7 +7367,8 @@ open class Files {
         argSerializer: Files.UploadSessionStartArgSerializer(),
         responseSerializer: Files.UploadSessionStartResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "upload"]
     )
 }

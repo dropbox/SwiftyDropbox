@@ -95,7 +95,8 @@ open class Contacts {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let deleteManualContactsBatch = Route(
@@ -106,7 +107,8 @@ open class Contacts {
         argSerializer: Contacts.DeleteManualContactsArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Contacts.DeleteManualContactsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }
