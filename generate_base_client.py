@@ -39,12 +39,6 @@ _cmdline_parser.add_argument(
     help='Path to generation output.',
 )
 _cmdline_parser.add_argument(
-    '-f',
-    '--format-output-path',
-    type=str,
-    help='Path to format output.',
-)
-_cmdline_parser.add_argument(
     '-r',
     '--route-whitelist-filter',
     type=str,
@@ -70,16 +64,18 @@ def main():
     if args.stone:
         stone_path = args.stone
 
-    dropbox_src_path = os.path.abspath('Source')
-    dropbox_default_output_path = os.path.abspath('Source/SwiftyDropbox/Shared/Generated')
+    dropbox_default_output_path = 'Source/SwiftyDropbox/Shared/Generated'
     dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
-    dropbox_format_script_path = os.path.abspath('Format')
-    dropbox_format_output_path = args.format_output_path if args.format_output_path else dropbox_src_path
+
+    # we run stone generation relative to the stone module,
+    # so we make our output path absolute here s it's relative to where we are called
+    if not os.path.isabs(dropbox_pkg_path):
+        dropbox_pkg_path = os.path.abspath(dropbox_pkg_path)
 
     # clear out all old files
-    if not args.format_output_path:
-        shutil.rmtree(dropbox_default_output_path)
-        os.makedirs(dropbox_default_output_path)
+    if os.path.exists(dropbox_pkg_path):
+        shutil.rmtree(dropbox_pkg_path)
+    os.makedirs(dropbox_pkg_path)
 
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
