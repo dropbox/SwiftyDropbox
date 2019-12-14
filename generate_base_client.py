@@ -68,7 +68,7 @@ def main():
     dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
 
     # we run stone generation relative to the stone module,
-    # so we make our output path absolute here s it's relative to where we are called
+    # so we make our output path absolute here so it's relative to where we are called
     if not os.path.isabs(dropbox_pkg_path):
         dropbox_pkg_path = os.path.abspath(dropbox_pkg_path)
 
