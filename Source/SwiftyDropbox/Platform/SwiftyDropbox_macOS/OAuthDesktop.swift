@@ -68,4 +68,12 @@ public class DesktopSharedApplication: SharedApplication {
     public func canPresentExternalApp(_ url: URL) -> Bool {
         return true
     }
+
+    public func presentLoading() {
+        // TODO: Implement when OAuth code flow is introduced into Desktop SDK.
+    }
+
+    public func dismissLoading() {
+        // TODO: Implement when OAuth code flow is introduced into Desktop SDK.
+    }
 }
