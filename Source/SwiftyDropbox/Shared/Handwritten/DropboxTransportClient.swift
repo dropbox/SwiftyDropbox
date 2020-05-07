@@ -5,6 +5,14 @@
 import Foundation
 import Alamofire
 
+/// Constants used to make API requests. e.g. server addresses and default user agent to be used.
+enum ApiClientConstants {
+    static let apiHost = "https://api.dropbox.com"
+    static let contentHost = "https://api-content.dropbox.com"
+    static let notifyHost = "https://notify.dropboxapi.com"
+    static let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(Constants.versionSDK)"
+}
+
 open class DropboxTransportClient {
     public let manager: SessionManager
     public let backgroundManager: SessionManager
@@ -47,12 +55,12 @@ open class DropboxTransportClient {
         let longpollManager = SessionManager(configuration: longpollConfig, delegate: longpollSessionDelegate, serverTrustPolicyManager: serverTrustPolicyManager)
 
         let defaultBaseHosts = [
-            "api": "https://api.dropbox.com/2",
-            "content": "https://api-content.dropbox.com/2",
-            "notify": "https://notify.dropboxapi.com/2",
-            ]
+            "api": "\(ApiClientConstants.apiHost)/2",
+            "content": "\(ApiClientConstants.contentHost)/2",
+            "notify": "\(ApiClientConstants.notifyHost)/2",
+        ]
 
-        let defaultUserAgent = "OfficialDropboxSwiftSDKv2/\(Constants.versionSDK)"
+        let defaultUserAgent = ApiClientConstants.defaultUserAgent
 
         self.manager = manager
         self.backgroundManager = backgroundManager

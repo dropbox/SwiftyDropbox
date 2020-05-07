@@ -61,22 +61,20 @@ extension DropboxClientsManager {
 }
 
 open class DropboxMobileOAuthManager: DropboxOAuthManager {
-    var dauthRedirectURL: URL
+    let dauthRedirectURL: URL
     
     public override init(appKey: String, host: String) {
         self.dauthRedirectURL = URL(string: "db-\(appKey)://1/connect")!
         super.init(appKey: appKey, host:host)
         self.urls.append(self.dauthRedirectURL)
     }
-    
-    internal override func extractFromUrl(_ url: URL) -> DropboxOAuthResult {
-        let result: DropboxOAuthResult
-        if url.host == "1" { // dauth
-            result = extractfromDAuthURL(url)
+
+    internal override func extractFromUrl(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+        if let host = url.host, host == dauthRedirectURL.host { // dauth
+            extractfromDAuthURL(url, completion: completion)
         } else {
-            result = extractFromRedirectURL(url)
+            extractFromRedirectURL(url, completion: completion)
         }
-        return result
     }
     
     internal override func checkAndPresentPlatformSpecificAuth(_ sharedApplication: SharedApplication) -> Bool {
@@ -104,12 +102,13 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
         return false
     }
     
-    open override func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
-        if let sharedMobileApplication = MobileSharedApplication.sharedMobileApplication {
-            sharedMobileApplication.dismissAuthController()
-        }
-        let result = super.handleRedirectURL(url)
-        return result
+    open override func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+        super.handleRedirectURL(url, completion: {
+            if let sharedMobileApplication = MobileSharedApplication.sharedMobileApplication {
+                sharedMobileApplication.dismissAuthController()
+            }
+            completion($0)
+        })
     }
 
     fileprivate func dAuthURL(_ scheme: String, nonce: String?) -> URL {
@@ -155,28 +154,86 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
         }
     }
     
-    func extractfromDAuthURL(_ url: URL) -> DropboxOAuthResult {
+    func extractfromDAuthURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
         switch url.path {
         case "/connect":
-            var results = [String: String]()
-            let pairs  = url.query?.components(separatedBy: "&") ?? []
-            
-            for pair in pairs {
-                let kv = pair.components(separatedBy: "=")
-                results.updateValue(kv[1], forKey: kv[0])
-            }
-            let state = results["state"]?.components(separatedBy: "%3A") ?? []
-            
-            let nonce = UserDefaults.standard.object(forKey: kDBLinkNonce) as? String
-            if state.count == 2 && state[0] == "oauth2" && state[1] == nonce! {
-                let accessToken = results["oauth_token_secret"]!
-                let uid = results["uid"]!
-                return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
+            if let authSession = authSession {
+                handleCodeFlowUrl(url, authSession: authSession, completion: completion)
             } else {
-                return .error(.unknown, "Unable to verify link request")
+                completion(extractFromTokenFlowUrl(url))
             }
         default:
-            return .error(.accessDenied, "User cancelled Dropbox link")
+            completion(.error(.accessDenied, "User cancelled Dropbox link"))
+        }
+    }
+
+    /// Handles code flow response URL from DBApp.
+    /// Auth results are passed back in URL query parameters.
+    /// Expect results look like below:
+    /// 1. DBApp that can handle dauth code flow properly
+    /// ```
+    /// [
+    ///     "state": "<state_string>",
+    ///     "oauth_code": "<oauth_code>"
+    /// ]
+    /// ```
+    /// 2. Legacy DBApp that calls legacy dauth api, oauth_token should be "oauth2code:" and the code is stored under
+    /// "oauth_token_secret" key.
+    /// ```
+    /// [
+    ///     "state": "<state_string>",
+    ///     "oauth_token": "oauth2code:",
+    ///     "oauth_token_secret": "<oauth_code>"
+    /// ]
+    /// ```
+    private func handleCodeFlowUrl(
+        _ url: URL, authSession: OAuthPKCESession, completion: @escaping DropboxOAuthCompletion
+    ) {
+        let parametersMap = OAuthUtils.extractParamsFromUrl(url)
+
+        let state = parametersMap[OAuthConstants.stateKey]
+        guard state == authSession.state else {
+            completion(.error(.unknown, "Unable to verify link request"))
+            return
+        }
+
+        let authCode: String?
+        if let code = parametersMap[OAuthConstants.oauthCodeKey] {
+            authCode = code
+        } else if parametersMap[OAuthConstants.oauthTokenKey] == "oauth2code:",
+            let code = parametersMap[OAuthConstants.oauthSecretKey] {
+            authCode = code
+        } else {
+            authCode = nil
+        }
+        if let authCode = authCode {
+            finishPkceOAuth(
+                authCode: authCode, codeVerifier: authSession.pkceData.codeVerifier, completion: completion
+            )
+        } else {
+            completion(.error(.unknown, "Unable to verify link request"))
+        }
+    }
+
+    /// Handles token flow response URL from DBApp.
+    /// Auth results are passed back in URL query parameters.
+    /// Expect results look like below:
+    /// ```
+    /// [
+    ///     "state": "oauth2:<nonce>",
+    ///     "oauth_token_secret": "<oauth2_access_token>",
+    ///     "uid": "<uid>"
+    /// ]
+    /// ```
+    private func extractFromTokenFlowUrl(_ url: URL) -> DropboxOAuthResult {
+        let parametersMap = OAuthUtils.extractParamsFromUrl(url)
+        let state = parametersMap[OAuthConstants.stateKey]
+        if let nonce = UserDefaults.standard.object(forKey: kDBLinkNonce) as? String, state == "oauth2:\(nonce)",
+            let accessToken = parametersMap[OAuthConstants.oauthSecretKey],
+            let uid = parametersMap[OAuthConstants.uidKey] {
+            return .success(DropboxAccessToken(accessToken: accessToken, uid: uid))
+        } else {
+            return .error(.unknown, "Unable to verify link request")
         }
     }
     
@@ -315,4 +372,3 @@ open class MobileSafariViewController: SFSafariViewController, SFSafariViewContr
     }
     
 }
-

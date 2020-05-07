@@ -110,39 +110,35 @@ open class DropboxClientsManager {
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURL(_ url: URL) -> DropboxOAuthResult? {
+    public static func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
-        if let result =  DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url) {
-            switch result {
-            case .success(let accessToken):
-                DropboxClientsManager.authorizedClient = DropboxClient(accessToken: accessToken.accessToken)
-                return result
-            case .cancel:
-                return result
-            case .error:
-                return result
+        DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
+            if let result = result {
+                switch result {
+                case .success(let accessToken):
+                    DropboxClientsManager.authorizedClient = DropboxClient(accessToken: accessToken.accessToken)
+                case .cancel, .error:
+                    break
+                }
             }
-        } else {
-            return nil
-        }
+            completion(result)
+        })
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURLTeam(_ url: URL) -> DropboxOAuthResult? {
+    public static func handleRedirectURLTeam(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
-        if let result =  DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url) {
-            switch result {
-            case .success(let accessToken):
-                DropboxClientsManager.authorizedTeamClient = DropboxTeamClient(accessToken: accessToken.accessToken)
-                return result
-            case .cancel:
-                return result
-            case .error:
-                return result
+        DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
+            if let result = result {
+                switch result {
+                case .success(let accessToken):
+                    DropboxClientsManager.authorizedTeamClient = DropboxTeamClient(accessToken: accessToken.accessToken)
+                case .cancel, .error:
+                    break
+                }
             }
-        } else {
-            return nil
-        }
+            completion(result)
+        })
     }
 
     /// Unlink the user.
