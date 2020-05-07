@@ -26,4 +26,15 @@ enum OAuthUtils {
         ])
         return params
     }
+
+    // Extracts query parameters from URL and removes percent encoding.
+    static func extractParamsFromUrl(_ url: URL) -> [String: String] {
+        guard let urlComponents = URLComponents(string: url.absoluteString),
+            let queryItems = urlComponents.queryItems else {
+            return [:]
+        }
+        return queryItems.reduce(into: [String: String]()) { result, queryItem in
+            result[queryItem.name] = queryItem.value
+        }
+    }
 }
