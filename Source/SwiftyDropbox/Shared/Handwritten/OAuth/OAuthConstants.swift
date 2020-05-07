@@ -14,4 +14,10 @@ enum OAuthConstants {
     static let includeGrantedScopesKey = "include_granted_scopes"
     static let stateKey = "state"
     static let extraQueryParamsKey = "extra_query_params"
+    static let oauthCodeKey = "oauth_code"
+    static let oauthTokenKey = "oauth_token"
+    static let oauthSecretKey = "oauth_token_secret"
+    static let uidKey = "uid"
+    static let errorKey = "error"
+    static let errorDescription = "error_description"
 }
