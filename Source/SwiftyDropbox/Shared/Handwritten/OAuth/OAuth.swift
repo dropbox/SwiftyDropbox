@@ -26,6 +26,9 @@ open class DropboxOAuthManager {
     let redirectURL: URL
     let host: String
     var urls: Array<URL>
+    /// Session data for OAuth2 code flow with PKCE.
+    /// nil if we are in the legacy token flow.
+    var authSession: OAuthPKCESession?
 
     // MARK: Shared instance
     /// A shared instance of a `DropboxOAuthManager` for convenience
@@ -77,11 +80,14 @@ open class DropboxOAuthManager {
     }
 
     ///
-    /// Present the OAuth2 authorization request page by presenting a web view controller modally
+    /// Present the OAuth2 authorization request page by presenting a web view controller modally.
     ///
-    /// - parameter controller: The controller to present from
-    ///
-    open func authorizeFromSharedApplication(_ sharedApplication: SharedApplication) {
+    /// - parameters:
+    ///     - controller: The controller to present from.
+    ///     - usePKCE: Whether to use OAuth2 code flow with PKCE. Default is false, i.e. use the legacy token flow.
+    ///     - scopeRequest: The ScopeRequest, only used in code flow with PKCE.
+    open func authorizeFromSharedApplication(
+        _ sharedApplication: SharedApplication, usePKCE: Bool = false, scopeRequest: ScopeRequest? = nil) {
         let cancelHandler: (() -> Void) = {
             let cancelUrl = URL(string: "db-\(self.appKey)://2/cancel")!
             sharedApplication.presentExternalApp(cancelUrl)
@@ -93,7 +99,7 @@ open class DropboxOAuthManager {
 
             let buttonHandlers: [String: () -> Void] = [
                 "Cancel": { cancelHandler() },
-                "Retry": { self.authorizeFromSharedApplication(sharedApplication) },
+                "Retry": { self.authorizeFromSharedApplication(sharedApplication, usePKCE: usePKCE, scopeRequest: scopeRequest) },
             ]
             sharedApplication.presentErrorMessageWithHandlers(message, title: title, buttonHandlers: buttonHandlers)
 
@@ -107,6 +113,12 @@ open class DropboxOAuthManager {
             sharedApplication.presentErrorMessage(message, title:title)
 
             return
+        }
+
+        if usePKCE {
+            authSession = OAuthPKCESession(scopeRequest: scopeRequest)
+        } else {
+            authSession = nil
         }
 
         let url = self.authURL()
@@ -150,18 +162,30 @@ open class DropboxOAuthManager {
 
         let locale = Bundle.main.preferredLocalizations.first ?? "en"
 
-        let state = ProcessInfo.processInfo.globallyUniqueString
-        UserDefaults.standard.setValue(state, forKey: Constants.kCSERFKey)
-
-        components.queryItems = [
-            URLQueryItem(name: "response_type", value: "token"),
+        var params = [
             URLQueryItem(name: "client_id", value: self.appKey),
             URLQueryItem(name: "redirect_uri", value: self.redirectURL.absoluteString),
             URLQueryItem(name: "disable_signup", value: "true"),
             URLQueryItem(name: "locale", value: self.locale?.identifier ?? locale),
-            URLQueryItem(name: "state", value: state),
         ]
-        return components.url!
+
+        let state: String
+        if let authSession = authSession {
+            // Code flow.
+            state = authSession.state
+            params.append(contentsOf: OAuthUtils.createPkceCodeFlowParams(for: authSession))
+        } else {
+            // Token flow.
+            state = ProcessInfo.processInfo.globallyUniqueString
+            params.append(contentsOf: [
+                URLQueryItem(name: OAuthConstants.responseTypeKey, value: "token"),
+                URLQueryItem(name: OAuthConstants.stateKey, value: state),
+            ])
+        }
+        UserDefaults.standard.setValue(state, forKey: Constants.kCSRFKey)
+        components.queryItems = params
+        guard let url = components.url else { fatalError("Failed to create auth url.") }
+        return url
     }
 
     fileprivate func canHandleURL(_ url: URL) -> Bool {
@@ -190,13 +214,13 @@ open class DropboxOAuthManager {
             return .error(OAuth2Error(errorCode: error), desc ?? "")
         } else {
             let state = results["state"]
-            let storedState = UserDefaults.standard.string(forKey: Constants.kCSERFKey)
+            let storedState = UserDefaults.standard.string(forKey: Constants.kCSRFKey)
 
             if state == nil || storedState == nil || state != storedState {
                 return .error(OAuth2Error(errorCode: "inconsistent_state"), "Auth flow failed because of inconsistent state.")
             } else {
                 // reset upon success
-                UserDefaults.standard.setValue(nil, forKey: Constants.kCSERFKey)
+                UserDefaults.standard.setValue(nil, forKey: Constants.kCSRFKey)
             }
             let accessToken = results["access_token"]!
             let uid = results["uid"]!

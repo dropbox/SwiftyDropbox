@@ -8,11 +8,39 @@ import UIKit
 import WebKit
 
 extension DropboxClientsManager {
+    /// Starts a "token" flow.
+    ///
+    /// - Parameters:
+    ///     - sharedApplication: The shared UIApplication instance in your app.
+    ///     - controller: A UIViewController to present the auth flow from.
+    ///     - openURL: Handler to open a URL.
     public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void)) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         let sharedMobileApplication = MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL)
         MobileSharedApplication.sharedMobileApplication = sharedMobileApplication
         DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(sharedMobileApplication)
+    }
+
+    /// Starts the OAuth 2 Authorization Code Flow with PKCE.
+    ///
+    /// PKCE allows "authorization code" flow without "client_secret"
+    /// It enables "native application", which is ensafe to hardcode client_secret in code, to use "authorization code".
+    /// PKCE is more secure than "token" flow. If authorization code is compromised during
+    /// transmission, it can't be used to exchange for access token without random generated
+    /// code_verifier, which is stored inside this SDK.
+    ///
+    /// - Parameters:
+    ///     - sharedApplication: The shared UIApplication instance in your app.
+    ///     - controller: A UIViewController to present the auth flow from.
+    ///     - openURL: Handler to open a URL.
+    ///     - scopeRequest: Contains requested scopes to obtain.
+    public static func authorizeFromControllerV2(
+        _ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void), scopeRequest: ScopeRequest?
+    ) {
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
+        let sharedMobileApplication = MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL)
+        MobileSharedApplication.sharedMobileApplication = sharedMobileApplication
+        DropboxOAuthManager.sharedOAuthManager.authorizeFromSharedApplication(sharedMobileApplication, usePKCE: true, scopeRequest: scopeRequest)
     }
 
     public static func setupWithAppKey(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
@@ -60,10 +88,17 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
         }
         
         if let scheme = dAuthScheme(sharedApplication) {
-            let nonce = UUID().uuidString
-            UserDefaults.standard.set(nonce, forKey: kDBLinkNonce)
-            UserDefaults.standard.synchronize()
-            sharedApplication.presentExternalApp(dAuthURL(scheme, nonce: nonce))
+            let url: URL
+            if let authSession = authSession {
+                // Code flow
+                url = dAuthURL(scheme, authSession: authSession)
+            } else {
+                // Token flow
+                let nonce = UUID().uuidString
+                UserDefaults.standard.set(nonce, forKey: kDBLinkNonce)
+                url = dAuthURL(scheme, nonce: nonce)
+            }
+            sharedApplication.presentExternalApp(url)
             return true
         }
         return false
@@ -78,20 +113,36 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
     }
 
     fileprivate func dAuthURL(_ scheme: String, nonce: String?) -> URL {
-        var components = URLComponents()
-        components.scheme =  scheme
-        components.host = "1"
-        components.path = "/connect"
-        
+        var components = dauthUrlCommonComponents(with: scheme)
         if let n = nonce {
             let state = "oauth2:\(n)"
-            components.queryItems = [
-                URLQueryItem(name: "k", value: self.appKey),
-                URLQueryItem(name: "s", value: ""),
-                URLQueryItem(name: "state", value: state),
-            ]
+            components.queryItems?.append(URLQueryItem(name: OAuthConstants.stateKey, value: state))
         }
-        return components.url!
+        guard let url = components.url else { fatalError("Failed to create dauth url.") }
+        return url
+    }
+
+    private func dAuthURL(_ scheme: String, authSession: OAuthPKCESession) -> URL {
+        var components = dauthUrlCommonComponents(with: scheme)
+        let extraQueryParams = Self.createExtraQueryParamsString(for: authSession)
+        components.queryItems?.append(contentsOf: [
+            URLQueryItem(name: OAuthConstants.stateKey, value: authSession.state),
+            URLQueryItem(name: OAuthConstants.extraQueryParamsKey, value: extraQueryParams),
+        ])
+        guard let url = components.url else { fatalError("Failed to create dauth url.") }
+        return url
+    }
+
+    private func dauthUrlCommonComponents(with scheme: String) -> URLComponents {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = "1"
+        components.path = "/connect"
+        components.queryItems = [
+            URLQueryItem(name: "k", value: appKey),
+            URLQueryItem(name: "s", value: ""),
+        ]
+        return components
     }
     
     fileprivate func dAuthScheme(_ sharedApplication: SharedApplication) -> String? {
@@ -145,6 +196,24 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
             }
         }
         return false
+    }
+
+    /// Creates a string that contains all code flow query parameters.
+    private static func createExtraQueryParamsString(for authSession: OAuthPKCESession) -> String {
+        let pkceData = authSession.pkceData
+        var extraQueryParams = "\(OAuthConstants.codeChallengeKey)=\(pkceData.codeChallenge)"
+            + "&\(OAuthConstants.codeChallengeMethodKey)=\(pkceData.codeChallengeMethod)"
+            + "&\(OAuthConstants.tokenAccessTypeKey)=\(authSession.tokenAccessType)"
+            + "&\(OAuthConstants.responseTypeKey)=\(authSession.responseType)"
+        if let scopeRequest = authSession.scopeRequest {
+            if let scopeString = scopeRequest.scopeString {
+                extraQueryParams += "&\(OAuthConstants.scopeKey)=\(scopeString)"
+            }
+            if scopeRequest.includeGrantedScopes {
+                extraQueryParams += "&\(OAuthConstants.includeGrantedScopesKey)=\(scopeRequest.scopeType.rawValue)"
+            }
+        }
+        return extraQueryParams
     }
 }
 
