@@ -69,12 +69,14 @@
 		9B70B79D22BD733A0059DA1E /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B70B76022BD733A0059DA1E /* SharingRoutes.swift */; };
 		9B70B79E22BD733A0059DA1E /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B70B76122BD733A0059DA1E /* StoneValidators.swift */; };
 		9B70B79F22BD733A0059DA1E /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B70B76122BD733A0059DA1E /* StoneValidators.swift */; };
+		BF082C1D24636E1E000C8469 /* OAuthTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */; };
 		BF082C242464B7C6000C8469 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C232464B7C6000C8469 /* AuthSession.swift */; };
 		BF082C262464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
 		BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
 		BF082C2C246620D2000C8469 /* OAuthConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C2B246620D2000C8469 /* OAuthConstants.swift */; };
 		BF082C2D246620D5000C8469 /* OAuthConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C2B246620D2000C8469 /* OAuthConstants.swift */; };
 		BF082C1D24636E1E000C8469 /* OAuthTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */; };
+		BF082C2A2464C4B7000C8469 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C292464C4B7000C8469 /* LoadingViewController.swift */; };
 		F2478F201ECCD0B300BAF014 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE21ECCD0B300BAF014 /* Custom.swift */; };
 		F2478F211ECCD0B300BAF014 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE21ECCD0B300BAF014 /* Custom.swift */; };
 		F2478F221ECCD0B300BAF014 /* CustomRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE31ECCD0B300BAF014 /* CustomRoutes.swift */; };
@@ -143,10 +145,12 @@
 		9B70B75F22BD733A0059DA1E /* TeamLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLog.swift; sourceTree = "<group>"; };
 		9B70B76022BD733A0059DA1E /* SharingRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingRoutes.swift; sourceTree = "<group>"; };
 		9B70B76122BD733A0059DA1E /* StoneValidators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneValidators.swift; sourceTree = "<group>"; };
+		BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenRequest.swift; sourceTree = "<group>"; };
 		BF082C232464B7C6000C8469 /* AuthSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
 		BF082C252464BE7A000C8469 /* OAuthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUtils.swift; sourceTree = "<group>"; };
 		BF082C2B246620D2000C8469 /* OAuthConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthConstants.swift; sourceTree = "<group>"; };
 		BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenRequest.swift; sourceTree = "<group>"; };
+		BF082C292464C4B7000C8469 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		F2478EE21ECCD0B300BAF014 /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		F2478EE31ECCD0B300BAF014 /* CustomRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRoutes.swift; sourceTree = "<group>"; };
 		F2478EE41ECCD0B300BAF014 /* CustomTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTasks.swift; sourceTree = "<group>"; };
@@ -247,6 +251,14 @@
 			path = OAuth;
 			sourceTree = "<group>";
 		};
+		BF082C282464C49B000C8469 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		F2478EC61ECCD0B300BAF014 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +302,7 @@
 			children = (
 				F265BD081E68072500CC38C8 /* Info.plist */,
 				F265BD091E68072500CC38C8 /* OAuthMobile.swift */,
+				BF082C292464C4B7000C8469 /* LoadingViewController.swift */,
 			);
 			name = SwiftyDropbox_iOS;
 			path = Platform/SwiftyDropbox_iOS;
@@ -312,6 +325,7 @@
 				F2478EC61ECCD0B300BAF014 /* Shared */,
 				F2C6FCC61D89E16800E0DD9E /* Products */,
 				F2C6FD351D89E37500E0DD9E /* Frameworks */,
+				BF082C282464C49B000C8469 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -468,6 +482,7 @@
 				F265BD0B1E68072500CC38C8 /* OAuthMobile.swift in Sources */,
 				F2478F2E1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
 				9B70B79A22BD733A0059DA1E /* TeamLog.swift in Sources */,
+				BF082C2A2464C4B7000C8469 /* LoadingViewController.swift in Sources */,
 				9B70B79422BD733A0059DA1E /* UsersCommon.swift in Sources */,
 				9B70B76822BD733A0059DA1E /* PaperRoutes.swift in Sources */,
 				9B70B76A22BD733A0059DA1E /* UsersRoutes.swift in Sources */,
@@ -518,7 +533,6 @@
 				F2478F371ECCD0B400BAF014 /* TransportConfig.swift in Sources */,
 				F2478F311ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */,
 				F2478F251ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
-				BF082C1E24636E1E000C8469 /* OAuthTokenRequest.swift in Sources */,
 				F265BD101E68073A00CC38C8 /* OAuthDesktop.swift in Sources */,
 				F2478F2F1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
 				9B70B79B22BD733A0059DA1E /* TeamLog.swift in Sources */,
