@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -28,29 +27,38 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="db5-aq-giW">
-                                <rect key="frame" x="140" y="118.5" width="95" height="30"/>
+                                <rect key="frame" x="140.5" y="118.5" width="94" height="30"/>
                                 <state key="normal" title="Run API Tests"/>
                                 <connections>
                                     <action selector="runTestsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kCH-Ax-VDT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b9W-gk-MoP">
-                                <rect key="frame" x="142" y="258.5" width="91" height="30"/>
-                                <state key="normal" title="Link Dropbox"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b9W-gk-MoP" userLabel="Link Button (token flow)">
+                                <rect key="frame" x="99" y="258.5" width="177" height="30"/>
+                                <state key="normal" title="Link Dropbox (token flow)"/>
                                 <connections>
-                                    <action selector="linkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vg8-o3-SP8"/>
+                                    <action selector="tokenFlowLinkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZZ0-sL-hUc"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q8N-GI-SJU">
-                                <rect key="frame" x="105" y="168.5" width="164" height="30"/>
+                                <rect key="frame" x="105.5" y="168.5" width="164" height="30"/>
                                 <state key="normal" title="Run Batch Upload Tests"/>
                                 <connections>
                                     <action selector="runBatchUploadTestsButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bfV-hX-Z6B"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4r-8k-ofz" userLabel="Link Dropbox (pkce code flow)">
+                                <rect key="frame" x="83" y="319" width="209" height="29"/>
+                                <state key="normal" title="Link Dropbox (pkce code flow)"/>
+                                <connections>
+                                    <action selector="codeFlowLinkButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0ye-kR-Td1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="R4r-8k-ofz" firstAttribute="centerY" secondItem="b9W-gk-MoP" secondAttribute="centerY" constant="60" id="4QU-k3-TNd"/>
+                            <constraint firstItem="R4r-8k-ofz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9mM-Kf-rMg"/>
                             <constraint firstItem="b9W-gk-MoP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-60" id="AKt-Sh-DWa"/>
                             <constraint firstItem="q8N-GI-SJU" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-150" id="CFB-5a-asu"/>
                             <constraint firstItem="b9W-gk-MoP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JeO-KH-8c6"/>
@@ -62,9 +70,10 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="linkButton" destination="b9W-gk-MoP" id="cQR-h6-mH9"/>
+                        <outlet property="codeFlowlinkButton" destination="R4r-8k-ofz" id="2T5-RA-tUM"/>
                         <outlet property="runBatchUploadTestsButton" destination="q8N-GI-SJU" id="fbR-us-3uk"/>
                         <outlet property="runTestsButton" destination="db5-aq-giW" id="Wtc-cp-UrB"/>
+                        <outlet property="tokenFlowlinkButton" destination="b9W-gk-MoP" id="nQP-BH-pew"/>
                         <outlet property="unlinkButton" destination="0Il-qF-Vab" id="KyD-lo-Q8w"/>
                     </connections>
                 </viewController>
