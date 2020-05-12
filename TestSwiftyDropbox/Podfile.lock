@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  SwiftyDropbox: ed60fd6c41e54c2c3dfa4e3baaf158134a60c230
+  SwiftyDropbox: 4d89b31cf318534df6ddde6c5a5c0c873dfa7840
 
 PODFILE CHECKSUM: f1cc2bd4e2b8e73913fb7bdce2c11926bb11e047
 

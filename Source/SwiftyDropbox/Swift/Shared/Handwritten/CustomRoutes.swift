@@ -4,7 +4,7 @@
 
 import Foundation
 
-#if SWIFT_PACKAGE_MANAGER_USED
+#if !COCOAPODS_IN_USE
 import SwiftyDropboxObjC
 #endif
 

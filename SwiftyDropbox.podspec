@@ -8,7 +8,9 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/dropbox/SwiftyDropbox.git', :tag => s.version }
 
   # A work-around to exclude an import needed when using the Swift Package Manager
-  s.compiler_flags = '-DSWIFT_PACKAGE_MANAGER_USED'
+  s.pod_target_xcconfig = {
+    'OTHER_SWIFT_FLAGS' => '-DCOCOAPODS_IN_USE'
+  }
 
   s.source_files = 'Source/SwiftyDropbox/Swift/Shared/**/*.{swift,h,m}', 'Source/SwiftyDropbox/ObjectiveC/**/*.{h,m}', 'Source/SwiftyDropbox/Includes/*.h'
   s.osx.source_files = 'Source/SwiftyDropbox/Swift/Platform/SwiftyDropbox_macOS/**/*.{swift}'
