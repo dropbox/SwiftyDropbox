@@ -3,7 +3,10 @@
 ///
 
 import Foundation
+
+#if SWIFT_PACKAGE_MANAGER_USED
 import SwiftyDropboxObjC
+#endif
 
 // 10 MB file chunk size
 let fileChunkSize: UInt64 = 10 * 1024 * 1024

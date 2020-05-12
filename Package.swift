@@ -8,6 +8,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftyDropbox",
     platforms: [
+        // The files in Source/SwiftyDropbox/Platform have conditional compilation for the iOS and macOS platforms to make this work. Perhaps Swift 5.3 can make this unnecessary: https://stackoverflow.com/questions/61730642
         .iOS(.v9),
         .macOS(.v10_12)
     ],

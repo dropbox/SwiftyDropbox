@@ -7,9 +7,12 @@ Pod::Spec.new do |s|
   s.author       = { 'Stephen Cobbe' => 'scobbe@dropbox.com' }
   s.source       = { :git => 'https://github.com/dropbox/SwiftyDropbox.git', :tag => s.version }
 
-  s.source_files = 'Source/SwiftyDropbox/Shared/**/*.{swift,h,m}'
-  s.osx.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_macOS/**/*.{swift,h,m}'
-  s.ios.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_iOS/**/*.{swift,h,m}'
+  # A work-around to exclude an import needed when using the Swift Package Manager
+  s.compiler_flags = '-DSWIFT_PACKAGE_MANAGER_USED'
+
+  s.source_files = 'Source/SwiftyDropbox/Swift/Shared/**/*.{swift,h,m}', 'Source/SwiftyDropbox/ObjectiveC/**/*.{h,m}', 'Source/SwiftyDropbox/Includes/*.h'
+  s.osx.source_files = 'Source/SwiftyDropbox/Swift/Platform/SwiftyDropbox_macOS/**/*.{swift}'
+  s.ios.source_files = 'Source/SwiftyDropbox/Swift/Platform/SwiftyDropbox_iOS/**/*.{swift}'
 
   s.requires_arc = true
   s.swift_version = '4.2'
