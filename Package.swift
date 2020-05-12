@@ -11,6 +11,11 @@ let package = Package(
         .iOS(.v9),
         .macOS(.v10_12)
     ],
+    products: [
+        .library(
+            name: "SwiftyDropbox",
+            targets: ["SwiftyDropbox"]),
+    ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMinor(from: "4.8.2")),
     ],
