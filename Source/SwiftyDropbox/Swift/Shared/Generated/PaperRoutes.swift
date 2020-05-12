@@ -1,3 +1,5 @@
+
+import Foundation
 ///
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///

@@ -2,6 +2,8 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
+#if os(macOS)
+
 import Foundation
 import AppKit
 import WebKit
@@ -69,3 +71,5 @@ public class DesktopSharedApplication: SharedApplication {
         return true
     }
 }
+
+#endif
