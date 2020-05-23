@@ -16,6 +16,25 @@ public protocol SharedApplication: class {
     func dismissLoading()
 }
 
+public protocol AccessTokenRefreshing {
+    /// Refreshes a (short-lived) access token for a given DropboxAccessToken.
+    ///
+    /// - Parameters:
+    ///     - accessToken: A `DropboxAccessToken` object.
+    ///     - scopes: An array of scopes to be granted for the refreshed access token.
+    ///       The requested scope MUST NOT include any scope not originally granted.
+    ///       Useful if users want to reduce the granted scopes for the new access token.
+    ///       Pass in an empty array if you don't want to change scopes of the access token.
+    ///     - queue: The queue where completion block will be called from.
+    ///     - completion: A `DropboxOAuthCompletion` block to notify caller the result.
+    func refreshAccessToken(
+        _ accessToken: DropboxAccessToken,
+        scopes: [String],
+        queue: DispatchQueue?,
+        completion: @escaping DropboxOAuthCompletion
+    )
+}
+
 /// Callback block for oauth result.
 public typealias DropboxOAuthCompletion = (DropboxOAuthResult?) -> Void
 
@@ -25,7 +44,7 @@ public typealias DropboxOAuthCompletion = (DropboxOAuthResult?) -> Void
 ///
 /// @note OAuth flow webviews localize to enviroment locale.
 ///
-open class DropboxOAuthManager {
+open class DropboxOAuthManager: AccessTokenRefreshing {
     public let locale: Locale?
     let appKey: String
     let redirectURL: URL
@@ -278,7 +297,7 @@ open class DropboxOAuthManager {
             oauthCode: authCode, codeVerifier: codeVerifier,
             appKey: appKey, locale: localeIdentifier, redirectUri: redirectURL.absoluteString
         )
-        request.start { [weak sharedApplication] in
+        request.start(queue: DispatchQueue.main) { [weak sharedApplication] in
             sharedApplication?.dismissLoading()
             completion($0)
         }
@@ -373,7 +392,56 @@ open class DropboxOAuthManager {
     open func getFirstAccessToken() -> DropboxAccessToken? {
         return self.getAllAccessTokens().values.first
     }
+
+    // MARK: Short-lived token support.
+
+    /// Refreshes a (short-lived) access token for a given DropboxAccessToken.
+    ///
+    /// - Parameters:
+    ///     - accessToken: A `DropboxAccessToken` object.
+    ///     - scopes: An array of scopes to be granted for the refreshed access token.
+    ///       The requested scope MUST NOT include any scope not originally granted.
+    ///       Useful if users want to reduce the granted scopes for the new access token.
+    ///       Pass in an empty array if you don't want to change scopes of the access token.
+    ///     - queue: The queue where completion block will be called from.
+    ///     - completion: A `DropboxOAuthCompletion` block to notify caller the result.
+    ///
+    /// - NOTE: Completion block will be called on main queue if a callback queue is not provided.
+    public func refreshAccessToken(
+        _ accessToken: DropboxAccessToken,
+        scopes: [String],
+        queue: DispatchQueue?,
+        completion: @escaping DropboxOAuthCompletion
+    ) {
+        guard let refreshToken = accessToken.refreshToken else {
+            completion(.error(.unknown, "Long-lived token can't be refreshed."))
+            return
+        }
+        let uid = accessToken.uid
+        let refreshRequest = OAuthTokenRefreshRequest(
+            uid: uid, refreshToken: refreshToken, scopes: scopes, appKey: appKey, locale: localeIdentifier
+        )
+        refreshRequest.start(queue: DispatchQueue.main) { [weak self] result in
+            if case let .success(token) = result {
+                self?.storeAccessToken(token)
+            }
+            (queue ?? DispatchQueue.main).async { completion(result) }
+        }
+    }
+
+    /// Creates an `AccessTokenProvider` that wraps short-lived for token refresh
+    /// or a static provider for long-live token.
+    /// - Parameter token: The `DropboxAccessToken` object.
+    func accessTokenProviderForToken(_ token: DropboxAccessToken) -> AccessTokenProvider {
+        if token.isShortLivedToken {
+            return ShortLivedAccessTokenProvider(token: token, tokenRefresher: self)
+        } else {
+            return LongLivedAccessTokenProvider(accessToken: token.accessToken)
+        }
+    }
 }
+
+// MARK: - DropboxAccessToken
 
 /// A Dropbox access token
 open class DropboxAccessToken: CustomStringConvertible, Codable {
@@ -389,6 +457,11 @@ open class DropboxAccessToken: CustomStringConvertible, Codable {
 
     /// The expiration time of the (short-lived) accessToken.
     public let tokenExpirationTimestamp: TimeInterval?
+
+    /// Indicates whether the access token is short-lived.
+    var isShortLivedToken: Bool {
+        refreshToken != nil && tokenExpirationTimestamp != nil
+    }
 
     /// Designated Initializer
     ///
@@ -413,8 +486,9 @@ open class DropboxAccessToken: CustomStringConvertible, Codable {
 }
 
 /// A failed authorization.
-/// See RFC6749 4.2.2.1
-public enum OAuth2Error: String {
+/// Includes errors from both Implicit Grant (See RFC6749 4.2.2.1) and Extension Grants (See RFC6749 5.2),
+/// and a couple of SDK defined errors outside of OAuth2 specification.
+public enum OAuth2Error: String, Error {
     /// The client is not authorized to request an access token using this method.
     case unauthorizedClient = "unauthorized_client"
 
@@ -433,6 +507,23 @@ public enum OAuth2Error: String {
     /// The authorization server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
     case temporarilyUnavailable = "temporarily_unavailable"
 
+    /// The request is missing a required parameter, includes an unsupported parameter value (other than grant type),
+    /// repeats a parameter, includes multiple credentials, utilizes more than one mechanism for authenticating the
+    /// client, or is otherwise malformed.
+    case invalidRequest = "invalid_request"
+
+    /// Client authentication failed (e.g., unknown client, no client authentication included, or unsupported
+    /// authentication method).
+    case invalidClient = "invalid_client"
+
+    /// The provided authorization grant (e.g., authorization code, resource owner credentials) or refresh token is
+    /// invalid, expired, revoked, does not match the redirection URI used in the authorization request,
+    /// or was issued to another client.
+    case invalidGrant = "invalid_grant"
+
+    /// The authorization grant type is not supported by the authorization server.
+    case unsupportedGrantType = "unsupported_grant_type"
+
     /// The state param received from the authorization server does not match the state param stored by the SDK.
     case inconsistentState = "inconsistent_state"
 
@@ -442,6 +533,15 @@ public enum OAuth2Error: String {
     /// Initializes an error code from the string specced in RFC6749
     init(errorCode: String) {
         self = Self.init(rawValue: errorCode) ?? .unknown
+    }
+
+    /// Indicates whether the error is invalid_grant error.
+    var isInvalidGrantError: Bool {
+        if case .invalidGrant = self {
+            return true
+        } else {
+            return false
+        }
     }
 }
 
@@ -458,6 +558,8 @@ public enum DropboxOAuthResult {
     /// The authorization was manually canceled by the user.
     case cancel
 }
+
+// MARK: - Keychain
 
 class Keychain {
     static let checkAccessibilityMigrationOneTime: () = {
