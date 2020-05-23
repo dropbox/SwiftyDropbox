@@ -46,6 +46,14 @@ extension DropboxClientsManager {
     ///       If a delegate is not provided, the SDK will show a default loading spinner when necessary.
     ///     - openURL: Handler to open a URL.
     ///     - scopeRequest: Contains requested scopes to obtain.
+    /// - NOTE:
+    ///     If auth completes successfully, A short-lived Access Token and a long-lived Refresh Token will be granted.
+    ///     API calls with expired Access Token will fail with AuthError. An expired Access Token must be refreshed
+    ///     in order to continue to access Dropbox APIs.
+    ///
+    ///     API clients set up by `DropboxClientsManager` will get token refresh logic for free.
+    ///     If you need to set up `DropboxClient`/`DropboxTeamClient` without `DropboxClientsManager`,
+    ///     you will have to set up the clients with an appropriate `AccessTokenProvider`.
     public static func authorizeFromControllerV2(
         _ sharedApplication: UIApplication, controller: UIViewController?, loadingStatusDelegate: LoadingStatusDelegate?, openURL: @escaping ((URL) -> Void), scopeRequest: ScopeRequest?
     ) {

@@ -73,10 +73,13 @@
 		BF082C242464B7C6000C8469 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C232464B7C6000C8469 /* AuthSession.swift */; };
 		BF082C262464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
 		BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
+		BF082C2A2464C4B7000C8469 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C292464C4B7000C8469 /* LoadingViewController.swift */; };
 		BF082C2C246620D2000C8469 /* OAuthConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C2B246620D2000C8469 /* OAuthConstants.swift */; };
 		BF082C2D246620D5000C8469 /* OAuthConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C2B246620D2000C8469 /* OAuthConstants.swift */; };
-		BF082C1D24636E1E000C8469 /* OAuthTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */; };
-		BF082C2A2464C4B7000C8469 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C292464C4B7000C8469 /* LoadingViewController.swift */; };
+		BF4CC99F247750E50005CADF /* AccessTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4CC99E247750E50005CADF /* AccessTokenProvider.swift */; };
+		BF4CC9A0247750E50005CADF /* AccessTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4CC99E247750E50005CADF /* AccessTokenProvider.swift */; };
+		BF4CC9A2247842250005CADF /* Request+TokenRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */; };
+		BF4CC9A3247842250005CADF /* Request+TokenRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */; };
 		F2478F201ECCD0B300BAF014 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE21ECCD0B300BAF014 /* Custom.swift */; };
 		F2478F211ECCD0B300BAF014 /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE21ECCD0B300BAF014 /* Custom.swift */; };
 		F2478F221ECCD0B300BAF014 /* CustomRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EE31ECCD0B300BAF014 /* CustomRoutes.swift */; };
@@ -148,9 +151,10 @@
 		BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenRequest.swift; sourceTree = "<group>"; };
 		BF082C232464B7C6000C8469 /* AuthSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
 		BF082C252464BE7A000C8469 /* OAuthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUtils.swift; sourceTree = "<group>"; };
-		BF082C2B246620D2000C8469 /* OAuthConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthConstants.swift; sourceTree = "<group>"; };
-		BF082C1C24636E1E000C8469 /* OAuthTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenRequest.swift; sourceTree = "<group>"; };
 		BF082C292464C4B7000C8469 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		BF082C2B246620D2000C8469 /* OAuthConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthConstants.swift; sourceTree = "<group>"; };
+		BF4CC99E247750E50005CADF /* AccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenProvider.swift; sourceTree = "<group>"; };
+		BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request+TokenRefresh.swift"; sourceTree = "<group>"; };
 		F2478EE21ECCD0B300BAF014 /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
 		F2478EE31ECCD0B300BAF014 /* CustomRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRoutes.swift; sourceTree = "<group>"; };
 		F2478EE41ECCD0B300BAF014 /* CustomTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTasks.swift; sourceTree = "<group>"; };
@@ -247,6 +251,7 @@
 				F2478EEB1ECCD0B300BAF014 /* OAuth.swift */,
 				BF082C252464BE7A000C8469 /* OAuthUtils.swift */,
 				BF082C2B246620D2000C8469 /* OAuthConstants.swift */,
+				BF4CC99E247750E50005CADF /* AccessTokenProvider.swift */,
 			);
 			path = OAuth;
 			sourceTree = "<group>";
@@ -284,6 +289,7 @@
 				F2478EEC1ECCD0B300BAF014 /* SwiftyDropbox.h */,
 				F2478EED1ECCD0B300BAF014 /* TransportConfig.swift */,
 				F2478F381ECCD2FF00BAF014 /* SDKConstants.swift */,
+				BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */,
 			);
 			path = Handwritten;
 			sourceTree = "<group>";
@@ -476,6 +482,7 @@
 				BF082C262464BE7A000C8469 /* OAuthUtils.swift in Sources */,
 				9B70B78622BD733A0059DA1E /* Common.swift in Sources */,
 				F2478F2C1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
+				BF4CC9A2247842250005CADF /* Request+TokenRefresh.swift in Sources */,
 				F2478F361ECCD0B300BAF014 /* TransportConfig.swift in Sources */,
 				F2478F301ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */,
 				F2478F241ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
@@ -489,6 +496,7 @@
 				9B70B76422BD733A0059DA1E /* Users.swift in Sources */,
 				9B70B77E22BD733A0059DA1E /* StoneSerializers.swift in Sources */,
 				9B70B77822BD733A0059DA1E /* FileRequestsRoutes.swift in Sources */,
+				BF4CC99F247750E50005CADF /* AccessTokenProvider.swift in Sources */,
 				BF082C2C246620D2000C8469 /* OAuthConstants.swift in Sources */,
 				9B70B79622BD733A0059DA1E /* AuthRoutes.swift in Sources */,
 				9B70B79022BD733A0059DA1E /* TeamRoutes.swift in Sources */,
@@ -532,6 +540,7 @@
 				F2478F2D1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
 				F2478F371ECCD0B400BAF014 /* TransportConfig.swift in Sources */,
 				F2478F311ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */,
+				BF4CC9A0247750E50005CADF /* AccessTokenProvider.swift in Sources */,
 				F2478F251ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
 				F265BD101E68073A00CC38C8 /* OAuthDesktop.swift in Sources */,
 				F2478F2F1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
@@ -565,6 +574,7 @@
 				F2478F331ECCD0B300BAF014 /* OAuth.swift in Sources */,
 				F2478F2B1ECCD0B300BAF014 /* DropboxClient.swift in Sources */,
 				9B70B78922BD733A0059DA1E /* TeamLogRoutes.swift in Sources */,
+				BF4CC9A3247842250005CADF /* Request+TokenRefresh.swift in Sources */,
 				9B70B77122BD733A0059DA1E /* TeamPolicies.swift in Sources */,
 				BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */,
 				9B70B79322BD733A0059DA1E /* StoneBase.swift in Sources */,
