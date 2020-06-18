@@ -578,7 +578,7 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
     ) -> Self {
         request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ response in
             if let error = response.error {
-                completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
+                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
             } else {
                 completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }
@@ -613,7 +613,7 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
     ) -> Self {
         request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ response in
             if let error = response.error {
-                completionHandler(nil, self.handleResponseError(response.response, data: response.data!, error: error))
+                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
             } else {
                 completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }

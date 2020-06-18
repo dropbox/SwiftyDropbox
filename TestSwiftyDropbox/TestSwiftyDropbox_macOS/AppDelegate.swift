@@ -32,45 +32,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
             if let urlStr = aeEventDescriptor.stringValue {
                 let url = URL(string: urlStr)!
-                
+                let oauthCompletion: DropboxOAuthCompletion = {
+                    if let authResult = $0 {
+                        switch authResult {
+                        case .success:
+                            print("Success! User is logged into Dropbox.")
+                        case .cancel:
+                            print("Authorization flow was manually canceled by user!")
+                        case .error(_, let description):
+                            print("Error: \(String(describing: description))")
+                        }
+                    }
+                    self.checkButtons()
+                }
+
                 switch(appPermission) {
                 case .fullDropbox:
-                    if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-                        switch authResult {
-                        case .success:
-                            print("Success! User is logged into Dropbox.")
-                        case .cancel:
-                            print("Authorization flow was manually canceled by user!")
-                        case .error(_, let description):
-                            print("Error: \(description)")
-                        }
-                    }
-                case .teamMemberFileAccess:
-                    if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
-                        switch authResult {
-                        case .success:
-                            print("Success! User is logged into Dropbox.")
-                        case .cancel:
-                            print("Authorization flow was manually canceled by user!")
-                        case .error(_, let description):
-                            print("Error: \(description)")
-                        }
-                    }
-                case .teamMemberManagement:
-                    if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
-                        switch authResult {
-                        case .success:
-                            print("Success! User is logged into Dropbox.")
-                        case .cancel:
-                            print("Authorization flow was manually canceled by user!")
-                        case .error(_, let description):
-                            print("Error: \(description)")
-                        }
-                    }
+                    DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+                case .teamMemberFileAccess, .teamMemberManagement:
+                    DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
                 }
             }
         }
-        self.checkButtons()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

@@ -6,7 +6,8 @@ import Cocoa
 import SwiftyDropbox
 
 class ViewController: NSViewController {
-    @IBOutlet weak var oauthLinkButton: NSButton!
+    @IBOutlet weak var oauthTokenFlowLinkButton: NSButton!
+    @IBOutlet weak var oauthCodeFlowLinkButton: NSButton!
     @IBOutlet weak var oauthUnlinkButton: NSButton!
     @IBOutlet weak var runApiTestsButton: NSButton!
     
@@ -17,9 +18,21 @@ class ViewController: NSViewController {
     override func viewWillAppear() {
     }
 
-    @IBAction func oauthLinkButtonPressed(_ sender: AnyObject) {
+    @IBAction func oauthTokenFlowLinkButtonPressed(_ sender: AnyObject) {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
             DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared, controller: self, openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)})
+        }
+    }
+
+    @IBAction func oauthCodeFlowLinkButtonPressed(_ senderr: AnyObject) {
+        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+        if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
+            DropboxClientsManager.authorizeFromControllerV2(
+                sharedWorkspace: NSWorkspace.shared,
+                controller: self,
+                loadingStatusDelegate: nil,
+                openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+                scopeRequest: scopeRequest)
         }
     }
 
@@ -47,11 +60,13 @@ class ViewController: NSViewController {
 
     func checkButtons() {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
-            oauthLinkButton.isHidden = true
+            oauthTokenFlowLinkButton.isHidden = true
+            oauthCodeFlowLinkButton.isHidden = true
             oauthUnlinkButton.isHidden = false
             runApiTestsButton.isHidden = false
         } else {
-            oauthLinkButton.isHidden = false
+            oauthTokenFlowLinkButton.isHidden = false
+            oauthCodeFlowLinkButton.isHidden = false
             oauthUnlinkButton.isHidden = true
             runApiTestsButton.isHidden = true
         }
