@@ -27,9 +27,33 @@ enum OAuthUtils {
         return params
     }
 
-    // Extracts query parameters from URL and removes percent encoding.
-    static func extractParamsFromUrl(_ url: URL) -> [String: String] {
+
+    /// Extracts auth response parameters from URL and removes percent encoding.
+    /// Response parameters from DAuth via the Dropbox app are in the query component.
+    static func extractDAuthResponseFromUrl(_ url: URL) -> [String: String] {
+        extractQueryParamsFromUrlString(url.absoluteString)
+    }
+
+    /// Extracts auth response parameters from URL and removes percent encoding.
+    /// Response parameters OAuth 2 code flow (RFC6749 4.1.2) are in the query component.
+    static func extractOAuthResponseFromCodeFlowUrl(_ url: URL) -> [String: String] {
+        extractQueryParamsFromUrlString(url.absoluteString)
+    }
+
+    /// Extracts auth response parameters from URL and removes percent encoding.
+    /// Response parameters from OAuth 2 token flow (RFC6749 4.2.2) are in the fragment component.
+    static func extractOAuthResponseFromTokenFlowUrl(_ url: URL) -> [String: String] {
         guard let urlComponents = URLComponents(string: url.absoluteString),
+            let responseString = urlComponents.fragment else {
+                return [:]
+        }
+        // Create a query only URL string and extract its individual query parameters.
+        return extractQueryParamsFromUrlString("?\(responseString)")
+    }
+
+    /// Extracts query parameters from URL and removes percent encoding.
+    private static func extractQueryParamsFromUrlString(_ urlString: String) -> [String: String] {
+        guard let urlComponents = URLComponents(string: urlString),
             let queryItems = urlComponents.queryItems else {
             return [:]
         }

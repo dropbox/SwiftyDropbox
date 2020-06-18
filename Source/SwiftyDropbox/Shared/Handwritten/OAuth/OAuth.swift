@@ -246,7 +246,13 @@ open class DropboxOAuthManager: AccessTokenRefreshing {
     ///     ]
     ///     ```
     func extractFromRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
-        let parametersMap = OAuthUtils.extractParamsFromUrl(url)
+        let parametersMap: [String: String]
+        let isInOAuthCodeFlow = authSession != nil
+        if isInOAuthCodeFlow {
+            parametersMap = OAuthUtils.extractOAuthResponseFromCodeFlowUrl(url)
+        } else {
+            parametersMap = OAuthUtils.extractOAuthResponseFromTokenFlowUrl(url)
+        }
         // Error case
         if let error = parametersMap[OAuthConstants.errorKey] {
             let result: DropboxOAuthResult
