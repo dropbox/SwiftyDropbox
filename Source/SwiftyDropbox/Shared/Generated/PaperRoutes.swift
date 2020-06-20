@@ -5,6 +5,8 @@
 ///
 
 /// Routes for the paper namespace
+import Foundation
+
 open class PaperRoutes {
     public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {

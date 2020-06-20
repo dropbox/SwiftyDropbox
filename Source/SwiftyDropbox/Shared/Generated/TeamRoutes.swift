@@ -5,6 +5,8 @@
 ///
 
 /// Routes for the team namespace
+import Foundation
+
 open class TeamRoutes {
     public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {

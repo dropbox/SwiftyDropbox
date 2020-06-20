@@ -5,6 +5,8 @@
 ///
 
 /// Routes for the files namespace
+import Foundation
+
 open class FilesRoutes {
     public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {
