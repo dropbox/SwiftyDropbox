@@ -84,7 +84,7 @@ extension FilesRoutes {
         uploadData.uploadGroup.enter()
         let startBytes = 0
         let endBytes = fileChunkSize
-        let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: UInt(startBytes), endBytes: UInt(endBytes))
+        let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: Int(startBytes), endBytes: Int(endBytes))
         // use seperate continue upload queue so we don't block other files from
         // commencing their upload
         let chunkUploadContinueQueue = DispatchQueue(label: "chunk_upload_continue_queue")
@@ -127,7 +127,7 @@ extension FilesRoutes {
             for i in 1..<numFileChunks {
                 let startBytes = fileChunkSize * i
                 let endBytes = (i != numFileChunks - 1) ? fileChunkSize * (i + 1) : fileSize
-                let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: UInt(startBytes), endBytes: UInt(endBytes))
+                let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: Int(startBytes), endBytes: Int(endBytes))
                 totalBytesSent += fileChunkSize
                 let cursor = Files.UploadSessionCursor(sessionId: sessionId, offset: (totalBytesSent))
                 let shouldClose = (i != numFileChunks - 1) ? false : true

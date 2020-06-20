@@ -5,6 +5,8 @@
 ///
 
 /// Routes for the sharing namespace
+import Foundation
+
 open class SharingRoutes {
     public let client: DropboxTransportClient
     init(client: DropboxTransportClient) {

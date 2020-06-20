@@ -2,6 +2,7 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
+#if canImport(AppKit)
 import Foundation
 import AppKit
 import WebKit
@@ -77,3 +78,4 @@ public class DesktopSharedApplication: SharedApplication {
         // TODO: Implement when OAuth code flow is introduced into Desktop SDK.
     }
 }
+#endif
