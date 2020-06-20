@@ -18,6 +18,6 @@ let package = Package(
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMinor(from: "4.8.2")),
     ],
 	targets: [
-		.target(name: "SwiftyDropbox", dependencies: ["AlamoFire"])
+		.target(name: "SwiftyDropbox", dependencies: ["Alamofire"])
 	]
 )
