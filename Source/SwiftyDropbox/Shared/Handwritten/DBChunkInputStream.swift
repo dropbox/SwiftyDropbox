@@ -75,7 +75,7 @@ class DBChunkInputStream: InputStream, StreamDelegate {
 		let bytesRemaining = totalBytesToRead - totalBytesRead
 		if len > bytesRemaining { bytesToRead = bytesRemaining }
 		let bytesRead = parentStream.read(buffer, maxLength: bytesToRead)
-		totalBytesToRead += bytesRead
+		totalBytesRead += bytesRead
 		return bytesRead
 	}
 	
