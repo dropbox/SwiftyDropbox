@@ -201,20 +201,18 @@ open class DropboxOAuthManager: AccessTokenRefreshing {
             URLQueryItem(name: "locale", value: localeIdentifier),
         ]
 
-        let state: String
         if let authSession = authSession {
             // Code flow.
-            state = authSession.state
             params.append(contentsOf: OAuthUtils.createPkceCodeFlowParams(for: authSession))
         } else {
             // Token flow.
-            state = ProcessInfo.processInfo.globallyUniqueString
-            params.append(contentsOf: [
-                URLQueryItem(name: OAuthConstants.responseTypeKey, value: "token"),
-                URLQueryItem(name: OAuthConstants.stateKey, value: state),
-            ])
+            params.append(URLQueryItem(name: OAuthConstants.responseTypeKey, value: "token"))
         }
+        // used to prevent malicious impersonation of app from web browser
+        let state = ProcessInfo.processInfo.globallyUniqueString
         UserDefaults.standard.setValue(state, forKey: Constants.kCSRFKey)
+        params.append(URLQueryItem(name: OAuthConstants.stateKey, value: state))
+
         components.queryItems = params
         guard let url = components.url else { fatalError("Failed to create auth url.") }
         return url

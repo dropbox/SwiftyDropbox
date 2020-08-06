@@ -22,7 +22,6 @@ enum OAuthUtils {
             URLQueryItem(name: OAuthConstants.codeChallengeMethodKey, value: pkceData.codeChallengeMethod),
             URLQueryItem(name: OAuthConstants.tokenAccessTypeKey, value: authSession.tokenAccessType),
             URLQueryItem(name: OAuthConstants.responseTypeKey, value: authSession.responseType),
-            URLQueryItem(name: OAuthConstants.stateKey, value: authSession.state),
         ])
         return params
     }
