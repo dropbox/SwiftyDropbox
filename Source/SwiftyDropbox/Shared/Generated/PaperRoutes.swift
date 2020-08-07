@@ -11,20 +11,29 @@ open class PaperRoutes {
         self.client = client
     }
 
-    /// Marks the given Paper doc as archived. Note: This action can be performed or undone by anyone with edit
-    /// permissions to the doc.
+    /// Marks the given Paper doc as archived. This action can be performed or undone by anyone with edit permissions to
+    /// the doc. Note that this endpoint will continue to work for content created by users on the older version of
+    /// Paper. To check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files
+    /// feature is enabled, then the user is running the new version of Paper. This endpoint will be retired in
+    /// September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsArchive is deprecated.")
     @discardableResult open func docsArchive(docId: String) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsArchive
         let serverArgs = Paper.RefPaperDoc(docId: docId)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Creates a new Paper doc with the provided content.
+    /// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work for content
+    /// created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
     /// have write access to this folder or error is thrown.
@@ -33,13 +42,18 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @available(*, unavailable, message:"docsCreate is deprecated.")
     @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Creates a new Paper doc with the provided content.
+    /// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work for content
+    /// created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
     /// have write access to this folder or error is thrown.
@@ -48,13 +62,18 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @available(*, unavailable, message:"docsCreate is deprecated.")
     @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Creates a new Paper doc with the provided content.
+    /// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work for content
+    /// created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter parentFolderId: The Paper folder ID where the Paper document should be created. The API user has to
     /// have write access to this folder or error is thrown.
@@ -63,13 +82,18 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocCreateError` object on failure.
+    @available(*, unavailable, message:"docsCreate is deprecated.")
     @discardableResult open func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
-    /// Exports and downloads Paper doc either as HTML or markdown.
+    /// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
@@ -79,17 +103,23 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocExportResult` object on
     /// success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsDownload is deprecated.")
     @discardableResult open func docsDownload(docId: String, exportFormat: Paper.ExportFormat, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsDownload
         let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
-    /// Exports and downloads Paper doc either as HTML or markdown.
+    /// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocExportResult` object on
     /// success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsDownload is deprecated.")
     @discardableResult open func docsDownload(docId: String, exportFormat: Paper.ExportFormat) -> DownloadRequestMemory<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsDownload
         let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat)
@@ -98,13 +128,17 @@ open class PaperRoutes {
 
     /// Lists the users who are explicitly invited to the Paper folder in which the Paper doc is contained. For private
     /// folders all users (including owner) shared on the folder are listed and for team folders all non-team users
-    /// shared on the folder are returned.
+    /// shared on the folder are returned. Note that this endpoint will continue to work for content created by users on
+    /// the older version of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
+    /// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to the Paper
+    /// Migration Guide https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter limit: Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
     /// Higher value results in invalid arguments error.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnFolderResponse` object on
     /// success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsFolderUsersList is deprecated.")
     @discardableResult open func docsFolderUsersList(docId: String, limit: Int32 = 1000) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsFolderUsersList
         let serverArgs = Paper.ListUsersOnFolderArgs(docId: docId, limit: limit)
@@ -112,13 +146,17 @@ open class PaperRoutes {
     }
 
     /// Once a cursor has been retrieved from docsFolderUsersList, use this to paginate through all users on the Paper
-    /// folder.
+    /// folder. Note that this endpoint will continue to work for content created by users on the older version of
+    /// Paper. To check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files
+    /// feature is enabled, then the user is running the new version of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter cursor: The cursor obtained from docsFolderUsersList or docsFolderUsersListContinue. Allows for
     /// pagination.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnFolderResponse` object on
     /// success or a `Paper.ListUsersCursorError` object on failure.
+    @available(*, unavailable, message:"docsFolderUsersListContinue is deprecated.")
     @discardableResult open func docsFolderUsersListContinue(docId: String, cursor: String) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
         let route = Paper.docsFolderUsersListContinue
         let serverArgs = Paper.ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
@@ -127,13 +165,18 @@ open class PaperRoutes {
 
     /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy; permissions for
     /// subfolders are set by the top-level folder.   - full 'filepath', i.e. the list of folders (both folderId and
-    /// folderName) from     the root folder to the folder directly containing the Paper doc.  Note: If the Paper doc is
-    /// not in any folder (aka unfiled) the response will be empty.
+    /// folderName) from     the root folder to the folder directly containing the Paper doc.  If the Paper doc is not
+    /// in any folder (aka unfiled) the response will be empty. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.FoldersContainingPaperDoc` object on
     /// success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsGetFolderInfo is deprecated.")
     @discardableResult open func docsGetFolderInfo(docId: String) -> RpcRequest<Paper.FoldersContainingPaperDocSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsGetFolderInfo
         let serverArgs = Paper.RefPaperDoc(docId: docId)
@@ -141,7 +184,11 @@ open class PaperRoutes {
     }
 
     /// Return the list of all Paper docs according to the argument specifications. To iterate over through the full
-    /// pagination, pass the cursor to docsListContinue.
+    /// pagination, pass the cursor to docsListContinue. Note that this endpoint will continue to work for content
+    /// created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter filterBy: Allows user to specify how the Paper docs should be filtered.
     /// - parameter sortBy: Allows user to specify how the Paper docs should be sorted.
@@ -151,43 +198,58 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListPaperDocsResponse` object on
     /// success or a `Void` object on failure.
+    @available(*, unavailable, message:"docsList is deprecated.")
     @discardableResult open func docsList(filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed, sortBy: Paper.ListPaperDocsSortBy = .accessed, sortOrder: Paper.ListPaperDocsSortOrder = .ascending, limit: Int32 = 1000) -> RpcRequest<Paper.ListPaperDocsResponseSerializer, VoidSerializer> {
         let route = Paper.docsList
         let serverArgs = Paper.ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Once a cursor has been retrieved from docsList, use this to paginate through all Paper doc.
+    /// Once a cursor has been retrieved from docsList, use this to paginate through all Paper doc. Note that this
+    /// endpoint will continue to work for content created by users on the older version of Paper. To check which
+    /// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then
+    /// the user is running the new version of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter cursor: The cursor obtained from docsList or docsListContinue. Allows for pagination.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListPaperDocsResponse` object on
     /// success or a `Paper.ListDocsCursorError` object on failure.
+    @available(*, unavailable, message:"docsListContinue is deprecated.")
     @discardableResult open func docsListContinue(cursor: String) -> RpcRequest<Paper.ListPaperDocsResponseSerializer, Paper.ListDocsCursorErrorSerializer> {
         let route = Paper.docsListContinue
         let serverArgs = Paper.ListPaperDocsContinueArgs(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.  Note: This
-    /// action can be performed only by the doc owner.
+    /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered. This action can
+    /// be performed only by the doc owner. Note that this endpoint will continue to work for content created by users
+    /// on the older version of Paper. To check which version of Paper a user is on, use /users/features/get_values. If
+    /// the paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to the Paper
+    /// Migration Guide https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsPermanentlyDelete is deprecated.")
     @discardableResult open func docsPermanentlyDelete(docId: String) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsPermanentlyDelete
         let serverArgs = Paper.RefPaperDoc(docId: docId)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Gets the default sharing policy for the given Paper doc.
+    /// Gets the default sharing policy for the given Paper doc. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter docId: The Paper doc ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.SharingPolicy` object on success or
     /// a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsSharingPolicyGet is deprecated.")
     @discardableResult open func docsSharingPolicyGet(docId: String) -> RpcRequest<Paper.SharingPolicySerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsSharingPolicyGet
         let serverArgs = Paper.RefPaperDoc(docId: docId)
@@ -195,20 +257,29 @@ open class PaperRoutes {
     }
 
     /// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can be changed only
-    /// by teams, omit this field for personal accounts.  Note: 'public_sharing_policy' cannot be set to the value
-    /// 'disabled' because this setting can be changed only via the team admin console.
+    /// by teams, omit this field for personal accounts. The 'public_sharing_policy' policy can't be set to the value
+    /// 'disabled' because this setting can be changed only via the team admin console. Note that this endpoint will
+    /// continue to work for content created by users on the older version of Paper. To check which version of Paper a
+    /// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+    /// the new version of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter sharingPolicy: The default sharing policy to be set for the Paper doc.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsSharingPolicySet is deprecated.")
     @discardableResult open func docsSharingPolicySet(docId: String, sharingPolicy: Paper.SharingPolicy) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsSharingPolicySet
         let serverArgs = Paper.PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Updates an existing Paper doc with the provided content.
+    /// Updates an existing Paper doc with the provided content. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter docUpdatePolicy: The policy used for the current update call.
     /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
@@ -218,13 +289,18 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
     @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Updates an existing Paper doc with the provided content.
+    /// Updates an existing Paper doc with the provided content. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter docUpdatePolicy: The policy used for the current update call.
     /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
@@ -234,13 +310,18 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
     @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Updates an existing Paper doc with the provided content.
+    /// Updates an existing Paper doc with the provided content. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. This endpoint will be retired in September 2020. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for more information.
     ///
     /// - parameter docUpdatePolicy: The policy used for the current update call.
     /// - parameter revision: The latest doc revision. This value must match the head revision or an error code will be
@@ -250,6 +331,7 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object
     /// on success or a `Paper.PaperDocUpdateError` object on failure.
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
     @discardableResult open func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
@@ -257,7 +339,11 @@ open class PaperRoutes {
     }
 
     /// Allows an owner or editor to add users to a Paper doc or change their permissions using their email address or
-    /// Dropbox account ID.  Note: The Doc owner's permissions cannot be changed.
+    /// Dropbox account ID. The doc owner's permissions cannot be changed. Note that this endpoint will continue to work
+    /// for content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter members: User which should be added to the Paper doc. Specify only email address or Dropbox account
     /// ID.
@@ -266,6 +352,7 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Paper.AddPaperDocUserMemberResult>`
     /// object on success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsUsersAdd is deprecated.")
     @discardableResult open func docsUsersAdd(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) -> RpcRequest<ArraySerializer<Paper.AddPaperDocUserMemberResultSerializer>, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersAdd
         let serverArgs = Paper.AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
@@ -274,7 +361,11 @@ open class PaperRoutes {
 
     /// Lists all users who visited the Paper doc or users with explicit access. This call excludes users who have been
     /// removed. The list is sorted by the date of the visit or the share date. The list will include both users, the
-    /// explicitly shared ones as well as those who came in using the Paper url link.
+    /// explicitly shared ones as well as those who came in using the Paper url link. Note that this endpoint will
+    /// continue to work for content created by users on the older version of Paper. To check which version of Paper a
+    /// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+    /// the new version of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter limit: Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
     /// Higher value results in invalid arguments error.
@@ -283,6 +374,7 @@ open class PaperRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnPaperDocResponse` object
     /// on success or a `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsUsersList is deprecated.")
     @discardableResult open func docsUsersList(docId: String, limit: Int32 = 1000, filterBy: Paper.UserOnPaperDocFilter = .shared) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersList
         let serverArgs = Paper.ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
@@ -290,28 +382,61 @@ open class PaperRoutes {
     }
 
     /// Once a cursor has been retrieved from docsUsersList, use this to paginate through all users on the Paper doc.
+    /// Note that this endpoint will continue to work for content created by users on the older version of Paper. To
+    /// check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+    /// enabled, then the user is running the new version of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter cursor: The cursor obtained from docsUsersList or docsUsersListContinue. Allows for pagination.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnPaperDocResponse` object
     /// on success or a `Paper.ListUsersCursorError` object on failure.
+    @available(*, unavailable, message:"docsUsersListContinue is deprecated.")
     @discardableResult open func docsUsersListContinue(docId: String, cursor: String) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
         let route = Paper.docsUsersListContinue
         let serverArgs = Paper.ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox account ID.
-    /// Note: Doc owner cannot be removed.
+    /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox account ID. The
+    /// doc owner cannot be removed. Note that this endpoint will continue to work for content created by users on the
+    /// older version of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
+    /// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to the Paper
+    /// Migration Guide https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
     /// - parameter member: User which should be removed from the Paper doc. Specify only email address or Dropbox
     /// account ID.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
+    @available(*, unavailable, message:"docsUsersRemove is deprecated.")
     @discardableResult open func docsUsersRemove(docId: String, member: Sharing.MemberSelector) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersRemove
         let serverArgs = Paper.RemovePaperDocUser(docId: docId, member: member)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Create a new Paper folder with the provided info. Note that this endpoint will continue to work for content
+    /// created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new version
+    /// of Paper. Refer to the Paper Migration Guide
+    /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
+    ///
+    /// - parameter name: The name of the new Paper folder.
+    /// - parameter parentFolderId: The encrypted Paper folder Id where the new Paper folder should be created. The API
+    /// user has to have write access to this folder or error is thrown. If not supplied, the new folder will be created
+    /// at top level.
+    /// - parameter isTeamFolder: Whether the folder to be created should be a team folder. This value will be ignored
+    /// if parent_folder_id is supplied, as the new folder will inherit the type (private or team folder) from its
+    /// parent. We will by default create a top-level private folder if both parent_folder_id and is_team_folder are not
+    /// supplied.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Paper.PaperFolderCreateResult` object on
+    /// success or a `Paper.PaperFolderCreateError` object on failure.
+    @available(*, unavailable, message:"foldersCreate is deprecated.")
+    @discardableResult open func foldersCreate(name: String, parentFolderId: String? = nil, isTeamFolder: Bool? = nil) -> RpcRequest<Paper.PaperFolderCreateResultSerializer, Paper.PaperFolderCreateErrorSerializer> {
+        let route = Paper.foldersCreate
+        let serverArgs = Paper.PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
         return client.request(route, serverArgs: serverArgs)
     }
 

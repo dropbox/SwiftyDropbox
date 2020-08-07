@@ -120,6 +120,235 @@ open class Team {
         }
     }
 
+    /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that a secondary
+    /// email was successfully added to a user. The other values explain the type of error that occurred, and include
+    /// the email for which the error occured.
+    public enum AddSecondaryEmailResult: CustomStringConvertible {
+        /// Describes a secondary email that was successfully added to a user.
+        case success(SecondaryEmails.SecondaryEmail)
+        /// Secondary email is not available to be claimed by the user.
+        case unavailable(String)
+        /// Secondary email is already a pending email for the user.
+        case alreadyPending(String)
+        /// Secondary email is already a verified email for the user.
+        case alreadyOwnedByUser(String)
+        /// User already has the maximum number of secondary emails allowed.
+        case reachedLimit(String)
+        /// A transient error occurred. Please try again later.
+        case transientError(String)
+        /// An error occurred due to conflicting updates. Please try again later.
+        case tooManyUpdates(String)
+        /// An unknown error occurred.
+        case unknownError(String)
+        /// Too many emails are being sent to this email address. Please try again later.
+        case rateLimited(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddSecondaryEmailResultSerializer().serialize(self)))"
+        }
+    }
+    open class AddSecondaryEmailResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddSecondaryEmailResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = Serialization.getFields(SecondaryEmails.SecondaryEmailSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .unavailable(let arg):
+                    var d = ["unavailable": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("unavailable")
+                    return .dictionary(d)
+                case .alreadyPending(let arg):
+                    var d = ["already_pending": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("already_pending")
+                    return .dictionary(d)
+                case .alreadyOwnedByUser(let arg):
+                    var d = ["already_owned_by_user": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("already_owned_by_user")
+                    return .dictionary(d)
+                case .reachedLimit(let arg):
+                    var d = ["reached_limit": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("reached_limit")
+                    return .dictionary(d)
+                case .transientError(let arg):
+                    var d = ["transient_error": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("transient_error")
+                    return .dictionary(d)
+                case .tooManyUpdates(let arg):
+                    var d = ["too_many_updates": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("too_many_updates")
+                    return .dictionary(d)
+                case .unknownError(let arg):
+                    var d = ["unknown_error": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("unknown_error")
+                    return .dictionary(d)
+                case .rateLimited(let arg):
+                    var d = ["rate_limited": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("rate_limited")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> AddSecondaryEmailResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = SecondaryEmails.SecondaryEmailSerializer().deserialize(json)
+                            return AddSecondaryEmailResult.success(v)
+                        case "unavailable":
+                            let v = Serialization._StringSerializer.deserialize(d["unavailable"] ?? .null)
+                            return AddSecondaryEmailResult.unavailable(v)
+                        case "already_pending":
+                            let v = Serialization._StringSerializer.deserialize(d["already_pending"] ?? .null)
+                            return AddSecondaryEmailResult.alreadyPending(v)
+                        case "already_owned_by_user":
+                            let v = Serialization._StringSerializer.deserialize(d["already_owned_by_user"] ?? .null)
+                            return AddSecondaryEmailResult.alreadyOwnedByUser(v)
+                        case "reached_limit":
+                            let v = Serialization._StringSerializer.deserialize(d["reached_limit"] ?? .null)
+                            return AddSecondaryEmailResult.reachedLimit(v)
+                        case "transient_error":
+                            let v = Serialization._StringSerializer.deserialize(d["transient_error"] ?? .null)
+                            return AddSecondaryEmailResult.transientError(v)
+                        case "too_many_updates":
+                            let v = Serialization._StringSerializer.deserialize(d["too_many_updates"] ?? .null)
+                            return AddSecondaryEmailResult.tooManyUpdates(v)
+                        case "unknown_error":
+                            let v = Serialization._StringSerializer.deserialize(d["unknown_error"] ?? .null)
+                            return AddSecondaryEmailResult.unknownError(v)
+                        case "rate_limited":
+                            let v = Serialization._StringSerializer.deserialize(d["rate_limited"] ?? .null)
+                            return AddSecondaryEmailResult.rateLimited(v)
+                        case "other":
+                            return AddSecondaryEmailResult.other
+                        default:
+                            return AddSecondaryEmailResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The AddSecondaryEmailsArg struct
+    open class AddSecondaryEmailsArg: CustomStringConvertible {
+        /// List of users and secondary emails to add.
+        public let newSecondaryEmails: Array<Team.UserSecondaryEmailsArg>
+        public init(newSecondaryEmails: Array<Team.UserSecondaryEmailsArg>) {
+            self.newSecondaryEmails = newSecondaryEmails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddSecondaryEmailsArgSerializer().serialize(self)))"
+        }
+    }
+    open class AddSecondaryEmailsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddSecondaryEmailsArg) -> JSON {
+            let output = [ 
+            "new_secondary_emails": ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).serialize(value.newSecondaryEmails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> AddSecondaryEmailsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let newSecondaryEmails = ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).deserialize(dict["new_secondary_emails"] ?? .null)
+                    return AddSecondaryEmailsArg(newSecondaryEmails: newSecondaryEmails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Error returned when adding secondary emails fails.
+    public enum AddSecondaryEmailsError: CustomStringConvertible {
+        /// Secondary emails are disabled for the team.
+        case secondaryEmailsDisabled
+        /// A maximum of 20 secondary emails can be added in a single call.
+        case tooManyEmails
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddSecondaryEmailsErrorSerializer().serialize(self)))"
+        }
+    }
+    open class AddSecondaryEmailsErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddSecondaryEmailsError) -> JSON {
+            switch value {
+                case .secondaryEmailsDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("secondary_emails_disabled")
+                    return .dictionary(d)
+                case .tooManyEmails:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_emails")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> AddSecondaryEmailsError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "secondary_emails_disabled":
+                            return AddSecondaryEmailsError.secondaryEmailsDisabled
+                        case "too_many_emails":
+                            return AddSecondaryEmailsError.tooManyEmails
+                        case "other":
+                            return AddSecondaryEmailsError.other
+                        default:
+                            return AddSecondaryEmailsError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The AddSecondaryEmailsResult struct
+    open class AddSecondaryEmailsResult: CustomStringConvertible {
+        /// List of users and secondary email results.
+        public let results: Array<Team.UserAddResult>
+        public init(results: Array<Team.UserAddResult>) {
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddSecondaryEmailsResultSerializer().serialize(self)))"
+        }
+    }
+    open class AddSecondaryEmailsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddSecondaryEmailsResult) -> JSON {
+            let output = [ 
+            "results": ArraySerializer(Team.UserAddResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> AddSecondaryEmailsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let results = ArraySerializer(Team.UserAddResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return AddSecondaryEmailsResult(results: results)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Describes which team-related admin permissions a user has.
     public enum AdminTier: CustomStringConvertible {
         /// User is an administrator of the team - has all permissions.
@@ -459,7 +688,8 @@ open class Team {
 
     /// Input arguments that can be provided for most reports.
     open class DateRange: CustomStringConvertible {
-        /// Optional starting date (inclusive).
+        /// Optional starting date (inclusive). If start_date is None or too long ago, this field will  be set to 6
+        /// months ago.
         public let startDate: Date?
         /// Optional ending date (exclusive).
         public let endDate: Date?
@@ -523,6 +753,130 @@ open class Team {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Result of trying to delete a secondary email address. 'success' is the only value indicating that a secondary
+    /// email was successfully deleted. The other values explain the type of error that occurred, and include the email
+    /// for which the error occured.
+    public enum DeleteSecondaryEmailResult: CustomStringConvertible {
+        /// The secondary email was successfully deleted.
+        case success(String)
+        /// The email address was not found for the user.
+        case notFound(String)
+        /// The email address is the primary email address of the user, and cannot be removed.
+        case cannotRemovePrimary(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DeleteSecondaryEmailResultSerializer().serialize(self)))"
+        }
+    }
+    open class DeleteSecondaryEmailResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DeleteSecondaryEmailResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = ["success": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .notFound(let arg):
+                    var d = ["not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("not_found")
+                    return .dictionary(d)
+                case .cannotRemovePrimary(let arg):
+                    var d = ["cannot_remove_primary": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("cannot_remove_primary")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> DeleteSecondaryEmailResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Serialization._StringSerializer.deserialize(d["success"] ?? .null)
+                            return DeleteSecondaryEmailResult.success(v)
+                        case "not_found":
+                            let v = Serialization._StringSerializer.deserialize(d["not_found"] ?? .null)
+                            return DeleteSecondaryEmailResult.notFound(v)
+                        case "cannot_remove_primary":
+                            let v = Serialization._StringSerializer.deserialize(d["cannot_remove_primary"] ?? .null)
+                            return DeleteSecondaryEmailResult.cannotRemovePrimary(v)
+                        case "other":
+                            return DeleteSecondaryEmailResult.other
+                        default:
+                            return DeleteSecondaryEmailResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The DeleteSecondaryEmailsArg struct
+    open class DeleteSecondaryEmailsArg: CustomStringConvertible {
+        /// List of users and their secondary emails to delete.
+        public let emailsToDelete: Array<Team.UserSecondaryEmailsArg>
+        public init(emailsToDelete: Array<Team.UserSecondaryEmailsArg>) {
+            self.emailsToDelete = emailsToDelete
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DeleteSecondaryEmailsArgSerializer().serialize(self)))"
+        }
+    }
+    open class DeleteSecondaryEmailsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DeleteSecondaryEmailsArg) -> JSON {
+            let output = [ 
+            "emails_to_delete": ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).serialize(value.emailsToDelete),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DeleteSecondaryEmailsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let emailsToDelete = ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).deserialize(dict["emails_to_delete"] ?? .null)
+                    return DeleteSecondaryEmailsArg(emailsToDelete: emailsToDelete)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DeleteSecondaryEmailsResult struct
+    open class DeleteSecondaryEmailsResult: CustomStringConvertible {
+        /// (no description)
+        public let results: Array<Team.UserDeleteResult>
+        public init(results: Array<Team.UserDeleteResult>) {
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DeleteSecondaryEmailsResultSerializer().serialize(self)))"
+        }
+    }
+    open class DeleteSecondaryEmailsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DeleteSecondaryEmailsResult) -> JSON {
+            let output = [ 
+            "results": ArraySerializer(Team.UserDeleteResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DeleteSecondaryEmailsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let results = ArraySerializer(Team.UserDeleteResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return DeleteSecondaryEmailsResult(results: results)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -1668,13 +2022,16 @@ open class Team {
     open class GroupCreateArg: CustomStringConvertible {
         /// Group name.
         public let groupName: String
+        /// Automatically add the creator of the group.
+        public let addCreatorAsOwner: Bool
         /// The creator of a team can associate an arbitrary external ID to the group.
         public let groupExternalId: String?
         /// Whether the team can be managed by selected users, or only by team admins.
         public let groupManagementType: TeamCommon.GroupManagementType?
-        public init(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) {
+        public init(groupName: String, addCreatorAsOwner: Bool = false, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) {
             stringValidator()(groupName)
             self.groupName = groupName
+            self.addCreatorAsOwner = addCreatorAsOwner
             nullableValidator(stringValidator())(groupExternalId)
             self.groupExternalId = groupExternalId
             self.groupManagementType = groupManagementType
@@ -1688,6 +2045,7 @@ open class Team {
         open func serialize(_ value: GroupCreateArg) -> JSON {
             let output = [ 
             "group_name": Serialization._StringSerializer.serialize(value.groupName),
+            "add_creator_as_owner": Serialization._BoolSerializer.serialize(value.addCreatorAsOwner),
             "group_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
             "group_management_type": NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).serialize(value.groupManagementType),
             ]
@@ -1697,9 +2055,10 @@ open class Team {
             switch json {
                 case .dictionary(let dict):
                     let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
+                    let addCreatorAsOwner = Serialization._BoolSerializer.deserialize(dict["add_creator_as_owner"] ?? .number(0))
                     let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .null)
                     let groupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["group_management_type"] ?? .null)
-                    return GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
+                    return GroupCreateArg(groupName: groupName, addCreatorAsOwner: addCreatorAsOwner, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2348,7 +2707,9 @@ open class Team {
     open class GroupMembersChangeResult: CustomStringConvertible {
         /// The group info after member change operation has been performed.
         public let groupInfo: Team.GroupFullInfo
-        /// An ID that can be used to obtain the status of granting/revoking group-owned resources.
+        /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID that was used to
+        /// obtain the status of granting/revoking group-owned resources. It's no longer necessary because the async
+        /// processing now happens automatically.
         public let asyncJobId: String
         public init(groupInfo: Team.GroupFullInfo, asyncJobId: String) {
             self.groupInfo = groupInfo
@@ -3435,6 +3796,1171 @@ open class Team {
         }
     }
 
+    /// The LegalHoldHeldRevisionMetadata struct
+    open class LegalHoldHeldRevisionMetadata: CustomStringConvertible {
+        /// The held revision filename.
+        public let newFilename: String
+        /// The id of the held revision.
+        public let originalRevisionId: String
+        /// The original path of the held revision.
+        public let originalFilePath: String
+        /// The last time the file was modified on Dropbox.
+        public let serverModified: Date
+        /// The member id of the revision's author.
+        public let authorMemberId: String
+        /// The member status of the revision's author.
+        public let authorMemberStatus: Team.TeamMemberStatus
+        /// The email address of the held revision author.
+        public let authorEmail: String
+        /// The type of the held revision's file.
+        public let fileType: String
+        /// The file size in bytes.
+        public let size: UInt64
+        /// A hash of the file content. This field can be used to verify data integrity. For more information see our
+        /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String
+        public init(newFilename: String, originalRevisionId: String, originalFilePath: String, serverModified: Date, authorMemberId: String, authorMemberStatus: Team.TeamMemberStatus, authorEmail: String, fileType: String, size: UInt64, contentHash: String) {
+            stringValidator()(newFilename)
+            self.newFilename = newFilename
+            stringValidator(minLength: 9, pattern: "[0-9a-f]+")(originalRevisionId)
+            self.originalRevisionId = originalRevisionId
+            stringValidator(pattern: "(/(.|[\\r\\n])*)?")(originalFilePath)
+            self.originalFilePath = originalFilePath
+            self.serverModified = serverModified
+            stringValidator()(authorMemberId)
+            self.authorMemberId = authorMemberId
+            self.authorMemberStatus = authorMemberStatus
+            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(authorEmail)
+            self.authorEmail = authorEmail
+            stringValidator()(fileType)
+            self.fileType = fileType
+            comparableValidator()(size)
+            self.size = size
+            stringValidator(minLength: 64, maxLength: 64)(contentHash)
+            self.contentHash = contentHash
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldHeldRevisionMetadataSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldHeldRevisionMetadataSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldHeldRevisionMetadata) -> JSON {
+            let output = [ 
+            "new_filename": Serialization._StringSerializer.serialize(value.newFilename),
+            "original_revision_id": Serialization._StringSerializer.serialize(value.originalRevisionId),
+            "original_file_path": Serialization._StringSerializer.serialize(value.originalFilePath),
+            "server_modified": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.serverModified),
+            "author_member_id": Serialization._StringSerializer.serialize(value.authorMemberId),
+            "author_member_status": Team.TeamMemberStatusSerializer().serialize(value.authorMemberStatus),
+            "author_email": Serialization._StringSerializer.serialize(value.authorEmail),
+            "file_type": Serialization._StringSerializer.serialize(value.fileType),
+            "size": Serialization._UInt64Serializer.serialize(value.size),
+            "content_hash": Serialization._StringSerializer.serialize(value.contentHash),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldHeldRevisionMetadata {
+            switch json {
+                case .dictionary(let dict):
+                    let newFilename = Serialization._StringSerializer.deserialize(dict["new_filename"] ?? .null)
+                    let originalRevisionId = Serialization._StringSerializer.deserialize(dict["original_revision_id"] ?? .null)
+                    let originalFilePath = Serialization._StringSerializer.deserialize(dict["original_file_path"] ?? .null)
+                    let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .null)
+                    let authorMemberId = Serialization._StringSerializer.deserialize(dict["author_member_id"] ?? .null)
+                    let authorMemberStatus = Team.TeamMemberStatusSerializer().deserialize(dict["author_member_status"] ?? .null)
+                    let authorEmail = Serialization._StringSerializer.deserialize(dict["author_email"] ?? .null)
+                    let fileType = Serialization._StringSerializer.deserialize(dict["file_type"] ?? .null)
+                    let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .null)
+                    let contentHash = Serialization._StringSerializer.deserialize(dict["content_hash"] ?? .null)
+                    return LegalHoldHeldRevisionMetadata(newFilename: newFilename, originalRevisionId: originalRevisionId, originalFilePath: originalFilePath, serverModified: serverModified, authorMemberId: authorMemberId, authorMemberStatus: authorMemberStatus, authorEmail: authorEmail, fileType: fileType, size: size, contentHash: contentHash)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldPolicy struct
+    open class LegalHoldPolicy: CustomStringConvertible {
+        /// The legal hold id.
+        public let id: String
+        /// Policy name.
+        public let name: String
+        /// A description of the legal hold policy.
+        public let description_: String?
+        /// The time at which the legal hold was activated.
+        public let activationTime: Date?
+        /// Team members IDs and number of permanetly deleted members under hold.
+        public let members: Team.MembersInfo
+        /// The current state of the hold.
+        public let status: Team.LegalHoldStatus
+        /// Start date of the legal hold policy.
+        public let startDate: Date
+        /// End date of the legal hold policy.
+        public let endDate: Date?
+        public init(id: String, name: String, members: Team.MembersInfo, status: Team.LegalHoldStatus, startDate: Date, description_: String? = nil, activationTime: Date? = nil, endDate: Date? = nil) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+            stringValidator(maxLength: 140)(name)
+            self.name = name
+            nullableValidator(stringValidator(maxLength: 501))(description_)
+            self.description_ = description_
+            self.activationTime = activationTime
+            self.members = members
+            self.status = status
+            self.startDate = startDate
+            self.endDate = endDate
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldPolicySerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldPolicy) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "members": Team.MembersInfoSerializer().serialize(value.members),
+            "status": Team.LegalHoldStatusSerializer().serialize(value.status),
+            "start_date": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.startDate),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+            "activation_time": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.activationTime),
+            "end_date": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.endDate),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldPolicy {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let members = Team.MembersInfoSerializer().deserialize(dict["members"] ?? .null)
+                    let status = Team.LegalHoldStatusSerializer().deserialize(dict["status"] ?? .null)
+                    let startDate = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["start_date"] ?? .null)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    let activationTime = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["activation_time"] ?? .null)
+                    let endDate = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["end_date"] ?? .null)
+                    return LegalHoldPolicy(id: id, name: name, members: members, status: status, startDate: startDate, description_: description_, activationTime: activationTime, endDate: endDate)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldStatus union
+    public enum LegalHoldStatus: CustomStringConvertible {
+        /// The legal hold policy is active.
+        case active
+        /// The legal hold policy was released.
+        case released
+        /// The legal hold policy is activating.
+        case activating
+        /// The legal hold policy is updating.
+        case updating
+        /// The legal hold policy is exporting.
+        case exporting
+        /// The legal hold policy is releasing.
+        case releasing
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldStatusSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldStatus) -> JSON {
+            switch value {
+                case .active:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("active")
+                    return .dictionary(d)
+                case .released:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("released")
+                    return .dictionary(d)
+                case .activating:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("activating")
+                    return .dictionary(d)
+                case .updating:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("updating")
+                    return .dictionary(d)
+                case .exporting:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("exporting")
+                    return .dictionary(d)
+                case .releasing:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("releasing")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "active":
+                            return LegalHoldStatus.active
+                        case "released":
+                            return LegalHoldStatus.released
+                        case "activating":
+                            return LegalHoldStatus.activating
+                        case "updating":
+                            return LegalHoldStatus.updating
+                        case "exporting":
+                            return LegalHoldStatus.exporting
+                        case "releasing":
+                            return LegalHoldStatus.releasing
+                        case "other":
+                            return LegalHoldStatus.other
+                        default:
+                            return LegalHoldStatus.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsError union
+    public enum LegalHoldsError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsError.other
+                        default:
+                            return LegalHoldsError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsGetPolicyArg struct
+    open class LegalHoldsGetPolicyArg: CustomStringConvertible {
+        /// The legal hold Id.
+        public let id: String
+        public init(id: String) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsGetPolicyArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsGetPolicyArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsGetPolicyArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsGetPolicyArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    return LegalHoldsGetPolicyArg(id: id)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsGetPolicyError union
+    public enum LegalHoldsGetPolicyError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Legal hold policy does not exist for id in LegalHoldsGetPolicyArg.
+        case legalHoldPolicyNotFound
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsGetPolicyErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsGetPolicyErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsGetPolicyError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .legalHoldPolicyNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_policy_not_found")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsGetPolicyError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsGetPolicyError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsGetPolicyError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsGetPolicyError.other
+                        case "legal_hold_policy_not_found":
+                            return LegalHoldsGetPolicyError.legalHoldPolicyNotFound
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsListHeldRevisionResult struct
+    open class LegalHoldsListHeldRevisionResult: CustomStringConvertible {
+        /// List of file entries that under the hold.
+        public let entries: Array<Team.LegalHoldHeldRevisionMetadata>
+        /// The cursor idicates where to continue reading file metadata entries for the next API call. When there are no
+        /// more entries, the cursor will return none. Pass the cursor into
+        /// /2/team/legal_holds/list_held_revisions/continue.
+        public let cursor: String?
+        /// True if there are more file entries that haven't been returned. You can retrieve them with a call to
+        /// /legal_holds/list_held_revisions_continue.
+        public let hasMore: Bool
+        public init(entries: Array<Team.LegalHoldHeldRevisionMetadata>, hasMore: Bool, cursor: String? = nil) {
+            self.entries = entries
+            nullableValidator(stringValidator(minLength: 1))(cursor)
+            self.cursor = cursor
+            self.hasMore = hasMore
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListHeldRevisionResultSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListHeldRevisionResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListHeldRevisionResult) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Team.LegalHoldHeldRevisionMetadataSerializer()).serialize(value.entries),
+            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+            "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListHeldRevisionResult {
+            switch json {
+                case .dictionary(let dict):
+                    let entries = ArraySerializer(Team.LegalHoldHeldRevisionMetadataSerializer()).deserialize(dict["entries"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    return LegalHoldsListHeldRevisionResult(entries: entries, hasMore: hasMore, cursor: cursor)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsListHeldRevisionsArg struct
+    open class LegalHoldsListHeldRevisionsArg: CustomStringConvertible {
+        /// The legal hold Id.
+        public let id: String
+        public init(id: String) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListHeldRevisionsArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListHeldRevisionsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListHeldRevisionsArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListHeldRevisionsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    return LegalHoldsListHeldRevisionsArg(id: id)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsListHeldRevisionsContinueArg struct
+    open class LegalHoldsListHeldRevisionsContinueArg: CustomStringConvertible {
+        /// The legal hold Id.
+        public let id: String
+        /// The cursor idicates where to continue reading file metadata entries for the next API call. When there are no
+        /// more entries, the cursor will return none.
+        public let cursor: String?
+        public init(id: String, cursor: String? = nil) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+            nullableValidator(stringValidator(minLength: 1))(cursor)
+            self.cursor = cursor
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListHeldRevisionsContinueArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListHeldRevisionsContinueArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListHeldRevisionsContinueArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "cursor": NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListHeldRevisionsContinueArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    return LegalHoldsListHeldRevisionsContinueArg(id: id, cursor: cursor)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsListHeldRevisionsContinueError union
+    public enum LegalHoldsListHeldRevisionsContinueError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// Temporary infrastructure failure, please retry.
+        case transientError
+        /// Indicates that the cursor has been invalidated. Call legalHoldsListHeldRevisionsContinue again with an empty
+        /// cursor to obtain a new cursor.
+        case reset
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListHeldRevisionsContinueErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListHeldRevisionsContinueErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListHeldRevisionsContinueError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .transientError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transient_error")
+                    return .dictionary(d)
+                case .reset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("reset")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListHeldRevisionsContinueError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsListHeldRevisionsContinueError.unknownLegalHoldError
+                        case "transient_error":
+                            return LegalHoldsListHeldRevisionsContinueError.transientError
+                        case "reset":
+                            return LegalHoldsListHeldRevisionsContinueError.reset
+                        case "other":
+                            return LegalHoldsListHeldRevisionsContinueError.other
+                        default:
+                            return LegalHoldsListHeldRevisionsContinueError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsListHeldRevisionsError union
+    public enum LegalHoldsListHeldRevisionsError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Temporary infrastructure failure, please retry.
+        case transientError
+        /// The legal hold is not holding any revisions yet.
+        case legalHoldStillEmpty
+        /// Trying to list revisions for an inactive legal hold.
+        case inactiveLegalHold
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListHeldRevisionsErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListHeldRevisionsErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListHeldRevisionsError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .transientError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transient_error")
+                    return .dictionary(d)
+                case .legalHoldStillEmpty:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_still_empty")
+                    return .dictionary(d)
+                case .inactiveLegalHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("inactive_legal_hold")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListHeldRevisionsError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsListHeldRevisionsError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsListHeldRevisionsError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsListHeldRevisionsError.other
+                        case "transient_error":
+                            return LegalHoldsListHeldRevisionsError.transientError
+                        case "legal_hold_still_empty":
+                            return LegalHoldsListHeldRevisionsError.legalHoldStillEmpty
+                        case "inactive_legal_hold":
+                            return LegalHoldsListHeldRevisionsError.inactiveLegalHold
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsListPoliciesArg struct
+    open class LegalHoldsListPoliciesArg: CustomStringConvertible {
+        /// Whether to return holds that were released.
+        public let includeReleased: Bool
+        public init(includeReleased: Bool = false) {
+            self.includeReleased = includeReleased
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListPoliciesArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListPoliciesArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListPoliciesArg) -> JSON {
+            let output = [ 
+            "include_released": Serialization._BoolSerializer.serialize(value.includeReleased),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListPoliciesArg {
+            switch json {
+                case .dictionary(let dict):
+                    let includeReleased = Serialization._BoolSerializer.deserialize(dict["include_released"] ?? .number(0))
+                    return LegalHoldsListPoliciesArg(includeReleased: includeReleased)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsListPoliciesError union
+    public enum LegalHoldsListPoliciesError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Temporary infrastructure failure, please retry.
+        case transientError
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListPoliciesErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListPoliciesErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListPoliciesError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .transientError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transient_error")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListPoliciesError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsListPoliciesError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsListPoliciesError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsListPoliciesError.other
+                        case "transient_error":
+                            return LegalHoldsListPoliciesError.transientError
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsListPoliciesResult struct
+    open class LegalHoldsListPoliciesResult: CustomStringConvertible {
+        /// (no description)
+        public let policies: Array<Team.LegalHoldPolicy>
+        public init(policies: Array<Team.LegalHoldPolicy>) {
+            self.policies = policies
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsListPoliciesResultSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsListPoliciesResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsListPoliciesResult) -> JSON {
+            let output = [ 
+            "policies": ArraySerializer(Team.LegalHoldPolicySerializer()).serialize(value.policies),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsListPoliciesResult {
+            switch json {
+                case .dictionary(let dict):
+                    let policies = ArraySerializer(Team.LegalHoldPolicySerializer()).deserialize(dict["policies"] ?? .null)
+                    return LegalHoldsListPoliciesResult(policies: policies)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyCreateArg struct
+    open class LegalHoldsPolicyCreateArg: CustomStringConvertible {
+        /// Policy name.
+        public let name: String
+        /// A description of the legal hold policy.
+        public let description_: String?
+        /// List of team member IDs added to the hold.
+        public let members: Array<String>
+        /// start date of the legal hold policy.
+        public let startDate: Date?
+        /// end date of the legal hold policy.
+        public let endDate: Date?
+        public init(name: String, members: Array<String>, description_: String? = nil, startDate: Date? = nil, endDate: Date? = nil) {
+            stringValidator(maxLength: 140)(name)
+            self.name = name
+            nullableValidator(stringValidator(maxLength: 501))(description_)
+            self.description_ = description_
+            arrayValidator(itemValidator: stringValidator())(members)
+            self.members = members
+            self.startDate = startDate
+            self.endDate = endDate
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyCreateArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyCreateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyCreateArg) -> JSON {
+            let output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "members": ArraySerializer(Serialization._StringSerializer).serialize(value.members),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+            "start_date": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.startDate),
+            "end_date": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.endDate),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyCreateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let members = ArraySerializer(Serialization._StringSerializer).deserialize(dict["members"] ?? .null)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    let startDate = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["start_date"] ?? .null)
+                    let endDate = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["end_date"] ?? .null)
+                    return LegalHoldsPolicyCreateArg(name: name, members: members, description_: description_, startDate: startDate, endDate: endDate)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyCreateError union
+    public enum LegalHoldsPolicyCreateError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Start date must be earlier than end date.
+        case startDateIsLaterThanEndDate
+        /// The users list must have at least one user.
+        case emptyMembersList
+        /// Some members in the members list are not valid to be placed under legal hold.
+        case invalidMembers
+        /// You cannot add more than 5 users in a legal hold.
+        case numberOfUsersOnHoldIsGreaterThanHoldLimitation
+        /// Temporary infrastructure failure, please retry.
+        case transientError
+        /// The name provided is already in use by another legal hold.
+        case nameMustBeUnique
+        /// Team exceeded legal hold quota.
+        case teamExceededLegalHoldQuota
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyCreateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyCreateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyCreateError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .startDateIsLaterThanEndDate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("start_date_is_later_than_end_date")
+                    return .dictionary(d)
+                case .emptyMembersList:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("empty_members_list")
+                    return .dictionary(d)
+                case .invalidMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_members")
+                    return .dictionary(d)
+                case .numberOfUsersOnHoldIsGreaterThanHoldLimitation:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("number_of_users_on_hold_is_greater_than_hold_limitation")
+                    return .dictionary(d)
+                case .transientError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transient_error")
+                    return .dictionary(d)
+                case .nameMustBeUnique:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("name_must_be_unique")
+                    return .dictionary(d)
+                case .teamExceededLegalHoldQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_exceeded_legal_hold_quota")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyCreateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsPolicyCreateError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsPolicyCreateError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsPolicyCreateError.other
+                        case "start_date_is_later_than_end_date":
+                            return LegalHoldsPolicyCreateError.startDateIsLaterThanEndDate
+                        case "empty_members_list":
+                            return LegalHoldsPolicyCreateError.emptyMembersList
+                        case "invalid_members":
+                            return LegalHoldsPolicyCreateError.invalidMembers
+                        case "number_of_users_on_hold_is_greater_than_hold_limitation":
+                            return LegalHoldsPolicyCreateError.numberOfUsersOnHoldIsGreaterThanHoldLimitation
+                        case "transient_error":
+                            return LegalHoldsPolicyCreateError.transientError
+                        case "name_must_be_unique":
+                            return LegalHoldsPolicyCreateError.nameMustBeUnique
+                        case "team_exceeded_legal_hold_quota":
+                            return LegalHoldsPolicyCreateError.teamExceededLegalHoldQuota
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyReleaseArg struct
+    open class LegalHoldsPolicyReleaseArg: CustomStringConvertible {
+        /// The legal hold Id.
+        public let id: String
+        public init(id: String) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyReleaseArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyReleaseArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyReleaseArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyReleaseArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    return LegalHoldsPolicyReleaseArg(id: id)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyReleaseError union
+    public enum LegalHoldsPolicyReleaseError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Legal hold is currently performing another operation.
+        case legalHoldPerformingAnotherOperation
+        /// Legal hold is currently performing a release or is already released.
+        case legalHoldAlreadyReleasing
+        /// Legal hold policy does not exist for id in LegalHoldsPolicyReleaseArg.
+        case legalHoldPolicyNotFound
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyReleaseErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyReleaseErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyReleaseError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .legalHoldPerformingAnotherOperation:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_performing_another_operation")
+                    return .dictionary(d)
+                case .legalHoldAlreadyReleasing:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_already_releasing")
+                    return .dictionary(d)
+                case .legalHoldPolicyNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_policy_not_found")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyReleaseError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsPolicyReleaseError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsPolicyReleaseError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsPolicyReleaseError.other
+                        case "legal_hold_performing_another_operation":
+                            return LegalHoldsPolicyReleaseError.legalHoldPerformingAnotherOperation
+                        case "legal_hold_already_releasing":
+                            return LegalHoldsPolicyReleaseError.legalHoldAlreadyReleasing
+                        case "legal_hold_policy_not_found":
+                            return LegalHoldsPolicyReleaseError.legalHoldPolicyNotFound
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyUpdateArg struct
+    open class LegalHoldsPolicyUpdateArg: CustomStringConvertible {
+        /// The legal hold Id.
+        public let id: String
+        /// Policy new name.
+        public let name: String?
+        /// Policy new description.
+        public let description_: String?
+        /// List of team member IDs to apply the policy on.
+        public let members: Array<String>?
+        public init(id: String, name: String? = nil, description_: String? = nil, members: Array<String>? = nil) {
+            stringValidator(pattern: "^pid_dbhid:.+")(id)
+            self.id = id
+            nullableValidator(stringValidator(maxLength: 140))(name)
+            self.name = name
+            nullableValidator(stringValidator(maxLength: 501))(description_)
+            self.description_ = description_
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(members)
+            self.members = members
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyUpdateArgSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyUpdateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyUpdateArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "name": NullableSerializer(Serialization._StringSerializer).serialize(value.name),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+            "members": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.members),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyUpdateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let name = NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .null)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    let members = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["members"] ?? .null)
+                    return LegalHoldsPolicyUpdateArg(id: id, name: name, description_: description_, members: members)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The LegalHoldsPolicyUpdateError union
+    public enum LegalHoldsPolicyUpdateError: CustomStringConvertible {
+        /// There has been an unknown legal hold error.
+        case unknownLegalHoldError
+        /// You don't have permissions to perform this action.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// Trying to release an inactive legal hold.
+        case inactiveLegalHold
+        /// Legal hold is currently performing another operation.
+        case legalHoldPerformingAnotherOperation
+        /// Some members in the members list are not valid to be placed under legal hold.
+        case invalidMembers
+        /// You cannot add more than 5 users in a legal hold.
+        case numberOfUsersOnHoldIsGreaterThanHoldLimitation
+        /// The users list must have at least one user.
+        case emptyMembersList
+        /// The name provided is already in use by another legal hold.
+        case nameMustBeUnique
+        /// Legal hold policy does not exist for id in LegalHoldsPolicyUpdateArg.
+        case legalHoldPolicyNotFound
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyUpdateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class LegalHoldsPolicyUpdateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LegalHoldsPolicyUpdateError) -> JSON {
+            switch value {
+                case .unknownLegalHoldError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_legal_hold_error")
+                    return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .inactiveLegalHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("inactive_legal_hold")
+                    return .dictionary(d)
+                case .legalHoldPerformingAnotherOperation:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_performing_another_operation")
+                    return .dictionary(d)
+                case .invalidMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_members")
+                    return .dictionary(d)
+                case .numberOfUsersOnHoldIsGreaterThanHoldLimitation:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("number_of_users_on_hold_is_greater_than_hold_limitation")
+                    return .dictionary(d)
+                case .emptyMembersList:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("empty_members_list")
+                    return .dictionary(d)
+                case .nameMustBeUnique:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("name_must_be_unique")
+                    return .dictionary(d)
+                case .legalHoldPolicyNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_hold_policy_not_found")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LegalHoldsPolicyUpdateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "unknown_legal_hold_error":
+                            return LegalHoldsPolicyUpdateError.unknownLegalHoldError
+                        case "insufficient_permissions":
+                            return LegalHoldsPolicyUpdateError.insufficientPermissions
+                        case "other":
+                            return LegalHoldsPolicyUpdateError.other
+                        case "inactive_legal_hold":
+                            return LegalHoldsPolicyUpdateError.inactiveLegalHold
+                        case "legal_hold_performing_another_operation":
+                            return LegalHoldsPolicyUpdateError.legalHoldPerformingAnotherOperation
+                        case "invalid_members":
+                            return LegalHoldsPolicyUpdateError.invalidMembers
+                        case "number_of_users_on_hold_is_greater_than_hold_limitation":
+                            return LegalHoldsPolicyUpdateError.numberOfUsersOnHoldIsGreaterThanHoldLimitation
+                        case "empty_members_list":
+                            return LegalHoldsPolicyUpdateError.emptyMembersList
+                        case "name_must_be_unique":
+                            return LegalHoldsPolicyUpdateError.nameMustBeUnique
+                        case "legal_hold_policy_not_found":
+                            return LegalHoldsPolicyUpdateError.legalHoldPolicyNotFound
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ListMemberAppsArg struct
     open class ListMemberAppsArg: CustomStringConvertible {
         /// The team member id.
@@ -4507,6 +6033,8 @@ open class Team {
         public let email: String
         /// Is true if the user's email is verified to be owned by the user.
         public let emailVerified: Bool
+        /// Secondary emails of a user.
+        public let secondaryEmails: Array<SecondaryEmails.SecondaryEmail>?
         /// The user's status as a member of a specific team.
         public let status: Team.TeamMemberStatus
         /// Representations for a person's name.
@@ -4514,10 +6042,13 @@ open class Team {
         /// The user's membership type: full (normal team member) vs limited (does not use a license; no access to the
         /// team's shared quota).
         public let membershipType: Team.TeamMembershipType
+        /// The date and time the user was invited to the team (contains value only when the member's status matches
+        /// invited in TeamMemberStatus).
+        public let invitedOn: Date?
         /// The date and time the user joined as a member of a specific team.
         public let joinedOn: Date?
         /// The date and time the user was suspended from the team (contains value only when the member's status matches
-        /// suspended in TeamMemberStatus.
+        /// suspended in TeamMemberStatus).
         public let suspendedOn: Date?
         /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used for SAML
         /// authentication.
@@ -4526,7 +6057,7 @@ open class Team {
         public let isDirectoryRestricted: Bool?
         /// URL for the photo representing the user, if one is set.
         public let profilePhotoUrl: String?
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, externalId: String? = nil, accountId: String? = nil, secondaryEmails: Array<SecondaryEmails.SecondaryEmail>? = nil, invitedOn: Date? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
             stringValidator()(teamMemberId)
             self.teamMemberId = teamMemberId
             nullableValidator(stringValidator())(externalId)
@@ -4536,9 +6067,11 @@ open class Team {
             stringValidator()(email)
             self.email = email
             self.emailVerified = emailVerified
+            self.secondaryEmails = secondaryEmails
             self.status = status
             self.name = name
             self.membershipType = membershipType
+            self.invitedOn = invitedOn
             self.joinedOn = joinedOn
             self.suspendedOn = suspendedOn
             nullableValidator(stringValidator())(persistentId)
@@ -4563,6 +6096,8 @@ open class Team {
             "membership_type": Team.TeamMembershipTypeSerializer().serialize(value.membershipType),
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
+            "secondary_emails": NullableSerializer(ArraySerializer(SecondaryEmails.SecondaryEmailSerializer())).serialize(value.secondaryEmails),
+            "invited_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.invitedOn),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
             "suspended_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.suspendedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
@@ -4582,12 +6117,14 @@ open class Team {
                     let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .null)
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
+                    let secondaryEmails = NullableSerializer(ArraySerializer(SecondaryEmails.SecondaryEmailSerializer())).deserialize(dict["secondary_emails"] ?? .null)
+                    let invitedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["invited_on"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
                     let suspendedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["suspended_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
                     let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
-                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
+                    return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4959,6 +6496,95 @@ open class Team {
         }
     }
 
+    /// The MembersDeleteProfilePhotoArg struct
+    open class MembersDeleteProfilePhotoArg: CustomStringConvertible {
+        /// Identity of the user whose profile photo will be deleted.
+        public let user: Team.UserSelectorArg
+        public init(user: Team.UserSelectorArg) {
+            self.user = user
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersDeleteProfilePhotoArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersDeleteProfilePhotoArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersDeleteProfilePhotoArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersDeleteProfilePhotoArg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    return MembersDeleteProfilePhotoArg(user: user)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersDeleteProfilePhotoError union
+    public enum MembersDeleteProfilePhotoError: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// Modifying deleted users is not allowed.
+        case setProfileDisallowed
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersDeleteProfilePhotoErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MembersDeleteProfilePhotoErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersDeleteProfilePhotoError) -> JSON {
+            switch value {
+                case .userNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_found")
+                    return .dictionary(d)
+                case .userNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_in_team")
+                    return .dictionary(d)
+                case .setProfileDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("set_profile_disallowed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersDeleteProfilePhotoError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersDeleteProfilePhotoError.userNotFound
+                        case "user_not_in_team":
+                            return MembersDeleteProfilePhotoError.userNotInTeam
+                        case "set_profile_disallowed":
+                            return MembersDeleteProfilePhotoError.setProfileDisallowed
+                        case "other":
+                            return MembersDeleteProfilePhotoError.other
+                        default:
+                            return MembersDeleteProfilePhotoError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The MembersGetInfoArgs struct
     open class MembersGetInfoArgs: CustomStringConvertible {
         /// List of team members.
@@ -5066,6 +6692,43 @@ open class Team {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersInfo struct
+    open class MembersInfo: CustomStringConvertible {
+        /// Team member IDs of the users under this hold.
+        public let teamMemberIds: Array<String>
+        /// The number of permanently deleted users that were under this hold.
+        public let permanentlyDeletedUsers: UInt64
+        public init(teamMemberIds: Array<String>, permanentlyDeletedUsers: UInt64) {
+            arrayValidator(itemValidator: stringValidator())(teamMemberIds)
+            self.teamMemberIds = teamMemberIds
+            comparableValidator()(permanentlyDeletedUsers)
+            self.permanentlyDeletedUsers = permanentlyDeletedUsers
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersInfoSerializer().serialize(self)))"
+        }
+    }
+    open class MembersInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersInfo) -> JSON {
+            let output = [ 
+            "team_member_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.teamMemberIds),
+            "permanently_deleted_users": Serialization._UInt64Serializer.serialize(value.permanentlyDeletedUsers),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let teamMemberIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["team_member_ids"] ?? .null)
+                    let permanentlyDeletedUsers = Serialization._UInt64Serializer.deserialize(dict["permanently_deleted_users"] ?? .null)
+                    return MembersInfo(teamMemberIds: teamMemberIds, permanentlyDeletedUsers: permanentlyDeletedUsers)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -5363,12 +7026,18 @@ open class Team {
         public let transferAdminId: Team.UserSelectorArg?
         /// Downgrade the member to a Basic account. The user will retain the email address associated with their
         /// Dropbox  account and data in their account that is not restricted to team members. In order to keep the
-        /// account the argument wipe_data should be set to False.
+        /// account the argument wipeData should be set to false.
         public let keepAccount: Bool
-        public init(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false) {
+        /// If provided, allows removed users to keep access to Dropbox folders (not Dropbox Paper folders) already
+        /// explicitly shared with them (not via a group) when they are downgraded to a Basic account. Users will not
+        /// retain access to folders that do not allow external sharing. In order to keep the sharing relationships, the
+        /// arguments wipeData should be set to false and keepAccount should be set to true.
+        public let retainTeamShares: Bool
+        public init(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false, retainTeamShares: Bool = false) {
             self.transferDestId = transferDestId
             self.transferAdminId = transferAdminId
             self.keepAccount = keepAccount
+            self.retainTeamShares = retainTeamShares
             super.init(user: user, wipeData: wipeData)
         }
         open override var description: String {
@@ -5384,6 +7053,7 @@ open class Team {
             "transfer_dest_id": NullableSerializer(Team.UserSelectorArgSerializer()).serialize(value.transferDestId),
             "transfer_admin_id": NullableSerializer(Team.UserSelectorArgSerializer()).serialize(value.transferAdminId),
             "keep_account": Serialization._BoolSerializer.serialize(value.keepAccount),
+            "retain_team_shares": Serialization._BoolSerializer.serialize(value.retainTeamShares),
             ]
             return .dictionary(output)
         }
@@ -5395,7 +7065,8 @@ open class Team {
                     let transferDestId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_dest_id"] ?? .null)
                     let transferAdminId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_admin_id"] ?? .null)
                     let keepAccount = Serialization._BoolSerializer.deserialize(dict["keep_account"] ?? .number(0))
-                    return MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount)
+                    let retainTeamShares = Serialization._BoolSerializer.deserialize(dict["retain_team_shares"] ?? .number(0))
+                    return MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount, retainTeamShares: retainTeamShares)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5556,12 +7227,29 @@ open class Team {
         /// Cannot keep account and transfer the data to another user at the same time.
         case cannotKeepAccountAndTransfer
         /// Cannot keep account and delete the data at the same time. To keep the account the argument wipe_data should
-        /// be set to False.
+        /// be set to false.
         case cannotKeepAccountAndDeleteData
         /// The email address of the user is too long to be disabled.
         case emailAddressTooLongToBeDisabled
         /// Cannot keep account of an invited user.
         case cannotKeepInvitedUserAccount
+        /// Cannot retain team shares when the user's data is marked for deletion on their linked devices. The argument
+        /// wipe_data should be set to false.
+        case cannotRetainSharesWhenDataWiped
+        /// The user's account must be kept in order to retain team shares. The argument keep_account should be set to
+        /// true.
+        case cannotRetainSharesWhenNoAccountKept
+        /// Externally sharing files, folders, and links must be enabled in team settings in order to retain team shares
+        /// for the user.
+        case cannotRetainSharesWhenTeamExternalSharingOff
+        /// Only a team admin, can convert this account to a Basic account.
+        case cannotKeepAccount
+        /// This user content is currently being held. To convert this member's account to a Basic account, you'll first
+        /// need to remove them from the hold.
+        case cannotKeepAccountUnderLegalHold
+        /// To convert this member to a Basic account, they'll first need to sign in to Dropbox and agree to the terms
+        /// of service.
+        case cannotKeepAccountRequiredToSignTos
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersRemoveErrorSerializer().serialize(self)))"
@@ -5639,6 +7327,30 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("cannot_keep_invited_user_account")
                     return .dictionary(d)
+                case .cannotRetainSharesWhenDataWiped:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_retain_shares_when_data_wiped")
+                    return .dictionary(d)
+                case .cannotRetainSharesWhenNoAccountKept:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_retain_shares_when_no_account_kept")
+                    return .dictionary(d)
+                case .cannotRetainSharesWhenTeamExternalSharingOff:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_retain_shares_when_team_external_sharing_off")
+                    return .dictionary(d)
+                case .cannotKeepAccount:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_keep_account")
+                    return .dictionary(d)
+                case .cannotKeepAccountUnderLegalHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_keep_account_under_legal_hold")
+                    return .dictionary(d)
+                case .cannotKeepAccountRequiredToSignTos:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_keep_account_required_to_sign_tos")
+                    return .dictionary(d)
             }
         }
         open func deserialize(_ json: JSON) -> MembersRemoveError {
@@ -5680,6 +7392,18 @@ open class Team {
                             return MembersRemoveError.emailAddressTooLongToBeDisabled
                         case "cannot_keep_invited_user_account":
                             return MembersRemoveError.cannotKeepInvitedUserAccount
+                        case "cannot_retain_shares_when_data_wiped":
+                            return MembersRemoveError.cannotRetainSharesWhenDataWiped
+                        case "cannot_retain_shares_when_no_account_kept":
+                            return MembersRemoveError.cannotRetainSharesWhenNoAccountKept
+                        case "cannot_retain_shares_when_team_external_sharing_off":
+                            return MembersRemoveError.cannotRetainSharesWhenTeamExternalSharingOff
+                        case "cannot_keep_account":
+                            return MembersRemoveError.cannotKeepAccount
+                        case "cannot_keep_account_under_legal_hold":
+                            return MembersRemoveError.cannotKeepAccountUnderLegalHold
+                        case "cannot_keep_account_required_to_sign_tos":
+                            return MembersRemoveError.cannotKeepAccountRequiredToSignTos
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -6069,6 +7793,109 @@ open class Team {
                             return MembersSetProfileError.other
                         default:
                             return MembersSetProfileError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersSetProfilePhotoArg struct
+    open class MembersSetProfilePhotoArg: CustomStringConvertible {
+        /// Identity of the user whose profile photo will be set.
+        public let user: Team.UserSelectorArg
+        /// Image to set as the member's new profile photo.
+        public let photo: Account.PhotoSourceArg
+        public init(user: Team.UserSelectorArg, photo: Account.PhotoSourceArg) {
+            self.user = user
+            self.photo = photo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfilePhotoArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersSetProfilePhotoArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersSetProfilePhotoArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "photo": Account.PhotoSourceArgSerializer().serialize(value.photo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersSetProfilePhotoArg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let photo = Account.PhotoSourceArgSerializer().deserialize(dict["photo"] ?? .null)
+                    return MembersSetProfilePhotoArg(user: user, photo: photo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersSetProfilePhotoError union
+    public enum MembersSetProfilePhotoError: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// Modifying deleted users is not allowed.
+        case setProfileDisallowed
+        /// An unspecified error.
+        case photoError(Account.SetProfilePhotoError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersSetProfilePhotoErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MembersSetProfilePhotoErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersSetProfilePhotoError) -> JSON {
+            switch value {
+                case .userNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_found")
+                    return .dictionary(d)
+                case .userNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_in_team")
+                    return .dictionary(d)
+                case .setProfileDisallowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("set_profile_disallowed")
+                    return .dictionary(d)
+                case .photoError(let arg):
+                    var d = ["photo_error": Account.SetProfilePhotoErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("photo_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersSetProfilePhotoError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersSetProfilePhotoError.userNotFound
+                        case "user_not_in_team":
+                            return MembersSetProfilePhotoError.userNotInTeam
+                        case "set_profile_disallowed":
+                            return MembersSetProfilePhotoError.setProfileDisallowed
+                        case "photo_error":
+                            let v = Account.SetProfilePhotoErrorSerializer().deserialize(d["photo_error"] ?? .null)
+                            return MembersSetProfilePhotoError.photoError(v)
+                        case "other":
+                            return MembersSetProfilePhotoError.other
+                        default:
+                            return MembersSetProfilePhotoError.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -6747,6 +8574,130 @@ open class Team {
         }
     }
 
+    /// Result of trying to resend verification email to a secondary email address. 'success' is the only value
+    /// indicating that a verification email was successfully sent. The other values explain the type of error that
+    /// occurred, and include the email for which the error occured.
+    public enum ResendSecondaryEmailResult: CustomStringConvertible {
+        /// A verification email was successfully sent to the secondary email address.
+        case success(String)
+        /// This secondary email address is not pending for the user.
+        case notPending(String)
+        /// Too many emails are being sent to this email address. Please try again later.
+        case rateLimited(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResendSecondaryEmailResultSerializer().serialize(self)))"
+        }
+    }
+    open class ResendSecondaryEmailResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResendSecondaryEmailResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = ["success": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .notPending(let arg):
+                    var d = ["not_pending": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("not_pending")
+                    return .dictionary(d)
+                case .rateLimited(let arg):
+                    var d = ["rate_limited": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("rate_limited")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ResendSecondaryEmailResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Serialization._StringSerializer.deserialize(d["success"] ?? .null)
+                            return ResendSecondaryEmailResult.success(v)
+                        case "not_pending":
+                            let v = Serialization._StringSerializer.deserialize(d["not_pending"] ?? .null)
+                            return ResendSecondaryEmailResult.notPending(v)
+                        case "rate_limited":
+                            let v = Serialization._StringSerializer.deserialize(d["rate_limited"] ?? .null)
+                            return ResendSecondaryEmailResult.rateLimited(v)
+                        case "other":
+                            return ResendSecondaryEmailResult.other
+                        default:
+                            return ResendSecondaryEmailResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The ResendVerificationEmailArg struct
+    open class ResendVerificationEmailArg: CustomStringConvertible {
+        /// List of users and secondary emails to resend verification emails to.
+        public let emailsToResend: Array<Team.UserSecondaryEmailsArg>
+        public init(emailsToResend: Array<Team.UserSecondaryEmailsArg>) {
+            self.emailsToResend = emailsToResend
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResendVerificationEmailArgSerializer().serialize(self)))"
+        }
+    }
+    open class ResendVerificationEmailArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResendVerificationEmailArg) -> JSON {
+            let output = [ 
+            "emails_to_resend": ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).serialize(value.emailsToResend),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ResendVerificationEmailArg {
+            switch json {
+                case .dictionary(let dict):
+                    let emailsToResend = ArraySerializer(Team.UserSecondaryEmailsArgSerializer()).deserialize(dict["emails_to_resend"] ?? .null)
+                    return ResendVerificationEmailArg(emailsToResend: emailsToResend)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// List of users and resend results.
+    open class ResendVerificationEmailResult: CustomStringConvertible {
+        /// (no description)
+        public let results: Array<Team.UserResendResult>
+        public init(results: Array<Team.UserResendResult>) {
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResendVerificationEmailResultSerializer().serialize(self)))"
+        }
+    }
+    open class ResendVerificationEmailResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResendVerificationEmailResult) -> JSON {
+            let output = [ 
+            "results": ArraySerializer(Team.UserResendResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ResendVerificationEmailResult {
+            switch json {
+                case .dictionary(let dict):
+                    let results = ArraySerializer(Team.UserResendResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return ResendVerificationEmailResult(results: results)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The RevokeDesktopClientArg struct
     open class RevokeDesktopClientArg: Team.DeviceSessionArg {
         /// Whether to delete all files of the account (this is possible only if supported by the desktop client and
@@ -7024,7 +8975,8 @@ open class Team {
         public let appId: String
         /// The unique id of the member owning the device.
         public let teamMemberId: String
-        /// Whether to keep the application dedicated folder (in case the application uses  one).
+        /// This flag is not longer supported, the application dedicated folder (in case the application uses  one) will
+        /// be kept.
         public let keepAppFolder: Bool
         public init(appId: String, teamMemberId: String, keepAppFolder: Bool = true) {
             stringValidator()(appId)
@@ -7161,6 +9113,8 @@ open class Team {
         case appNotFound
         /// Member not found.
         case memberNotFound
+        /// App folder removal is not supported.
+        case appFolderRemovalNotSupported
         /// An unspecified error.
         case other
 
@@ -7180,6 +9134,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_not_found")
                     return .dictionary(d)
+                case .appFolderRemovalNotSupported:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("app_folder_removal_not_supported")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -7195,6 +9153,8 @@ open class Team {
                             return RevokeLinkedAppError.appNotFound
                         case "member_not_found":
                             return RevokeLinkedAppError.memberNotFound
+                        case "app_folder_removal_not_supported":
+                            return RevokeLinkedAppError.appFolderRemovalNotSupported
                         case "other":
                             return RevokeLinkedAppError.other
                         default:
@@ -8659,12 +10619,12 @@ open class Team {
         public let groups: Array<String>
         /// The namespace id of the user's root folder.
         public let memberFolderId: String
-        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
+        public init(teamMemberId: String, email: String, emailVerified: Bool, status: Team.TeamMemberStatus, name: Users.Name, membershipType: Team.TeamMembershipType, groups: Array<String>, memberFolderId: String, externalId: String? = nil, accountId: String? = nil, secondaryEmails: Array<SecondaryEmails.SecondaryEmail>? = nil, invitedOn: Date? = nil, joinedOn: Date? = nil, suspendedOn: Date? = nil, persistentId: String? = nil, isDirectoryRestricted: Bool? = nil, profilePhotoUrl: String? = nil) {
             arrayValidator(itemValidator: stringValidator())(groups)
             self.groups = groups
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(memberFolderId)
             self.memberFolderId = memberFolderId
-            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
+            super.init(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberProfileSerializer().serialize(self)))"
@@ -8684,6 +10644,8 @@ open class Team {
             "member_folder_id": Serialization._StringSerializer.serialize(value.memberFolderId),
             "external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.externalId),
             "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
+            "secondary_emails": NullableSerializer(ArraySerializer(SecondaryEmails.SecondaryEmailSerializer())).serialize(value.secondaryEmails),
+            "invited_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.invitedOn),
             "joined_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.joinedOn),
             "suspended_on": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.suspendedOn),
             "persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.persistentId),
@@ -8705,12 +10667,14 @@ open class Team {
                     let memberFolderId = Serialization._StringSerializer.deserialize(dict["member_folder_id"] ?? .null)
                     let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
                     let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
+                    let secondaryEmails = NullableSerializer(ArraySerializer(SecondaryEmails.SecondaryEmailSerializer())).deserialize(dict["secondary_emails"] ?? .null)
+                    let invitedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["invited_on"] ?? .null)
                     let joinedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["joined_on"] ?? .null)
                     let suspendedOn = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["suspended_on"] ?? .null)
                     let persistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["persistent_id"] ?? .null)
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
                     let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
-                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
+                    return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9215,6 +11179,79 @@ open class Team {
         }
     }
 
+    /// Result of trying to add secondary emails to a user. 'success' is the only value indicating that a user was
+    /// successfully retrieved for adding secondary emails. The other values explain the type of error that occurred,
+    /// and include the user for which the error occured.
+    public enum UserAddResult: CustomStringConvertible {
+        /// Describes a user and the results for each attempt to add a secondary email.
+        case success(Team.UserSecondaryEmailsResult)
+        /// Specified user is not a valid target for adding secondary emails.
+        case invalidUser(Team.UserSelectorArg)
+        /// Secondary emails can only be added to verified users.
+        case unverified(Team.UserSelectorArg)
+        /// Secondary emails cannot be added to placeholder users.
+        case placeholderUser(Team.UserSelectorArg)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserAddResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserAddResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserAddResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = Serialization.getFields(Team.UserSecondaryEmailsResultSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .invalidUser(let arg):
+                    var d = ["invalid_user": Team.UserSelectorArgSerializer().serialize(arg)]
+                    d[".tag"] = .str("invalid_user")
+                    return .dictionary(d)
+                case .unverified(let arg):
+                    var d = ["unverified": Team.UserSelectorArgSerializer().serialize(arg)]
+                    d[".tag"] = .str("unverified")
+                    return .dictionary(d)
+                case .placeholderUser(let arg):
+                    var d = ["placeholder_user": Team.UserSelectorArgSerializer().serialize(arg)]
+                    d[".tag"] = .str("placeholder_user")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserAddResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Team.UserSecondaryEmailsResultSerializer().deserialize(json)
+                            return UserAddResult.success(v)
+                        case "invalid_user":
+                            let v = Team.UserSelectorArgSerializer().deserialize(d["invalid_user"] ?? .null)
+                            return UserAddResult.invalidUser(v)
+                        case "unverified":
+                            let v = Team.UserSelectorArgSerializer().deserialize(d["unverified"] ?? .null)
+                            return UserAddResult.unverified(v)
+                        case "placeholder_user":
+                            let v = Team.UserSelectorArgSerializer().deserialize(d["placeholder_user"] ?? .null)
+                            return UserAddResult.placeholderUser(v)
+                        case "other":
+                            return UserAddResult.other
+                        default:
+                            return UserAddResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// User and their required custom quota in GB (1 TB = 1024 GB).
     open class UserCustomQuotaArg: CustomStringConvertible {
         /// (no description)
@@ -9281,6 +11318,257 @@ open class Team {
                     let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
                     let quotaGb = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["quota_gb"] ?? .null)
                     return UserCustomQuotaResult(user: user, quotaGb: quotaGb)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UserDeleteEmailsResult struct
+    open class UserDeleteEmailsResult: CustomStringConvertible {
+        /// (no description)
+        public let user: Team.UserSelectorArg
+        /// (no description)
+        public let results: Array<Team.DeleteSecondaryEmailResult>
+        public init(user: Team.UserSelectorArg, results: Array<Team.DeleteSecondaryEmailResult>) {
+            self.user = user
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserDeleteEmailsResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserDeleteEmailsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserDeleteEmailsResult) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "results": ArraySerializer(Team.DeleteSecondaryEmailResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserDeleteEmailsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let results = ArraySerializer(Team.DeleteSecondaryEmailResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return UserDeleteEmailsResult(user: user, results: results)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Result of trying to delete a user's secondary emails. 'success' is the only value indicating that a user was
+    /// successfully retrieved for deleting secondary emails. The other values explain the type of error that occurred,
+    /// and include the user for which the error occured.
+    public enum UserDeleteResult: CustomStringConvertible {
+        /// Describes a user and the results for each attempt to delete a secondary email.
+        case success(Team.UserDeleteEmailsResult)
+        /// Specified user is not a valid target for deleting secondary emails.
+        case invalidUser(Team.UserSelectorArg)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserDeleteResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserDeleteResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserDeleteResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = Serialization.getFields(Team.UserDeleteEmailsResultSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .invalidUser(let arg):
+                    var d = ["invalid_user": Team.UserSelectorArgSerializer().serialize(arg)]
+                    d[".tag"] = .str("invalid_user")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserDeleteResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Team.UserDeleteEmailsResultSerializer().deserialize(json)
+                            return UserDeleteResult.success(v)
+                        case "invalid_user":
+                            let v = Team.UserSelectorArgSerializer().deserialize(d["invalid_user"] ?? .null)
+                            return UserDeleteResult.invalidUser(v)
+                        case "other":
+                            return UserDeleteResult.other
+                        default:
+                            return UserDeleteResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The UserResendEmailsResult struct
+    open class UserResendEmailsResult: CustomStringConvertible {
+        /// (no description)
+        public let user: Team.UserSelectorArg
+        /// (no description)
+        public let results: Array<Team.ResendSecondaryEmailResult>
+        public init(user: Team.UserSelectorArg, results: Array<Team.ResendSecondaryEmailResult>) {
+            self.user = user
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserResendEmailsResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserResendEmailsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserResendEmailsResult) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "results": ArraySerializer(Team.ResendSecondaryEmailResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserResendEmailsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let results = ArraySerializer(Team.ResendSecondaryEmailResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return UserResendEmailsResult(user: user, results: results)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Result of trying to resend verification emails to a user. 'success' is the only value indicating that a user was
+    /// successfully retrieved for sending verification emails. The other values explain the type of error that
+    /// occurred, and include the user for which the error occured.
+    public enum UserResendResult: CustomStringConvertible {
+        /// Describes a user and the results for each attempt to resend verification emails.
+        case success(Team.UserResendEmailsResult)
+        /// Specified user is not a valid target for resending verification emails.
+        case invalidUser(Team.UserSelectorArg)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserResendResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserResendResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserResendResult) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = Serialization.getFields(Team.UserResendEmailsResultSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .invalidUser(let arg):
+                    var d = ["invalid_user": Team.UserSelectorArgSerializer().serialize(arg)]
+                    d[".tag"] = .str("invalid_user")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserResendResult {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Team.UserResendEmailsResultSerializer().deserialize(json)
+                            return UserResendResult.success(v)
+                        case "invalid_user":
+                            let v = Team.UserSelectorArgSerializer().deserialize(d["invalid_user"] ?? .null)
+                            return UserResendResult.invalidUser(v)
+                        case "other":
+                            return UserResendResult.other
+                        default:
+                            return UserResendResult.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// User and a list of secondary emails.
+    open class UserSecondaryEmailsArg: CustomStringConvertible {
+        /// (no description)
+        public let user: Team.UserSelectorArg
+        /// (no description)
+        public let secondaryEmails: Array<String>
+        public init(user: Team.UserSelectorArg, secondaryEmails: Array<String>) {
+            self.user = user
+            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(secondaryEmails)
+            self.secondaryEmails = secondaryEmails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserSecondaryEmailsArgSerializer().serialize(self)))"
+        }
+    }
+    open class UserSecondaryEmailsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserSecondaryEmailsArg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "secondary_emails": ArraySerializer(Serialization._StringSerializer).serialize(value.secondaryEmails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserSecondaryEmailsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let secondaryEmails = ArraySerializer(Serialization._StringSerializer).deserialize(dict["secondary_emails"] ?? .null)
+                    return UserSecondaryEmailsArg(user: user, secondaryEmails: secondaryEmails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UserSecondaryEmailsResult struct
+    open class UserSecondaryEmailsResult: CustomStringConvertible {
+        /// (no description)
+        public let user: Team.UserSelectorArg
+        /// (no description)
+        public let results: Array<Team.AddSecondaryEmailResult>
+        public init(user: Team.UserSelectorArg, results: Array<Team.AddSecondaryEmailResult>) {
+            self.user = user
+            self.results = results
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserSecondaryEmailsResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserSecondaryEmailsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserSecondaryEmailsResult) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "results": ArraySerializer(Team.AddSecondaryEmailResultSerializer()).serialize(value.results),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserSecondaryEmailsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let results = ArraySerializer(Team.AddSecondaryEmailResultSerializer()).deserialize(dict["results"] ?? .null)
+                    return UserSecondaryEmailsResult(user: user, results: results)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9626,6 +11914,90 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let legalHoldsCreatePolicy = Route(
+        name: "legal_holds/create_policy",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsPolicyCreateArgSerializer(),
+        responseSerializer: Team.LegalHoldPolicySerializer(),
+        errorSerializer: Team.LegalHoldsPolicyCreateErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsGetPolicy = Route(
+        name: "legal_holds/get_policy",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsGetPolicyArgSerializer(),
+        responseSerializer: Team.LegalHoldPolicySerializer(),
+        errorSerializer: Team.LegalHoldsGetPolicyErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsListHeldRevisions = Route(
+        name: "legal_holds/list_held_revisions",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsListHeldRevisionsArgSerializer(),
+        responseSerializer: Team.LegalHoldsListHeldRevisionResultSerializer(),
+        errorSerializer: Team.LegalHoldsListHeldRevisionsErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsListHeldRevisionsContinue = Route(
+        name: "legal_holds/list_held_revisions_continue",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsListHeldRevisionsContinueArgSerializer(),
+        responseSerializer: Team.LegalHoldsListHeldRevisionResultSerializer(),
+        errorSerializer: Team.LegalHoldsListHeldRevisionsErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsListPolicies = Route(
+        name: "legal_holds/list_policies",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsListPoliciesArgSerializer(),
+        responseSerializer: Team.LegalHoldsListPoliciesResultSerializer(),
+        errorSerializer: Team.LegalHoldsListPoliciesErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsReleasePolicy = Route(
+        name: "legal_holds/release_policy",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsPolicyReleaseArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Team.LegalHoldsPolicyReleaseErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let legalHoldsUpdatePolicy = Route(
+        name: "legal_holds/update_policy",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.LegalHoldsPolicyUpdateArgSerializer(),
+        responseSerializer: Team.LegalHoldPolicySerializer(),
+        errorSerializer: Team.LegalHoldsPolicyUpdateErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let linkedAppsListMemberLinkedApps = Route(
         name: "linked_apps/list_member_linked_apps",
         version: 1,
@@ -9794,6 +12166,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersDeleteProfilePhoto = Route(
+        name: "members/delete_profile_photo",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoSerializer(),
+        errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersGetInfo = Route(
         name: "members/get_info",
         version: 1,
@@ -9890,6 +12274,42 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersSecondaryEmailsAdd = Route(
+        name: "members/secondary_emails/add",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.AddSecondaryEmailsArgSerializer(),
+        responseSerializer: Team.AddSecondaryEmailsResultSerializer(),
+        errorSerializer: Team.AddSecondaryEmailsErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersSecondaryEmailsDelete = Route(
+        name: "members/secondary_emails/delete",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.DeleteSecondaryEmailsArgSerializer(),
+        responseSerializer: Team.DeleteSecondaryEmailsResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersSecondaryEmailsResendVerificationEmails = Route(
+        name: "members/secondary_emails/resend_verification_emails",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.ResendVerificationEmailArgSerializer(),
+        responseSerializer: Team.ResendVerificationEmailResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersSendWelcomeEmail = Route(
         name: "members/send_welcome_email",
         version: 1,
@@ -9922,6 +12342,18 @@ open class Team {
         argSerializer: Team.MembersSetProfileArgSerializer(),
         responseSerializer: Team.TeamMemberInfoSerializer(),
         errorSerializer: Team.MembersSetProfileErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersSetProfilePhoto = Route(
+        name: "members/set_profile_photo",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSetProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoSerializer(),
+        errorSerializer: Team.MembersSetProfilePhotoErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]

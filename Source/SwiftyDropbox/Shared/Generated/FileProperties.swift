@@ -12,7 +12,8 @@ open class FileProperties {
     open class AddPropertiesArg: CustomStringConvertible {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups which are to be added to a Dropbox file.
+        /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
+        /// same template.
         public let propertyGroups: Array<FileProperties.PropertyGroup>
         public init(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
@@ -181,6 +182,8 @@ open class FileProperties {
         case propertyFieldTooLarge
         /// One or more of the supplied property fields does not conform to the template specifications.
         case doesNotFitTemplate
+        /// There are 2 or more property groups referring to the same templates in the input.
+        case duplicatePropertyGroups
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(InvalidPropertyGroupErrorSerializer().serialize(self)))"
@@ -218,6 +221,10 @@ open class FileProperties {
                     var d = [String: JSON]()
                     d[".tag"] = .str("does_not_fit_template")
                     return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
             }
         }
         open func deserialize(_ json: JSON) -> InvalidPropertyGroupError {
@@ -241,6 +248,8 @@ open class FileProperties {
                             return InvalidPropertyGroupError.propertyFieldTooLarge
                         case "does_not_fit_template":
                             return InvalidPropertyGroupError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return InvalidPropertyGroupError.duplicatePropertyGroups
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -266,6 +275,8 @@ open class FileProperties {
         case propertyFieldTooLarge
         /// One or more of the supplied property fields does not conform to the template specifications.
         case doesNotFitTemplate
+        /// There are 2 or more property groups referring to the same templates in the input.
+        case duplicatePropertyGroups
         /// A property group associated with this template and file already exists.
         case propertyGroupAlreadyExists
 
@@ -305,6 +316,10 @@ open class FileProperties {
                     var d = [String: JSON]()
                     d[".tag"] = .str("does_not_fit_template")
                     return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
                 case .propertyGroupAlreadyExists:
                     var d = [String: JSON]()
                     d[".tag"] = .str("property_group_already_exists")
@@ -332,6 +347,8 @@ open class FileProperties {
                             return AddPropertiesError.propertyFieldTooLarge
                         case "does_not_fit_template":
                             return AddPropertiesError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return AddPropertiesError.duplicatePropertyGroups
                         case "property_group_already_exists":
                             return AddPropertiesError.propertyGroupAlreadyExists
                         default:
@@ -788,7 +805,8 @@ open class FileProperties {
     open class OverwritePropertyGroupArg: CustomStringConvertible {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups "snapshot" updates to force apply.
+        /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
+        /// template.
         public let propertyGroups: Array<FileProperties.PropertyGroup>
         public init(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
@@ -1692,6 +1710,8 @@ open class FileProperties {
         case propertyFieldTooLarge
         /// One or more of the supplied property fields does not conform to the template specifications.
         case doesNotFitTemplate
+        /// There are 2 or more property groups referring to the same templates in the input.
+        case duplicatePropertyGroups
         /// An unspecified error.
         case propertyGroupLookup(FileProperties.LookUpPropertiesError)
 
@@ -1731,6 +1751,10 @@ open class FileProperties {
                     var d = [String: JSON]()
                     d[".tag"] = .str("does_not_fit_template")
                     return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
                 case .propertyGroupLookup(let arg):
                     var d = ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("property_group_lookup")
@@ -1758,6 +1782,8 @@ open class FileProperties {
                             return UpdatePropertiesError.propertyFieldTooLarge
                         case "does_not_fit_template":
                             return UpdatePropertiesError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return UpdatePropertiesError.duplicatePropertyGroups
                         case "property_group_lookup":
                             let v = FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
                             return UpdatePropertiesError.propertyGroupLookup(v)

@@ -111,14 +111,15 @@ open class TeamRoutes {
     /// Creates a new, empty group, with a requested name. Permission : Team member management.
     ///
     /// - parameter groupName: Group name.
+    /// - parameter addCreatorAsOwner: Automatically add the creator of the group.
     /// - parameter groupExternalId: The creator of a team can associate an arbitrary external ID to the group.
     /// - parameter groupManagementType: Whether the team can be managed by selected users, or only by team admins.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupCreateError` object on failure.
-    @discardableResult open func groupsCreate(groupName: String, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
+    @discardableResult open func groupsCreate(groupName: String, addCreatorAsOwner: Bool = false, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
         let route = Team.groupsCreate
-        let serverArgs = Team.GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
+        let serverArgs = Team.GroupCreateArg(groupName: groupName, addCreatorAsOwner: addCreatorAsOwner, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -276,6 +277,106 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Creates new legal hold policy. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
+    /// Team member file access.
+    ///
+    /// - parameter name: Policy name.
+    /// - parameter description_: A description of the legal hold policy.
+    /// - parameter members: List of team member IDs added to the hold.
+    /// - parameter startDate: start date of the legal hold policy.
+    /// - parameter endDate: end date of the legal hold policy.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// a `Team.LegalHoldsPolicyCreateError` object on failure.
+    @discardableResult open func legalHoldsCreatePolicy(name: String, members: Array<String>, description_: String? = nil, startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyCreateErrorSerializer> {
+        let route = Team.legalHoldsCreatePolicy
+        let serverArgs = Team.LegalHoldsPolicyCreateArg(name: name, members: members, description_: description_, startDate: startDate, endDate: endDate)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Gets a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission : Team
+    /// member file access.
+    ///
+    /// - parameter id: The legal hold Id.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// a `Team.LegalHoldsGetPolicyError` object on failure.
+    @discardableResult open func legalHoldsGetPolicy(id: String) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsGetPolicyErrorSerializer> {
+        let route = Team.legalHoldsGetPolicy
+        let serverArgs = Team.LegalHoldsGetPolicyArg(id: id)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// List the file metadata that's under the hold. Note: Legal Holds is a paid add-on. Not all teams have the
+    /// feature. Permission : Team member file access.
+    ///
+    /// - parameter id: The legal hold Id.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
+    /// object on success or a `Team.LegalHoldsListHeldRevisionsError` object on failure.
+    @discardableResult open func legalHoldsListHeldRevisions(id: String) -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
+        let route = Team.legalHoldsListHeldRevisions
+        let serverArgs = Team.LegalHoldsListHeldRevisionsArg(id: id)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Continue listing the file metadata that's under the hold. Note: Legal Holds is a paid add-on. Not all teams have
+    /// the feature. Permission : Team member file access.
+    ///
+    /// - parameter id: The legal hold Id.
+    /// - parameter cursor: The cursor idicates where to continue reading file metadata entries for the next API call.
+    /// When there are no more entries, the cursor will return none.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
+    /// object on success or a `Team.LegalHoldsListHeldRevisionsError` object on failure.
+    @discardableResult open func legalHoldsListHeldRevisionsContinue(id: String, cursor: String? = nil) -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
+        let route = Team.legalHoldsListHeldRevisionsContinue
+        let serverArgs = Team.LegalHoldsListHeldRevisionsContinueArg(id: id, cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Lists legal holds on a team. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
+    /// Team member file access.
+    ///
+    /// - parameter includeReleased: Whether to return holds that were released.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListPoliciesResult` object
+    /// on success or a `Team.LegalHoldsListPoliciesError` object on failure.
+    @discardableResult open func legalHoldsListPolicies(includeReleased: Bool = false) -> RpcRequest<Team.LegalHoldsListPoliciesResultSerializer, Team.LegalHoldsListPoliciesErrorSerializer> {
+        let route = Team.legalHoldsListPolicies
+        let serverArgs = Team.LegalHoldsListPoliciesArg(includeReleased: includeReleased)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Releases a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
+    /// Team member file access.
+    ///
+    /// - parameter id: The legal hold Id.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Team.LegalHoldsPolicyReleaseError` object on failure.
+    @discardableResult open func legalHoldsReleasePolicy(id: String) -> RpcRequest<VoidSerializer, Team.LegalHoldsPolicyReleaseErrorSerializer> {
+        let route = Team.legalHoldsReleasePolicy
+        let serverArgs = Team.LegalHoldsPolicyReleaseArg(id: id)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a legal hold. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission : Team
+    /// member file access.
+    ///
+    /// - parameter id: The legal hold Id.
+    /// - parameter name: Policy new name.
+    /// - parameter description_: Policy new description.
+    /// - parameter members: List of team member IDs to apply the policy on.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// a `Team.LegalHoldsPolicyUpdateError` object on failure.
+    @discardableResult open func legalHoldsUpdatePolicy(id: String, name: String? = nil, description_: String? = nil, members: Array<String>? = nil) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyUpdateErrorSerializer> {
+        let route = Team.legalHoldsUpdatePolicy
+        let serverArgs = Team.LegalHoldsPolicyUpdateArg(id: id, name: name, description_: description_, members: members)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// List all linked applications of the team member. Note, this endpoint does not list any team-linked applications.
     ///
     /// - parameter teamMemberId: The team member id.
@@ -323,7 +424,8 @@ open class TeamRoutes {
     ///
     /// - parameter appId: The application's unique id.
     /// - parameter teamMemberId: The unique id of the member owning the device.
-    /// - parameter keepAppFolder: Whether to keep the application dedicated folder (in case the application uses  one).
+    /// - parameter keepAppFolder: This flag is not longer supported, the application dedicated folder (in case the
+    /// application uses  one) will be kept.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeLinkedAppError` object on failure.
@@ -463,6 +565,18 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Deletes a team member's profile photo. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be deleted.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
+    /// a `Team.MembersDeleteProfilePhotoError` object on failure.
+    @discardableResult open func membersDeleteProfilePhoto(user: Team.UserSelectorArg) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
+        let route = Team.membersDeleteProfilePhoto
+        let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Returns information about multiple team members. Permission : Team information This endpoint will return
     /// idNotFound in MembersGetInfoItem, for IDs (or emails) that cannot be matched to a valid team member.
     ///
@@ -549,7 +663,7 @@ open class TeamRoutes {
     /// day period or until the account has been permanently deleted or transferred to another account (whichever comes
     /// first). Calling membersAdd while a user is still recoverable on your team will return with userAlreadyOnTeam in
     /// MemberAddResult. Accounts can have their files transferred via the admin console for a limited time, based on
-    /// the version history length associated with the team (120 days for most teams). This endpoint may initiate an
+    /// the version history length associated with the team (180 days for most teams). This endpoint may initiate an
     /// asynchronous job. To obtain the final result of the job, the client should periodically poll
     /// membersRemoveJobStatusGet.
     ///
@@ -558,13 +672,17 @@ open class TeamRoutes {
     /// user. If the transfer_dest_id argument was provided, then this argument must be provided as well.
     /// - parameter keepAccount: Downgrade the member to a Basic account. The user will retain the email address
     /// associated with their Dropbox  account and data in their account that is not restricted to team members. In
-    /// order to keep the account the argument wipe_data should be set to False.
+    /// order to keep the account the argument wipeData should be set to false.
+    /// - parameter retainTeamShares: If provided, allows removed users to keep access to Dropbox folders (not Dropbox
+    /// Paper folders) already explicitly shared with them (not via a group) when they are downgraded to a Basic
+    /// account. Users will not retain access to folders that do not allow external sharing. In order to keep the
+    /// sharing relationships, the arguments wipeData should be set to false and keepAccount should be set to true.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.MembersRemoveError` object on failure.
-    @discardableResult open func membersRemove(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersRemoveErrorSerializer> {
+    @discardableResult open func membersRemove(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false, retainTeamShares: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersRemoveErrorSerializer> {
         let route = Team.membersRemove
-        let serverArgs = Team.MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount)
+        let serverArgs = Team.MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount, retainTeamShares: retainTeamShares)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -579,6 +697,44 @@ open class TeamRoutes {
     @discardableResult open func membersRemoveJobStatusGet(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
         let route = Team.membersRemoveJobStatusGet
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Add secondary emails to users. Permission : Team member management. Emails that are on verified domains will be
+    /// verified automatically. For each email address not on a verified domain a verification email will be sent.
+    ///
+    /// - parameter newSecondaryEmails: List of users and secondary emails to add.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.AddSecondaryEmailsResult` object on
+    /// success or a `Team.AddSecondaryEmailsError` object on failure.
+    @discardableResult open func membersSecondaryEmailsAdd(newSecondaryEmails: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.AddSecondaryEmailsResultSerializer, Team.AddSecondaryEmailsErrorSerializer> {
+        let route = Team.membersSecondaryEmailsAdd
+        let serverArgs = Team.AddSecondaryEmailsArg(newSecondaryEmails: newSecondaryEmails)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Delete secondary emails from users Permission : Team member management. Users will be notified of deletions of
+    /// verified secondary emails at both the secondary email and their primary email.
+    ///
+    /// - parameter emailsToDelete: List of users and their secondary emails to delete.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.DeleteSecondaryEmailsResult` object
+    /// on success or a `Void` object on failure.
+    @discardableResult open func membersSecondaryEmailsDelete(emailsToDelete: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.DeleteSecondaryEmailsResultSerializer, VoidSerializer> {
+        let route = Team.membersSecondaryEmailsDelete
+        let serverArgs = Team.DeleteSecondaryEmailsArg(emailsToDelete: emailsToDelete)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Resend secondary email verification emails. Permission : Team member management.
+    ///
+    /// - parameter emailsToResend: List of users and secondary emails to resend verification emails to.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ResendVerificationEmailResult` object
+    /// on success or a `Void` object on failure.
+    @discardableResult open func membersSecondaryEmailsResendVerificationEmails(emailsToResend: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.ResendVerificationEmailResultSerializer, VoidSerializer> {
+        let route = Team.membersSecondaryEmailsResendVerificationEmails
+        let serverArgs = Team.ResendVerificationEmailArg(emailsToResend: emailsToResend)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -625,6 +781,19 @@ open class TeamRoutes {
     @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfile
         let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a team member's profile photo. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be set.
+    /// - parameter photo: Image to set as the member's new profile photo.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
+    /// a `Team.MembersSetProfilePhotoError` object on failure.
+    @discardableResult open func membersSetProfilePhoto(user: Team.UserSelectorArg, photo: Account.PhotoSourceArg) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
+        let route = Team.membersSetProfilePhoto
+        let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -738,7 +907,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's user activity.
     ///
-    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
+    /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetActivityReport` object on success
@@ -751,7 +921,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's linked devices.
     ///
-    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
+    /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetDevicesReport` object on success
@@ -764,7 +935,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's membership.
     ///
-    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
+    /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetMembershipReport` object on
@@ -777,7 +949,8 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's storage usage.
     ///
-    /// - parameter startDate: Optional starting date (inclusive).
+    /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
+    /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetStorageReport` object on success

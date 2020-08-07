@@ -5,7 +5,10 @@
     {
       "name": "Routes", 
       "children": [
+        "AccountRoutes", 
         "AuthRoutes", 
+        "CheckRoutes", 
+        "CloudDocsRoutes", 
         "ContactsRoutes", 
         "FilePropertiesRoutes", 
         "FileRequestsRoutes", 
@@ -20,16 +23,21 @@
     {
       "name": "Data Types", 
       "children": [
+        "Account", 
         "Async", 
         "Auth", 
+        "Check", 
+        "CloudDocs", 
         "Common", 
         "Contacts", 
         "FileProperties", 
         "FileRequests", 
         "Files", 
         "Paper", 
+        "SecondaryEmails", 
         "SeenState", 
         "Sharing", 
+        "StoneFixtures", 
         "Team", 
         "TeamCommon", 
         "TeamLog", 

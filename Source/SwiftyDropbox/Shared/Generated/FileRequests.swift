@@ -291,8 +291,8 @@ open class FileRequests {
         case validationError
         /// File requests are not available on the specified folder.
         case invalidLocation
-        /// The user has reached the rate limit for creating file requests. The limit is currently 100 file requests per
-        /// day.
+        /// The user has reached the rate limit for creating file requests. The limit is currently 4000 file requests
+        /// total.
         case rateLimit
 
         public var description: String {

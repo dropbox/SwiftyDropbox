@@ -11,6 +11,19 @@ open class UsersRoutes {
         self.client = client
     }
 
+    /// Get a list of feature values that may be configured for the current account.
+    ///
+    /// - parameter features: A list of features in UserFeature. If the list is empty, this route will return
+    /// UserFeaturesGetValuesBatchError.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Users.UserFeaturesGetValuesBatchResult`
+    /// object on success or a `Users.UserFeaturesGetValuesBatchError` object on failure.
+    @discardableResult open func featuresGetValues(features: Array<Users.UserFeature>) -> RpcRequest<Users.UserFeaturesGetValuesBatchResultSerializer, Users.UserFeaturesGetValuesBatchErrorSerializer> {
+        let route = Users.featuresGetValues
+        let serverArgs = Users.UserFeaturesGetValuesBatchArg(features: features)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Get information about a user's account.
     ///
     /// - parameter accountId: A user's account identifier.

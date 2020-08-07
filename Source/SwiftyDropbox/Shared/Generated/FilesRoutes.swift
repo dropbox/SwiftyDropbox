@@ -412,6 +412,19 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Return the lock metadata for the given list of paths.
+    ///
+    /// - parameter entries: List of 'entries'. Each 'entry' contains a path of the file which will be locked or
+    /// queried. Duplicate path arguments in the batch are considered only once.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.LockFileBatchResult` object on
+    /// success or a `Files.LockFileError` object on failure.
+    @discardableResult open func getFileLockBatch(entries: Array<Files.LockFileArg>) -> RpcRequest<Files.LockFileBatchResultSerializer, Files.LockFileErrorSerializer> {
+        let route = Files.getFileLockBatch
+        let serverArgs = Files.LockFileBatchArg(entries: entries)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
     ///
     /// - parameter path: The path of a file or folder on Dropbox.
@@ -491,15 +504,15 @@ open class FilesRoutes {
     /// hours. Upon consumption or expiration, a new link will have to be generated. Multiple links may exist for a
     /// specific upload path at any given time.  The POST request on the temporary upload link must have its
     /// Content-Type set to "application/octet-stream".  Example temporary upload link consumption request:  curl -X
-    /// POST https://dl.dropboxusercontent.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
-    /// application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link consumption request
-    /// returns the content hash of the uploaded data in JSON format.  Example succesful temporary upload link
-    /// consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary
-    /// upload link consumption request returns any of the following status codes:  HTTP 400 Bad Request: Content-Type
-    /// is not one of application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary
-    /// upload link does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410
-    /// Gone: The temporary upload link is expired or consumed.  Example unsuccessful temporary upload link consumption
-    /// response: Temporary upload link has been recently consumed.
+    /// POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type: application/octet-stream"
+    /// --data-binary @local_file.txt  A successful temporary upload link consumption request returns the content hash
+    /// of the uploaded data in JSON format.  Example succesful temporary upload link consumption response:
+    /// {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption
+    /// request returns any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
+    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link does
+    /// not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
+    /// temporary upload link is expired or consumed.  Example unsuccessful temporary upload link consumption response:
+    /// Temporary upload link has been recently consumed.
     ///
     /// - parameter commitInfo: Contains the path and other optional modifiers for the future upload commit. Equivalent
     /// to the parameters provided to upload.
@@ -550,6 +563,45 @@ open class FilesRoutes {
     @discardableResult open func getThumbnail(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) -> DownloadRequestMemory<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer> {
         let route = Files.getThumbnail
         let serverArgs = Files.ThumbnailArg(path: path, format: format, size: size, mode: mode)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Get a thumbnail for a file.
+    ///
+    /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
+    /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
+    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
+    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter size: The size for the thumbnail image.
+    /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure, an
+    /// NSError will be thrown).
+    /// - parameter destination: A closure used to compute the destination, given the temporary file location and the
+    /// response.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or
+    /// a `Files.ThumbnailV2Error` object on failure.
+    @discardableResult open func getThumbnailV2(resource: Files.PathOrLink, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict, overwrite: Bool = false, destination: @escaping (URL, HTTPURLResponse) -> URL) -> DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
+        let route = Files.getThumbnailV2
+        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode)
+        return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+
+    /// Get a thumbnail for a file.
+    ///
+    /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
+    /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
+    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
+    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter size: The size for the thumbnail image.
+    /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or
+    /// a `Files.ThumbnailV2Error` object on failure.
+    @discardableResult open func getThumbnailV2(resource: Files.PathOrLink, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) -> DownloadRequestMemory<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
+        let route = Files.getThumbnailV2
+        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -694,8 +746,23 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Lock the files at the given paths. A locked file will be writable only by the lock holder. A successful response
+    /// indicates that the file has been locked. Returns a list of the locked file paths and their metadata after this
+    /// operation.
+    ///
+    /// - parameter entries: List of 'entries'. Each 'entry' contains a path of the file which will be locked or
+    /// queried. Duplicate path arguments in the batch are considered only once.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.LockFileBatchResult` object on
+    /// success or a `Files.LockFileError` object on failure.
+    @discardableResult open func lockFileBatch(entries: Array<Files.LockFileArg>) -> RpcRequest<Files.LockFileBatchResultSerializer, Files.LockFileErrorSerializer> {
+        let route = Files.lockFileBatch
+        let serverArgs = Files.LockFileBatchArg(entries: entries)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
-    /// contents will be moved.
+    /// contents will be moved. Note that we do not currently support case-only renaming.
     ///
     /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
     /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
@@ -731,10 +798,11 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Move multiple files or folders to different locations at once in the user's Dropbox. This route will replace
-    /// moveBatch. The main difference is this route will return status for each entry, while moveBatch raises failure
-    /// if any entry fails. This route will either finish synchronously, or return a job ID and do the async move job in
-    /// background. Please use moveBatchCheckV2 to check the job status.
+    /// Move multiple files or folders to different locations at once in the user's Dropbox. Note that we do not
+    /// currently support case-only renaming. This route will replace moveBatch. The main difference is this route will
+    /// return status for each entry, while moveBatch raises failure if any entry fails. This route will either finish
+    /// synchronously, or return a job ID and do the async move job in background. Please use moveBatchCheckV2 to check
+    /// the job status.
     ///
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
@@ -747,9 +815,8 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Move multiple files or folders to different locations at once in the user's Dropbox. This route is 'all or
-    /// nothing', which means if one entry fails, the whole transaction will abort. This route will return job ID
-    /// immediately and do the async moving job in background. Please use moveBatchCheck to check the job status.
+    /// Move multiple files or folders to different locations at once in the user's Dropbox. This route will return job
+    /// ID immediately and do the async moving job in background. Please use moveBatchCheck to check the job status.
     ///
     /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
     /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
@@ -759,6 +826,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchLaunch` object on
     /// success or a `Void` object on failure.
+    @available(*, unavailable, message:"moveBatch is deprecated. Use moveBatchV2.")
     @discardableResult open func moveBatch(entries: Array<Files.RelocationPath>, autorename: Bool = false, allowSharedFolder: Bool = false, allowOwnershipTransfer: Bool = false) -> RpcRequest<Files.RelocationBatchLaunchSerializer, VoidSerializer> {
         let route = Files.moveBatch
         let serverArgs = Files.RelocationBatchArg(entries: entries, autorename: autorename, allowSharedFolder: allowSharedFolder, allowOwnershipTransfer: allowOwnershipTransfer)
@@ -785,6 +853,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.RelocationBatchJobStatus` object on
     /// success or a `Async.PollError` object on failure.
+    @available(*, unavailable, message:"moveBatchCheck is deprecated. Use moveBatchCheckV2.")
     @discardableResult open func moveBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.moveBatchCheck
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
@@ -809,7 +878,8 @@ open class FilesRoutes {
     /// The propertiesAdd route
     ///
     /// - parameter path: A unique identifier for the file or folder.
-    /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file.
+    /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file. No two groups in the
+    /// input should  refer to the same template.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.AddPropertiesError` object on failure.
@@ -823,7 +893,8 @@ open class FilesRoutes {
     /// The propertiesOverwrite route
     ///
     /// - parameter path: A unique identifier for the file or folder.
-    /// - parameter propertyGroups: The property groups "snapshot" updates to force apply.
+    /// - parameter propertyGroups: The property groups "snapshot" updates to force apply. No two groups in the input
+    /// should  refer to the same template.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.InvalidPropertyGroupError` object on failure.
@@ -929,13 +1000,13 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Searches for files and folders. Note: Recent changes may not immediately be reflected in search results due to a
-    /// short delay in indexing.
+    /// Searches for files and folders. Note: Recent changes will be reflected in search results within a few seconds
+    /// and older revisions of existing files may still match your query for up to a few days.
     ///
     /// - parameter path: The path in the user's Dropbox to search. Should probably be a folder.
-    /// - parameter query: The string to search for. The search string is split on spaces into multiple tokens. For file
-    /// name searching, the last token is used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman
-    /// car").
+    /// - parameter query: The string to search for. Query string may be rewritten to improve relevance of results. The
+    /// string is split on spaces into multiple tokens. For file name searching, the last token is used for prefix
+    /// matching (i.e. "bat c" matches "bat cave" but not "batman car").
     /// - parameter start: The starting index within the search results (used for paging).
     /// - parameter maxResults: The maximum number of search results to return.
     /// - parameter mode: The search mode (filename, filename_and_content, or deleted_filename). Note that searching
@@ -943,9 +1014,58 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SearchResult` object on success or a
     /// `Files.SearchError` object on failure.
+    @available(*, unavailable, message:"search is deprecated. Use searchV2.")
     @discardableResult open func search(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) -> RpcRequest<Files.SearchResultSerializer, Files.SearchErrorSerializer> {
         let route = Files.search
         let serverArgs = Files.SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Searches for files and folders. Note: searchV2 along with searchContinueV2 can only be used to retrieve a
+    /// maximum of 10,000 matches. Recent changes may not immediately be reflected in search results due to a short
+    /// delay in indexing. Duplicate results may be returned across pages. Some results may not be returned.
+    ///
+    /// - parameter query: The string to search for. May match across multiple fields based on the request arguments.
+    /// Query string may be rewritten to improve relevance of results.
+    /// - parameter options: Options for more targeted search results.
+    /// - parameter matchFieldOptions: Options for search results match fields.
+    /// - parameter includeHighlights: Deprecated and moved this option to SearchMatchFieldOptions.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.SearchV2Result` object on success or
+    /// a `Files.SearchError` object on failure.
+    @discardableResult open func searchV2(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool = false) -> RpcRequest<Files.SearchV2ResultSerializer, Files.SearchErrorSerializer> {
+        let route = Files.searchV2
+        let serverArgs = Files.SearchV2Arg(query: query, options: options, matchFieldOptions: matchFieldOptions, includeHighlights: includeHighlights)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Fetches the next page of search results returned from searchV2. Note: searchV2 along with searchContinueV2 can
+    /// only be used to retrieve a maximum of 10,000 matches. Recent changes may not immediately be reflected in search
+    /// results due to a short delay in indexing. Duplicate results may be returned across pages. Some results may not
+    /// be returned.
+    ///
+    /// - parameter cursor: The cursor returned by your last call to searchV2. Used to fetch the next page of results.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.SearchV2Result` object on success or
+    /// a `Files.SearchError` object on failure.
+    @discardableResult open func searchContinueV2(cursor: String) -> RpcRequest<Files.SearchV2ResultSerializer, Files.SearchErrorSerializer> {
+        let route = Files.searchContinueV2
+        let serverArgs = Files.SearchV2ContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Unlock the files at the given paths. A locked file can only be unlocked by the lock holder or, if a business
+    /// account, a team admin. A successful response indicates that the file has been unlocked. Returns a list of the
+    /// unlocked file paths and their metadata after this operation.
+    ///
+    /// - parameter entries: List of 'entries'. Each 'entry' contains a path of the file which will be unlocked.
+    /// Duplicate path arguments in the batch are considered only once.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.LockFileBatchResult` object on
+    /// success or a `Files.LockFileError` object on failure.
+    @discardableResult open func unlockFileBatch(entries: Array<Files.UnlockFileArg>) -> RpcRequest<Files.LockFileBatchResultSerializer, Files.LockFileErrorSerializer> {
+        let route = Files.unlockFileBatch
+        let serverArgs = Files.UnlockFileBatchArg(entries: entries)
         return client.request(route, serverArgs: serverArgs)
     }
 

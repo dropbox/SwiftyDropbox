@@ -14,7 +14,8 @@ open class FilePropertiesRoutes {
     /// Add property groups to a Dropbox file. See templatesAddForUser or templatesAddForTeam to create new templates.
     ///
     /// - parameter path: A unique identifier for the file or folder.
-    /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file.
+    /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file. No two groups in the
+    /// input should  refer to the same template.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.AddPropertiesError` object on failure.
@@ -30,7 +31,8 @@ open class FilePropertiesRoutes {
     /// explicitly marked for deletion.
     ///
     /// - parameter path: A unique identifier for the file or folder.
-    /// - parameter propertyGroups: The property groups "snapshot" updates to force apply.
+    /// - parameter propertyGroups: The property groups "snapshot" updates to force apply. No two groups in the input
+    /// should  refer to the same template.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.InvalidPropertyGroupError` object on failure.

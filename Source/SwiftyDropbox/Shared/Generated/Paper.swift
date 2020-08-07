@@ -290,7 +290,9 @@ open class Paper {
 
     /// The PaperApiBaseError union
     public enum PaperApiBaseError: CustomStringConvertible {
-        /// Your account does not have permissions to perform this action.
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
         case insufficientPermissions
         /// An unspecified error.
         case other
@@ -333,7 +335,9 @@ open class Paper {
 
     /// The DocLookupError union
     public enum DocLookupError: CustomStringConvertible {
-        /// Your account does not have permissions to perform this action.
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
         case insufficientPermissions
         /// An unspecified error.
         case other
@@ -529,7 +533,7 @@ open class Paper {
         }
     }
 
-    /// The sharing policy of a Paper folder.  Note: The sharing policy of subfolders is inherited from the root folder.
+    /// The sharing policy of a Paper folder. The sharing policy of subfolders is inherited from the root folder.
     public enum FolderSharingPolicyType: CustomStringConvertible {
         /// Everyone in your team and anyone directly invited can access this folder.
         case team
@@ -670,11 +674,11 @@ open class Paper {
     public enum ImportFormat: CustomStringConvertible {
         /// The provided data is interpreted as standard HTML.
         case html
-        /// The provided data is interpreted as markdown. Note: The first line of the provided document will be used as
-        /// the doc title.
+        /// The provided data is interpreted as markdown. The first line of the provided document will be used as the
+        /// doc title.
         case markdown
-        /// The provided data is interpreted as plain text. Note: The first line of the provided document will be used
-        /// as the doc title.
+        /// The provided data is interpreted as plain text. The first line of the provided document will be used as the
+        /// doc title.
         case plainText
         /// An unspecified error.
         case other
@@ -1091,7 +1095,9 @@ open class Paper {
 
     /// The ListUsersCursorError union
     public enum ListUsersCursorError: CustomStringConvertible {
-        /// Your account does not have permissions to perform this action.
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
         case insufficientPermissions
         /// An unspecified error.
         case other
@@ -1500,7 +1506,9 @@ open class Paper {
 
     /// The PaperDocCreateError union
     public enum PaperDocCreateError: CustomStringConvertible {
-        /// Your account does not have permissions to perform this action.
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
         case insufficientPermissions
         /// An unspecified error.
         case other
@@ -1510,8 +1518,8 @@ open class Paper {
         case folderNotFound
         /// The newly created Paper doc would be too large. Please split the content into multiple docs.
         case docLengthExceeded
-        /// The imported document contains an image that is too large. The current limit is 1MB. Note: This only applies
-        /// to HTML with data uri.
+        /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
+        /// HTML with data URI.
         case imageSizeExceeded
 
         public var description: String {
@@ -1830,7 +1838,9 @@ open class Paper {
 
     /// The PaperDocUpdateError union
     public enum PaperDocUpdateError: CustomStringConvertible {
-        /// Your account does not have permissions to perform this action.
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
         case insufficientPermissions
         /// An unspecified error.
         case other
@@ -1842,8 +1852,8 @@ open class Paper {
         case revisionMismatch
         /// The newly created Paper doc would be too large, split the content into multiple docs.
         case docLengthExceeded
-        /// The imported document contains an image that is too large. The current limit is 1MB. Note: This only applies
-        /// to HTML with data uri.
+        /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
+        /// HTML with data URI.
         case imageSizeExceeded
         /// This operation is not allowed on archived Paper docs.
         case docArchived
@@ -1932,7 +1942,7 @@ open class Paper {
     public enum PaperDocUpdatePolicy: CustomStringConvertible {
         /// The content will be appended to the doc.
         case append
-        /// The content will be prepended to the doc. Note: the doc title will not be affected.
+        /// The content will be prepended to the doc. The doc title will not be affected.
         case prepend
         /// The document will be overwitten at the head with the provided content.
         case overwriteAll
@@ -1983,6 +1993,143 @@ open class Paper {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperFolderCreateArg struct
+    open class PaperFolderCreateArg: CustomStringConvertible {
+        /// The name of the new Paper folder.
+        public let name: String
+        /// The encrypted Paper folder Id where the new Paper folder should be created. The API user has to have write
+        /// access to this folder or error is thrown. If not supplied, the new folder will be created at top level.
+        public let parentFolderId: String?
+        /// Whether the folder to be created should be a team folder. This value will be ignored if parent_folder_id is
+        /// supplied, as the new folder will inherit the type (private or team folder) from its parent. We will by
+        /// default create a top-level private folder if both parent_folder_id and is_team_folder are not supplied.
+        public let isTeamFolder: Bool?
+        public init(name: String, parentFolderId: String? = nil, isTeamFolder: Bool? = nil) {
+            stringValidator()(name)
+            self.name = name
+            nullableValidator(stringValidator())(parentFolderId)
+            self.parentFolderId = parentFolderId
+            self.isTeamFolder = isTeamFolder
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateArgSerializer().serialize(self)))"
+        }
+    }
+    open class PaperFolderCreateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperFolderCreateArg) -> JSON {
+            let output = [ 
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "parent_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+            "is_team_folder": NullableSerializer(Serialization._BoolSerializer).serialize(value.isTeamFolder),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperFolderCreateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let parentFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                    let isTeamFolder = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_team_folder"] ?? .null)
+                    return PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperFolderCreateError union
+    public enum PaperFolderCreateError: CustomStringConvertible {
+        /// Your account does not have permissions to perform this action. This may be due to it only having access to
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        case insufficientPermissions
+        /// An unspecified error.
+        case other
+        /// The specified parent Paper folder cannot be found.
+        case folderNotFound
+        /// The folder id cannot be decrypted to valid folder id.
+        case invalidFolderId
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperFolderCreateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperFolderCreateError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .folderNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_not_found")
+                    return .dictionary(d)
+                case .invalidFolderId:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_folder_id")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperFolderCreateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperFolderCreateError.insufficientPermissions
+                        case "other":
+                            return PaperFolderCreateError.other
+                        case "folder_not_found":
+                            return PaperFolderCreateError.folderNotFound
+                        case "invalid_folder_id":
+                            return PaperFolderCreateError.invalidFolderId
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperFolderCreateResult struct
+    open class PaperFolderCreateResult: CustomStringConvertible {
+        /// Folder ID of the newly created folder.
+        public let folderId: String
+        public init(folderId: String) {
+            stringValidator()(folderId)
+            self.folderId = folderId
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateResultSerializer().serialize(self)))"
+        }
+    }
+    open class PaperFolderCreateResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperFolderCreateResult) -> JSON {
+            let output = [ 
+            "folder_id": Serialization._StringSerializer.serialize(value.folderId),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperFolderCreateResult {
+            switch json {
+                case .dictionary(let dict):
+                    let folderId = Serialization._StringSerializer.deserialize(dict["folder_id"] ?? .null)
+                    return PaperFolderCreateResult(folderId: folderId)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -2259,7 +2406,7 @@ open class Paper {
         name: "docs/archive",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2271,7 +2418,7 @@ open class Paper {
         name: "docs/create",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.PaperDocCreateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocCreateErrorSerializer(),
@@ -2283,7 +2430,7 @@ open class Paper {
         name: "docs/download",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.PaperDocExportSerializer(),
         responseSerializer: Paper.PaperDocExportResultSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2295,7 +2442,7 @@ open class Paper {
         name: "docs/folder_users/list",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListUsersOnFolderArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2307,7 +2454,7 @@ open class Paper {
         name: "docs/folder_users/list/continue",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListUsersOnFolderContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
@@ -2319,7 +2466,7 @@ open class Paper {
         name: "docs/get_folder_info",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.FoldersContainingPaperDocSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2331,7 +2478,7 @@ open class Paper {
         name: "docs/list",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListPaperDocsArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Serialization._VoidSerializer,
@@ -2343,7 +2490,7 @@ open class Paper {
         name: "docs/list/continue",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListPaperDocsContinueArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Paper.ListDocsCursorErrorSerializer(),
@@ -2355,7 +2502,7 @@ open class Paper {
         name: "docs/permanently_delete",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2367,7 +2514,7 @@ open class Paper {
         name: "docs/sharing_policy/get",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.SharingPolicySerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2379,7 +2526,7 @@ open class Paper {
         name: "docs/sharing_policy/set",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.PaperDocSharingPolicySerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2391,7 +2538,7 @@ open class Paper {
         name: "docs/update",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.PaperDocUpdateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocUpdateErrorSerializer(),
@@ -2403,7 +2550,7 @@ open class Paper {
         name: "docs/users/add",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.AddPaperDocUserSerializer(),
         responseSerializer: ArraySerializer(Paper.AddPaperDocUserMemberResultSerializer()),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2415,7 +2562,7 @@ open class Paper {
         name: "docs/users/list",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListUsersOnPaperDocArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
@@ -2427,7 +2574,7 @@ open class Paper {
         name: "docs/users/list/continue",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.ListUsersOnPaperDocContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
@@ -2439,10 +2586,22 @@ open class Paper {
         name: "docs/users/remove",
         version: 1,
         namespace: "paper",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Paper.RemovePaperDocUserSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let foldersCreate = Route(
+        name: "folders/create",
+        version: 1,
+        namespace: "paper",
+        deprecated: true,
+        argSerializer: Paper.PaperFolderCreateArgSerializer(),
+        responseSerializer: Paper.PaperFolderCreateResultSerializer(),
+        errorSerializer: Paper.PaperFolderCreateErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "api",
                 "style": "rpc"]

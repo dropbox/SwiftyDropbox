@@ -380,6 +380,8 @@ open class Sharing {
         case teamFolder
         /// The current user does not have permission to perform this action.
         case noPermission
+        /// Invalid shared folder error will be returned as an access_error.
+        case invalidSharedFolder
         /// An unspecified error.
         case other
 
@@ -439,6 +441,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("no_permission")
                     return .dictionary(d)
+                case .invalidSharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_shared_folder")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -478,6 +484,8 @@ open class Sharing {
                             return AddFolderMemberError.teamFolder
                         case "no_permission":
                             return AddFolderMemberError.noPermission
+                        case "invalid_shared_folder":
+                            return AddFolderMemberError.invalidSharedFolder
                         case "other":
                             return AddFolderMemberError.other
                         default:
@@ -5705,7 +5713,8 @@ open class Sharing {
     public enum RequestedLinkAccessLevel: CustomStringConvertible {
         /// Users who use the link can view and comment on the content.
         case viewer
-        /// Users who use the link can edit, view and comment on the content.
+        /// Users who use the link can edit, view and comment on the content. Note not all file types support edit links
+        /// yet.
         case editor
         /// Request for the maximum access level you can set the link to.
         case max
@@ -6461,6 +6470,8 @@ open class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
+        /// We do not support sharing the Vault folder.
+        case isVault
         /// An unspecified error.
         case other
 
@@ -6524,6 +6535,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("inside_osx_package")
                     return .dictionary(d)
+                case .isVault:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_vault")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -6562,6 +6577,8 @@ open class Sharing {
                             return SharePathError.isOsxPackage
                         case "inside_osx_package":
                             return SharePathError.insideOsxPackage
+                        case "is_vault":
+                            return SharePathError.isVault
                         case "other":
                             return SharePathError.other
                         default:
@@ -6976,7 +6993,9 @@ open class Sharing {
         public let parentSharedFolderId: String?
         /// The lower-cased full path of this shared folder. Absent for unmounted folders.
         public let pathLower: String?
-        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil) {
+        /// Display name for the parent folder.
+        public let parentFolderName: String?
+        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, parentFolderName: String? = nil) {
             self.accessType = accessType
             self.isInsideTeamFolder = isInsideTeamFolder
             self.isTeamFolder = isTeamFolder
@@ -6987,6 +7006,8 @@ open class Sharing {
             self.parentSharedFolderId = parentSharedFolderId
             nullableValidator(stringValidator())(pathLower)
             self.pathLower = pathLower
+            nullableValidator(stringValidator())(parentFolderName)
+            self.parentFolderName = parentFolderName
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataBaseSerializer().serialize(self)))"
@@ -7003,6 +7024,7 @@ open class Sharing {
             "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
+            "parent_folder_name": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
             ]
             return .dictionary(output)
         }
@@ -7016,7 +7038,8 @@ open class Sharing {
                     let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
-                    return SharedFolderMetadataBase(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
+                    let parentFolderName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
+                    return SharedFolderMetadataBase(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7043,7 +7066,7 @@ open class Sharing {
         public let timeInvited: Date
         /// Whether the folder inherits its members from its parent.
         public let accessInheritance: Sharing.AccessInheritance
-        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
+        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, parentFolderName: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
             self.linkMetadata = linkMetadata
             stringValidator()(name)
             self.name = name
@@ -7055,7 +7078,7 @@ open class Sharing {
             self.sharedFolderId = sharedFolderId
             self.timeInvited = timeInvited
             self.accessInheritance = accessInheritance
-            super.init(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
+            super.init(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataSerializer().serialize(self)))"
@@ -7077,6 +7100,7 @@ open class Sharing {
             "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
+            "parent_folder_name": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
             "link_metadata": NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).serialize(value.linkMetadata),
             "permissions": NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).serialize(value.permissions),
             "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
@@ -7098,10 +7122,11 @@ open class Sharing {
                     let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
+                    let parentFolderName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
                     let linkMetadata = NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).deserialize(dict["link_metadata"] ?? .null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
                     let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
-                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, linkMetadata: linkMetadata, permissions: permissions, accessInheritance: accessInheritance)
+                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName, linkMetadata: linkMetadata, permissions: permissions, accessInheritance: accessInheritance)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7300,7 +7325,8 @@ open class Sharing {
         /// folder policies to determine the final effective audience type in the `effective_audience` field of
         /// `LinkPermissions.
         public let audience: Sharing.LinkAudience?
-        /// Requested access level you want the audience to gain from this link.
+        /// Requested access level you want the audience to gain from this link. Note, modifying access level for an
+        /// existing link is not supported.
         public let access: Sharing.RequestedLinkAccessLevel?
         public init(requestedVisibility: Sharing.RequestedVisibility? = nil, linkPassword: String? = nil, expires: Date? = nil, audience: Sharing.LinkAudience? = nil, access: Sharing.RequestedLinkAccessLevel? = nil) {
             self.requestedVisibility = requestedVisibility

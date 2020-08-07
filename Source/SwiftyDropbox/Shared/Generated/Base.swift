@@ -9,8 +9,14 @@ import Foundation
 import Alamofire
 
 open class DropboxBase {
+    /// Routes within the account namespace. See AccountRoutes for details.
+    open var account: AccountRoutes!
     /// Routes within the auth namespace. See AuthRoutes for details.
     open var auth: AuthRoutes!
+    /// Routes within the check namespace. See CheckRoutes for details.
+    open var check: CheckRoutes!
+    /// Routes within the cloud_docs namespace. See CloudDocsRoutes for details.
+    open var cloud_docs: CloudDocsRoutes!
     /// Routes within the contacts namespace. See ContactsRoutes for details.
     open var contacts: ContactsRoutes!
     /// Routes within the file_properties namespace. See FilePropertiesRoutes for details.
@@ -29,7 +35,10 @@ open class DropboxBase {
     open var users: UsersRoutes!
 
     public init(client: DropboxTransportClient) {
+        self.account = AccountRoutes(client: client)
         self.auth = AuthRoutes(client: client)
+        self.check = CheckRoutes(client: client)
+        self.cloud_docs = CloudDocsRoutes(client: client)
         self.contacts = ContactsRoutes(client: client)
         self.file_properties = FilePropertiesRoutes(client: client)
         self.file_requests = FileRequestsRoutes(client: client)

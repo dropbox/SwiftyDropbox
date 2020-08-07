@@ -118,6 +118,51 @@ open class Users {
         }
     }
 
+    /// The value for fileLocking in UserFeature.
+    public enum FileLockingValue: CustomStringConvertible {
+        /// When this value is True, the user can lock files in shared directories. When the value is False the user can
+        /// unlock the files they have locked or request to unlock files locked by others.
+        case enabled(Bool)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileLockingValueSerializer().serialize(self)))"
+        }
+    }
+    open class FileLockingValueSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileLockingValue) -> JSON {
+            switch value {
+                case .enabled(let arg):
+                    var d = ["enabled": Serialization._BoolSerializer.serialize(arg)]
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> FileLockingValue {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "enabled":
+                            let v = Serialization._BoolSerializer.deserialize(d["enabled"] ?? .null)
+                            return FileLockingValue.enabled(v)
+                        case "other":
+                            return FileLockingValue.other
+                        default:
+                            return FileLockingValue.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Detailed information about the current user's account.
     open class FullAccount: Users.Account {
         /// The user's two-letter country code, if available. Country codes are based on ISO 3166-1
@@ -516,6 +561,52 @@ open class Users {
         }
     }
 
+    /// The value for paperAsFiles in UserFeature.
+    public enum PaperAsFilesValue: CustomStringConvertible {
+        /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper extension and must
+        /// be accessed via the /files endpoints.  When this value is false, the user's Paper docs are stored separate
+        /// from Dropbox files and folders and should be accessed via the /paper endpoints.
+        case enabled(Bool)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperAsFilesValueSerializer().serialize(self)))"
+        }
+    }
+    open class PaperAsFilesValueSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperAsFilesValue) -> JSON {
+            switch value {
+                case .enabled(let arg):
+                    var d = ["enabled": Serialization._BoolSerializer.serialize(arg)]
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperAsFilesValue {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "enabled":
+                            let v = Serialization._BoolSerializer.deserialize(d["enabled"] ?? .null)
+                            return PaperAsFilesValue.enabled(v)
+                        case "other":
+                            return PaperAsFilesValue.other
+                        default:
+                            return PaperAsFilesValue.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Space is allocated differently based on the type of account.
     public enum SpaceAllocation: CustomStringConvertible {
         /// The user's space allocation applies only to their individual account.
@@ -616,7 +707,9 @@ open class Users {
         public let userWithinTeamSpaceAllocated: UInt64
         /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
         public let userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType
-        public init(used: UInt64, allocated: UInt64, userWithinTeamSpaceAllocated: UInt64, userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType) {
+        /// An accurate cached calculation of a team member's total space usage (bytes).
+        public let userWithinTeamSpaceUsedCached: UInt64
+        public init(used: UInt64, allocated: UInt64, userWithinTeamSpaceAllocated: UInt64, userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType, userWithinTeamSpaceUsedCached: UInt64) {
             comparableValidator()(used)
             self.used = used
             comparableValidator()(allocated)
@@ -624,6 +717,8 @@ open class Users {
             comparableValidator()(userWithinTeamSpaceAllocated)
             self.userWithinTeamSpaceAllocated = userWithinTeamSpaceAllocated
             self.userWithinTeamSpaceLimitType = userWithinTeamSpaceLimitType
+            comparableValidator()(userWithinTeamSpaceUsedCached)
+            self.userWithinTeamSpaceUsedCached = userWithinTeamSpaceUsedCached
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
@@ -637,6 +732,7 @@ open class Users {
             "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
             "user_within_team_space_allocated": Serialization._UInt64Serializer.serialize(value.userWithinTeamSpaceAllocated),
             "user_within_team_space_limit_type": TeamCommon.MemberSpaceLimitTypeSerializer().serialize(value.userWithinTeamSpaceLimitType),
+            "user_within_team_space_used_cached": Serialization._UInt64Serializer.serialize(value.userWithinTeamSpaceUsedCached),
             ]
             return .dictionary(output)
         }
@@ -647,7 +743,216 @@ open class Users {
                     let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .null)
                     let userWithinTeamSpaceAllocated = Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_allocated"] ?? .null)
                     let userWithinTeamSpaceLimitType = TeamCommon.MemberSpaceLimitTypeSerializer().deserialize(dict["user_within_team_space_limit_type"] ?? .null)
-                    return TeamSpaceAllocation(used: used, allocated: allocated, userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated, userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType)
+                    let userWithinTeamSpaceUsedCached = Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_used_cached"] ?? .null)
+                    return TeamSpaceAllocation(used: used, allocated: allocated, userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated, userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType, userWithinTeamSpaceUsedCached: userWithinTeamSpaceUsedCached)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// A set of features that a Dropbox User account may have configured.
+    public enum UserFeature: CustomStringConvertible {
+        /// This feature contains information about how the user's Paper files are stored.
+        case paperAsFiles
+        /// This feature allows users to lock files in order to restrict other users from editing them.
+        case fileLocking
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFeatureSerializer().serialize(self)))"
+        }
+    }
+    open class UserFeatureSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFeature) -> JSON {
+            switch value {
+                case .paperAsFiles:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("paper_as_files")
+                    return .dictionary(d)
+                case .fileLocking:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("file_locking")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserFeature {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "paper_as_files":
+                            return UserFeature.paperAsFiles
+                        case "file_locking":
+                            return UserFeature.fileLocking
+                        case "other":
+                            return UserFeature.other
+                        default:
+                            return UserFeature.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Values that correspond to entries in UserFeature.
+    public enum UserFeatureValue: CustomStringConvertible {
+        /// An unspecified error.
+        case paperAsFiles(Users.PaperAsFilesValue)
+        /// An unspecified error.
+        case fileLocking(Users.FileLockingValue)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFeatureValueSerializer().serialize(self)))"
+        }
+    }
+    open class UserFeatureValueSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFeatureValue) -> JSON {
+            switch value {
+                case .paperAsFiles(let arg):
+                    var d = ["paper_as_files": Users.PaperAsFilesValueSerializer().serialize(arg)]
+                    d[".tag"] = .str("paper_as_files")
+                    return .dictionary(d)
+                case .fileLocking(let arg):
+                    var d = ["file_locking": Users.FileLockingValueSerializer().serialize(arg)]
+                    d[".tag"] = .str("file_locking")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserFeatureValue {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "paper_as_files":
+                            let v = Users.PaperAsFilesValueSerializer().deserialize(d["paper_as_files"] ?? .null)
+                            return UserFeatureValue.paperAsFiles(v)
+                        case "file_locking":
+                            let v = Users.FileLockingValueSerializer().deserialize(d["file_locking"] ?? .null)
+                            return UserFeatureValue.fileLocking(v)
+                        case "other":
+                            return UserFeatureValue.other
+                        default:
+                            return UserFeatureValue.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The UserFeaturesGetValuesBatchArg struct
+    open class UserFeaturesGetValuesBatchArg: CustomStringConvertible {
+        /// A list of features in UserFeature. If the list is empty, this route will return
+        /// UserFeaturesGetValuesBatchError.
+        public let features: Array<Users.UserFeature>
+        public init(features: Array<Users.UserFeature>) {
+            self.features = features
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFeaturesGetValuesBatchArgSerializer().serialize(self)))"
+        }
+    }
+    open class UserFeaturesGetValuesBatchArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFeaturesGetValuesBatchArg) -> JSON {
+            let output = [ 
+            "features": ArraySerializer(Users.UserFeatureSerializer()).serialize(value.features),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserFeaturesGetValuesBatchArg {
+            switch json {
+                case .dictionary(let dict):
+                    let features = ArraySerializer(Users.UserFeatureSerializer()).deserialize(dict["features"] ?? .null)
+                    return UserFeaturesGetValuesBatchArg(features: features)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UserFeaturesGetValuesBatchError union
+    public enum UserFeaturesGetValuesBatchError: CustomStringConvertible {
+        /// At least one UserFeature must be included in the UserFeaturesGetValuesBatchArg.features list.
+        case emptyFeaturesList
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFeaturesGetValuesBatchErrorSerializer().serialize(self)))"
+        }
+    }
+    open class UserFeaturesGetValuesBatchErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFeaturesGetValuesBatchError) -> JSON {
+            switch value {
+                case .emptyFeaturesList:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("empty_features_list")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UserFeaturesGetValuesBatchError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "empty_features_list":
+                            return UserFeaturesGetValuesBatchError.emptyFeaturesList
+                        case "other":
+                            return UserFeaturesGetValuesBatchError.other
+                        default:
+                            return UserFeaturesGetValuesBatchError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The UserFeaturesGetValuesBatchResult struct
+    open class UserFeaturesGetValuesBatchResult: CustomStringConvertible {
+        /// (no description)
+        public let values: Array<Users.UserFeatureValue>
+        public init(values: Array<Users.UserFeatureValue>) {
+            self.values = values
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserFeaturesGetValuesBatchResultSerializer().serialize(self)))"
+        }
+    }
+    open class UserFeaturesGetValuesBatchResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserFeaturesGetValuesBatchResult) -> JSON {
+            let output = [ 
+            "values": ArraySerializer(Users.UserFeatureValueSerializer()).serialize(value.values),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserFeaturesGetValuesBatchResult {
+            switch json {
+                case .dictionary(let dict):
+                    let values = ArraySerializer(Users.UserFeatureValueSerializer()).deserialize(dict["values"] ?? .null)
+                    return UserFeaturesGetValuesBatchResult(values: values)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -657,6 +962,18 @@ open class Users {
 
     /// Stone Route Objects
 
+    static let featuresGetValues = Route(
+        name: "features/get_values",
+        version: 1,
+        namespace: "users",
+        deprecated: false,
+        argSerializer: Users.UserFeaturesGetValuesBatchArgSerializer(),
+        responseSerializer: Users.UserFeaturesGetValuesBatchResultSerializer(),
+        errorSerializer: Users.UserFeaturesGetValuesBatchErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let getAccount = Route(
         name: "get_account",
         version: 1,
