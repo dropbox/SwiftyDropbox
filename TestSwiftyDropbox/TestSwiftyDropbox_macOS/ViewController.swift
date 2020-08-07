@@ -24,15 +24,16 @@ class ViewController: NSViewController {
         }
     }
 
-    @IBAction func oauthCodeFlowLinkButtonPressed(_ senderr: AnyObject) {
-        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    @IBAction func oauthCodeFlowLinkButtonPressed(_ sender: AnyObject) {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
+            let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
             DropboxClientsManager.authorizeFromControllerV2(
                 sharedWorkspace: NSWorkspace.shared,
                 controller: self,
                 loadingStatusDelegate: nil,
                 openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
-                scopeRequest: scopeRequest)
+                scopeRequest: scopeRequest
+            )
         }
     }
 

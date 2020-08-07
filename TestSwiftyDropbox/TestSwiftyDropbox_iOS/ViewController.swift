@@ -17,13 +17,14 @@ class ViewController: UIViewController {
     }
 
     @IBAction func codeFlowLinkButtonPressed(_ sender: Any) {
-        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: true)
+        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
         DropboxClientsManager.authorizeFromControllerV2(
             UIApplication.shared,
             controller: self,
             loadingStatusDelegate: nil,
             openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
-            scopeRequest: scopeRequest)
+            scopeRequest: scopeRequest
+        )
     }
 
     @IBAction func unlinkButtonPressed(_ sender: AnyObject) {

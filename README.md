@@ -288,11 +288,22 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     UIApplication.shared.openURL(url)
                                                   })
+
+  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+  DropboxClientsManager.authorizeFromControllerV2(
+      UIApplication.shared,
+      controller: self,
+      loadingStatusDelegate: nil,
+      openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
+      scopeRequest: scopeRequest
+  )
 }
 
 ```
@@ -303,11 +314,22 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     NSWorkspace.shared.open(url)
                                                   })
+
+  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+  DropboxClientsManager.authorizeFromControllerV2(
+      sharedWorkspace: NSWorkspace.shared,
+      controller: self,
+      loadingStatusDelegate: nil,
+      openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+      scopeRequest: scopeRequest
+  )
 }
 ```
 
@@ -330,16 +352,19 @@ To handle the redirection back into the Swift SDK once the authentication flow i
 import SwiftyDropbox
 
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-        switch authResult {
-        case .success:
-            print("Success! User is logged into Dropbox.")
-        case .cancel:
-            print("Authorization flow was manually canceled by user!")
-        case .error(_, let description):
-            print("Error: \(description)")
-        }
+    let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
     }
+    DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
     return true
 }
 
@@ -363,16 +388,19 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
     if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
         if let urlStr = aeEventDescriptor.stringValue {
             let url = URL(string: urlStr)!
-            if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-                switch authResult {
-                case .success:
-                    print("Success! User is logged into Dropbox.")
-                case .cancel:
-                    print("Authorization flow was manually canceled by user!")
-                case .error(_, let description):
-                    print("Error: \(description)")
+            let oauthCompletion: DropboxOAuthCompletion = {
+                if let authResult = $0 {
+                    switch authResult {
+                    case .success:
+                        print("Success! User is logged into Dropbox.")
+                    case .cancel:
+                        print("Authorization flow was manually canceled by user!")
+                    case .error(_, let description):
+                        print("Error: \(String(describing: description))")
+                    }
                 }
             }
+            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
             // this brings your application back the foreground on redirect
             NSApp.activate(ignoringOtherApps: true)
         }
