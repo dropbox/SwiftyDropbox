@@ -288,6 +288,9 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+
+    // Use only one of these two flows at once:
+
     // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
@@ -314,6 +317,9 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+
+    // Use only one of these two flows at once:
+
     // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
                                                   controller: self,
