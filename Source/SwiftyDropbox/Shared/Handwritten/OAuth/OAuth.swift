@@ -92,23 +92,28 @@ open class DropboxOAuthManager: AccessTokenRefreshing {
     ///
     /// Try to handle a redirect back into the application
     ///
-    /// - parameter url: The URL to attempt to handle
+    /// - parameters:
+    ///     - url: The URL to attempt to handle.
+    ///     - completion: The callback closure to receive auth result.
+    /// - returns: Whether the redirect URL can be handled.
     ///
-    /// - returns `nil` if SwiftyDropbox cannot handle the redirect URL, otherwise returns the `DropboxOAuthResult`.
-    ///
-    open func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+    open func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) -> Bool {
         // check if url is a cancel url
         if (url.host == "1" && url.path == "/cancel") || (url.host == "2" && url.path == "/cancel") {
             completion(.cancel)
-        } else if !self.canHandleURL(url) {
-            completion(nil)
-        } else {
+            return true
+        }
+        if self.canHandleURL(url) {
             extractFromUrl(url) { result in
                 if case let .success(token) = result {
                     self.storeAccessToken(token)
                 }
                 completion(result)
             }
+            return true
+        } else {
+            completion(nil)
+            return false
         }
     }
 
