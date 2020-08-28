@@ -40,15 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             (self.window?.rootViewController as? ViewController)?.checkButtons()
         }
 
+        let canHandleUrl: Bool
         switch(appPermission) {
         case .fullDropbox:
-            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+            canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
         case .teamMemberFileAccess:
-            DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
+            canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         case .teamMemberManagement:
-            DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
+            canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         }
-        return true
+        return canHandleUrl
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

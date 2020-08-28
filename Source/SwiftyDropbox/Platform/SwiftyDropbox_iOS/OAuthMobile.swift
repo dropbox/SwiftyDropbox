@@ -114,7 +114,7 @@ open class DropboxMobileOAuthManager: DropboxOAuthManager {
         return false
     }
     
-    open override func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+    open override func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) -> Bool {
         super.handleRedirectURL(url, completion: {
             if let sharedMobileApplication = MobileSharedApplication.sharedMobileApplication {
                 sharedMobileApplication.dismissAuthController()

@@ -370,8 +370,8 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
           }
       }
     }
-    DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
-    return true
+    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+    return canHandleUrl
 }
 
 ```

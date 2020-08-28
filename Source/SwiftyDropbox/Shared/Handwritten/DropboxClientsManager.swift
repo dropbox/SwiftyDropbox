@@ -116,9 +116,16 @@ open class DropboxClientsManager {
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+    ///
+    /// - parameters:
+    ///     - url: The URL to attempt to handle.
+    ///     - completion: The callback closure to receive auth result.
+    /// - returns: Whether the redirect URL can be handled.
+    ///
+    @discardableResult
+    public static func handleRedirectURL(_ url: URL, completion: @escaping DropboxOAuthCompletion) -> Bool {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
-        DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
+        return DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
             if let result = result {
                 switch result {
                 case .success(let accessToken):
@@ -132,9 +139,16 @@ open class DropboxClientsManager {
     }
 
     /// Handle a redirect and automatically initialize the client and save the token.
-    public static func handleRedirectURLTeam(_ url: URL, completion: @escaping DropboxOAuthCompletion) {
+    ///
+    /// - parameters:
+    ///     - url: The URL to attempt to handle.
+    ///     - completion: The callback closure to receive auth result.
+    /// - returns: Whether the redirect URL can be handled.
+    ///
+    @discardableResult
+    public static func handleRedirectURLTeam(_ url: URL, completion: @escaping DropboxOAuthCompletion) -> Bool {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
-        DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
+        return DropboxOAuthManager.sharedOAuthManager.handleRedirectURL(url, completion: { result in
             if let result = result {
                 switch result {
                 case .success(let accessToken):
