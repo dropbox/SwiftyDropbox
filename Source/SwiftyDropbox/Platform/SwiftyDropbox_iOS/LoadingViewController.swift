@@ -2,6 +2,8 @@
 /// Copyright (c) 2020 Dropbox, Inc. All rights reserved.
 ///
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -34,3 +36,5 @@ class LoadingViewController: UIViewController {
         loadingSpinner.startAnimating()
     }
 }
+
+#endif

@@ -2,6 +2,8 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
+#if canImport(UIKit)
+
 import Foundation
 import SafariServices
 import UIKit
@@ -443,3 +445,5 @@ open class MobileSafariViewController: SFSafariViewController, SFSafariViewContr
     }
     
 }
+
+#endif
