@@ -84,7 +84,7 @@ extension FilesRoutes {
         uploadData.uploadGroup.enter()
         let startBytes = 0
         let endBytes = fileChunkSize
-        let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: UInt(startBytes), endBytes: UInt(endBytes))
+        let fileChunkInputStream = ChunkInputStream(fileUrl: fileUrl, startBytes: startBytes, endBytes: Int(endBytes))
         // use seperate continue upload queue so we don't block other files from
         // commencing their upload
         let chunkUploadContinueQueue = DispatchQueue(label: "chunk_upload_continue_queue")
@@ -127,7 +127,7 @@ extension FilesRoutes {
             for i in 1..<numFileChunks {
                 let startBytes = fileChunkSize * i
                 let endBytes = (i != numFileChunks - 1) ? fileChunkSize * (i + 1) : fileSize
-                let fileChunkInputStream = DBChunkInputStream(fileUrl: fileUrl, startBytes: UInt(startBytes), endBytes: UInt(endBytes))
+                let fileChunkInputStream = ChunkInputStream(fileUrl: fileUrl, startBytes: Int(startBytes), endBytes: Int(endBytes))
                 totalBytesSent += fileChunkSize
                 let cursor = Files.UploadSessionCursor(sessionId: sessionId, offset: (totalBytesSent))
                 let shouldClose = (i != numFileChunks - 1) ? false : true
@@ -140,7 +140,7 @@ extension FilesRoutes {
         }
     }
     
-    func appendFileChunk(uploadData: BatchUploadData, fileUrl: URL, cursor: Files.UploadSessionCursor, shouldClose: Bool, fileChunkInputStream: DBChunkInputStream, chunkUploadResponseQueue: DispatchQueue, chunkUploadFinished: DispatchSemaphore, retryCount: Int, startBytes: UInt64, endBytes: UInt64, shouldContinue: Bool) {
+    func appendFileChunk(uploadData: BatchUploadData, fileUrl: URL, cursor: Files.UploadSessionCursor, shouldClose: Bool, fileChunkInputStream: ChunkInputStream, chunkUploadResponseQueue: DispatchQueue, chunkUploadFinished: DispatchSemaphore, retryCount: Int, startBytes: UInt64, endBytes: UInt64, shouldContinue: Bool) {
         // close session on final append call
         
         self.uploadSessionAppendV2(cursor: cursor, close: shouldClose, input: fileChunkInputStream).response(queue: DispatchQueue(label: "testing"), completionHandler: { result, error in
