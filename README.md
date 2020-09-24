@@ -13,6 +13,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [Register your application](#register-your-application)
   * [Obtain an OAuth 2.0 token](#obtain-an-oauth-20-token)
 * [SDK distribution](#sdk-distribution)
+  * [Swift Package Manager](#swift-package-manager)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
   * [Manually add subproject](#manually-add-subproject)
@@ -73,6 +74,17 @@ Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-de
 ## SDK distribution
 
 You can integrate the Dropbox Swift SDK into your project using one of several methods.
+
+### Swift Package Manager
+
+The Dropbox Swift SDK can be installed in your project using [Swift Package Manager](https://swift.org/package-manager/) by specifying the Dropbox Swift SDK repository URL:
+
+```
+https://github.com/dropbox/SwiftyDropbox.git
+```
+
+Refer to [Apple's "Adding Package Dependencies to Your App" documentation](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) for more information.
+
 
 ### CocoaPods
 
