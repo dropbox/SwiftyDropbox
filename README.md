@@ -53,7 +53,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 - iOS 9.0+
 - macOS 10.11+
 - Xcode 10.0+
-- Swift 4.2+
+- Swift 5.0+
 
 ## Get Started
 
