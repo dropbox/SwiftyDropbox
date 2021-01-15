@@ -8,7 +8,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftyDropbox",
     platforms: [
-		.iOS(SupportedPlatform.IOSVersion.v11)
+		.iOS(SupportedPlatform.IOSVersion.v9)
 	],
     products: [
         .library(name: "SwiftyDropbox", targets:["SwiftyDropbox"]),
