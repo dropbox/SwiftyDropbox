@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8529B7C925FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */; };
+		8529B7CA25FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */; };
 		BF082C242464B7C6000C8469 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C232464B7C6000C8469 /* AuthSession.swift */; };
 		BF082C262464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
 		BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C252464BE7A000C8469 /* OAuthUtils.swift */; };
@@ -124,8 +126,6 @@
 		F2478F3A1ECCD2FF00BAF014 /* SDKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478F381ECCD2FF00BAF014 /* SDKConstants.swift */; };
 		F265BD0B1E68072500CC38C8 /* OAuthMobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F265BD091E68072500CC38C8 /* OAuthMobile.swift */; };
 		F265BD101E68073A00CC38C8 /* OAuthDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F265BD0E1E68073A00CC38C8 /* OAuthDesktop.swift */; };
-		F2C54A9E1D89F6F0003A2675 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */; };
-		F2C54AA01D89F6FA003A2675 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */; };
 		F2C6FD371D89E37500E0DD9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD361D89E37500E0DD9E /* Foundation.framework */; };
 		F2C6FD391D89E37A00E0DD9E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD381D89E37A00E0DD9E /* UIKit.framework */; };
 		F2C6FD3B1D89E38200E0DD9E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */; };
@@ -133,6 +133,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = ../../Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
 		BF082C232464B7C6000C8469 /* AuthSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
 		BF082C252464BE7A000C8469 /* OAuthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUtils.swift; sourceTree = "<group>"; };
 		BF082C292464C4B7000C8469 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
@@ -195,8 +196,6 @@
 		F265BD091E68072500CC38C8 /* OAuthMobile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthMobile.swift; sourceTree = "<group>"; };
 		F265BD0D1E68073A00CC38C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F265BD0E1E68073A00CC38C8 /* OAuthDesktop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthDesktop.swift; sourceTree = "<group>"; };
-		F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
-		F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		F2C6FCC51D89E16800E0DD9E /* SwiftyDropbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyDropbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C6FCD51D89E1A900E0DD9E /* SwiftyDropbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyDropbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C6FD361D89E37500E0DD9E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -210,9 +209,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8529B7C925FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */,
 				F2C6FD371D89E37500E0DD9E /* Foundation.framework in Frameworks */,
 				F2C6FD391D89E37A00E0DD9E /* UIKit.framework in Frameworks */,
-				F2C54A9E1D89F6F0003A2675 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,9 +219,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8529B7CA25FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */,
 				F2C6FD3D1D89E38800E0DD9E /* Foundation.framework in Frameworks */,
 				F2C6FD3B1D89E38200E0DD9E /* AppKit.framework in Frameworks */,
-				F2C54AA01D89F6FA003A2675 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,9 +368,8 @@
 		F2C6FD351D89E37500E0DD9E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */,
-				F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */,
 				F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */,
+				8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */,
 				F2C6FD3A1D89E38200E0DD9E /* AppKit.framework */,
 				F2C6FD381D89E37A00E0DD9E /* UIKit.framework */,
 				F2C6FD361D89E37500E0DD9E /* Foundation.framework */,
@@ -739,7 +737,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -761,7 +760,11 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropbox.SwiftyDropbox;
 				PRODUCT_NAME = SwiftyDropbox;
 				SKIP_INSTALL = YES;
@@ -783,7 +786,11 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dropbox.SwiftyDropbox;
 				PRODUCT_NAME = SwiftyDropbox;
 				SKIP_INSTALL = YES;
@@ -805,7 +812,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.SwiftyDropbox-macOS";
 				PRODUCT_NAME = SwiftyDropbox;
@@ -830,7 +841,11 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.SwiftyDropbox-macOS";
 				PRODUCT_NAME = SwiftyDropbox;
