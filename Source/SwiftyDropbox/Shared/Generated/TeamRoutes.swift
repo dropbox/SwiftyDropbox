@@ -915,6 +915,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetActivityReport` object on success
     /// or a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message:"reportsGetActivity is deprecated.")
     @discardableResult open func reportsGetActivity(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetActivityReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetActivity
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
@@ -929,6 +930,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetDevicesReport` object on success
     /// or a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message:"reportsGetDevices is deprecated.")
     @discardableResult open func reportsGetDevices(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetDevicesReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetDevices
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
@@ -943,6 +945,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetMembershipReport` object on
     /// success or a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message:"reportsGetMembership is deprecated.")
     @discardableResult open func reportsGetMembership(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetMembershipReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetMembership
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
@@ -957,6 +960,7 @@ open class TeamRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.GetStorageReport` object on success
     /// or a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message:"reportsGetStorage is deprecated.")
     @discardableResult open func reportsGetStorage(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetStorageReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetStorage
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)

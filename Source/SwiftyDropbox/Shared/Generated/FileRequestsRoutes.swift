@@ -32,12 +32,13 @@ open class FileRequestsRoutes {
     /// accounts.
     /// - parameter open: Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
+    /// - parameter description_: A description of the file request.
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on
     /// success or a `FileRequests.CreateFileRequestError` object on failure.
-    @discardableResult open func create(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.CreateFileRequestErrorSerializer> {
+    @discardableResult open func create(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true, description_: String? = nil) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.CreateFileRequestErrorSerializer> {
         let route = FileRequests.create
-        let serverArgs = FileRequests.CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open)
+        let serverArgs = FileRequests.CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -122,12 +123,13 @@ open class FileRequestsRoutes {
     /// - parameter deadline: The new deadline for the file request. Deadlines can only be set by Professional and
     /// Business accounts.
     /// - parameter open: Whether to set this file request as open or closed.
+    /// - parameter description_: The description of the file request.
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on
     /// success or a `FileRequests.UpdateFileRequestError` object on failure.
-    @discardableResult open func update(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.UpdateFileRequestErrorSerializer> {
+    @discardableResult open func update(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil, description_: String? = nil) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.UpdateFileRequestErrorSerializer> {
         let route = FileRequests.update
-        let serverArgs = FileRequests.UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open)
+        let serverArgs = FileRequests.UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
         return client.request(route, serverArgs: serverArgs)
     }
 

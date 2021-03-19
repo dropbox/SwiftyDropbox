@@ -4614,6 +4614,8 @@ open class Team {
         case nameMustBeUnique
         /// Team exceeded legal hold quota.
         case teamExceededLegalHoldQuota
+        /// The provided date is invalid.
+        case invalidDate
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(LegalHoldsPolicyCreateErrorSerializer().serialize(self)))"
@@ -4663,6 +4665,10 @@ open class Team {
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_exceeded_legal_hold_quota")
                     return .dictionary(d)
+                case .invalidDate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_date")
+                    return .dictionary(d)
             }
         }
         open func deserialize(_ json: JSON) -> LegalHoldsPolicyCreateError {
@@ -4690,6 +4696,8 @@ open class Team {
                             return LegalHoldsPolicyCreateError.nameMustBeUnique
                         case "team_exceeded_legal_hold_quota":
                             return LegalHoldsPolicyCreateError.teamExceededLegalHoldQuota
+                        case "invalid_date":
+                            return LegalHoldsPolicyCreateError.invalidDate
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -12458,7 +12466,7 @@ open class Team {
         name: "reports/get_activity",
         version: 1,
         namespace: "team",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetActivityReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
@@ -12470,7 +12478,7 @@ open class Team {
         name: "reports/get_devices",
         version: 1,
         namespace: "team",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetDevicesReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
@@ -12482,7 +12490,7 @@ open class Team {
         name: "reports/get_membership",
         version: 1,
         namespace: "team",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetMembershipReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
@@ -12494,7 +12502,7 @@ open class Team {
         name: "reports/get_storage",
         version: 1,
         namespace: "team",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetStorageReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),

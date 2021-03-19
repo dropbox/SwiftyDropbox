@@ -10,18 +10,18 @@ import Foundation
 open class TeamLog {
     /// Indicates the method in which the action was performed.
     public enum AccessMethodLogInfo: CustomStringConvertible {
-        /// End user session details.
-        case endUser(TeamLog.SessionLogInfo)
-        /// Sign in as session details.
-        case signInAs(TeamLog.WebSessionLogInfo)
-        /// Content manager session details.
-        case contentManager(TeamLog.WebSessionLogInfo)
         /// Admin console session details.
         case adminConsole(TeamLog.WebSessionLogInfo)
-        /// Enterprise console session details.
-        case enterpriseConsole(TeamLog.WebSessionLogInfo)
         /// Api session details.
         case api(TeamLog.ApiSessionLogInfo)
+        /// Content manager session details.
+        case contentManager(TeamLog.WebSessionLogInfo)
+        /// End user session details.
+        case endUser(TeamLog.SessionLogInfo)
+        /// Enterprise console session details.
+        case enterpriseConsole(TeamLog.WebSessionLogInfo)
+        /// Sign in as session details.
+        case signInAs(TeamLog.WebSessionLogInfo)
         /// An unspecified error.
         case other
 
@@ -33,29 +33,29 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: AccessMethodLogInfo) -> JSON {
             switch value {
-                case .endUser(let arg):
-                    var d = ["end_user": TeamLog.SessionLogInfoSerializer().serialize(arg)]
-                    d[".tag"] = .str("end_user")
-                    return .dictionary(d)
-                case .signInAs(let arg):
+                case .adminConsole(let arg):
                     var d = Serialization.getFields(TeamLog.WebSessionLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("sign_in_as")
+                    d[".tag"] = .str("admin_console")
+                    return .dictionary(d)
+                case .api(let arg):
+                    var d = Serialization.getFields(TeamLog.ApiSessionLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("api")
                     return .dictionary(d)
                 case .contentManager(let arg):
                     var d = Serialization.getFields(TeamLog.WebSessionLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("content_manager")
                     return .dictionary(d)
-                case .adminConsole(let arg):
-                    var d = Serialization.getFields(TeamLog.WebSessionLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("admin_console")
+                case .endUser(let arg):
+                    var d = ["end_user": TeamLog.SessionLogInfoSerializer().serialize(arg)]
+                    d[".tag"] = .str("end_user")
                     return .dictionary(d)
                 case .enterpriseConsole(let arg):
                     var d = Serialization.getFields(TeamLog.WebSessionLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("enterprise_console")
                     return .dictionary(d)
-                case .api(let arg):
-                    var d = Serialization.getFields(TeamLog.ApiSessionLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("api")
+                case .signInAs(let arg):
+                    var d = Serialization.getFields(TeamLog.WebSessionLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("sign_in_as")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -68,24 +68,24 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "end_user":
-                            let v = TeamLog.SessionLogInfoSerializer().deserialize(d["end_user"] ?? .null)
-                            return AccessMethodLogInfo.endUser(v)
-                        case "sign_in_as":
-                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
-                            return AccessMethodLogInfo.signInAs(v)
-                        case "content_manager":
-                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
-                            return AccessMethodLogInfo.contentManager(v)
                         case "admin_console":
                             let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
                             return AccessMethodLogInfo.adminConsole(v)
-                        case "enterprise_console":
-                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
-                            return AccessMethodLogInfo.enterpriseConsole(v)
                         case "api":
                             let v = TeamLog.ApiSessionLogInfoSerializer().deserialize(json)
                             return AccessMethodLogInfo.api(v)
+                        case "content_manager":
+                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
+                            return AccessMethodLogInfo.contentManager(v)
+                        case "end_user":
+                            let v = TeamLog.SessionLogInfoSerializer().deserialize(d["end_user"] ?? .null)
+                            return AccessMethodLogInfo.endUser(v)
+                        case "enterprise_console":
+                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
+                            return AccessMethodLogInfo.enterpriseConsole(v)
+                        case "sign_in_as":
+                            let v = TeamLog.WebSessionLogInfoSerializer().deserialize(json)
+                            return AccessMethodLogInfo.signInAs(v)
                         case "other":
                             return AccessMethodLogInfo.other
                         default:
@@ -100,9 +100,9 @@ open class TeamLog {
     /// The AccountCaptureAvailability union
     public enum AccountCaptureAvailability: CustomStringConvertible {
         /// An unspecified error.
-        case unavailable
-        /// An unspecified error.
         case available
+        /// An unspecified error.
+        case unavailable
         /// An unspecified error.
         case other
 
@@ -114,13 +114,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: AccountCaptureAvailability) -> JSON {
             switch value {
-                case .unavailable:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("unavailable")
-                    return .dictionary(d)
                 case .available:
                     var d = [String: JSON]()
                     d[".tag"] = .str("available")
+                    return .dictionary(d)
+                case .unavailable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unavailable")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -133,10 +133,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "unavailable":
-                            return AccountCaptureAvailability.unavailable
                         case "available":
                             return AccountCaptureAvailability.available
+                        case "unavailable":
+                            return AccountCaptureAvailability.unavailable
                         case "other":
                             return AccountCaptureAvailability.other
                         default:
@@ -412,9 +412,9 @@ open class TeamLog {
     /// The AccountCaptureNotificationType union
     public enum AccountCaptureNotificationType: CustomStringConvertible {
         /// An unspecified error.
-        case proactiveWarningNotification
-        /// An unspecified error.
         case actionableNotification
+        /// An unspecified error.
+        case proactiveWarningNotification
         /// An unspecified error.
         case other
 
@@ -426,13 +426,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: AccountCaptureNotificationType) -> JSON {
             switch value {
-                case .proactiveWarningNotification:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("proactive_warning_notification")
-                    return .dictionary(d)
                 case .actionableNotification:
                     var d = [String: JSON]()
                     d[".tag"] = .str("actionable_notification")
+                    return .dictionary(d)
+                case .proactiveWarningNotification:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("proactive_warning_notification")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -445,10 +445,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "proactive_warning_notification":
-                            return AccountCaptureNotificationType.proactiveWarningNotification
                         case "actionable_notification":
                             return AccountCaptureNotificationType.actionableNotification
+                        case "proactive_warning_notification":
+                            return AccountCaptureNotificationType.proactiveWarningNotification
                         case "other":
                             return AccountCaptureNotificationType.other
                         default:
@@ -463,11 +463,11 @@ open class TeamLog {
     /// The AccountCapturePolicy union
     public enum AccountCapturePolicy: CustomStringConvertible {
         /// An unspecified error.
+        case allUsers
+        /// An unspecified error.
         case disabled
         /// An unspecified error.
         case invitedUsers
-        /// An unspecified error.
-        case allUsers
         /// An unspecified error.
         case other
 
@@ -479,6 +479,10 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: AccountCapturePolicy) -> JSON {
             switch value {
+                case .allUsers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("all_users")
+                    return .dictionary(d)
                 case .disabled:
                     var d = [String: JSON]()
                     d[".tag"] = .str("disabled")
@@ -486,10 +490,6 @@ open class TeamLog {
                 case .invitedUsers:
                     var d = [String: JSON]()
                     d[".tag"] = .str("invited_users")
-                    return .dictionary(d)
-                case .allUsers:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("all_users")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -502,12 +502,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "all_users":
+                            return AccountCapturePolicy.allUsers
                         case "disabled":
                             return AccountCapturePolicy.disabled
                         case "invited_users":
                             return AccountCapturePolicy.invitedUsers
-                        case "all_users":
-                            return AccountCapturePolicy.allUsers
                         case "other":
                             return AccountCapturePolicy.other
                         default:
@@ -700,12 +700,12 @@ open class TeamLog {
 
     /// Additional information indicating the action taken that caused status change.
     public enum ActionDetails: CustomStringConvertible {
-        /// Additional information relevant when a new member joins the team.
-        case teamJoinDetails(TeamLog.JoinTeamDetails)
         /// Define how the user was removed from the team.
         case removeAction(TeamLog.MemberRemoveActionType)
         /// Additional information relevant when someone is invited to the team.
         case teamInviteDetails(TeamLog.TeamInviteDetails)
+        /// Additional information relevant when a new member joins the team.
+        case teamJoinDetails(TeamLog.JoinTeamDetails)
         /// An unspecified error.
         case other
 
@@ -717,10 +717,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: ActionDetails) -> JSON {
             switch value {
-                case .teamJoinDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.JoinTeamDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("team_join_details")
-                    return .dictionary(d)
                 case .removeAction(let arg):
                     var d = ["remove_action": TeamLog.MemberRemoveActionTypeSerializer().serialize(arg)]
                     d[".tag"] = .str("remove_action")
@@ -728,6 +724,10 @@ open class TeamLog {
                 case .teamInviteDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamInviteDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("team_invite_details")
+                    return .dictionary(d)
+                case .teamJoinDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.JoinTeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_join_details")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -740,15 +740,15 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "team_join_details":
-                            let v = TeamLog.JoinTeamDetailsSerializer().deserialize(json)
-                            return ActionDetails.teamJoinDetails(v)
                         case "remove_action":
                             let v = TeamLog.MemberRemoveActionTypeSerializer().deserialize(d["remove_action"] ?? .null)
                             return ActionDetails.removeAction(v)
                         case "team_invite_details":
                             let v = TeamLog.TeamInviteDetailsSerializer().deserialize(json)
                             return ActionDetails.teamInviteDetails(v)
+                        case "team_join_details":
+                            let v = TeamLog.JoinTeamDetailsSerializer().deserialize(json)
+                            return ActionDetails.teamJoinDetails(v)
                         case "other":
                             return ActionDetails.other
                         default:
@@ -762,18 +762,18 @@ open class TeamLog {
 
     /// The entity who performed the action.
     public enum ActorLogInfo: CustomStringConvertible {
-        /// The user who did the action.
-        case user(TeamLog.UserLogInfo)
         /// The admin who did the action.
         case admin(TeamLog.UserLogInfo)
-        /// The application who did the action.
-        case app(TeamLog.AppLogInfo)
-        /// Action done by reseller.
-        case reseller(TeamLog.ResellerLogInfo)
-        /// Action done by Dropbox.
-        case dropbox
         /// Anonymous actor.
         case anonymous
+        /// The application who did the action.
+        case app(TeamLog.AppLogInfo)
+        /// Action done by Dropbox.
+        case dropbox
+        /// Action done by reseller.
+        case reseller(TeamLog.ResellerLogInfo)
+        /// The user who did the action.
+        case user(TeamLog.UserLogInfo)
         /// An unspecified error.
         case other
 
@@ -785,29 +785,29 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: ActorLogInfo) -> JSON {
             switch value {
-                case .user(let arg):
-                    var d = ["user": TeamLog.UserLogInfoSerializer().serialize(arg)]
-                    d[".tag"] = .str("user")
-                    return .dictionary(d)
                 case .admin(let arg):
                     var d = ["admin": TeamLog.UserLogInfoSerializer().serialize(arg)]
                     d[".tag"] = .str("admin")
+                    return .dictionary(d)
+                case .anonymous:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("anonymous")
                     return .dictionary(d)
                 case .app(let arg):
                     var d = ["app": TeamLog.AppLogInfoSerializer().serialize(arg)]
                     d[".tag"] = .str("app")
                     return .dictionary(d)
-                case .reseller(let arg):
-                    var d = Serialization.getFields(TeamLog.ResellerLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("reseller")
-                    return .dictionary(d)
                 case .dropbox:
                     var d = [String: JSON]()
                     d[".tag"] = .str("dropbox")
                     return .dictionary(d)
-                case .anonymous:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("anonymous")
+                case .reseller(let arg):
+                    var d = Serialization.getFields(TeamLog.ResellerLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("reseller")
+                    return .dictionary(d)
+                case .user(let arg):
+                    var d = ["user": TeamLog.UserLogInfoSerializer().serialize(arg)]
+                    d[".tag"] = .str("user")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -820,22 +820,22 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "user":
-                            let v = TeamLog.UserLogInfoSerializer().deserialize(d["user"] ?? .null)
-                            return ActorLogInfo.user(v)
                         case "admin":
                             let v = TeamLog.UserLogInfoSerializer().deserialize(d["admin"] ?? .null)
                             return ActorLogInfo.admin(v)
+                        case "anonymous":
+                            return ActorLogInfo.anonymous
                         case "app":
                             let v = TeamLog.AppLogInfoSerializer().deserialize(d["app"] ?? .null)
                             return ActorLogInfo.app(v)
+                        case "dropbox":
+                            return ActorLogInfo.dropbox
                         case "reseller":
                             let v = TeamLog.ResellerLogInfoSerializer().deserialize(json)
                             return ActorLogInfo.reseller(v)
-                        case "dropbox":
-                            return ActorLogInfo.dropbox
-                        case "anonymous":
-                            return ActorLogInfo.anonymous
+                        case "user":
+                            let v = TeamLog.UserLogInfoSerializer().deserialize(d["user"] ?? .null)
+                            return ActorLogInfo.user(v)
                         case "other":
                             return ActorLogInfo.other
                         default:
@@ -850,15 +850,15 @@ open class TeamLog {
     /// The AdminRole union
     public enum AdminRole: CustomStringConvertible {
         /// An unspecified error.
-        case teamAdmin
-        /// An unspecified error.
-        case userManagementAdmin
-        /// An unspecified error.
-        case supportAdmin
-        /// An unspecified error.
         case limitedAdmin
         /// An unspecified error.
         case memberOnly
+        /// An unspecified error.
+        case supportAdmin
+        /// An unspecified error.
+        case teamAdmin
+        /// An unspecified error.
+        case userManagementAdmin
         /// An unspecified error.
         case other
 
@@ -870,18 +870,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: AdminRole) -> JSON {
             switch value {
-                case .teamAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team_admin")
-                    return .dictionary(d)
-                case .userManagementAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("user_management_admin")
-                    return .dictionary(d)
-                case .supportAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("support_admin")
-                    return .dictionary(d)
                 case .limitedAdmin:
                     var d = [String: JSON]()
                     d[".tag"] = .str("limited_admin")
@@ -889,6 +877,18 @@ open class TeamLog {
                 case .memberOnly:
                     var d = [String: JSON]()
                     d[".tag"] = .str("member_only")
+                    return .dictionary(d)
+                case .supportAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("support_admin")
+                    return .dictionary(d)
+                case .teamAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_admin")
+                    return .dictionary(d)
+                case .userManagementAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_management_admin")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -901,16 +901,16 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "team_admin":
-                            return AdminRole.teamAdmin
-                        case "user_management_admin":
-                            return AdminRole.userManagementAdmin
-                        case "support_admin":
-                            return AdminRole.supportAdmin
                         case "limited_admin":
                             return AdminRole.limitedAdmin
                         case "member_only":
                             return AdminRole.memberOnly
+                        case "support_admin":
+                            return AdminRole.supportAdmin
+                        case "team_admin":
+                            return AdminRole.teamAdmin
+                        case "user_management_admin":
+                            return AdminRole.userManagementAdmin
                         case "other":
                             return AdminRole.other
                         default:
@@ -1445,6 +1445,57 @@ open class TeamLog {
                             return AssetLogInfo.other
                         default:
                             return AssetLogInfo.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Backup status
+    public enum BackupStatus: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(BackupStatusSerializer().serialize(self)))"
+        }
+    }
+    open class BackupStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: BackupStatus) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> BackupStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return BackupStatus.disabled
+                        case "enabled":
+                            return BackupStatus.enabled
+                        case "other":
+                            return BackupStatus.other
+                        default:
+                            return BackupStatus.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -2388,6 +2439,171 @@ open class TeamLog {
         }
     }
 
+    /// Changed classification policy for team.
+    open class ClassificationChangePolicyDetails: CustomStringConvertible {
+        /// Previous classification policy.
+        public let previousValue: TeamLog.ClassificationPolicyEnumWrapper
+        /// New classification policy.
+        public let newValue: TeamLog.ClassificationPolicyEnumWrapper
+        /// Policy type.
+        public let classificationType: TeamLog.ClassificationType
+        public init(previousValue: TeamLog.ClassificationPolicyEnumWrapper, newValue: TeamLog.ClassificationPolicyEnumWrapper, classificationType: TeamLog.ClassificationType) {
+            self.previousValue = previousValue
+            self.newValue = newValue
+            self.classificationType = classificationType
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ClassificationChangePolicyDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ClassificationChangePolicyDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ClassificationChangePolicyDetails) -> JSON {
+            let output = [ 
+            "previous_value": TeamLog.ClassificationPolicyEnumWrapperSerializer().serialize(value.previousValue),
+            "new_value": TeamLog.ClassificationPolicyEnumWrapperSerializer().serialize(value.newValue),
+            "classification_type": TeamLog.ClassificationTypeSerializer().serialize(value.classificationType),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ClassificationChangePolicyDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let previousValue = TeamLog.ClassificationPolicyEnumWrapperSerializer().deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamLog.ClassificationPolicyEnumWrapperSerializer().deserialize(dict["new_value"] ?? .null)
+                    let classificationType = TeamLog.ClassificationTypeSerializer().deserialize(dict["classification_type"] ?? .null)
+                    return ClassificationChangePolicyDetails(previousValue: previousValue, newValue: newValue, classificationType: classificationType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ClassificationChangePolicyType struct
+    open class ClassificationChangePolicyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ClassificationChangePolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ClassificationChangePolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ClassificationChangePolicyType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ClassificationChangePolicyType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ClassificationChangePolicyType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling team access to the classification feature
+    public enum ClassificationPolicyEnumWrapper: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ClassificationPolicyEnumWrapperSerializer().serialize(self)))"
+        }
+    }
+    open class ClassificationPolicyEnumWrapperSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ClassificationPolicyEnumWrapper) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ClassificationPolicyEnumWrapper {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ClassificationPolicyEnumWrapper.disabled
+                        case "enabled":
+                            return ClassificationPolicyEnumWrapper.enabled
+                        case "other":
+                            return ClassificationPolicyEnumWrapper.other
+                        default:
+                            return ClassificationPolicyEnumWrapper.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The type of classification (currently only PII)
+    public enum ClassificationType: CustomStringConvertible {
+        /// An unspecified error.
+        case pii
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ClassificationTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ClassificationTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ClassificationType) -> JSON {
+            switch value {
+                case .pii:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("pii")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ClassificationType {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "pii":
+                            return ClassificationType.pii
+                        case "other":
+                            return ClassificationType.other
+                        default:
+                            return ClassificationType.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Shared album.
     open class CollectionShareDetails: CustomStringConvertible {
         /// Album name.
@@ -2444,6 +2660,131 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return CollectionShareType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for controlling team access to computer backup feature
+    public enum ComputerBackupPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case default_
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ComputerBackupPolicySerializer().serialize(self)))"
+        }
+    }
+    open class ComputerBackupPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ComputerBackupPolicy) -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ComputerBackupPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return ComputerBackupPolicy.default_
+                        case "disabled":
+                            return ComputerBackupPolicy.disabled
+                        case "enabled":
+                            return ComputerBackupPolicy.enabled
+                        case "other":
+                            return ComputerBackupPolicy.other
+                        default:
+                            return ComputerBackupPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed computer backup policy for team.
+    open class ComputerBackupPolicyChangedDetails: CustomStringConvertible {
+        /// New computer backup policy.
+        public let newValue: TeamLog.ComputerBackupPolicy
+        /// Previous computer backup policy.
+        public let previousValue: TeamLog.ComputerBackupPolicy
+        public init(newValue: TeamLog.ComputerBackupPolicy, previousValue: TeamLog.ComputerBackupPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ComputerBackupPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ComputerBackupPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ComputerBackupPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.ComputerBackupPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.ComputerBackupPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ComputerBackupPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.ComputerBackupPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.ComputerBackupPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return ComputerBackupPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ComputerBackupPolicyChangedType struct
+    open class ComputerBackupPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ComputerBackupPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ComputerBackupPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ComputerBackupPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ComputerBackupPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ComputerBackupPolicyChangedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2602,16 +2943,16 @@ open class TeamLog {
 
     /// The primary entity on which the action was done.
     public enum ContextLogInfo: CustomStringConvertible {
-        /// Action was done on behalf of a team member.
-        case teamMember(TeamLog.TeamMemberLogInfo)
-        /// Action was done on behalf of a non team member.
-        case nonTeamMember(TeamLog.NonTeamMemberLogInfo)
         /// Anonymous context.
         case anonymous
-        /// Action was done on behalf of the team.
-        case team
+        /// Action was done on behalf of a non team member.
+        case nonTeamMember(TeamLog.NonTeamMemberLogInfo)
         /// Action was done on behalf of a team that's part of an organization.
         case organizationTeam(TeamLog.TeamLogInfo)
+        /// Action was done on behalf of the team.
+        case team
+        /// Action was done on behalf of a team member.
+        case teamMember(TeamLog.TeamMemberLogInfo)
         /// Action was done on behalf of a trusted non team member.
         case trustedNonTeamMember(TeamLog.TrustedNonTeamMemberLogInfo)
         /// An unspecified error.
@@ -2625,25 +2966,25 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: ContextLogInfo) -> JSON {
             switch value {
-                case .teamMember(let arg):
-                    var d = Serialization.getFields(TeamLog.TeamMemberLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("team_member")
+                case .anonymous:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("anonymous")
                     return .dictionary(d)
                 case .nonTeamMember(let arg):
                     var d = Serialization.getFields(TeamLog.NonTeamMemberLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("non_team_member")
                     return .dictionary(d)
-                case .anonymous:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("anonymous")
+                case .organizationTeam(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("organization_team")
                     return .dictionary(d)
                 case .team:
                     var d = [String: JSON]()
                     d[".tag"] = .str("team")
                     return .dictionary(d)
-                case .organizationTeam(let arg):
-                    var d = Serialization.getFields(TeamLog.TeamLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("organization_team")
+                case .teamMember(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamMemberLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("team_member")
                     return .dictionary(d)
                 case .trustedNonTeamMember(let arg):
                     var d = Serialization.getFields(TeamLog.TrustedNonTeamMemberLogInfoSerializer().serialize(arg))
@@ -2660,19 +3001,19 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "team_member":
-                            let v = TeamLog.TeamMemberLogInfoSerializer().deserialize(json)
-                            return ContextLogInfo.teamMember(v)
+                        case "anonymous":
+                            return ContextLogInfo.anonymous
                         case "non_team_member":
                             let v = TeamLog.NonTeamMemberLogInfoSerializer().deserialize(json)
                             return ContextLogInfo.nonTeamMember(v)
-                        case "anonymous":
-                            return ContextLogInfo.anonymous
-                        case "team":
-                            return ContextLogInfo.team
                         case "organization_team":
                             let v = TeamLog.TeamLogInfoSerializer().deserialize(json)
                             return ContextLogInfo.organizationTeam(v)
+                        case "team":
+                            return ContextLogInfo.team
+                        case "team_member":
+                            let v = TeamLog.TeamMemberLogInfoSerializer().deserialize(json)
+                            return ContextLogInfo.teamMember(v)
                         case "trusted_non_team_member":
                             let v = TeamLog.TrustedNonTeamMemberLogInfoSerializer().deserialize(json)
                             return ContextLogInfo.trustedNonTeamMember(v)
@@ -3546,9 +3887,9 @@ open class TeamLog {
     /// The DeviceApprovalsPolicy union
     public enum DeviceApprovalsPolicy: CustomStringConvertible {
         /// An unspecified error.
-        case unlimited
-        /// An unspecified error.
         case limited
+        /// An unspecified error.
+        case unlimited
         /// An unspecified error.
         case other
 
@@ -3560,13 +3901,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: DeviceApprovalsPolicy) -> JSON {
             switch value {
-                case .unlimited:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("unlimited")
-                    return .dictionary(d)
                 case .limited:
                     var d = [String: JSON]()
                     d[".tag"] = .str("limited")
+                    return .dictionary(d)
+                case .unlimited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlimited")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -3579,10 +3920,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "unlimited":
-                            return DeviceApprovalsPolicy.unlimited
                         case "limited":
                             return DeviceApprovalsPolicy.limited
+                        case "unlimited":
+                            return DeviceApprovalsPolicy.unlimited
                         case "other":
                             return DeviceApprovalsPolicy.other
                         default:
@@ -4211,6 +4552,77 @@ open class TeamLog {
         }
     }
 
+    /// Enabled/disabled backup for computer.
+    open class DeviceSyncBackupStatusChangedDetails: CustomStringConvertible {
+        /// Device's session logged information.
+        public let desktopDeviceSessionInfo: TeamLog.DesktopDeviceSessionLogInfo
+        /// Previous status of computer backup on the device.
+        public let previousValue: TeamLog.BackupStatus
+        /// Next status of computer backup on the device.
+        public let newValue: TeamLog.BackupStatus
+        public init(desktopDeviceSessionInfo: TeamLog.DesktopDeviceSessionLogInfo, previousValue: TeamLog.BackupStatus, newValue: TeamLog.BackupStatus) {
+            self.desktopDeviceSessionInfo = desktopDeviceSessionInfo
+            self.previousValue = previousValue
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DeviceSyncBackupStatusChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DeviceSyncBackupStatusChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DeviceSyncBackupStatusChangedDetails) -> JSON {
+            let output = [ 
+            "desktop_device_session_info": TeamLog.DesktopDeviceSessionLogInfoSerializer().serialize(value.desktopDeviceSessionInfo),
+            "previous_value": TeamLog.BackupStatusSerializer().serialize(value.previousValue),
+            "new_value": TeamLog.BackupStatusSerializer().serialize(value.newValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DeviceSyncBackupStatusChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let desktopDeviceSessionInfo = TeamLog.DesktopDeviceSessionLogInfoSerializer().deserialize(dict["desktop_device_session_info"] ?? .null)
+                    let previousValue = TeamLog.BackupStatusSerializer().deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamLog.BackupStatusSerializer().deserialize(dict["new_value"] ?? .null)
+                    return DeviceSyncBackupStatusChangedDetails(desktopDeviceSessionInfo: desktopDeviceSessionInfo, previousValue: previousValue, newValue: newValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DeviceSyncBackupStatusChangedType struct
+    open class DeviceSyncBackupStatusChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DeviceSyncBackupStatusChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DeviceSyncBackupStatusChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DeviceSyncBackupStatusChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DeviceSyncBackupStatusChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DeviceSyncBackupStatusChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The DeviceType union
     public enum DeviceType: CustomStringConvertible {
         /// An unspecified error.
@@ -4306,9 +4718,9 @@ open class TeamLog {
     /// The DeviceUnlinkPolicy union
     public enum DeviceUnlinkPolicy: CustomStringConvertible {
         /// An unspecified error.
-        case remove
-        /// An unspecified error.
         case keep
+        /// An unspecified error.
+        case remove
         /// An unspecified error.
         case other
 
@@ -4320,13 +4732,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: DeviceUnlinkPolicy) -> JSON {
             switch value {
-                case .remove:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("remove")
-                    return .dictionary(d)
                 case .keep:
                     var d = [String: JSON]()
                     d[".tag"] = .str("keep")
+                    return .dictionary(d)
+                case .remove:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("remove")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -4339,10 +4751,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "remove":
-                            return DeviceUnlinkPolicy.remove
                         case "keep":
                             return DeviceUnlinkPolicy.keep
+                        case "remove":
+                            return DeviceUnlinkPolicy.remove
                         case "other":
                             return DeviceUnlinkPolicy.other
                         default:
@@ -5142,6 +5554,135 @@ open class TeamLog {
         }
     }
 
+    /// Exported passwords.
+    open class DropboxPasswordsExportedDetails: CustomStringConvertible {
+        /// The platform the device runs export.
+        public let platform: String
+        public init(platform: String) {
+            stringValidator()(platform)
+            self.platform = platform
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsExportedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsExportedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsExportedDetails) -> JSON {
+            let output = [ 
+            "platform": Serialization._StringSerializer.serialize(value.platform),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsExportedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let platform = Serialization._StringSerializer.deserialize(dict["platform"] ?? .null)
+                    return DropboxPasswordsExportedDetails(platform: platform)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DropboxPasswordsExportedType struct
+    open class DropboxPasswordsExportedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsExportedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsExportedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsExportedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsExportedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DropboxPasswordsExportedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Enrolled new Dropbox Passwords device.
+    open class DropboxPasswordsNewDeviceEnrolledDetails: CustomStringConvertible {
+        /// Whether it's a first device enrolled.
+        public let isFirstDevice: Bool
+        /// The platform the device is enrolled.
+        public let platform: String
+        public init(isFirstDevice: Bool, platform: String) {
+            self.isFirstDevice = isFirstDevice
+            stringValidator()(platform)
+            self.platform = platform
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsNewDeviceEnrolledDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsNewDeviceEnrolledDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsNewDeviceEnrolledDetails) -> JSON {
+            let output = [ 
+            "is_first_device": Serialization._BoolSerializer.serialize(value.isFirstDevice),
+            "platform": Serialization._StringSerializer.serialize(value.platform),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsNewDeviceEnrolledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let isFirstDevice = Serialization._BoolSerializer.deserialize(dict["is_first_device"] ?? .null)
+                    let platform = Serialization._StringSerializer.deserialize(dict["platform"] ?? .null)
+                    return DropboxPasswordsNewDeviceEnrolledDetails(isFirstDevice: isFirstDevice, platform: platform)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DropboxPasswordsNewDeviceEnrolledType struct
+    open class DropboxPasswordsNewDeviceEnrolledType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsNewDeviceEnrolledTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsNewDeviceEnrolledTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsNewDeviceEnrolledType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsNewDeviceEnrolledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DropboxPasswordsNewDeviceEnrolledType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Represents a time duration: unit and amount
     open class DurationLogInfo: CustomStringConvertible {
         /// Time unit.
@@ -5837,6 +6378,8 @@ open class TeamLog {
         case apps
         /// Events that have to do with comments on files and Paper documents.
         case comments
+        /// Events that involve data governance actions
+        case dataGovernance
         /// Events that apply to linked devices on mobile, desktop and Web platforms.
         case devices
         /// Events that involve domain management feature: domain verification, invite enforcement and account capture.
@@ -5847,8 +6390,6 @@ open class TeamLog {
         case fileRequests
         /// Events that involve group management.
         case groups
-        /// Events that involve placing holds on content for litigation reasons
-        case legalHolds
         /// Events that involve users signing in to or out of Dropbox.
         case logins
         /// Events that involve team member management.
@@ -5896,6 +6437,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("comments")
                     return .dictionary(d)
+                case .dataGovernance:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("data_governance")
+                    return .dictionary(d)
                 case .devices:
                     var d = [String: JSON]()
                     d[".tag"] = .str("devices")
@@ -5915,10 +6460,6 @@ open class TeamLog {
                 case .groups:
                     var d = [String: JSON]()
                     d[".tag"] = .str("groups")
-                    return .dictionary(d)
-                case .legalHolds:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds")
                     return .dictionary(d)
                 case .logins:
                     var d = [String: JSON]()
@@ -5987,6 +6528,8 @@ open class TeamLog {
                             return EventCategory.apps
                         case "comments":
                             return EventCategory.comments
+                        case "data_governance":
+                            return EventCategory.dataGovernance
                         case "devices":
                             return EventCategory.devices
                         case "domains":
@@ -5997,8 +6540,6 @@ open class TeamLog {
                             return EventCategory.fileRequests
                         case "groups":
                             return EventCategory.groups
-                        case "legal_holds":
-                            return EventCategory.legalHolds
                         case "logins":
                             return EventCategory.logins
                         case "members":
@@ -6067,6 +6608,40 @@ open class TeamLog {
         /// An unspecified error.
         case fileUnresolveCommentDetails(TeamLog.FileUnresolveCommentDetails)
         /// An unspecified error.
+        case governancePolicyAddFoldersDetails(TeamLog.GovernancePolicyAddFoldersDetails)
+        /// An unspecified error.
+        case governancePolicyCreateDetails(TeamLog.GovernancePolicyCreateDetails)
+        /// An unspecified error.
+        case governancePolicyDeleteDetails(TeamLog.GovernancePolicyDeleteDetails)
+        /// An unspecified error.
+        case governancePolicyEditDetailsDetails(TeamLog.GovernancePolicyEditDetailsDetails)
+        /// An unspecified error.
+        case governancePolicyEditDurationDetails(TeamLog.GovernancePolicyEditDurationDetails)
+        /// An unspecified error.
+        case governancePolicyRemoveFoldersDetails(TeamLog.GovernancePolicyRemoveFoldersDetails)
+        /// An unspecified error.
+        case legalHoldsActivateAHoldDetails(TeamLog.LegalHoldsActivateAHoldDetails)
+        /// An unspecified error.
+        case legalHoldsAddMembersDetails(TeamLog.LegalHoldsAddMembersDetails)
+        /// An unspecified error.
+        case legalHoldsChangeHoldDetailsDetails(TeamLog.LegalHoldsChangeHoldDetailsDetails)
+        /// An unspecified error.
+        case legalHoldsChangeHoldNameDetails(TeamLog.LegalHoldsChangeHoldNameDetails)
+        /// An unspecified error.
+        case legalHoldsExportAHoldDetails(TeamLog.LegalHoldsExportAHoldDetails)
+        /// An unspecified error.
+        case legalHoldsExportCancelledDetails(TeamLog.LegalHoldsExportCancelledDetails)
+        /// An unspecified error.
+        case legalHoldsExportDownloadedDetails(TeamLog.LegalHoldsExportDownloadedDetails)
+        /// An unspecified error.
+        case legalHoldsExportRemovedDetails(TeamLog.LegalHoldsExportRemovedDetails)
+        /// An unspecified error.
+        case legalHoldsReleaseAHoldDetails(TeamLog.LegalHoldsReleaseAHoldDetails)
+        /// An unspecified error.
+        case legalHoldsRemoveMembersDetails(TeamLog.LegalHoldsRemoveMembersDetails)
+        /// An unspecified error.
+        case legalHoldsReportAHoldDetails(TeamLog.LegalHoldsReportAHoldDetails)
+        /// An unspecified error.
         case deviceChangeIpDesktopDetails(TeamLog.DeviceChangeIpDesktopDetails)
         /// An unspecified error.
         case deviceChangeIpMobileDetails(TeamLog.DeviceChangeIpMobileDetails)
@@ -6085,7 +6660,13 @@ open class TeamLog {
         /// An unspecified error.
         case deviceManagementEnabledDetails(TeamLog.DeviceManagementEnabledDetails)
         /// An unspecified error.
+        case deviceSyncBackupStatusChangedDetails(TeamLog.DeviceSyncBackupStatusChangedDetails)
+        /// An unspecified error.
         case deviceUnlinkDetails(TeamLog.DeviceUnlinkDetails)
+        /// An unspecified error.
+        case dropboxPasswordsExportedDetails(TeamLog.DropboxPasswordsExportedDetails)
+        /// An unspecified error.
+        case dropboxPasswordsNewDeviceEnrolledDetails(TeamLog.DropboxPasswordsNewDeviceEnrolledDetails)
         /// An unspecified error.
         case emmRefreshAuthTokenDetails(TeamLog.EmmRefreshAuthTokenDetails)
         /// An unspecified error.
@@ -6194,28 +6775,6 @@ open class TeamLog {
         case groupRemoveMemberDetails(TeamLog.GroupRemoveMemberDetails)
         /// An unspecified error.
         case groupRenameDetails(TeamLog.GroupRenameDetails)
-        /// An unspecified error.
-        case legalHoldsActivateAHoldDetails(TeamLog.LegalHoldsActivateAHoldDetails)
-        /// An unspecified error.
-        case legalHoldsAddMembersDetails(TeamLog.LegalHoldsAddMembersDetails)
-        /// An unspecified error.
-        case legalHoldsChangeHoldDetailsDetails(TeamLog.LegalHoldsChangeHoldDetailsDetails)
-        /// An unspecified error.
-        case legalHoldsChangeHoldNameDetails(TeamLog.LegalHoldsChangeHoldNameDetails)
-        /// An unspecified error.
-        case legalHoldsExportAHoldDetails(TeamLog.LegalHoldsExportAHoldDetails)
-        /// An unspecified error.
-        case legalHoldsExportCancelledDetails(TeamLog.LegalHoldsExportCancelledDetails)
-        /// An unspecified error.
-        case legalHoldsExportDownloadedDetails(TeamLog.LegalHoldsExportDownloadedDetails)
-        /// An unspecified error.
-        case legalHoldsExportRemovedDetails(TeamLog.LegalHoldsExportRemovedDetails)
-        /// An unspecified error.
-        case legalHoldsReleaseAHoldDetails(TeamLog.LegalHoldsReleaseAHoldDetails)
-        /// An unspecified error.
-        case legalHoldsRemoveMembersDetails(TeamLog.LegalHoldsRemoveMembersDetails)
-        /// An unspecified error.
-        case legalHoldsReportAHoldDetails(TeamLog.LegalHoldsReportAHoldDetails)
         /// An unspecified error.
         case accountLockOrUnlockedDetails(TeamLog.AccountLockOrUnlockedDetails)
         /// An unspecified error.
@@ -6589,6 +7148,10 @@ open class TeamLog {
         /// An unspecified error.
         case sharedNoteOpenedDetails(TeamLog.SharedNoteOpenedDetails)
         /// An unspecified error.
+        case shmodelDisableDownloadsDetails(TeamLog.ShmodelDisableDownloadsDetails)
+        /// An unspecified error.
+        case shmodelEnableDownloadsDetails(TeamLog.ShmodelEnableDownloadsDetails)
+        /// An unspecified error.
         case shmodelGroupShareDetails(TeamLog.ShmodelGroupShareDetails)
         /// An unspecified error.
         case showcaseAccessGrantedDetails(TeamLog.ShowcaseAccessGrantedDetails)
@@ -6678,6 +7241,10 @@ open class TeamLog {
         case allowDownloadEnabledDetails(TeamLog.AllowDownloadEnabledDetails)
         /// An unspecified error.
         case cameraUploadsPolicyChangedDetails(TeamLog.CameraUploadsPolicyChangedDetails)
+        /// An unspecified error.
+        case classificationChangePolicyDetails(TeamLog.ClassificationChangePolicyDetails)
+        /// An unspecified error.
+        case computerBackupPolicyChangedDetails(TeamLog.ComputerBackupPolicyChangedDetails)
         /// An unspecified error.
         case contentAdministrationPolicyChangedDetails(TeamLog.ContentAdministrationPolicyChangedDetails)
         /// An unspecified error.
@@ -6792,6 +7359,8 @@ open class TeamLog {
         case smartSyncOptOutDetails(TeamLog.SmartSyncOptOutDetails)
         /// An unspecified error.
         case ssoChangePolicyDetails(TeamLog.SsoChangePolicyDetails)
+        /// An unspecified error.
+        case teamBrandingPolicyChangedDetails(TeamLog.TeamBrandingPolicyChangedDetails)
         /// An unspecified error.
         case teamExtensionsPolicyChangedDetails(TeamLog.TeamExtensionsPolicyChangedDetails)
         /// An unspecified error.
@@ -6963,6 +7532,74 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileUnresolveCommentDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_unresolve_comment_details")
                     return .dictionary(d)
+                case .governancePolicyAddFoldersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyAddFoldersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_add_folders_details")
+                    return .dictionary(d)
+                case .governancePolicyCreateDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyCreateDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_create_details")
+                    return .dictionary(d)
+                case .governancePolicyDeleteDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyDeleteDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_delete_details")
+                    return .dictionary(d)
+                case .governancePolicyEditDetailsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyEditDetailsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_edit_details_details")
+                    return .dictionary(d)
+                case .governancePolicyEditDurationDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyEditDurationDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_edit_duration_details")
+                    return .dictionary(d)
+                case .governancePolicyRemoveFoldersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyRemoveFoldersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_remove_folders_details")
+                    return .dictionary(d)
+                case .legalHoldsActivateAHoldDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsActivateAHoldDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_activate_a_hold_details")
+                    return .dictionary(d)
+                case .legalHoldsAddMembersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsAddMembersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_add_members_details")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldDetailsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldDetailsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_change_hold_details_details")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldNameDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldNameDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_change_hold_name_details")
+                    return .dictionary(d)
+                case .legalHoldsExportAHoldDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportAHoldDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_a_hold_details")
+                    return .dictionary(d)
+                case .legalHoldsExportCancelledDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportCancelledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_cancelled_details")
+                    return .dictionary(d)
+                case .legalHoldsExportDownloadedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportDownloadedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_downloaded_details")
+                    return .dictionary(d)
+                case .legalHoldsExportRemovedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportRemovedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_removed_details")
+                    return .dictionary(d)
+                case .legalHoldsReleaseAHoldDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsReleaseAHoldDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_release_a_hold_details")
+                    return .dictionary(d)
+                case .legalHoldsRemoveMembersDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsRemoveMembersDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_remove_members_details")
+                    return .dictionary(d)
+                case .legalHoldsReportAHoldDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsReportAHoldDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_report_a_hold_details")
+                    return .dictionary(d)
                 case .deviceChangeIpDesktopDetails(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceChangeIpDesktopDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("device_change_ip_desktop_details")
@@ -6999,9 +7636,21 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.DeviceManagementEnabledDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("device_management_enabled_details")
                     return .dictionary(d)
+                case .deviceSyncBackupStatusChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DeviceSyncBackupStatusChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("device_sync_backup_status_changed_details")
+                    return .dictionary(d)
                 case .deviceUnlinkDetails(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceUnlinkDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("device_unlink_details")
+                    return .dictionary(d)
+                case .dropboxPasswordsExportedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsExportedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_exported_details")
+                    return .dictionary(d)
+                case .dropboxPasswordsNewDeviceEnrolledDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsNewDeviceEnrolledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_new_device_enrolled_details")
                     return .dictionary(d)
                 case .emmRefreshAuthTokenDetails(let arg):
                     var d = Serialization.getFields(TeamLog.EmmRefreshAuthTokenDetailsSerializer().serialize(arg))
@@ -7218,50 +7867,6 @@ open class TeamLog {
                 case .groupRenameDetails(let arg):
                     var d = Serialization.getFields(TeamLog.GroupRenameDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("group_rename_details")
-                    return .dictionary(d)
-                case .legalHoldsActivateAHoldDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsActivateAHoldDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_activate_a_hold_details")
-                    return .dictionary(d)
-                case .legalHoldsAddMembersDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsAddMembersDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_add_members_details")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldDetailsDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldDetailsDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_change_hold_details_details")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldNameDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldNameDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_change_hold_name_details")
-                    return .dictionary(d)
-                case .legalHoldsExportAHoldDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportAHoldDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_a_hold_details")
-                    return .dictionary(d)
-                case .legalHoldsExportCancelledDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportCancelledDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_cancelled_details")
-                    return .dictionary(d)
-                case .legalHoldsExportDownloadedDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportDownloadedDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_downloaded_details")
-                    return .dictionary(d)
-                case .legalHoldsExportRemovedDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportRemovedDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_removed_details")
-                    return .dictionary(d)
-                case .legalHoldsReleaseAHoldDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsReleaseAHoldDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_release_a_hold_details")
-                    return .dictionary(d)
-                case .legalHoldsRemoveMembersDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsRemoveMembersDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_remove_members_details")
-                    return .dictionary(d)
-                case .legalHoldsReportAHoldDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsReportAHoldDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_report_a_hold_details")
                     return .dictionary(d)
                 case .accountLockOrUnlockedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.AccountLockOrUnlockedDetailsSerializer().serialize(arg))
@@ -8007,6 +8612,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.SharedNoteOpenedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("shared_note_opened_details")
                     return .dictionary(d)
+                case .shmodelDisableDownloadsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShmodelDisableDownloadsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("shmodel_disable_downloads_details")
+                    return .dictionary(d)
+                case .shmodelEnableDownloadsDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ShmodelEnableDownloadsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("shmodel_enable_downloads_details")
+                    return .dictionary(d)
                 case .shmodelGroupShareDetails(let arg):
                     var d = Serialization.getFields(TeamLog.ShmodelGroupShareDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("shmodel_group_share_details")
@@ -8186,6 +8799,14 @@ open class TeamLog {
                 case .cameraUploadsPolicyChangedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.CameraUploadsPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("camera_uploads_policy_changed_details")
+                    return .dictionary(d)
+                case .classificationChangePolicyDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ClassificationChangePolicyDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("classification_change_policy_details")
+                    return .dictionary(d)
+                case .computerBackupPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.ComputerBackupPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("computer_backup_policy_changed_details")
                     return .dictionary(d)
                 case .contentAdministrationPolicyChangedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.ContentAdministrationPolicyChangedDetailsSerializer().serialize(arg))
@@ -8414,6 +9035,10 @@ open class TeamLog {
                 case .ssoChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.SsoChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("sso_change_policy_details")
+                    return .dictionary(d)
+                case .teamBrandingPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamBrandingPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_branding_policy_changed_details")
                     return .dictionary(d)
                 case .teamExtensionsPolicyChangedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().serialize(arg))
@@ -8676,6 +9301,57 @@ open class TeamLog {
                         case "file_unresolve_comment_details":
                             let v = TeamLog.FileUnresolveCommentDetailsSerializer().deserialize(json)
                             return EventDetails.fileUnresolveCommentDetails(v)
+                        case "governance_policy_add_folders_details":
+                            let v = TeamLog.GovernancePolicyAddFoldersDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyAddFoldersDetails(v)
+                        case "governance_policy_create_details":
+                            let v = TeamLog.GovernancePolicyCreateDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyCreateDetails(v)
+                        case "governance_policy_delete_details":
+                            let v = TeamLog.GovernancePolicyDeleteDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyDeleteDetails(v)
+                        case "governance_policy_edit_details_details":
+                            let v = TeamLog.GovernancePolicyEditDetailsDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyEditDetailsDetails(v)
+                        case "governance_policy_edit_duration_details":
+                            let v = TeamLog.GovernancePolicyEditDurationDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyEditDurationDetails(v)
+                        case "governance_policy_remove_folders_details":
+                            let v = TeamLog.GovernancePolicyRemoveFoldersDetailsSerializer().deserialize(json)
+                            return EventDetails.governancePolicyRemoveFoldersDetails(v)
+                        case "legal_holds_activate_a_hold_details":
+                            let v = TeamLog.LegalHoldsActivateAHoldDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsActivateAHoldDetails(v)
+                        case "legal_holds_add_members_details":
+                            let v = TeamLog.LegalHoldsAddMembersDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsAddMembersDetails(v)
+                        case "legal_holds_change_hold_details_details":
+                            let v = TeamLog.LegalHoldsChangeHoldDetailsDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsChangeHoldDetailsDetails(v)
+                        case "legal_holds_change_hold_name_details":
+                            let v = TeamLog.LegalHoldsChangeHoldNameDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsChangeHoldNameDetails(v)
+                        case "legal_holds_export_a_hold_details":
+                            let v = TeamLog.LegalHoldsExportAHoldDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsExportAHoldDetails(v)
+                        case "legal_holds_export_cancelled_details":
+                            let v = TeamLog.LegalHoldsExportCancelledDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsExportCancelledDetails(v)
+                        case "legal_holds_export_downloaded_details":
+                            let v = TeamLog.LegalHoldsExportDownloadedDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsExportDownloadedDetails(v)
+                        case "legal_holds_export_removed_details":
+                            let v = TeamLog.LegalHoldsExportRemovedDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsExportRemovedDetails(v)
+                        case "legal_holds_release_a_hold_details":
+                            let v = TeamLog.LegalHoldsReleaseAHoldDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsReleaseAHoldDetails(v)
+                        case "legal_holds_remove_members_details":
+                            let v = TeamLog.LegalHoldsRemoveMembersDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsRemoveMembersDetails(v)
+                        case "legal_holds_report_a_hold_details":
+                            let v = TeamLog.LegalHoldsReportAHoldDetailsSerializer().deserialize(json)
+                            return EventDetails.legalHoldsReportAHoldDetails(v)
                         case "device_change_ip_desktop_details":
                             let v = TeamLog.DeviceChangeIpDesktopDetailsSerializer().deserialize(json)
                             return EventDetails.deviceChangeIpDesktopDetails(v)
@@ -8703,9 +9379,18 @@ open class TeamLog {
                         case "device_management_enabled_details":
                             let v = TeamLog.DeviceManagementEnabledDetailsSerializer().deserialize(json)
                             return EventDetails.deviceManagementEnabledDetails(v)
+                        case "device_sync_backup_status_changed_details":
+                            let v = TeamLog.DeviceSyncBackupStatusChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.deviceSyncBackupStatusChangedDetails(v)
                         case "device_unlink_details":
                             let v = TeamLog.DeviceUnlinkDetailsSerializer().deserialize(json)
                             return EventDetails.deviceUnlinkDetails(v)
+                        case "dropbox_passwords_exported_details":
+                            let v = TeamLog.DropboxPasswordsExportedDetailsSerializer().deserialize(json)
+                            return EventDetails.dropboxPasswordsExportedDetails(v)
+                        case "dropbox_passwords_new_device_enrolled_details":
+                            let v = TeamLog.DropboxPasswordsNewDeviceEnrolledDetailsSerializer().deserialize(json)
+                            return EventDetails.dropboxPasswordsNewDeviceEnrolledDetails(v)
                         case "emm_refresh_auth_token_details":
                             let v = TeamLog.EmmRefreshAuthTokenDetailsSerializer().deserialize(json)
                             return EventDetails.emmRefreshAuthTokenDetails(v)
@@ -8868,39 +9553,6 @@ open class TeamLog {
                         case "group_rename_details":
                             let v = TeamLog.GroupRenameDetailsSerializer().deserialize(json)
                             return EventDetails.groupRenameDetails(v)
-                        case "legal_holds_activate_a_hold_details":
-                            let v = TeamLog.LegalHoldsActivateAHoldDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsActivateAHoldDetails(v)
-                        case "legal_holds_add_members_details":
-                            let v = TeamLog.LegalHoldsAddMembersDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsAddMembersDetails(v)
-                        case "legal_holds_change_hold_details_details":
-                            let v = TeamLog.LegalHoldsChangeHoldDetailsDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsChangeHoldDetailsDetails(v)
-                        case "legal_holds_change_hold_name_details":
-                            let v = TeamLog.LegalHoldsChangeHoldNameDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsChangeHoldNameDetails(v)
-                        case "legal_holds_export_a_hold_details":
-                            let v = TeamLog.LegalHoldsExportAHoldDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsExportAHoldDetails(v)
-                        case "legal_holds_export_cancelled_details":
-                            let v = TeamLog.LegalHoldsExportCancelledDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsExportCancelledDetails(v)
-                        case "legal_holds_export_downloaded_details":
-                            let v = TeamLog.LegalHoldsExportDownloadedDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsExportDownloadedDetails(v)
-                        case "legal_holds_export_removed_details":
-                            let v = TeamLog.LegalHoldsExportRemovedDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsExportRemovedDetails(v)
-                        case "legal_holds_release_a_hold_details":
-                            let v = TeamLog.LegalHoldsReleaseAHoldDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsReleaseAHoldDetails(v)
-                        case "legal_holds_remove_members_details":
-                            let v = TeamLog.LegalHoldsRemoveMembersDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsRemoveMembersDetails(v)
-                        case "legal_holds_report_a_hold_details":
-                            let v = TeamLog.LegalHoldsReportAHoldDetailsSerializer().deserialize(json)
-                            return EventDetails.legalHoldsReportAHoldDetails(v)
                         case "account_lock_or_unlocked_details":
                             let v = TeamLog.AccountLockOrUnlockedDetailsSerializer().deserialize(json)
                             return EventDetails.accountLockOrUnlockedDetails(v)
@@ -9459,6 +10111,12 @@ open class TeamLog {
                         case "shared_note_opened_details":
                             let v = TeamLog.SharedNoteOpenedDetailsSerializer().deserialize(json)
                             return EventDetails.sharedNoteOpenedDetails(v)
+                        case "shmodel_disable_downloads_details":
+                            let v = TeamLog.ShmodelDisableDownloadsDetailsSerializer().deserialize(json)
+                            return EventDetails.shmodelDisableDownloadsDetails(v)
+                        case "shmodel_enable_downloads_details":
+                            let v = TeamLog.ShmodelEnableDownloadsDetailsSerializer().deserialize(json)
+                            return EventDetails.shmodelEnableDownloadsDetails(v)
                         case "shmodel_group_share_details":
                             let v = TeamLog.ShmodelGroupShareDetailsSerializer().deserialize(json)
                             return EventDetails.shmodelGroupShareDetails(v)
@@ -9594,6 +10252,12 @@ open class TeamLog {
                         case "camera_uploads_policy_changed_details":
                             let v = TeamLog.CameraUploadsPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.cameraUploadsPolicyChangedDetails(v)
+                        case "classification_change_policy_details":
+                            let v = TeamLog.ClassificationChangePolicyDetailsSerializer().deserialize(json)
+                            return EventDetails.classificationChangePolicyDetails(v)
+                        case "computer_backup_policy_changed_details":
+                            let v = TeamLog.ComputerBackupPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.computerBackupPolicyChangedDetails(v)
                         case "content_administration_policy_changed_details":
                             let v = TeamLog.ContentAdministrationPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.contentAdministrationPolicyChangedDetails(v)
@@ -9765,6 +10429,9 @@ open class TeamLog {
                         case "sso_change_policy_details":
                             let v = TeamLog.SsoChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.ssoChangePolicyDetails(v)
+                        case "team_branding_policy_changed_details":
+                            let v = TeamLog.TeamBrandingPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamBrandingPolicyChangedDetails(v)
                         case "team_extensions_policy_changed_details":
                             let v = TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.teamExtensionsPolicyChangedDetails(v)
@@ -9962,6 +10629,40 @@ open class TeamLog {
         case fileUnlikeComment(TeamLog.FileUnlikeCommentType)
         /// (comments) Unresolved file comment
         case fileUnresolveComment(TeamLog.FileUnresolveCommentType)
+        /// (data_governance) Added folders to policy
+        case governancePolicyAddFolders(TeamLog.GovernancePolicyAddFoldersType)
+        /// (data_governance) Activated a new policy
+        case governancePolicyCreate(TeamLog.GovernancePolicyCreateType)
+        /// (data_governance) Deleted a policy
+        case governancePolicyDelete(TeamLog.GovernancePolicyDeleteType)
+        /// (data_governance) Edited policy
+        case governancePolicyEditDetails(TeamLog.GovernancePolicyEditDetailsType)
+        /// (data_governance) Changed policy duration
+        case governancePolicyEditDuration(TeamLog.GovernancePolicyEditDurationType)
+        /// (data_governance) Removed folders from policy
+        case governancePolicyRemoveFolders(TeamLog.GovernancePolicyRemoveFoldersType)
+        /// (data_governance) Activated a hold
+        case legalHoldsActivateAHold(TeamLog.LegalHoldsActivateAHoldType)
+        /// (data_governance) Added members to a hold
+        case legalHoldsAddMembers(TeamLog.LegalHoldsAddMembersType)
+        /// (data_governance) Edited details for a hold
+        case legalHoldsChangeHoldDetails(TeamLog.LegalHoldsChangeHoldDetailsType)
+        /// (data_governance) Renamed a hold
+        case legalHoldsChangeHoldName(TeamLog.LegalHoldsChangeHoldNameType)
+        /// (data_governance) Exported hold
+        case legalHoldsExportAHold(TeamLog.LegalHoldsExportAHoldType)
+        /// (data_governance) Canceled export for a hold
+        case legalHoldsExportCancelled(TeamLog.LegalHoldsExportCancelledType)
+        /// (data_governance) Downloaded export for a hold
+        case legalHoldsExportDownloaded(TeamLog.LegalHoldsExportDownloadedType)
+        /// (data_governance) Removed export for a hold
+        case legalHoldsExportRemoved(TeamLog.LegalHoldsExportRemovedType)
+        /// (data_governance) Released a hold
+        case legalHoldsReleaseAHold(TeamLog.LegalHoldsReleaseAHoldType)
+        /// (data_governance) Removed members from a hold
+        case legalHoldsRemoveMembers(TeamLog.LegalHoldsRemoveMembersType)
+        /// (data_governance) Created a summary report for a hold
+        case legalHoldsReportAHold(TeamLog.LegalHoldsReportAHoldType)
         /// (devices) Changed IP address associated with active desktop session
         case deviceChangeIpDesktop(TeamLog.DeviceChangeIpDesktopType)
         /// (devices) Changed IP address associated with active mobile session
@@ -9980,8 +10681,14 @@ open class TeamLog {
         case deviceManagementDisabled(TeamLog.DeviceManagementDisabledType)
         /// (devices) Enabled device management (deprecated, no longer logged)
         case deviceManagementEnabled(TeamLog.DeviceManagementEnabledType)
+        /// (devices) Enabled/disabled backup for computer
+        case deviceSyncBackupStatusChanged(TeamLog.DeviceSyncBackupStatusChangedType)
         /// (devices) Disconnected device
         case deviceUnlink(TeamLog.DeviceUnlinkType)
+        /// (devices) Exported passwords
+        case dropboxPasswordsExported(TeamLog.DropboxPasswordsExportedType)
+        /// (devices) Enrolled new Dropbox Passwords device
+        case dropboxPasswordsNewDeviceEnrolled(TeamLog.DropboxPasswordsNewDeviceEnrolledType)
         /// (devices) Refreshed auth token used for setting up EMM
         case emmRefreshAuthToken(TeamLog.EmmRefreshAuthTokenType)
         /// (domains) Granted/revoked option to enable account capture on team domains
@@ -10090,28 +10797,6 @@ open class TeamLog {
         case groupRemoveMember(TeamLog.GroupRemoveMemberType)
         /// (groups) Renamed group
         case groupRename(TeamLog.GroupRenameType)
-        /// (legal_holds) Activated a hold
-        case legalHoldsActivateAHold(TeamLog.LegalHoldsActivateAHoldType)
-        /// (legal_holds) Added members to a hold
-        case legalHoldsAddMembers(TeamLog.LegalHoldsAddMembersType)
-        /// (legal_holds) Edited details for a hold
-        case legalHoldsChangeHoldDetails(TeamLog.LegalHoldsChangeHoldDetailsType)
-        /// (legal_holds) Renamed a hold
-        case legalHoldsChangeHoldName(TeamLog.LegalHoldsChangeHoldNameType)
-        /// (legal_holds) Exported hold
-        case legalHoldsExportAHold(TeamLog.LegalHoldsExportAHoldType)
-        /// (legal_holds) Canceled export for a hold
-        case legalHoldsExportCancelled(TeamLog.LegalHoldsExportCancelledType)
-        /// (legal_holds) Downloaded export for a hold
-        case legalHoldsExportDownloaded(TeamLog.LegalHoldsExportDownloadedType)
-        /// (legal_holds) Removed export for a hold
-        case legalHoldsExportRemoved(TeamLog.LegalHoldsExportRemovedType)
-        /// (legal_holds) Released a hold
-        case legalHoldsReleaseAHold(TeamLog.LegalHoldsReleaseAHoldType)
-        /// (legal_holds) Removed members from a hold
-        case legalHoldsRemoveMembers(TeamLog.LegalHoldsRemoveMembersType)
-        /// (legal_holds) Created a summary report for a hold
-        case legalHoldsReportAHold(TeamLog.LegalHoldsReportAHoldType)
         /// (logins) Unlocked/locked account after failed sign in attempts
         case accountLockOrUnlocked(TeamLog.AccountLockOrUnlockedType)
         /// (logins) Failed to sign in via EMM (deprecated, replaced by 'Failed to sign in')
@@ -10298,9 +10983,9 @@ open class TeamLog {
         case exportMembersReport(TeamLog.ExportMembersReportType)
         /// (reports) Failed to create members data report
         case exportMembersReportFail(TeamLog.ExportMembersReportFailType)
-        /// (reports) Report created: Data shared outside the team
+        /// (reports) Created External sharing report
         case externalSharingCreateReport(TeamLog.ExternalSharingCreateReportType)
-        /// (reports) Couldn't create report: Data shared outside the team
+        /// (reports) Couldn't create External sharing report
         case externalSharingReportFailed(TeamLog.ExternalSharingReportFailedType)
         /// (reports) Report created: Links created with no expiration
         case noExpirationLinkGenCreateReport(TeamLog.NoExpirationLinkGenCreateReportType)
@@ -10486,6 +11171,10 @@ open class TeamLog {
         case sharedLinkView(TeamLog.SharedLinkViewType)
         /// (sharing) Opened shared Paper doc (deprecated, no longer logged)
         case sharedNoteOpened(TeamLog.SharedNoteOpenedType)
+        /// (sharing) Disabled downloads for link (deprecated, no longer logged)
+        case shmodelDisableDownloads(TeamLog.ShmodelDisableDownloadsType)
+        /// (sharing) Enabled downloads for link (deprecated, no longer logged)
+        case shmodelEnableDownloads(TeamLog.ShmodelEnableDownloadsType)
         /// (sharing) Shared link with group (deprecated, no longer logged)
         case shmodelGroupShare(TeamLog.ShmodelGroupShareType)
         /// (showcase) Granted access to showcase
@@ -10576,6 +11265,10 @@ open class TeamLog {
         case allowDownloadEnabled(TeamLog.AllowDownloadEnabledType)
         /// (team_policies) Changed camera uploads setting for team
         case cameraUploadsPolicyChanged(TeamLog.CameraUploadsPolicyChangedType)
+        /// (team_policies) Changed classification policy for team
+        case classificationChangePolicy(TeamLog.ClassificationChangePolicyType)
+        /// (team_policies) Changed computer backup policy for team
+        case computerBackupPolicyChanged(TeamLog.ComputerBackupPolicyChangedType)
         /// (team_policies) Changed content management setting
         case contentAdministrationPolicyChanged(TeamLog.ContentAdministrationPolicyChangedType)
         /// (team_policies) Set restrictions on data center locations where team data resides
@@ -10693,6 +11386,8 @@ open class TeamLog {
         case smartSyncOptOut(TeamLog.SmartSyncOptOutType)
         /// (team_policies) Changed single sign-on setting for team
         case ssoChangePolicy(TeamLog.SsoChangePolicyType)
+        /// (team_policies) Changed team branding policy for team
+        case teamBrandingPolicyChanged(TeamLog.TeamBrandingPolicyChangedType)
         /// (team_policies) Changed App Integrations setting for team
         case teamExtensionsPolicyChanged(TeamLog.TeamExtensionsPolicyChangedType)
         /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -10865,6 +11560,74 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileUnresolveCommentTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_unresolve_comment")
                     return .dictionary(d)
+                case .governancePolicyAddFolders(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyAddFoldersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_add_folders")
+                    return .dictionary(d)
+                case .governancePolicyCreate(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyCreateTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_create")
+                    return .dictionary(d)
+                case .governancePolicyDelete(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyDeleteTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_delete")
+                    return .dictionary(d)
+                case .governancePolicyEditDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyEditDetailsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_edit_details")
+                    return .dictionary(d)
+                case .governancePolicyEditDuration(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyEditDurationTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_edit_duration")
+                    return .dictionary(d)
+                case .governancePolicyRemoveFolders(let arg):
+                    var d = Serialization.getFields(TeamLog.GovernancePolicyRemoveFoldersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("governance_policy_remove_folders")
+                    return .dictionary(d)
+                case .legalHoldsActivateAHold(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsActivateAHoldTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_activate_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsAddMembers(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsAddMembersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_add_members")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldDetailsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_change_hold_details")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldName(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldNameTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_change_hold_name")
+                    return .dictionary(d)
+                case .legalHoldsExportAHold(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportAHoldTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsExportCancelled(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportCancelledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_cancelled")
+                    return .dictionary(d)
+                case .legalHoldsExportDownloaded(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportDownloadedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_downloaded")
+                    return .dictionary(d)
+                case .legalHoldsExportRemoved(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsExportRemovedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_export_removed")
+                    return .dictionary(d)
+                case .legalHoldsReleaseAHold(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsReleaseAHoldTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_release_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsRemoveMembers(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsRemoveMembersTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_remove_members")
+                    return .dictionary(d)
+                case .legalHoldsReportAHold(let arg):
+                    var d = Serialization.getFields(TeamLog.LegalHoldsReportAHoldTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("legal_holds_report_a_hold")
+                    return .dictionary(d)
                 case .deviceChangeIpDesktop(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceChangeIpDesktopTypeSerializer().serialize(arg))
                     d[".tag"] = .str("device_change_ip_desktop")
@@ -10901,9 +11664,21 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.DeviceManagementEnabledTypeSerializer().serialize(arg))
                     d[".tag"] = .str("device_management_enabled")
                     return .dictionary(d)
+                case .deviceSyncBackupStatusChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.DeviceSyncBackupStatusChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("device_sync_backup_status_changed")
+                    return .dictionary(d)
                 case .deviceUnlink(let arg):
                     var d = Serialization.getFields(TeamLog.DeviceUnlinkTypeSerializer().serialize(arg))
                     d[".tag"] = .str("device_unlink")
+                    return .dictionary(d)
+                case .dropboxPasswordsExported(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsExportedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_exported")
+                    return .dictionary(d)
+                case .dropboxPasswordsNewDeviceEnrolled(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsNewDeviceEnrolledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_new_device_enrolled")
                     return .dictionary(d)
                 case .emmRefreshAuthToken(let arg):
                     var d = Serialization.getFields(TeamLog.EmmRefreshAuthTokenTypeSerializer().serialize(arg))
@@ -11120,50 +11895,6 @@ open class TeamLog {
                 case .groupRename(let arg):
                     var d = Serialization.getFields(TeamLog.GroupRenameTypeSerializer().serialize(arg))
                     d[".tag"] = .str("group_rename")
-                    return .dictionary(d)
-                case .legalHoldsActivateAHold(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsActivateAHoldTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_activate_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsAddMembers(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsAddMembersTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_add_members")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldDetails(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldDetailsTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_change_hold_details")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldName(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsChangeHoldNameTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_change_hold_name")
-                    return .dictionary(d)
-                case .legalHoldsExportAHold(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportAHoldTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsExportCancelled(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportCancelledTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_cancelled")
-                    return .dictionary(d)
-                case .legalHoldsExportDownloaded(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportDownloadedTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_downloaded")
-                    return .dictionary(d)
-                case .legalHoldsExportRemoved(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsExportRemovedTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_export_removed")
-                    return .dictionary(d)
-                case .legalHoldsReleaseAHold(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsReleaseAHoldTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_release_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsRemoveMembers(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsRemoveMembersTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_remove_members")
-                    return .dictionary(d)
-                case .legalHoldsReportAHold(let arg):
-                    var d = Serialization.getFields(TeamLog.LegalHoldsReportAHoldTypeSerializer().serialize(arg))
-                    d[".tag"] = .str("legal_holds_report_a_hold")
                     return .dictionary(d)
                 case .accountLockOrUnlocked(let arg):
                     var d = Serialization.getFields(TeamLog.AccountLockOrUnlockedTypeSerializer().serialize(arg))
@@ -11909,6 +12640,14 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.SharedNoteOpenedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("shared_note_opened")
                     return .dictionary(d)
+                case .shmodelDisableDownloads(let arg):
+                    var d = Serialization.getFields(TeamLog.ShmodelDisableDownloadsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("shmodel_disable_downloads")
+                    return .dictionary(d)
+                case .shmodelEnableDownloads(let arg):
+                    var d = Serialization.getFields(TeamLog.ShmodelEnableDownloadsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("shmodel_enable_downloads")
+                    return .dictionary(d)
                 case .shmodelGroupShare(let arg):
                     var d = Serialization.getFields(TeamLog.ShmodelGroupShareTypeSerializer().serialize(arg))
                     d[".tag"] = .str("shmodel_group_share")
@@ -12088,6 +12827,14 @@ open class TeamLog {
                 case .cameraUploadsPolicyChanged(let arg):
                     var d = Serialization.getFields(TeamLog.CameraUploadsPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("camera_uploads_policy_changed")
+                    return .dictionary(d)
+                case .classificationChangePolicy(let arg):
+                    var d = Serialization.getFields(TeamLog.ClassificationChangePolicyTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("classification_change_policy")
+                    return .dictionary(d)
+                case .computerBackupPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.ComputerBackupPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("computer_backup_policy_changed")
                     return .dictionary(d)
                 case .contentAdministrationPolicyChanged(let arg):
                     var d = Serialization.getFields(TeamLog.ContentAdministrationPolicyChangedTypeSerializer().serialize(arg))
@@ -12316,6 +13063,10 @@ open class TeamLog {
                 case .ssoChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.SsoChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("sso_change_policy")
+                    return .dictionary(d)
+                case .teamBrandingPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamBrandingPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_branding_policy_changed")
                     return .dictionary(d)
                 case .teamExtensionsPolicyChanged(let arg):
                     var d = Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedTypeSerializer().serialize(arg))
@@ -12574,6 +13325,57 @@ open class TeamLog {
                         case "file_unresolve_comment":
                             let v = TeamLog.FileUnresolveCommentTypeSerializer().deserialize(json)
                             return EventType.fileUnresolveComment(v)
+                        case "governance_policy_add_folders":
+                            let v = TeamLog.GovernancePolicyAddFoldersTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyAddFolders(v)
+                        case "governance_policy_create":
+                            let v = TeamLog.GovernancePolicyCreateTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyCreate(v)
+                        case "governance_policy_delete":
+                            let v = TeamLog.GovernancePolicyDeleteTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyDelete(v)
+                        case "governance_policy_edit_details":
+                            let v = TeamLog.GovernancePolicyEditDetailsTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyEditDetails(v)
+                        case "governance_policy_edit_duration":
+                            let v = TeamLog.GovernancePolicyEditDurationTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyEditDuration(v)
+                        case "governance_policy_remove_folders":
+                            let v = TeamLog.GovernancePolicyRemoveFoldersTypeSerializer().deserialize(json)
+                            return EventType.governancePolicyRemoveFolders(v)
+                        case "legal_holds_activate_a_hold":
+                            let v = TeamLog.LegalHoldsActivateAHoldTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsActivateAHold(v)
+                        case "legal_holds_add_members":
+                            let v = TeamLog.LegalHoldsAddMembersTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsAddMembers(v)
+                        case "legal_holds_change_hold_details":
+                            let v = TeamLog.LegalHoldsChangeHoldDetailsTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsChangeHoldDetails(v)
+                        case "legal_holds_change_hold_name":
+                            let v = TeamLog.LegalHoldsChangeHoldNameTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsChangeHoldName(v)
+                        case "legal_holds_export_a_hold":
+                            let v = TeamLog.LegalHoldsExportAHoldTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsExportAHold(v)
+                        case "legal_holds_export_cancelled":
+                            let v = TeamLog.LegalHoldsExportCancelledTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsExportCancelled(v)
+                        case "legal_holds_export_downloaded":
+                            let v = TeamLog.LegalHoldsExportDownloadedTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsExportDownloaded(v)
+                        case "legal_holds_export_removed":
+                            let v = TeamLog.LegalHoldsExportRemovedTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsExportRemoved(v)
+                        case "legal_holds_release_a_hold":
+                            let v = TeamLog.LegalHoldsReleaseAHoldTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsReleaseAHold(v)
+                        case "legal_holds_remove_members":
+                            let v = TeamLog.LegalHoldsRemoveMembersTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsRemoveMembers(v)
+                        case "legal_holds_report_a_hold":
+                            let v = TeamLog.LegalHoldsReportAHoldTypeSerializer().deserialize(json)
+                            return EventType.legalHoldsReportAHold(v)
                         case "device_change_ip_desktop":
                             let v = TeamLog.DeviceChangeIpDesktopTypeSerializer().deserialize(json)
                             return EventType.deviceChangeIpDesktop(v)
@@ -12601,9 +13403,18 @@ open class TeamLog {
                         case "device_management_enabled":
                             let v = TeamLog.DeviceManagementEnabledTypeSerializer().deserialize(json)
                             return EventType.deviceManagementEnabled(v)
+                        case "device_sync_backup_status_changed":
+                            let v = TeamLog.DeviceSyncBackupStatusChangedTypeSerializer().deserialize(json)
+                            return EventType.deviceSyncBackupStatusChanged(v)
                         case "device_unlink":
                             let v = TeamLog.DeviceUnlinkTypeSerializer().deserialize(json)
                             return EventType.deviceUnlink(v)
+                        case "dropbox_passwords_exported":
+                            let v = TeamLog.DropboxPasswordsExportedTypeSerializer().deserialize(json)
+                            return EventType.dropboxPasswordsExported(v)
+                        case "dropbox_passwords_new_device_enrolled":
+                            let v = TeamLog.DropboxPasswordsNewDeviceEnrolledTypeSerializer().deserialize(json)
+                            return EventType.dropboxPasswordsNewDeviceEnrolled(v)
                         case "emm_refresh_auth_token":
                             let v = TeamLog.EmmRefreshAuthTokenTypeSerializer().deserialize(json)
                             return EventType.emmRefreshAuthToken(v)
@@ -12766,39 +13577,6 @@ open class TeamLog {
                         case "group_rename":
                             let v = TeamLog.GroupRenameTypeSerializer().deserialize(json)
                             return EventType.groupRename(v)
-                        case "legal_holds_activate_a_hold":
-                            let v = TeamLog.LegalHoldsActivateAHoldTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsActivateAHold(v)
-                        case "legal_holds_add_members":
-                            let v = TeamLog.LegalHoldsAddMembersTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsAddMembers(v)
-                        case "legal_holds_change_hold_details":
-                            let v = TeamLog.LegalHoldsChangeHoldDetailsTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsChangeHoldDetails(v)
-                        case "legal_holds_change_hold_name":
-                            let v = TeamLog.LegalHoldsChangeHoldNameTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsChangeHoldName(v)
-                        case "legal_holds_export_a_hold":
-                            let v = TeamLog.LegalHoldsExportAHoldTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsExportAHold(v)
-                        case "legal_holds_export_cancelled":
-                            let v = TeamLog.LegalHoldsExportCancelledTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsExportCancelled(v)
-                        case "legal_holds_export_downloaded":
-                            let v = TeamLog.LegalHoldsExportDownloadedTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsExportDownloaded(v)
-                        case "legal_holds_export_removed":
-                            let v = TeamLog.LegalHoldsExportRemovedTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsExportRemoved(v)
-                        case "legal_holds_release_a_hold":
-                            let v = TeamLog.LegalHoldsReleaseAHoldTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsReleaseAHold(v)
-                        case "legal_holds_remove_members":
-                            let v = TeamLog.LegalHoldsRemoveMembersTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsRemoveMembers(v)
-                        case "legal_holds_report_a_hold":
-                            let v = TeamLog.LegalHoldsReportAHoldTypeSerializer().deserialize(json)
-                            return EventType.legalHoldsReportAHold(v)
                         case "account_lock_or_unlocked":
                             let v = TeamLog.AccountLockOrUnlockedTypeSerializer().deserialize(json)
                             return EventType.accountLockOrUnlocked(v)
@@ -13357,6 +14135,12 @@ open class TeamLog {
                         case "shared_note_opened":
                             let v = TeamLog.SharedNoteOpenedTypeSerializer().deserialize(json)
                             return EventType.sharedNoteOpened(v)
+                        case "shmodel_disable_downloads":
+                            let v = TeamLog.ShmodelDisableDownloadsTypeSerializer().deserialize(json)
+                            return EventType.shmodelDisableDownloads(v)
+                        case "shmodel_enable_downloads":
+                            let v = TeamLog.ShmodelEnableDownloadsTypeSerializer().deserialize(json)
+                            return EventType.shmodelEnableDownloads(v)
                         case "shmodel_group_share":
                             let v = TeamLog.ShmodelGroupShareTypeSerializer().deserialize(json)
                             return EventType.shmodelGroupShare(v)
@@ -13492,6 +14276,12 @@ open class TeamLog {
                         case "camera_uploads_policy_changed":
                             let v = TeamLog.CameraUploadsPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.cameraUploadsPolicyChanged(v)
+                        case "classification_change_policy":
+                            let v = TeamLog.ClassificationChangePolicyTypeSerializer().deserialize(json)
+                            return EventType.classificationChangePolicy(v)
+                        case "computer_backup_policy_changed":
+                            let v = TeamLog.ComputerBackupPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.computerBackupPolicyChanged(v)
                         case "content_administration_policy_changed":
                             let v = TeamLog.ContentAdministrationPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.contentAdministrationPolicyChanged(v)
@@ -13663,6 +14453,9 @@ open class TeamLog {
                         case "sso_change_policy":
                             let v = TeamLog.SsoChangePolicyTypeSerializer().deserialize(json)
                             return EventType.ssoChangePolicy(v)
+                        case "team_branding_policy_changed":
+                            let v = TeamLog.TeamBrandingPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.teamBrandingPolicyChanged(v)
                         case "team_extensions_policy_changed":
                             let v = TeamLog.TeamExtensionsPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.teamExtensionsPolicyChanged(v)
@@ -13857,6 +14650,40 @@ open class TeamLog {
         case fileUnlikeComment
         /// (comments) Unresolved file comment
         case fileUnresolveComment
+        /// (data_governance) Added folders to policy
+        case governancePolicyAddFolders
+        /// (data_governance) Activated a new policy
+        case governancePolicyCreate
+        /// (data_governance) Deleted a policy
+        case governancePolicyDelete
+        /// (data_governance) Edited policy
+        case governancePolicyEditDetails
+        /// (data_governance) Changed policy duration
+        case governancePolicyEditDuration
+        /// (data_governance) Removed folders from policy
+        case governancePolicyRemoveFolders
+        /// (data_governance) Activated a hold
+        case legalHoldsActivateAHold
+        /// (data_governance) Added members to a hold
+        case legalHoldsAddMembers
+        /// (data_governance) Edited details for a hold
+        case legalHoldsChangeHoldDetails
+        /// (data_governance) Renamed a hold
+        case legalHoldsChangeHoldName
+        /// (data_governance) Exported hold
+        case legalHoldsExportAHold
+        /// (data_governance) Canceled export for a hold
+        case legalHoldsExportCancelled
+        /// (data_governance) Downloaded export for a hold
+        case legalHoldsExportDownloaded
+        /// (data_governance) Removed export for a hold
+        case legalHoldsExportRemoved
+        /// (data_governance) Released a hold
+        case legalHoldsReleaseAHold
+        /// (data_governance) Removed members from a hold
+        case legalHoldsRemoveMembers
+        /// (data_governance) Created a summary report for a hold
+        case legalHoldsReportAHold
         /// (devices) Changed IP address associated with active desktop session
         case deviceChangeIpDesktop
         /// (devices) Changed IP address associated with active mobile session
@@ -13875,8 +14702,14 @@ open class TeamLog {
         case deviceManagementDisabled
         /// (devices) Enabled device management (deprecated, no longer logged)
         case deviceManagementEnabled
+        /// (devices) Enabled/disabled backup for computer
+        case deviceSyncBackupStatusChanged
         /// (devices) Disconnected device
         case deviceUnlink
+        /// (devices) Exported passwords
+        case dropboxPasswordsExported
+        /// (devices) Enrolled new Dropbox Passwords device
+        case dropboxPasswordsNewDeviceEnrolled
         /// (devices) Refreshed auth token used for setting up EMM
         case emmRefreshAuthToken
         /// (domains) Granted/revoked option to enable account capture on team domains
@@ -13985,28 +14818,6 @@ open class TeamLog {
         case groupRemoveMember
         /// (groups) Renamed group
         case groupRename
-        /// (legal_holds) Activated a hold
-        case legalHoldsActivateAHold
-        /// (legal_holds) Added members to a hold
-        case legalHoldsAddMembers
-        /// (legal_holds) Edited details for a hold
-        case legalHoldsChangeHoldDetails
-        /// (legal_holds) Renamed a hold
-        case legalHoldsChangeHoldName
-        /// (legal_holds) Exported hold
-        case legalHoldsExportAHold
-        /// (legal_holds) Canceled export for a hold
-        case legalHoldsExportCancelled
-        /// (legal_holds) Downloaded export for a hold
-        case legalHoldsExportDownloaded
-        /// (legal_holds) Removed export for a hold
-        case legalHoldsExportRemoved
-        /// (legal_holds) Released a hold
-        case legalHoldsReleaseAHold
-        /// (legal_holds) Removed members from a hold
-        case legalHoldsRemoveMembers
-        /// (legal_holds) Created a summary report for a hold
-        case legalHoldsReportAHold
         /// (logins) Unlocked/locked account after failed sign in attempts
         case accountLockOrUnlocked
         /// (logins) Failed to sign in via EMM (deprecated, replaced by 'Failed to sign in')
@@ -14193,9 +15004,9 @@ open class TeamLog {
         case exportMembersReport
         /// (reports) Failed to create members data report
         case exportMembersReportFail
-        /// (reports) Report created: Data shared outside the team
+        /// (reports) Created External sharing report
         case externalSharingCreateReport
-        /// (reports) Couldn't create report: Data shared outside the team
+        /// (reports) Couldn't create External sharing report
         case externalSharingReportFailed
         /// (reports) Report created: Links created with no expiration
         case noExpirationLinkGenCreateReport
@@ -14381,6 +15192,10 @@ open class TeamLog {
         case sharedLinkView
         /// (sharing) Opened shared Paper doc (deprecated, no longer logged)
         case sharedNoteOpened
+        /// (sharing) Disabled downloads for link (deprecated, no longer logged)
+        case shmodelDisableDownloads
+        /// (sharing) Enabled downloads for link (deprecated, no longer logged)
+        case shmodelEnableDownloads
         /// (sharing) Shared link with group (deprecated, no longer logged)
         case shmodelGroupShare
         /// (showcase) Granted access to showcase
@@ -14471,6 +15286,10 @@ open class TeamLog {
         case allowDownloadEnabled
         /// (team_policies) Changed camera uploads setting for team
         case cameraUploadsPolicyChanged
+        /// (team_policies) Changed classification policy for team
+        case classificationChangePolicy
+        /// (team_policies) Changed computer backup policy for team
+        case computerBackupPolicyChanged
         /// (team_policies) Changed content management setting
         case contentAdministrationPolicyChanged
         /// (team_policies) Set restrictions on data center locations where team data resides
@@ -14588,6 +15407,8 @@ open class TeamLog {
         case smartSyncOptOut
         /// (team_policies) Changed single sign-on setting for team
         case ssoChangePolicy
+        /// (team_policies) Changed team branding policy for team
+        case teamBrandingPolicyChanged
         /// (team_policies) Changed App Integrations setting for team
         case teamExtensionsPolicyChanged
         /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -14760,6 +15581,74 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("file_unresolve_comment")
                     return .dictionary(d)
+                case .governancePolicyAddFolders:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_add_folders")
+                    return .dictionary(d)
+                case .governancePolicyCreate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_create")
+                    return .dictionary(d)
+                case .governancePolicyDelete:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_delete")
+                    return .dictionary(d)
+                case .governancePolicyEditDetails:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_edit_details")
+                    return .dictionary(d)
+                case .governancePolicyEditDuration:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_edit_duration")
+                    return .dictionary(d)
+                case .governancePolicyRemoveFolders:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("governance_policy_remove_folders")
+                    return .dictionary(d)
+                case .legalHoldsActivateAHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_activate_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsAddMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_add_members")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldDetails:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_change_hold_details")
+                    return .dictionary(d)
+                case .legalHoldsChangeHoldName:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_change_hold_name")
+                    return .dictionary(d)
+                case .legalHoldsExportAHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_export_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsExportCancelled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_export_cancelled")
+                    return .dictionary(d)
+                case .legalHoldsExportDownloaded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_export_downloaded")
+                    return .dictionary(d)
+                case .legalHoldsExportRemoved:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_export_removed")
+                    return .dictionary(d)
+                case .legalHoldsReleaseAHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_release_a_hold")
+                    return .dictionary(d)
+                case .legalHoldsRemoveMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_remove_members")
+                    return .dictionary(d)
+                case .legalHoldsReportAHold:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legal_holds_report_a_hold")
+                    return .dictionary(d)
                 case .deviceChangeIpDesktop:
                     var d = [String: JSON]()
                     d[".tag"] = .str("device_change_ip_desktop")
@@ -14796,9 +15685,21 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("device_management_enabled")
                     return .dictionary(d)
+                case .deviceSyncBackupStatusChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("device_sync_backup_status_changed")
+                    return .dictionary(d)
                 case .deviceUnlink:
                     var d = [String: JSON]()
                     d[".tag"] = .str("device_unlink")
+                    return .dictionary(d)
+                case .dropboxPasswordsExported:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("dropbox_passwords_exported")
+                    return .dictionary(d)
+                case .dropboxPasswordsNewDeviceEnrolled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("dropbox_passwords_new_device_enrolled")
                     return .dictionary(d)
                 case .emmRefreshAuthToken:
                     var d = [String: JSON]()
@@ -15015,50 +15916,6 @@ open class TeamLog {
                 case .groupRename:
                     var d = [String: JSON]()
                     d[".tag"] = .str("group_rename")
-                    return .dictionary(d)
-                case .legalHoldsActivateAHold:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_activate_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsAddMembers:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_add_members")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldDetails:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_change_hold_details")
-                    return .dictionary(d)
-                case .legalHoldsChangeHoldName:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_change_hold_name")
-                    return .dictionary(d)
-                case .legalHoldsExportAHold:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_export_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsExportCancelled:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_export_cancelled")
-                    return .dictionary(d)
-                case .legalHoldsExportDownloaded:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_export_downloaded")
-                    return .dictionary(d)
-                case .legalHoldsExportRemoved:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_export_removed")
-                    return .dictionary(d)
-                case .legalHoldsReleaseAHold:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_release_a_hold")
-                    return .dictionary(d)
-                case .legalHoldsRemoveMembers:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_remove_members")
-                    return .dictionary(d)
-                case .legalHoldsReportAHold:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("legal_holds_report_a_hold")
                     return .dictionary(d)
                 case .accountLockOrUnlocked:
                     var d = [String: JSON]()
@@ -15804,6 +16661,14 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("shared_note_opened")
                     return .dictionary(d)
+                case .shmodelDisableDownloads:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shmodel_disable_downloads")
+                    return .dictionary(d)
+                case .shmodelEnableDownloads:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shmodel_enable_downloads")
+                    return .dictionary(d)
                 case .shmodelGroupShare:
                     var d = [String: JSON]()
                     d[".tag"] = .str("shmodel_group_share")
@@ -15983,6 +16848,14 @@ open class TeamLog {
                 case .cameraUploadsPolicyChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("camera_uploads_policy_changed")
+                    return .dictionary(d)
+                case .classificationChangePolicy:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("classification_change_policy")
+                    return .dictionary(d)
+                case .computerBackupPolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("computer_backup_policy_changed")
                     return .dictionary(d)
                 case .contentAdministrationPolicyChanged:
                     var d = [String: JSON]()
@@ -16211,6 +17084,10 @@ open class TeamLog {
                 case .ssoChangePolicy:
                     var d = [String: JSON]()
                     d[".tag"] = .str("sso_change_policy")
+                    return .dictionary(d)
+                case .teamBrandingPolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_branding_policy_changed")
                     return .dictionary(d)
                 case .teamExtensionsPolicyChanged:
                     var d = [String: JSON]()
@@ -16455,6 +17332,40 @@ open class TeamLog {
                             return EventTypeArg.fileUnlikeComment
                         case "file_unresolve_comment":
                             return EventTypeArg.fileUnresolveComment
+                        case "governance_policy_add_folders":
+                            return EventTypeArg.governancePolicyAddFolders
+                        case "governance_policy_create":
+                            return EventTypeArg.governancePolicyCreate
+                        case "governance_policy_delete":
+                            return EventTypeArg.governancePolicyDelete
+                        case "governance_policy_edit_details":
+                            return EventTypeArg.governancePolicyEditDetails
+                        case "governance_policy_edit_duration":
+                            return EventTypeArg.governancePolicyEditDuration
+                        case "governance_policy_remove_folders":
+                            return EventTypeArg.governancePolicyRemoveFolders
+                        case "legal_holds_activate_a_hold":
+                            return EventTypeArg.legalHoldsActivateAHold
+                        case "legal_holds_add_members":
+                            return EventTypeArg.legalHoldsAddMembers
+                        case "legal_holds_change_hold_details":
+                            return EventTypeArg.legalHoldsChangeHoldDetails
+                        case "legal_holds_change_hold_name":
+                            return EventTypeArg.legalHoldsChangeHoldName
+                        case "legal_holds_export_a_hold":
+                            return EventTypeArg.legalHoldsExportAHold
+                        case "legal_holds_export_cancelled":
+                            return EventTypeArg.legalHoldsExportCancelled
+                        case "legal_holds_export_downloaded":
+                            return EventTypeArg.legalHoldsExportDownloaded
+                        case "legal_holds_export_removed":
+                            return EventTypeArg.legalHoldsExportRemoved
+                        case "legal_holds_release_a_hold":
+                            return EventTypeArg.legalHoldsReleaseAHold
+                        case "legal_holds_remove_members":
+                            return EventTypeArg.legalHoldsRemoveMembers
+                        case "legal_holds_report_a_hold":
+                            return EventTypeArg.legalHoldsReportAHold
                         case "device_change_ip_desktop":
                             return EventTypeArg.deviceChangeIpDesktop
                         case "device_change_ip_mobile":
@@ -16473,8 +17384,14 @@ open class TeamLog {
                             return EventTypeArg.deviceManagementDisabled
                         case "device_management_enabled":
                             return EventTypeArg.deviceManagementEnabled
+                        case "device_sync_backup_status_changed":
+                            return EventTypeArg.deviceSyncBackupStatusChanged
                         case "device_unlink":
                             return EventTypeArg.deviceUnlink
+                        case "dropbox_passwords_exported":
+                            return EventTypeArg.dropboxPasswordsExported
+                        case "dropbox_passwords_new_device_enrolled":
+                            return EventTypeArg.dropboxPasswordsNewDeviceEnrolled
                         case "emm_refresh_auth_token":
                             return EventTypeArg.emmRefreshAuthToken
                         case "account_capture_change_availability":
@@ -16583,28 +17500,6 @@ open class TeamLog {
                             return EventTypeArg.groupRemoveMember
                         case "group_rename":
                             return EventTypeArg.groupRename
-                        case "legal_holds_activate_a_hold":
-                            return EventTypeArg.legalHoldsActivateAHold
-                        case "legal_holds_add_members":
-                            return EventTypeArg.legalHoldsAddMembers
-                        case "legal_holds_change_hold_details":
-                            return EventTypeArg.legalHoldsChangeHoldDetails
-                        case "legal_holds_change_hold_name":
-                            return EventTypeArg.legalHoldsChangeHoldName
-                        case "legal_holds_export_a_hold":
-                            return EventTypeArg.legalHoldsExportAHold
-                        case "legal_holds_export_cancelled":
-                            return EventTypeArg.legalHoldsExportCancelled
-                        case "legal_holds_export_downloaded":
-                            return EventTypeArg.legalHoldsExportDownloaded
-                        case "legal_holds_export_removed":
-                            return EventTypeArg.legalHoldsExportRemoved
-                        case "legal_holds_release_a_hold":
-                            return EventTypeArg.legalHoldsReleaseAHold
-                        case "legal_holds_remove_members":
-                            return EventTypeArg.legalHoldsRemoveMembers
-                        case "legal_holds_report_a_hold":
-                            return EventTypeArg.legalHoldsReportAHold
                         case "account_lock_or_unlocked":
                             return EventTypeArg.accountLockOrUnlocked
                         case "emm_error":
@@ -16977,6 +17872,10 @@ open class TeamLog {
                             return EventTypeArg.sharedLinkView
                         case "shared_note_opened":
                             return EventTypeArg.sharedNoteOpened
+                        case "shmodel_disable_downloads":
+                            return EventTypeArg.shmodelDisableDownloads
+                        case "shmodel_enable_downloads":
+                            return EventTypeArg.shmodelEnableDownloads
                         case "shmodel_group_share":
                             return EventTypeArg.shmodelGroupShare
                         case "showcase_access_granted":
@@ -17067,6 +17966,10 @@ open class TeamLog {
                             return EventTypeArg.allowDownloadEnabled
                         case "camera_uploads_policy_changed":
                             return EventTypeArg.cameraUploadsPolicyChanged
+                        case "classification_change_policy":
+                            return EventTypeArg.classificationChangePolicy
+                        case "computer_backup_policy_changed":
+                            return EventTypeArg.computerBackupPolicyChanged
                         case "content_administration_policy_changed":
                             return EventTypeArg.contentAdministrationPolicyChanged
                         case "data_placement_restriction_change_policy":
@@ -17181,6 +18084,8 @@ open class TeamLog {
                             return EventTypeArg.smartSyncOptOut
                         case "sso_change_policy":
                             return EventTypeArg.ssoChangePolicy
+                        case "team_branding_policy_changed":
+                            return EventTypeArg.teamBrandingPolicyChanged
                         case "team_extensions_policy_changed":
                             return EventTypeArg.teamExtensionsPolicyChanged
                         case "team_selective_sync_policy_changed":
@@ -17543,7 +18448,7 @@ open class TeamLog {
         }
     }
 
-    /// Report created: Data shared outside the team.
+    /// Created External sharing report.
     open class ExternalSharingCreateReportDetails: CustomStringConvertible {
         public init() {
         }
@@ -17598,7 +18503,7 @@ open class TeamLog {
         }
     }
 
-    /// Couldn't create report: Data shared outside the team.
+    /// Couldn't create External sharing report.
     open class ExternalSharingReportFailedDetails: CustomStringConvertible {
         /// Failure reason.
         public let failureReason: Team.TeamReportFailureReason
@@ -17735,9 +18640,9 @@ open class TeamLog {
     /// The FedAdminRole union
     public enum FedAdminRole: CustomStringConvertible {
         /// An unspecified error.
-        case notEnterpriseAdmin
-        /// An unspecified error.
         case enterpriseAdmin
+        /// An unspecified error.
+        case notEnterpriseAdmin
         /// An unspecified error.
         case other
 
@@ -17749,13 +18654,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: FedAdminRole) -> JSON {
             switch value {
-                case .notEnterpriseAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_enterprise_admin")
-                    return .dictionary(d)
                 case .enterpriseAdmin:
                     var d = [String: JSON]()
                     d[".tag"] = .str("enterprise_admin")
+                    return .dictionary(d)
+                case .notEnterpriseAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_enterprise_admin")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -17768,10 +18673,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "not_enterprise_admin":
-                            return FedAdminRole.notEnterpriseAdmin
                         case "enterprise_admin":
                             return FedAdminRole.enterpriseAdmin
+                        case "not_enterprise_admin":
+                            return FedAdminRole.notEnterpriseAdmin
                         case "other":
                             return FedAdminRole.other
                         default:
@@ -17785,10 +18690,10 @@ open class TeamLog {
 
     /// More details about the organization or team.
     public enum FedExtraDetails: CustomStringConvertible {
-        /// More details about the team.
-        case team(TeamLog.TeamDetails)
         /// More details about the organization.
         case organization(TeamLog.OrganizationDetails)
+        /// More details about the team.
+        case team(TeamLog.TeamDetails)
         /// An unspecified error.
         case other
 
@@ -17800,13 +18705,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: FedExtraDetails) -> JSON {
             switch value {
-                case .team(let arg):
-                    var d = Serialization.getFields(TeamLog.TeamDetailsSerializer().serialize(arg))
-                    d[".tag"] = .str("team")
-                    return .dictionary(d)
                 case .organization(let arg):
                     var d = Serialization.getFields(TeamLog.OrganizationDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("organization")
+                    return .dictionary(d)
+                case .team(let arg):
+                    var d = Serialization.getFields(TeamLog.TeamDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -17819,12 +18724,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "team":
-                            let v = TeamLog.TeamDetailsSerializer().deserialize(json)
-                            return FedExtraDetails.team(v)
                         case "organization":
                             let v = TeamLog.OrganizationDetailsSerializer().deserialize(json)
                             return FedExtraDetails.organization(v)
+                        case "team":
+                            let v = TeamLog.TeamDetailsSerializer().deserialize(json)
+                            return FedExtraDetails.team(v)
                         case "other":
                             return FedExtraDetails.other
                         default:
@@ -17839,17 +18744,17 @@ open class TeamLog {
     /// The FedHandshakeAction union
     public enum FedHandshakeAction: CustomStringConvertible {
         /// An unspecified error.
-        case invited
-        /// An unspecified error.
         case acceptedInvite
-        /// An unspecified error.
-        case rejectedInvite
         /// An unspecified error.
         case canceledInvite
         /// An unspecified error.
-        case removedTeam
-        /// An unspecified error.
         case inviteExpired
+        /// An unspecified error.
+        case invited
+        /// An unspecified error.
+        case rejectedInvite
+        /// An unspecified error.
+        case removedTeam
         /// An unspecified error.
         case other
 
@@ -17861,29 +18766,29 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: FedHandshakeAction) -> JSON {
             switch value {
-                case .invited:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invited")
-                    return .dictionary(d)
                 case .acceptedInvite:
                     var d = [String: JSON]()
                     d[".tag"] = .str("accepted_invite")
-                    return .dictionary(d)
-                case .rejectedInvite:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("rejected_invite")
                     return .dictionary(d)
                 case .canceledInvite:
                     var d = [String: JSON]()
                     d[".tag"] = .str("canceled_invite")
                     return .dictionary(d)
-                case .removedTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("removed_team")
-                    return .dictionary(d)
                 case .inviteExpired:
                     var d = [String: JSON]()
                     d[".tag"] = .str("invite_expired")
+                    return .dictionary(d)
+                case .invited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invited")
+                    return .dictionary(d)
+                case .rejectedInvite:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("rejected_invite")
+                    return .dictionary(d)
+                case .removedTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("removed_team")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -17896,18 +18801,18 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "invited":
-                            return FedHandshakeAction.invited
                         case "accepted_invite":
                             return FedHandshakeAction.acceptedInvite
-                        case "rejected_invite":
-                            return FedHandshakeAction.rejectedInvite
                         case "canceled_invite":
                             return FedHandshakeAction.canceledInvite
-                        case "removed_team":
-                            return FedHandshakeAction.removedTeam
                         case "invite_expired":
                             return FedHandshakeAction.inviteExpired
+                        case "invited":
+                            return FedHandshakeAction.invited
+                        case "rejected_invite":
+                            return FedHandshakeAction.rejectedInvite
+                        case "removed_team":
+                            return FedHandshakeAction.removedTeam
                         case "other":
                             return FedHandshakeAction.other
                         default:
@@ -21396,6 +22301,495 @@ open class TeamLog {
         }
     }
 
+    /// Added folders to policy.
+    open class GovernancePolicyAddFoldersDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        /// Folders.
+        public let folders: Array<String>?
+        public init(governancePolicyId: String, name: String, policyType: TeamLog.PolicyType? = nil, folders: Array<String>? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(folders)
+            self.folders = folders
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyAddFoldersDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyAddFoldersDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyAddFoldersDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            "folders": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.folders),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyAddFoldersDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    let folders = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["folders"] ?? .null)
+                    return GovernancePolicyAddFoldersDetails(governancePolicyId: governancePolicyId, name: name, policyType: policyType, folders: folders)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyAddFoldersType struct
+    open class GovernancePolicyAddFoldersType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyAddFoldersTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyAddFoldersTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyAddFoldersType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyAddFoldersType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyAddFoldersType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Activated a new policy.
+    open class GovernancePolicyCreateDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        /// Duration in days.
+        public let duration: TeamLog.DurationLogInfo
+        /// Folders.
+        public let folders: Array<String>?
+        public init(governancePolicyId: String, name: String, duration: TeamLog.DurationLogInfo, policyType: TeamLog.PolicyType? = nil, folders: Array<String>? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+            self.duration = duration
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(folders)
+            self.folders = folders
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyCreateDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyCreateDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyCreateDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "duration": TeamLog.DurationLogInfoSerializer().serialize(value.duration),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            "folders": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.folders),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyCreateDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let duration = TeamLog.DurationLogInfoSerializer().deserialize(dict["duration"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    let folders = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["folders"] ?? .null)
+                    return GovernancePolicyCreateDetails(governancePolicyId: governancePolicyId, name: name, duration: duration, policyType: policyType, folders: folders)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyCreateType struct
+    open class GovernancePolicyCreateType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyCreateTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyCreateTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyCreateType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyCreateType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyCreateType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Deleted a policy.
+    open class GovernancePolicyDeleteDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        public init(governancePolicyId: String, name: String, policyType: TeamLog.PolicyType? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyDeleteDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyDeleteDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyDeleteDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyDeleteDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    return GovernancePolicyDeleteDetails(governancePolicyId: governancePolicyId, name: name, policyType: policyType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyDeleteType struct
+    open class GovernancePolicyDeleteType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyDeleteTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyDeleteTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyDeleteType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyDeleteType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyDeleteType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Edited policy.
+    open class GovernancePolicyEditDetailsDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        /// Attribute.
+        public let attribute: String
+        /// From.
+        public let previousValue: String
+        /// To.
+        public let newValue: String
+        public init(governancePolicyId: String, name: String, attribute: String, previousValue: String, newValue: String, policyType: TeamLog.PolicyType? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+            stringValidator()(attribute)
+            self.attribute = attribute
+            stringValidator()(previousValue)
+            self.previousValue = previousValue
+            stringValidator()(newValue)
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyEditDetailsDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyEditDetailsDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyEditDetailsDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "attribute": Serialization._StringSerializer.serialize(value.attribute),
+            "previous_value": Serialization._StringSerializer.serialize(value.previousValue),
+            "new_value": Serialization._StringSerializer.serialize(value.newValue),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyEditDetailsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let attribute = Serialization._StringSerializer.deserialize(dict["attribute"] ?? .null)
+                    let previousValue = Serialization._StringSerializer.deserialize(dict["previous_value"] ?? .null)
+                    let newValue = Serialization._StringSerializer.deserialize(dict["new_value"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    return GovernancePolicyEditDetailsDetails(governancePolicyId: governancePolicyId, name: name, attribute: attribute, previousValue: previousValue, newValue: newValue, policyType: policyType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyEditDetailsType struct
+    open class GovernancePolicyEditDetailsType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyEditDetailsTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyEditDetailsTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyEditDetailsType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyEditDetailsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyEditDetailsType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Changed policy duration.
+    open class GovernancePolicyEditDurationDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        /// From.
+        public let previousValue: TeamLog.DurationLogInfo
+        /// To.
+        public let newValue: TeamLog.DurationLogInfo
+        public init(governancePolicyId: String, name: String, previousValue: TeamLog.DurationLogInfo, newValue: TeamLog.DurationLogInfo, policyType: TeamLog.PolicyType? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+            self.previousValue = previousValue
+            self.newValue = newValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyEditDurationDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyEditDurationDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyEditDurationDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "previous_value": TeamLog.DurationLogInfoSerializer().serialize(value.previousValue),
+            "new_value": TeamLog.DurationLogInfoSerializer().serialize(value.newValue),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyEditDurationDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let previousValue = TeamLog.DurationLogInfoSerializer().deserialize(dict["previous_value"] ?? .null)
+                    let newValue = TeamLog.DurationLogInfoSerializer().deserialize(dict["new_value"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    return GovernancePolicyEditDurationDetails(governancePolicyId: governancePolicyId, name: name, previousValue: previousValue, newValue: newValue, policyType: policyType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyEditDurationType struct
+    open class GovernancePolicyEditDurationType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyEditDurationTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyEditDurationTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyEditDurationType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyEditDurationType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyEditDurationType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Removed folders from policy.
+    open class GovernancePolicyRemoveFoldersDetails: CustomStringConvertible {
+        /// Policy ID.
+        public let governancePolicyId: String
+        /// Policy name.
+        public let name: String
+        /// Policy type.
+        public let policyType: TeamLog.PolicyType?
+        /// Folders.
+        public let folders: Array<String>?
+        public init(governancePolicyId: String, name: String, policyType: TeamLog.PolicyType? = nil, folders: Array<String>? = nil) {
+            stringValidator()(governancePolicyId)
+            self.governancePolicyId = governancePolicyId
+            stringValidator()(name)
+            self.name = name
+            self.policyType = policyType
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(folders)
+            self.folders = folders
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyRemoveFoldersDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyRemoveFoldersDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyRemoveFoldersDetails) -> JSON {
+            let output = [ 
+            "governance_policy_id": Serialization._StringSerializer.serialize(value.governancePolicyId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "policy_type": NullableSerializer(TeamLog.PolicyTypeSerializer()).serialize(value.policyType),
+            "folders": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.folders),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyRemoveFoldersDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let governancePolicyId = Serialization._StringSerializer.deserialize(dict["governance_policy_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let policyType = NullableSerializer(TeamLog.PolicyTypeSerializer()).deserialize(dict["policy_type"] ?? .null)
+                    let folders = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["folders"] ?? .null)
+                    return GovernancePolicyRemoveFoldersDetails(governancePolicyId: governancePolicyId, name: name, policyType: policyType, folders: folders)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GovernancePolicyRemoveFoldersType struct
+    open class GovernancePolicyRemoveFoldersType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GovernancePolicyRemoveFoldersTypeSerializer().serialize(self)))"
+        }
+    }
+    open class GovernancePolicyRemoveFoldersTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GovernancePolicyRemoveFoldersType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GovernancePolicyRemoveFoldersType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return GovernancePolicyRemoveFoldersType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Added external ID for group.
     open class GroupAddExternalIdDetails: CustomStringConvertible {
         /// Current external id.
@@ -22887,9 +24281,11 @@ open class TeamLog {
     /// The InviteMethod union
     public enum InviteMethod: CustomStringConvertible {
         /// An unspecified error.
+        case autoApprove
+        /// An unspecified error.
         case inviteLink
         /// An unspecified error.
-        case autoApprove
+        case memberInvite
         /// An unspecified error.
         case movedFromAnotherTeam
         /// An unspecified error.
@@ -22903,13 +24299,17 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: InviteMethod) -> JSON {
             switch value {
+                case .autoApprove:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("auto_approve")
+                    return .dictionary(d)
                 case .inviteLink:
                     var d = [String: JSON]()
                     d[".tag"] = .str("invite_link")
                     return .dictionary(d)
-                case .autoApprove:
+                case .memberInvite:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("auto_approve")
+                    d[".tag"] = .str("member_invite")
                     return .dictionary(d)
                 case .movedFromAnotherTeam:
                     var d = [String: JSON]()
@@ -22926,10 +24326,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "invite_link":
-                            return InviteMethod.inviteLink
                         case "auto_approve":
                             return InviteMethod.autoApprove
+                        case "invite_link":
+                            return InviteMethod.inviteLink
+                        case "member_invite":
+                            return InviteMethod.memberInvite
                         case "moved_from_another_team":
                             return InviteMethod.movedFromAnotherTeam
                         case "other":
@@ -23912,14 +25314,14 @@ open class TeamLog {
 
     /// The device sessions that user is linked to.
     public enum LinkedDeviceLogInfo: CustomStringConvertible {
-        /// mobile device session's details.
-        case mobileDeviceSession(TeamLog.MobileDeviceSessionLogInfo)
         /// desktop device session's details.
         case desktopDeviceSession(TeamLog.DesktopDeviceSessionLogInfo)
-        /// web device session's details.
-        case webDeviceSession(TeamLog.WebDeviceSessionLogInfo)
         /// legacy device session's details.
         case legacyDeviceSession(TeamLog.LegacyDeviceSessionLogInfo)
+        /// mobile device session's details.
+        case mobileDeviceSession(TeamLog.MobileDeviceSessionLogInfo)
+        /// web device session's details.
+        case webDeviceSession(TeamLog.WebDeviceSessionLogInfo)
         /// An unspecified error.
         case other
 
@@ -23931,21 +25333,21 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: LinkedDeviceLogInfo) -> JSON {
             switch value {
-                case .mobileDeviceSession(let arg):
-                    var d = Serialization.getFields(TeamLog.MobileDeviceSessionLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("mobile_device_session")
-                    return .dictionary(d)
                 case .desktopDeviceSession(let arg):
                     var d = Serialization.getFields(TeamLog.DesktopDeviceSessionLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("desktop_device_session")
                     return .dictionary(d)
-                case .webDeviceSession(let arg):
-                    var d = Serialization.getFields(TeamLog.WebDeviceSessionLogInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("web_device_session")
-                    return .dictionary(d)
                 case .legacyDeviceSession(let arg):
                     var d = Serialization.getFields(TeamLog.LegacyDeviceSessionLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("legacy_device_session")
+                    return .dictionary(d)
+                case .mobileDeviceSession(let arg):
+                    var d = Serialization.getFields(TeamLog.MobileDeviceSessionLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("mobile_device_session")
+                    return .dictionary(d)
+                case .webDeviceSession(let arg):
+                    var d = Serialization.getFields(TeamLog.WebDeviceSessionLogInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("web_device_session")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -23958,18 +25360,18 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "mobile_device_session":
-                            let v = TeamLog.MobileDeviceSessionLogInfoSerializer().deserialize(json)
-                            return LinkedDeviceLogInfo.mobileDeviceSession(v)
                         case "desktop_device_session":
                             let v = TeamLog.DesktopDeviceSessionLogInfoSerializer().deserialize(json)
                             return LinkedDeviceLogInfo.desktopDeviceSession(v)
-                        case "web_device_session":
-                            let v = TeamLog.WebDeviceSessionLogInfoSerializer().deserialize(json)
-                            return LinkedDeviceLogInfo.webDeviceSession(v)
                         case "legacy_device_session":
                             let v = TeamLog.LegacyDeviceSessionLogInfoSerializer().deserialize(json)
                             return LinkedDeviceLogInfo.legacyDeviceSession(v)
+                        case "mobile_device_session":
+                            let v = TeamLog.MobileDeviceSessionLogInfoSerializer().deserialize(json)
+                            return LinkedDeviceLogInfo.mobileDeviceSession(v)
+                        case "web_device_session":
+                            let v = TeamLog.WebDeviceSessionLogInfoSerializer().deserialize(json)
+                            return LinkedDeviceLogInfo.webDeviceSession(v)
                         case "other":
                             return LinkedDeviceLogInfo.other
                         default:
@@ -24106,21 +25508,21 @@ open class TeamLog {
     /// The LoginMethod union
     public enum LoginMethod: CustomStringConvertible {
         /// An unspecified error.
-        case password
-        /// An unspecified error.
-        case twoFactorAuthentication
-        /// An unspecified error.
-        case saml
-        /// An unspecified error.
-        case googleOauth
-        /// An unspecified error.
-        case webSession
-        /// An unspecified error.
-        case qrCode
-        /// An unspecified error.
         case appleOauth
         /// An unspecified error.
         case firstPartyTokenExchange
+        /// An unspecified error.
+        case googleOauth
+        /// An unspecified error.
+        case password
+        /// An unspecified error.
+        case qrCode
+        /// An unspecified error.
+        case saml
+        /// An unspecified error.
+        case twoFactorAuthentication
+        /// An unspecified error.
+        case webSession
         /// An unspecified error.
         case other
 
@@ -24132,30 +25534,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: LoginMethod) -> JSON {
             switch value {
-                case .password:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("password")
-                    return .dictionary(d)
-                case .twoFactorAuthentication:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("two_factor_authentication")
-                    return .dictionary(d)
-                case .saml:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("saml")
-                    return .dictionary(d)
-                case .googleOauth:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("google_oauth")
-                    return .dictionary(d)
-                case .webSession:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("web_session")
-                    return .dictionary(d)
-                case .qrCode:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("qr_code")
-                    return .dictionary(d)
                 case .appleOauth:
                     var d = [String: JSON]()
                     d[".tag"] = .str("apple_oauth")
@@ -24163,6 +25541,30 @@ open class TeamLog {
                 case .firstPartyTokenExchange:
                     var d = [String: JSON]()
                     d[".tag"] = .str("first_party_token_exchange")
+                    return .dictionary(d)
+                case .googleOauth:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("google_oauth")
+                    return .dictionary(d)
+                case .password:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("password")
+                    return .dictionary(d)
+                case .qrCode:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("qr_code")
+                    return .dictionary(d)
+                case .saml:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("saml")
+                    return .dictionary(d)
+                case .twoFactorAuthentication:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("two_factor_authentication")
+                    return .dictionary(d)
+                case .webSession:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("web_session")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -24175,22 +25577,22 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "password":
-                            return LoginMethod.password
-                        case "two_factor_authentication":
-                            return LoginMethod.twoFactorAuthentication
-                        case "saml":
-                            return LoginMethod.saml
-                        case "google_oauth":
-                            return LoginMethod.googleOauth
-                        case "web_session":
-                            return LoginMethod.webSession
-                        case "qr_code":
-                            return LoginMethod.qrCode
                         case "apple_oauth":
                             return LoginMethod.appleOauth
                         case "first_party_token_exchange":
                             return LoginMethod.firstPartyTokenExchange
+                        case "google_oauth":
+                            return LoginMethod.googleOauth
+                        case "password":
+                            return LoginMethod.password
+                        case "qr_code":
+                            return LoginMethod.qrCode
+                        case "saml":
+                            return LoginMethod.saml
+                        case "two_factor_authentication":
+                            return LoginMethod.twoFactorAuthentication
+                        case "web_session":
+                            return LoginMethod.webSession
                         case "other":
                             return LoginMethod.other
                         default:
@@ -24270,7 +25672,11 @@ open class TeamLog {
 
     /// Signed out.
     open class LogoutDetails: CustomStringConvertible {
-        public init() {
+        /// Login session id.
+        public let loginId: String?
+        public init(loginId: String? = nil) {
+            nullableValidator(stringValidator())(loginId)
+            self.loginId = loginId
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(LogoutDetailsSerializer().serialize(self)))"
@@ -24279,13 +25685,16 @@ open class TeamLog {
     open class LogoutDetailsSerializer: JSONSerializer {
         public init() { }
         open func serialize(_ value: LogoutDetails) -> JSON {
-            let output = [String: JSON]()
+            let output = [ 
+            "login_id": NullableSerializer(Serialization._StringSerializer).serialize(value.loginId),
+            ]
             return .dictionary(output)
         }
         open func deserialize(_ json: JSON) -> LogoutDetails {
             switch json {
-                case .dictionary(_):
-                    return LogoutDetails()
+                case .dictionary(let dict):
+                    let loginId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["login_id"] ?? .null)
+                    return LogoutDetails(loginId: loginId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -25035,9 +26444,9 @@ open class TeamLog {
         /// An unspecified error.
         case delete
         /// An unspecified error.
-        case offboard
-        /// An unspecified error.
         case leave
+        /// An unspecified error.
+        case offboard
         /// An unspecified error.
         case offboardAndRetainTeamFolders
         /// An unspecified error.
@@ -25055,13 +26464,13 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("delete")
                     return .dictionary(d)
-                case .offboard:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("offboard")
-                    return .dictionary(d)
                 case .leave:
                     var d = [String: JSON]()
                     d[".tag"] = .str("leave")
+                    return .dictionary(d)
+                case .offboard:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("offboard")
                     return .dictionary(d)
                 case .offboardAndRetainTeamFolders:
                     var d = [String: JSON]()
@@ -25080,10 +26489,10 @@ open class TeamLog {
                     switch tag {
                         case "delete":
                             return MemberRemoveActionType.delete
-                        case "offboard":
-                            return MemberRemoveActionType.offboard
                         case "leave":
                             return MemberRemoveActionType.leave
+                        case "offboard":
+                            return MemberRemoveActionType.offboard
                         case "offboard_and_retain_team_folders":
                             return MemberRemoveActionType.offboardAndRetainTeamFolders
                         case "other":
@@ -25289,9 +26698,9 @@ open class TeamLog {
         /// An unspecified error.
         case disabled
         /// An unspecified error.
-        case specificMembers
-        /// An unspecified error.
         case everyone
+        /// An unspecified error.
+        case specificMembers
         /// An unspecified error.
         case other
 
@@ -25307,13 +26716,13 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("disabled")
                     return .dictionary(d)
-                case .specificMembers:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("specific_members")
-                    return .dictionary(d)
                 case .everyone:
                     var d = [String: JSON]()
                     d[".tag"] = .str("everyone")
+                    return .dictionary(d)
+                case .specificMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("specific_members")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -25328,10 +26737,10 @@ open class TeamLog {
                     switch tag {
                         case "disabled":
                             return MemberSendInvitePolicy.disabled
-                        case "specific_members":
-                            return MemberSendInvitePolicy.specificMembers
                         case "everyone":
                             return MemberSendInvitePolicy.everyone
+                        case "specific_members":
+                            return MemberSendInvitePolicy.specificMembers
                         case "other":
                             return MemberSendInvitePolicy.other
                         default:
@@ -25962,17 +27371,17 @@ open class TeamLog {
     /// The MemberStatus union
     public enum MemberStatus: CustomStringConvertible {
         /// An unspecified error.
-        case notJoined
+        case active
         /// An unspecified error.
         case invited
         /// An unspecified error.
-        case active
+        case movedToAnotherTeam
         /// An unspecified error.
-        case suspended
+        case notJoined
         /// An unspecified error.
         case removed
         /// An unspecified error.
-        case movedToAnotherTeam
+        case suspended
         /// An unspecified error.
         case other
 
@@ -25984,29 +27393,29 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: MemberStatus) -> JSON {
             switch value {
-                case .notJoined:
+                case .active:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("not_joined")
+                    d[".tag"] = .str("active")
                     return .dictionary(d)
                 case .invited:
                     var d = [String: JSON]()
                     d[".tag"] = .str("invited")
                     return .dictionary(d)
-                case .active:
+                case .movedToAnotherTeam:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("active")
+                    d[".tag"] = .str("moved_to_another_team")
                     return .dictionary(d)
-                case .suspended:
+                case .notJoined:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("suspended")
+                    d[".tag"] = .str("not_joined")
                     return .dictionary(d)
                 case .removed:
                     var d = [String: JSON]()
                     d[".tag"] = .str("removed")
                     return .dictionary(d)
-                case .movedToAnotherTeam:
+                case .suspended:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("moved_to_another_team")
+                    d[".tag"] = .str("suspended")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -26019,18 +27428,18 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "not_joined":
-                            return MemberStatus.notJoined
-                        case "invited":
-                            return MemberStatus.invited
                         case "active":
                             return MemberStatus.active
-                        case "suspended":
-                            return MemberStatus.suspended
-                        case "removed":
-                            return MemberStatus.removed
+                        case "invited":
+                            return MemberStatus.invited
                         case "moved_to_another_team":
                             return MemberStatus.movedToAnotherTeam
+                        case "not_joined":
+                            return MemberStatus.notJoined
+                        case "removed":
+                            return MemberStatus.removed
+                        case "suspended":
+                            return MemberStatus.suspended
                         case "other":
                             return MemberStatus.other
                         default:
@@ -27744,11 +29153,11 @@ open class TeamLog {
     /// The PaperAccessType union
     public enum PaperAccessType: CustomStringConvertible {
         /// An unspecified error.
-        case viewer
-        /// An unspecified error.
         case commenter
         /// An unspecified error.
         case editor
+        /// An unspecified error.
+        case viewer
         /// An unspecified error.
         case other
 
@@ -27760,10 +29169,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: PaperAccessType) -> JSON {
             switch value {
-                case .viewer:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("viewer")
-                    return .dictionary(d)
                 case .commenter:
                     var d = [String: JSON]()
                     d[".tag"] = .str("commenter")
@@ -27771,6 +29176,10 @@ open class TeamLog {
                 case .editor:
                     var d = [String: JSON]()
                     d[".tag"] = .str("editor")
+                    return .dictionary(d)
+                case .viewer:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("viewer")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -27783,12 +29192,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "viewer":
-                            return PaperAccessType.viewer
                         case "commenter":
                             return PaperAccessType.commenter
                         case "editor":
                             return PaperAccessType.editor
+                        case "viewer":
+                            return PaperAccessType.viewer
                         case "other":
                             return PaperAccessType.other
                         default:
@@ -31327,10 +32736,10 @@ open class TeamLog {
 
     /// A user or group
     public enum ParticipantLogInfo: CustomStringConvertible {
-        /// A user with a Dropbox account.
-        case user(TeamLog.UserLogInfo)
         /// Group details.
         case group(TeamLog.GroupLogInfo)
+        /// A user with a Dropbox account.
+        case user(TeamLog.UserLogInfo)
         /// An unspecified error.
         case other
 
@@ -31342,13 +32751,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: ParticipantLogInfo) -> JSON {
             switch value {
-                case .user(let arg):
-                    var d = ["user": TeamLog.UserLogInfoSerializer().serialize(arg)]
-                    d[".tag"] = .str("user")
-                    return .dictionary(d)
                 case .group(let arg):
                     var d = Serialization.getFields(TeamLog.GroupLogInfoSerializer().serialize(arg))
                     d[".tag"] = .str("group")
+                    return .dictionary(d)
+                case .user(let arg):
+                    var d = ["user": TeamLog.UserLogInfoSerializer().serialize(arg)]
+                    d[".tag"] = .str("user")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -31361,12 +32770,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "user":
-                            let v = TeamLog.UserLogInfoSerializer().deserialize(d["user"] ?? .null)
-                            return ParticipantLogInfo.user(v)
                         case "group":
                             let v = TeamLog.GroupLogInfoSerializer().deserialize(json)
                             return ParticipantLogInfo.group(v)
+                        case "user":
+                            let v = TeamLog.UserLogInfoSerializer().deserialize(d["user"] ?? .null)
+                            return ParticipantLogInfo.user(v)
                         case "other":
                             return ParticipantLogInfo.other
                         default:
@@ -31381,11 +32790,11 @@ open class TeamLog {
     /// The PassPolicy union
     public enum PassPolicy: CustomStringConvertible {
         /// An unspecified error.
-        case enabled
-        /// An unspecified error.
         case allow
         /// An unspecified error.
         case disabled
+        /// An unspecified error.
+        case enabled
         /// An unspecified error.
         case other
 
@@ -31397,10 +32806,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: PassPolicy) -> JSON {
             switch value {
-                case .enabled:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("enabled")
-                    return .dictionary(d)
                 case .allow:
                     var d = [String: JSON]()
                     d[".tag"] = .str("allow")
@@ -31408,6 +32813,10 @@ open class TeamLog {
                 case .disabled:
                     var d = [String: JSON]()
                     d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -31420,12 +32829,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "enabled":
-                            return PassPolicy.enabled
                         case "allow":
                             return PassPolicy.allow
                         case "disabled":
                             return PassPolicy.disabled
+                        case "enabled":
+                            return PassPolicy.enabled
                         case "other":
                             return PassPolicy.other
                         default:
@@ -31892,6 +33301,49 @@ open class TeamLog {
                             return PlacementRestriction.other
                         default:
                             return PlacementRestriction.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PolicyType union
+    public enum PolicyType: CustomStringConvertible {
+        /// An unspecified error.
+        case retention
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PolicyTypeSerializer().serialize(self)))"
+        }
+    }
+    open class PolicyTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PolicyType) -> JSON {
+            switch value {
+                case .retention:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("retention")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PolicyType {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "retention":
+                            return PolicyType.retention
+                        case "other":
+                            return PolicyType.other
+                        default:
+                            return PolicyType.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -35967,9 +37419,9 @@ open class TeamLog {
     /// Specifies if a shared folder inherits its members from the parent folder.
     public enum SharedFolderMembersInheritancePolicy: CustomStringConvertible {
         /// An unspecified error.
-        case inheritMembers
-        /// An unspecified error.
         case dontInheritMembers
+        /// An unspecified error.
+        case inheritMembers
         /// An unspecified error.
         case other
 
@@ -35981,13 +37433,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: SharedFolderMembersInheritancePolicy) -> JSON {
             switch value {
-                case .inheritMembers:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("inherit_members")
-                    return .dictionary(d)
                 case .dontInheritMembers:
                     var d = [String: JSON]()
                     d[".tag"] = .str("dont_inherit_members")
+                    return .dictionary(d)
+                case .inheritMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("inherit_members")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -36000,10 +37452,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "inherit_members":
-                            return SharedFolderMembersInheritancePolicy.inheritMembers
                         case "dont_inherit_members":
                             return SharedFolderMembersInheritancePolicy.dontInheritMembers
+                        case "inherit_members":
+                            return SharedFolderMembersInheritancePolicy.inheritMembers
                         case "other":
                             return SharedFolderMembersInheritancePolicy.other
                         default:
@@ -38076,6 +39528,128 @@ open class TeamLog {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Disabled downloads for link.
+    open class ShmodelDisableDownloadsDetails: CustomStringConvertible {
+        /// Shared link owner details. Might be missing due to historical data gap.
+        public let sharedLinkOwner: TeamLog.UserLogInfo?
+        public init(sharedLinkOwner: TeamLog.UserLogInfo? = nil) {
+            self.sharedLinkOwner = sharedLinkOwner
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShmodelDisableDownloadsDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShmodelDisableDownloadsDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShmodelDisableDownloadsDetails) -> JSON {
+            let output = [ 
+            "shared_link_owner": NullableSerializer(TeamLog.UserLogInfoSerializer()).serialize(value.sharedLinkOwner),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShmodelDisableDownloadsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sharedLinkOwner = NullableSerializer(TeamLog.UserLogInfoSerializer()).deserialize(dict["shared_link_owner"] ?? .null)
+                    return ShmodelDisableDownloadsDetails(sharedLinkOwner: sharedLinkOwner)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShmodelDisableDownloadsType struct
+    open class ShmodelDisableDownloadsType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShmodelDisableDownloadsTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShmodelDisableDownloadsTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShmodelDisableDownloadsType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShmodelDisableDownloadsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShmodelDisableDownloadsType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Enabled downloads for link.
+    open class ShmodelEnableDownloadsDetails: CustomStringConvertible {
+        /// Shared link owner details. Might be missing due to historical data gap.
+        public let sharedLinkOwner: TeamLog.UserLogInfo?
+        public init(sharedLinkOwner: TeamLog.UserLogInfo? = nil) {
+            self.sharedLinkOwner = sharedLinkOwner
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShmodelEnableDownloadsDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class ShmodelEnableDownloadsDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShmodelEnableDownloadsDetails) -> JSON {
+            let output = [ 
+            "shared_link_owner": NullableSerializer(TeamLog.UserLogInfoSerializer()).serialize(value.sharedLinkOwner),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShmodelEnableDownloadsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let sharedLinkOwner = NullableSerializer(TeamLog.UserLogInfoSerializer()).deserialize(dict["shared_link_owner"] ?? .null)
+                    return ShmodelEnableDownloadsDetails(sharedLinkOwner: sharedLinkOwner)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ShmodelEnableDownloadsType struct
+    open class ShmodelEnableDownloadsType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ShmodelEnableDownloadsTypeSerializer().serialize(self)))"
+        }
+    }
+    open class ShmodelEnableDownloadsTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ShmodelEnableDownloadsType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ShmodelEnableDownloadsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ShmodelEnableDownloadsType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -40589,11 +42163,11 @@ open class TeamLog {
     /// The SpaceLimitsStatus union
     public enum SpaceLimitsStatus: CustomStringConvertible {
         /// An unspecified error.
-        case withinQuota
-        /// An unspecified error.
         case nearQuota
         /// An unspecified error.
         case overQuota
+        /// An unspecified error.
+        case withinQuota
         /// An unspecified error.
         case other
 
@@ -40605,10 +42179,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: SpaceLimitsStatus) -> JSON {
             switch value {
-                case .withinQuota:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("within_quota")
-                    return .dictionary(d)
                 case .nearQuota:
                     var d = [String: JSON]()
                     d[".tag"] = .str("near_quota")
@@ -40616,6 +42186,10 @@ open class TeamLog {
                 case .overQuota:
                     var d = [String: JSON]()
                     d[".tag"] = .str("over_quota")
+                    return .dictionary(d)
+                case .withinQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("within_quota")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -40628,12 +42202,12 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "within_quota":
-                            return SpaceLimitsStatus.withinQuota
                         case "near_quota":
                             return SpaceLimitsStatus.nearQuota
                         case "over_quota":
                             return SpaceLimitsStatus.overQuota
+                        case "within_quota":
+                            return SpaceLimitsStatus.withinQuota
                         case "other":
                             return SpaceLimitsStatus.other
                         default:
@@ -41594,6 +43168,123 @@ open class TeamLog {
         }
     }
 
+    /// Policy for controlling team access to setting up branding feature
+    public enum TeamBrandingPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamBrandingPolicySerializer().serialize(self)))"
+        }
+    }
+    open class TeamBrandingPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamBrandingPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> TeamBrandingPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return TeamBrandingPolicy.disabled
+                        case "enabled":
+                            return TeamBrandingPolicy.enabled
+                        case "other":
+                            return TeamBrandingPolicy.other
+                        default:
+                            return TeamBrandingPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed team branding policy for team.
+    open class TeamBrandingPolicyChangedDetails: CustomStringConvertible {
+        /// New team branding policy.
+        public let newValue: TeamLog.TeamBrandingPolicy
+        /// Previous team branding policy.
+        public let previousValue: TeamLog.TeamBrandingPolicy
+        public init(newValue: TeamLog.TeamBrandingPolicy, previousValue: TeamLog.TeamBrandingPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamBrandingPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class TeamBrandingPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamBrandingPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.TeamBrandingPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.TeamBrandingPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamBrandingPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.TeamBrandingPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.TeamBrandingPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return TeamBrandingPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The TeamBrandingPolicyChangedType struct
+    open class TeamBrandingPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamBrandingPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class TeamBrandingPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamBrandingPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamBrandingPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamBrandingPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// More details about the team.
     open class TeamDetails: CustomStringConvertible {
         /// The name of the team.
@@ -42133,8 +43824,11 @@ open class TeamLog {
     open class TeamInviteDetails: CustomStringConvertible {
         /// How the user was invited to the team.
         public let inviteMethod: TeamLog.InviteMethod
-        public init(inviteMethod: TeamLog.InviteMethod) {
+        /// True if the invitation incurred an additional license purchase.
+        public let additionalLicensePurchase: Bool?
+        public init(inviteMethod: TeamLog.InviteMethod, additionalLicensePurchase: Bool? = nil) {
             self.inviteMethod = inviteMethod
+            self.additionalLicensePurchase = additionalLicensePurchase
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamInviteDetailsSerializer().serialize(self)))"
@@ -42145,6 +43839,7 @@ open class TeamLog {
         open func serialize(_ value: TeamInviteDetails) -> JSON {
             let output = [ 
             "invite_method": TeamLog.InviteMethodSerializer().serialize(value.inviteMethod),
+            "additional_license_purchase": NullableSerializer(Serialization._BoolSerializer).serialize(value.additionalLicensePurchase),
             ]
             return .dictionary(output)
         }
@@ -42152,7 +43847,8 @@ open class TeamLog {
             switch json {
                 case .dictionary(let dict):
                     let inviteMethod = TeamLog.InviteMethodSerializer().deserialize(dict["invite_method"] ?? .null)
-                    return TeamInviteDetails(inviteMethod: inviteMethod)
+                    let additionalLicensePurchase = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["additional_license_purchase"] ?? .null)
+                    return TeamInviteDetails(inviteMethod: inviteMethod, additionalLicensePurchase: additionalLicensePurchase)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -42269,9 +43965,9 @@ open class TeamLog {
     /// The TeamMembershipType union
     public enum TeamMembershipType: CustomStringConvertible {
         /// An unspecified error.
-        case full
-        /// An unspecified error.
         case free
+        /// An unspecified error.
+        case full
         /// An unspecified error.
         case other
 
@@ -42283,13 +43979,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TeamMembershipType) -> JSON {
             switch value {
-                case .full:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("full")
-                    return .dictionary(d)
                 case .free:
                     var d = [String: JSON]()
                     d[".tag"] = .str("free")
+                    return .dictionary(d)
+                case .full:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("full")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -42302,10 +43998,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "full":
-                            return TeamMembershipType.full
                         case "free":
                             return TeamMembershipType.free
+                        case "full":
+                            return TeamMembershipType.full
                         case "other":
                             return TeamMembershipType.other
                         default:
@@ -44761,13 +46457,13 @@ open class TeamLog {
     /// Two factor authentication configuration. Note: the enabled option is deprecated.
     public enum TfaConfiguration: CustomStringConvertible {
         /// An unspecified error.
+        case authenticator
+        /// An unspecified error.
         case disabled
         /// An unspecified error.
         case enabled
         /// An unspecified error.
         case sms
-        /// An unspecified error.
-        case authenticator
         /// An unspecified error.
         case other
 
@@ -44779,6 +46475,10 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TfaConfiguration) -> JSON {
             switch value {
+                case .authenticator:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("authenticator")
+                    return .dictionary(d)
                 case .disabled:
                     var d = [String: JSON]()
                     d[".tag"] = .str("disabled")
@@ -44791,10 +46491,6 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("sms")
                     return .dictionary(d)
-                case .authenticator:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("authenticator")
-                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -44806,14 +46502,14 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
+                        case "authenticator":
+                            return TfaConfiguration.authenticator
                         case "disabled":
                             return TfaConfiguration.disabled
                         case "enabled":
                             return TfaConfiguration.enabled
                         case "sms":
                             return TfaConfiguration.sms
-                        case "authenticator":
-                            return TfaConfiguration.authenticator
                         case "other":
                             return TfaConfiguration.other
                         default:
@@ -45048,19 +46744,19 @@ open class TeamLog {
     /// The TimeUnit union
     public enum TimeUnit: CustomStringConvertible {
         /// An unspecified error.
-        case milliseconds
-        /// An unspecified error.
-        case seconds
-        /// An unspecified error.
-        case minutes
+        case days
         /// An unspecified error.
         case hours
         /// An unspecified error.
-        case days
+        case milliseconds
         /// An unspecified error.
-        case weeks
+        case minutes
         /// An unspecified error.
         case months
+        /// An unspecified error.
+        case seconds
+        /// An unspecified error.
+        case weeks
         /// An unspecified error.
         case years
         /// An unspecified error.
@@ -45074,33 +46770,33 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TimeUnit) -> JSON {
             switch value {
-                case .milliseconds:
+                case .days:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("milliseconds")
-                    return .dictionary(d)
-                case .seconds:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("seconds")
-                    return .dictionary(d)
-                case .minutes:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("minutes")
+                    d[".tag"] = .str("days")
                     return .dictionary(d)
                 case .hours:
                     var d = [String: JSON]()
                     d[".tag"] = .str("hours")
                     return .dictionary(d)
-                case .days:
+                case .milliseconds:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("days")
+                    d[".tag"] = .str("milliseconds")
                     return .dictionary(d)
-                case .weeks:
+                case .minutes:
                     var d = [String: JSON]()
-                    d[".tag"] = .str("weeks")
+                    d[".tag"] = .str("minutes")
                     return .dictionary(d)
                 case .months:
                     var d = [String: JSON]()
                     d[".tag"] = .str("months")
+                    return .dictionary(d)
+                case .seconds:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("seconds")
+                    return .dictionary(d)
+                case .weeks:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("weeks")
                     return .dictionary(d)
                 case .years:
                     var d = [String: JSON]()
@@ -45117,20 +46813,20 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "milliseconds":
-                            return TimeUnit.milliseconds
-                        case "seconds":
-                            return TimeUnit.seconds
-                        case "minutes":
-                            return TimeUnit.minutes
-                        case "hours":
-                            return TimeUnit.hours
                         case "days":
                             return TimeUnit.days
-                        case "weeks":
-                            return TimeUnit.weeks
+                        case "hours":
+                            return TimeUnit.hours
+                        case "milliseconds":
+                            return TimeUnit.milliseconds
+                        case "minutes":
+                            return TimeUnit.minutes
                         case "months":
                             return TimeUnit.months
+                        case "seconds":
+                            return TimeUnit.seconds
+                        case "weeks":
+                            return TimeUnit.weeks
                         case "years":
                             return TimeUnit.years
                         case "other":
@@ -45148,7 +46844,7 @@ open class TeamLog {
     open class TrustedNonTeamMemberLogInfo: TeamLog.UserLogInfo {
         /// Indicates the type of the member of a trusted team.
         public let trustedNonTeamMemberType: TeamLog.TrustedNonTeamMemberType
-        /// Details about this useru2019s trusted team.
+        /// Details about this user's trusted team.
         public let team: TeamLog.TeamLogInfo?
         public init(trustedNonTeamMemberType: TeamLog.TrustedNonTeamMemberType, accountId: String? = nil, displayName: String? = nil, email: String? = nil, team: TeamLog.TeamLogInfo? = nil) {
             self.trustedNonTeamMemberType = trustedNonTeamMemberType
@@ -45189,9 +46885,9 @@ open class TeamLog {
     /// The TrustedNonTeamMemberType union
     public enum TrustedNonTeamMemberType: CustomStringConvertible {
         /// An unspecified error.
-        case multiInstanceAdmin
-        /// An unspecified error.
         case enterpriseAdmin
+        /// An unspecified error.
+        case multiInstanceAdmin
         /// An unspecified error.
         case other
 
@@ -45203,13 +46899,13 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TrustedNonTeamMemberType) -> JSON {
             switch value {
-                case .multiInstanceAdmin:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("multi_instance_admin")
-                    return .dictionary(d)
                 case .enterpriseAdmin:
                     var d = [String: JSON]()
                     d[".tag"] = .str("enterprise_admin")
+                    return .dictionary(d)
+                case .multiInstanceAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("multi_instance_admin")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -45222,10 +46918,10 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "multi_instance_admin":
-                            return TrustedNonTeamMemberType.multiInstanceAdmin
                         case "enterprise_admin":
                             return TrustedNonTeamMemberType.enterpriseAdmin
+                        case "multi_instance_admin":
+                            return TrustedNonTeamMemberType.multiInstanceAdmin
                         case "other":
                             return TrustedNonTeamMemberType.other
                         default:
@@ -45240,15 +46936,15 @@ open class TeamLog {
     /// The TrustedTeamsRequestAction union
     public enum TrustedTeamsRequestAction: CustomStringConvertible {
         /// An unspecified error.
-        case invited
-        /// An unspecified error.
-        case expired
-        /// An unspecified error.
-        case revoked
-        /// An unspecified error.
         case accepted
         /// An unspecified error.
         case declined
+        /// An unspecified error.
+        case expired
+        /// An unspecified error.
+        case invited
+        /// An unspecified error.
+        case revoked
         /// An unspecified error.
         case other
 
@@ -45260,18 +46956,6 @@ open class TeamLog {
         public init() { }
         open func serialize(_ value: TrustedTeamsRequestAction) -> JSON {
             switch value {
-                case .invited:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invited")
-                    return .dictionary(d)
-                case .expired:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("expired")
-                    return .dictionary(d)
-                case .revoked:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("revoked")
-                    return .dictionary(d)
                 case .accepted:
                     var d = [String: JSON]()
                     d[".tag"] = .str("accepted")
@@ -45279,6 +46963,18 @@ open class TeamLog {
                 case .declined:
                     var d = [String: JSON]()
                     d[".tag"] = .str("declined")
+                    return .dictionary(d)
+                case .expired:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired")
+                    return .dictionary(d)
+                case .invited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invited")
+                    return .dictionary(d)
+                case .revoked:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("revoked")
                     return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
@@ -45291,16 +46987,16 @@ open class TeamLog {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "invited":
-                            return TrustedTeamsRequestAction.invited
-                        case "expired":
-                            return TrustedTeamsRequestAction.expired
-                        case "revoked":
-                            return TrustedTeamsRequestAction.revoked
                         case "accepted":
                             return TrustedTeamsRequestAction.accepted
                         case "declined":
                             return TrustedTeamsRequestAction.declined
+                        case "expired":
+                            return TrustedTeamsRequestAction.expired
+                        case "invited":
+                            return TrustedTeamsRequestAction.invited
+                        case "revoked":
+                            return TrustedTeamsRequestAction.revoked
                         case "other":
                             return TrustedTeamsRequestAction.other
                         default:

@@ -357,7 +357,8 @@ open class Sharing {
     public enum AddFolderMemberError: CustomStringConvertible {
         /// Unable to access shared folder.
         case accessError(Sharing.SharedFolderAccessError)
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// The current user has been banned.
         case bannedMember
@@ -540,8 +541,8 @@ open class Sharing {
         case invalidDropboxId(String)
         /// The value is the e-email address that is malformed.
         case invalidEmail(String)
-        /// The value is the ID of the Dropbox user with an unverified e-mail address.  Invite unverified users by
-        /// e-mail address instead of by their Dropbox ID.
+        /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified users by email
+        /// address instead of by their Dropbox ID.
         case unverifiedDropboxId(String)
         /// At least one of the specified groups in members in AddFolderMemberArg is deleted.
         case groupDeleted
@@ -988,7 +989,8 @@ open class Sharing {
     public enum CreateSharedLinkWithSettingsError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
-        /// User's email should be verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
         /// The shared link already exists. You can call listSharedLinks to get the  existing link, or use the provided
         /// metadata if it is returned.
@@ -2789,7 +2791,7 @@ open class Sharing {
 
     /// Information about the recipient of a shared content invitation.
     public enum InviteeInfo: CustomStringConvertible {
-        /// E-mail address of invited user.
+        /// Email address of invited user.
         case email(String)
         /// An unspecified error.
         case other
@@ -4627,7 +4629,7 @@ open class Sharing {
     public enum MemberSelector: CustomStringConvertible {
         /// Dropbox account, team member, or group ID of member.
         case dropboxId(String)
-        /// E-mail address of member.
+        /// Email address of member.
         case email(String)
         /// An unspecified error.
         case other
@@ -4729,7 +4731,8 @@ open class Sharing {
         case other
         /// There is an error with the given settings.
         case settingsError(Sharing.SharedLinkSettingsError)
-        /// The caller's email should be verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
 
         public var description: String {
@@ -6201,7 +6204,8 @@ open class Sharing {
 
     /// The ShareFolderErrorBase union
     public enum ShareFolderErrorBase: CustomStringConvertible {
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// path in ShareFolderArg is invalid.
         case badPath(Sharing.SharePathError)
@@ -6269,7 +6273,8 @@ open class Sharing {
 
     /// The ShareFolderError union
     public enum ShareFolderError: CustomStringConvertible {
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// path in ShareFolderArg is invalid.
         case badPath(Sharing.SharePathError)
@@ -6472,6 +6477,8 @@ open class Sharing {
         case insideOsxPackage
         /// We do not support sharing the Vault folder.
         case isVault
+        /// We do not support sharing the Family folder.
+        case isFamily
         /// An unspecified error.
         case other
 
@@ -6539,6 +6546,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("is_vault")
                     return .dictionary(d)
+                case .isFamily:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_family")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -6579,6 +6590,8 @@ open class Sharing {
                             return SharePathError.insideOsxPackage
                         case "is_vault":
                             return SharePathError.isVault
+                        case "is_family":
+                            return SharePathError.isFamily
                         case "other":
                             return SharePathError.other
                         default:
@@ -7137,7 +7150,8 @@ open class Sharing {
     public enum SharedLinkAccessFailureReason: CustomStringConvertible {
         /// User is not logged in.
         case loginRequired
-        /// User's email is not verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailVerifyRequired
         /// The link is password protected.
         case passwordRequired
@@ -7491,7 +7505,8 @@ open class Sharing {
 
     /// User account had a problem preventing this action.
     public enum SharingUserError: CustomStringConvertible {
-        /// The current user must verify the account e-mail address before performing this action.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// An unspecified error.
         case other
@@ -7622,7 +7637,8 @@ open class Sharing {
         case newOwnerNotAMember
         /// The new designated owner has not added the folder to their Dropbox.
         case newOwnerUnmounted
-        /// The new designated owner's e-mail address is unverified.
+        /// The new designated owner's email address is not verified. This functionality is only available on accounts
+        /// with a verified email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case newOwnerEmailUnverified
         /// This action cannot be performed on a team shared folder.
         case teamFolder

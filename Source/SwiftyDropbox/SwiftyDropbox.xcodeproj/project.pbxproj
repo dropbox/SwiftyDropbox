@@ -24,8 +24,6 @@
 		BF4CC9A3247842250005CADF /* Request+TokenRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */; };
 		BFDD66C9250310F7009D9B6D /* ChunkInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDD66C8250310F7009D9B6D /* ChunkInputStream.swift */; };
 		BFDD66CA250310F7009D9B6D /* ChunkInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDD66C8250310F7009D9B6D /* ChunkInputStream.swift */; };
-		BFFF31FC24DE68950029FC0C /* CloudDocs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31D524DE68950029FC0C /* CloudDocs.swift */; };
-		BFFF31FD24DE68950029FC0C /* CloudDocs.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31D524DE68950029FC0C /* CloudDocs.swift */; };
 		BFFF31FE24DE68950029FC0C /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31D624DE68950029FC0C /* FilePropertiesRoutes.swift */; };
 		BFFF31FF24DE68950029FC0C /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31D624DE68950029FC0C /* FilePropertiesRoutes.swift */; };
 		BFFF320024DE68950029FC0C /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31D724DE68950029FC0C /* Users.swift */; };
@@ -70,8 +68,6 @@
 		BFFF322724DE68950029FC0C /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EA24DE68950029FC0C /* Common.swift */; };
 		BFFF322824DE68950029FC0C /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EB24DE68950029FC0C /* TeamLogRoutes.swift */; };
 		BFFF322924DE68950029FC0C /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EB24DE68950029FC0C /* TeamLogRoutes.swift */; };
-		BFFF322A24DE68950029FC0C /* StoneFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EC24DE68950029FC0C /* StoneFixtures.swift */; };
-		BFFF322B24DE68950029FC0C /* StoneFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EC24DE68950029FC0C /* StoneFixtures.swift */; };
 		BFFF322C24DE68950029FC0C /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31ED24DE68950029FC0C /* AccountRoutes.swift */; };
 		BFFF322D24DE68950029FC0C /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31ED24DE68950029FC0C /* AccountRoutes.swift */; };
 		BFFF322E24DE68950029FC0C /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31EE24DE68950029FC0C /* Check.swift */; };
@@ -86,8 +82,6 @@
 		BFFF323724DE68950029FC0C /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F224DE68950029FC0C /* TeamRoutes.swift */; };
 		BFFF323824DE68950029FC0C /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F324DE68950029FC0C /* StoneBase.swift */; };
 		BFFF323924DE68950029FC0C /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F324DE68950029FC0C /* StoneBase.swift */; };
-		BFFF323A24DE68950029FC0C /* CloudDocsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F424DE68950029FC0C /* CloudDocsRoutes.swift */; };
-		BFFF323B24DE68950029FC0C /* CloudDocsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F424DE68950029FC0C /* CloudDocsRoutes.swift */; };
 		BFFF323C24DE68950029FC0C /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F524DE68950029FC0C /* UsersCommon.swift */; };
 		BFFF323D24DE68950029FC0C /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F524DE68950029FC0C /* UsersCommon.swift */; };
 		BFFF323E24DE68950029FC0C /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFF31F624DE68950029FC0C /* AuthRoutes.swift */; };
@@ -142,7 +136,6 @@
 		BF4CC99E247750E50005CADF /* AccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenProvider.swift; sourceTree = "<group>"; };
 		BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request+TokenRefresh.swift"; sourceTree = "<group>"; };
 		BFDD66C8250310F7009D9B6D /* ChunkInputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChunkInputStream.swift; sourceTree = "<group>"; };
-		BFFF31D524DE68950029FC0C /* CloudDocs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudDocs.swift; sourceTree = "<group>"; };
 		BFFF31D624DE68950029FC0C /* FilePropertiesRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePropertiesRoutes.swift; sourceTree = "<group>"; };
 		BFFF31D724DE68950029FC0C /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		BFFF31D824DE68950029FC0C /* ContactsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsRoutes.swift; sourceTree = "<group>"; };
@@ -165,7 +158,6 @@
 		BFFF31E924DE68950029FC0C /* Contacts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
 		BFFF31EA24DE68950029FC0C /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		BFFF31EB24DE68950029FC0C /* TeamLogRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLogRoutes.swift; sourceTree = "<group>"; };
-		BFFF31EC24DE68950029FC0C /* StoneFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneFixtures.swift; sourceTree = "<group>"; };
 		BFFF31ED24DE68950029FC0C /* AccountRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRoutes.swift; sourceTree = "<group>"; };
 		BFFF31EE24DE68950029FC0C /* Check.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Check.swift; sourceTree = "<group>"; };
 		BFFF31EF24DE68950029FC0C /* BaseTeam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTeam.swift; sourceTree = "<group>"; };
@@ -173,7 +165,6 @@
 		BFFF31F124DE68950029FC0C /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		BFFF31F224DE68950029FC0C /* TeamRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRoutes.swift; sourceTree = "<group>"; };
 		BFFF31F324DE68950029FC0C /* StoneBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneBase.swift; sourceTree = "<group>"; };
-		BFFF31F424DE68950029FC0C /* CloudDocsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudDocsRoutes.swift; sourceTree = "<group>"; };
 		BFFF31F524DE68950029FC0C /* UsersCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersCommon.swift; sourceTree = "<group>"; };
 		BFFF31F624DE68950029FC0C /* AuthRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthRoutes.swift; sourceTree = "<group>"; };
 		BFFF31F724DE68950029FC0C /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
@@ -244,7 +235,6 @@
 		BFFF31D424DE68950029FC0C /* Generated */ = {
 			isa = PBXGroup;
 			children = (
-				BFFF31D524DE68950029FC0C /* CloudDocs.swift */,
 				BFFF31D624DE68950029FC0C /* FilePropertiesRoutes.swift */,
 				BFFF31D724DE68950029FC0C /* Users.swift */,
 				BFFF31D824DE68950029FC0C /* ContactsRoutes.swift */,
@@ -267,7 +257,6 @@
 				BFFF31E924DE68950029FC0C /* Contacts.swift */,
 				BFFF31EA24DE68950029FC0C /* Common.swift */,
 				BFFF31EB24DE68950029FC0C /* TeamLogRoutes.swift */,
-				BFFF31EC24DE68950029FC0C /* StoneFixtures.swift */,
 				BFFF31ED24DE68950029FC0C /* AccountRoutes.swift */,
 				BFFF31EE24DE68950029FC0C /* Check.swift */,
 				BFFF31EF24DE68950029FC0C /* BaseTeam.swift */,
@@ -275,7 +264,6 @@
 				BFFF31F124DE68950029FC0C /* Base.swift */,
 				BFFF31F224DE68950029FC0C /* TeamRoutes.swift */,
 				BFFF31F324DE68950029FC0C /* StoneBase.swift */,
-				BFFF31F424DE68950029FC0C /* CloudDocsRoutes.swift */,
 				BFFF31F524DE68950029FC0C /* UsersCommon.swift */,
 				BFFF31F624DE68950029FC0C /* AuthRoutes.swift */,
 				BFFF31F724DE68950029FC0C /* Account.swift */,
@@ -504,7 +492,6 @@
 				BFFF323224DE68950029FC0C /* Async.swift in Sources */,
 				BFFF322024DE68950029FC0C /* Team.swift in Sources */,
 				BFFF320224DE68950029FC0C /* ContactsRoutes.swift in Sources */,
-				BFFF322A24DE68950029FC0C /* StoneFixtures.swift in Sources */,
 				BFFF321A24DE68950029FC0C /* Files.swift in Sources */,
 				F2478F2C1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
 				BFFF320E24DE68950029FC0C /* Paper.swift in Sources */,
@@ -520,7 +507,6 @@
 				BFFF321824DE68950029FC0C /* FileRequestsRoutes.swift in Sources */,
 				F2478F241ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
 				BFFF320A24DE68950029FC0C /* TeamCommon.swift in Sources */,
-				BFFF31FC24DE68950029FC0C /* CloudDocs.swift in Sources */,
 				BFFF324024DE68950029FC0C /* Account.swift in Sources */,
 				BFFF324424DE68950029FC0C /* TeamLog.swift in Sources */,
 				F265BD0B1E68072500CC38C8 /* OAuthMobile.swift in Sources */,
@@ -546,7 +532,6 @@
 				BFFF322224DE68950029FC0C /* FileRequests.swift in Sources */,
 				BFFF323824DE68950029FC0C /* StoneBase.swift in Sources */,
 				BFFF323C24DE68950029FC0C /* UsersCommon.swift in Sources */,
-				BFFF323A24DE68950029FC0C /* CloudDocsRoutes.swift in Sources */,
 				BFFF321024DE68950029FC0C /* TeamPolicies.swift in Sources */,
 				BFFF321E24DE68950029FC0C /* StoneSerializers.swift in Sources */,
 				F2478F2A1ECCD0B300BAF014 /* DropboxClient.swift in Sources */,
@@ -583,7 +568,6 @@
 				BFFF323124DE68950029FC0C /* BaseTeam.swift in Sources */,
 				BFFF323324DE68950029FC0C /* Async.swift in Sources */,
 				BFFF320D24DE68950029FC0C /* SecondaryEmails.swift in Sources */,
-				BFFF31FD24DE68950029FC0C /* CloudDocs.swift in Sources */,
 				BFFF320524DE68950029FC0C /* PaperRoutes.swift in Sources */,
 				F2478F2F1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
 				BFFF320324DE68950029FC0C /* ContactsRoutes.swift in Sources */,
@@ -609,12 +593,10 @@
 				BF4CC9A3247842250005CADF /* Request+TokenRefresh.swift in Sources */,
 				BFFF321B24DE68950029FC0C /* Files.swift in Sources */,
 				BFFF324124DE68950029FC0C /* Account.swift in Sources */,
-				BFFF323B24DE68950029FC0C /* CloudDocsRoutes.swift in Sources */,
 				BFFF31FF24DE68950029FC0C /* FilePropertiesRoutes.swift in Sources */,
 				BF3A927524DE2EB7000BA354 /* OAuthTokenRequest.swift in Sources */,
 				BFFF322324DE68950029FC0C /* FileRequests.swift in Sources */,
 				BFFF323924DE68950029FC0C /* StoneBase.swift in Sources */,
-				BFFF322B24DE68950029FC0C /* StoneFixtures.swift in Sources */,
 				BFFF321724DE68950029FC0C /* FileProperties.swift in Sources */,
 				BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */,
 				F2478F231ECCD0B300BAF014 /* CustomRoutes.swift in Sources */,

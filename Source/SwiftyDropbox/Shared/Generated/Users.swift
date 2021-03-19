@@ -14,10 +14,10 @@ open class Users {
         public let accountId: String
         /// Details of a user's name.
         public let name: Users.Name
-        /// The user's e-mail address. Do not rely on this without checking the emailVerified field. Even then, it's
-        /// possible that the user has since lost access to their e-mail.
+        /// The user's email address. Do not rely on this without checking the emailVerified field. Even then, it's
+        /// possible that the user has since lost access to their email.
         public let email: String
-        /// Whether the user has verified their e-mail address.
+        /// Whether the user has verified their email address.
         public let emailVerified: Bool
         /// URL for the photo representing the user, if one is set.
         public let profilePhotoUrl: String?

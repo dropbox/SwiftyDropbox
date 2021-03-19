@@ -59,6 +59,65 @@ open class TeamPolicies {
         }
     }
 
+    /// The ComputerBackupPolicyState union
+    public enum ComputerBackupPolicyState: CustomStringConvertible {
+        /// Computer Backup feature is disabled.
+        case disabled
+        /// Computer Backup feature is enabled.
+        case enabled
+        /// Computer Backup defaults to ON for SSB teams, and OFF for Enterprise teams.
+        case default_
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ComputerBackupPolicyStateSerializer().serialize(self)))"
+        }
+    }
+    open class ComputerBackupPolicyStateSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ComputerBackupPolicyState) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ComputerBackupPolicyState {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ComputerBackupPolicyState.disabled
+                        case "enabled":
+                            return ComputerBackupPolicyState.enabled
+                        case "default":
+                            return ComputerBackupPolicyState.default_
+                        case "other":
+                            return ComputerBackupPolicyState.other
+                        default:
+                            return ComputerBackupPolicyState.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The EmmState union
     public enum EmmState: CustomStringConvertible {
         /// Emm token is disabled.
@@ -1116,6 +1175,57 @@ open class TeamPolicies {
         }
     }
 
+    /// The SuggestMembersPolicy union
+    public enum SuggestMembersPolicy: CustomStringConvertible {
+        /// Suggest members is disabled.
+        case disabled
+        /// Suggest members is enabled.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SuggestMembersPolicySerializer().serialize(self)))"
+        }
+    }
+    open class SuggestMembersPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SuggestMembersPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SuggestMembersPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return SuggestMembersPolicy.disabled
+                        case "enabled":
+                            return SuggestMembersPolicy.enabled
+                        case "other":
+                            return SuggestMembersPolicy.other
+                        default:
+                            return SuggestMembersPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Policies governing team members.
     open class TeamMemberPolicies: CustomStringConvertible {
         /// Policies governing sharing.
@@ -1127,10 +1237,13 @@ open class TeamPolicies {
         public let emmState: TeamPolicies.EmmState
         /// The admin policy around the Dropbox Office Add-In for this team.
         public let officeAddin: TeamPolicies.OfficeAddInPolicy
-        public init(sharing: TeamPolicies.TeamSharingPolicies, emmState: TeamPolicies.EmmState, officeAddin: TeamPolicies.OfficeAddInPolicy) {
+        /// The team policy on if teammembers are allowed to suggest users for admins to invite to the team.
+        public let suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy
+        public init(sharing: TeamPolicies.TeamSharingPolicies, emmState: TeamPolicies.EmmState, officeAddin: TeamPolicies.OfficeAddInPolicy, suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy) {
             self.sharing = sharing
             self.emmState = emmState
             self.officeAddin = officeAddin
+            self.suggestMembersPolicy = suggestMembersPolicy
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberPoliciesSerializer().serialize(self)))"
@@ -1143,6 +1256,7 @@ open class TeamPolicies {
             "sharing": TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharing),
             "emm_state": TeamPolicies.EmmStateSerializer().serialize(value.emmState),
             "office_addin": TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddin),
+            "suggest_members_policy": TeamPolicies.SuggestMembersPolicySerializer().serialize(value.suggestMembersPolicy),
             ]
             return .dictionary(output)
         }
@@ -1152,7 +1266,8 @@ open class TeamPolicies {
                     let sharing = TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing"] ?? .null)
                     let emmState = TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .null)
                     let officeAddin = TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin"] ?? .null)
-                    return TeamMemberPolicies(sharing: sharing, emmState: emmState, officeAddin: officeAddin)
+                    let suggestMembersPolicy = TeamPolicies.SuggestMembersPolicySerializer().deserialize(dict["suggest_members_policy"] ?? .null)
+                    return TeamMemberPolicies(sharing: sharing, emmState: emmState, officeAddin: officeAddin, suggestMembersPolicy: suggestMembersPolicy)
                 default:
                     fatalError("Type error deserializing")
             }
