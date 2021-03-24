@@ -865,7 +865,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Permission : Team member file access.
+    /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
     ///
     /// - parameter templateId: An identifier for template added by route  See templatesAddForUser or
     /// templatesAddForTeam.
@@ -879,7 +879,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Permission : Team member file access.
+    /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
@@ -907,7 +907,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Retrieves reporting data about a team's user activity.
+    /// Retrieves reporting data about a team's user activity. Deprecated: Will be removed on July 1st 2021.
     ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
@@ -922,7 +922,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Retrieves reporting data about a team's linked devices.
+    /// Retrieves reporting data about a team's linked devices. Deprecated: Will be removed on July 1st 2021.
     ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
@@ -937,7 +937,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Retrieves reporting data about a team's membership.
+    /// Retrieves reporting data about a team's membership. Deprecated: Will be removed on July 1st 2021.
     ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
@@ -952,7 +952,7 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Retrieves reporting data about a team's storage usage.
+    /// Retrieves reporting data about a team's storage usage. Deprecated: Will be removed on July 1st 2021.
     ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.

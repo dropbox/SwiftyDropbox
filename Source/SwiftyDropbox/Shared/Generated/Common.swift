@@ -73,8 +73,8 @@ open class Common {
 
     /// The PathRootError union
     public enum PathRootError: CustomStringConvertible {
-        /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is use's latest
-        /// root info.
+        /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's
+        /// latest root info.
         case invalidRoot(Common.RootInfo)
         /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
         case noPermission
