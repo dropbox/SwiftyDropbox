@@ -137,13 +137,17 @@ open class FileRequests {
         /// Whether or not the file request should be open. If the file request is closed, it will not accept any file
         /// submissions, but it can be opened later.
         public let open: Bool
-        public init(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true) {
+        /// A description of the file request.
+        public let description_: String?
+        public init(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true, description_: String? = nil) {
             stringValidator(minLength: 1)(title)
             self.title = title
             stringValidator(pattern: "/(.|[\\r\\n])*")(destination)
             self.destination = destination
             self.deadline = deadline
             self.open = open
+            nullableValidator(stringValidator())(description_)
+            self.description_ = description_
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CreateFileRequestArgsSerializer().serialize(self)))"
@@ -157,6 +161,7 @@ open class FileRequests {
             "destination": Serialization._StringSerializer.serialize(value.destination),
             "deadline": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
             "open": Serialization._BoolSerializer.serialize(value.open),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
@@ -167,7 +172,8 @@ open class FileRequests {
                     let destination = Serialization._StringSerializer.deserialize(dict["destination"] ?? .null)
                     let deadline = NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
                     let open = Serialization._BoolSerializer.deserialize(dict["open"] ?? .number(1))
-                    return CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    return CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -686,7 +692,9 @@ open class FileRequests {
         public let isOpen: Bool
         /// The number of files this file request has received.
         public let fileCount: Int64
-        public init(id: String, url: String, title: String, created: Date, isOpen: Bool, fileCount: Int64, destination: String? = nil, deadline: FileRequests.FileRequestDeadline? = nil) {
+        /// A description of the file request.
+        public let description_: String?
+        public init(id: String, url: String, title: String, created: Date, isOpen: Bool, fileCount: Int64, destination: String? = nil, deadline: FileRequests.FileRequestDeadline? = nil, description_: String? = nil) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
             stringValidator(minLength: 1)(url)
@@ -700,6 +708,8 @@ open class FileRequests {
             self.isOpen = isOpen
             comparableValidator()(fileCount)
             self.fileCount = fileCount
+            nullableValidator(stringValidator())(description_)
+            self.description_ = description_
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FileRequestSerializer().serialize(self)))"
@@ -717,6 +727,7 @@ open class FileRequests {
             "file_count": Serialization._Int64Serializer.serialize(value.fileCount),
             "destination": NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
             "deadline": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
@@ -731,7 +742,8 @@ open class FileRequests {
                     let fileCount = Serialization._Int64Serializer.deserialize(dict["file_count"] ?? .null)
                     let destination = NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
                     let deadline = NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
-                    return FileRequest(id: id, url: url, title: title, created: created, isOpen: isOpen, fileCount: fileCount, destination: destination, deadline: deadline)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    return FileRequest(id: id, url: url, title: title, created: created, isOpen: isOpen, fileCount: fileCount, destination: destination, deadline: deadline, description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1216,7 +1228,9 @@ open class FileRequests {
         public let deadline: FileRequests.UpdateFileRequestDeadline
         /// Whether to set this file request as open or closed.
         public let open: Bool?
-        public init(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil) {
+        /// The description of the file request.
+        public let description_: String?
+        public init(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil, description_: String? = nil) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
             nullableValidator(stringValidator(minLength: 1))(title)
@@ -1225,6 +1239,8 @@ open class FileRequests {
             self.destination = destination
             self.deadline = deadline
             self.open = open
+            nullableValidator(stringValidator())(description_)
+            self.description_ = description_
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdateFileRequestArgsSerializer().serialize(self)))"
@@ -1239,6 +1255,7 @@ open class FileRequests {
             "destination": NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
             "deadline": FileRequests.UpdateFileRequestDeadlineSerializer().serialize(value.deadline),
             "open": NullableSerializer(Serialization._BoolSerializer).serialize(value.open),
+            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
@@ -1250,7 +1267,8 @@ open class FileRequests {
                     let destination = NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
                     let deadline = FileRequests.UpdateFileRequestDeadlineSerializer().deserialize(dict["deadline"] ?? FileRequests.UpdateFileRequestDeadlineSerializer().serialize(.noUpdate))
                     let open = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["open"] ?? .null)
-                    return UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    return UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }

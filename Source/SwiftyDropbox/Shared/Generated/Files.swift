@@ -207,7 +207,8 @@ open class Files {
         public let propertyGroups: Array<FileProperties.PropertyGroup>?
         /// Be more strict about how each WriteMode detects conflict. For example, always return a conflict error when
         /// mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev", even if the existing
-        /// file has been deleted.
+        /// file has been deleted. This also forces a conflict even when the target path refers to a file with identical
+        /// contents.
         public let strictConflict: Bool
         public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, strictConflict: Bool = false) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
@@ -409,7 +410,7 @@ open class Files {
         /// Whether to force the create to happen asynchronously.
         public let forceAsync: Bool
         public init(paths: Array<String>, autorename: Bool = false, forceAsync: Bool = false) {
-            arrayValidator(itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
+            arrayValidator(maxItems: 10000, itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
             self.paths = paths
             self.autorename = autorename
             self.forceAsync = forceAsync
@@ -2576,7 +2577,8 @@ open class Files {
     public enum GetTemporaryLinkError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
-        /// The user's email address needs to be verified to use this functionality.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
         /// Cannot get temporary link to this file type; use export instead.
         case unsupportedFile
@@ -4559,8 +4561,7 @@ open class Files {
 
     /// The RelocationArg struct
     open class RelocationArg: Files.RelocationPath {
-        /// If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError will be
-        /// returned if fromPath contains shared folder. This field is always true for move.
+        /// This flag has no effect.
         public let allowSharedFolder: Bool
         /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the conflict.
         public let autorename: Bool
@@ -4606,9 +4607,7 @@ open class Files {
 
     /// The RelocationBatchArg struct
     open class RelocationBatchArg: Files.RelocationBatchArgBase {
-        /// If true, copyBatch will copy contents in shared folder, otherwise cantCopySharedFolder in RelocationError
-        /// will be returned if fromPath in RelocationPath contains shared folder. This field is always true for
-        /// moveBatch.
+        /// This flag has no effect.
         public let allowSharedFolder: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
@@ -5425,8 +5424,10 @@ open class Files {
         case pathLookup(Files.LookupError)
         /// An error occurs when trying to restore the file to that path.
         case pathWrite(Files.WriteError)
-        /// The revision is invalid. It may not exist.
+        /// The revision is invalid. It may not exist or may point to a deleted file.
         case invalidRevision
+        /// The restore is currently executing, but has not yet completed.
+        case inProgress
         /// An unspecified error.
         case other
 
@@ -5450,6 +5451,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("invalid_revision")
                     return .dictionary(d)
+                case .inProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("in_progress")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5469,6 +5474,8 @@ open class Files {
                             return RestoreError.pathWrite(v)
                         case "invalid_revision":
                             return RestoreError.invalidRevision
+                        case "in_progress":
+                            return RestoreError.inProgress
                         case "other":
                             return RestoreError.other
                         default:
@@ -5847,7 +5854,7 @@ open class Files {
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
-            stringValidator()(query)
+            stringValidator(maxLength: 1000)(query)
             self.query = query
             comparableValidator(maxValue: 9999)(start)
             self.start = start
@@ -6063,14 +6070,84 @@ open class Files {
         }
     }
 
+    /// Indicates what type of match was found for a given item.
+    public enum SearchMatchTypeV2: CustomStringConvertible {
+        /// This item was matched on its file or folder name.
+        case filename
+        /// This item was matched based on its file contents.
+        case fileContent
+        /// This item was matched based on both its contents and its file name.
+        case filenameAndContent
+        /// This item was matched on image content.
+        case imageContent
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchMatchTypeV2Serializer().serialize(self)))"
+        }
+    }
+    open class SearchMatchTypeV2Serializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SearchMatchTypeV2) -> JSON {
+            switch value {
+                case .filename:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("filename")
+                    return .dictionary(d)
+                case .fileContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("file_content")
+                    return .dictionary(d)
+                case .filenameAndContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("filename_and_content")
+                    return .dictionary(d)
+                case .imageContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SearchMatchTypeV2 {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "filename":
+                            return SearchMatchTypeV2.filename
+                        case "file_content":
+                            return SearchMatchTypeV2.fileContent
+                        case "filename_and_content":
+                            return SearchMatchTypeV2.filenameAndContent
+                        case "image_content":
+                            return SearchMatchTypeV2.imageContent
+                        case "other":
+                            return SearchMatchTypeV2.other
+                        default:
+                            return SearchMatchTypeV2.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The SearchMatchV2 struct
     open class SearchMatchV2: CustomStringConvertible {
         /// The metadata for the matched file or folder.
         public let metadata: Files.MetadataV2
+        /// The type of the match.
+        public let matchType: Files.SearchMatchTypeV2?
         /// The list of HighlightSpan determines which parts of the file title should be highlighted.
         public let highlightSpans: Array<Files.HighlightSpan>?
-        public init(metadata: Files.MetadataV2, highlightSpans: Array<Files.HighlightSpan>? = nil) {
+        public init(metadata: Files.MetadataV2, matchType: Files.SearchMatchTypeV2? = nil, highlightSpans: Array<Files.HighlightSpan>? = nil) {
             self.metadata = metadata
+            self.matchType = matchType
             self.highlightSpans = highlightSpans
         }
         open var description: String {
@@ -6082,6 +6159,7 @@ open class Files {
         open func serialize(_ value: SearchMatchV2) -> JSON {
             let output = [ 
             "metadata": Files.MetadataV2Serializer().serialize(value.metadata),
+            "match_type": NullableSerializer(Files.SearchMatchTypeV2Serializer()).serialize(value.matchType),
             "highlight_spans": NullableSerializer(ArraySerializer(Files.HighlightSpanSerializer())).serialize(value.highlightSpans),
             ]
             return .dictionary(output)
@@ -6090,8 +6168,9 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let metadata = Files.MetadataV2Serializer().deserialize(dict["metadata"] ?? .null)
+                    let matchType = NullableSerializer(Files.SearchMatchTypeV2Serializer()).deserialize(dict["match_type"] ?? .null)
                     let highlightSpans = NullableSerializer(ArraySerializer(Files.HighlightSpanSerializer())).deserialize(dict["highlight_spans"] ?? .null)
-                    return SearchMatchV2(metadata: metadata, highlightSpans: highlightSpans)
+                    return SearchMatchV2(metadata: metadata, matchType: matchType, highlightSpans: highlightSpans)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -6155,6 +6234,8 @@ open class Files {
         public let path: String?
         /// The maximum number of search results to return.
         public let maxResults: UInt64
+        /// Specified property of the order of search results. By default, results are sorted by relevance.
+        public let orderBy: Files.SearchOrderBy?
         /// Restricts search to the given file status.
         public let fileStatus: Files.FileStatus
         /// Restricts search to only match on filenames.
@@ -6163,11 +6244,12 @@ open class Files {
         public let fileExtensions: Array<String>?
         /// Restricts search to only the file categories specified. Only supported for active file search.
         public let fileCategories: Array<Files.FileCategory>?
-        public init(path: String? = nil, maxResults: UInt64 = 100, fileStatus: Files.FileStatus = .active, filenameOnly: Bool = false, fileExtensions: Array<String>? = nil, fileCategories: Array<Files.FileCategory>? = nil) {
+        public init(path: String? = nil, maxResults: UInt64 = 100, orderBy: Files.SearchOrderBy? = nil, fileStatus: Files.FileStatus = .active, filenameOnly: Bool = false, fileExtensions: Array<String>? = nil, fileCategories: Array<Files.FileCategory>? = nil) {
             nullableValidator(stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)"))(path)
             self.path = path
             comparableValidator(minValue: 1, maxValue: 1000)(maxResults)
             self.maxResults = maxResults
+            self.orderBy = orderBy
             self.fileStatus = fileStatus
             self.filenameOnly = filenameOnly
             nullableValidator(arrayValidator(itemValidator: stringValidator()))(fileExtensions)
@@ -6184,6 +6266,7 @@ open class Files {
             let output = [ 
             "path": NullableSerializer(Serialization._StringSerializer).serialize(value.path),
             "max_results": Serialization._UInt64Serializer.serialize(value.maxResults),
+            "order_by": NullableSerializer(Files.SearchOrderBySerializer()).serialize(value.orderBy),
             "file_status": Files.FileStatusSerializer().serialize(value.fileStatus),
             "filename_only": Serialization._BoolSerializer.serialize(value.filenameOnly),
             "file_extensions": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.fileExtensions),
@@ -6196,13 +6279,65 @@ open class Files {
                 case .dictionary(let dict):
                     let path = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path"] ?? .null)
                     let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .number(100))
+                    let orderBy = NullableSerializer(Files.SearchOrderBySerializer()).deserialize(dict["order_by"] ?? .null)
                     let fileStatus = Files.FileStatusSerializer().deserialize(dict["file_status"] ?? Files.FileStatusSerializer().serialize(.active))
                     let filenameOnly = Serialization._BoolSerializer.deserialize(dict["filename_only"] ?? .number(0))
                     let fileExtensions = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["file_extensions"] ?? .null)
                     let fileCategories = NullableSerializer(ArraySerializer(Files.FileCategorySerializer())).deserialize(dict["file_categories"] ?? .null)
-                    return SearchOptions(path: path, maxResults: maxResults, fileStatus: fileStatus, filenameOnly: filenameOnly, fileExtensions: fileExtensions, fileCategories: fileCategories)
+                    return SearchOptions(path: path, maxResults: maxResults, orderBy: orderBy, fileStatus: fileStatus, filenameOnly: filenameOnly, fileExtensions: fileExtensions, fileCategories: fileCategories)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SearchOrderBy union
+    public enum SearchOrderBy: CustomStringConvertible {
+        /// An unspecified error.
+        case relevance
+        /// An unspecified error.
+        case lastModifiedTime
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SearchOrderBySerializer().serialize(self)))"
+        }
+    }
+    open class SearchOrderBySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SearchOrderBy) -> JSON {
+            switch value {
+                case .relevance:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("relevance")
+                    return .dictionary(d)
+                case .lastModifiedTime:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("last_modified_time")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SearchOrderBy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "relevance":
+                            return SearchOrderBy.relevance
+                        case "last_modified_time":
+                            return SearchOrderBy.lastModifiedTime
+                        case "other":
+                            return SearchOrderBy.other
+                        default:
+                            return SearchOrderBy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -6259,9 +6394,9 @@ open class Files {
         /// Options for search results match fields.
         public let matchFieldOptions: Files.SearchMatchFieldOptions?
         /// Deprecated and moved this option to SearchMatchFieldOptions.
-        public let includeHighlights: Bool
-        public init(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool = false) {
-            stringValidator()(query)
+        public let includeHighlights: Bool?
+        public init(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool? = nil) {
+            stringValidator(maxLength: 1000)(query)
             self.query = query
             self.options = options
             self.matchFieldOptions = matchFieldOptions
@@ -6278,7 +6413,7 @@ open class Files {
             "query": Serialization._StringSerializer.serialize(value.query),
             "options": NullableSerializer(Files.SearchOptionsSerializer()).serialize(value.options),
             "match_field_options": NullableSerializer(Files.SearchMatchFieldOptionsSerializer()).serialize(value.matchFieldOptions),
-            "include_highlights": Serialization._BoolSerializer.serialize(value.includeHighlights),
+            "include_highlights": NullableSerializer(Serialization._BoolSerializer).serialize(value.includeHighlights),
             ]
             return .dictionary(output)
         }
@@ -6288,7 +6423,7 @@ open class Files {
                     let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
                     let options = NullableSerializer(Files.SearchOptionsSerializer()).deserialize(dict["options"] ?? .null)
                     let matchFieldOptions = NullableSerializer(Files.SearchMatchFieldOptionsSerializer()).deserialize(dict["match_field_options"] ?? .null)
-                    let includeHighlights = Serialization._BoolSerializer.deserialize(dict["include_highlights"] ?? .number(0))
+                    let includeHighlights = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["include_highlights"] ?? .null)
                     return SearchV2Arg(query: query, options: options, matchFieldOptions: matchFieldOptions, includeHighlights: includeHighlights)
                 default:
                     fatalError("Type error deserializing")
@@ -8011,6 +8146,8 @@ open class Files {
         case disallowedName
         /// This endpoint cannot move or delete team folders.
         case teamFolder
+        /// This file operation is not allowed at this path.
+        case operationSuppressed
         /// There are too many write operations in user's Dropbox. Please retry this request.
         case tooManyWriteOperations
         /// An unspecified error.
@@ -8048,6 +8185,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_folder")
                     return .dictionary(d)
+                case .operationSuppressed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("operation_suppressed")
+                    return .dictionary(d)
                 case .tooManyWriteOperations:
                     var d = [String: JSON]()
                     d[".tag"] = .str("too_many_write_operations")
@@ -8077,6 +8218,8 @@ open class Files {
                             return WriteError.disallowedName
                         case "team_folder":
                             return WriteError.teamFolder
+                        case "operation_suppressed":
+                            return WriteError.operationSuppressed
                         case "too_many_write_operations":
                             return WriteError.tooManyWriteOperations
                         case "other":

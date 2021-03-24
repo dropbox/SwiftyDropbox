@@ -76,8 +76,7 @@ open class FilesRoutes {
     /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be copied.
     ///
-    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
-    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -94,8 +93,7 @@ open class FilesRoutes {
     /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be copied.
     ///
-    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
-    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -127,15 +125,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Copy multiple files or folders to different locations at once in the user's Dropbox. If allowSharedFolder in
-    /// RelocationBatchArg is false, this route is atomic. If one entry fails, the whole transaction will abort. If
-    /// allowSharedFolder in RelocationBatchArg is true, atomicity is not guaranteed, but it allows you to copy the
-    /// contents of shared folders to new locations. This route will return job ID immediately and do the async copy job
-    /// in background. Please use copyBatchCheck to check the job status.
+    /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route will return job
+    /// ID immediately and do the async copy job in background. Please use copyBatchCheck to check the job status.
     ///
-    /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
-    /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
-    /// This field is always true for moveBatch.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
@@ -766,8 +759,7 @@ open class FilesRoutes {
     /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be moved. Note that we do not currently support case-only renaming.
     ///
-    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
-    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -784,8 +776,7 @@ open class FilesRoutes {
     /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be moved.
     ///
-    /// - parameter allowSharedFolder: If true, copy will copy contents in shared folder, otherwise cantCopySharedFolder
-    /// in RelocationError will be returned if fromPath contains shared folder. This field is always true for move.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -820,9 +811,7 @@ open class FilesRoutes {
     /// Move multiple files or folders to different locations at once in the user's Dropbox. This route will return job
     /// ID immediately and do the async moving job in background. Please use moveBatchCheck to check the job status.
     ///
-    /// - parameter allowSharedFolder: If true, copyBatch will copy contents in shared folder, otherwise
-    /// cantCopySharedFolder in RelocationError will be returned if fromPath in RelocationPath contains shared folder.
-    /// This field is always true for moveBatch.
+    /// - parameter allowSharedFolder: This flag has no effect.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
@@ -862,8 +851,10 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40). Note: This
-    /// endpoint is only available for Dropbox Business apps.
+    /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40). If the given
+    /// file or folder is not yet deleted, this route will first delete it. It is possible for this route to
+    /// successfully delete, then fail to permanently delete. Note: This endpoint is only available for Dropbox Business
+    /// apps.
     ///
     /// - parameter path: Path in the user's Dropbox to delete.
     /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
@@ -1035,7 +1026,7 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.SearchV2Result` object on success or
     /// a `Files.SearchError` object on failure.
-    @discardableResult open func searchV2(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool = false) -> RpcRequest<Files.SearchV2ResultSerializer, Files.SearchErrorSerializer> {
+    @discardableResult open func searchV2(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool? = nil) -> RpcRequest<Files.SearchV2ResultSerializer, Files.SearchErrorSerializer> {
         let route = Files.searchV2
         let serverArgs = Files.SearchV2Arg(query: query, options: options, matchFieldOptions: matchFieldOptions, includeHighlights: includeHighlights)
         return client.request(route, serverArgs: serverArgs)
@@ -1091,7 +1082,8 @@ open class FilesRoutes {
     /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter strictConflict: Be more strict about how each WriteMode detects conflict. For example, always return
     /// a conflict error when mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev",
-    /// even if the existing file has been deleted.
+    /// even if the existing file has been deleted. This also forces a conflict even when the target path refers to a
+    /// file with identical contents.
     /// - parameter input: The file to upload, as an Data object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
@@ -1122,7 +1114,8 @@ open class FilesRoutes {
     /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter strictConflict: Be more strict about how each WriteMode detects conflict. For example, always return
     /// a conflict error when mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev",
-    /// even if the existing file has been deleted.
+    /// even if the existing file has been deleted. This also forces a conflict even when the target path refers to a
+    /// file with identical contents.
     /// - parameter input: The file to upload, as an URL object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
@@ -1153,7 +1146,8 @@ open class FilesRoutes {
     /// - parameter propertyGroups: List of custom properties to add to file.
     /// - parameter strictConflict: Be more strict about how each WriteMode detects conflict. For example, always return
     /// a conflict error when mode = update in WriteMode and the given "rev" doesn't match the existing file's "rev",
-    /// even if the existing file has been deleted.
+    /// even if the existing file has been deleted. This also forces a conflict even when the target path refers to a
+    /// file with identical contents.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
