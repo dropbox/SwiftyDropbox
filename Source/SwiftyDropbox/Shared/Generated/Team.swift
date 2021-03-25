@@ -4870,6 +4870,8 @@ open class Team {
         case insufficientPermissions
         /// An unspecified error.
         case other
+        /// Temporary infrastructure failure, please retry.
+        case transientError
         /// Trying to release an inactive legal hold.
         case inactiveLegalHold
         /// Legal hold is currently performing another operation.
@@ -4904,6 +4906,10 @@ open class Team {
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .transientError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("transient_error")
                     return .dictionary(d)
                 case .inactiveLegalHold:
                     var d = [String: JSON]()
@@ -4946,6 +4952,8 @@ open class Team {
                             return LegalHoldsPolicyUpdateError.insufficientPermissions
                         case "other":
                             return LegalHoldsPolicyUpdateError.other
+                        case "transient_error":
+                            return LegalHoldsPolicyUpdateError.transientError
                         case "inactive_legal_hold":
                             return LegalHoldsPolicyUpdateError.inactiveLegalHold
                         case "legal_hold_performing_another_operation":

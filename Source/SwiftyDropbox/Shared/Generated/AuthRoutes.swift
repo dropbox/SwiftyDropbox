@@ -26,7 +26,8 @@ open class AuthRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Disables the access token used to authenticate the call.
+    /// Disables the access token used to authenticate the call. If there is a corresponding refresh token for the
+    /// access token, this disables that refresh token, as well as any other access tokens for that refresh token.
     ///
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object

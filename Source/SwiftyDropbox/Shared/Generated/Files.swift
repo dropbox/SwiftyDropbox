@@ -1635,9 +1635,15 @@ open class Files {
     open class ExportArg: CustomStringConvertible {
         /// The path of the file to be exported.
         public let path: String
-        public init(path: String) {
+        /// The file format to which the file should be exported. This must be one of the formats listed in the file's
+        /// export_options returned by getMetadata. If none is specified, the default format (specified in export_as in
+        /// file metadata) will be used.
+        public let exportFormat: String?
+        public init(path: String, exportFormat: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
+            nullableValidator(stringValidator())(exportFormat)
+            self.exportFormat = exportFormat
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ExportArgSerializer().serialize(self)))"
@@ -1648,6 +1654,7 @@ open class Files {
         open func serialize(_ value: ExportArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
+            "export_format": NullableSerializer(Serialization._StringSerializer).serialize(value.exportFormat),
             ]
             return .dictionary(output)
         }
@@ -1655,7 +1662,8 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    return ExportArg(path: path)
+                    let exportFormat = NullableSerializer(Serialization._StringSerializer).deserialize(dict["export_format"] ?? .null)
+                    return ExportArg(path: path, exportFormat: exportFormat)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1668,6 +1676,8 @@ open class Files {
         case path(Files.LookupError)
         /// This file type cannot be exported. Use download instead.
         case nonExportable
+        /// The specified export format is not a valid option for this file type.
+        case invalidExportFormat
         /// The exportable content is not yet available. Please retry later.
         case retryError
         /// An unspecified error.
@@ -1689,6 +1699,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("non_exportable")
                     return .dictionary(d)
+                case .invalidExportFormat:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_export_format")
+                    return .dictionary(d)
                 case .retryError:
                     var d = [String: JSON]()
                     d[".tag"] = .str("retry_error")
@@ -1709,6 +1723,8 @@ open class Files {
                             return ExportError.path(v)
                         case "non_exportable":
                             return ExportError.nonExportable
+                        case "invalid_export_format":
+                            return ExportError.invalidExportFormat
                         case "retry_error":
                             return ExportError.retryError
                         case "other":
@@ -1726,9 +1742,14 @@ open class Files {
     open class ExportInfo: CustomStringConvertible {
         /// Format to which the file can be exported to.
         public let exportAs: String?
-        public init(exportAs: String? = nil) {
+        /// Additional formats to which the file can be exported. These values can be specified as the export_format in
+        /// /files/export.
+        public let exportOptions: Array<String>?
+        public init(exportAs: String? = nil, exportOptions: Array<String>? = nil) {
             nullableValidator(stringValidator())(exportAs)
             self.exportAs = exportAs
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(exportOptions)
+            self.exportOptions = exportOptions
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ExportInfoSerializer().serialize(self)))"
@@ -1739,6 +1760,7 @@ open class Files {
         open func serialize(_ value: ExportInfo) -> JSON {
             let output = [ 
             "export_as": NullableSerializer(Serialization._StringSerializer).serialize(value.exportAs),
+            "export_options": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.exportOptions),
             ]
             return .dictionary(output)
         }
@@ -1746,7 +1768,8 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let exportAs = NullableSerializer(Serialization._StringSerializer).deserialize(dict["export_as"] ?? .null)
-                    return ExportInfo(exportAs: exportAs)
+                    let exportOptions = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["export_options"] ?? .null)
+                    return ExportInfo(exportAs: exportAs, exportOptions: exportOptions)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1763,13 +1786,17 @@ open class Files {
         /// content hash. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let exportHash: String?
-        public init(name: String, size: UInt64, exportHash: String? = nil) {
+        /// If the file is a Paper doc, this gives the latest doc revision which can be used in paperUpdate.
+        public let paperRevision: Int64?
+        public init(name: String, size: UInt64, exportHash: String? = nil, paperRevision: Int64? = nil) {
             stringValidator()(name)
             self.name = name
             comparableValidator()(size)
             self.size = size
             nullableValidator(stringValidator(minLength: 64, maxLength: 64))(exportHash)
             self.exportHash = exportHash
+            nullableValidator(comparableValidator())(paperRevision)
+            self.paperRevision = paperRevision
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ExportMetadataSerializer().serialize(self)))"
@@ -1782,6 +1809,7 @@ open class Files {
             "name": Serialization._StringSerializer.serialize(value.name),
             "size": Serialization._UInt64Serializer.serialize(value.size),
             "export_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.exportHash),
+            "paper_revision": NullableSerializer(Serialization._Int64Serializer).serialize(value.paperRevision),
             ]
             return .dictionary(output)
         }
@@ -1791,7 +1819,8 @@ open class Files {
                     let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
                     let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .null)
                     let exportHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["export_hash"] ?? .null)
-                    return ExportMetadata(name: name, size: size, exportHash: exportHash)
+                    let paperRevision = NullableSerializer(Serialization._Int64Serializer).deserialize(dict["paper_revision"] ?? .null)
+                    return ExportMetadata(name: name, size: size, exportHash: exportHash, paperRevision: paperRevision)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2582,6 +2611,10 @@ open class Files {
         case emailNotVerified
         /// Cannot get temporary link to this file type; use export instead.
         case unsupportedFile
+        /// The user is not allowed to request a temporary link to the specified file. For example, this can occur if
+        /// the file is restricted or if the user's links are banned
+        /// https://help.dropbox.com/files-folders/share/banned-links.
+        case notAllowed
         /// An unspecified error.
         case other
 
@@ -2605,6 +2638,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("unsupported_file")
                     return .dictionary(d)
+                case .notAllowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_allowed")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -2623,6 +2660,8 @@ open class Files {
                             return GetTemporaryLinkError.emailNotVerified
                         case "unsupported_file":
                             return GetTemporaryLinkError.unsupportedFile
+                        case "not_allowed":
+                            return GetTemporaryLinkError.notAllowed
                         case "other":
                             return GetTemporaryLinkError.other
                         default:
@@ -3000,6 +3039,65 @@ open class Files {
                     return HighlightSpan(highlightStr: highlightStr, isHighlighted: isHighlighted)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The import format of the incoming Paper doc content.
+    public enum ImportFormat: CustomStringConvertible {
+        /// The provided data is interpreted as standard HTML.
+        case html
+        /// The provided data is interpreted as markdown.
+        case markdown
+        /// The provided data is interpreted as plain text.
+        case plainText
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ImportFormatSerializer().serialize(self)))"
+        }
+    }
+    open class ImportFormatSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ImportFormat) -> JSON {
+            switch value {
+                case .html:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("html")
+                    return .dictionary(d)
+                case .markdown:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("markdown")
+                    return .dictionary(d)
+                case .plainText:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("plain_text")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ImportFormat {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "html":
+                            return ImportFormat.html
+                        case "markdown":
+                            return ImportFormat.markdown
+                        case "plain_text":
+                            return ImportFormat.plainText
+                        case "other":
+                            return ImportFormat.other
+                        default:
+                            return ImportFormat.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -4302,6 +4400,508 @@ open class Files {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperContentError union
+    public enum PaperContentError: CustomStringConvertible {
+        /// Your account does not have permissions to edit Paper docs.
+        case insufficientPermissions
+        /// The provided content was malformed and cannot be imported to Paper.
+        case contentMalformed
+        /// The Paper doc would be too large, split the content into multiple docs.
+        case docLengthExceeded
+        /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
+        /// HTML with data URI.
+        case imageSizeExceeded
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperContentErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperContentErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperContentError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperContentError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperContentError.insufficientPermissions
+                        case "content_malformed":
+                            return PaperContentError.contentMalformed
+                        case "doc_length_exceeded":
+                            return PaperContentError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperContentError.imageSizeExceeded
+                        case "other":
+                            return PaperContentError.other
+                        default:
+                            return PaperContentError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperCreateArg struct
+    open class PaperCreateArg: CustomStringConvertible {
+        /// The fully qualified path to the location in the user's Dropbox where the Paper Doc should be created. This
+        /// should include the document's title and end with .paper.
+        public let path: String
+        /// The format of the provided data.
+        public let importFormat: Files.ImportFormat
+        public init(path: String, importFormat: Files.ImportFormat) {
+            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            self.path = path
+            self.importFormat = importFormat
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperCreateArgSerializer().serialize(self)))"
+        }
+    }
+    open class PaperCreateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperCreateArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "import_format": Files.ImportFormatSerializer().serialize(value.importFormat),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperCreateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let importFormat = Files.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    return PaperCreateArg(path: path, importFormat: importFormat)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperCreateError union
+    public enum PaperCreateError: CustomStringConvertible {
+        /// Your account does not have permissions to edit Paper docs.
+        case insufficientPermissions
+        /// The provided content was malformed and cannot be imported to Paper.
+        case contentMalformed
+        /// The Paper doc would be too large, split the content into multiple docs.
+        case docLengthExceeded
+        /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
+        /// HTML with data URI.
+        case imageSizeExceeded
+        /// An unspecified error.
+        case other
+        /// The file could not be saved to the specified location.
+        case invalidPath
+        /// The user's email must be verified to create Paper docs.
+        case emailUnverified
+        /// The file path must end in .paper.
+        case invalidFileExtension
+        /// Paper is disabled for your team.
+        case paperDisabled
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperCreateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperCreateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperCreateError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .invalidPath:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_path")
+                    return .dictionary(d)
+                case .emailUnverified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("email_unverified")
+                    return .dictionary(d)
+                case .invalidFileExtension:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_file_extension")
+                    return .dictionary(d)
+                case .paperDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("paper_disabled")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperCreateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperCreateError.insufficientPermissions
+                        case "content_malformed":
+                            return PaperCreateError.contentMalformed
+                        case "doc_length_exceeded":
+                            return PaperCreateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperCreateError.imageSizeExceeded
+                        case "other":
+                            return PaperCreateError.other
+                        case "invalid_path":
+                            return PaperCreateError.invalidPath
+                        case "email_unverified":
+                            return PaperCreateError.emailUnverified
+                        case "invalid_file_extension":
+                            return PaperCreateError.invalidFileExtension
+                        case "paper_disabled":
+                            return PaperCreateError.paperDisabled
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperCreateResult struct
+    open class PaperCreateResult: CustomStringConvertible {
+        /// URL to open the Paper Doc.
+        public let url: String
+        /// The fully qualified path the Paper Doc was actually created at.
+        public let resultPath: String
+        /// The id to use in Dropbox APIs when referencing the Paper Doc.
+        public let fileId: String
+        /// The current doc revision.
+        public let paperRevision: Int64
+        public init(url: String, resultPath: String, fileId: String, paperRevision: Int64) {
+            stringValidator()(url)
+            self.url = url
+            stringValidator()(resultPath)
+            self.resultPath = resultPath
+            stringValidator(minLength: 4, pattern: "id:.+")(fileId)
+            self.fileId = fileId
+            comparableValidator()(paperRevision)
+            self.paperRevision = paperRevision
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperCreateResultSerializer().serialize(self)))"
+        }
+    }
+    open class PaperCreateResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperCreateResult) -> JSON {
+            let output = [ 
+            "url": Serialization._StringSerializer.serialize(value.url),
+            "result_path": Serialization._StringSerializer.serialize(value.resultPath),
+            "file_id": Serialization._StringSerializer.serialize(value.fileId),
+            "paper_revision": Serialization._Int64Serializer.serialize(value.paperRevision),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperCreateResult {
+            switch json {
+                case .dictionary(let dict):
+                    let url = Serialization._StringSerializer.deserialize(dict["url"] ?? .null)
+                    let resultPath = Serialization._StringSerializer.deserialize(dict["result_path"] ?? .null)
+                    let fileId = Serialization._StringSerializer.deserialize(dict["file_id"] ?? .null)
+                    let paperRevision = Serialization._Int64Serializer.deserialize(dict["paper_revision"] ?? .null)
+                    return PaperCreateResult(url: url, resultPath: resultPath, fileId: fileId, paperRevision: paperRevision)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperDocUpdatePolicy union
+    public enum PaperDocUpdatePolicy: CustomStringConvertible {
+        /// Sets the doc content to the provided content if the provided paper_revision matches the latest doc revision.
+        /// Otherwise, returns an error.
+        case update
+        /// Sets the doc content to the provided content without checking paper_revision.
+        case overwrite
+        /// Adds the provided content to the beginning of the doc without checking paper_revision.
+        case prepend
+        /// Adds the provided content to the end of the doc without checking paper_revision.
+        case append
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdatePolicySerializer().serialize(self)))"
+        }
+    }
+    open class PaperDocUpdatePolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperDocUpdatePolicy) -> JSON {
+            switch value {
+                case .update:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("update")
+                    return .dictionary(d)
+                case .overwrite:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("overwrite")
+                    return .dictionary(d)
+                case .prepend:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("prepend")
+                    return .dictionary(d)
+                case .append:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("append")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperDocUpdatePolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "update":
+                            return PaperDocUpdatePolicy.update
+                        case "overwrite":
+                            return PaperDocUpdatePolicy.overwrite
+                        case "prepend":
+                            return PaperDocUpdatePolicy.prepend
+                        case "append":
+                            return PaperDocUpdatePolicy.append
+                        case "other":
+                            return PaperDocUpdatePolicy.other
+                        default:
+                            return PaperDocUpdatePolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperUpdateArg struct
+    open class PaperUpdateArg: CustomStringConvertible {
+        /// Path in the user's Dropbox to update. The path must correspond to a Paper doc or an error will be returned.
+        public let path: String
+        /// The format of the provided data.
+        public let importFormat: Files.ImportFormat
+        /// How the provided content should be applied to the doc.
+        public let docUpdatePolicy: Files.PaperDocUpdatePolicy
+        /// The latest doc revision. Required when doc_update_policy is update. This value must match the current
+        /// revision of the doc or error revision_mismatch will be returned.
+        public let paperRevision: Int64?
+        public init(path: String, importFormat: Files.ImportFormat, docUpdatePolicy: Files.PaperDocUpdatePolicy, paperRevision: Int64? = nil) {
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            self.path = path
+            self.importFormat = importFormat
+            self.docUpdatePolicy = docUpdatePolicy
+            nullableValidator(comparableValidator())(paperRevision)
+            self.paperRevision = paperRevision
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperUpdateArgSerializer().serialize(self)))"
+        }
+    }
+    open class PaperUpdateArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperUpdateArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "import_format": Files.ImportFormatSerializer().serialize(value.importFormat),
+            "doc_update_policy": Files.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
+            "paper_revision": NullableSerializer(Serialization._Int64Serializer).serialize(value.paperRevision),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperUpdateArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let importFormat = Files.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    let docUpdatePolicy = Files.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
+                    let paperRevision = NullableSerializer(Serialization._Int64Serializer).deserialize(dict["paper_revision"] ?? .null)
+                    return PaperUpdateArg(path: path, importFormat: importFormat, docUpdatePolicy: docUpdatePolicy, paperRevision: paperRevision)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The PaperUpdateError union
+    public enum PaperUpdateError: CustomStringConvertible {
+        /// Your account does not have permissions to edit Paper docs.
+        case insufficientPermissions
+        /// The provided content was malformed and cannot be imported to Paper.
+        case contentMalformed
+        /// The Paper doc would be too large, split the content into multiple docs.
+        case docLengthExceeded
+        /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
+        /// HTML with data URI.
+        case imageSizeExceeded
+        /// An unspecified error.
+        case other
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// The provided revision does not match the document head.
+        case revisionMismatch
+        /// This operation is not allowed on archived Paper docs.
+        case docArchived
+        /// This operation is not allowed on deleted Paper docs.
+        case docDeleted
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperUpdateErrorSerializer().serialize(self)))"
+        }
+    }
+    open class PaperUpdateErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperUpdateError) -> JSON {
+            switch value {
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .revisionMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("revision_mismatch")
+                    return .dictionary(d)
+                case .docArchived:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_archived")
+                    return .dictionary(d)
+                case .docDeleted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_deleted")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> PaperUpdateError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperUpdateError.insufficientPermissions
+                        case "content_malformed":
+                            return PaperUpdateError.contentMalformed
+                        case "doc_length_exceeded":
+                            return PaperUpdateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperUpdateError.imageSizeExceeded
+                        case "other":
+                            return PaperUpdateError.other
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return PaperUpdateError.path(v)
+                        case "revision_mismatch":
+                            return PaperUpdateError.revisionMismatch
+                        case "doc_archived":
+                            return PaperUpdateError.docArchived
+                        case "doc_deleted":
+                            return PaperUpdateError.docDeleted
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The PaperUpdateResult struct
+    open class PaperUpdateResult: CustomStringConvertible {
+        /// The current doc revision.
+        public let paperRevision: Int64
+        public init(paperRevision: Int64) {
+            comparableValidator()(paperRevision)
+            self.paperRevision = paperRevision
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PaperUpdateResultSerializer().serialize(self)))"
+        }
+    }
+    open class PaperUpdateResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PaperUpdateResult) -> JSON {
+            let output = [ 
+            "paper_revision": Serialization._Int64Serializer.serialize(value.paperRevision),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PaperUpdateResult {
+            switch json {
+                case .dictionary(let dict):
+                    let paperRevision = Serialization._Int64Serializer.deserialize(dict["paper_revision"] ?? .null)
+                    return PaperUpdateResult(paperRevision: paperRevision)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -6386,8 +6986,7 @@ open class Files {
 
     /// The SearchV2Arg struct
     open class SearchV2Arg: CustomStringConvertible {
-        /// The string to search for. May match across multiple fields based on the request arguments. Query string may
-        /// be rewritten to improve relevance of results.
+        /// The string to search for. May match across multiple fields based on the request arguments.
         public let query: String
         /// Options for more targeted search results.
         public let options: Files.SearchOptions?
@@ -7471,7 +8070,7 @@ open class Files {
     open class UploadSessionCursor: CustomStringConvertible {
         /// The upload session ID (returned by uploadSessionStart).
         public let sessionId: String
-        /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't lost or
+        /// Offset in bytes at which data should be appended. We use this to make sure upload data isn't lost or
         /// duplicated in the event of a network error.
         public let offset: UInt64
         public init(sessionId: String, offset: UInt64) {
@@ -7759,6 +8358,12 @@ open class Files {
         case tooManySharedFolderTargets
         /// There are too many write operations happening in the user's Dropbox. You should retry uploading this file.
         case tooManyWriteOperations
+        /// Uploading data not allowed when finishing concurrent upload session.
+        case concurrentSessionDataNotAllowed
+        /// Concurrent upload sessions need to be closed before finishing.
+        case concurrentSessionNotClosed
+        /// Not all pieces of data were uploaded before trying to finish the session.
+        case concurrentSessionMissingData
         /// An unspecified error.
         case other
 
@@ -7790,6 +8395,18 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("too_many_write_operations")
                     return .dictionary(d)
+                case .concurrentSessionDataNotAllowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_data_not_allowed")
+                    return .dictionary(d)
+                case .concurrentSessionNotClosed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_not_closed")
+                    return .dictionary(d)
+                case .concurrentSessionMissingData:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_missing_data")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -7814,6 +8431,12 @@ open class Files {
                             return UploadSessionFinishError.tooManySharedFolderTargets
                         case "too_many_write_operations":
                             return UploadSessionFinishError.tooManyWriteOperations
+                        case "concurrent_session_data_not_allowed":
+                            return UploadSessionFinishError.concurrentSessionDataNotAllowed
+                        case "concurrent_session_not_closed":
+                            return UploadSessionFinishError.concurrentSessionNotClosed
+                        case "concurrent_session_missing_data":
+                            return UploadSessionFinishError.concurrentSessionMissingData
                         case "other":
                             return UploadSessionFinishError.other
                         default:
@@ -7827,7 +8450,7 @@ open class Files {
 
     /// The UploadSessionLookupError union
     public enum UploadSessionLookupError: CustomStringConvertible {
-        /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
+        /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
         case notFound
         /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
         /// previous request was received and processed successfully but the client did not receive the response, e.g.
@@ -7840,6 +8463,10 @@ open class Files {
         /// You can not append to the upload session because the size of a file should not reach the max file size limit
         /// (i.e. 350GB).
         case tooLarge
+        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+        case concurrentSessionInvalidOffset
+        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+        case concurrentSessionInvalidDataSize
         /// An unspecified error.
         case other
 
@@ -7871,6 +8498,14 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("too_large")
                     return .dictionary(d)
+                case .concurrentSessionInvalidOffset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_offset")
+                    return .dictionary(d)
+                case .concurrentSessionInvalidDataSize:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_data_size")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -7893,6 +8528,10 @@ open class Files {
                             return UploadSessionLookupError.notClosed
                         case "too_large":
                             return UploadSessionLookupError.tooLarge
+                        case "concurrent_session_invalid_offset":
+                            return UploadSessionLookupError.concurrentSessionInvalidOffset
+                        case "concurrent_session_invalid_data_size":
+                            return UploadSessionLookupError.concurrentSessionInvalidDataSize
                         case "other":
                             return UploadSessionLookupError.other
                         default:
@@ -7940,8 +8579,11 @@ open class Files {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
         public let close: Bool
-        public init(close: Bool = false) {
+        /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
+        public let sessionType: Files.UploadSessionType?
+        public init(close: Bool = false, sessionType: Files.UploadSessionType? = nil) {
             self.close = close
+            self.sessionType = sessionType
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartArgSerializer().serialize(self)))"
@@ -7952,6 +8594,7 @@ open class Files {
         open func serialize(_ value: UploadSessionStartArg) -> JSON {
             let output = [ 
             "close": Serialization._BoolSerializer.serialize(value.close),
+            "session_type": NullableSerializer(Files.UploadSessionTypeSerializer()).serialize(value.sessionType),
             ]
             return .dictionary(output)
         }
@@ -7959,9 +8602,61 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
-                    return UploadSessionStartArg(close: close)
+                    let sessionType = NullableSerializer(Files.UploadSessionTypeSerializer()).deserialize(dict["session_type"] ?? .null)
+                    return UploadSessionStartArg(close: close, sessionType: sessionType)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionStartError union
+    public enum UploadSessionStartError: CustomStringConvertible {
+        /// Uploading data not allowed when starting concurrent upload session.
+        case concurrentSessionDataNotAllowed
+        /// Can not start a closed concurrent upload session.
+        case concurrentSessionCloseNotAllowed
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartErrorSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionStartErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionStartError) -> JSON {
+            switch value {
+                case .concurrentSessionDataNotAllowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_data_not_allowed")
+                    return .dictionary(d)
+                case .concurrentSessionCloseNotAllowed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_close_not_allowed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionStartError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "concurrent_session_data_not_allowed":
+                            return UploadSessionStartError.concurrentSessionDataNotAllowed
+                        case "concurrent_session_close_not_allowed":
+                            return UploadSessionStartError.concurrentSessionCloseNotAllowed
+                        case "other":
+                            return UploadSessionStartError.other
+                        default:
+                            return UploadSessionStartError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -7993,6 +8688,57 @@ open class Files {
                     return UploadSessionStartResult(sessionId: sessionId)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionType union
+    public enum UploadSessionType: CustomStringConvertible {
+        /// Pieces of data are uploaded sequentially one after another. This is the default behavior.
+        case sequential
+        /// Pieces of data can be uploaded in concurrent RPCs in any order.
+        case concurrent
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionTypeSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionType) -> JSON {
+            switch value {
+                case .sequential:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("sequential")
+                    return .dictionary(d)
+                case .concurrent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionType {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "sequential":
+                            return UploadSessionType.sequential
+                        case "concurrent":
+                            return UploadSessionType.concurrent
+                        case "other":
+                            return UploadSessionType.other
+                        default:
+                            return UploadSessionType.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -8788,6 +9534,30 @@ open class Files {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let paperCreate = Route(
+        name: "paper/create",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.PaperCreateArgSerializer(),
+        responseSerializer: Files.PaperCreateResultSerializer(),
+        errorSerializer: Files.PaperCreateErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "upload"]
+    )
+    static let paperUpdate = Route(
+        name: "paper/update",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.PaperUpdateArgSerializer(),
+        responseSerializer: Files.PaperUpdateResultSerializer(),
+        errorSerializer: Files.PaperUpdateErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "upload"]
+    )
     static let permanentlyDelete = Route(
         name: "permanently_delete",
         version: 1,
@@ -9035,7 +9805,7 @@ open class Files {
         deprecated: false,
         argSerializer: Files.UploadSessionStartArgSerializer(),
         responseSerializer: Files.UploadSessionStartResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        errorSerializer: Files.UploadSessionStartErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "content",
                 "style": "upload"]
