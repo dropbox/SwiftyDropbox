@@ -45,7 +45,7 @@ open class DropboxTester {
                 }
             } else {
                 if !FileManager.default.fileExists(atPath: fileUrl.path) {
-                    print("\n\nPlease create a large file named \(fileUrl.lastPathComponent) to test chunked uploading\n\n")
+                    print("\n\nPlease create a large file named \(fileUrl) to test chunked uploading\n\n")
                     exit(0)
                 }
             }
@@ -322,20 +322,9 @@ open class DropboxTeamTester {
             TestFormat.printTestEnd()
             nextTest()
         }
-        let reportsGetStorage = {
-            tester.reportsGetStorage(end)
-        }
-        let reportsGetMembership = {
-            tester.reportsGetMembership(reportsGetStorage)
-        }
-        let reportsGetDevices = {
-            tester.reportsGetDevices(reportsGetMembership)
-        }
-        let reportsGetActivity = {
-            tester.reportsGetActivity(reportsGetDevices)
-        }
+
         let linkedAppsListMembersLinkedApps = {
-            tester.linkedAppsListMembersLinkedApps(reportsGetActivity)
+            tester.linkedAppsListMembersLinkedApps(end)
         }
         let linkedAppsListMemberLinkedApps = {
             tester.linkedAppsListMemberLinkedApps(linkedAppsListMembersLinkedApps)
@@ -1207,67 +1196,6 @@ open class TeamTests {
             }
         }
     }
-
-    func reportsGetActivity(_ nextTest: @escaping (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let calendar = Calendar.current
-        let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        tester.team.reportsGetActivity(startDate: twoDaysAgo, endDate: Date()).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
-            }
-        }
-    }
-
-    func reportsGetDevices(_ nextTest: @escaping (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let calendar = Calendar.current
-        let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        tester.team.reportsGetDevices(startDate: twoDaysAgo, endDate: Date()).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
-            }
-        }
-    }
-
-    func reportsGetMembership(_ nextTest: @escaping (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let calendar = Calendar.current
-        let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        tester.team.reportsGetMembership(startDate: twoDaysAgo, endDate: Date()).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
-            }
-        }
-    }
-
-    func reportsGetStorage(_ nextTest: @escaping (() -> Void)) {
-        TestFormat.printSubTestBegin(#function)
-        let calendar = Calendar.current
-        let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: -2, to: Date(), options: [])
-        tester.team.reportsGetStorage(startDate: twoDaysAgo, endDate: Date()).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
-            }
-        }
-    }
-
 
     /**
         Permission: Team member management
