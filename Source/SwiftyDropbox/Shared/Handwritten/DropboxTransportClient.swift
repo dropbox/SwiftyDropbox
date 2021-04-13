@@ -353,6 +353,10 @@ open class Box<T> {
     init (_ v: T) { self.unboxed = v }
 }
 
+public enum DropboxTransportClientError: Error {
+    case objectAlreadyDeinit
+}
+
 public enum CallError<EType>: CustomStringConvertible {
     case internalServerError(Int, String?, String?)
     case badInputError(String?, String?)
@@ -474,10 +478,13 @@ public enum UploadBody {
 open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
     let responseSerializer: RSerial
     let errorSerializer: ESerial
+    private var selfRetain: AnyObject?
 
     init(responseSerializer: RSerial, errorSerializer: ESerial) {
         self.errorSerializer = errorSerializer
         self.responseSerializer = responseSerializer
+
+        self.selfRetain = self
     }
 
     func handleResponseError(_ response: HTTPURLResponse?, data: Data?, error: Error?) -> CallError<ESerial.ValueType> {
@@ -556,6 +563,10 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
 
         return "";
     }
+
+    func cleanupSelfRetain() {
+        self.selfRetain = nil
+    }
 }
 
 /// An "rpc-style" request
@@ -576,12 +587,17 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
         queue: DispatchQueue? = nil,
         completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void
     ) -> Self {
-        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ response in
-            if let error = response.error {
-                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
-            } else {
-                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
+        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ [weak self] response in
+            guard let strongSelf = self else {
+                completionHandler(nil, .clientError(DropboxTransportClientError.objectAlreadyDeinit))
+                return
             }
+            if let error = response.error {
+                completionHandler(nil, strongSelf.handleResponseError(response.response, data: response.data, error: error))
+            } else {
+                completionHandler(strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
+            }
+            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -611,12 +627,17 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
         queue: DispatchQueue? = nil,
         completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void
     ) -> Self {
-        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ response in
-            if let error = response.error {
-                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
-            } else {
-                completionHandler(self.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
+        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ [weak self] response in
+            guard let strongSelf = self else {
+                completionHandler(nil, .clientError(DropboxTransportClientError.objectAlreadyDeinit))
+                return
             }
+            if let error = response.error {
+                completionHandler(nil, strongSelf.handleResponseError(response.response, data: response.data, error: error))
+            } else {
+                completionHandler(strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
+            }
+            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -651,19 +672,24 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
         queue: DispatchQueue? = nil,
         completionHandler: @escaping ((RSerial.ValueType, URL)?, CallError<ESerial.ValueType>?) -> Void
     ) -> Self {
-        request.setCompletionHandler(queue: queue, completionHandler: .downloadFileCompletionHandler({ response in
+        request.setCompletionHandler(queue: queue, completionHandler: .downloadFileCompletionHandler({ [weak self] response in
+            guard let strongSelf = self else {
+                completionHandler(nil, .clientError(DropboxTransportClientError.objectAlreadyDeinit))
+                return
+            }
             if let error = response.error {
                 completionHandler(
-                    nil, self.handleResponseError(response.response, data: self.errorMessage, error: error)
+                    nil, strongSelf.handleResponseError(response.response, data: strongSelf.errorMessage, error: error)
                 )
             } else {
                 let headerFields: [AnyHashable : Any] = response.response!.allHeaderFields
                 let result = caseInsensitiveLookup("Dropbox-Api-Result", dictionary: headerFields)!
                 let resultData = result.data(using: .utf8, allowLossyConversion: false)
-                let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
+                let resultObject = strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
 
-                completionHandler((resultObject, self.urlPath!), nil)
+                completionHandler((resultObject, strongSelf.urlPath!), nil)
             }
+            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -693,17 +719,22 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
         queue: DispatchQueue? = nil,
         completionHandler: @escaping ((RSerial.ValueType, Data)?, CallError<ESerial.ValueType>?) -> Void
     ) -> Self {
-        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ response in
+        request.setCompletionHandler(queue: queue, completionHandler: .dataCompletionHandler({ [weak self] response in
+            guard let strongSelf = self else {
+                completionHandler(nil, .clientError(DropboxTransportClientError.objectAlreadyDeinit))
+                return
+            }
             if let error = response.error {
-                completionHandler(nil, self.handleResponseError(response.response, data: response.data, error: error))
+                completionHandler(nil, strongSelf.handleResponseError(response.response, data: response.data, error: error))
             } else {
                 let headerFields: [AnyHashable : Any] = response.response!.allHeaderFields
                 let result = caseInsensitiveLookup("Dropbox-Api-Result", dictionary: headerFields)!
                 let resultData = result.data(using: .utf8, allowLossyConversion: false)
-                let resultObject = self.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
+                let resultObject = strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
 
                 completionHandler((resultObject, response.data!), nil)
             }
+            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
