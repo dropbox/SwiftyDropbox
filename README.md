@@ -144,62 +144,16 @@ Then, run the following command to install the dependency to checkout and build 
 carthage update --platform iOS --use-xcframeworks
 ```
 
-In the Project Navigator in Xcode, select your project, and then navigate to **General** > **Linked Frameworks and Libraries**, then drag and drop `SwiftyDropbox.xcframework` (from `Carthage/Build/iOS`). Then to add SwiftyDropbox's Alamofire dependency, drag and drop `Alamofire.xcframework` (from `Carthage/Build`) to **Linked Frameworks and Libraries**, as well.
-
-Then, navigate to **Build Phases** > **+** > **New Run Script Phase**. In the newly-created **Run Script** section, add the following code to the script body area (beneath the "Shell" box):
-
-```
-/usr/local/bin/carthage copy-frameworks
-```
-
-Then, navigate to the **Input Files** section and add the following path:
-
-```
-$(SRCROOT)/Carthage/Build/SwiftyDropbox.xcframework
-$(SRCROOT)/Carthage/Build/Alamofire.xcframework
-```
+Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Frameworks, Libraries, and Embedded Content** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
 
 ##### macOS
 ```bash
 carthage update --platform Mac --use-xcframeworks
 ```
 
-In the Project Navigator in Xcode, select your project, and then navigate to **General** > **Embedded Binaries**, then drag and drop `SwiftyDropbox.xcframework` (from `Carthage/Build`). Then to add SwiftyDropbox's Alamofire dependency, drag and drop `Alamofire.framework` (from `Carthage/Build/Mac`) to **Linked Frameworks and Libraries**, as well.
-
-Then navigate to **Build Phases** > **+** > **New Copy Files Phase**. In the newly-created **Copy Files** section, click the **Destination** drop-down menu and select **Products Directory**, then drag and drop `SwiftyDropbox.xcframework.dSYM` (from `Carthage/Build/SwiftyDropbox.xcframework/macos-arm64_x86_64/`).
-
----
-
-### Manually add subproject
-
-Finally, you can also integrate the Dropbox Swift SDK into your project manually with the help of Carthage. Please take the following steps:
-
-Create a `Cartfile` in your project with the same contents as the Cartfile listed in the [Carthage](#carthage) section of the README.
-
-Then, run the following command to checkout and build the Dropbox Swift SDK repository:
-
-##### iOS
-
-```bash
-carthage update --platform iOS
-```
-
 Once you have checked-out out all the necessary code via Carthage, drag the `Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` file into your project as a subproject.
 
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add the `SwiftyDropbox.framework` file for the iOS platform.
-
-Finally, to retrieve SwiftyDropbox's Alamofire dependency, drag the `Carthage/Checkouts/Alamofire/Alamofire.xcodeproj` project into your project (as you did with `SwiftyDropbox.xcodeproj`). Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Linked Frameworks and Libraries** > **+** and then add the `Alamofire.framework` file for the iOS platform.
-
-##### macOS
-```bash
-carthage update --platform Mac
-```
-
-Once you have checked-out out all the necessary code via Carthage, drag the `Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` file into your project as a subproject.
-
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add the `SwiftyDropbox.framework` file for the macOS platform.
-
-Finally, to retrieve SwiftyDropbox's Alamofire dependency, drag the `Carthage/Checkouts/Alamofire/Alamofire.xcodeproj` project into your project (as you did with `SwiftyDropbox.xcodeproj`). Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Linked Frameworks and Libraries** > **+** and then add the `Alamofire.framework` file for the macOS platform.
+Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
 
 ---
 
