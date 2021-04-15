@@ -13,7 +13,7 @@ extension DropboxClientsManager {
     ///
     /// - Parameters:
     ///     - sharedWorkspace: The shared NSWorkspace instance in your app.
-    ///     - controller: An NSViewController to present the auth flow from.
+    ///     - controller: An NSViewController to present the auth flow from. Reference is weakly held.
     ///     - openURL: Handler to open a URL.
     public static func authorizeFromController(sharedWorkspace: NSWorkspace, controller: NSViewController?, openURL: @escaping ((URL) -> Void)) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
@@ -32,7 +32,7 @@ extension DropboxClientsManager {
     ///
     /// - Parameters:
     ///     - sharedApplication: The shared NSWorkspace instance in your app.
-    ///     - controller: An NSViewController to present the auth flow from.
+    ///     - controller: An NSViewController to present the auth flow from. Reference is weakly held.
     ///     - loadingStatusDelegate: An optional delegate to handle loading experience during auth flow.
     ///       e.g. Show a loading spinner and block user interaction while loading/waiting.
     ///     - openURL: Handler to open a URL.
@@ -86,11 +86,12 @@ public class DesktopSharedApplication: SharedApplication {
     public static var sharedDesktopApplication: DesktopSharedApplication?
 
     let sharedWorkspace: NSWorkspace
-    let controller: NSViewController?
+    weak var controller: NSViewController?
     let openURL: ((URL) -> Void)
 
     weak var loadingStatusDelegate: LoadingStatusDelegate?
 
+    /// Reference to controller is weakly held.
     public init(sharedWorkspace: NSWorkspace, controller: NSViewController?, openURL: @escaping ((URL) -> Void)) {
         self.sharedWorkspace = sharedWorkspace
         self.controller = controller
