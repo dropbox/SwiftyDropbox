@@ -244,7 +244,7 @@ func applicationDidFinishLaunching(_ aNotification: Notification) {
 #### Begin the authorization flow
 
 You can commence the auth flow by calling `authorizeFromController:controller:openURL` method in your application's
-view controller.
+view controller. Note that the controller reference will be weakly held.
 
 From your view controller:
 
