@@ -341,6 +341,30 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 }
 
 ```
+Or if your app is iOS13+, or your app also supports Scenes, add the following code into your application's main scene delegate:
+```Swift
+import SwiftyDropbox
+
+func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+     let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
+    }
+    
+    for context in URLContexts {
+        // stop iterating after the first handle-able url      
+        if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
+    }
+}
+```
 
 ##### macOS
 
