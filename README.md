@@ -44,6 +44,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 * [Documentation](#documentation)
 * [Stone](#stone)
 * [Modifications](#modifications)
+* [App Store Connect Privacy Labels](#app-store-connect-privacy-labels)
 * [Bugs](#bugs)
 
 ---
@@ -827,6 +828,42 @@ To ensure your changes have not broken any existing functionality, you can run a
 * open Info.plist and configure the "URL types > Item 0 (Editor) > URL Schemes > Item 0" key to db-"App key"
 * open AppDelegate.swift and replace "FULL_DROPBOX_APP_KEY" with the App key as well
 * run the test app on your device and follow the on-screen instructions
+
+---
+
+## App Store Connect Privacy Labels
+
+To assist developers using Dropbox SDKs in filling out Apple’s Privacy Practices Questionnaire, we’ve provided the below information on the data that may be collected and used by Dropbox. 
+
+As you complete the questionnaire you should note that the below information is general in nature. Dropbox SDKs are designed to be configured by the developer to incorporate Dropbox functionality as is best suited to their application. As a result of this customizable nature of the Dropbox SDKs, we are unable to provide information on the actual data collection and use for each application. We advise developers reference our Dropbox for HTTP Developers for specifics on how data is collected by each Dropbox API. 
+
+In addition, you should note that the information below only identifies Dropbox’s collection and use of data. You are responsible for identifying your own collection and use of data in your app, which may result in different questionnaire answers than identified below:
+
+| Data                    | Collected by Dropbox                                                      | Data Use                                                                 | Data Linked to the User | Tracking |
+| ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------- | -------- |
+| **Contact Info**        |                                                                           |                                                                          |                         |          |
+| &emsp;• Name            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| &emsp;• Email Address   | May be collected<br>(if you enable authentication using an email address) | • Application functionality                                              | Y                       | N        |
+| **Health & Fitness**    | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Financial Info**      | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Location**            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Sensitive Info**      | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Contacts**            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **User Content**        |                                                                           |                                                                          |                         |          |
+| &emsp;• Audio Data      | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| &emsp;• Photos or Videos | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| &emsp;• Other User Content | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| **Browsing History**    | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Search History**      |                                                                           |                                                                          |                         |          |
+| &emsp;• Search History  | May be collected<br>(if using search functionality)                       | • Application functionality<br>• Analytics                               | Y                       | N        |
+| **Identifiers**         |                                                                           |                                                                          |                         |          |
+| &emsp;• User ID         | Collected                                                                 | • Application functionality<br>• Analytics                               | Y                       | N        |
+| **Purchases**           | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Usage Data**          |                                                                           |                                                                          |                         |          |
+| &emsp;• Product Interaction | Collected                                                                 | • Application functionality <br>• Analytics<br>• Product personalization | Y                       | N        |
+| **Diagnostics**         |                                                                           |                                                                          |                         |          |
+| &emsp;• Other Diagnostic Data | Collected<br>(API call logs)                                              | • Application functionality                                              | Y                       | N        |
+| **Other Data**          | N/A                                                                       | N/A                                                                      | N/A                     | N/A      |
 
 ---
 
