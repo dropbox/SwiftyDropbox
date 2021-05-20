@@ -10,6 +10,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let processInfo = ProcessInfo.processInfo.environment
+        let inTestScheme = processInfo["FULL_DROPBOX_API_APP_KEY"] != nil
+
+        // Skip setup if launching for unit tests, XCTests set up the clients themselves
+        if inTestScheme {
+            return true
+        }
+
         if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
             exit(0);
@@ -22,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         case .teamMemberManagement:
             DropboxClientsManager.setupWithTeamAppKey(TestData.teamMemberManagementAppKey)
         }
+
         return true
     }
 
