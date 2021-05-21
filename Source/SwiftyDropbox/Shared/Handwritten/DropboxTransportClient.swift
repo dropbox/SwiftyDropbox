@@ -478,13 +478,23 @@ public enum UploadBody {
 open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
     let responseSerializer: RSerial
     let errorSerializer: ESerial
+
+    fileprivate let request: ApiRequest
     private var selfRetain: AnyObject?
 
-    init(responseSerializer: RSerial, errorSerializer: ESerial) {
+    init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
         self.errorSerializer = errorSerializer
         self.responseSerializer = responseSerializer
 
+        self.request = request
         self.selfRetain = self
+        request.setCleanupHandler { [weak self] in
+            self?.cleanupSelfRetain()
+        }
+    }
+
+    public func cancel() {
+        request.cancel()
     }
 
     func handleResponseError(_ response: HTTPURLResponse?, data: Data?, error: Error?) -> CallError<ESerial.ValueType> {
@@ -564,24 +574,13 @@ open class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
         return "";
     }
 
-    func cleanupSelfRetain() {
+    private func cleanupSelfRetain() {
         self.selfRetain = nil
     }
 }
 
 /// An "rpc-style" request
 open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    private let request: ApiRequest
-
-    init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
-        self.request = request
-        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-    }
-
-    public func cancel() {
-        request.cancel()
-    }
-
     @discardableResult
     public func response(
         queue: DispatchQueue? = nil,
@@ -597,7 +596,6 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
             } else {
                 completionHandler(strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }
-            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -605,21 +603,10 @@ open class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request
 
 /// An "upload-style" request
 open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    private let request: ApiRequest
-
-    init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
-        self.request = request
-        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-    }
-
     @discardableResult
     public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         request.setProgressHandler(progressHandler)
         return self
-    }
-
-    public func cancel() {
-        request.cancel()
     }
 
     @discardableResult
@@ -637,7 +624,6 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
             } else {
                 completionHandler(strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(response.data!)), nil)
             }
-            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -646,25 +632,19 @@ open class UploadRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Requ
 
 /// A "download-style" request to a file
 open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    private let request: ApiRequest
     var urlPath: URL?
     var errorMessage: Data
 
-    init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
-        self.request = request
+    override init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
         urlPath = nil
         errorMessage = Data()
-        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
+        super.init(request: request, responseSerializer: responseSerializer, errorSerializer: errorSerializer)
     }
 
     @discardableResult
     public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         request.setProgressHandler(progressHandler)
         return self
-    }
-
-    public func cancel() {
-        self.request.cancel()
     }
 
     @discardableResult
@@ -689,7 +669,6 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
 
                 completionHandler((resultObject, strongSelf.urlPath!), nil)
             }
-            strongSelf.cleanupSelfRetain()
         }))
         return self
     }
@@ -697,21 +676,10 @@ open class DownloadRequestFile<RSerial: JSONSerializer, ESerial: JSONSerializer>
 
 /// A "download-style" request to memory
 open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
-    private let request: ApiRequest
-
-    init(request: ApiRequest, responseSerializer: RSerial, errorSerializer: ESerial) {
-        self.request = request
-        super.init(responseSerializer: responseSerializer, errorSerializer: errorSerializer)
-    }
-
     @discardableResult
     public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
         request.setProgressHandler(progressHandler)
         return self
-    }
-
-    public func cancel() {
-        request.cancel()
     }
 
     @discardableResult
@@ -734,7 +702,6 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
 
                 completionHandler((resultObject, response.data!), nil)
             }
-            strongSelf.cleanupSelfRetain()
         }))
         return self
     }

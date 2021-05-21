@@ -33,19 +33,27 @@ protocol ApiRequest {
 
     /// Cancels the request.
     func cancel()
+
+    /// Set a block that can be called when the request completes or cancels.
+    func setCleanupHandler(_ handler: @escaping () -> Void)
 }
 
 /// A class that wraps a network request that calls Dropbox API.
 /// This class will first attempt to refresh the access token and conditionally proceed to the actual API call.
 class RequestWithTokenRefresh: ApiRequest {
     typealias RequestCreationBlock = () -> Alamofire.Request
-    fileprivate var request: Alamofire.Request?
+    private var request: Alamofire.Request?
     private var cancelled = false
     private var responseQueue: DispatchQueue?
     private var completionHandler: RequestCompletionHandler?
     private var progressHandler: Alamofire.Request.ProgressHandler?
+    private var cleanupHandler: (() -> Void)?
     private let serialQueue =
         DispatchQueue(label: "com.dropbox.SwiftyDropbox.RequestWithTokenRefresh.serial.queue", qos: .userInitiated)
+
+    private var completionHandlerQueue: DispatchQueue {
+        responseQueue ?? DispatchQueue.main
+    }
 
     /// Designated Initializer.
     ///
@@ -64,7 +72,6 @@ class RequestWithTokenRefresh: ApiRequest {
         serialQueue.async {
             self.responseQueue = queue
             self.completionHandler = completionHandler
-            self.setCompletionHandlerIfNecessary()
         }
         return self
     }
@@ -81,7 +88,19 @@ class RequestWithTokenRefresh: ApiRequest {
         serialQueue.async {
             self.cancelled = true
             self.request?.cancel()
+            self.cleanup()
         }
+    }
+
+    func setCleanupHandler(_ handler: @escaping () -> Void) {
+        serialQueue.async {
+            self.cleanupHandler = handler
+        }
+    }
+
+    private func cleanup() {
+        cleanupHandler?()
+        cleanupHandler = nil
     }
 
     private func handleTokenRefreshResult(_ result: DropboxOAuthResult?, requestCreation: RequestCreationBlock) {
@@ -103,8 +122,8 @@ class RequestWithTokenRefresh: ApiRequest {
 
     private func setRequest(_ request: Alamofire.Request) {
         self.request = request
+        setupCompletionHandler()
         setProgressHandlerIfNecessary()
-        setCompletionHandlerIfNecessary()
         if cancelled {
             request.cancel()
         } else {
@@ -112,17 +131,27 @@ class RequestWithTokenRefresh: ApiRequest {
         }
     }
 
-    private func setCompletionHandlerIfNecessary() {
-        guard let completionHandler = completionHandler else { return }
-        switch completionHandler {
-        case .dataCompletionHandler(let handler):
-            if let dataRequest = request as? Alamofire.DataRequest {
-                dataRequest.validate().response(queue: responseQueue, completionHandler: handler)
+    private func setupCompletionHandler() {
+        if let dataRequest = request as? Alamofire.DataRequest {
+            let wrappedHandler: (DefaultDataResponse) -> Void = { dataResponse in
+                if case let .dataCompletionHandler(handler) = self.completionHandler {
+                    self.completionHandlerQueue.async {
+                        handler(dataResponse)
+                    }
+                }
+                self.cleanup()
             }
-        case .downloadFileCompletionHandler(let handler):
-            if let downloadRequest = request as? Alamofire.DownloadRequest {
-                downloadRequest.validate().response(queue: responseQueue, completionHandler: handler)
+            dataRequest.validate().response(completionHandler: wrappedHandler)
+        } else if let downloadRequest = request as? Alamofire.DownloadRequest {
+            let wrappedHandler: (DefaultDownloadResponse) -> Void = { downloadResponse in
+                if case let .downloadFileCompletionHandler(handler) = self.completionHandler {
+                    self.completionHandlerQueue.async {
+                        handler(downloadResponse)
+                    }
+                }
+                self.cleanup()
             }
+            downloadRequest.validate().response(completionHandler: wrappedHandler)
         }
     }
 
@@ -138,9 +167,8 @@ class RequestWithTokenRefresh: ApiRequest {
     }
 
     private func completeWithError(_ error: OAuth2Error) {
-        guard let completionHandler = completionHandler else { return }
-        (responseQueue ?? DispatchQueue.main).async {
-            switch completionHandler  {
+        completionHandlerQueue.async {
+            switch self.completionHandler  {
             case .dataCompletionHandler(let handler):
                 let dataResponse = DefaultDataResponse(request: nil, response: nil, data: nil, error: error)
                 handler(dataResponse)
@@ -150,7 +178,10 @@ class RequestWithTokenRefresh: ApiRequest {
                     destinationURL: nil, resumeData: nil, error: error
                 )
                 handler(downloadResponse)
+            case .none:
+                break
             }
+            self.cleanup()
         }
     }
 }
