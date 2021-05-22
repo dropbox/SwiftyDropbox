@@ -137,9 +137,11 @@ class RequestWithTokenRefresh: ApiRequest {
                 if case let .dataCompletionHandler(handler) = self.completionHandler {
                     self.completionHandlerQueue.async {
                         handler(dataResponse)
+                        self.cleanup()
                     }
+                } else {
+                    self.cleanup()
                 }
-                self.cleanup()
             }
             dataRequest.validate().response(completionHandler: wrappedHandler)
         } else if let downloadRequest = request as? Alamofire.DownloadRequest {
@@ -147,9 +149,11 @@ class RequestWithTokenRefresh: ApiRequest {
                 if case let .downloadFileCompletionHandler(handler) = self.completionHandler {
                     self.completionHandlerQueue.async {
                         handler(downloadResponse)
+                        self.cleanup()
                     }
+                } else {
+                    self.cleanup()
                 }
-                self.cleanup()
             }
             downloadRequest.validate().response(completionHandler: wrappedHandler)
         }
