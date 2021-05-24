@@ -5,7 +5,7 @@
 import SystemConfiguration
 import Foundation
 
-public protocol SharedApplication: class {
+public protocol SharedApplication: AnyObject {
     func presentErrorMessage(_ message: String, title: String)
     func presentErrorMessageWithHandlers(_ message: String, title: String, buttonHandlers: Dictionary<String, () -> Void>)
     func presentPlatformSpecificAuth(_ authURL: URL) -> Bool
@@ -37,7 +37,7 @@ public protocol AccessTokenRefreshing {
 
 /// Protocol for handling loading status during auth flow.
 /// Implementing class could show custom UX to reflect loading status.
-public protocol LoadingStatusDelegate: class {
+public protocol LoadingStatusDelegate: AnyObject {
     // Called when auth flow is loading/waiting for some data. e.g. Waiting for a network request to finish.
     func showLoading()
     // Called when auth flow finishes loading/waiting. e.g. A network request finished.
