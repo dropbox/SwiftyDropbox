@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Pod Install
-        run: 
+        run: | 
           cd TestSwiftyDropbox
           pod install --repo-update
       - name: Test iOS
