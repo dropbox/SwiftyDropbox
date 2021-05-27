@@ -653,7 +653,6 @@ open class FilesTests {
 
     func downloadToFile(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        print("Test file path: \(TestData.testFilePath)")
         tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
             if let result = response {
                 print(result)
@@ -925,13 +924,27 @@ open class SharingTests {
 
         let memberSelector = Sharing.MemberSelector.dropboxId(TestData.accountId3)
 
-        let checkJobStatus: ((String) -> Void) = { asyncJobId in
+        func checkJobStatusWithDelay(_ asyncJobId: String, retryCount: Int) {
+            if retryCount >= 5 {
+                TestFormat.abort("Folder member not removed after \(retryCount) retries! Job id: \(asyncJobId)")
+            }
+
+            TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
+            print("Sleeping for 3 seconds, then trying again", terminator: "")
+            for _ in 1...3 {
+                sleep(1)
+
+                print(".", terminator:"")
+            }
+            print()
+            TestFormat.printOffset("Retrying!")
+
             self.tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
                     case .inProgress:
-                        TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId). Please adjust test order.")
+                        checkJobStatusWithDelay(asyncJobId, retryCount: retryCount + 1)
                     case .complete:
                         TestFormat.printSubTestEnd(#function)
                         nextTest()
@@ -944,22 +957,13 @@ open class SharingTests {
             }
         }
 
-        // JRL TODO multiple retries
         tester.sharing.removeFolderMember(sharedFolderId: sharedFolderId, member: memberSelector, leaveACopy: false).response { response, error in
             if let result = response {
                 print(result)
 
                 switch result {
                 case .asyncJobId(let asyncJobId):
-                    TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
-                    print("Sleeping for 3 seconds, then trying again", terminator: "")
-                    for _ in 1...8 {
-                        sleep(1)
-                        print(".", terminator:"")
-                    }
-                    print()
-                    TestFormat.printOffset("Retrying!")
-                    checkJobStatus(asyncJobId)
+                    checkJobStatusWithDelay(asyncJobId, retryCount: 0)
                 }
             } else if let callError = error {
                 TestFormat.abort(String(describing: callError))
