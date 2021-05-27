@@ -79,7 +79,7 @@ open class DropboxTester {
     }
 
     // Test user app with 'Full Dropbox' permission
-    func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
+    func testAllUserEndpoints(asMember: Bool = false, skipRevokeToken: Bool = false, nextTest: (() -> Void)? = nil) {
         let end = {
             if let nextTest = nextTest {
                 nextTest()
@@ -91,7 +91,7 @@ open class DropboxTester {
             self.testAuthActions(end)
         }
         let testUserActions = {
-            self.testUserActions(testAuthActions)
+            self.testUserActions(skipRevokeToken ? end : testAuthActions)
         }
         let testSharingActions = {
             self.testSharingActions(testUserActions)
@@ -281,7 +281,7 @@ open class DropboxTeamTester {
     let team = DropboxClientsManager.authorizedTeamClient!.team!
 
     // Test business app with 'Team member file access' permission
-    func testTeamMemberFileAcessActions(_ nextTest: (() -> Void)? = nil) {
+    func testTeamMemberFileAcessActions(skipRevokeToken: Bool = false, _ nextTest: (() -> Void)? = nil) {
         let end = {
             if let nextTest = nextTest {
                 nextTest()
@@ -290,7 +290,7 @@ open class DropboxTeamTester {
             }
         }
         let testPerformActionAsMember = {
-            DropboxTester().testAllUserEndpoints(true, nextTest: end)
+            DropboxTester().testAllUserEndpoints(asMember:true, skipRevokeToken: skipRevokeToken, nextTest: end)
         }
         let start = {
             self.testTeamMemberFileAcessActionsGroup(testPerformActionAsMember)
@@ -943,6 +943,7 @@ open class SharingTests {
             }
         }
 
+        // JRL TODO multiple retries
         tester.sharing.removeFolderMember(sharedFolderId: sharedFolderId, member: memberSelector, leaveACopy: false).response { response, error in
             if let result = response {
                 print(result)
@@ -951,7 +952,7 @@ open class SharingTests {
                 case .asyncJobId(let asyncJobId):
                     TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
                     print("Sleeping for 3 seconds, then trying again", terminator: "")
-                    for _ in 1...3 {
+                    for _ in 1...8 {
                         sleep(1)
                         print(".", terminator:"")
                     }

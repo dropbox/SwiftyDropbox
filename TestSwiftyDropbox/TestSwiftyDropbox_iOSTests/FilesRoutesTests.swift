@@ -15,8 +15,11 @@ class FilesRoutesTests: XCTestCase {
     private var userClient: UsersRoutes!
     private var tester: DropboxTester!
 
+    private let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
+
     override func setUpWithError() throws {
-        // You need an API app with the "Full Dropbox" permission type and at least the scopes in scopesForTeamRoutesTests
+        // You need an API app with the "Full Dropbox" permission type and at least the scopes above
+        // and no team scopes.
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
         // The 'App key' will be on the app's info page.
         // Then follow https://dropbox.tech/developers/pkce--what-and-why- to get a refresh token using the PKCE flow

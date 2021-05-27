@@ -25,6 +25,7 @@
 		F2D0EA5E1E67B7E30076A119 /* TestAppType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D0EA5C1E67B7E30076A119 /* TestAppType.swift */; };
 		F67BA3E07645BA0BDD67D0C8 /* Pods_TestSwiftyDropbox_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E97640DDC4A490D55BEBB20E /* Pods_TestSwiftyDropbox_iOS.framework */; };
 		F8E76D64CE9CA1FC6AA2728F /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4138CDE8EA81313D397A3C /* Pods_TestSwiftyDropbox_macOS.framework */; };
+		F949339F265D7ABA005DCA3C /* TeamRoutesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */; };
 		F975E5F0265702F400A17965 /* FilesRoutesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E5EF265702F400A17965 /* FilesRoutesTests.swift */; };
 		F975E60F2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E60E2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift */; };
 		F975E62E2658063300A17965 /* TestTokenAuthGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E62D2658063300A17965 /* TestTokenAuthGenerator.swift */; };
@@ -74,6 +75,7 @@
 		F2D0EA551E67B7140076A119 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		F2D0EA5C1E67B7E30076A119 /* TestAppType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAppType.swift; sourceTree = "<group>"; };
 		F6FD6468D7EB0E2A24938C7F /* Pods_TestSwiftyDropbox_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestSwiftyDropbox_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamRoutesTests.swift; sourceTree = "<group>"; };
 		F975E5ED265702F400A17965 /* TestSwiftyDropbox_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestSwiftyDropbox_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F975E5EF265702F400A17965 /* FilesRoutesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesRoutesTests.swift; sourceTree = "<group>"; };
 		F975E5F1265702F400A17965 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				F975E5EF265702F400A17965 /* FilesRoutesTests.swift */,
+				F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */,
 				F975E62D2658063300A17965 /* TestTokenAuthGenerator.swift */,
 				F975E5F1265702F400A17965 /* Info.plist */,
 			);
@@ -557,6 +560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F975E5F0265702F400A17965 /* FilesRoutesTests.swift in Sources */,
+				F949339F265D7ABA005DCA3C /* TeamRoutesTests.swift in Sources */,
 				F975E62E2658063300A17965 /* TestTokenAuthGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
