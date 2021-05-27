@@ -20,6 +20,9 @@ jobs:
           FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN }}
           TEAM_MEMBER_EMAIL: ${{ secrets.TEAM_MEMBER_EMAIL }}
           EMAIL_TO_ADD_AS_TEAM_MEMBER: ${{ secrets.EMAIL_TO_ADD_AS_TEAM_MEMBER }}
+          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+          ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
+          ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
           platform: ${{ 'iOS Simulator' }}
         run: |
           device=`instruments -s -devices | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}'`
