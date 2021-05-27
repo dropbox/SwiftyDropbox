@@ -27,7 +27,6 @@
 		F8E76D64CE9CA1FC6AA2728F /* Pods_TestSwiftyDropbox_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4138CDE8EA81313D397A3C /* Pods_TestSwiftyDropbox_macOS.framework */; };
 		F949339F265D7ABA005DCA3C /* TeamRoutesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */; };
 		F975E5F0265702F400A17965 /* FilesRoutesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E5EF265702F400A17965 /* FilesRoutesTests.swift */; };
-		F975E60F2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E60E2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift */; };
 		F975E62E2658063300A17965 /* TestTokenAuthGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975E62D2658063300A17965 /* TestTokenAuthGenerator.swift */; };
 /* End PBXBuildFile section */
 
@@ -80,7 +79,6 @@
 		F975E5EF265702F400A17965 /* FilesRoutesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesRoutesTests.swift; sourceTree = "<group>"; };
 		F975E5F1265702F400A17965 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F975E60C2657069C00A17965 /* TestSwiftyDropbox_macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestSwiftyDropbox_macOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F975E60E2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftyDropbox_macOSTests.swift; sourceTree = "<group>"; };
 		F975E6102657069C00A17965 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F975E62D2658063300A17965 /* TestTokenAuthGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTokenAuthGenerator.swift; sourceTree = "<group>"; };
 		FD634227A6DF5488E51AF98C /* Pods-TestSwiftyDropbox_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestSwiftyDropbox_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestSwiftyDropbox_iOS/Pods-TestSwiftyDropbox_iOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -220,7 +218,6 @@
 		F975E60D2657069C00A17965 /* TestSwiftyDropbox_macOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				F975E60E2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift */,
 				F975E6102657069C00A17965 /* Info.plist */,
 			);
 			path = TestSwiftyDropbox_macOSTests;
@@ -569,7 +566,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F975E60F2657069C00A17965 /* TestSwiftyDropbox_macOSTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
