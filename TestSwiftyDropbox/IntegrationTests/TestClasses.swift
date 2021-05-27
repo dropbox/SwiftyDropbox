@@ -653,6 +653,7 @@ open class FilesTests {
 
     func downloadToFile(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
+        print("Test file path: \(TestData.testFilePath)")
         tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
             if let result = response {
                 print(result)
