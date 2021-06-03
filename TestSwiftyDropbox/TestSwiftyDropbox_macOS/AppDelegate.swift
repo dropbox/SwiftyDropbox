@@ -10,6 +10,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var viewController: ViewController? = nil;
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        let processInfo = ProcessInfo.processInfo.environment
+        let inTestScheme = processInfo["FULL_DROPBOX_API_APP_KEY"] != nil
+
+        // Skip setup if launching for unit tests, XCTests set up the clients themselves
+        if inTestScheme {
+            return
+        }
+
         if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
             exit(0);

@@ -1301,13 +1301,27 @@ open class TeamTests {
     func groupsDelete(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
 
-        let jobStatus: ((String) -> Void) = { jobId in
-            self.tester.team.groupsJobStatusGet(asyncJobId: jobId).response { response, error in
+        func checkJobStatusWithDelay(_ asyncJobId: String, retryCount: Int) {
+            if retryCount >= 10 {
+                TestFormat.abort("Groups delete incomplete after \(retryCount) retries! Job id: \(asyncJobId)")
+            }
+
+            TestFormat.printOffset("Groups delete incomplete! Job id: \(asyncJobId)")
+            print("Sleeping for 3 seconds, then trying again", terminator: "")
+            for _ in 1...3 {
+                sleep(1)
+
+                print(".", terminator:"")
+            }
+            print()
+            TestFormat.printOffset("Retrying!")
+
+            self.tester.team.groupsJobStatusGet(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
                     case .inProgress:
-                        TestFormat.abort("Took too long to delete")
+                        checkJobStatusWithDelay(asyncJobId, retryCount: retryCount + 1)
                     case .complete:
                         TestFormat.printOffset("Deleted")
                         TestFormat.printSubTestEnd(#function)
@@ -1327,7 +1341,7 @@ open class TeamTests {
                 case .asyncJobId(let asyncJobId):
                     TestFormat.printOffset("Waiting for deletion...")
                     sleep(1)
-                    jobStatus(asyncJobId)
+                    checkJobStatusWithDelay(asyncJobId, retryCount: 0)
                 case .complete:
                     TestFormat.printOffset("Deleted")
                     TestFormat.printSubTestEnd(#function)
