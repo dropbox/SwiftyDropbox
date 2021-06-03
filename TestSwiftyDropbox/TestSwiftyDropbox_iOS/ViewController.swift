@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         
         switch(appPermission) {
         case .fullDropbox:
-            DropboxTester().testAllUserEndpoints(false, nextTest:unlink)
+            DropboxTester().testAllUserEndpoints(asMember: false, nextTest:unlink)
         case .teamMemberFileAccess:
             DropboxTeamTester().testTeamMemberFileAcessActions(unlink)
         case .teamMemberManagement:

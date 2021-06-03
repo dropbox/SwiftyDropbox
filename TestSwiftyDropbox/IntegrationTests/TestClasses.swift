@@ -79,7 +79,7 @@ open class DropboxTester {
     }
 
     // Test user app with 'Full Dropbox' permission
-    func testAllUserEndpoints(_ asMember: Bool = false, nextTest: (() -> Void)? = nil) {
+    func testAllUserEndpoints(asMember: Bool = false, skipRevokeToken: Bool = false, nextTest: (() -> Void)? = nil) {
         let end = {
             if let nextTest = nextTest {
                 nextTest()
@@ -91,7 +91,7 @@ open class DropboxTester {
             self.testAuthActions(end)
         }
         let testUserActions = {
-            self.testUserActions(testAuthActions)
+            self.testUserActions(skipRevokeToken ? end : testAuthActions)
         }
         let testSharingActions = {
             self.testSharingActions(testUserActions)
@@ -281,7 +281,7 @@ open class DropboxTeamTester {
     let team = DropboxClientsManager.authorizedTeamClient!.team!
 
     // Test business app with 'Team member file access' permission
-    func testTeamMemberFileAcessActions(_ nextTest: (() -> Void)? = nil) {
+    func testTeamMemberFileAcessActions(skipRevokeToken: Bool = false, _ nextTest: (() -> Void)? = nil) {
         let end = {
             if let nextTest = nextTest {
                 nextTest()
@@ -290,7 +290,7 @@ open class DropboxTeamTester {
             }
         }
         let testPerformActionAsMember = {
-            DropboxTester().testAllUserEndpoints(true, nextTest: end)
+            DropboxTester().testAllUserEndpoints(asMember:true, skipRevokeToken: skipRevokeToken, nextTest: end)
         }
         let start = {
             self.testTeamMemberFileAcessActionsGroup(testPerformActionAsMember)
@@ -924,13 +924,27 @@ open class SharingTests {
 
         let memberSelector = Sharing.MemberSelector.dropboxId(TestData.accountId3)
 
-        let checkJobStatus: ((String) -> Void) = { asyncJobId in
+        func checkJobStatusWithDelay(_ asyncJobId: String, retryCount: Int) {
+            if retryCount >= 5 {
+                TestFormat.abort("Folder member not removed after \(retryCount) retries! Job id: \(asyncJobId)")
+            }
+
+            TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
+            print("Sleeping for 3 seconds, then trying again", terminator: "")
+            for _ in 1...3 {
+                sleep(1)
+
+                print(".", terminator:"")
+            }
+            print()
+            TestFormat.printOffset("Retrying!")
+
             self.tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
                     case .inProgress:
-                        TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId). Please adjust test order.")
+                        checkJobStatusWithDelay(asyncJobId, retryCount: retryCount + 1)
                     case .complete:
                         TestFormat.printSubTestEnd(#function)
                         nextTest()
@@ -949,15 +963,7 @@ open class SharingTests {
 
                 switch result {
                 case .asyncJobId(let asyncJobId):
-                    TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
-                    print("Sleeping for 3 seconds, then trying again", terminator: "")
-                    for _ in 1...3 {
-                        sleep(1)
-                        print(".", terminator:"")
-                    }
-                    print()
-                    TestFormat.printOffset("Retrying!")
-                    checkJobStatus(asyncJobId)
+                    checkJobStatusWithDelay(asyncJobId, retryCount: 0)
                 }
             } else if let callError = error {
                 TestFormat.abort(String(describing: callError))

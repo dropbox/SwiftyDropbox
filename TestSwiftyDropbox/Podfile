@@ -1,8 +1,16 @@
 use_frameworks!
 
-target "TestSwiftyDropbox_iOS" do
+def shared_iOS_pods
     platform :ios, '9.0'
     pod 'SwiftyDropbox', :path => '../'
+end
+
+target "TestSwiftyDropbox_iOS" do
+    shared_iOS_pods
+end
+
+target "TestSwiftyDropbox_iOSTests" do
+    shared_iOS_pods
 end
 
 target "TestSwiftyDropbox_macOS" do
