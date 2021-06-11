@@ -3,7 +3,11 @@
 //
 
 import XCTest
+#if os(OSX)
+@testable import TestSwiftyDropbox_macOS
+#elseif os(iOS)
 @testable import TestSwiftyDropbox_iOS
+#endif
 @testable import SwiftyDropbox
 
 class TeamRoutesTests: XCTestCase {
@@ -13,7 +17,7 @@ class TeamRoutesTests: XCTestCase {
 
     private let scopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
 
-    override func setUpWithError() throws {
+    override func setUp() {
         // You need an API app with the "Full Dropbox" permission type and at least the scopes above
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
         // The 'App key' will be on the app's info page.
@@ -51,7 +55,12 @@ class TeamRoutesTests: XCTestCase {
         let transportClient = DropboxTransportClient(accessToken: accessToken)
 
         DropboxOAuthManager.sharedOAuthManager = nil
-        DropboxClientsManager.setupWithTeamAppKey(apiAppKey, transportClient: transportClient)
+
+        #if os(OSX)
+            DropboxClientsManager.setupWithTeamAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        #elseif os(iOS)
+            DropboxClientsManager.setupWithTeamAppKey(apiAppKey, transportClient: transportClient)
+        #endif
 
         teamClient = DropboxClientsManager.authorizedTeamClient?.team
 
@@ -66,7 +75,7 @@ class TeamRoutesTests: XCTestCase {
         tester = DropboxTeamTester()
     }
 
-    func testTeamMemberManagement() throws {
+    func testTeamMemberManagement() {
         let flag = XCTestExpectation()
 
         tester.testTeamMemberManagementActions {
@@ -77,7 +86,7 @@ class TeamRoutesTests: XCTestCase {
         XCTAssertEqual(result, .completed, "Error: timeout on team management routes tests")
     }
 
-    func testTeamMemberFileAccess() throws {
+    func testTeamMemberFileAccess() {
         let flag = XCTestExpectation()
 
         tester.testTeamMemberFileAcessActions(skipRevokeToken: true) {

@@ -7,7 +7,12 @@
 //
 
 import XCTest
+#if os(OSX)
+@testable import TestSwiftyDropbox_macOS
+#elseif os(iOS)
 @testable import TestSwiftyDropbox_iOS
+#endif
+
 @testable import SwiftyDropbox
 
 class FilesRoutesTests: XCTestCase {
@@ -17,7 +22,7 @@ class FilesRoutesTests: XCTestCase {
 
     private let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
 
-    override func setUpWithError() throws {
+    override func setUp() {
         // You need an API app with the "Full Dropbox" permission type and at least the scopes above
         // and no team scopes.
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
@@ -35,18 +40,23 @@ class FilesRoutesTests: XCTestCase {
             return XCTFail("FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme")
         }
 
-        let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
         guard let accessToken = TestAuthTokenGenerator.authToken(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
 
         let transportClient = DropboxTransportClient(accessToken: accessToken)
-        DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient)
+
+        #if os(OSX)
+            DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        #elseif os(iOS)
+            DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient)
+        #endif
+
         userClient = DropboxClientsManager.authorizedClient!.users!
         tester = DropboxTester()
     }
 
-    override func tearDownWithError() throws {
+    override func tearDown() {
         print("tearDown: delete folder")
         let flag = XCTestExpectation()
 
@@ -57,7 +67,7 @@ class FilesRoutesTests: XCTestCase {
         _ = XCTWaiter.wait(for: [flag], timeout: 30) // don't need to check result on tear down
     }
 
-    func testFileRoutes() throws {
+    func testFileRoutes() {
         let flag = XCTestExpectation()
 
         let nextTest = {
@@ -69,5 +79,4 @@ class FilesRoutesTests: XCTestCase {
         let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
         XCTAssertEqual(result, .completed, "Error: timeout on file routes tests")
     }
-
 }

@@ -62,6 +62,21 @@
             value = "$(FULL_DROPBOX_API_APP_KEY)"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "ACCOUNT_ID"
+            value = "$(ACCOUNT_ID)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "ACCOUNT_ID_2"
+            value = "$(ACCOUNT_ID_2)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "ACCOUNT_ID_3"
+            value = "$(ACCOUNT_ID_3)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <Testables>
          <TestableReference

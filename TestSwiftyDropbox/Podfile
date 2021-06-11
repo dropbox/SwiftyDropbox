@@ -5,6 +5,11 @@ def shared_iOS_pods
     pod 'SwiftyDropbox', :path => '../'
 end
 
+def shared_macOS_pods
+    platform :osx, '10.11'
+    pod 'SwiftyDropbox', :path => '../'
+end
+
 target "TestSwiftyDropbox_iOS" do
     shared_iOS_pods
 end
@@ -14,6 +19,9 @@ target "TestSwiftyDropbox_iOSTests" do
 end
 
 target "TestSwiftyDropbox_macOS" do
-    platform :osx, '10.11'
-    pod 'SwiftyDropbox', :path => '../'
+    shared_macOS_pods
+end
+
+target "TestSwiftyDropbox_macOSTests" do
+    shared_macOS_pods
 end

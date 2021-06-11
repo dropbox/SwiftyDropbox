@@ -7,7 +7,7 @@ enum TestAuthTokenGenerator {
 
         let defaultToken = DropboxAccessToken(
             accessToken: "",
-            uid: "",
+            uid: "test", // non-empty string needed here as subsequent tokens will share the uid and macOS keychain drops the attribute if empty
             refreshToken: refreshToken,
             tokenExpirationTimestamp: 0
         )
