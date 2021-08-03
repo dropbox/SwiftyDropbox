@@ -29,7 +29,6 @@ open class DropboxTransportClient {
     }
 
     public let manager: Session
-    public let backgroundManager: Session
     public let longpollManager: Session
     public var accessTokenProvider: AccessTokenProvider
     open var selectUser: String?
@@ -37,15 +36,26 @@ open class DropboxTransportClient {
     var baseHosts: [String: String]
     var userAgent: String
 
-    public convenience init(accessToken: String, selectUser: String? = nil, pathRoot: Common.PathRoot? = nil) {
-        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser, pathRoot: pathRoot)
+    public convenience init(accessToken: String,
+                            selectUser: String? = nil,
+                            pathRoot: Common.PathRoot? = nil) {
+        self.init(accessToken: accessToken,
+                  baseHosts: nil,
+                  userAgent: nil,
+                  selectUser: selectUser,
+                  pathRoot: pathRoot)
     }
 
     public convenience init(
-        accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?,
-        sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil,
-        longpollSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustManager? = nil,
-        sharedContainerIdentifier: String? = nil, pathRoot: Common.PathRoot? = nil
+        accessToken: String,
+        baseHosts: [String: String]?,
+        userAgent: String?,
+        selectUser: String?,
+        sessionDelegate: SessionDelegate? = nil,
+        longpollSessionDelegate: SessionDelegate? = nil,
+        serverTrustPolicyManager: ServerTrustManager? = nil,
+        sharedContainerIdentifier: String? = nil,
+        pathRoot: Common.PathRoot? = nil
     ) {
         self.init(
             accessTokenProvider: LongLivedAccessTokenProvider(accessToken: accessToken),
@@ -53,7 +63,6 @@ open class DropboxTransportClient {
             userAgent: userAgent,
             selectUser: selectUser,
             sessionDelegate: sessionDelegate,
-            backgroundSessionDelegate: backgroundSessionDelegate,
             longpollSessionDelegate: longpollSessionDelegate,
             serverTrustPolicyManager: serverTrustPolicyManager,
             sharedContainerIdentifier: sharedContainerIdentifier,
@@ -71,10 +80,15 @@ open class DropboxTransportClient {
     }
 
     public init(
-        accessTokenProvider: AccessTokenProvider, baseHosts: [String: String]?, userAgent: String?, selectUser: String?,
-        sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil,
-        longpollSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustManager? = nil,
-        sharedContainerIdentifier: String? = nil, pathRoot: Common.PathRoot? = nil
+        accessTokenProvider: AccessTokenProvider,
+        baseHosts: [String: String]?,
+        userAgent: String?,
+        selectUser: String?,
+        sessionDelegate: SessionDelegate? = nil,
+        longpollSessionDelegate: SessionDelegate? = nil,
+        serverTrustPolicyManager: ServerTrustManager? = nil,
+        sharedContainerIdentifier: String? = nil,
+        pathRoot: Common.PathRoot? = nil
     ) {
         let config = URLSessionConfiguration.default
         let delegate = sessionDelegate ?? SessionDelegate()
@@ -83,23 +97,6 @@ open class DropboxTransportClient {
                               delegate: delegate,
                               startRequestsImmediately: false,
                               serverTrustManager: serverTrustPolicyManager)
-
-        let backgroundManager = { () -> Session in
-            let backgroundConfig = URLSessionConfiguration.background(withIdentifier: "com.dropbox.SwiftyDropbox." + UUID().uuidString)
-            if let sharedContainerIdentifier = sharedContainerIdentifier{
-                backgroundConfig.sharedContainerIdentifier = sharedContainerIdentifier
-            }
-            if let backgroundSessionDelegate = backgroundSessionDelegate {
-                return Session(configuration: backgroundConfig,
-                               delegate: backgroundSessionDelegate,
-                               startRequestsImmediately: false,
-                               serverTrustManager: serverTrustPolicyManager)
-            }
-            
-            return Session(configuration: backgroundConfig,
-                           startRequestsImmediately: false,
-                           serverTrustManager: serverTrustPolicyManager)
-        }()
 
         let longpollConfig = URLSessionConfiguration.default
         longpollConfig.timeoutIntervalForRequest = 480.0
@@ -119,7 +116,6 @@ open class DropboxTransportClient {
         let defaultUserAgent = ApiClientConstants.defaultUserAgent
 
         self.manager = manager
-        self.backgroundManager = backgroundManager
         self.longpollManager = longpollManager
         self.accessTokenProvider = accessTokenProvider
         self.selectUser = selectUser
@@ -316,7 +312,7 @@ open class DropboxTransportClient {
         case let .data(data):
             request = manager.upload(data, to: url, method: .post, headers: headers)
         case let .file(file):
-            request = backgroundManager.upload(file, to: url, method: .post, headers: headers)
+            request = manager.upload(file, to: url, method: .post, headers: headers)
         case let .stream(stream):
             request = manager.upload(stream, to: url, method: .post, headers: headers)
         }
@@ -339,7 +335,7 @@ open class DropboxTransportClient {
         let jsonRequestObj = route.argSerializer.serialize(serverArgs)
         let rawJsonRequest = SerializeUtil.dumpJSON(jsonRequestObj)
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
-        return backgroundManager.download(url, method: .post, headers: headers, to: downloadFileDestination)
+        return manager.download(url, method: .post, headers: headers, to: downloadFileDestination)
     }
 
     private func createDownloadMemoryRequest<ASerial, RSerial, ESerial>(
@@ -352,7 +348,7 @@ open class DropboxTransportClient {
         let jsonRequestObj = route.argSerializer.serialize(serverArgs)
         let rawJsonRequest = SerializeUtil.dumpJSON(jsonRequestObj)
         let headers = getHeaders(routeStyle, jsonRequest: rawJsonRequest, host: host)
-        return backgroundManager.request(url, method: .post, headers: headers)
+        return manager.request(url, method: .post, headers: headers)
     }
 }
 

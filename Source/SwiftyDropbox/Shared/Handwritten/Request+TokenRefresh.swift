@@ -5,9 +5,6 @@
 import Foundation
 import Alamofire
 
-struct SuccessData {
-}
-
 typealias DefaultDataResponse = AFDataResponse<Data?>
 typealias DefaultDownloadResponse = AFDownloadResponse<URL?>
 
