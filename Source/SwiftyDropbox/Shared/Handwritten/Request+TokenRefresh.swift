@@ -5,6 +5,9 @@
 import Foundation
 import Alamofire
 
+typealias DefaultDataResponse = AFDataResponse<Data?>
+typealias DefaultDownloadResponse = AFDownloadResponse<URL?>
+
 /// Completion handler for ApiRequest.
 enum RequestCompletionHandler {
     /// Handler for data requests whose results are in memory.
@@ -109,7 +112,7 @@ class RequestWithTokenRefresh: ApiRequest {
             // Complete request with error immediately, so developers could retry and get access token refreshed.
             // Otherwise, the API request may proceed with an expired access token which would lead to
             // a false positive auth error.
-            self.completeWithError(oauthError)
+            self.completeWithError(.sessionTaskFailed(error: oauthError))
         } else {
             // Refresh succeeded or a refresh is not required, i.e. access token is valid, continue request normally.
             // Or
@@ -170,17 +173,24 @@ class RequestWithTokenRefresh: ApiRequest {
         }
     }
 
-    private func completeWithError(_ error: OAuth2Error) {
+    private func completeWithError(_ error: AFError) {
         completionHandlerQueue.async {
             switch self.completionHandler  {
             case .dataCompletionHandler(let handler):
-                let dataResponse = DefaultDataResponse(request: nil, response: nil, data: nil, error: error)
+                let dataResponse = DefaultDataResponse(request: nil,
+                                                       response: nil,
+                                                       data: nil,
+                                                       metrics: nil,
+                                                       serializationDuration: 0,
+                                                       result: .failure(error))
                 handler(dataResponse)
             case .downloadFileCompletionHandler(let handler):
-                let downloadResponse = DefaultDownloadResponse(
-                    request: nil, response: nil, temporaryURL: nil,
-                    destinationURL: nil, resumeData: nil, error: error
-                )
+                let downloadResponse = DefaultDownloadResponse(request: nil,
+                                                               response: nil,
+                                                               fileURL: nil,
+                                                               resumeData: nil,
+                                                               metrics: nil,
+                                                               serializationDuration: 0, result: .failure( error))
                 handler(downloadResponse)
             case .none:
                 break

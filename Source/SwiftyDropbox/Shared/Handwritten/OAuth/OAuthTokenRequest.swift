@@ -87,11 +87,21 @@ class OAuthTokenRefreshRequest: OAuthTokenRequest {
 
 // MARK: - Base Request
 
+extension Dictionary where Key == String, Value == String {
+    func toHTTPHeaders() -> HTTPHeaders {
+        var headers: [HTTPHeader] = []
+        for (key, value) in self {
+            let header = HTTPHeader(name: key, value: value)
+            headers.append(header)
+        }
+        return HTTPHeaders(headers)
+    }
+}
+
 /// Makes a network request to `oauth2/token` to get short-lived access token.
 class OAuthTokenRequest {
-    private static let sessionManager: SessionManager = {
-        let sessionManager = SessionManager(configuration: .default)
-        sessionManager.startRequestsImmediately = false
+    private static let sessionManager: Session = {
+        var sessionManager = Session(configuration: .default, startRequestsImmediately: false)
         return sessionManager
     }()
 
@@ -109,7 +119,7 @@ class OAuthTokenRequest {
             "\(ApiClientConstants.apiHost)/oauth2/token",
             method: .post,
             parameters: allParams,
-            headers: headers)
+            headers: headers.toHTTPHeaders())
     }
 
     /// Start request and set the completion handler.

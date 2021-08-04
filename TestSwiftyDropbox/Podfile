@@ -1,12 +1,12 @@
 use_frameworks!
 
 def shared_iOS_pods
-    platform :ios, '9.0'
+    platform :ios, '10.0'
     pod 'SwiftyDropbox', :path => '../'
 end
 
 def shared_macOS_pods
-    platform :osx, '10.11'
+    platform :osx, '10.12'
     pod 'SwiftyDropbox', :path => '../'
 end
 
