@@ -43,7 +43,6 @@ jobs:
           security create-keychain -p testingkeychain build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p testingkeychain build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k testingkeychain build.keychain
 
       - name: Test macOS
         env:
