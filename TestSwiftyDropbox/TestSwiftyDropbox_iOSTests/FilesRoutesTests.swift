@@ -40,11 +40,9 @@ class FilesRoutesTests: XCTestCase {
             return XCTFail("FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme")
         }
 
-        guard let accessToken = TestAuthTokenGenerator.authToken(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
+        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
-
-        let transportClient = DropboxTransportClient(accessToken: accessToken)
 
         #if os(OSX)
             DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient)

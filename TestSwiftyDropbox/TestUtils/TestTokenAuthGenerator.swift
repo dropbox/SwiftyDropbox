@@ -1,13 +1,14 @@
 import XCTest
 @testable import SwiftyDropbox
 
+let TestUid = "test" // non-empty string needed here as subsequent tokens will share the uid and macOS keychain drops the attribute if empty
 enum TestAuthTokenGenerator {
-    static func authToken(with refreshToken: String, apiKey: String, scopes: [String]) -> String? {
+    static func transportClient(with refreshToken: String, apiKey: String, scopes: [String]) -> DropboxTransportClient? {
         let manager = SwiftyDropbox.DropboxOAuthManager(appKey: apiKey)
 
         let defaultToken = DropboxAccessToken(
             accessToken: "",
-            uid: "test", // non-empty string needed here as subsequent tokens will share the uid and macOS keychain drops the attribute if empty
+            uid: TestUid,
             refreshToken: refreshToken,
             tokenExpirationTimestamp: 0
         )
@@ -38,6 +39,14 @@ enum TestAuthTokenGenerator {
 
         let result = XCTWaiter.wait(for: [flag], timeout: 10)
         XCTAssertEqual(result, .completed, "Error: timeout refreshing access token")
-        return returnAccessToken
+        guard let accessToken = returnAccessToken else {
+            XCTFail("AccessToken creation failed")
+            fatalError("AccessToken creation failed")
+        }
+        let tokenProvider = ShortLivedAccessTokenProvider(token: DropboxAccessToken(accessToken: accessToken,
+                                                                                    uid: TestUid),
+                                                          tokenRefresher: manager)
+                                                          
+        return DropboxTransportClient(accessTokenProvider: tokenProvider)
     }
 }

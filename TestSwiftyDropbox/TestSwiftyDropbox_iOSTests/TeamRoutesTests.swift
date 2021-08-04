@@ -31,9 +31,9 @@ class TeamRoutesTests: XCTestCase {
             return XCTFail("FULL_DROPBOX_API_APP_KEY needs to be set in the test Scheme")
         }
         guard let refreshToken = processInfo["FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN"] else {
-            return XCTFail("FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme")
+            return XCTFail("FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN needs to be set in the test Scheme")
         }
-        guard let accessToken = TestAuthTokenGenerator.authToken(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
+        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
         guard let teamMemberEmail = processInfo["TEAM_MEMBER_EMAIL"] else {
@@ -52,14 +52,12 @@ class TeamRoutesTests: XCTestCase {
             return XCTFail("ACCOUNT_ID_3 needs to be set in the test Scheme")
         }
 
-        let transportClient = DropboxTransportClient(accessToken: accessToken)
-
         DropboxOAuthManager.sharedOAuthManager = nil
 
         #if os(OSX)
-            DropboxClientsManager.setupWithTeamAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUserDesktop(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
         #elseif os(iOS)
-            DropboxClientsManager.setupWithTeamAppKey(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUser(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
         #endif
 
         teamClient = DropboxClientsManager.authorizedTeamClient?.team
