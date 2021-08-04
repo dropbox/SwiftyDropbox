@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Pod Install
-        run: | 
+        run: |
           cd TestSwiftyDropbox
           pod install --repo-update
       - name: Test iOS
@@ -37,6 +37,14 @@ jobs:
             ACCOUNT_ID_2=$ACCOUNT_ID_2 \
             ACCOUNT_ID_3=$ACCOUNT_ID_3 \
             test
+
+      - name: Set up keychain
+        env:
+          TEST_KEYCHAIN_PASSWORD: ${{ secrets.TEST_KEYCHAIN_PASSWORD }}
+        run: |
+          security create-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
 
       - name: Test macOS
         env:
