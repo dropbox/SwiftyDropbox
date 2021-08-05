@@ -543,13 +543,44 @@ open class TeamRoutes {
     /// and for 'Perform as team member' actions taken on the user before they become 'active'.
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
-    /// - parameter forceAsync: Whether to force the add to happen asynchronously.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
+    /// success or a `Void` object on failure.
+    @discardableResult open func membersAddV2(newMembers: Array<Team.MemberAddV2Arg>, forceAsync: Bool = false) -> RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer> {
+        let route = Team.membersAddV2
+        let serverArgs = Team.MembersAddV2Arg(newMembers: newMembers, forceAsync: forceAsync)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
+    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created with
+    /// the given email address, and that account will be invited to the team. If a personal Dropbox account exists with
+    /// the email address specified in the call, this call will create a placeholder Dropbox account for the user on the
+    /// team and send an email inviting the user to migrate their existing personal account onto the team. Team member
+    /// management apps are required to set an initial given_name and surname for a user to use in the team invitation
+    /// and for 'Perform as team member' actions taken on the user before they become 'active'.
+    ///
+    /// - parameter newMembers: Details of new members to be added to the team.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success
     /// or a `Void` object on failure.
     @discardableResult open func membersAdd(newMembers: Array<Team.MemberAddArg>, forceAsync: Bool = false) -> RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer> {
         let route = Team.membersAdd
         let serverArgs = Team.MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once an async_job_id is returned from membersAddV2 , use this to poll the status of the asynchronous request.
+    /// Permission : Team member management.
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatusV2Result` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult open func membersAddJobStatusGetV2(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer> {
+        let route = Team.membersAddJobStatusGetV2
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -571,11 +602,47 @@ open class TeamRoutes {
     ///
     /// - parameter user: Identity of the user whose profile photo will be deleted.
     ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersDeleteProfilePhotoError` object on failure.
+    @discardableResult open func membersDeleteProfilePhotoV2(user: Team.UserSelectorArg) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
+        let route = Team.membersDeleteProfilePhotoV2
+        let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Deletes a team member's profile photo. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be deleted.
+    ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
     /// a `Team.MembersDeleteProfilePhotoError` object on failure.
     @discardableResult open func membersDeleteProfilePhoto(user: Team.UserSelectorArg) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
         let route = Team.membersDeleteProfilePhoto
         let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Get available TeamMemberRoles for the connected team. To be used with membersSetAdminPermissionsV2. Permission :
+    /// Team member management.
+    ///
+    ///
+    ///  - returns: Through the response callback, the caller will receive a
+    /// `Team.MembersGetAvailableTeamMemberRolesResult` object on success or a `Void` object on failure.
+    @discardableResult open func membersGetAvailableTeamMemberRoles() -> RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer> {
+        let route = Team.membersGetAvailableTeamMemberRoles
+        return client.request(route)
+    }
+
+    /// Returns information about multiple team members. Permission : Team information This endpoint will return
+    /// idNotFound in MembersGetInfoItem, for IDs (or emails) that cannot be matched to a valid team member.
+    ///
+    /// - parameter members: List of team members.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
+    /// success or a `Team.MembersGetInfoError` object on failure.
+    @discardableResult open func membersGetInfoV2(members: Array<Team.UserSelectorArg>) -> RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer> {
+        let route = Team.membersGetInfoV2
+        let serverArgs = Team.MembersGetInfoV2Arg(members: members)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -597,11 +664,37 @@ open class TeamRoutes {
     /// - parameter limit: Number of results to return per call.
     /// - parameter includeRemoved: Whether to return removed members.
     ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on
+    /// success or a `Team.MembersListError` object on failure.
+    @discardableResult open func membersListV2(limit: UInt32 = 1000, includeRemoved: Bool = false) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer> {
+        let route = Team.membersListV2
+        let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Lists members of a team. Permission : Team information.
+    ///
+    /// - parameter limit: Number of results to return per call.
+    /// - parameter includeRemoved: Whether to return removed members.
+    ///
     ///  - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
     /// or a `Team.MembersListError` object on failure.
     @discardableResult open func membersList(limit: UInt32 = 1000, includeRemoved: Bool = false) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer> {
         let route = Team.membersList
         let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
+    /// Team information.
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of members.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on
+    /// success or a `Team.MembersListContinueError` object on failure.
+    @discardableResult open func membersListContinueV2(cursor: String) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer> {
+        let route = Team.membersListContinueV2
+        let serverArgs = Team.MembersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -757,6 +850,20 @@ open class TeamRoutes {
     /// Updates a team member's permissions. Permission : Team member management.
     ///
     /// - parameter user: Identity of user whose role will be set.
+    /// - parameter newRoles: The new roles for the member. Send empty list to make user member only. For now, only up
+    /// to one role is allowed.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
+    /// on success or a `Team.MembersSetPermissions2Error` object on failure.
+    @discardableResult open func membersSetAdminPermissionsV2(user: Team.UserSelectorArg, newRoles: Array<String>? = nil) -> RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer> {
+        let route = Team.membersSetAdminPermissionsV2
+        let serverArgs = Team.MembersSetPermissions2Arg(user: user, newRoles: newRoles)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a team member's permissions. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRole: The new role of the member.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object
@@ -778,11 +885,43 @@ open class TeamRoutes {
     /// configuration.
     /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersSetProfileError` object on failure.
+    @discardableResult open func membersSetProfileV2(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer> {
+        let route = Team.membersSetProfileV2
+        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a team member's profile. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of user whose profile will be set.
+    /// - parameter newEmail: New email for member.
+    /// - parameter newExternalId: New external ID for member.
+    /// - parameter newGivenName: New given name for member.
+    /// - parameter newSurname: New surname for member.
+    /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
+    /// configuration.
+    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
+    ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
     /// a `Team.MembersSetProfileError` object on failure.
     @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfile
         let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a team member's profile photo. Permission : Team member management.
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be set.
+    /// - parameter photo: Image to set as the member's new profile photo.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersSetProfilePhotoError` object on failure.
+    @discardableResult open func membersSetProfilePhotoV2(user: Team.UserSelectorArg, photo: Account.PhotoSourceArg) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
+        let route = Team.membersSetProfilePhotoV2
+        let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
         return client.request(route, serverArgs: serverArgs)
     }
 

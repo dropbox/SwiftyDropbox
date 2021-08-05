@@ -17,7 +17,7 @@ open class SharingRoutes {
     ///
     /// - parameter file: File to which to add members.
     /// - parameter members: Members to add. Note that even an email address is given, this may result in a user being
-    /// directy added to the membership if that email is the user's main account email.
+    /// directly added to the membership if that email is the user's main account email.
     /// - parameter customMessage: Message to send to added members in their invitation.
     /// - parameter quiet: Whether added members should be notified via device notifications of their invitation.
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
@@ -46,21 +46,6 @@ open class SharingRoutes {
     @discardableResult open func addFolderMember(sharedFolderId: String, members: Array<Sharing.AddMember>, quiet: Bool = false, customMessage: String? = nil) -> RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
         let route = Sharing.addFolderMember
         let serverArgs = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Identical to update_file_member but with less information returned.
-    ///
-    /// - parameter file: File for which we are changing a member's access.
-    /// - parameter member: The member whose access we are changing.
-    /// - parameter accessLevel: The new access level for the member.
-    ///
-    ///  - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionResult` object on
-    /// success or a `Sharing.FileMemberActionError` object on failure.
-    @available(*, unavailable, message:"changeFileMemberAccess is deprecated. Use updateFileMember.")
-    @discardableResult open func changeFileMemberAccess(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<Sharing.FileMemberActionResultSerializer, Sharing.FileMemberActionErrorSerializer> {
-        let route = Sharing.changeFileMemberAccess
-        let serverArgs = Sharing.ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -103,14 +88,12 @@ open class SharingRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Create a shared link. If a shared link already exists for the given path, that link is returned. Note that in
-    /// the returned PathLinkMetadata, the url in PathLinkMetadata field is the shortened URL if shortUrl in
-    /// CreateSharedLinkArg argument is set to true. Previously, it was technically possible to break a shared link by
-    /// moving or renaming the corresponding file or folder. In the future, this will no longer be the case, so your app
-    /// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use revokeSharedLink.
+    /// Create a shared link. If a shared link already exists for the given path, that link is returned. Previously, it
+    /// was technically possible to break a shared link by moving or renaming the corresponding file or folder. In the
+    /// future, this will no longer be the case, so your app shouldn't rely on this behavior. Instead, if your app needs
+    /// to revoke a shared link, use revokeSharedLink.
     ///
     /// - parameter path: The path to share.
-    /// - parameter shortUrl: Whether to return a shortened URL.
     /// - parameter pendingUpload: If it's okay to share a path that does not yet exist, set this to either file in
     /// PendingUploadMode or folder in PendingUploadMode to indicate whether to assume it's a file or folder.
     ///
@@ -236,7 +219,7 @@ open class SharingRoutes {
     /// Returns a list of LinkMetadata objects for this user, including collection links. If no path is given, returns a
     /// list of all shared links for the current user, including collection links, up to a maximum of 1000 links. If a
     /// non-empty path is given, returns a list of all shared links that allow access to the given path.  Collection
-    /// links are never returned in this case. Note that the url field in the response is never the shortened URL.
+    /// links are never returned in this case.
     ///
     /// - parameter path: See getSharedLinks description.
     ///
@@ -627,6 +610,9 @@ open class SharingRoutes {
 
     /// Changes a member's access on a shared file.
     ///
+    /// - parameter file: File for which we are changing a member's access.
+    /// - parameter member: The member whose access we are changing.
+    /// - parameter accessLevel: The new access level for the member.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.

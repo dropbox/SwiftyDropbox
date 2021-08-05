@@ -183,7 +183,7 @@ open class Sharing {
     open class AddFileMemberArgs: CustomStringConvertible {
         /// File to which to add members.
         public let file: String
-        /// Members to add. Note that even an email address is given, this may result in a user being directy added to
+        /// Members to add. Note that even an email address is given, this may result in a user being directly added to
         /// the membership if that email is the user's main account email.
         public let members: Array<Sharing.MemberSelector>
         /// Message to send to added members in their invitation.
@@ -620,6 +620,247 @@ open class Sharing {
         }
     }
 
+    /// The access permission that can be requested by the caller for the shared link. Note that the final resolved
+    /// visibility of the shared link takes into account other aspects, such as team and shared folder settings. Check
+    /// the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
+    public enum RequestedVisibility: CustomStringConvertible {
+        /// Anyone who has received the link can access it. No login required.
+        case public_
+        /// Only members of the same team can access the link. Login is required.
+        case teamOnly
+        /// A link-specific password is required to access the link. Login is not required.
+        case password
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RequestedVisibilitySerializer().serialize(self)))"
+        }
+    }
+    open class RequestedVisibilitySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RequestedVisibility) -> JSON {
+            switch value {
+                case .public_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("public")
+                    return .dictionary(d)
+                case .teamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_only")
+                    return .dictionary(d)
+                case .password:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("password")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RequestedVisibility {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "public":
+                            return RequestedVisibility.public_
+                        case "team_only":
+                            return RequestedVisibility.teamOnly
+                        case "password":
+                            return RequestedVisibility.password
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The actual access permissions values of shared links after taking into account user preferences and the team and
+    /// shared folder settings. Check the RequestedVisibility for more info on the possible visibility values that can
+    /// be set by the shared link's owner.
+    public enum ResolvedVisibility: CustomStringConvertible {
+        /// Anyone who has received the link can access it. No login required.
+        case public_
+        /// Only members of the same team can access the link. Login is required.
+        case teamOnly
+        /// A link-specific password is required to access the link. Login is not required.
+        case password
+        /// Only members of the same team who have the link-specific password can access the link. Login is required.
+        case teamAndPassword
+        /// Only members of the shared folder containing the linked file can access the link. Login is required.
+        case sharedFolderOnly
+        /// The link merely points the user to the content, and does not grant any additional rights. Existing members
+        /// of the content who use this link can only access the content with their pre-existing access rights. Either
+        /// on the file directly, or inherited from a parent folder.
+        case noOne
+        /// Only the current user can view this link.
+        case onlyYou
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ResolvedVisibilitySerializer().serialize(self)))"
+        }
+    }
+    open class ResolvedVisibilitySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ResolvedVisibility) -> JSON {
+            switch value {
+                case .public_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("public")
+                    return .dictionary(d)
+                case .teamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_only")
+                    return .dictionary(d)
+                case .password:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("password")
+                    return .dictionary(d)
+                case .teamAndPassword:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_and_password")
+                    return .dictionary(d)
+                case .sharedFolderOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared_folder_only")
+                    return .dictionary(d)
+                case .noOne:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_one")
+                    return .dictionary(d)
+                case .onlyYou:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("only_you")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ResolvedVisibility {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "public":
+                            return ResolvedVisibility.public_
+                        case "team_only":
+                            return ResolvedVisibility.teamOnly
+                        case "password":
+                            return ResolvedVisibility.password
+                        case "team_and_password":
+                            return ResolvedVisibility.teamAndPassword
+                        case "shared_folder_only":
+                            return ResolvedVisibility.sharedFolderOnly
+                        case "no_one":
+                            return ResolvedVisibility.noOne
+                        case "only_you":
+                            return ResolvedVisibility.onlyYou
+                        case "other":
+                            return ResolvedVisibility.other
+                        default:
+                            return ResolvedVisibility.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// check documentation for ResolvedVisibility.
+    public enum AlphaResolvedVisibility: CustomStringConvertible {
+        /// Anyone who has received the link can access it. No login required.
+        case public_
+        /// Only members of the same team can access the link. Login is required.
+        case teamOnly
+        /// A link-specific password is required to access the link. Login is not required.
+        case password
+        /// Only members of the same team who have the link-specific password can access the link. Login is required.
+        case teamAndPassword
+        /// Only members of the shared folder containing the linked file can access the link. Login is required.
+        case sharedFolderOnly
+        /// The link merely points the user to the content, and does not grant any additional rights. Existing members
+        /// of the content who use this link can only access the content with their pre-existing access rights. Either
+        /// on the file directly, or inherited from a parent folder.
+        case noOne
+        /// Only the current user can view this link.
+        case onlyYou
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AlphaResolvedVisibilitySerializer().serialize(self)))"
+        }
+    }
+    open class AlphaResolvedVisibilitySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AlphaResolvedVisibility) -> JSON {
+            switch value {
+                case .public_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("public")
+                    return .dictionary(d)
+                case .teamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_only")
+                    return .dictionary(d)
+                case .password:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("password")
+                    return .dictionary(d)
+                case .teamAndPassword:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_and_password")
+                    return .dictionary(d)
+                case .sharedFolderOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared_folder_only")
+                    return .dictionary(d)
+                case .noOne:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_one")
+                    return .dictionary(d)
+                case .onlyYou:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("only_you")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> AlphaResolvedVisibility {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "public":
+                            return AlphaResolvedVisibility.public_
+                        case "team_only":
+                            return AlphaResolvedVisibility.teamOnly
+                        case "password":
+                            return AlphaResolvedVisibility.password
+                        case "team_and_password":
+                            return AlphaResolvedVisibility.teamAndPassword
+                        case "shared_folder_only":
+                            return AlphaResolvedVisibility.sharedFolderOnly
+                        case "no_one":
+                            return AlphaResolvedVisibility.noOne
+                        case "only_you":
+                            return AlphaResolvedVisibility.onlyYou
+                        case "other":
+                            return AlphaResolvedVisibility.other
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Information about the content that has a link audience different than that of this folder.
     open class AudienceExceptionContentInfo: CustomStringConvertible {
         /// The name of the content, which is either a file or a folder.
@@ -731,47 +972,6 @@ open class Sharing {
         }
     }
 
-    /// Arguments for changeFileMemberAccess.
-    open class ChangeFileMemberAccessArgs: CustomStringConvertible {
-        /// File for which we are changing a member's access.
-        public let file: String
-        /// The member whose access we are changing.
-        public let member: Sharing.MemberSelector
-        /// The new access level for the member.
-        public let accessLevel: Sharing.AccessLevel
-        public init(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) {
-            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
-            self.file = file
-            self.member = member
-            self.accessLevel = accessLevel
-        }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ChangeFileMemberAccessArgsSerializer().serialize(self)))"
-        }
-    }
-    open class ChangeFileMemberAccessArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ChangeFileMemberAccessArgs) -> JSON {
-            let output = [ 
-            "file": Serialization._StringSerializer.serialize(value.file),
-            "member": Sharing.MemberSelectorSerializer().serialize(value.member),
-            "access_level": Sharing.AccessLevelSerializer().serialize(value.accessLevel),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> ChangeFileMemberAccessArgs {
-            switch json {
-                case .dictionary(let dict):
-                    let file = Serialization._StringSerializer.deserialize(dict["file"] ?? .null)
-                    let member = Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                    let accessLevel = Sharing.AccessLevelSerializer().deserialize(dict["access_level"] ?? .null)
-                    return ChangeFileMemberAccessArgs(file: file, member: member, accessLevel: accessLevel)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
     /// Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
     open class LinkMetadata: CustomStringConvertible {
         /// URL of the shared link.
@@ -867,7 +1067,7 @@ open class Sharing {
     open class CreateSharedLinkArg: CustomStringConvertible {
         /// The path to share.
         public let path: String
-        /// Whether to return a shortened URL.
+        /// (no description)
         public let shortUrl: Bool
         /// If it's okay to share a path that does not yet exist, set this to either file in PendingUploadMode or folder
         /// in PendingUploadMode to indicate whether to assume it's a file or folder.
@@ -997,7 +1197,9 @@ open class Sharing {
         case sharedLinkAlreadyExists(Sharing.SharedLinkAlreadyExistsMetadata?)
         /// There is an error with the given settings.
         case settingsError(Sharing.SharedLinkSettingsError)
-        /// Access to the requested path is forbidden.
+        /// The user is not allowed to create a shared link to the specified file. For  example, this can occur if the
+        /// file is restricted or if the user's links are  banned
+        /// https://help.dropbox.com/files-folders/share/banned-links.
         case accessDenied
 
         public var description: String {
@@ -1627,7 +1829,7 @@ open class Sharing {
         }
     }
 
-    /// Per-member result for addFileMember or changeFileMemberAccess.
+    /// Per-member result for addFileMember.
     open class FileMemberActionResult: CustomStringConvertible {
         /// One of specified input members.
         public let member: Sharing.MemberSelector
@@ -3135,7 +3337,8 @@ open class Sharing {
         /// additional rights to the user. Members of the content who use this link can only access the content with
         /// their pre-existing access rights.
         case noOne
-        /// A link-specific password is required to access the link. Login is not required.
+        /// Use `require_password` instead. A link-specific password is required to access the link. Login is not
+        /// required.
         case password
         /// Link is accessible only by members of the content.
         case members
@@ -3198,6 +3401,215 @@ open class Sharing {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The VisibilityPolicyDisallowedReason union
+    public enum VisibilityPolicyDisallowedReason: CustomStringConvertible {
+        /// The user needs to delete and recreate the link to change the visibility policy.
+        case deleteAndRecreate
+        /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
+        /// policy, remove the restriction from the parent shared folder.
+        case restrictedBySharedFolder
+        /// The team policy prevents links being shared outside the team.
+        case restrictedByTeam
+        /// The user needs to be on a team to set this policy.
+        case userNotOnTeam
+        /// The user is a basic user or is on a limited team.
+        case userAccountType
+        /// The user does not have permission.
+        case permissionDenied
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(VisibilityPolicyDisallowedReasonSerializer().serialize(self)))"
+        }
+    }
+    open class VisibilityPolicyDisallowedReasonSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: VisibilityPolicyDisallowedReason) -> JSON {
+            switch value {
+                case .deleteAndRecreate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("delete_and_recreate")
+                    return .dictionary(d)
+                case .restrictedBySharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_by_shared_folder")
+                    return .dictionary(d)
+                case .restrictedByTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_by_team")
+                    return .dictionary(d)
+                case .userNotOnTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_on_team")
+                    return .dictionary(d)
+                case .userAccountType:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_account_type")
+                    return .dictionary(d)
+                case .permissionDenied:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("permission_denied")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> VisibilityPolicyDisallowedReason {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "delete_and_recreate":
+                            return VisibilityPolicyDisallowedReason.deleteAndRecreate
+                        case "restricted_by_shared_folder":
+                            return VisibilityPolicyDisallowedReason.restrictedBySharedFolder
+                        case "restricted_by_team":
+                            return VisibilityPolicyDisallowedReason.restrictedByTeam
+                        case "user_not_on_team":
+                            return VisibilityPolicyDisallowedReason.userNotOnTeam
+                        case "user_account_type":
+                            return VisibilityPolicyDisallowedReason.userAccountType
+                        case "permission_denied":
+                            return VisibilityPolicyDisallowedReason.permissionDenied
+                        case "other":
+                            return VisibilityPolicyDisallowedReason.other
+                        default:
+                            return VisibilityPolicyDisallowedReason.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// check documentation for VisibilityPolicyDisallowedReason.
+    public enum LinkAudienceDisallowedReason: CustomStringConvertible {
+        /// The user needs to delete and recreate the link to change the visibility policy.
+        case deleteAndRecreate
+        /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
+        /// policy, remove the restriction from the parent shared folder.
+        case restrictedBySharedFolder
+        /// The team policy prevents links being shared outside the team.
+        case restrictedByTeam
+        /// The user needs to be on a team to set this policy.
+        case userNotOnTeam
+        /// The user is a basic user or is on a limited team.
+        case userAccountType
+        /// The user does not have permission.
+        case permissionDenied
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LinkAudienceDisallowedReasonSerializer().serialize(self)))"
+        }
+    }
+    open class LinkAudienceDisallowedReasonSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LinkAudienceDisallowedReason) -> JSON {
+            switch value {
+                case .deleteAndRecreate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("delete_and_recreate")
+                    return .dictionary(d)
+                case .restrictedBySharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_by_shared_folder")
+                    return .dictionary(d)
+                case .restrictedByTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_by_team")
+                    return .dictionary(d)
+                case .userNotOnTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_on_team")
+                    return .dictionary(d)
+                case .userAccountType:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_account_type")
+                    return .dictionary(d)
+                case .permissionDenied:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("permission_denied")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> LinkAudienceDisallowedReason {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "delete_and_recreate":
+                            return LinkAudienceDisallowedReason.deleteAndRecreate
+                        case "restricted_by_shared_folder":
+                            return LinkAudienceDisallowedReason.restrictedBySharedFolder
+                        case "restricted_by_team":
+                            return LinkAudienceDisallowedReason.restrictedByTeam
+                        case "user_not_on_team":
+                            return LinkAudienceDisallowedReason.userNotOnTeam
+                        case "user_account_type":
+                            return LinkAudienceDisallowedReason.userAccountType
+                        case "permission_denied":
+                            return LinkAudienceDisallowedReason.permissionDenied
+                        case "other":
+                            return LinkAudienceDisallowedReason.other
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The LinkAudienceOption struct
+    open class LinkAudienceOption: CustomStringConvertible {
+        /// Specifies who can access the link.
+        public let audience: Sharing.LinkAudience
+        /// Whether the user calling this API can select this audience option.
+        public let allowed: Bool
+        /// If allowed is false, this will provide the reason that the user is not permitted to set the visibility to
+        /// this policy.
+        public let disallowedReason: Sharing.LinkAudienceDisallowedReason?
+        public init(audience: Sharing.LinkAudience, allowed: Bool, disallowedReason: Sharing.LinkAudienceDisallowedReason? = nil) {
+            self.audience = audience
+            self.allowed = allowed
+            self.disallowedReason = disallowedReason
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(LinkAudienceOptionSerializer().serialize(self)))"
+        }
+    }
+    open class LinkAudienceOptionSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: LinkAudienceOption) -> JSON {
+            let output = [ 
+            "audience": Sharing.LinkAudienceSerializer().serialize(value.audience),
+            "allowed": Serialization._BoolSerializer.serialize(value.allowed),
+            "disallowed_reason": NullableSerializer(Sharing.LinkAudienceDisallowedReasonSerializer()).serialize(value.disallowedReason),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> LinkAudienceOption {
+            switch json {
+                case .dictionary(let dict):
+                    let audience = Sharing.LinkAudienceSerializer().deserialize(dict["audience"] ?? .null)
+                    let allowed = Serialization._BoolSerializer.deserialize(dict["allowed"] ?? .null)
+                    let disallowedReason = NullableSerializer(Sharing.LinkAudienceDisallowedReasonSerializer()).deserialize(dict["disallowed_reason"] ?? .null)
+                    return LinkAudienceOption(audience: audience, allowed: allowed, disallowedReason: disallowedReason)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -3369,13 +3781,55 @@ open class Sharing {
         /// a property of the link, and does not depend on who is calling this API. In particular, `link_access_level`
         /// does not take into account the API caller's current permissions to the content.
         public let linkAccessLevel: Sharing.LinkAccessLevel?
-        public init(canRevoke: Bool, resolvedVisibility: Sharing.ResolvedVisibility? = nil, requestedVisibility: Sharing.RequestedVisibility? = nil, revokeFailureReason: Sharing.SharedLinkAccessFailureReason? = nil, effectiveAudience: Sharing.LinkAudience? = nil, linkAccessLevel: Sharing.LinkAccessLevel? = nil) {
+        /// A list of policies that the user might be able to set for the visibility.
+        public let visibilityPolicies: Array<Sharing.VisibilityPolicy>
+        /// Whether the user can set the expiry settings of the link. This refers to the ability to create a new expiry
+        /// and modify an existing expiry.
+        public let canSetExpiry: Bool
+        /// Whether the user can remove the expiry of the link.
+        public let canRemoveExpiry: Bool
+        /// Whether the link can be downloaded or not.
+        public let allowDownload: Bool
+        /// Whether the user can allow downloads via the link. This refers to the ability to remove a no-download
+        /// restriction on the link.
+        public let canAllowDownload: Bool
+        /// Whether the user can disallow downloads via the link. This refers to the ability to impose a no-download
+        /// restriction on the link.
+        public let canDisallowDownload: Bool
+        /// Whether comments are enabled for the linked file. This takes the team commenting policy into account.
+        public let allowComments: Bool
+        /// Whether the team has disabled commenting globally.
+        public let teamRestrictsComments: Bool
+        /// A list of link audience options the user might be able to set as the new audience.
+        public let audienceOptions: Array<Sharing.LinkAudienceOption>?
+        /// Whether the user can set a password for the link.
+        public let canSetPassword: Bool?
+        /// Whether the user can remove the password of the link.
+        public let canRemovePassword: Bool?
+        /// Whether the user is required to provide a password to view the link.
+        public let requirePassword: Bool?
+        /// Whether the user can use extended sharing controls, based on their account type.
+        public let canUseExtendedSharingControls: Bool?
+        public init(canRevoke: Bool, visibilityPolicies: Array<Sharing.VisibilityPolicy>, canSetExpiry: Bool, canRemoveExpiry: Bool, allowDownload: Bool, canAllowDownload: Bool, canDisallowDownload: Bool, allowComments: Bool, teamRestrictsComments: Bool, resolvedVisibility: Sharing.ResolvedVisibility? = nil, requestedVisibility: Sharing.RequestedVisibility? = nil, revokeFailureReason: Sharing.SharedLinkAccessFailureReason? = nil, effectiveAudience: Sharing.LinkAudience? = nil, linkAccessLevel: Sharing.LinkAccessLevel? = nil, audienceOptions: Array<Sharing.LinkAudienceOption>? = nil, canSetPassword: Bool? = nil, canRemovePassword: Bool? = nil, requirePassword: Bool? = nil, canUseExtendedSharingControls: Bool? = nil) {
             self.resolvedVisibility = resolvedVisibility
             self.requestedVisibility = requestedVisibility
             self.canRevoke = canRevoke
             self.revokeFailureReason = revokeFailureReason
             self.effectiveAudience = effectiveAudience
             self.linkAccessLevel = linkAccessLevel
+            self.visibilityPolicies = visibilityPolicies
+            self.canSetExpiry = canSetExpiry
+            self.canRemoveExpiry = canRemoveExpiry
+            self.allowDownload = allowDownload
+            self.canAllowDownload = canAllowDownload
+            self.canDisallowDownload = canDisallowDownload
+            self.allowComments = allowComments
+            self.teamRestrictsComments = teamRestrictsComments
+            self.audienceOptions = audienceOptions
+            self.canSetPassword = canSetPassword
+            self.canRemovePassword = canRemovePassword
+            self.requirePassword = requirePassword
+            self.canUseExtendedSharingControls = canUseExtendedSharingControls
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(LinkPermissionsSerializer().serialize(self)))"
@@ -3386,11 +3840,24 @@ open class Sharing {
         open func serialize(_ value: LinkPermissions) -> JSON {
             let output = [ 
             "can_revoke": Serialization._BoolSerializer.serialize(value.canRevoke),
+            "visibility_policies": ArraySerializer(Sharing.VisibilityPolicySerializer()).serialize(value.visibilityPolicies),
+            "can_set_expiry": Serialization._BoolSerializer.serialize(value.canSetExpiry),
+            "can_remove_expiry": Serialization._BoolSerializer.serialize(value.canRemoveExpiry),
+            "allow_download": Serialization._BoolSerializer.serialize(value.allowDownload),
+            "can_allow_download": Serialization._BoolSerializer.serialize(value.canAllowDownload),
+            "can_disallow_download": Serialization._BoolSerializer.serialize(value.canDisallowDownload),
+            "allow_comments": Serialization._BoolSerializer.serialize(value.allowComments),
+            "team_restricts_comments": Serialization._BoolSerializer.serialize(value.teamRestrictsComments),
             "resolved_visibility": NullableSerializer(Sharing.ResolvedVisibilitySerializer()).serialize(value.resolvedVisibility),
             "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
             "revoke_failure_reason": NullableSerializer(Sharing.SharedLinkAccessFailureReasonSerializer()).serialize(value.revokeFailureReason),
             "effective_audience": NullableSerializer(Sharing.LinkAudienceSerializer()).serialize(value.effectiveAudience),
             "link_access_level": NullableSerializer(Sharing.LinkAccessLevelSerializer()).serialize(value.linkAccessLevel),
+            "audience_options": NullableSerializer(ArraySerializer(Sharing.LinkAudienceOptionSerializer())).serialize(value.audienceOptions),
+            "can_set_password": NullableSerializer(Serialization._BoolSerializer).serialize(value.canSetPassword),
+            "can_remove_password": NullableSerializer(Serialization._BoolSerializer).serialize(value.canRemovePassword),
+            "require_password": NullableSerializer(Serialization._BoolSerializer).serialize(value.requirePassword),
+            "can_use_extended_sharing_controls": NullableSerializer(Serialization._BoolSerializer).serialize(value.canUseExtendedSharingControls),
             ]
             return .dictionary(output)
         }
@@ -3398,12 +3865,25 @@ open class Sharing {
             switch json {
                 case .dictionary(let dict):
                     let canRevoke = Serialization._BoolSerializer.deserialize(dict["can_revoke"] ?? .null)
+                    let visibilityPolicies = ArraySerializer(Sharing.VisibilityPolicySerializer()).deserialize(dict["visibility_policies"] ?? .null)
+                    let canSetExpiry = Serialization._BoolSerializer.deserialize(dict["can_set_expiry"] ?? .null)
+                    let canRemoveExpiry = Serialization._BoolSerializer.deserialize(dict["can_remove_expiry"] ?? .null)
+                    let allowDownload = Serialization._BoolSerializer.deserialize(dict["allow_download"] ?? .null)
+                    let canAllowDownload = Serialization._BoolSerializer.deserialize(dict["can_allow_download"] ?? .null)
+                    let canDisallowDownload = Serialization._BoolSerializer.deserialize(dict["can_disallow_download"] ?? .null)
+                    let allowComments = Serialization._BoolSerializer.deserialize(dict["allow_comments"] ?? .null)
+                    let teamRestrictsComments = Serialization._BoolSerializer.deserialize(dict["team_restricts_comments"] ?? .null)
                     let resolvedVisibility = NullableSerializer(Sharing.ResolvedVisibilitySerializer()).deserialize(dict["resolved_visibility"] ?? .null)
                     let requestedVisibility = NullableSerializer(Sharing.RequestedVisibilitySerializer()).deserialize(dict["requested_visibility"] ?? .null)
                     let revokeFailureReason = NullableSerializer(Sharing.SharedLinkAccessFailureReasonSerializer()).deserialize(dict["revoke_failure_reason"] ?? .null)
                     let effectiveAudience = NullableSerializer(Sharing.LinkAudienceSerializer()).deserialize(dict["effective_audience"] ?? .null)
                     let linkAccessLevel = NullableSerializer(Sharing.LinkAccessLevelSerializer()).deserialize(dict["link_access_level"] ?? .null)
-                    return LinkPermissions(canRevoke: canRevoke, resolvedVisibility: resolvedVisibility, requestedVisibility: requestedVisibility, revokeFailureReason: revokeFailureReason, effectiveAudience: effectiveAudience, linkAccessLevel: linkAccessLevel)
+                    let audienceOptions = NullableSerializer(ArraySerializer(Sharing.LinkAudienceOptionSerializer())).deserialize(dict["audience_options"] ?? .null)
+                    let canSetPassword = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["can_set_password"] ?? .null)
+                    let canRemovePassword = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["can_remove_password"] ?? .null)
+                    let requirePassword = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["require_password"] ?? .null)
+                    let canUseExtendedSharingControls = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["can_use_extended_sharing_controls"] ?? .null)
+                    return LinkPermissions(canRevoke: canRevoke, visibilityPolicies: visibilityPolicies, canSetExpiry: canSetExpiry, canRemoveExpiry: canRemoveExpiry, allowDownload: allowDownload, canAllowDownload: canAllowDownload, canDisallowDownload: canDisallowDownload, allowComments: allowComments, teamRestrictsComments: teamRestrictsComments, resolvedVisibility: resolvedVisibility, requestedVisibility: requestedVisibility, revokeFailureReason: revokeFailureReason, effectiveAudience: effectiveAudience, linkAccessLevel: linkAccessLevel, audienceOptions: audienceOptions, canSetPassword: canSetPassword, canRemovePassword: canRemovePassword, requirePassword: requirePassword, canUseExtendedSharingControls: canUseExtendedSharingControls)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -5772,136 +6252,6 @@ open class Sharing {
         }
     }
 
-    /// The access permission that can be requested by the caller for the shared link. Note that the final resolved
-    /// visibility of the shared link takes into account other aspects, such as team and shared folder settings. Check
-    /// the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
-    public enum RequestedVisibility: CustomStringConvertible {
-        /// Anyone who has received the link can access it. No login required.
-        case public_
-        /// Only members of the same team can access the link. Login is required.
-        case teamOnly
-        /// A link-specific password is required to access the link. Login is not required.
-        case password
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RequestedVisibilitySerializer().serialize(self)))"
-        }
-    }
-    open class RequestedVisibilitySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: RequestedVisibility) -> JSON {
-            switch value {
-                case .public_:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("public")
-                    return .dictionary(d)
-                case .teamOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team_only")
-                    return .dictionary(d)
-                case .password:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("password")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> RequestedVisibility {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "public":
-                            return RequestedVisibility.public_
-                        case "team_only":
-                            return RequestedVisibility.teamOnly
-                        case "password":
-                            return RequestedVisibility.password
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// The actual access permissions values of shared links after taking into account user preferences and the team and
-    /// shared folder settings. Check the RequestedVisibility for more info on the possible visibility values that can
-    /// be set by the shared link's owner.
-    public enum ResolvedVisibility: CustomStringConvertible {
-        /// Anyone who has received the link can access it. No login required.
-        case public_
-        /// Only members of the same team can access the link. Login is required.
-        case teamOnly
-        /// A link-specific password is required to access the link. Login is not required.
-        case password
-        /// Only members of the same team who have the link-specific password can access the link. Login is required.
-        case teamAndPassword
-        /// Only members of the shared folder containing the linked file can access the link. Login is required.
-        case sharedFolderOnly
-        /// An unspecified error.
-        case other
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ResolvedVisibilitySerializer().serialize(self)))"
-        }
-    }
-    open class ResolvedVisibilitySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ResolvedVisibility) -> JSON {
-            switch value {
-                case .public_:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("public")
-                    return .dictionary(d)
-                case .teamOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team_only")
-                    return .dictionary(d)
-                case .password:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("password")
-                    return .dictionary(d)
-                case .teamAndPassword:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team_and_password")
-                    return .dictionary(d)
-                case .sharedFolderOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("shared_folder_only")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> ResolvedVisibility {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "public":
-                            return ResolvedVisibility.public_
-                        case "team_only":
-                            return ResolvedVisibility.teamOnly
-                        case "password":
-                            return ResolvedVisibility.password
-                        case "team_and_password":
-                            return ResolvedVisibility.teamAndPassword
-                        case "shared_folder_only":
-                            return ResolvedVisibility.sharedFolderOnly
-                        case "other":
-                            return ResolvedVisibility.other
-                        default:
-                            return ResolvedVisibility.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
     /// The RevokeSharedLinkArg struct
     open class RevokeSharedLinkArg: CustomStringConvertible {
         /// URL of the shared link.
@@ -7327,10 +7677,9 @@ open class Sharing {
 
     /// The SharedLinkSettings struct
     open class SharedLinkSettings: CustomStringConvertible {
-        /// The requested access for this shared link.
-        public let requestedVisibility: Sharing.RequestedVisibility?
-        /// If requestedVisibility is password in RequestedVisibility this is needed to specify the password to access
-        /// the link.
+        /// Boolean flag to enable or disable password protection.
+        public let requirePassword: Bool?
+        /// If requirePassword is true, this is needed to specify the password to access the link.
         public let linkPassword: String?
         /// Expiration time of the shared link. By default the link won't expire.
         public let expires: Date?
@@ -7342,13 +7691,19 @@ open class Sharing {
         /// Requested access level you want the audience to gain from this link. Note, modifying access level for an
         /// existing link is not supported.
         public let access: Sharing.RequestedLinkAccessLevel?
-        public init(requestedVisibility: Sharing.RequestedVisibility? = nil, linkPassword: String? = nil, expires: Date? = nil, audience: Sharing.LinkAudience? = nil, access: Sharing.RequestedLinkAccessLevel? = nil) {
-            self.requestedVisibility = requestedVisibility
+        /// Use audience instead.  The requested access for this shared link.
+        public let requestedVisibility: Sharing.RequestedVisibility?
+        /// Boolean flag to allow or not download capabilities for shared links.
+        public let allowDownload: Bool?
+        public init(requirePassword: Bool? = nil, linkPassword: String? = nil, expires: Date? = nil, audience: Sharing.LinkAudience? = nil, access: Sharing.RequestedLinkAccessLevel? = nil, requestedVisibility: Sharing.RequestedVisibility? = nil, allowDownload: Bool? = nil) {
+            self.requirePassword = requirePassword
             nullableValidator(stringValidator())(linkPassword)
             self.linkPassword = linkPassword
             self.expires = expires
             self.audience = audience
             self.access = access
+            self.requestedVisibility = requestedVisibility
+            self.allowDownload = allowDownload
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedLinkSettingsSerializer().serialize(self)))"
@@ -7358,23 +7713,27 @@ open class Sharing {
         public init() { }
         open func serialize(_ value: SharedLinkSettings) -> JSON {
             let output = [ 
-            "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
+            "require_password": NullableSerializer(Serialization._BoolSerializer).serialize(value.requirePassword),
             "link_password": NullableSerializer(Serialization._StringSerializer).serialize(value.linkPassword),
             "expires": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expires),
             "audience": NullableSerializer(Sharing.LinkAudienceSerializer()).serialize(value.audience),
             "access": NullableSerializer(Sharing.RequestedLinkAccessLevelSerializer()).serialize(value.access),
+            "requested_visibility": NullableSerializer(Sharing.RequestedVisibilitySerializer()).serialize(value.requestedVisibility),
+            "allow_download": NullableSerializer(Serialization._BoolSerializer).serialize(value.allowDownload),
             ]
             return .dictionary(output)
         }
         open func deserialize(_ json: JSON) -> SharedLinkSettings {
             switch json {
                 case .dictionary(let dict):
-                    let requestedVisibility = NullableSerializer(Sharing.RequestedVisibilitySerializer()).deserialize(dict["requested_visibility"] ?? .null)
+                    let requirePassword = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["require_password"] ?? .null)
                     let linkPassword = NullableSerializer(Serialization._StringSerializer).deserialize(dict["link_password"] ?? .null)
                     let expires = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expires"] ?? .null)
                     let audience = NullableSerializer(Sharing.LinkAudienceSerializer()).deserialize(dict["audience"] ?? .null)
                     let access = NullableSerializer(Sharing.RequestedLinkAccessLevelSerializer()).deserialize(dict["access"] ?? .null)
-                    return SharedLinkSettings(requestedVisibility: requestedVisibility, linkPassword: linkPassword, expires: expires, audience: audience, access: access)
+                    let requestedVisibility = NullableSerializer(Sharing.RequestedVisibilitySerializer()).deserialize(dict["requested_visibility"] ?? .null)
+                    let allowDownload = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["allow_download"] ?? .null)
+                    return SharedLinkSettings(requirePassword: requirePassword, linkPassword: linkPassword, expires: expires, audience: audience, access: access, requestedVisibility: requestedVisibility, allowDownload: allowDownload)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8002,8 +8361,20 @@ open class Sharing {
     }
 
     /// Arguments for updateFileMember.
-    open class UpdateFileMemberArgs: Sharing.ChangeFileMemberAccessArgs {
-        open override var description: String {
+    open class UpdateFileMemberArgs: CustomStringConvertible {
+        /// File for which we are changing a member's access.
+        public let file: String
+        /// The member whose access we are changing.
+        public let member: Sharing.MemberSelector
+        /// The new access level for the member.
+        public let accessLevel: Sharing.AccessLevel
+        public init(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) {
+            stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
+            self.file = file
+            self.member = member
+            self.accessLevel = accessLevel
+        }
+        open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UpdateFileMemberArgsSerializer().serialize(self)))"
         }
     }
@@ -8565,6 +8936,54 @@ open class Sharing {
         }
     }
 
+    /// The VisibilityPolicy struct
+    open class VisibilityPolicy: CustomStringConvertible {
+        /// This is the value to submit when saving the visibility setting.
+        public let policy: Sharing.RequestedVisibility
+        /// This is what the effective policy would be, if you selected this option. The resolved policy is obtained
+        /// after considering external effects such as shared folder settings and team policy. This value is guaranteed
+        /// to be provided.
+        public let resolvedPolicy: Sharing.AlphaResolvedVisibility
+        /// Whether the user is permitted to set the visibility to this policy.
+        public let allowed: Bool
+        /// If allowed is false, this will provide the reason that the user is not permitted to set the visibility to
+        /// this policy.
+        public let disallowedReason: Sharing.VisibilityPolicyDisallowedReason?
+        public init(policy: Sharing.RequestedVisibility, resolvedPolicy: Sharing.AlphaResolvedVisibility, allowed: Bool, disallowedReason: Sharing.VisibilityPolicyDisallowedReason? = nil) {
+            self.policy = policy
+            self.resolvedPolicy = resolvedPolicy
+            self.allowed = allowed
+            self.disallowedReason = disallowedReason
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(VisibilityPolicySerializer().serialize(self)))"
+        }
+    }
+    open class VisibilityPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: VisibilityPolicy) -> JSON {
+            let output = [ 
+            "policy": Sharing.RequestedVisibilitySerializer().serialize(value.policy),
+            "resolved_policy": Sharing.AlphaResolvedVisibilitySerializer().serialize(value.resolvedPolicy),
+            "allowed": Serialization._BoolSerializer.serialize(value.allowed),
+            "disallowed_reason": NullableSerializer(Sharing.VisibilityPolicyDisallowedReasonSerializer()).serialize(value.disallowedReason),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> VisibilityPolicy {
+            switch json {
+                case .dictionary(let dict):
+                    let policy = Sharing.RequestedVisibilitySerializer().deserialize(dict["policy"] ?? .null)
+                    let resolvedPolicy = Sharing.AlphaResolvedVisibilitySerializer().deserialize(dict["resolved_policy"] ?? .null)
+                    let allowed = Serialization._BoolSerializer.deserialize(dict["allowed"] ?? .null)
+                    let disallowedReason = NullableSerializer(Sharing.VisibilityPolicyDisallowedReasonSerializer()).deserialize(dict["disallowed_reason"] ?? .null)
+                    return VisibilityPolicy(policy: policy, resolvedPolicy: resolvedPolicy, allowed: allowed, disallowedReason: disallowedReason)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
 
     /// Stone Route Objects
 
@@ -8588,18 +9007,6 @@ open class Sharing {
         argSerializer: Sharing.AddFolderMemberArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.AddFolderMemberErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
-    )
-    static let changeFileMemberAccess = Route(
-        name: "change_file_member_access",
-        version: 1,
-        namespace: "sharing",
-        deprecated: true,
-        argSerializer: Sharing.ChangeFileMemberAccessArgsSerializer(),
-        responseSerializer: Sharing.FileMemberActionResultSerializer(),
-        errorSerializer: Sharing.FileMemberActionErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "api",
                 "style": "rpc"]

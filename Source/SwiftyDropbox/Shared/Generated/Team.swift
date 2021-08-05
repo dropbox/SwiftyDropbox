@@ -122,7 +122,7 @@ open class Team {
 
     /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that a secondary
     /// email was successfully added to a user. The other values explain the type of error that occurred, and include
-    /// the email for which the error occured.
+    /// the email for which the error occurred.
     public enum AddSecondaryEmailResult: CustomStringConvertible {
         /// Describes a secondary email that was successfully added to a user.
         case success(SecondaryEmails.SecondaryEmail)
@@ -355,7 +355,8 @@ open class Team {
         case teamAdmin
         /// User can do most user provisioning, de-provisioning and management.
         case userManagementAdmin
-        /// User can do a limited set of common support tasks for existing users.
+        /// User can do a limited set of common support tasks for existing users. Note: Dropbox is adding new types of
+        /// admin roles; these may display as support_admin.
         case supportAdmin
         /// User is not an admin of the team.
         case memberOnly
@@ -759,7 +760,7 @@ open class Team {
 
     /// Result of trying to delete a secondary email address. 'success' is the only value indicating that a secondary
     /// email was successfully deleted. The other values explain the type of error that occurred, and include the email
-    /// for which the error occured.
+    /// for which the error occurred.
     public enum DeleteSecondaryEmailResult: CustomStringConvertible {
         /// The secondary email was successfully deleted.
         case success(String)
@@ -3890,7 +3891,7 @@ open class Team {
         public let description_: String?
         /// The time at which the legal hold was activated.
         public let activationTime: Date?
-        /// Team members IDs and number of permanetly deleted members under hold.
+        /// Team members IDs and number of permanently deleted members under hold.
         public let members: Team.MembersInfo
         /// The current state of the hold.
         public let status: Team.LegalHoldStatus
@@ -5751,8 +5752,8 @@ open class Team {
         }
     }
 
-    /// The MemberAddArg struct
-    open class MemberAddArg: CustomStringConvertible {
+    /// The MemberAddArgBase struct
+    open class MemberAddArgBase: CustomStringConvertible {
         /// (no description)
         public let memberEmail: String
         /// Member's first name.
@@ -5767,11 +5768,9 @@ open class Team {
         /// sent to the user. This may be useful for apps using single sign-on (SSO) flows for onboarding that want to
         /// handle announcements themselves.
         public let sendWelcomeEmail: Bool
-        /// (no description)
-        public let role: Team.AdminTier
         /// Whether a user is directory restricted.
         public let isDirectoryRestricted: Bool?
-        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, role: Team.AdminTier = .memberOnly, isDirectoryRestricted: Bool? = nil) {
+        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, isDirectoryRestricted: Bool? = nil) {
             stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
             nullableValidator(stringValidator(maxLength: 100, pattern: "[^/:?*<>\"|]*"))(memberGivenName)
@@ -5783,10 +5782,52 @@ open class Team {
             nullableValidator(stringValidator())(memberPersistentId)
             self.memberPersistentId = memberPersistentId
             self.sendWelcomeEmail = sendWelcomeEmail
-            self.role = role
             self.isDirectoryRestricted = isDirectoryRestricted
         }
         open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddArgBaseSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddArgBaseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddArgBase) -> JSON {
+            let output = [ 
+            "member_email": Serialization._StringSerializer.serialize(value.memberEmail),
+            "member_given_name": NullableSerializer(Serialization._StringSerializer).serialize(value.memberGivenName),
+            "member_surname": NullableSerializer(Serialization._StringSerializer).serialize(value.memberSurname),
+            "member_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberExternalId),
+            "member_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberPersistentId),
+            "send_welcome_email": Serialization._BoolSerializer.serialize(value.sendWelcomeEmail),
+            "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberAddArgBase {
+            switch json {
+                case .dictionary(let dict):
+                    let memberEmail = Serialization._StringSerializer.deserialize(dict["member_email"] ?? .null)
+                    let memberGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_given_name"] ?? .null)
+                    let memberSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_surname"] ?? .null)
+                    let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
+                    let memberPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_persistent_id"] ?? .null)
+                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
+                    let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
+                    return MemberAddArgBase(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, isDirectoryRestricted: isDirectoryRestricted)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MemberAddArg struct
+    open class MemberAddArg: Team.MemberAddArgBase {
+        /// (no description)
+        public let role: Team.AdminTier
+        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, isDirectoryRestricted: Bool? = nil, role: Team.AdminTier = .memberOnly) {
+            self.role = role
+            super.init(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, isDirectoryRestricted: isDirectoryRestricted)
+        }
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MemberAddArgSerializer().serialize(self)))"
         }
     }
@@ -5800,8 +5841,8 @@ open class Team {
             "member_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberExternalId),
             "member_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberPersistentId),
             "send_welcome_email": Serialization._BoolSerializer.serialize(value.sendWelcomeEmail),
-            "role": Team.AdminTierSerializer().serialize(value.role),
             "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
+            "role": Team.AdminTierSerializer().serialize(value.role),
             ]
             return .dictionary(output)
         }
@@ -5814,21 +5855,17 @@ open class Team {
                     let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
                     let memberPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_persistent_id"] ?? .null)
                     let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
-                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
-                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, role: role, isDirectoryRestricted: isDirectoryRestricted)
+                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
+                    return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, isDirectoryRestricted: isDirectoryRestricted, role: role)
                 default:
                     fatalError("Type error deserializing")
             }
         }
     }
 
-    /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
-    /// a user was indeed added to the team - the other values explain the type of failure that occurred, and include
-    /// the email of the user for which the operation has failed.
-    public enum MemberAddResult: CustomStringConvertible {
-        /// Describes a user that was successfully added to the team.
-        case success(Team.TeamMemberInfo)
+    /// The MemberAddResultBase union
+    public enum MemberAddResultBase: CustomStringConvertible {
         /// Team is already full. The organization has no available licenses.
         case teamLicenseLimit(String)
         /// Team is already full. The free team member limit has been reached.
@@ -5854,17 +5891,13 @@ open class Team {
         case userCreationFailed(String)
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddResultSerializer().serialize(self)))"
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddResultBaseSerializer().serialize(self)))"
         }
     }
-    open class MemberAddResultSerializer: JSONSerializer {
+    open class MemberAddResultBaseSerializer: JSONSerializer {
         public init() { }
-        open func serialize(_ value: MemberAddResult) -> JSON {
+        open func serialize(_ value: MemberAddResultBase) -> JSON {
             switch value {
-                case .success(let arg):
-                    var d = Serialization.getFields(Team.TeamMemberInfoSerializer().serialize(arg))
-                    d[".tag"] = .str("success")
-                    return .dictionary(d)
                 case .teamLicenseLimit(let arg):
                     var d = ["team_license_limit": Serialization._StringSerializer.serialize(arg)]
                     d[".tag"] = .str("team_license_limit")
@@ -5907,14 +5940,139 @@ open class Team {
                     return .dictionary(d)
             }
         }
+        open func deserialize(_ json: JSON) -> MemberAddResultBase {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "team_license_limit":
+                            let v = Serialization._StringSerializer.deserialize(d["team_license_limit"] ?? .null)
+                            return MemberAddResultBase.teamLicenseLimit(v)
+                        case "free_team_member_limit_reached":
+                            let v = Serialization._StringSerializer.deserialize(d["free_team_member_limit_reached"] ?? .null)
+                            return MemberAddResultBase.freeTeamMemberLimitReached(v)
+                        case "user_already_on_team":
+                            let v = Serialization._StringSerializer.deserialize(d["user_already_on_team"] ?? .null)
+                            return MemberAddResultBase.userAlreadyOnTeam(v)
+                        case "user_on_another_team":
+                            let v = Serialization._StringSerializer.deserialize(d["user_on_another_team"] ?? .null)
+                            return MemberAddResultBase.userOnAnotherTeam(v)
+                        case "user_already_paired":
+                            let v = Serialization._StringSerializer.deserialize(d["user_already_paired"] ?? .null)
+                            return MemberAddResultBase.userAlreadyPaired(v)
+                        case "user_migration_failed":
+                            let v = Serialization._StringSerializer.deserialize(d["user_migration_failed"] ?? .null)
+                            return MemberAddResultBase.userMigrationFailed(v)
+                        case "duplicate_external_member_id":
+                            let v = Serialization._StringSerializer.deserialize(d["duplicate_external_member_id"] ?? .null)
+                            return MemberAddResultBase.duplicateExternalMemberId(v)
+                        case "duplicate_member_persistent_id":
+                            let v = Serialization._StringSerializer.deserialize(d["duplicate_member_persistent_id"] ?? .null)
+                            return MemberAddResultBase.duplicateMemberPersistentId(v)
+                        case "persistent_id_disabled":
+                            let v = Serialization._StringSerializer.deserialize(d["persistent_id_disabled"] ?? .null)
+                            return MemberAddResultBase.persistentIdDisabled(v)
+                        case "user_creation_failed":
+                            let v = Serialization._StringSerializer.deserialize(d["user_creation_failed"] ?? .null)
+                            return MemberAddResultBase.userCreationFailed(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
+    /// a user was indeed added to the team - the other values explain the type of failure that occurred, and include
+    /// the email of the user for which the operation has failed.
+    public enum MemberAddResult: CustomStringConvertible {
+        /// Team is already full. The organization has no available licenses.
+        case teamLicenseLimit(String)
+        /// Team is already full. The free team member limit has been reached.
+        case freeTeamMemberLimitReached(String)
+        /// User is already on this team. The provided email address is associated with a user who is already a member
+        /// of (including in recoverable state) or invited to the team.
+        case userAlreadyOnTeam(String)
+        /// User is already on another team. The provided email address is associated with a user that is already a
+        /// member or invited to another team.
+        case userOnAnotherTeam(String)
+        /// User is already paired.
+        case userAlreadyPaired(String)
+        /// User migration has failed.
+        case userMigrationFailed(String)
+        /// A user with the given external member ID already exists on the team (including in recoverable state).
+        case duplicateExternalMemberId(String)
+        /// A user with the given persistent ID already exists on the team (including in recoverable state).
+        case duplicateMemberPersistentId(String)
+        /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
+        /// more information.
+        case persistentIdDisabled(String)
+        /// User creation has failed.
+        case userCreationFailed(String)
+        /// Describes a user that was successfully added to the team.
+        case success(Team.TeamMemberInfo)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddResultSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddResult) -> JSON {
+            switch value {
+                case .teamLicenseLimit(let arg):
+                    var d = ["team_license_limit": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("team_license_limit")
+                    return .dictionary(d)
+                case .freeTeamMemberLimitReached(let arg):
+                    var d = ["free_team_member_limit_reached": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("free_team_member_limit_reached")
+                    return .dictionary(d)
+                case .userAlreadyOnTeam(let arg):
+                    var d = ["user_already_on_team": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_already_on_team")
+                    return .dictionary(d)
+                case .userOnAnotherTeam(let arg):
+                    var d = ["user_on_another_team": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_on_another_team")
+                    return .dictionary(d)
+                case .userAlreadyPaired(let arg):
+                    var d = ["user_already_paired": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_already_paired")
+                    return .dictionary(d)
+                case .userMigrationFailed(let arg):
+                    var d = ["user_migration_failed": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_migration_failed")
+                    return .dictionary(d)
+                case .duplicateExternalMemberId(let arg):
+                    var d = ["duplicate_external_member_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("duplicate_external_member_id")
+                    return .dictionary(d)
+                case .duplicateMemberPersistentId(let arg):
+                    var d = ["duplicate_member_persistent_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("duplicate_member_persistent_id")
+                    return .dictionary(d)
+                case .persistentIdDisabled(let arg):
+                    var d = ["persistent_id_disabled": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("persistent_id_disabled")
+                    return .dictionary(d)
+                case .userCreationFailed(let arg):
+                    var d = ["user_creation_failed": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_creation_failed")
+                    return .dictionary(d)
+                case .success(let arg):
+                    var d = Serialization.getFields(Team.TeamMemberInfoSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+            }
+        }
         open func deserialize(_ json: JSON) -> MemberAddResult {
             switch json {
                 case .dictionary(let d):
                     let tag = Serialization.getTag(d)
                     switch tag {
-                        case "success":
-                            let v = Team.TeamMemberInfoSerializer().deserialize(json)
-                            return MemberAddResult.success(v)
                         case "team_license_limit":
                             let v = Serialization._StringSerializer.deserialize(d["team_license_limit"] ?? .null)
                             return MemberAddResult.teamLicenseLimit(v)
@@ -5945,8 +6103,196 @@ open class Team {
                         case "user_creation_failed":
                             let v = Serialization._StringSerializer.deserialize(d["user_creation_failed"] ?? .null)
                             return MemberAddResult.userCreationFailed(v)
+                        case "success":
+                            let v = Team.TeamMemberInfoSerializer().deserialize(json)
+                            return MemberAddResult.success(v)
                         default:
                             fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MemberAddV2Arg struct
+    open class MemberAddV2Arg: Team.MemberAddArgBase {
+        /// (no description)
+        public let roleIds: Array<String>?
+        public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, isDirectoryRestricted: Bool? = nil, roleIds: Array<String>? = nil) {
+            nullableValidator(arrayValidator(maxItems: 1, itemValidator: stringValidator(maxLength: 128, pattern: "pid_dbtmr:.*")))(roleIds)
+            self.roleIds = roleIds
+            super.init(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, isDirectoryRestricted: isDirectoryRestricted)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddV2ArgSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddV2ArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddV2Arg) -> JSON {
+            let output = [ 
+            "member_email": Serialization._StringSerializer.serialize(value.memberEmail),
+            "member_given_name": NullableSerializer(Serialization._StringSerializer).serialize(value.memberGivenName),
+            "member_surname": NullableSerializer(Serialization._StringSerializer).serialize(value.memberSurname),
+            "member_external_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberExternalId),
+            "member_persistent_id": NullableSerializer(Serialization._StringSerializer).serialize(value.memberPersistentId),
+            "send_welcome_email": Serialization._BoolSerializer.serialize(value.sendWelcomeEmail),
+            "is_directory_restricted": NullableSerializer(Serialization._BoolSerializer).serialize(value.isDirectoryRestricted),
+            "role_ids": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.roleIds),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MemberAddV2Arg {
+            switch json {
+                case .dictionary(let dict):
+                    let memberEmail = Serialization._StringSerializer.deserialize(dict["member_email"] ?? .null)
+                    let memberGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_given_name"] ?? .null)
+                    let memberSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_surname"] ?? .null)
+                    let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
+                    let memberPersistentId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_persistent_id"] ?? .null)
+                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
+                    let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
+                    let roleIds = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["role_ids"] ?? .null)
+                    return MemberAddV2Arg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail, isDirectoryRestricted: isDirectoryRestricted, roleIds: roleIds)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
+    /// a user was indeed added to the team - the other values explain the type of failure that occurred, and include
+    /// the email of the user for which the operation has failed.
+    public enum MemberAddV2Result: CustomStringConvertible {
+        /// Team is already full. The organization has no available licenses.
+        case teamLicenseLimit(String)
+        /// Team is already full. The free team member limit has been reached.
+        case freeTeamMemberLimitReached(String)
+        /// User is already on this team. The provided email address is associated with a user who is already a member
+        /// of (including in recoverable state) or invited to the team.
+        case userAlreadyOnTeam(String)
+        /// User is already on another team. The provided email address is associated with a user that is already a
+        /// member or invited to another team.
+        case userOnAnotherTeam(String)
+        /// User is already paired.
+        case userAlreadyPaired(String)
+        /// User migration has failed.
+        case userMigrationFailed(String)
+        /// A user with the given external member ID already exists on the team (including in recoverable state).
+        case duplicateExternalMemberId(String)
+        /// A user with the given persistent ID already exists on the team (including in recoverable state).
+        case duplicateMemberPersistentId(String)
+        /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
+        /// more information.
+        case persistentIdDisabled(String)
+        /// User creation has failed.
+        case userCreationFailed(String)
+        /// Describes a user that was successfully added to the team.
+        case success(Team.TeamMemberInfoV2)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MemberAddV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MemberAddV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MemberAddV2Result) -> JSON {
+            switch value {
+                case .teamLicenseLimit(let arg):
+                    var d = ["team_license_limit": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("team_license_limit")
+                    return .dictionary(d)
+                case .freeTeamMemberLimitReached(let arg):
+                    var d = ["free_team_member_limit_reached": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("free_team_member_limit_reached")
+                    return .dictionary(d)
+                case .userAlreadyOnTeam(let arg):
+                    var d = ["user_already_on_team": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_already_on_team")
+                    return .dictionary(d)
+                case .userOnAnotherTeam(let arg):
+                    var d = ["user_on_another_team": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_on_another_team")
+                    return .dictionary(d)
+                case .userAlreadyPaired(let arg):
+                    var d = ["user_already_paired": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_already_paired")
+                    return .dictionary(d)
+                case .userMigrationFailed(let arg):
+                    var d = ["user_migration_failed": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_migration_failed")
+                    return .dictionary(d)
+                case .duplicateExternalMemberId(let arg):
+                    var d = ["duplicate_external_member_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("duplicate_external_member_id")
+                    return .dictionary(d)
+                case .duplicateMemberPersistentId(let arg):
+                    var d = ["duplicate_member_persistent_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("duplicate_member_persistent_id")
+                    return .dictionary(d)
+                case .persistentIdDisabled(let arg):
+                    var d = ["persistent_id_disabled": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("persistent_id_disabled")
+                    return .dictionary(d)
+                case .userCreationFailed(let arg):
+                    var d = ["user_creation_failed": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("user_creation_failed")
+                    return .dictionary(d)
+                case .success(let arg):
+                    var d = Serialization.getFields(Team.TeamMemberInfoV2Serializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MemberAddV2Result {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "team_license_limit":
+                            let v = Serialization._StringSerializer.deserialize(d["team_license_limit"] ?? .null)
+                            return MemberAddV2Result.teamLicenseLimit(v)
+                        case "free_team_member_limit_reached":
+                            let v = Serialization._StringSerializer.deserialize(d["free_team_member_limit_reached"] ?? .null)
+                            return MemberAddV2Result.freeTeamMemberLimitReached(v)
+                        case "user_already_on_team":
+                            let v = Serialization._StringSerializer.deserialize(d["user_already_on_team"] ?? .null)
+                            return MemberAddV2Result.userAlreadyOnTeam(v)
+                        case "user_on_another_team":
+                            let v = Serialization._StringSerializer.deserialize(d["user_on_another_team"] ?? .null)
+                            return MemberAddV2Result.userOnAnotherTeam(v)
+                        case "user_already_paired":
+                            let v = Serialization._StringSerializer.deserialize(d["user_already_paired"] ?? .null)
+                            return MemberAddV2Result.userAlreadyPaired(v)
+                        case "user_migration_failed":
+                            let v = Serialization._StringSerializer.deserialize(d["user_migration_failed"] ?? .null)
+                            return MemberAddV2Result.userMigrationFailed(v)
+                        case "duplicate_external_member_id":
+                            let v = Serialization._StringSerializer.deserialize(d["duplicate_external_member_id"] ?? .null)
+                            return MemberAddV2Result.duplicateExternalMemberId(v)
+                        case "duplicate_member_persistent_id":
+                            let v = Serialization._StringSerializer.deserialize(d["duplicate_member_persistent_id"] ?? .null)
+                            return MemberAddV2Result.duplicateMemberPersistentId(v)
+                        case "persistent_id_disabled":
+                            let v = Serialization._StringSerializer.deserialize(d["persistent_id_disabled"] ?? .null)
+                            return MemberAddV2Result.persistentIdDisabled(v)
+                        case "user_creation_failed":
+                            let v = Serialization._StringSerializer.deserialize(d["user_creation_failed"] ?? .null)
+                            return MemberAddV2Result.userCreationFailed(v)
+                        case "success":
+                            let v = Team.TeamMemberInfoV2Serializer().deserialize(json)
+                            return MemberAddV2Result.success(v)
+                        case "other":
+                            return MemberAddV2Result.other
+                        default:
+                            return MemberAddV2Result.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -6225,17 +6571,45 @@ open class Team {
         }
     }
 
-    /// The MembersAddArg struct
-    open class MembersAddArg: CustomStringConvertible {
-        /// Details of new members to be added to the team.
-        public let newMembers: Array<Team.MemberAddArg>
+    /// The MembersAddArgBase struct
+    open class MembersAddArgBase: CustomStringConvertible {
         /// Whether to force the add to happen asynchronously.
         public let forceAsync: Bool
-        public init(newMembers: Array<Team.MemberAddArg>, forceAsync: Bool = false) {
-            self.newMembers = newMembers
+        public init(forceAsync: Bool = false) {
             self.forceAsync = forceAsync
         }
         open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersAddArgBaseSerializer().serialize(self)))"
+        }
+    }
+    open class MembersAddArgBaseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersAddArgBase) -> JSON {
+            let output = [ 
+            "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersAddArgBase {
+            switch json {
+                case .dictionary(let dict):
+                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .number(0))
+                    return MembersAddArgBase(forceAsync: forceAsync)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersAddArg struct
+    open class MembersAddArg: Team.MembersAddArgBase {
+        /// Details of new members to be added to the team.
+        public let newMembers: Array<Team.MemberAddArg>
+        public init(newMembers: Array<Team.MemberAddArg>, forceAsync: Bool = false) {
+            self.newMembers = newMembers
+            super.init(forceAsync: forceAsync)
+        }
+        open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MembersAddArgSerializer().serialize(self)))"
         }
     }
@@ -6314,6 +6688,68 @@ open class Team {
         }
     }
 
+    /// The MembersAddJobStatusV2Result union
+    public enum MembersAddJobStatusV2Result: CustomStringConvertible {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
+        /// was provided to membersAddV2, a corresponding item is returned in this list.
+        case complete(Array<Team.MemberAddV2Result>)
+        /// The asynchronous job returned an error. The string contains an error message.
+        case failed(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersAddJobStatusV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersAddJobStatusV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersAddJobStatusV2Result) -> JSON {
+            switch value {
+                case .inProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("in_progress")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = ["complete": ArraySerializer(Team.MemberAddV2ResultSerializer()).serialize(arg)]
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+                case .failed(let arg):
+                    var d = ["failed": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("failed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersAddJobStatusV2Result {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "in_progress":
+                            return MembersAddJobStatusV2Result.inProgress
+                        case "complete":
+                            let v = ArraySerializer(Team.MemberAddV2ResultSerializer()).deserialize(d["complete"] ?? .null)
+                            return MembersAddJobStatusV2Result.complete(v)
+                        case "failed":
+                            let v = Serialization._StringSerializer.deserialize(d["failed"] ?? .null)
+                            return MembersAddJobStatusV2Result.failed(v)
+                        case "other":
+                            return MembersAddJobStatusV2Result.other
+                        default:
+                            return MembersAddJobStatusV2Result.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The MembersAddLaunch union
     public enum MembersAddLaunch: CustomStringConvertible {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
@@ -6356,6 +6792,93 @@ open class Team {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersAddLaunchV2Result union
+    public enum MembersAddLaunchV2Result: CustomStringConvertible {
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
+        case asyncJobId(String)
+        /// An unspecified error.
+        case complete(Array<Team.MemberAddV2Result>)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersAddLaunchV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersAddLaunchV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersAddLaunchV2Result) -> JSON {
+            switch value {
+                case .asyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("async_job_id")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = ["complete": ArraySerializer(Team.MemberAddV2ResultSerializer()).serialize(arg)]
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersAddLaunchV2Result {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                            return MembersAddLaunchV2Result.asyncJobId(v)
+                        case "complete":
+                            let v = ArraySerializer(Team.MemberAddV2ResultSerializer()).deserialize(d["complete"] ?? .null)
+                            return MembersAddLaunchV2Result.complete(v)
+                        case "other":
+                            return MembersAddLaunchV2Result.other
+                        default:
+                            return MembersAddLaunchV2Result.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersAddV2Arg struct
+    open class MembersAddV2Arg: Team.MembersAddArgBase {
+        /// Details of new members to be added to the team.
+        public let newMembers: Array<Team.MemberAddV2Arg>
+        public init(newMembers: Array<Team.MemberAddV2Arg>, forceAsync: Bool = false) {
+            self.newMembers = newMembers
+            super.init(forceAsync: forceAsync)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersAddV2ArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersAddV2ArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersAddV2Arg) -> JSON {
+            let output = [ 
+            "new_members": ArraySerializer(Team.MemberAddV2ArgSerializer()).serialize(value.newMembers),
+            "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersAddV2Arg {
+            switch json {
+                case .dictionary(let dict):
+                    let newMembers = ArraySerializer(Team.MemberAddV2ArgSerializer()).deserialize(dict["new_members"] ?? .null)
+                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .number(0))
+                    return MembersAddV2Arg(newMembers: newMembers, forceAsync: forceAsync)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -6601,6 +7124,36 @@ open class Team {
         }
     }
 
+    /// Available TeamMemberRole for the connected team. To be used with membersSetAdminPermissionsV2.
+    open class MembersGetAvailableTeamMemberRolesResult: CustomStringConvertible {
+        /// Available roles.
+        public let roles: Array<Team.TeamMemberRole>
+        public init(roles: Array<Team.TeamMemberRole>) {
+            self.roles = roles
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersGetAvailableTeamMemberRolesResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersGetAvailableTeamMemberRolesResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersGetAvailableTeamMemberRolesResult) -> JSON {
+            let output = [ 
+            "roles": ArraySerializer(Team.TeamMemberRoleSerializer()).serialize(value.roles),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersGetAvailableTeamMemberRolesResult {
+            switch json {
+                case .dictionary(let dict):
+                    let roles = ArraySerializer(Team.TeamMemberRoleSerializer()).deserialize(dict["roles"] ?? .null)
+                    return MembersGetAvailableTeamMemberRolesResult(roles: roles)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The MembersGetInfoArgs struct
     open class MembersGetInfoArgs: CustomStringConvertible {
         /// List of team members.
@@ -6666,10 +7219,49 @@ open class Team {
         }
     }
 
+    /// The MembersGetInfoItemBase union
+    public enum MembersGetInfoItemBase: CustomStringConvertible {
+        /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how the method
+        /// was called.
+        case idNotFound(String)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoItemBaseSerializer().serialize(self)))"
+        }
+    }
+    open class MembersGetInfoItemBaseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersGetInfoItemBase) -> JSON {
+            switch value {
+                case .idNotFound(let arg):
+                    var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("id_not_found")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersGetInfoItemBase {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "id_not_found":
+                            let v = Serialization._StringSerializer.deserialize(d["id_not_found"] ?? .null)
+                            return MembersGetInfoItemBase.idNotFound(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfo.
     public enum MembersGetInfoItem: CustomStringConvertible {
-        /// An ID that was provided as a parameter to membersGetInfo, and did not match a corresponding user. This might
-        /// be a team_member_id, an email, or an external ID, depending on how the method was called.
+        /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how the method
+        /// was called.
         case idNotFound(String)
         /// Info about a team member.
         case memberInfo(Team.TeamMemberInfo)
@@ -6708,6 +7300,121 @@ open class Team {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfoV2.
+    public enum MembersGetInfoItemV2: CustomStringConvertible {
+        /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how the method
+        /// was called.
+        case idNotFound(String)
+        /// Info about a team member.
+        case memberInfo(Team.TeamMemberInfoV2)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoItemV2Serializer().serialize(self)))"
+        }
+    }
+    open class MembersGetInfoItemV2Serializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersGetInfoItemV2) -> JSON {
+            switch value {
+                case .idNotFound(let arg):
+                    var d = ["id_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("id_not_found")
+                    return .dictionary(d)
+                case .memberInfo(let arg):
+                    var d = Serialization.getFields(Team.TeamMemberInfoV2Serializer().serialize(arg))
+                    d[".tag"] = .str("member_info")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersGetInfoItemV2 {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "id_not_found":
+                            let v = Serialization._StringSerializer.deserialize(d["id_not_found"] ?? .null)
+                            return MembersGetInfoItemV2.idNotFound(v)
+                        case "member_info":
+                            let v = Team.TeamMemberInfoV2Serializer().deserialize(json)
+                            return MembersGetInfoItemV2.memberInfo(v)
+                        case "other":
+                            return MembersGetInfoItemV2.other
+                        default:
+                            return MembersGetInfoItemV2.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersGetInfoV2Arg struct
+    open class MembersGetInfoV2Arg: CustomStringConvertible {
+        /// List of team members.
+        public let members: Array<Team.UserSelectorArg>
+        public init(members: Array<Team.UserSelectorArg>) {
+            self.members = members
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoV2ArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersGetInfoV2ArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersGetInfoV2Arg) -> JSON {
+            let output = [ 
+            "members": ArraySerializer(Team.UserSelectorArgSerializer()).serialize(value.members),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersGetInfoV2Arg {
+            switch json {
+                case .dictionary(let dict):
+                    let members = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["members"] ?? .null)
+                    return MembersGetInfoV2Arg(members: members)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersGetInfoV2Result struct
+    open class MembersGetInfoV2Result: CustomStringConvertible {
+        /// List of team members info.
+        public let membersInfo: Array<Team.MembersGetInfoItemV2>
+        public init(membersInfo: Array<Team.MembersGetInfoItemV2>) {
+            self.membersInfo = membersInfo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersGetInfoV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersGetInfoV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersGetInfoV2Result) -> JSON {
+            let output = [ 
+            "members_info": ArraySerializer(Team.MembersGetInfoItemV2Serializer()).serialize(value.membersInfo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersGetInfoV2Result {
+            switch json {
+                case .dictionary(let dict):
+                    let membersInfo = ArraySerializer(Team.MembersGetInfoItemV2Serializer()).deserialize(dict["members_info"] ?? .null)
+                    return MembersGetInfoV2Result(membersInfo: membersInfo)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -6930,6 +7637,48 @@ open class Team {
                     let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                     return MembersListResult(members: members, cursor: cursor, hasMore: hasMore)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersListV2Result struct
+    open class MembersListV2Result: CustomStringConvertible {
+        /// List of team members.
+        public let members: Array<Team.TeamMemberInfoV2>
+        /// Pass the cursor into membersListContinueV2 to obtain the additional members.
+        public let cursor: String
+        /// Is true if there are additional team members that have not been returned yet. An additional call to
+        /// membersListContinueV2 can retrieve them.
+        public let hasMore: Bool
+        public init(members: Array<Team.TeamMemberInfoV2>, cursor: String, hasMore: Bool) {
+            self.members = members
+            stringValidator()(cursor)
+            self.cursor = cursor
+            self.hasMore = hasMore
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersListV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersListV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersListV2Result) -> JSON {
+            let output = [ 
+            "members": ArraySerializer(Team.TeamMemberInfoV2Serializer()).serialize(value.members),
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersListV2Result {
+            switch json {
+                case .dictionary(let dict):
+                    let members = ArraySerializer(Team.TeamMemberInfoV2Serializer()).deserialize(dict["members"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    return MembersListV2Result(members: members, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7476,6 +8225,154 @@ open class Team {
                     }
                 default:
                     fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
+    open class MembersSetPermissions2Arg: CustomStringConvertible {
+        /// Identity of user whose role will be set.
+        public let user: Team.UserSelectorArg
+        /// The new roles for the member. Send empty list to make user member only. For now, only up to one role is
+        /// allowed.
+        public let newRoles: Array<String>?
+        public init(user: Team.UserSelectorArg, newRoles: Array<String>? = nil) {
+            self.user = user
+            nullableValidator(arrayValidator(maxItems: 1, itemValidator: stringValidator(maxLength: 128, pattern: "pid_dbtmr:.*")))(newRoles)
+            self.newRoles = newRoles
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissions2ArgSerializer().serialize(self)))"
+        }
+    }
+    open class MembersSetPermissions2ArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersSetPermissions2Arg) -> JSON {
+            let output = [ 
+            "user": Team.UserSelectorArgSerializer().serialize(value.user),
+            "new_roles": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.newRoles),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersSetPermissions2Arg {
+            switch json {
+                case .dictionary(let dict):
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let newRoles = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["new_roles"] ?? .null)
+                    return MembersSetPermissions2Arg(user: user, newRoles: newRoles)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MembersSetPermissions2Error union
+    public enum MembersSetPermissions2Error: CustomStringConvertible {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// Cannot remove the admin setting of the last admin.
+        case lastAdmin
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// Cannot remove/grant permissions. This can happen if the team member is suspended.
+        case cannotSetPermissions
+        /// No matching role found. At least one of the provided new_roles does not exist on this team.
+        case roleNotFound
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissions2ErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MembersSetPermissions2ErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersSetPermissions2Error) -> JSON {
+            switch value {
+                case .userNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_found")
+                    return .dictionary(d)
+                case .lastAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("last_admin")
+                    return .dictionary(d)
+                case .userNotInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_not_in_team")
+                    return .dictionary(d)
+                case .cannotSetPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("cannot_set_permissions")
+                    return .dictionary(d)
+                case .roleNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("role_not_found")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MembersSetPermissions2Error {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_not_found":
+                            return MembersSetPermissions2Error.userNotFound
+                        case "last_admin":
+                            return MembersSetPermissions2Error.lastAdmin
+                        case "user_not_in_team":
+                            return MembersSetPermissions2Error.userNotInTeam
+                        case "cannot_set_permissions":
+                            return MembersSetPermissions2Error.cannotSetPermissions
+                        case "role_not_found":
+                            return MembersSetPermissions2Error.roleNotFound
+                        case "other":
+                            return MembersSetPermissions2Error.other
+                        default:
+                            return MembersSetPermissions2Error.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The MembersSetPermissions2Result struct
+    open class MembersSetPermissions2Result: CustomStringConvertible {
+        /// The member ID of the user to which the change was applied.
+        public let teamMemberId: String
+        /// The roles after the change. Empty in case the user become a non-admin.
+        public let roles: Array<Team.TeamMemberRole>?
+        public init(teamMemberId: String, roles: Array<Team.TeamMemberRole>? = nil) {
+            stringValidator()(teamMemberId)
+            self.teamMemberId = teamMemberId
+            self.roles = roles
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MembersSetPermissions2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class MembersSetPermissions2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MembersSetPermissions2Result) -> JSON {
+            let output = [ 
+            "team_member_id": Serialization._StringSerializer.serialize(value.teamMemberId),
+            "roles": NullableSerializer(ArraySerializer(Team.TeamMemberRoleSerializer())).serialize(value.roles),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> MembersSetPermissions2Result {
+            switch json {
+                case .dictionary(let dict):
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let roles = NullableSerializer(ArraySerializer(Team.TeamMemberRoleSerializer())).deserialize(dict["roles"] ?? .null)
+                    return MembersSetPermissions2Result(teamMemberId: teamMemberId, roles: roles)
+                default:
+                    fatalError("Type error deserializing")
             }
         }
     }
@@ -8592,7 +9489,7 @@ open class Team {
 
     /// Result of trying to resend verification email to a secondary email address. 'success' is the only value
     /// indicating that a verification email was successfully sent. The other values explain the type of error that
-    /// occurred, and include the email for which the error occured.
+    /// occurred, and include the email for which the error occurred.
     public enum ResendSecondaryEmailResult: CustomStringConvertible {
         /// A verification email was successfully sent to the secondary email address.
         case success(String)
@@ -10629,6 +11526,71 @@ open class Team {
         }
     }
 
+    /// Information about a team member.
+    open class TeamMemberInfoV2: CustomStringConvertible {
+        /// Profile of a user as a member of a team.
+        public let profile: Team.TeamMemberProfile
+        /// The user's roles in the team.
+        public let roles: Array<Team.TeamMemberRole>?
+        public init(profile: Team.TeamMemberProfile, roles: Array<Team.TeamMemberRole>? = nil) {
+            self.profile = profile
+            self.roles = roles
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberInfoV2Serializer().serialize(self)))"
+        }
+    }
+    open class TeamMemberInfoV2Serializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMemberInfoV2) -> JSON {
+            let output = [ 
+            "profile": Team.TeamMemberProfileSerializer().serialize(value.profile),
+            "roles": NullableSerializer(ArraySerializer(Team.TeamMemberRoleSerializer())).serialize(value.roles),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMemberInfoV2 {
+            switch json {
+                case .dictionary(let dict):
+                    let profile = Team.TeamMemberProfileSerializer().deserialize(dict["profile"] ?? .null)
+                    let roles = NullableSerializer(ArraySerializer(Team.TeamMemberRoleSerializer())).deserialize(dict["roles"] ?? .null)
+                    return TeamMemberInfoV2(profile: profile, roles: roles)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Information about a team member, after the change, like at membersSetProfileV2.
+    open class TeamMemberInfoV2Result: CustomStringConvertible {
+        /// Member info, after the change.
+        public let memberInfo: Team.TeamMemberInfoV2
+        public init(memberInfo: Team.TeamMemberInfoV2) {
+            self.memberInfo = memberInfo
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberInfoV2ResultSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMemberInfoV2ResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMemberInfoV2Result) -> JSON {
+            let output = [ 
+            "member_info": Team.TeamMemberInfoV2Serializer().serialize(value.memberInfo),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMemberInfoV2Result {
+            switch json {
+                case .dictionary(let dict):
+                    let memberInfo = Team.TeamMemberInfoV2Serializer().deserialize(dict["member_info"] ?? .null)
+                    return TeamMemberInfoV2Result(memberInfo: memberInfo)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Profile of a user as a member of a team.
     open class TeamMemberProfile: Team.MemberProfile {
         /// List of group IDs of groups that the user belongs to.
@@ -10691,6 +11653,50 @@ open class Team {
                     let isDirectoryRestricted = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_directory_restricted"] ?? .null)
                     let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
                     return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, memberFolderId: memberFolderId, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted, profilePhotoUrl: profilePhotoUrl)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// A role which can be attached to a team member. This replaces AdminTier; each AdminTier corresponds to a new
+    /// TeamMemberRole with a matching name.
+    open class TeamMemberRole: CustomStringConvertible {
+        /// A string containing encoded role ID. For roles defined by Dropbox, this is the same across all teams.
+        public let roleId: String
+        /// The role display name.
+        public let name: String
+        /// Role description. Describes which permissions come with this role.
+        public let description_: String
+        public init(roleId: String, name: String, description_: String) {
+            stringValidator(maxLength: 128, pattern: "pid_dbtmr:.*")(roleId)
+            self.roleId = roleId
+            stringValidator(maxLength: 32)(name)
+            self.name = name
+            stringValidator(maxLength: 256)(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TeamMemberRoleSerializer().serialize(self)))"
+        }
+    }
+    open class TeamMemberRoleSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: TeamMemberRole) -> JSON {
+            let output = [ 
+            "role_id": Serialization._StringSerializer.serialize(value.roleId),
+            "name": Serialization._StringSerializer.serialize(value.name),
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> TeamMemberRole {
+            switch json {
+                case .dictionary(let dict):
+                    let roleId = Serialization._StringSerializer.deserialize(dict["role_id"] ?? .null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamMemberRole(roleId: roleId, name: name, description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -11197,7 +12203,7 @@ open class Team {
 
     /// Result of trying to add secondary emails to a user. 'success' is the only value indicating that a user was
     /// successfully retrieved for adding secondary emails. The other values explain the type of error that occurred,
-    /// and include the user for which the error occured.
+    /// and include the user for which the error occurred.
     public enum UserAddResult: CustomStringConvertible {
         /// Describes a user and the results for each attempt to add a secondary email.
         case success(Team.UserSecondaryEmailsResult)
@@ -11377,7 +12383,7 @@ open class Team {
 
     /// Result of trying to delete a user's secondary emails. 'success' is the only value indicating that a user was
     /// successfully retrieved for deleting secondary emails. The other values explain the type of error that occurred,
-    /// and include the user for which the error occured.
+    /// and include the user for which the error occurred.
     public enum UserDeleteResult: CustomStringConvertible {
         /// Describes a user and the results for each attempt to delete a secondary email.
         case success(Team.UserDeleteEmailsResult)
@@ -11467,7 +12473,7 @@ open class Team {
 
     /// Result of trying to resend verification emails to a user. 'success' is the only value indicating that a user was
     /// successfully retrieved for sending verification emails. The other values explain the type of error that
-    /// occurred, and include the user for which the error occured.
+    /// occurred, and include the user for which the error occurred.
     public enum UserResendResult: CustomStringConvertible {
         /// Describes a user and the results for each attempt to resend verification emails.
         case success(Team.UserResendEmailsResult)
@@ -12158,6 +13164,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersAddV2 = Route(
+        name: "members/add",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersAddV2ArgSerializer(),
+        responseSerializer: Team.MembersAddLaunchV2ResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersAdd = Route(
         name: "members/add",
         version: 1,
@@ -12166,6 +13184,18 @@ open class Team {
         argSerializer: Team.MembersAddArgSerializer(),
         responseSerializer: Team.MembersAddLaunchSerializer(),
         errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersAddJobStatusGetV2 = Route(
+        name: "members/add/job_status/get",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Team.MembersAddJobStatusV2ResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]
@@ -12182,6 +13212,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersDeleteProfilePhotoV2 = Route(
+        name: "members/delete_profile_photo",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
+        errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersDeleteProfilePhoto = Route(
         name: "members/delete_profile_photo",
         version: 1,
@@ -12190,6 +13232,30 @@ open class Team {
         argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
         responseSerializer: Team.TeamMemberInfoSerializer(),
         errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersGetAvailableTeamMemberRoles = Route(
+        name: "members/get_available_team_member_roles",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Serialization._VoidSerializer,
+        responseSerializer: Team.MembersGetAvailableTeamMemberRolesResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersGetInfoV2 = Route(
+        name: "members/get_info",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersGetInfoV2ArgSerializer(),
+        responseSerializer: Team.MembersGetInfoV2ResultSerializer(),
+        errorSerializer: Team.MembersGetInfoErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]
@@ -12206,6 +13272,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersListV2 = Route(
+        name: "members/list",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersListArgSerializer(),
+        responseSerializer: Team.MembersListV2ResultSerializer(),
+        errorSerializer: Team.MembersListErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersList = Route(
         name: "members/list",
         version: 1,
@@ -12214,6 +13292,18 @@ open class Team {
         argSerializer: Team.MembersListArgSerializer(),
         responseSerializer: Team.MembersListResultSerializer(),
         errorSerializer: Team.MembersListErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersListContinueV2 = Route(
+        name: "members/list/continue",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersListContinueArgSerializer(),
+        responseSerializer: Team.MembersListV2ResultSerializer(),
+        errorSerializer: Team.MembersListContinueErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]
@@ -12338,6 +13428,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersSetAdminPermissionsV2 = Route(
+        name: "members/set_admin_permissions",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSetPermissions2ArgSerializer(),
+        responseSerializer: Team.MembersSetPermissions2ResultSerializer(),
+        errorSerializer: Team.MembersSetPermissions2ErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersSetAdminPermissions = Route(
         name: "members/set_admin_permissions",
         version: 1,
@@ -12350,6 +13452,18 @@ open class Team {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let membersSetProfileV2 = Route(
+        name: "members/set_profile",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSetProfileArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
+        errorSerializer: Team.MembersSetProfileErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let membersSetProfile = Route(
         name: "members/set_profile",
         version: 1,
@@ -12358,6 +13472,18 @@ open class Team {
         argSerializer: Team.MembersSetProfileArgSerializer(),
         responseSerializer: Team.TeamMemberInfoSerializer(),
         errorSerializer: Team.MembersSetProfileErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let membersSetProfilePhotoV2 = Route(
+        name: "members/set_profile_photo",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSetProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
+        errorSerializer: Team.MembersSetProfilePhotoErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]
