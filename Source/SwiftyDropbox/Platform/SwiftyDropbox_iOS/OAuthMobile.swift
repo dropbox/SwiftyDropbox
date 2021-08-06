@@ -2,7 +2,7 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
-#if canImport(UIKit)
+#if os(iOS)
 
 import Foundation
 import SafariServices

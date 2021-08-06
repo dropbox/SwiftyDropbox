@@ -112,8 +112,6 @@
 		F2478F311ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EEA1ECCD0B300BAF014 /* DropboxTransportClient.swift */; };
 		F2478F321ECCD0B300BAF014 /* OAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EEB1ECCD0B300BAF014 /* OAuth.swift */; };
 		F2478F331ECCD0B300BAF014 /* OAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EEB1ECCD0B300BAF014 /* OAuth.swift */; };
-		F2478F341ECCD0B300BAF014 /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F2478EEC1ECCD0B300BAF014 /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F2478F351ECCD0B300BAF014 /* SwiftyDropbox.h in Headers */ = {isa = PBXBuildFile; fileRef = F2478EEC1ECCD0B300BAF014 /* SwiftyDropbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F2478F361ECCD0B300BAF014 /* TransportConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EED1ECCD0B300BAF014 /* TransportConfig.swift */; };
 		F2478F371ECCD0B400BAF014 /* TransportConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478EED1ECCD0B300BAF014 /* TransportConfig.swift */; };
 		F2478F391ECCD2FF00BAF014 /* SDKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2478F381ECCD2FF00BAF014 /* SDKConstants.swift */; };
@@ -180,7 +178,6 @@
 		F2478EE91ECCD0B300BAF014 /* DropboxTeamClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropboxTeamClient.swift; sourceTree = "<group>"; };
 		F2478EEA1ECCD0B300BAF014 /* DropboxTransportClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropboxTransportClient.swift; sourceTree = "<group>"; };
 		F2478EEB1ECCD0B300BAF014 /* OAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth.swift; sourceTree = "<group>"; };
-		F2478EEC1ECCD0B300BAF014 /* SwiftyDropbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox.h; sourceTree = "<group>"; };
 		F2478EED1ECCD0B300BAF014 /* TransportConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportConfig.swift; sourceTree = "<group>"; };
 		F2478F381ECCD2FF00BAF014 /* SDKConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKConstants.swift; sourceTree = "<group>"; };
 		F265BD081E68072500CC38C8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -295,7 +292,6 @@
 				F2478EE81ECCD0B300BAF014 /* DropboxClientsManager.swift */,
 				F2478EE91ECCD0B300BAF014 /* DropboxTeamClient.swift */,
 				F2478EEA1ECCD0B300BAF014 /* DropboxTransportClient.swift */,
-				F2478EEC1ECCD0B300BAF014 /* SwiftyDropbox.h */,
 				F2478EED1ECCD0B300BAF014 /* TransportConfig.swift */,
 				F2478F381ECCD2FF00BAF014 /* SDKConstants.swift */,
 				BF4CC9A1247842250005CADF /* Request+TokenRefresh.swift */,
@@ -372,7 +368,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2478F341ECCD0B300BAF014 /* SwiftyDropbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,7 +375,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2478F351ECCD0B300BAF014 /* SwiftyDropbox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

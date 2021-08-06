@@ -2,7 +2,7 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
-#if canImport(AppKit)
+#if os(macOS)
 
 import Foundation
 import AppKit
