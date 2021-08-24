@@ -255,7 +255,7 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
-    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
     let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
     DropboxClientsManager.authorizeFromControllerV2(
         UIApplication.shared,
@@ -283,7 +283,7 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
-    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
     let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
     DropboxClientsManager.authorizeFromControllerV2(
         sharedWorkspace: NSWorkspace.shared,
