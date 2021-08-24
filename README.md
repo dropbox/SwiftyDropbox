@@ -255,25 +255,24 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        UIApplication.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
+        scopeRequest: scopeRequest
+    )
 
-    // Use only one of these two flows at once:
-
-    // Legacy authorization flow that grants a long-lived token.
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     UIApplication.shared.openURL(url)
                                                   })
-
-  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
-  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
-  DropboxClientsManager.authorizeFromControllerV2(
-      UIApplication.shared,
-      controller: self,
-      loadingStatusDelegate: nil,
-      openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
-      scopeRequest: scopeRequest
-  )
 }
 
 ```
@@ -284,25 +283,24 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        sharedWorkspace: NSWorkspace.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+        scopeRequest: scopeRequest
+    )
 
-    // Use only one of these two flows at once:
-
-    // Legacy authorization flow that grants a long-lived token.
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
     DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     NSWorkspace.shared.open(url)
                                                   })
-
-  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
-  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
-  DropboxClientsManager.authorizeFromControllerV2(
-      sharedWorkspace: NSWorkspace.shared,
-      controller: self,
-      loadingStatusDelegate: nil,
-      openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
-      scopeRequest: scopeRequest
-  )
 }
 ```
 
