@@ -12,11 +12,18 @@ import WebKit
 extension DropboxClientsManager {
     /// Starts a "token" flow.
     ///
+    /// This method should no longer be used.
+    /// Long-lived access tokens are deprecated. See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens.
+    /// Please use `authorizeFromControllerV2` instead.
+    ///
     /// - Parameters:
     ///     - sharedApplication: The shared UIApplication instance in your app.
     ///     - controller: A UIViewController to present the auth flow from. Reference is weakly held.
     ///     - openURL: Handler to open a URL.
-    public static func authorizeFromController(_ sharedApplication: UIApplication, controller: UIViewController?, openURL: @escaping ((URL) -> Void)) {
+    @available(*, deprecated, message: "This method was used for long-lived access tokens, which are now deprecated. Please use `authorizeFromControllerV2` instead.")
+    public static func authorizeFromController(_ sharedApplication: UIApplication,
+                                               controller: UIViewController?,
+                                               openURL: @escaping ((URL) -> Void)) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         let sharedMobileApplication = MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL)
         MobileSharedApplication.sharedMobileApplication = sharedMobileApplication
@@ -47,8 +54,11 @@ extension DropboxClientsManager {
     ///     API clients set up by `DropboxClientsManager` will get token refresh logic for free.
     ///     If you need to set up `DropboxClient`/`DropboxTeamClient` without `DropboxClientsManager`,
     ///     you will have to set up the clients with an appropriate `AccessTokenProvider`.
-    public static func authorizeFromControllerV2(
-        _ sharedApplication: UIApplication, controller: UIViewController?, loadingStatusDelegate: LoadingStatusDelegate?, openURL: @escaping ((URL) -> Void), scopeRequest: ScopeRequest?
+    public static func authorizeFromControllerV2(_ sharedApplication: UIApplication,
+                                                 controller: UIViewController?,
+                                                 loadingStatusDelegate: LoadingStatusDelegate?,
+                                                 openURL: @escaping ((URL) -> Void),
+                                                 scopeRequest: ScopeRequest?
     ) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         let sharedMobileApplication = MobileSharedApplication(sharedApplication: sharedApplication, controller: controller, openURL: openURL)
@@ -429,7 +439,7 @@ open class MobileSafariViewController: SFSafariViewController, SFSafariViewContr
     var cancelHandler: (() -> Void) = {}
 
     public init(url: URL, cancelHandler: @escaping (() -> Void)) {
-			  super.init(url: url, entersReaderIfAvailable: false)
+        super.init(url: url, entersReaderIfAvailable: false)
         self.cancelHandler = cancelHandler
         self.delegate = self;
     }
