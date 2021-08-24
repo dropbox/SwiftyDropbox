@@ -261,7 +261,7 @@ func myButtonInControllerPressed() {
         UIApplication.shared,
         controller: self,
         loadingStatusDelegate: nil,
-        openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
+        openURL: { (url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
         scopeRequest: scopeRequest
     )
 
@@ -271,7 +271,7 @@ func myButtonInControllerPressed() {
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
-                                                    UIApplication.shared.openURL(url)
+                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
                                                   })
 }
 
