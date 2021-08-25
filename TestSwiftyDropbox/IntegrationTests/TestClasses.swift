@@ -444,7 +444,7 @@ open class FilesTests {
         self.tester = tester
     }
 
-    func deleteV2(_ nextTest: @escaping (() -> Void)) {
+    func deleteV2(_ nextTest: @escaping (() -> Void), retries: Int = 2) {
         TestFormat.printSubTestBegin(#function)
         tester.files.deleteV2(path: TestData.baseFolder).response { response, error in
             if let result = response {
@@ -453,8 +453,13 @@ open class FilesTests {
                 nextTest()
             } else if let callError = error {
                 print(callError)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
+                if retries > 0, case .rateLimitError(let rateLimitError, _, _, _) = callError {
+                    sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
+                    self.deleteV2(nextTest, retries: retries - 1)
+                } else {
+                    TestFormat.printSubTestEnd(#function)
+                    nextTest()
+                }
             }
         }
     }
