@@ -5,9 +5,8 @@
 import Foundation
 
 public enum AppPermission {
-    case fullDropbox
-    case teamMemberFileAccess
-    case teamMemberManagement
+    case fullDropboxScoped
+    case fullDropboxScopedForTeamTesting
 }
 
-let appPermission = AppPermission.fullDropbox
+let appPermission = AppPermission.fullDropboxScoped

@@ -810,7 +810,7 @@ open class SharingTests {
         self.tester = tester
     }
 
-    func shareFolder(_ nextTest: @escaping (() -> Void)) {
+    func shareFolder(_ nextTest: @escaping (() -> Void), retries: Int = 2) {
         TestFormat.printSubTestBegin(#function)
         tester.sharing.shareFolder(path: TestData.testShareFolderPath).response { response, error in
             if let result = response {
@@ -824,7 +824,12 @@ open class SharingTests {
                     nextTest()
                 }
             } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
+                if retries > 0, case .rateLimitError(let rateLimitError, _, _, _) = callError {
+                    sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
+                    self.shareFolder(nextTest, retries: retries - 1)
+                } else {
+                    TestFormat.abort(String(describing: callError))
+                }
             }
         }
     }

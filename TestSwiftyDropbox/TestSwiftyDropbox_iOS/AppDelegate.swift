@@ -18,17 +18,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
 
-        if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
+        if (TestData.fullDropboxAppKey.range(of:"<") != nil) {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
             exit(0);
         }
         switch(appPermission) {
-        case .fullDropbox:
+        case .fullDropboxScoped:
             DropboxClientsManager.setupWithAppKey(TestData.fullDropboxAppKey)
-        case .teamMemberFileAccess:
-            DropboxClientsManager.setupWithTeamAppKey(TestData.teamMemberFileAccessAppKey)
-        case .teamMemberManagement:
-            DropboxClientsManager.setupWithTeamAppKey(TestData.teamMemberManagementAppKey)
+        case .fullDropboxScopedForTeamTesting:
+            DropboxClientsManager.setupWithTeamAppKey(TestData.fullDropboxAppKey)
         }
 
         return true
@@ -51,11 +49,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let canHandleUrl: Bool
         switch(appPermission) {
-        case .fullDropbox:
+        case .fullDropboxScoped:
             canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
-        case .teamMemberFileAccess:
-            canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
-        case .teamMemberManagement:
+        case .fullDropboxScopedForTeamTesting:
             canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         }
         return canHandleUrl
