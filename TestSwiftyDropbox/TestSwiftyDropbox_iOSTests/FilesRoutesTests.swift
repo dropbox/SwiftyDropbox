@@ -20,10 +20,8 @@ class FilesRoutesTests: XCTestCase {
     private var userClient: UsersRoutes!
     private var tester: DropboxTester!
 
-    private let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
-
     override func setUp() {
-        // You need an API app with the "Full Dropbox" permission type and at least the scopes above
+        // You need an API app with the "Full Dropbox" permission type and at least the scopes in DropboxTester.scopes
         // and no team scopes.
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
         // The 'App key' will be on the app's info page.
@@ -40,7 +38,7 @@ class FilesRoutesTests: XCTestCase {
             return XCTFail("FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme")
         }
 
-        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
+        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: DropboxTester.scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
 

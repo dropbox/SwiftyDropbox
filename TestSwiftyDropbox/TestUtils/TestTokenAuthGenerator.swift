@@ -13,7 +13,6 @@ enum TestAuthTokenGenerator {
             tokenExpirationTimestamp: 0
         )
 
-
         let flag = XCTestExpectation()
 
         var returnAccessToken: String?

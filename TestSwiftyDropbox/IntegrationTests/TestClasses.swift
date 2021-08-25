@@ -6,6 +6,8 @@ import Foundation
 import SwiftyDropbox
 
 open class DropboxTester {
+    static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
+    
     let auth = DropboxClientsManager.authorizedClient!.auth!
     let users = DropboxClientsManager.authorizedClient!.users!
     let files = DropboxClientsManager.authorizedClient!.files!
@@ -278,6 +280,7 @@ open class DropboxTester {
 }
 
 open class DropboxTeamTester {
+    static let scopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
     let team = DropboxClientsManager.authorizedTeamClient!.team!
 
     // Test business app with 'Team member file access' permission

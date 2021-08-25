@@ -5,25 +5,20 @@
 import UIKit
 import SwiftyDropbox
 
-
-
 class ViewController: UIViewController {
     @IBOutlet weak var runTestsButton: UIButton!
     @IBOutlet weak var codeFlowlinkButton: UIButton!
     @IBOutlet weak var unlinkButton: UIButton!
     @IBOutlet weak var runBatchUploadTestsButton: UIButton!
     
-    // note if you add new scopes, you need to relogin to update your token
-    private let userScopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write sharing.read sharing.write".components(separatedBy: " ")
-    private let teamScopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
-    
     @IBAction func codeFlowLinkButtonPressed(_ sender: AnyObject) {
         let scopeRequest: ScopeRequest
+        // note if you add new scopes, you need to relogin to update your token
         switch(appPermission) {
         case .fullDropboxScoped:
-            scopeRequest = ScopeRequest(scopeType: .user, scopes: userScopes, includeGrantedScopes: false)
+            scopeRequest = ScopeRequest(scopeType: .user, scopes: DropboxTester.scopes, includeGrantedScopes: false)
         case .fullDropboxScopedForTeamTesting:
-            scopeRequest = ScopeRequest(scopeType: .team, scopes: teamScopes, includeGrantedScopes: false)
+            scopeRequest = ScopeRequest(scopeType: .team, scopes: DropboxTeamTester.scopes, includeGrantedScopes: false)
         }
         DropboxClientsManager.authorizeFromControllerV2(UIApplication.shared,
                                                         controller: self,
