@@ -15,10 +15,8 @@ class TeamRoutesTests: XCTestCase {
     private var teamClient: TeamRoutes!
     private var tester: DropboxTeamTester!
 
-    private let scopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
-
     override func setUp() {
-        // You need an API app with the "Full Dropbox" permission type and at least the scopes above
+        // You need an API app with the "Full Dropbox" permission type and at least the scopes in DropboxTeamTester.scopes
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
         // The 'App key' will be on the app's info page.
         // Then follow https://dropbox.tech/developers/pkce--what-and-why- to get a refresh token using the PKCE flow
@@ -33,7 +31,7 @@ class TeamRoutesTests: XCTestCase {
         guard let refreshToken = processInfo["FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN"] else {
             return XCTFail("FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN needs to be set in the test Scheme")
         }
-        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: scopes) else {
+        guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: DropboxTeamTester.scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
         guard let teamMemberEmail = processInfo["TEAM_MEMBER_EMAIL"] else {

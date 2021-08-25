@@ -65,12 +65,6 @@ open class TestData {
     // App key and secret
     static var fullDropboxAppKey = "<FULL_DROPBOX_APP_KEY>";
     static var fullDropboxAppSecret = "<FULL_DROPBOX_APP_SECRET>";
-    
-    static var teamMemberFileAccessAppKey = "<TEAM_MEMBER_FILE_ACCESS_APP_KEY>";
-    static var teamMemberFileAccessAppSecret = "<FULL_DROPBOX_APP_SECRET>";
-    
-    static var teamMemberManagementAppKey = "<TEAM_MEMBER_MANAGEMENT_APP_KEY>";
-    static var teamMemberManagementAppSecret = "<TEAM_MEMBER_MANAGEMENT_APP_SECRET>";
 }
 
 open class TestTeamData {

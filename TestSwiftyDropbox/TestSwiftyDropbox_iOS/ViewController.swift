@@ -7,24 +7,24 @@ import SwiftyDropbox
 
 class ViewController: UIViewController {
     @IBOutlet weak var runTestsButton: UIButton!
-    @IBOutlet weak var tokenFlowlinkButton: UIButton!
     @IBOutlet weak var codeFlowlinkButton: UIButton!
     @IBOutlet weak var unlinkButton: UIButton!
     @IBOutlet weak var runBatchUploadTestsButton: UIButton!
     
-    @IBAction func tokenFlowLinkButtonPressed(_ sender: AnyObject) {
-        DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: self, openURL: {(url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) })
-    }
-
-    @IBAction func codeFlowLinkButtonPressed(_ sender: Any) {
-        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
-        DropboxClientsManager.authorizeFromControllerV2(
-            UIApplication.shared,
-            controller: self,
-            loadingStatusDelegate: nil,
-            openURL: { (url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
-            scopeRequest: scopeRequest
-        )
+    @IBAction func codeFlowLinkButtonPressed(_ sender: AnyObject) {
+        let scopeRequest: ScopeRequest
+        // note if you add new scopes, you need to relogin to update your token
+        switch(appPermission) {
+        case .fullDropboxScoped:
+            scopeRequest = ScopeRequest(scopeType: .user, scopes: DropboxTester.scopes, includeGrantedScopes: false)
+        case .fullDropboxScopedForTeamTesting:
+            scopeRequest = ScopeRequest(scopeType: .team, scopes: DropboxTeamTester.scopes, includeGrantedScopes: false)
+        }
+        DropboxClientsManager.authorizeFromControllerV2(UIApplication.shared,
+                                                        controller: self,
+                                                        loadingStatusDelegate: nil,
+                                                        openURL: {(url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
+                                                        scopeRequest: scopeRequest)
     }
 
     @IBAction func unlinkButtonPressed(_ sender: AnyObject) {
@@ -40,12 +40,10 @@ class ViewController: UIViewController {
         }
         
         switch(appPermission) {
-        case .fullDropbox:
+        case .fullDropboxScoped:
             DropboxTester().testAllUserEndpoints(asMember: false, nextTest:unlink)
-        case .teamMemberFileAccess:
+        case .fullDropboxScopedForTeamTesting:
             DropboxTeamTester().testTeamMemberFileAcessActions(unlink)
-        case .teamMemberManagement:
-            DropboxTeamTester().testTeamMemberManagementActions(unlink)
         }
     }
 
@@ -70,13 +68,11 @@ class ViewController: UIViewController {
 
     func checkButtons() {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
-            tokenFlowlinkButton.isHidden = true
             codeFlowlinkButton.isHidden = true
             unlinkButton.isHidden = false
             runTestsButton.isHidden = false
             runBatchUploadTestsButton.isHidden = false
         } else {
-            tokenFlowlinkButton.isHidden = false
             codeFlowlinkButton.isHidden = false
             unlinkButton.isHidden = true
             runTestsButton.isHidden = true

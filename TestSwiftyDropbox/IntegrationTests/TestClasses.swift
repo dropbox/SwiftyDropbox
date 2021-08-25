@@ -6,6 +6,8 @@ import Foundation
 import SwiftyDropbox
 
 open class DropboxTester {
+    static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
+    
     let auth = DropboxClientsManager.authorizedClient!.auth!
     let users = DropboxClientsManager.authorizedClient!.users!
     let files = DropboxClientsManager.authorizedClient!.files!
@@ -278,6 +280,7 @@ open class DropboxTester {
 }
 
 open class DropboxTeamTester {
+    static let scopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
     let team = DropboxClientsManager.authorizedTeamClient!.team!
 
     // Test business app with 'Team member file access' permission
@@ -810,7 +813,7 @@ open class SharingTests {
         self.tester = tester
     }
 
-    func shareFolder(_ nextTest: @escaping (() -> Void)) {
+    func shareFolder(_ nextTest: @escaping (() -> Void), retries: Int = 2) {
         TestFormat.printSubTestBegin(#function)
         tester.sharing.shareFolder(path: TestData.testShareFolderPath).response { response, error in
             if let result = response {
@@ -824,7 +827,12 @@ open class SharingTests {
                     nextTest()
                 }
             } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
+                if retries > 0, case .rateLimitError(let rateLimitError, _, _, _) = callError {
+                    sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
+                    self.shareFolder(nextTest, retries: retries - 1)
+                } else {
+                    TestFormat.abort(String(describing: callError))
+                }
             }
         }
     }

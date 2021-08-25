@@ -18,17 +18,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        if (TestData.fullDropboxAppKey.range(of:"<") != nil || TestData.teamMemberFileAccessAppKey.range(of:"<") != nil || TestData.teamMemberManagementAppKey.range(of:"<") != nil) {
+        if (TestData.fullDropboxAppKey.range(of:"<") != nil) {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
             exit(0);
         }
         switch(appPermission) {
-        case .fullDropbox:
+        case .fullDropboxScoped:
             DropboxClientsManager.setupWithAppKeyDesktop(TestData.fullDropboxAppKey)
-        case .teamMemberFileAccess:
-            DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.teamMemberFileAccessAppKey)
-        case .teamMemberManagement:
-            DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.teamMemberManagementAppKey)
+        case .fullDropboxScopedForTeamTesting:
+            DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.fullDropboxAppKey)
         }
         NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
 
@@ -55,9 +53,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
 
                 switch(appPermission) {
-                case .fullDropbox:
+                case .fullDropboxScoped:
                     DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
-                case .teamMemberFileAccess, .teamMemberManagement:
+                case .fullDropboxScopedForTeamTesting:
                     DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
                 }
             }
