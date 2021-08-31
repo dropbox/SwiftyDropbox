@@ -883,8 +883,8 @@ open class SharingTests {
         let memberSelector = Sharing.MemberSelector.email(TestData.accountId3Email)
         let addFolderMemberArg = Sharing.AddMember(member: memberSelector)
         tester.sharing.addFolderMember(sharedFolderId: sharedFolderId, members: [addFolderMemberArg], quiet: true).response { response, error in
-            if let _ = response {
-                TestFormat.printOffset("Folder member added")
+            if let response = response {
+                TestFormat.printOffset("Folder member added \(response)")
                 TestFormat.printSubTestEnd(#function)
                 nextTest()
             } else if let callError = error {
@@ -1409,6 +1409,14 @@ open class TeamTests {
                     case .success(let teamMemberInfo):
                         let teamMemberId = teamMemberInfo.profile.teamMemberId
                         self.teamMemberId2 = teamMemberId
+                    case .userAlreadyOnTeam(let email):
+                        sleep(3)
+                        // sometimes when a previous test errors, the member could still be added
+                        self.membersRemove({
+                            sleep(3)
+                            self.membersAdd(nextTest)
+                        }, emailToRemove: email)
+                        return
                     default:
                         TestFormat.abort("Member add finished but did not go as expected:\n \(memberAddResult)")
                     }
@@ -1492,7 +1500,7 @@ open class TeamTests {
         }
     }
 
-    func membersRemove(_ nextTest: @escaping (() -> Void)) {
+    func membersRemove(_ nextTest: @escaping (() -> Void), emailToRemove: String? = nil) {
         TestFormat.printSubTestBegin(#function)
 
         let jobStatus: ((String) -> Void) = { jobId in
@@ -1513,7 +1521,13 @@ open class TeamTests {
             }
         }
 
-        let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId2!)
+        let userSelectorArg: Team.UserSelectorArg
+        if let emailToRemove = emailToRemove {
+            userSelectorArg = Team.UserSelectorArg.email(emailToRemove)
+        } else {
+            userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId2!)
+        }
+        
         tester.team.membersRemove(user: userSelectorArg).response { response, error in
             if let result = response {
                 print(result)
