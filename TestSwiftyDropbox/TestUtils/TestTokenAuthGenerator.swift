@@ -15,7 +15,7 @@ enum TestAuthTokenGenerator {
 
         let flag = XCTestExpectation()
 
-        var returnAccessToken: String?
+        var returnAccessToken: DropboxAccessToken?
 
         manager.refreshAccessToken(
             defaultToken,
@@ -24,7 +24,7 @@ enum TestAuthTokenGenerator {
 
             switch result {
             case .success(let authToken)?:
-                returnAccessToken = authToken.accessToken
+                returnAccessToken = authToken
             case .error(_, let description)?:
                 XCTFail("Error: failed to refresh access token (\(description ?? "no description")")
             case .cancel?:
@@ -42,10 +42,6 @@ enum TestAuthTokenGenerator {
             XCTFail("AccessToken creation failed")
             fatalError("AccessToken creation failed")
         }
-        let tokenProvider = ShortLivedAccessTokenProvider(token: DropboxAccessToken(accessToken: accessToken,
-                                                                                    uid: TestUid),
-                                                          tokenRefresher: manager)
-                                                          
-        return DropboxTransportClient(accessTokenProvider: tokenProvider)
+        return DropboxTransportClient(accessTokenProvider: manager.accessTokenProviderForToken(accessToken))
     }
 }
