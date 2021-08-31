@@ -40,7 +40,18 @@ open class DropboxClient: DropboxBase {
         )
         self.init(transportClient: transportClient)
     }
-
+    
+    /// Initialize a client with an `DropboxAccessToken`.
+    ///
+    /// - Parameters:
+    ///     - accessToken: The token itself, could be long or short lived.
+    ///     - dropboxOauthManager: an oauthManager, used for creating the token provider.
+    public convenience init(accessToken: DropboxAccessToken, dropboxOauthManager: DropboxOAuthManager) {
+        let accessTokenProvider = dropboxOauthManager.accessTokenProviderForToken(accessToken)
+        let transportClient = DropboxTransportClient(accessTokenProvider: accessTokenProvider)
+        self.init(transportClient: transportClient)
+    }
+    
     /// Designated Initializer.
     ///
     /// - Parameter transportClient: The underlying DropboxTransportClient to make API calls.
