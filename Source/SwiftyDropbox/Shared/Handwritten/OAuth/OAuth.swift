@@ -488,7 +488,7 @@ open class DropboxAccessToken: CustomStringConvertible, Codable {
     ///     - uid: The associated user id.
     ///     - refreshToken: The refresh token if accessToken is short-lived.
     ///     - tokenExpirationTimestamp: The expiration time of the (short-lived) accessToken.
-    init(
+    public init(
         accessToken: String, uid: String,
         refreshToken: String? = nil, tokenExpirationTimestamp: TimeInterval? = nil
     ) {
