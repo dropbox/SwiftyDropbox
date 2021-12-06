@@ -24,8 +24,8 @@ jobs:
           ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
           ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
           platform: ${{ 'iOS Simulator' }}
+          device: ${{ 'iPhone 13' }}
         run: |
-          device=`instruments -s -devices | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}'`
           xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
             -destination "platform=$platform,name=$device" \
             FULL_DROPBOX_API_APP_KEY=$FULL_DROPBOX_API_APP_KEY \
