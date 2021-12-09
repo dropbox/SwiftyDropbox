@@ -15,7 +15,7 @@ open class SecondaryEmails {
         /// Whether or not the secondary email address is verified to be owned by a user.
         public let isVerified: Bool
         public init(email: String, isVerified: Bool) {
-            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(email)
+            stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(email)
             self.email = email
             self.isVerified = isVerified
         }

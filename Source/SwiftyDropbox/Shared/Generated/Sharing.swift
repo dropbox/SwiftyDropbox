@@ -5774,7 +5774,8 @@ open class Sharing {
     open class RelinquishFolderMembershipArg: CustomStringConvertible {
         /// The ID for the shared folder.
         public let sharedFolderId: String
-        /// Keep a copy of the folder's contents upon relinquishing membership.
+        /// Keep a copy of the folder's contents upon relinquishing membership. This must be set to false when the
+        /// folder is within a team folder or another shared folder.
         public let leaveACopy: Bool
         public init(sharedFolderId: String, leaveACopy: Bool = false) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
@@ -6008,7 +6009,8 @@ open class Sharing {
         /// The member to remove from the folder.
         public let member: Sharing.MemberSelector
         /// If true, the removed user will keep their copy of the folder after it's unshared, assuming it was mounted.
-        /// Otherwise, it will be removed from their Dropbox. Also, this must be set to false when kicking a group.
+        /// Otherwise, it will be removed from their Dropbox. This must be set to false when removing a group, or when
+        /// the folder is within a team folder or another shared folder.
         public let leaveACopy: Bool
         public init(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
@@ -6827,6 +6829,8 @@ open class Sharing {
         case insideOsxPackage
         /// We do not support sharing the Vault folder.
         case isVault
+        /// We do not support sharing a folder inside a locked Vault.
+        case isVaultLocked
         /// We do not support sharing the Family folder.
         case isFamily
         /// An unspecified error.
@@ -6896,6 +6900,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("is_vault")
                     return .dictionary(d)
+                case .isVaultLocked:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_vault_locked")
+                    return .dictionary(d)
                 case .isFamily:
                     var d = [String: JSON]()
                     d[".tag"] = .str("is_family")
@@ -6940,6 +6948,8 @@ open class Sharing {
                             return SharePathError.insideOsxPackage
                         case "is_vault":
                             return SharePathError.isVault
+                        case "is_vault_locked":
+                            return SharePathError.isVaultLocked
                         case "is_family":
                             return SharePathError.isFamily
                         case "other":
@@ -8711,7 +8721,8 @@ open class Sharing {
 
     /// The information about a user member of the shared content with an appended last seen timestamp.
     open class UserFileMembershipInfo: Sharing.UserMembershipInfo {
-        /// The UTC timestamp of when the user has last seen the content, if they have.
+        /// The UTC timestamp of when the user has last seen the content. Only populated if the user has seen the
+        /// content and the caller has a plan that includes viewer history.
         public let timeLastSeen: Date?
         /// The platform on which the user has last seen the content, or unknown.
         public let platformType: SeenState.PlatformType?

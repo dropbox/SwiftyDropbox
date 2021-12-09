@@ -452,7 +452,8 @@ open class SharingRoutes {
     /// leave_a_copy is false, and asynchronously if leave_a_copy is true.
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
-    /// - parameter leaveACopy: Keep a copy of the folder's contents upon relinquishing membership.
+    /// - parameter leaveACopy: Keep a copy of the folder's contents upon relinquishing membership. This must be set to
+    /// false when the folder is within a team folder or another shared folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Sharing.RelinquishFolderMembershipError` object on failure.
@@ -496,8 +497,8 @@ open class SharingRoutes {
     /// - parameter sharedFolderId: The ID for the shared folder.
     /// - parameter member: The member to remove from the folder.
     /// - parameter leaveACopy: If true, the removed user will keep their copy of the folder after it's unshared,
-    /// assuming it was mounted. Otherwise, it will be removed from their Dropbox. Also, this must be set to false when
-    /// kicking a group.
+    /// assuming it was mounted. Otherwise, it will be removed from their Dropbox. This must be set to false when
+    /// removing a group, or when the folder is within a team folder or another shared folder.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Sharing.RemoveFolderMemberError` object on failure.

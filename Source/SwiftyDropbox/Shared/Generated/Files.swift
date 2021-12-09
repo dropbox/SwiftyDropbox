@@ -8,6 +8,139 @@ import Foundation
 
 /// Datatypes and serializers for the files namespace
 open class Files {
+    /// The AddTagArg struct
+    open class AddTagArg: CustomStringConvertible {
+        /// Path to the item to be tagged.
+        public let path: String
+        /// The value of the tag to add.
+        public let tagText: String
+        public init(path: String, tagText: String) {
+            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            self.path = path
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            self.tagText = tagText
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddTagArgSerializer().serialize(self)))"
+        }
+    }
+    open class AddTagArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddTagArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "tag_text": Serialization._StringSerializer.serialize(value.tagText),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> AddTagArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let tagText = Serialization._StringSerializer.deserialize(dict["tag_text"] ?? .null)
+                    return AddTagArg(path: path, tagText: tagText)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The BaseTagError union
+    public enum BaseTagError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(BaseTagErrorSerializer().serialize(self)))"
+        }
+    }
+    open class BaseTagErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: BaseTagError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> BaseTagError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return BaseTagError.path(v)
+                        case "other":
+                            return BaseTagError.other
+                        default:
+                            return BaseTagError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The AddTagError union
+    public enum AddTagError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// An unspecified error.
+        case other
+        /// The item already has the maximum supported number of tags.
+        case tooManyTags
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(AddTagErrorSerializer().serialize(self)))"
+        }
+    }
+    open class AddTagErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: AddTagError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .tooManyTags:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_tags")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> AddTagError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return AddTagError.path(v)
+                        case "other":
+                            return AddTagError.other
+                        case "too_many_tags":
+                            return AddTagError.tooManyTags
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The GetMetadataArg struct
     open class GetMetadataArg: CustomStringConvertible {
         /// The path of a file or folder on Dropbox.
@@ -2571,6 +2704,67 @@ open class Files {
         }
     }
 
+    /// The GetTagsArg struct
+    open class GetTagsArg: CustomStringConvertible {
+        /// Path to the items.
+        public let paths: Array<String>
+        public init(paths: Array<String>) {
+            arrayValidator(itemValidator: stringValidator(pattern: "/(.|[\\r\\n])*"))(paths)
+            self.paths = paths
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTagsArgSerializer().serialize(self)))"
+        }
+    }
+    open class GetTagsArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTagsArg) -> JSON {
+            let output = [ 
+            "paths": ArraySerializer(Serialization._StringSerializer).serialize(value.paths),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTagsArg {
+            switch json {
+                case .dictionary(let dict):
+                    let paths = ArraySerializer(Serialization._StringSerializer).deserialize(dict["paths"] ?? .null)
+                    return GetTagsArg(paths: paths)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The GetTagsResult struct
+    open class GetTagsResult: CustomStringConvertible {
+        /// List of paths and their corresponding tags.
+        public let pathsToTags: Array<Files.PathToTags>
+        public init(pathsToTags: Array<Files.PathToTags>) {
+            self.pathsToTags = pathsToTags
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(GetTagsResultSerializer().serialize(self)))"
+        }
+    }
+    open class GetTagsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: GetTagsResult) -> JSON {
+            let output = [ 
+            "paths_to_tags": ArraySerializer(Files.PathToTagsSerializer()).serialize(value.pathsToTags),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> GetTagsResult {
+            switch json {
+                case .dictionary(let dict):
+                    let pathsToTags = ArraySerializer(Files.PathToTagsSerializer()).deserialize(dict["paths_to_tags"] ?? .null)
+                    return GetTagsResult(pathsToTags: pathsToTags)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The GetTemporaryLinkArg struct
     open class GetTemporaryLinkArg: CustomStringConvertible {
         /// The path to the file you want a temporary link to.
@@ -4959,6 +5153,42 @@ open class Files {
         }
     }
 
+    /// The PathToTags struct
+    open class PathToTags: CustomStringConvertible {
+        /// Path of the item.
+        public let path: String
+        /// Tags assigned to this item.
+        public let tags: Array<Files.Tag>
+        public init(path: String, tags: Array<Files.Tag>) {
+            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            self.path = path
+            self.tags = tags
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(PathToTagsSerializer().serialize(self)))"
+        }
+    }
+    open class PathToTagsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: PathToTags) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "tags": ArraySerializer(Files.TagSerializer()).serialize(value.tags),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> PathToTags {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let tags = ArraySerializer(Files.TagSerializer()).deserialize(dict["tags"] ?? .null)
+                    return PathToTags(path: path, tags: tags)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Metadata for a photo.
     open class PhotoMetadata: Files.MediaMetadata {
         open override var description: String {
@@ -5977,6 +6207,95 @@ open class Files {
                     return RelocationResult(metadata: metadata)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The RemoveTagArg struct
+    open class RemoveTagArg: CustomStringConvertible {
+        /// Path to the item to tag.
+        public let path: String
+        /// The tag to remove.
+        public let tagText: String
+        public init(path: String, tagText: String) {
+            stringValidator(pattern: "/(.|[\\r\\n])*")(path)
+            self.path = path
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            self.tagText = tagText
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RemoveTagArgSerializer().serialize(self)))"
+        }
+    }
+    open class RemoveTagArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RemoveTagArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "tag_text": Serialization._StringSerializer.serialize(value.tagText),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> RemoveTagArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let tagText = Serialization._StringSerializer.deserialize(dict["tag_text"] ?? .null)
+                    return RemoveTagArg(path: path, tagText: tagText)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The RemoveTagError union
+    public enum RemoveTagError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// An unspecified error.
+        case other
+        /// That tag doesn't exist at this path.
+        case tagNotPresent
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(RemoveTagErrorSerializer().serialize(self)))"
+        }
+    }
+    open class RemoveTagErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: RemoveTagError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .tagNotPresent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("tag_not_present")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> RemoveTagError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return RemoveTagError.path(v)
+                        case "other":
+                            return RemoveTagError.other
+                        case "tag_not_present":
+                            return RemoveTagError.tagNotPresent
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -7431,6 +7750,50 @@ open class Files {
         }
     }
 
+    /// Tag that can be added in multiple ways.
+    public enum Tag: CustomStringConvertible {
+        /// Tag generated by the user.
+        case userGeneratedTag(Files.UserGeneratedTag)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(TagSerializer().serialize(self)))"
+        }
+    }
+    open class TagSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: Tag) -> JSON {
+            switch value {
+                case .userGeneratedTag(let arg):
+                    var d = Serialization.getFields(Files.UserGeneratedTagSerializer().serialize(arg))
+                    d[".tag"] = .str("user_generated_tag")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> Tag {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "user_generated_tag":
+                            let v = Files.UserGeneratedTagSerializer().deserialize(json)
+                            return Tag.userGeneratedTag(v)
+                        case "other":
+                            return Tag.other
+                        default:
+                            return Tag.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ThumbnailArg struct
     open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
@@ -8780,6 +9143,37 @@ open class Files {
         }
     }
 
+    /// The UserGeneratedTag struct
+    open class UserGeneratedTag: CustomStringConvertible {
+        /// (no description)
+        public let tagText: String
+        public init(tagText: String) {
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            self.tagText = tagText
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UserGeneratedTagSerializer().serialize(self)))"
+        }
+    }
+    open class UserGeneratedTagSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UserGeneratedTag) -> JSON {
+            let output = [ 
+            "tag_text": Serialization._StringSerializer.serialize(value.tagText),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UserGeneratedTag {
+            switch json {
+                case .dictionary(let dict):
+                    let tagText = Serialization._StringSerializer.deserialize(dict["tag_text"] ?? .null)
+                    return UserGeneratedTag(tagText: tagText)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Metadata for a video.
     open class VideoMetadata: Files.MediaMetadata {
         /// The duration of the video in milliseconds.
@@ -8991,9 +9385,12 @@ open class Files {
         case add
         /// Always overwrite the existing file. The autorename strategy is the same as it is for add.
         case overwrite
-        /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is to append the
-        /// string "conflicted copy" to the file name. For example, "document.txt" might become "document (conflicted
-        /// copy).txt" or "document (Panda's conflicted copy).txt".
+        /// Overwrite if the given "rev" matches the existing file's "rev". The supplied value should be the latest
+        /// known "rev" of the file, for example, from FileMetadata, from when the file was last downloaded by the app.
+        /// This will cause the file on the Dropbox servers to be overwritten if the given "rev" matches the existing
+        /// file's current "rev" on the Dropbox servers. The autorename strategy is to append the string "conflicted
+        /// copy" to the file name. For example, "document.txt" might become "document (conflicted copy).txt" or
+        /// "document (Panda's conflicted copy).txt".
         case update(String)
 
         public var description: String {
@@ -9398,7 +9795,7 @@ open class Files {
         argSerializer: Files.ListFolderArgSerializer(),
         responseSerializer: Files.ListFolderResultSerializer(),
         errorSerializer: Files.ListFolderErrorSerializer(),
-        attrs: ["auth": "user",
+        attrs: ["auth": "app, user",
                 "host": "api",
                 "style": "rpc"]
     )
@@ -9410,7 +9807,7 @@ open class Files {
         argSerializer: Files.ListFolderContinueArgSerializer(),
         responseSerializer: Files.ListFolderResultSerializer(),
         errorSerializer: Files.ListFolderContinueErrorSerializer(),
-        attrs: ["auth": "user",
+        attrs: ["auth": "app, user",
                 "host": "api",
                 "style": "rpc"]
     )
@@ -9714,6 +10111,42 @@ open class Files {
                 "host": "api",
                 "style": "rpc"]
     )
+    static let tagsAdd = Route(
+        name: "tags/add",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.AddTagArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Files.AddTagErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let tagsGet = Route(
+        name: "tags/get",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.GetTagsArgSerializer(),
+        responseSerializer: Files.GetTagsResultSerializer(),
+        errorSerializer: Files.BaseTagErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let tagsRemove = Route(
+        name: "tags/remove",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.RemoveTagArgSerializer(),
+        responseSerializer: Serialization._VoidSerializer,
+        errorSerializer: Files.RemoveTagErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
     static let unlockFileBatch = Route(
         name: "unlock_file_batch",
         version: 1,
@@ -9778,9 +10211,21 @@ open class Files {
         name: "upload_session/finish_batch",
         version: 1,
         namespace: "files",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
         responseSerializer: Files.UploadSessionFinishBatchLaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let uploadSessionFinishBatchV2 = Route(
+        name: "upload_session/finish_batch",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.UploadSessionFinishBatchArgSerializer(),
+        responseSerializer: Files.UploadSessionFinishBatchResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
         attrs: ["auth": "user",
                 "host": "api",

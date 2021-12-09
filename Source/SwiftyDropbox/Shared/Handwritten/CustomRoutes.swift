@@ -237,8 +237,6 @@ extension FilesRoutes {
     }
     
     func batchFinishUponCompletion(uploadData: BatchUploadData) {
-        // wait for all upload calls to complete and then batch "finish" all uploaded files
-        // with one call to `upload_session/finish_batch`
         uploadData.uploadGroup.notify(queue: DispatchQueue.main) {
             uploadData.finishArgs.sort { $0.commit.path < $1.commit.path }
             

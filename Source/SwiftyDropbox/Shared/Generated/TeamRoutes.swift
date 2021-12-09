@@ -1118,8 +1118,8 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Sets an active team folder's status to archived and removes all folder and file members. Permission : Team
-    /// member file access.
+    /// Sets an active team folder's status to archived and removes all folder and file members. This endpoint cannot be
+    /// used for teams that have a shared team space. Permission : Team member file access.
     ///
     /// - parameter forceAsyncOff: Whether to force the archive to happen synchronously.
     ///
@@ -1144,7 +1144,8 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Creates a new, active, team folder with no members. Permission : Team member file access.
+    /// Creates a new, active, team folder with no members. This endpoint can only be used for teams that do not already
+    /// have a shared team space. Permission : Team member file access.
     ///
     /// - parameter name: Name for the new team folder.
     /// - parameter syncSetting: The sync setting to apply to this team folder. Only permitted if the team has team
@@ -1195,7 +1196,8 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Permanently deletes an archived team folder. Permission : Team member file access.
+    /// Permanently deletes an archived team folder. This endpoint cannot be used for teams that have a shared team
+    /// space. Permission : Team member file access.
     ///
     /// - parameter teamFolderId: The ID of the team folder.
     ///
