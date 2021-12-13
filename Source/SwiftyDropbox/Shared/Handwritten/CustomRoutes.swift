@@ -173,84 +173,32 @@ extension FilesRoutes {
 //        uploadData.taskStorage.add(task)
     }
 
-    func queryJobStatus(uploadData: BatchUploadData, asyncJobId: String, retryCount: Int) {
-        self.uploadSessionFinishBatchCheck(asyncJobId: asyncJobId).response { result, error in
-            if let result = result {
-                switch result {
-                case .inProgress:
-                    sleep(1)
-                    if retryCount <= timeoutInSec {
-                        self.queryJobStatus(uploadData: uploadData, asyncJobId: asyncJobId, retryCount: retryCount + 1)
-                    } else {
-                        let errorMessage: String = "Result polling took > \(timeoutInSec) seconds. Timing out."
-                        var userInfo = [String: Any]()
-                        userInfo[NSUnderlyingErrorKey] = errorMessage
-                        let timeoutError = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: userInfo)
-                        uploadData.queue.async {
-                            uploadData.responseBlock(nil, .clientError(timeoutError), uploadData.fileUrlsToRequestErrors)
-                        }
-                    }
-                case .complete(let complete):
-                    uploadData.queue.async {
-                        let completeResult = complete.entries
-                        // create reverse lookup
-                        var dropboxFilePathToNSURL = [String: URL]()
-                        for (fileUrl, commitInfo) in uploadData.fileUrlsToCommitInfo {
-                            dropboxFilePathToNSURL[commitInfo.path] = fileUrl
-                        }
-                        var fileUrlsToBatchResultEntries: [URL: Files.UploadSessionFinishBatchResultEntry] = [:]
-                        var index = 0
-                        for finishArg in uploadData.finishArgs {
-                            let path = finishArg.commit.path
-                            let resultEntry: Files.UploadSessionFinishBatchResultEntry? = completeResult[index]
-                            fileUrlsToBatchResultEntries[dropboxFilePathToNSURL[path]!] = resultEntry
-                            index += 1
-                        }
-                        uploadData.responseBlock(fileUrlsToBatchResultEntries, nil, uploadData.fileUrlsToRequestErrors)
-                    }
-                }
-            } else {
-                if let error = error {
-                    switch error as CallError {
-                    case .rateLimitError(let rateLimitError, _, _, _):
-                        let backoffInSeconds = rateLimitError.retryAfter
-                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(backoffInSeconds)) {
-                            if retryCount <= 3 {
-                                self.queryJobStatus(uploadData: uploadData, asyncJobId: asyncJobId, retryCount: retryCount)
-                            } else {
-                                //                                uploadData.fileUrlsToRequestErrors[fileUrl] = error
-                                //                                shouldContinue = false
-                            }
-                        }
-                    default:
-                        uploadData.queue.async {
-                            uploadData.responseBlock(nil, error, uploadData.fileUrlsToRequestErrors)
-                        }
-                    }
-                } else {
-                    uploadData.queue.async {
-//                        uploadData.responseBlock(nil, error, error, uploadData.fileUrlsToRequestErrors)
-                    }
-                }
+    func finishBatch(uploadData: BatchUploadData,
+                     entries: Array<Files.UploadSessionFinishBatchResultEntry>) {
+        uploadData.queue.async {
+            var dropboxFilePathToNSURL = [String: URL]()
+            for (fileUrl, commitInfo) in uploadData.fileUrlsToCommitInfo {
+                dropboxFilePathToNSURL[commitInfo.path] = fileUrl
             }
+            var fileUrlsToBatchResultEntries: [URL: Files.UploadSessionFinishBatchResultEntry] = [:]
+            var index = 0
+            for finishArg in uploadData.finishArgs {
+                let path = finishArg.commit.path
+                let resultEntry: Files.UploadSessionFinishBatchResultEntry? = entries[index]
+                fileUrlsToBatchResultEntries[dropboxFilePathToNSURL[path]!] = resultEntry
+                index += 1
+            }
+            uploadData.responseBlock(fileUrlsToBatchResultEntries, nil, uploadData.fileUrlsToRequestErrors)
         }
     }
-    
+
     func batchFinishUponCompletion(uploadData: BatchUploadData) {
-        // wait for all upload calls to complete and then batch "finish" all uploaded files
-        // with one call to `upload_session/finish_batch`
         uploadData.uploadGroup.notify(queue: DispatchQueue.main) {
             uploadData.finishArgs.sort { $0.commit.path < $1.commit.path }
-            
-            self.uploadSessionFinishBatch(entries: uploadData.finishArgs).response { result, error in
+
+            self.uploadSessionFinishBatchV2(entries: uploadData.finishArgs).response { result, error in
                 if let result = result {
-                    switch result {
-                    case .asyncJobId(let asyncJobId):
-                        sleep(1)
-                        self.queryJobStatus(uploadData: uploadData, asyncJobId: asyncJobId, retryCount: 2)
-                    default:
-                        break;
-                    }
+                    self.finishBatch(uploadData: uploadData, entries: result.entries)
                 } else {
                     uploadData.queue.async {
 //                        uploadData.responseBlock(nil, nil, error, uploadData.fileUrlsToRequestErrors)

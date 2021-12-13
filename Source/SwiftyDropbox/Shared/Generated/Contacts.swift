@@ -13,7 +13,7 @@ open class Contacts {
         /// List of manually added contacts to be deleted.
         public let emailAddresses: Array<String>
         public init(emailAddresses: Array<String>) {
-            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(emailAddresses)
+            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(emailAddresses)
             self.emailAddresses = emailAddresses
         }
         open var description: String {

@@ -3831,7 +3831,7 @@ open class Team {
             stringValidator()(authorMemberId)
             self.authorMemberId = authorMemberId
             self.authorMemberStatus = authorMemberStatus
-            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(authorEmail)
+            stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(authorEmail)
             self.authorEmail = authorEmail
             stringValidator()(fileType)
             self.fileType = fileType
@@ -5771,7 +5771,7 @@ open class Team {
         /// Whether a user is directory restricted.
         public let isDirectoryRestricted: Bool?
         public init(memberEmail: String, memberGivenName: String? = nil, memberSurname: String? = nil, memberExternalId: String? = nil, memberPersistentId: String? = nil, sendWelcomeEmail: Bool = true, isDirectoryRestricted: Bool? = nil) {
-            stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(memberEmail)
+            stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$")(memberEmail)
             self.memberEmail = memberEmail
             nullableValidator(stringValidator(maxLength: 100, pattern: "[^/:?*<>\"|]*"))(memberGivenName)
             self.memberGivenName = memberGivenName
@@ -8542,7 +8542,7 @@ open class Team {
         public let newIsDirectoryRestricted: Bool?
         public init(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) {
             self.user = user
-            nullableValidator(stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(newEmail)
+            nullableValidator(stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(newEmail)
             self.newEmail = newEmail
             nullableValidator(stringValidator(maxLength: 64))(newExternalId)
             self.newExternalId = newExternalId
@@ -12534,7 +12534,7 @@ open class Team {
         public let secondaryEmails: Array<String>
         public init(user: Team.UserSelectorArg, secondaryEmails: Array<String>) {
             self.user = user
-            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(secondaryEmails)
+            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(secondaryEmails)
             self.secondaryEmails = secondaryEmails
         }
         open var description: String {

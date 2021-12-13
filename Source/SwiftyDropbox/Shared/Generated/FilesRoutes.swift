@@ -1159,6 +1159,44 @@ open class FilesRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Add a tag to an item. A tag is a string. No more than 20 tags can be added to a given item.
+    ///
+    /// - parameter path: Path to the item to be tagged.
+    /// - parameter tagText: The value of the tag to add.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Files.AddTagError` object on failure.
+    @discardableResult open func tagsAdd(path: String, tagText: String) -> RpcRequest<VoidSerializer, Files.AddTagErrorSerializer> {
+        let route = Files.tagsAdd
+        let serverArgs = Files.AddTagArg(path: path, tagText: tagText)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Get list of tags assigned to items.
+    ///
+    /// - parameter paths: Path to the items.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.GetTagsResult` object on success or
+    /// a `Files.BaseTagError` object on failure.
+    @discardableResult open func tagsGet(paths: Array<String>) -> RpcRequest<Files.GetTagsResultSerializer, Files.BaseTagErrorSerializer> {
+        let route = Files.tagsGet
+        let serverArgs = Files.GetTagsArg(paths: paths)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Remove a tag from an item.
+    ///
+    /// - parameter path: Path to the item to tag.
+    /// - parameter tagText: The tag to remove.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Files.RemoveTagError` object on failure.
+    @discardableResult open func tagsRemove(path: String, tagText: String) -> RpcRequest<VoidSerializer, Files.RemoveTagErrorSerializer> {
+        let route = Files.tagsRemove
+        let serverArgs = Files.RemoveTagArg(path: path, tagText: tagText)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Unlock the files at the given paths. A locked file can only be unlocked by the lock holder or, if a business
     /// account, a team admin. A successful response indicates that the file has been unlocked. Returns a list of the
     /// unlocked file paths and their metadata after this operation.
@@ -1458,8 +1496,29 @@ open class FilesRoutes {
     ///
     ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionFinishBatchLaunch`
     /// object on success or a `Void` object on failure.
+    @available(*, unavailable, message:"uploadSessionFinishBatch is deprecated. Use uploadSessionFinishBatchV2.")
     @discardableResult open func uploadSessionFinishBatch(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Files.UploadSessionFinishBatchLaunchSerializer, VoidSerializer> {
         let route = Files.uploadSessionFinishBatch
+        let serverArgs = Files.UploadSessionFinishBatchArg(entries: entries)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// This route helps you commit many files at once into a user's Dropbox. Use uploadSessionStart and
+    /// uploadSessionAppendV2 to upload file contents. We recommend uploading many files in parallel to increase
+    /// throughput. Once the file contents have been uploaded, rather than calling uploadSessionFinish, use this route
+    /// to finish all your upload sessions in a single request. close in UploadSessionStartArg or close in
+    /// UploadSessionAppendArg needs to be true for the last uploadSessionStart or uploadSessionAppendV2 call of each
+    /// upload session. The maximum size of a file one can upload to an upload session is 350 GB. We allow up to 1000
+    /// entries in a single request. Calls to this endpoint will count as data transport calls for any Dropbox Business
+    /// teams with a limit on the number of data transport calls allowed per month. For more information, see the Data
+    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - parameter entries: Commit information for each file in the batch.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Files.UploadSessionFinishBatchResult`
+    /// object on success or a `Void` object on failure.
+    @discardableResult open func uploadSessionFinishBatchV2(entries: Array<Files.UploadSessionFinishArg>) -> RpcRequest<Files.UploadSessionFinishBatchResultSerializer, VoidSerializer> {
+        let route = Files.uploadSessionFinishBatchV2
         let serverArgs = Files.UploadSessionFinishBatchArg(entries: entries)
         return client.request(route, serverArgs: serverArgs)
     }
