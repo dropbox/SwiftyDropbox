@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SwiftyDropbox  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a title="SwiftyDropbox  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">SwiftyDropbox 8.2.0 Docs</a></p>
+        <p class="header-right"><a href="https://github.com/dropbox/SwiftyDropbox"><img src="img/gh.png" alt="GitHub"/>View on GitHub</a></p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">SwiftyDropbox Reference</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        SwiftyDropbox  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='dropbox-for-swift' class='heading'>Dropbox for Swift</h1>
+
+<p>The Official Dropbox Swift SDK for integrating with Dropbox <a href="https://www.dropbox.com/developers/documentation/http/documentation">API v2</a> on iOS or macOS.</p>
+
+<p>Full documentation <a href="http://dropbox.github.io/SwiftyDropbox/api-docs/latest/">here</a>.</p>
+
+<hr>
+<h2 id='table-of-contents' class='heading'>Table of Contents</h2>
+
+<ul>
+<li><a href="#system-requirements">System requirements</a></li>
+<li><a href="#get-started">Get started</a>
+
+<ul>
+<li><a href="#register-your-application">Register your application</a></li>
+<li><a href="#obtain-an-oauth-20-token">Obtain an OAuth 2.0 token</a></li>
+</ul></li>
+<li><a href="#sdk-distribution">SDK distribution</a>
+
+<ul>
+<li><a href="#swift-package-manager">Swift Package Manager</a></li>
+<li><a href="#cocoapods">CocoaPods</a></li>
+<li><a href="#carthage">Carthage</a></li>
+<li><a href="#manually-add-subproject">Manually add subproject</a></li>
+</ul></li>
+<li><a href="#configure-your-project">Configure your project</a>
+
+<ul>
+<li><a href="#application-plist-file">Application <code>.plist</code> file</a></li>
+<li><a href="#handling-the-authorization-flow">Handling the authorization flow</a></li>
+<li><a href="#initialize-a-dropboxclient-instance">Initialize a <code>DropboxClient</code> instance</a></li>
+<li><a href="#begin-the-authorization-flow">Begin the authorization flow</a></li>
+<li><a href="#handle-redirect-back-into-sdk">Handle redirect back into SDK</a></li>
+</ul></li>
+<li><a href="#try-some-api-requests">Try some API requests</a>
+
+<ul>
+<li><a href="#dropbox-client-instance">Dropbox client instance</a></li>
+<li><a href="#handle-the-api-response">Handle the API response</a></li>
+<li><a href="#request-types">Request types</a></li>
+<li><a href="#rpc-style-request">RPC-style request</a></li>
+<li><a href="#upload-style-request">Upload-style request</a></li>
+<li><a href="#download-style-request">Download-style request</a></li>
+<li><a href="#handling-responses-and-errors">Handling responses and errors</a></li>
+<li><a href="#route-specific-errors">Route-specific errors</a></li>
+<li><a href="#generic-network-request-errors">Generic network request errors</a></li>
+<li><a href="#response-handling-edge-cases">Response handling edge cases</a></li>
+<li><a href="#customizing-network-calls">Customizing network calls</a></li>
+<li><a href="#configure-network-client">Configure network client</a></li>
+<li><a href="#specify-api-call-response-queue">Specify API call response queue</a></li>
+<li><a href="#dropboxclientsmanager-class"><code>DropboxClientsManager</code> class</a></li>
+<li><a href="#single-dropbox-user-case">Single Dropbox user case</a></li>
+<li><a href="#multiple-dropbox-user-case">Multiple Dropbox user case</a></li>
+</ul></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#stone">Stone</a></li>
+<li><a href="#modifications">Modifications</a></li>
+<li><a href="#app-store-connect-privacy-labels">App Store Connect Privacy Labels</a></li>
+<li><a href="#bugs">Bugs</a></li>
+</ul>
+
+<hr>
+<h2 id='system-requirements' class='heading'>System requirements</h2>
+
+<ul>
+<li>iOS 10.0+</li>
+<li>macOS 10.12+</li>
+<li>Xcode 10.0+ (11.0+ if you use Carthage)</li>
+<li>Swift 5.1+</li>
+</ul>
+<h2 id='get-started' class='heading'>Get Started</h2>
+<h3 id='register-your-application' class='heading'>Register your application</h3>
+
+<p>Before using this SDK, you should register your application in the <a href="https://dropbox.com/developers/apps">Dropbox App Console</a>. This creates a record of your app with Dropbox that will be associated with the API calls you make.</p>
+<h3 id='obtain-an-oauth-2-0-token' class='heading'>Obtain an OAuth 2.0 token</h3>
+
+<p>All requests need to be made with an OAuth 2.0 access token. An OAuth token represents an authenticated link between a Dropbox app and
+a Dropbox user account or team.</p>
+
+<p>Once you&rsquo;ve created an app, you can go to the App Console and manually generate an access token to authorize your app to access your own Dropbox account.
+Otherwise, you can obtain an OAuth token programmatically using the SDK&rsquo;s pre-defined auth flow. For more information, <a href="https://github.com/dropbox/SwiftyDropbox#handling-the-authorization-flow">see below</a>.</p>
+
+<hr>
+<h2 id='sdk-distribution' class='heading'>SDK distribution</h2>
+
+<p>You can integrate the Dropbox Swift SDK into your project using one of several methods.</p>
+<h3 id='swift-package-manager' class='heading'>Swift Package Manager</h3>
+
+<p>The Dropbox Swift SDK can be installed in your project using <a href="https://swift.org/package-manager/">Swift Package Manager</a> by specifying the Dropbox Swift SDK repository URL:</p>
+<pre class="highlight plaintext"><code>https://github.com/dropbox/SwiftyDropbox.git
+</code></pre>
+
+<p>Refer to <a href="https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app">Apple&rsquo;s &ldquo;Adding Package Dependencies to Your App&rdquo; documentation</a> for more information.</p>
+<h3 id='cocoapods' class='heading'>CocoaPods</h3>
+
+<p>To use <a href="http://cocoapods.org">CocoaPods</a>, a dependency manager for Cocoa projects, you should first install it using the following command:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>gem <span class="nb">install </span>cocoapods
+</code></pre>
+
+<p>Then navigate to the directory that contains your project and create a new file called <code>Podfile</code>. You can do this either with <code>pod init</code>, or open an existing Podfile, and then add <code>pod &#39;SwiftyDropbox&#39;</code> to the main loop. Your Podfile should look something like this:</p>
+<pre class="highlight ruby"><code><span class="n">use_frameworks!</span>
+
+<span class="n">target</span> <span class="s1">'&lt;YOUR_PROJECT_NAME&gt;'</span> <span class="k">do</span>
+    <span class="n">pod</span> <span class="s1">'SwiftyDropbox'</span>
+<span class="k">end</span>
+</code></pre>
+
+<p>Then, run the following command to install the dependency:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>pod <span class="nb">install</span>
+</code></pre>
+
+<p>Once your project is integrated with the Dropbox Swift SDK, you can pull SDK updates using the following command:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>pod update
+</code></pre>
+
+<p><strong>Note</strong>: SwiftyDropbox requires CocoaPods 1.0.0+ when using Alamofire 4.0.0+. Because of this requirement, the CocoaPods App (which uses CocoaPods 1.0.0) cannot be used.</p>
+
+<hr>
+<h3 id='carthage' class='heading'>Carthage</h3>
+
+<p>You can also integrate the Dropbox Swift SDK into your project using <a href="https://github.com/Carthage/Carthage">Carthage</a>, a decentralized dependency manager for Cocoa. Carthage offers more flexibility than CocoaPods, but requires some additional work. Carthage 0.37.0 is required due to XCFramework requirements on Xcode 12. You can install Carthage (with Xcode 11+) via <a href="http://brew.sh/">Homebrew</a>:</p>
+<pre class="highlight shell"><code>brew update
+brew <span class="nb">install </span>carthage
+</code></pre>
+
+<p>To install the Dropbox Swift SDK via Carthage, you need to create a <code>Cartfile</code> in your project with the following contents:</p>
+<pre class="highlight plaintext"><code># SwiftyDropbox
+github "https://github.com/dropbox/SwiftyDropbox" ~&gt; 8.2.1
+</code></pre>
+
+<p>Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:</p>
+<h5 id='ios' class='heading'>iOS</h5>
+<pre class="highlight shell"><code>carthage update <span class="nt">--platform</span> iOS <span class="nt">--use-xcframeworks</span>
+</code></pre>
+
+<p>Then, in the Project Navigator in Xcode, select your project, and then navigate to your project&rsquo;s build target &gt; <strong>General</strong> &gt; <strong>Frameworks, Libraries, and Embedded Content</strong> then drag both the <code>SwiftyDropbox.xcframework</code> and <code>Alamofire.xcframework</code>  files (from <code>Carthage/Build</code>) into the table, choosing <code>Embed &amp; Sign</code>.</p>
+<h5 id='macos' class='heading'>macOS</h5>
+<pre class="highlight shell"><code>carthage update <span class="nt">--platform</span> Mac <span class="nt">--use-xcframeworks</span>
+</code></pre>
+
+<p>Once you have checked-out out all the necessary code via Carthage, drag the <code>Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj</code> file into your project as a subproject.</p>
+
+<p>Then, in the Project Navigator in Xcode, select your project, and then navigate to your project&rsquo;s build target &gt; <strong>General</strong> &gt; <strong>Embedded Binaries</strong> then drag both the <code>SwiftyDropbox.xcframework</code> and <code>Alamofire.xcframework</code>  files (from <code>Carthage/Build</code>) into the table, choosing <code>Embed &amp; Sign</code>.</p>
+
+<hr>
+<h2 id='configure-your-project' class='heading'>Configure your project</h2>
+
+<p>Once you have integrated the Dropbox Swift SDK into your project, there are a few additional steps to take before you can begin making API calls.</p>
+<h3 id='application-code-plist-code-file' class='heading'>Application <code>.plist</code> file</h3>
+
+<p>If you are compiling on iOS SDK 9.0, you will need to modify your application&rsquo;s <code>.plist</code> to handle Apple&rsquo;s <a href="https://developer.apple.com/videos/wwdc/2015/?id=703">new security changes</a> to the <code>canOpenURL</code> function. You should
+add the following code to your application&rsquo;s <code>.plist</code> file:</p>
+<pre class="highlight plaintext"><code>&lt;key&gt;LSApplicationQueriesSchemes&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;dbapi-8-emm&lt;/string&gt;
+        &lt;string&gt;dbapi-2&lt;/string&gt;
+    &lt;/array&gt;
+</code></pre>
+
+<p>This allows the Swift SDK to determine if the official Dropbox iOS app is installed on the current device. If it is installed, then the official Dropbox iOS app can be used to programmatically obtain an OAuth 2.0 access token.</p>
+
+<p>Additionally, your application needs to register to handle a unique Dropbox URL scheme for redirect following completion of the OAuth 2.0 authorization flow. This URL scheme should have the format <code>db-&lt;APP_KEY&gt;</code>, where <code>&lt;APP_KEY&gt;</code> is your
+Dropbox app&rsquo;s app key, which can be found in the <a href="https://dropbox.com/developers/apps">App Console</a>.</p>
+
+<p>You should add the following code to your <code>.plist</code> file (but be sure to replace <code>&lt;APP_KEY&gt;</code> with your app&rsquo;s app key):</p>
+<pre class="highlight plaintext"><code>&lt;key&gt;CFBundleURLTypes&lt;/key&gt;
+    &lt;array&gt;
+        &lt;dict&gt;
+            &lt;key&gt;CFBundleURLSchemes&lt;/key&gt;
+            &lt;array&gt;
+                &lt;string&gt;db-&lt;APP_KEY&gt;&lt;/string&gt;
+            &lt;/array&gt;
+            &lt;key&gt;CFBundleURLName&lt;/key&gt;
+            &lt;string&gt;&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/array&gt;
+</code></pre>
+
+<p>After you&rsquo;ve made the above changes, your application&rsquo;s <code>.plist</code> file should look something like this:</p>
+
+<p align="center">
+  <img src="https://github.com/dropbox/SwiftyDropbox/blob/master/Images/InfoPlistExample.png?raw=true" alt="Info .plist Example"/>
+</p>
+
+<hr>
+<h3 id='handling-the-authorization-flow' class='heading'>Handling the authorization flow</h3>
+
+<p>There are three methods to programmatically retrieve an OAuth 2.0 access token:</p>
+
+<ul>
+<li><strong>Direct auth</strong> (iOS only): This launches the official Dropbox iOS app (if installed), authenticates via the official app, then redirects back into the SDK</li>
+<li><strong>Safari view controller auth</strong> (iOS only): This launches a <code>SFSafariViewController</code> to facillitate the auth flow. This is desirable because it is safer for the end-user, and pre-existing session data can be used to avoid requiring the user to re-enter their Dropbox credentials.</li>
+<li><strong>Redirect to external browser</strong> (macOS only): This launches the user&rsquo;s default browser to facillitate the auth flow. This is also desirable because it is safer for the end-user, and pre-existing session data can be used to avoid requiring the user to re-enter their Dropbox credentials.</li>
+</ul>
+
+<p>To facilitate the above authorization flows, you should take the following steps:</p>
+
+<hr>
+<h4 id='initialize-a-code-dropboxclient-code-instance' class='heading'>Initialize a <code>DropboxClient</code> instance</h4>
+
+<p>From your application delegate:</p>
+<h5 id='ios' class='heading'>iOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -&gt; Bool {
+    DropboxClientsManager.setupWithAppKey("&lt;APP_KEY&gt;")
+    return true
+}
+</code></pre>
+<h5 id='macos' class='heading'>macOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func applicationDidFinishLaunching(_ aNotification: Notification) {
+    DropboxClientsManager.setupWithAppKeyDesktop("&lt;APP_KEY&gt;")
+}
+</code></pre>
+
+<hr>
+<h4 id='begin-the-authorization-flow' class='heading'>Begin the authorization flow</h4>
+
+<p>You can commence the auth flow by calling <code>authorizeFromController:controller:openURL</code> method in your application&rsquo;s
+view controller. Note that the controller reference will be weakly held.</p>
+
+<p>From your view controller:</p>
+<h5 id='ios' class='heading'>iOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        UIApplication.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: { (url: URL) -&gt; Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
+        scopeRequest: scopeRequest
+    )
+
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
+    DropboxClientsManager.authorizeFromController(UIApplication.shared,
+                                                  controller: self,
+                                                  openURL: { (url: URL) -&gt; Void in
+                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                                  })
+}
+
+</code></pre>
+<h5 id='macos' class='heading'>macOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        sharedWorkspace: NSWorkspace.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: {(url: URL) -&gt; Void in NSWorkspace.shared.open(url)},
+        scopeRequest: scopeRequest
+    )
+
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
+    DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
+                                                  controller: self,
+                                                  openURL: { (url: URL) -&gt; Void in
+                                                    NSWorkspace.shared.open(url)
+                                                  })
+}
+</code></pre>
+
+<p>Beginning the authentication flow via in-app webview will launch a window like this:</p>
+
+<p align="center">
+  <img src="https://github.com/dropbox/SwiftyDropbox/blob/master/Images/OAuthFlowInit.png?raw=true" alt="Auth Flow Init Example"/>
+</p>
+
+<hr>
+<h4 id='handle-redirect-back-into-sdk' class='heading'>Handle redirect back into SDK</h4>
+
+<p>To handle the redirection back into the Swift SDK once the authentication flow is complete, you should add the following code in your application&rsquo;s delegate:</p>
+<h5 id='ios' class='heading'>iOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -&gt; Bool {
+    let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
+    }
+    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+    return canHandleUrl
+}
+
+</code></pre>
+
+<p>Or if your app is iOS13+, or your app also supports Scenes, add the following code into your application&rsquo;s main scene delegate:</p>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func scene(_ scene: UIScene, openURLContexts URLContexts: Set&lt;UIOpenURLContext&gt;) {
+     let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
+    }
+
+    for context in URLContexts {
+        // stop iterating after the first handle-able url
+        if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
+    }
+}
+</code></pre>
+<h5 id='macos' class='heading'>macOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+func applicationDidFinishLaunching(_ aNotification: Notification) {
+    ...... // code outlined above goes here
+
+    NSAppleEventManager.shared().setEventHandler(self,
+                                                 andSelector: #selector(handleGetURLEvent),
+                                                 forEventClass: AEEventClass(kInternetEventClass),
+                                                 andEventID: AEEventID(kAEGetURL))
+}
+
+func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
+    if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
+        if let urlStr = aeEventDescriptor.stringValue {
+            let url = URL(string: urlStr)!
+            let oauthCompletion: DropboxOAuthCompletion = {
+                if let authResult = $0 {
+                    switch authResult {
+                    case .success:
+                        print("Success! User is logged into Dropbox.")
+                    case .cancel:
+                        print("Authorization flow was manually canceled by user!")
+                    case .error(_, let description):
+                        print("Error: \(String(describing: description))")
+                    }
+                }
+            }
+            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+            // this brings your application back the foreground on redirect
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+}
+</code></pre>
+
+<p>After the end user signs in with their Dropbox login credentials via the in-app webview, they will see a window like this:</p>
+
+<p align="center">
+  <img src="https://github.com/dropbox/SwiftyDropbox/blob/master/Images/OAuthFlowApproval.png?raw=true" alt="Auth Flow Approval Example"/>
+</p>
+
+<p>If they press <strong>Allow</strong> or <strong>Cancel</strong>, the <code>db-&lt;APP_KEY&gt;</code> redirect URL will be launched from the webview, and will be handled in your application
+delegate&rsquo;s <code>application:handleOpenURL</code> method, from which the result of the authorization can be parsed.</p>
+
+<p>Now you&rsquo;re ready to begin making API requests!</p>
+
+<hr>
+<h2 id='try-some-api-requests' class='heading'>Try some API requests</h2>
+
+<p>Once you have obtained an OAuth 2.0 token, you can try some API v2 calls using the Swift SDK.</p>
+<h3 id='dropbox-client-instance' class='heading'>Dropbox client instance</h3>
+
+<p>Start by creating a reference to the <code>DropboxClient</code> or <code>DropboxTeamClient</code> instance that you will use to make your API calls.</p>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+// Reference after programmatic auth flow
+let client = DropboxClientsManager.authorizedClient
+</code></pre>
+
+<p>or</p>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+// Initialize with manually retrieved auth token
+let client = DropboxClient(accessToken: "&lt;MY_ACCESS_TOKEN&gt;")
+</code></pre>
+
+<hr>
+<h3 id='handle-the-api-response' class='heading'>Handle the API response</h3>
+
+<p>The Dropbox <a href="https://www.dropbox.com/developers/documentation/http/documentation">User API</a> and <a href="https://www.dropbox.com/developers/documentation/http/teams">Business API</a> have three types of requests: RPC, Upload and Download.</p>
+
+<p>The response handlers for each request type are similar to one another. The arguments for the handler blocks are as follows:</p>
+
+<ul>
+<li><strong>route result type</strong> (<code>Void</code> if the route does not have a return type)</li>
+<li><strong>network error</strong> (either a route-specific error or generic network error)</li>
+<li><strong>output content</strong> (<code>URL</code> / <code>Data</code> reference to downloaded output for Download-style endpoints only)</li>
+</ul>
+
+<p>Note: Response handlers are required for all endpoints. Progress handlers, on the other hand, are optional for all endpoints.</p>
+
+<hr>
+<h3 id='request-types' class='heading'>Request types</h3>
+<h4 id='rpc-style-request' class='heading'>RPC-style request</h4>
+<pre class="highlight plaintext"><code>client.files.createFolder(path: "/test/path/in/Dropbox/account").response { response, error in
+    if let response = response {
+        print(response)
+    } else if let error = error {
+        print(error)
+    }
+}
+</code></pre>
+
+<hr>
+<h4 id='upload-style-request' class='heading'>Upload-style request</h4>
+<pre class="highlight plaintext"><code>let fileData = "testing data example".data(using: String.Encoding.utf8, allowLossyConversion: false)!
+
+let request = client.files.upload(path: "/test/path/in/Dropbox/account", input: fileData)
+    .response { response, error in
+        if let response = response {
+            print(response)
+        } else if let error = error {
+            print(error)
+        }
+    }
+    .progress { progressData in
+        print(progressData)
+    }
+
+// in case you want to cancel the request
+if someConditionIsSatisfied {
+    request.cancel()
+}
+</code></pre>
+
+<hr>
+<h4 id='download-style-request' class='heading'>Download-style request</h4>
+<pre class="highlight plaintext"><code>// Download to URL
+let fileManager = FileManager.default
+let directoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+let destURL = directoryURL.appendingPathComponent("myTestFile")
+let destination: (URL, HTTPURLResponse) -&gt; URL = { temporaryURL, response in
+    return destURL
+}
+client.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
+    .response { response, error in
+        if let response = response {
+            print(response)
+        } else if let error = error {
+            print(error)
+        }
+    }
+    .progress { progressData in
+        print(progressData)
+    }
+
+
+// Download to Data
+client.files.download(path: "/test/path/in/Dropbox/account")
+    .response { response, error in
+        if let response = response {
+            let responseMetadata = response.0
+            print(responseMetadata)
+            let fileContents = response.1
+            print(fileContents)
+        } else if let error = error {
+            print(error)
+        }
+    }
+    .progress { progressData in
+        print(progressData)
+    }
+</code></pre>
+
+<hr>
+<h3 id='handling-responses-and-errors' class='heading'>Handling responses and errors</h3>
+
+<p>Dropbox API v2 deals largely with two data types: <strong>structs</strong> and <strong>unions</strong>. Broadly speaking, most route <strong>arguments</strong> are struct types and most route <strong>errors</strong> are union types.</p>
+
+<p><strong>NOTE:</strong> In this context, &ldquo;structs&rdquo; and &ldquo;unions&rdquo; are terms specific to the Dropbox API, and not to any of the languages that are used to query the API, so you should avoid thinking of them in terms of their Swift definitions.</p>
+
+<p><strong>Struct types</strong> are &ldquo;traditional&rdquo; object types, that is, composite types made up of a collection of one or more instance fields. All public instance fields are accessible at runtime, regardless of runtime state.</p>
+
+<p><strong>Union types</strong>, on the other hand, represent a single value that can take on multiple value types, depending on state. We capture all of these different type scenarios under one &ldquo;union object&rdquo;, but that object will exist only as one type at runtime. Each union state type, or <strong>tag</strong>, may have an associated value (if it doesn&rsquo;t, the union state type is said to be <strong>void</strong>). Associated value types can either be primitives, structs or unions. Although the Swift SDK represents union types as objects with multiple instance fields, at most one instance field is accessible at runtime, depending on the tag state of the union.</p>
+
+<p>For example, the <a href="https://www.dropbox.com/developers/documentation/http/documentation#files-delete">/delete</a> endpoint returns an error, <code>Files.DeleteError</code>, which is a union type. The <code>Files.DeleteError</code> union can take on two different tag states: <code>path_lookup</code>
+(if there is a problem looking up the path) or <code>path_write</code> (if there is a problem writing &ndash; or in this case deleting &ndash; to the path). Here, both tag states have non-void associated values (of types <code>Files.LookupError</code> and <code>Files.WriteError</code>, respectively).</p>
+
+<p>In this way, one union object is able to capture a multitude of scenarios, each of which has their own value type.</p>
+
+<p>To properly handle union types, you should pass each union through a switch statement, and check each possible tag state associated with the union. Once you have determined the current tag state of the union, you can then access the value associated with that tag state (provided there exists an associated value type, i.e., it&rsquo;s not <strong>void</strong>).</p>
+
+<hr>
+<h4 id='route-specific-errors' class='heading'>Route-specific errors</h4>
+<pre class="highlight plaintext"><code>client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
+    if let response = response {
+        print(response)
+    } else if let error = error {
+        switch error as CallError {
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
+            print("RouteError[\(requestId)]:")
+
+            switch boxed.unboxed as Files.DeleteError {
+            case .pathLookup(let lookupError):
+                switch lookupError {
+                case .notFound:
+                    print("There is nothing at the given path.")
+                case .notFile:
+                    print("We were expecting a file, but the given path refers to something that isn't a file.")
+                case .notFolder:
+                    print("We were expecting a folder, but the given path refers to something that isn't a folder.")
+                case .restrictedContent:
+                    print("The file cannot be transferred because the content is restricted...")
+                case .malformedPath(let malformedPath):
+                    print("Malformed path: \(malformedPath)")
+                case .other:
+                    print("Unknown")
+                }
+            case .pathWrite(let writeError):
+                print("WriteError: \(writeError)")
+                // you can handle each `WriteError` case like the `DeleteError` cases above
+            case .tooManyWriteOperations:
+                print("Another write operation occurring at the same time prevented this from succeeding.")
+            case .tooManyFiles:
+                print("There are too many files to delete.")
+            case .other:
+                print("Unknown")
+            }
+        case .internalServerError(let code, let message, let requestId):
+            ....
+            ....
+            // a not route-specific error occurred
+        ....
+        ....
+        ....
+        }
+    }
+}
+</code></pre>
+
+<hr>
+<h4 id='generic-network-request-errors' class='heading'>Generic network request errors</h4>
+
+<p>In the case of a network error, errors are either specific to the endpoint (as shown above) or more generic errors.</p>
+
+<p>To determine if an error is route-specific or not, the error object should be cast as a <code>CallError</code>, and depending on the type of error, handled in the appropriate switch statement.</p>
+<pre class="highlight plaintext"><code>client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
+    if let response = response {
+        print(response)
+    } else if let error = error {
+        switch error as CallError {
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
+            // a route-specific error occurred
+            // see handling above
+            ....
+            ....
+            ....
+        case .internalServerError(let code, let message, let requestId):
+            print("InternalServerError[\(requestId)]: \(code): \(message)")
+        case .badInputError(let message, let requestId):
+            print("BadInputError[\(requestId)]: \(message)")
+        case .authError(let authError, let userMessage, let errorSummary, let requestId):
+            print("AuthError[\(requestId)]: \(userMessage) \(errorSummary) \(authError)")
+        case .accessError(let accessError, let userMessage, let errorSummary, let requestId):
+            print("AccessError[\(requestId)]: \(userMessage) \(errorSummary) \(accessError)")
+        case .rateLimitError(let rateLimitError, let userMessage, let errorSummary, let requestId):
+            print("RateLimitError[\(requestId)]: \(userMessage) \(errorSummary) \(rateLimitError)")
+        case .httpError(let code, let message, let requestId):
+            print("HTTPError[\(requestId)]: \(code): \(message)")
+        case .clientError(let error):
+            print("ClientError: \(error)")
+        }
+    }
+}
+</code></pre>
+
+<hr>
+<h4 id='response-handling-edge-cases' class='heading'>Response handling edge cases</h4>
+
+<p>Some routes return union types as result types, so you should be prepared to handle these results in the same way that you handle union route errors. Please consult the <a href="https://www.dropbox.com/developers/documentation/http/documentation">documentation</a>
+for each endpoint that you use to ensure you are properly handling the route&rsquo;s response type.</p>
+
+<p>A few routes return result types that are <strong>datatypes with subtypes</strong>, that is, structs that can take on multiple state types like unions.</p>
+
+<p>For example, the <a href="https://www.dropbox.com/developers/documentation/http/documentation#files-delete">/delete</a> endpoint returns a generic <code>Metadata</code> type, which can exist either as a <code>FileMetadata</code> struct, a <code>FolderMetadata</code> struct, or a <code>DeletedMetadata</code> struct.
+To determine at runtime which subtype the <code>Metadata</code> type exists as, pass the object through a switch statement, and check for each possible class, with the result casted accordingly. See below:</p>
+<pre class="highlight plaintext"><code>client.files.deleteV2(path: "/test/path/in/Dropbox/account").response { response, error in
+    if let response = response {
+        switch response {
+        case let fileMetadata as Files.FileMetadata:
+            print("File metadata: \(fileMetadata)")
+        case let folderMetadata as Files.FolderMetadata:
+            print("Folder metadata: \(folderMetadata)")
+        case let deletedMetadata as Files.DeletedMetadata:
+            print("Deleted entity's metadata: \(deletedMetadata)")
+        }
+    } else if let error = error {
+        switch error as CallError {
+        case .routeError(let boxed, let userMessage, let errorSummary, let requestId):
+            // a route-specific error occurred
+            // see handling above
+        case .internalServerError(let code, let message, let requestId):
+            ....
+            ....
+            // a not route-specific error occurred
+            // see handling above
+        ....
+        ....
+        ....
+        }
+    }
+}
+</code></pre>
+
+<p>This <code>Metadata</code> object is known as a <strong>datatype with subtypes</strong> in our API v2 documentation.</p>
+
+<p>Datatypes with subtypes are a way combining structs and unions. Datatypes with subtypes are struct objects that contain a tag, which specifies which subtype the object exists as at runtime. The reason we have this construct, as with unions, is so we can capture a multitude of scenarios with one object.</p>
+
+<p>In the above example, the <code>Metadata</code> type can exists as <code>FileMetadata</code>, <code>FolderMetadata</code> or <code>DeleteMetadata</code>. Each of these types have common instances fields like &ldquo;name&rdquo; (the name for the file, folder or deleted type), but also instance fields that are specific to the particular subtype. In order to leverage inheritance, we set a common supertype called <code>Metadata</code> which captures all of the common instance fields, but also has a tag instance field, which specifies which subtype the object currently exists as.</p>
+
+<p>In this way, datatypes with subtypes are a hybrid of structs and unions. Only a few routes return result types like this.</p>
+
+<hr>
+<h3 id='customizing-network-calls' class='heading'>Customizing network calls</h3>
+<h4 id='configure-network-client' class='heading'>Configure network client</h4>
+
+<p>It is possible to configure the networking client used by the SDK to make API requests. You can supply custom fields like a custom user agent or custom delegates to manage response handler code, or a custom server trust policy. See below:</p>
+<h5 id='ios' class='heading'>iOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+let transportClient = DropboxTransportClient(accessToken: "&lt;MY_ACCESS_TOKEN&gt;",
+                                             baseHosts: nil,
+                                             userAgent: "CustomUserAgent",
+                                             selectUser: nil,
+                                             sessionDelegate: mySessionDelegate,
+                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
+                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+
+DropboxClientsManager.setupWithAppKey("&lt;APP_KEY&gt;", transportClient: transportClient)
+</code></pre>
+<h5 id='macos' class='heading'>macOS</h5>
+<pre class="highlight plaintext"><code>import SwiftyDropbox
+
+let transportClient = DropboxTransportClient(accessToken: "&lt;MY_ACCESS_TOKEN&gt;",
+                                             baseHosts: nil,
+                                             userAgent: "CustomUserAgent",
+                                             selectUser: nil,
+                                             sessionDelegate: mySessionDelegate,
+                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
+                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+
+DropboxClientsManager.setupWithAppKeyDesktop("&lt;APP_KEY&gt;", transportClient: transportClient)
+</code></pre>
+<h4 id='specify-api-call-response-queue' class='heading'>Specify API call response queue</h4>
+
+<p>By default, response/progress handler code runs on the main thread. You can set a custom response queue for each API call that you make via the <code>response</code> method, in the event want your response/progress handler code to run on a different thread:</p>
+<pre class="highlight plaintext"><code>let client = DropboxClientsManager.authorizedClient!
+
+client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustomSerialQueue")) { response, error in
+    if let result = response {
+        print(Thread.current)  // Output: &lt;NSThread: 0x61000007bec0&gt;{number = 4, name = (null)}
+        print(Thread.main)     // Output: &lt;NSThread: 0x608000070100&gt;{number = 1, name = (null)}
+        print(result)
+    }
+}
+</code></pre>
+
+<hr>
+<h3 id='code-dropboxclientsmanager-code-class' class='heading'><code>DropboxClientsManager</code> class</h3>
+
+<p>The Swift SDK includes a convenience class, <code>DropboxClientsManager</code>, for integrating the different functions of the SDK into one class.</p>
+<h4 id='single-dropbox-user-case' class='heading'>Single Dropbox user case</h4>
+
+<p>For most apps, it is reasonable to assume that only one Dropbox account (and access token) needs to be managed at a time. In this case, the <code>DropboxClientsManager</code> flow looks like this:</p>
+
+<ul>
+<li>call <code>setupWithAppKey</code>/<code>setupWithAppKeyDesktop</code> (or <code>setupWithTeamAppKey</code>/<code>setupWithTeamAppKeyDesktop</code>) in integrating app&rsquo;s app delegate</li>
+<li>client manager determines whether any access tokens are stored &ndash; if any exist, one token is arbitrarily chosen to use</li>
+<li>if no token is found, call <code>authorizeFromController</code>/<code>authorizeFromControllerDesktop</code> to initiate the OAuth flow</li>
+<li>if auth flow is initiated, call <code>handleRedirectURL</code> (or <code>handleRedirectURLTeam</code>) in integrating app&rsquo;s app delegate to handle auth redirect back into the app and store the retrieved access token (using a <code>DropboxOAuthManager</code> instance)</li>
+<li>client manager instantiates a <code>DropboxTransportClient</code> (if not supplied by the user)</li>
+<li>client manager instantiates a <code>DropboxClient</code> (or <code>DropboxTeamClient</code>) with the transport client as a field</li>
+</ul>
+
+<p>The <code>DropboxClient</code> (or <code>DropboxTeamClient</code>) is then used to make all of the desired API calls.</p>
+
+<ul>
+<li>call <code>unlinkClients</code> to logout Dropbox user and clear all access tokens</li>
+</ul>
+<h4 id='multiple-dropbox-user-case' class='heading'>Multiple Dropbox user case</h4>
+
+<p>For some apps, it is necessary to manage more than one Dropbox account (and access token) at a time. In this case, the <code>DropboxClientsManager</code> flow looks like this:</p>
+
+<ul>
+<li>access token uids are managed by the app that is integrating with the SDK for later lookup</li>
+<li>call <code>setupWithAppKeyMultiUser</code>/<code>setupWithAppKeyMultiUserDesktop</code> (or <code>setupWithTeamAppKeyMultiUser</code>/<code>setupWithTeamAppKeyMultiUserDesktop</code>) in integrating app&rsquo;s app delegate</li>
+<li>client manager determines whether an access token is stored with the<code>tokenUid</code> as a key &ndash; if one exists, this token is chosen to use</li>
+<li>if no token is found, call <code>authorizeFromController</code>/<code>authorizeFromControllerDesktop</code> to initiate the OAuth flow</li>
+<li>if auth flow is initiated, call <code>handleRedirectURL</code> (or <code>handleRedirectURLTeam</code>) in integrating app&rsquo;s app delegate to handle auth redirect back into the app and store the retrieved access token (using a <code>DropboxOAuthManager</code> instance)</li>
+<li>at this point, the app that is integrating with the SDK should persistently save the <code>tokenUid</code> from the <code>DropboxAccessToken</code> field of the <code>DropboxOAuthResult</code> object returned from the <code>handleRedirectURL</code> (or <code>handleRedirectURLTeam</code>) method</li>
+<li><code>tokenUid</code> can be reused either to authorize a new user mid-way through an app&rsquo;s lifecycle via <code>reauthorizeClient</code> (or <code>reauthorizeTeamClient</code>) or when the app initially launches via <code>setupWithAppKeyMultiUser</code>/<code>setupWithAppKeyMultiUserDesktop</code> (or <code>setupWithTeamAppKeyMultiUser</code>/<code>setupWithTeamAppKeyMultiUserDesktop</code>)</li>
+<li>client manager instantiates a <code>DropboxTransportClient</code> (if not supplied by the user)</li>
+<li>client manager instantiates a <code>DropboxClient</code> (or <code>DropboxTeamClient</code>) with the transport client as a field</li>
+</ul>
+
+<p>The <code>DropboxClient</code> (or <code>DropboxTeamClient</code>) is then used to make all of the desired API calls.</p>
+
+<ul>
+<li>call <code>resetClients</code> to logout Dropbox user but not clear any access tokens</li>
+<li>if specific access tokens need to be removed, use the <code>clearStoredAccessToken</code> method in <code>DropboxOAuthManager</code></li>
+</ul>
+
+<hr>
+<h2 id='examples' class='heading'>Examples</h2>
+
+<ul>
+<li><a href="https://github.com/dropbox/PhotoWatch">PhotoWatch</a> - View photos from your Dropbox. Supports Apple Watch.</li>
+</ul>
+
+<hr>
+<h2 id='documentation' class='heading'>Documentation</h2>
+
+<ul>
+<li><a href="http://dropbox.github.io/SwiftyDropbox/api-docs/latest/">Dropbox API v2 Swift SDK</a></li>
+<li><a href="https://www.dropbox.com/developers/documentation/http/documentation">Dropbox API v2</a></li>
+</ul>
+
+<hr>
+<h2 id='stone' class='heading'>Stone</h2>
+
+<p>All of our routes and data types are auto-generated using a framework called <a href="https://github.com/dropbox/stone">Stone</a>.</p>
+
+<p>The <code>stone</code> repo contains all of the Swift specific generation logic, and the <code>spec</code> repo contains the language-neutral API endpoint specifications which serve
+as input to the language-specific generators.</p>
+
+<hr>
+<h2 id='modifications' class='heading'>Modifications</h2>
+
+<p>If you&rsquo;re interested in modifying the SDK codebase, you should take the following steps:</p>
+
+<ul>
+<li>clone this GitHub repository to your local filesystem</li>
+<li>run <code>git submodule init</code> and then <code>git submodule update</code></li>
+<li>navigate to <code>TestSwifty_[iOS|macOS]</code></li>
+<li>check the CocoaPods version installed (via <code>pod --version</code>) is same as &ldquo;locked&rdquo; in <code>TestSwifty_[iOS|macOS]/Podfile.lock</code></li>
+<li>run <code>pod install</code></li>
+<li>open <code>TestSwifty_[iOS|macOS]/TestSwifty_[iOS|macOS].xcworkspace</code> in Xcode</li>
+<li>implement your changes to the SDK source code.</li>
+</ul>
+
+<p>To ensure your changes have not broken any existing functionality, you can run a series of integration tests:</p>
+
+<ul>
+<li>create a new app on <a href="https://www.dropbox.com/developers/apps/">https://www.dropbox.com/developers/apps/</a>, with &ldquo;Full Dropbox&rdquo; access. Note the App key</li>
+<li>open Info.plist and configure the &ldquo;URL types &gt; Item 0 (Editor) &gt; URL Schemes &gt; Item 0&rdquo; key to db-&ldquo;App key&rdquo;</li>
+<li>open AppDelegate.swift and replace &ldquo;FULL_DROPBOX_APP_KEY&rdquo; with the App key as well</li>
+<li>run the test app on your device and follow the on-screen instructions</li>
+</ul>
+
+<hr>
+<h2 id='app-store-connect-privacy-labels' class='heading'>App Store Connect Privacy Labels</h2>
+
+<p>To assist developers using Dropbox SDKs in filling out Apple’s Privacy Practices Questionnaire, we’ve provided the below information on the data that may be collected and used by Dropbox.</p>
+
+<p>As you complete the questionnaire you should note that the below information is general in nature. Dropbox SDKs are designed to be configured by the developer to incorporate Dropbox functionality as is best suited to their application. As a result of this customizable nature of the Dropbox SDKs, we are unable to provide information on the actual data collection and use for each application. We advise developers reference our Dropbox for HTTP Developers for specifics on how data is collected by each Dropbox API.</p>
+
+<p>In addition, you should note that the information below only identifies Dropbox’s collection and use of data. You are responsible for identifying your own collection and use of data in your app, which may result in different questionnaire answers than identified below:</p>
+
+<table><thead>
+<tr>
+<th>Data</th>
+<th>Collected by Dropbox</th>
+<th>Data Use</th>
+<th>Data Linked to the User</th>
+<th>Tracking</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Contact Info</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• Name</td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>&emsp;• Email Address</td>
+<td>May be collected<br>(if you enable authentication using an email address)</td>
+<td>• Application functionality</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Health &amp; Fitness</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Financial Info</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Location</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Sensitive Info</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Contacts</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>User Content</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• Audio Data</td>
+<td>May be collected</td>
+<td>• Application functionality</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>&emsp;• Photos or Videos</td>
+<td>May be collected</td>
+<td>• Application functionality</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>&emsp;• Other User Content</td>
+<td>May be collected</td>
+<td>• Application functionality</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Browsing History</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Search History</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• Search History</td>
+<td>May be collected<br>(if using search functionality)</td>
+<td>• Application functionality<br>• Analytics</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Identifiers</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• User ID</td>
+<td>Collected</td>
+<td>• Application functionality<br>• Analytics</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Purchases</strong></td>
+<td>Not collected</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Usage Data</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• Product Interaction</td>
+<td>Collected</td>
+<td>• Application functionality <br>• Analytics<br>• Product personalization</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Diagnostics</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>&emsp;• Other Diagnostic Data</td>
+<td>Collected<br>(API call logs)</td>
+<td>• Application functionality</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td><strong>Other Data</strong></td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+</tbody></table>
+
+<hr>
+<h2 id='bugs' class='heading'>Bugs</h2>
+
+<p>Please post any bugs to the <a href="https://github.com/dropbox/SwiftyDropbox/issues">issue tracker</a> found on the project&rsquo;s GitHub page.</p>
+
+<p>Please include the following with your issue:</p>
+
+<ul>
+<li>a description of what is not working right</li>
+<li>sample code to help replicate the issue</li>
+</ul>
+
+<p>Thank you!</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="https://dropbox.com/developers" target="_blank" rel="external noopener">Dropbox, Inc.</a>. All rights reserved. (Last updated: 2021-12-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
