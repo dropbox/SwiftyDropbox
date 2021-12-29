@@ -7,78 +7,78 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0EC97CF0276021D900C47B34 /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCC276021D800C47B34 /* TeamRoutes.swift */; };
-		0EC97CF1276021D900C47B34 /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCC276021D800C47B34 /* TeamRoutes.swift */; };
-		0EC97CF2276021D900C47B34 /* TeamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCD276021D800C47B34 /* TeamLog.swift */; };
-		0EC97CF3276021D900C47B34 /* TeamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCD276021D800C47B34 /* TeamLog.swift */; };
-		0EC97CF4276021D900C47B34 /* FileRequestsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCE276021D800C47B34 /* FileRequestsRoutes.swift */; };
-		0EC97CF5276021D900C47B34 /* FileRequestsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCE276021D800C47B34 /* FileRequestsRoutes.swift */; };
-		0EC97CF6276021D900C47B34 /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCF276021D800C47B34 /* FilePropertiesRoutes.swift */; };
-		0EC97CF7276021D900C47B34 /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CCF276021D800C47B34 /* FilePropertiesRoutes.swift */; };
-		0EC97CF8276021D900C47B34 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD0276021D800C47B34 /* TeamPolicies.swift */; };
-		0EC97CF9276021D900C47B34 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD0276021D800C47B34 /* TeamPolicies.swift */; };
-		0EC97CFA276021D900C47B34 /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD1276021D800C47B34 /* StoneValidators.swift */; };
-		0EC97CFB276021D900C47B34 /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD1276021D800C47B34 /* StoneValidators.swift */; };
-		0EC97CFC276021D900C47B34 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD2276021D800C47B34 /* Base.swift */; };
-		0EC97CFD276021D900C47B34 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD2276021D800C47B34 /* Base.swift */; };
-		0EC97CFE276021D900C47B34 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD3276021D800C47B34 /* Paper.swift */; };
-		0EC97CFF276021D900C47B34 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD3276021D800C47B34 /* Paper.swift */; };
-		0EC97D00276021D900C47B34 /* StoneSerializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD4276021D800C47B34 /* StoneSerializers.swift */; };
-		0EC97D01276021D900C47B34 /* StoneSerializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD4276021D800C47B34 /* StoneSerializers.swift */; };
-		0EC97D02276021D900C47B34 /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD5276021D800C47B34 /* SeenState.swift */; };
-		0EC97D03276021D900C47B34 /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD5276021D800C47B34 /* SeenState.swift */; };
-		0EC97D04276021D900C47B34 /* BaseTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD6276021D800C47B34 /* BaseTeam.swift */; };
-		0EC97D05276021D900C47B34 /* BaseTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD6276021D800C47B34 /* BaseTeam.swift */; };
-		0EC97D06276021D900C47B34 /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD7276021D800C47B34 /* AuthRoutes.swift */; };
-		0EC97D07276021D900C47B34 /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD7276021D800C47B34 /* AuthRoutes.swift */; };
-		0EC97D08276021D900C47B34 /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD8276021D800C47B34 /* SharingRoutes.swift */; };
-		0EC97D09276021D900C47B34 /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD8276021D800C47B34 /* SharingRoutes.swift */; };
-		0EC97D0A276021D900C47B34 /* FileProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD9276021D800C47B34 /* FileProperties.swift */; };
-		0EC97D0B276021D900C47B34 /* FileProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CD9276021D800C47B34 /* FileProperties.swift */; };
-		0EC97D0C276021D900C47B34 /* FilesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDA276021D800C47B34 /* FilesRoutes.swift */; };
-		0EC97D0D276021D900C47B34 /* FilesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDA276021D800C47B34 /* FilesRoutes.swift */; };
-		0EC97D0E276021D900C47B34 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDB276021D800C47B34 /* Team.swift */; };
-		0EC97D0F276021D900C47B34 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDB276021D800C47B34 /* Team.swift */; };
-		0EC97D10276021D900C47B34 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDC276021D800C47B34 /* UsersRoutes.swift */; };
-		0EC97D11276021D900C47B34 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDC276021D800C47B34 /* UsersRoutes.swift */; };
-		0EC97D12276021D900C47B34 /* SecondaryEmails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDD276021D800C47B34 /* SecondaryEmails.swift */; };
-		0EC97D13276021D900C47B34 /* SecondaryEmails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDD276021D800C47B34 /* SecondaryEmails.swift */; };
-		0EC97D14276021D900C47B34 /* CheckRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDE276021D800C47B34 /* CheckRoutes.swift */; };
-		0EC97D15276021D900C47B34 /* CheckRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDE276021D800C47B34 /* CheckRoutes.swift */; };
-		0EC97D16276021D900C47B34 /* ContactsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDF276021D800C47B34 /* ContactsRoutes.swift */; };
-		0EC97D17276021D900C47B34 /* ContactsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CDF276021D800C47B34 /* ContactsRoutes.swift */; };
-		0EC97D18276021D900C47B34 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE0276021D800C47B34 /* Account.swift */; };
-		0EC97D19276021D900C47B34 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE0276021D800C47B34 /* Account.swift */; };
-		0EC97D1A276021D900C47B34 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE1276021D800C47B34 /* Auth.swift */; };
-		0EC97D1B276021D900C47B34 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE1276021D800C47B34 /* Auth.swift */; };
-		0EC97D1C276021D900C47B34 /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE2276021D900C47B34 /* AccountRoutes.swift */; };
-		0EC97D1D276021D900C47B34 /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE2276021D900C47B34 /* AccountRoutes.swift */; };
-		0EC97D1E276021D900C47B34 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE3276021D900C47B34 /* Async.swift */; };
-		0EC97D1F276021D900C47B34 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE3276021D900C47B34 /* Async.swift */; };
-		0EC97D20276021D900C47B34 /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE4276021D900C47B34 /* Check.swift */; };
-		0EC97D21276021D900C47B34 /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE4276021D900C47B34 /* Check.swift */; };
-		0EC97D22276021D900C47B34 /* TeamCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE5276021D900C47B34 /* TeamCommon.swift */; };
-		0EC97D23276021D900C47B34 /* TeamCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE5276021D900C47B34 /* TeamCommon.swift */; };
-		0EC97D24276021D900C47B34 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE6276021D900C47B34 /* Users.swift */; };
-		0EC97D25276021D900C47B34 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE6276021D900C47B34 /* Users.swift */; };
-		0EC97D26276021D900C47B34 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE7276021D900C47B34 /* Sharing.swift */; };
-		0EC97D27276021D900C47B34 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE7276021D900C47B34 /* Sharing.swift */; };
-		0EC97D28276021D900C47B34 /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE8276021D900C47B34 /* UsersCommon.swift */; };
-		0EC97D29276021D900C47B34 /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE8276021D900C47B34 /* UsersCommon.swift */; };
-		0EC97D2A276021DA00C47B34 /* PaperRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE9276021D900C47B34 /* PaperRoutes.swift */; };
-		0EC97D2B276021DA00C47B34 /* PaperRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CE9276021D900C47B34 /* PaperRoutes.swift */; };
-		0EC97D2C276021DA00C47B34 /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEA276021D900C47B34 /* StoneBase.swift */; };
-		0EC97D2D276021DA00C47B34 /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEA276021D900C47B34 /* StoneBase.swift */; };
-		0EC97D2E276021DA00C47B34 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEB276021D900C47B34 /* Files.swift */; };
-		0EC97D2F276021DA00C47B34 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEB276021D900C47B34 /* Files.swift */; };
-		0EC97D30276021DA00C47B34 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEC276021D900C47B34 /* Common.swift */; };
-		0EC97D31276021DA00C47B34 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEC276021D900C47B34 /* Common.swift */; };
-		0EC97D32276021DA00C47B34 /* FileRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CED276021D900C47B34 /* FileRequests.swift */; };
-		0EC97D33276021DA00C47B34 /* FileRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CED276021D900C47B34 /* FileRequests.swift */; };
-		0EC97D34276021DA00C47B34 /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEE276021D900C47B34 /* TeamLogRoutes.swift */; };
-		0EC97D35276021DA00C47B34 /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEE276021D900C47B34 /* TeamLogRoutes.swift */; };
-		0EC97D36276021DA00C47B34 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEF276021D900C47B34 /* Contacts.swift */; };
-		0EC97D37276021DA00C47B34 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC97CEF276021D900C47B34 /* Contacts.swift */; };
+		0E152892277BD81D003813C2 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15286E277BD81C003813C2 /* Auth.swift */; };
+		0E152893277BD81D003813C2 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15286E277BD81C003813C2 /* Auth.swift */; };
+		0E152894277BD81D003813C2 /* SecondaryEmails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15286F277BD81C003813C2 /* SecondaryEmails.swift */; };
+		0E152895277BD81D003813C2 /* SecondaryEmails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15286F277BD81C003813C2 /* SecondaryEmails.swift */; };
+		0E152896277BD81D003813C2 /* PaperRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152870277BD81C003813C2 /* PaperRoutes.swift */; };
+		0E152897277BD81D003813C2 /* PaperRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152870277BD81C003813C2 /* PaperRoutes.swift */; };
+		0E152898277BD81D003813C2 /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152871277BD81C003813C2 /* SharingRoutes.swift */; };
+		0E152899277BD81D003813C2 /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152871277BD81C003813C2 /* SharingRoutes.swift */; };
+		0E15289A277BD81D003813C2 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152872277BD81C003813C2 /* Base.swift */; };
+		0E15289B277BD81D003813C2 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152872277BD81C003813C2 /* Base.swift */; };
+		0E15289C277BD81D003813C2 /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152873277BD81C003813C2 /* StoneBase.swift */; };
+		0E15289D277BD81D003813C2 /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152873277BD81C003813C2 /* StoneBase.swift */; };
+		0E15289E277BD81D003813C2 /* ContactsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152874277BD81C003813C2 /* ContactsRoutes.swift */; };
+		0E15289F277BD81D003813C2 /* ContactsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152874277BD81C003813C2 /* ContactsRoutes.swift */; };
+		0E1528A0277BD81D003813C2 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152875277BD81C003813C2 /* Paper.swift */; };
+		0E1528A1277BD81D003813C2 /* Paper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152875277BD81C003813C2 /* Paper.swift */; };
+		0E1528A2277BD81D003813C2 /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152876277BD81C003813C2 /* FilePropertiesRoutes.swift */; };
+		0E1528A3277BD81D003813C2 /* FilePropertiesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152876277BD81C003813C2 /* FilePropertiesRoutes.swift */; };
+		0E1528A4277BD81D003813C2 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152877277BD81C003813C2 /* Common.swift */; };
+		0E1528A5277BD81D003813C2 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152877277BD81C003813C2 /* Common.swift */; };
+		0E1528A6277BD81D003813C2 /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152878277BD81C003813C2 /* TeamRoutes.swift */; };
+		0E1528A7277BD81D003813C2 /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152878277BD81C003813C2 /* TeamRoutes.swift */; };
+		0E1528A8277BD81D003813C2 /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152879277BD81C003813C2 /* UsersCommon.swift */; };
+		0E1528A9277BD81D003813C2 /* UsersCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152879277BD81C003813C2 /* UsersCommon.swift */; };
+		0E1528AA277BD81D003813C2 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287A277BD81C003813C2 /* TeamPolicies.swift */; };
+		0E1528AB277BD81D003813C2 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287A277BD81C003813C2 /* TeamPolicies.swift */; };
+		0E1528AC277BD81D003813C2 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287B277BD81C003813C2 /* UsersRoutes.swift */; };
+		0E1528AD277BD81D003813C2 /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287B277BD81C003813C2 /* UsersRoutes.swift */; };
+		0E1528AE277BD81D003813C2 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287C277BD81C003813C2 /* Files.swift */; };
+		0E1528AF277BD81D003813C2 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287C277BD81C003813C2 /* Files.swift */; };
+		0E1528B0277BD81D003813C2 /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287D277BD81C003813C2 /* StoneValidators.swift */; };
+		0E1528B1277BD81D003813C2 /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287D277BD81C003813C2 /* StoneValidators.swift */; };
+		0E1528B2277BD81D003813C2 /* TeamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287E277BD81C003813C2 /* TeamLog.swift */; };
+		0E1528B3277BD81D003813C2 /* TeamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287E277BD81C003813C2 /* TeamLog.swift */; };
+		0E1528B4277BD81D003813C2 /* CheckRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287F277BD81C003813C2 /* CheckRoutes.swift */; };
+		0E1528B5277BD81D003813C2 /* CheckRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15287F277BD81C003813C2 /* CheckRoutes.swift */; };
+		0E1528B6277BD81D003813C2 /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152880277BD81C003813C2 /* AuthRoutes.swift */; };
+		0E1528B7277BD81D003813C2 /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152880277BD81C003813C2 /* AuthRoutes.swift */; };
+		0E1528B8277BD81D003813C2 /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152881277BD81C003813C2 /* TeamLogRoutes.swift */; };
+		0E1528B9277BD81D003813C2 /* TeamLogRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152881277BD81C003813C2 /* TeamLogRoutes.swift */; };
+		0E1528BA277BD81D003813C2 /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152882277BD81D003813C2 /* Check.swift */; };
+		0E1528BB277BD81D003813C2 /* Check.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152882277BD81D003813C2 /* Check.swift */; };
+		0E1528BC277BD81D003813C2 /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152883277BD81D003813C2 /* AccountRoutes.swift */; };
+		0E1528BD277BD81D003813C2 /* AccountRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152883277BD81D003813C2 /* AccountRoutes.swift */; };
+		0E1528BE277BD81D003813C2 /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152884277BD81D003813C2 /* SeenState.swift */; };
+		0E1528BF277BD81D003813C2 /* SeenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152884277BD81D003813C2 /* SeenState.swift */; };
+		0E1528C0277BD81D003813C2 /* TeamCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152885277BD81D003813C2 /* TeamCommon.swift */; };
+		0E1528C1277BD81D003813C2 /* TeamCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152885277BD81D003813C2 /* TeamCommon.swift */; };
+		0E1528C2277BD81D003813C2 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152886277BD81D003813C2 /* Users.swift */; };
+		0E1528C3277BD81D003813C2 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152886277BD81D003813C2 /* Users.swift */; };
+		0E1528C4277BD81D003813C2 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152887277BD81D003813C2 /* Team.swift */; };
+		0E1528C5277BD81D003813C2 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152887277BD81D003813C2 /* Team.swift */; };
+		0E1528C6277BD81D003813C2 /* FilesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152888277BD81D003813C2 /* FilesRoutes.swift */; };
+		0E1528C7277BD81D003813C2 /* FilesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152888277BD81D003813C2 /* FilesRoutes.swift */; };
+		0E1528C8277BD81D003813C2 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152889277BD81D003813C2 /* Contacts.swift */; };
+		0E1528C9277BD81D003813C2 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152889277BD81D003813C2 /* Contacts.swift */; };
+		0E1528CA277BD81D003813C2 /* BaseTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288A277BD81D003813C2 /* BaseTeam.swift */; };
+		0E1528CB277BD81D003813C2 /* BaseTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288A277BD81D003813C2 /* BaseTeam.swift */; };
+		0E1528CC277BD81D003813C2 /* FileRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288B277BD81D003813C2 /* FileRequests.swift */; };
+		0E1528CD277BD81D003813C2 /* FileRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288B277BD81D003813C2 /* FileRequests.swift */; };
+		0E1528CE277BD81D003813C2 /* FileRequestsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288C277BD81D003813C2 /* FileRequestsRoutes.swift */; };
+		0E1528CF277BD81D003813C2 /* FileRequestsRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288C277BD81D003813C2 /* FileRequestsRoutes.swift */; };
+		0E1528D0277BD81D003813C2 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288D277BD81D003813C2 /* Sharing.swift */; };
+		0E1528D1277BD81D003813C2 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288D277BD81D003813C2 /* Sharing.swift */; };
+		0E1528D2277BD81D003813C2 /* FileProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288E277BD81D003813C2 /* FileProperties.swift */; };
+		0E1528D3277BD81D003813C2 /* FileProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288E277BD81D003813C2 /* FileProperties.swift */; };
+		0E1528D4277BD81D003813C2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288F277BD81D003813C2 /* Account.swift */; };
+		0E1528D5277BD81D003813C2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15288F277BD81D003813C2 /* Account.swift */; };
+		0E1528D6277BD81D003813C2 /* StoneSerializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152890277BD81D003813C2 /* StoneSerializers.swift */; };
+		0E1528D7277BD81D003813C2 /* StoneSerializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152890277BD81D003813C2 /* StoneSerializers.swift */; };
+		0E1528D8277BD81D003813C2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152891277BD81D003813C2 /* Async.swift */; };
+		0E1528D9277BD81D003813C2 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E152891277BD81D003813C2 /* Async.swift */; };
 		8529B7C925FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */; };
 		8529B7CA25FAC97F00F5F6E9 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */; };
 		BF082C242464B7C6000C8469 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF082C232464B7C6000C8469 /* AuthSession.swift */; };
@@ -125,42 +125,42 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0EC97CCC276021D800C47B34 /* TeamRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRoutes.swift; sourceTree = "<group>"; };
-		0EC97CCD276021D800C47B34 /* TeamLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLog.swift; sourceTree = "<group>"; };
-		0EC97CCE276021D800C47B34 /* FileRequestsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileRequestsRoutes.swift; sourceTree = "<group>"; };
-		0EC97CCF276021D800C47B34 /* FilePropertiesRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePropertiesRoutes.swift; sourceTree = "<group>"; };
-		0EC97CD0276021D800C47B34 /* TeamPolicies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamPolicies.swift; sourceTree = "<group>"; };
-		0EC97CD1276021D800C47B34 /* StoneValidators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneValidators.swift; sourceTree = "<group>"; };
-		0EC97CD2276021D800C47B34 /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
-		0EC97CD3276021D800C47B34 /* Paper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Paper.swift; sourceTree = "<group>"; };
-		0EC97CD4276021D800C47B34 /* StoneSerializers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneSerializers.swift; sourceTree = "<group>"; };
-		0EC97CD5276021D800C47B34 /* SeenState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenState.swift; sourceTree = "<group>"; };
-		0EC97CD6276021D800C47B34 /* BaseTeam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTeam.swift; sourceTree = "<group>"; };
-		0EC97CD7276021D800C47B34 /* AuthRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthRoutes.swift; sourceTree = "<group>"; };
-		0EC97CD8276021D800C47B34 /* SharingRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingRoutes.swift; sourceTree = "<group>"; };
-		0EC97CD9276021D800C47B34 /* FileProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileProperties.swift; sourceTree = "<group>"; };
-		0EC97CDA276021D800C47B34 /* FilesRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesRoutes.swift; sourceTree = "<group>"; };
-		0EC97CDB276021D800C47B34 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
-		0EC97CDC276021D800C47B34 /* UsersRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersRoutes.swift; sourceTree = "<group>"; };
-		0EC97CDD276021D800C47B34 /* SecondaryEmails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondaryEmails.swift; sourceTree = "<group>"; };
-		0EC97CDE276021D800C47B34 /* CheckRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckRoutes.swift; sourceTree = "<group>"; };
-		0EC97CDF276021D800C47B34 /* ContactsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsRoutes.swift; sourceTree = "<group>"; };
-		0EC97CE0276021D800C47B34 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		0EC97CE1276021D800C47B34 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
-		0EC97CE2276021D900C47B34 /* AccountRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRoutes.swift; sourceTree = "<group>"; };
-		0EC97CE3276021D900C47B34 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		0EC97CE4276021D900C47B34 /* Check.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Check.swift; sourceTree = "<group>"; };
-		0EC97CE5276021D900C47B34 /* TeamCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCommon.swift; sourceTree = "<group>"; };
-		0EC97CE6276021D900C47B34 /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
-		0EC97CE7276021D900C47B34 /* Sharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sharing.swift; sourceTree = "<group>"; };
-		0EC97CE8276021D900C47B34 /* UsersCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersCommon.swift; sourceTree = "<group>"; };
-		0EC97CE9276021D900C47B34 /* PaperRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaperRoutes.swift; sourceTree = "<group>"; };
-		0EC97CEA276021D900C47B34 /* StoneBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneBase.swift; sourceTree = "<group>"; };
-		0EC97CEB276021D900C47B34 /* Files.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
-		0EC97CEC276021D900C47B34 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		0EC97CED276021D900C47B34 /* FileRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileRequests.swift; sourceTree = "<group>"; };
-		0EC97CEE276021D900C47B34 /* TeamLogRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLogRoutes.swift; sourceTree = "<group>"; };
-		0EC97CEF276021D900C47B34 /* Contacts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
+		0E15286E277BD81C003813C2 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		0E15286F277BD81C003813C2 /* SecondaryEmails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondaryEmails.swift; sourceTree = "<group>"; };
+		0E152870277BD81C003813C2 /* PaperRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaperRoutes.swift; sourceTree = "<group>"; };
+		0E152871277BD81C003813C2 /* SharingRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingRoutes.swift; sourceTree = "<group>"; };
+		0E152872277BD81C003813C2 /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		0E152873277BD81C003813C2 /* StoneBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneBase.swift; sourceTree = "<group>"; };
+		0E152874277BD81C003813C2 /* ContactsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsRoutes.swift; sourceTree = "<group>"; };
+		0E152875277BD81C003813C2 /* Paper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Paper.swift; sourceTree = "<group>"; };
+		0E152876277BD81C003813C2 /* FilePropertiesRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePropertiesRoutes.swift; sourceTree = "<group>"; };
+		0E152877277BD81C003813C2 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		0E152878277BD81C003813C2 /* TeamRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamRoutes.swift; sourceTree = "<group>"; };
+		0E152879277BD81C003813C2 /* UsersCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersCommon.swift; sourceTree = "<group>"; };
+		0E15287A277BD81C003813C2 /* TeamPolicies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamPolicies.swift; sourceTree = "<group>"; };
+		0E15287B277BD81C003813C2 /* UsersRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersRoutes.swift; sourceTree = "<group>"; };
+		0E15287C277BD81C003813C2 /* Files.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
+		0E15287D277BD81C003813C2 /* StoneValidators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneValidators.swift; sourceTree = "<group>"; };
+		0E15287E277BD81C003813C2 /* TeamLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLog.swift; sourceTree = "<group>"; };
+		0E15287F277BD81C003813C2 /* CheckRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckRoutes.swift; sourceTree = "<group>"; };
+		0E152880277BD81C003813C2 /* AuthRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthRoutes.swift; sourceTree = "<group>"; };
+		0E152881277BD81C003813C2 /* TeamLogRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamLogRoutes.swift; sourceTree = "<group>"; };
+		0E152882277BD81D003813C2 /* Check.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Check.swift; sourceTree = "<group>"; };
+		0E152883277BD81D003813C2 /* AccountRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountRoutes.swift; sourceTree = "<group>"; };
+		0E152884277BD81D003813C2 /* SeenState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeenState.swift; sourceTree = "<group>"; };
+		0E152885277BD81D003813C2 /* TeamCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCommon.swift; sourceTree = "<group>"; };
+		0E152886277BD81D003813C2 /* Users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
+		0E152887277BD81D003813C2 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		0E152888277BD81D003813C2 /* FilesRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesRoutes.swift; sourceTree = "<group>"; };
+		0E152889277BD81D003813C2 /* Contacts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
+		0E15288A277BD81D003813C2 /* BaseTeam.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTeam.swift; sourceTree = "<group>"; };
+		0E15288B277BD81D003813C2 /* FileRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileRequests.swift; sourceTree = "<group>"; };
+		0E15288C277BD81D003813C2 /* FileRequestsRoutes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileRequestsRoutes.swift; sourceTree = "<group>"; };
+		0E15288D277BD81D003813C2 /* Sharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sharing.swift; sourceTree = "<group>"; };
+		0E15288E277BD81D003813C2 /* FileProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileProperties.swift; sourceTree = "<group>"; };
+		0E15288F277BD81D003813C2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		0E152890277BD81D003813C2 /* StoneSerializers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoneSerializers.swift; sourceTree = "<group>"; };
+		0E152891277BD81D003813C2 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		8529B7C825FAC97F00F5F6E9 /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = ../../Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
 		BF082C232464B7C6000C8469 /* AuthSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
 		BF082C252464BE7A000C8469 /* OAuthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUtils.swift; sourceTree = "<group>"; };
@@ -232,42 +232,42 @@
 		BFFF31D424DE68950029FC0C /* Generated */ = {
 			isa = PBXGroup;
 			children = (
-				0EC97CE0276021D800C47B34 /* Account.swift */,
-				0EC97CE2276021D900C47B34 /* AccountRoutes.swift */,
-				0EC97CE3276021D900C47B34 /* Async.swift */,
-				0EC97CE1276021D800C47B34 /* Auth.swift */,
-				0EC97CD7276021D800C47B34 /* AuthRoutes.swift */,
-				0EC97CD2276021D800C47B34 /* Base.swift */,
-				0EC97CD6276021D800C47B34 /* BaseTeam.swift */,
-				0EC97CE4276021D900C47B34 /* Check.swift */,
-				0EC97CDE276021D800C47B34 /* CheckRoutes.swift */,
-				0EC97CEC276021D900C47B34 /* Common.swift */,
-				0EC97CEF276021D900C47B34 /* Contacts.swift */,
-				0EC97CDF276021D800C47B34 /* ContactsRoutes.swift */,
-				0EC97CD9276021D800C47B34 /* FileProperties.swift */,
-				0EC97CCF276021D800C47B34 /* FilePropertiesRoutes.swift */,
-				0EC97CED276021D900C47B34 /* FileRequests.swift */,
-				0EC97CCE276021D800C47B34 /* FileRequestsRoutes.swift */,
-				0EC97CEB276021D900C47B34 /* Files.swift */,
-				0EC97CDA276021D800C47B34 /* FilesRoutes.swift */,
-				0EC97CD3276021D800C47B34 /* Paper.swift */,
-				0EC97CE9276021D900C47B34 /* PaperRoutes.swift */,
-				0EC97CDD276021D800C47B34 /* SecondaryEmails.swift */,
-				0EC97CD5276021D800C47B34 /* SeenState.swift */,
-				0EC97CE7276021D900C47B34 /* Sharing.swift */,
-				0EC97CD8276021D800C47B34 /* SharingRoutes.swift */,
-				0EC97CEA276021D900C47B34 /* StoneBase.swift */,
-				0EC97CD4276021D800C47B34 /* StoneSerializers.swift */,
-				0EC97CD1276021D800C47B34 /* StoneValidators.swift */,
-				0EC97CDB276021D800C47B34 /* Team.swift */,
-				0EC97CE5276021D900C47B34 /* TeamCommon.swift */,
-				0EC97CCD276021D800C47B34 /* TeamLog.swift */,
-				0EC97CEE276021D900C47B34 /* TeamLogRoutes.swift */,
-				0EC97CD0276021D800C47B34 /* TeamPolicies.swift */,
-				0EC97CCC276021D800C47B34 /* TeamRoutes.swift */,
-				0EC97CE6276021D900C47B34 /* Users.swift */,
-				0EC97CE8276021D900C47B34 /* UsersCommon.swift */,
-				0EC97CDC276021D800C47B34 /* UsersRoutes.swift */,
+				0E15288F277BD81D003813C2 /* Account.swift */,
+				0E152883277BD81D003813C2 /* AccountRoutes.swift */,
+				0E152891277BD81D003813C2 /* Async.swift */,
+				0E15286E277BD81C003813C2 /* Auth.swift */,
+				0E152880277BD81C003813C2 /* AuthRoutes.swift */,
+				0E152872277BD81C003813C2 /* Base.swift */,
+				0E15288A277BD81D003813C2 /* BaseTeam.swift */,
+				0E152882277BD81D003813C2 /* Check.swift */,
+				0E15287F277BD81C003813C2 /* CheckRoutes.swift */,
+				0E152877277BD81C003813C2 /* Common.swift */,
+				0E152889277BD81D003813C2 /* Contacts.swift */,
+				0E152874277BD81C003813C2 /* ContactsRoutes.swift */,
+				0E15288E277BD81D003813C2 /* FileProperties.swift */,
+				0E152876277BD81C003813C2 /* FilePropertiesRoutes.swift */,
+				0E15288B277BD81D003813C2 /* FileRequests.swift */,
+				0E15288C277BD81D003813C2 /* FileRequestsRoutes.swift */,
+				0E15287C277BD81C003813C2 /* Files.swift */,
+				0E152888277BD81D003813C2 /* FilesRoutes.swift */,
+				0E152875277BD81C003813C2 /* Paper.swift */,
+				0E152870277BD81C003813C2 /* PaperRoutes.swift */,
+				0E15286F277BD81C003813C2 /* SecondaryEmails.swift */,
+				0E152884277BD81D003813C2 /* SeenState.swift */,
+				0E15288D277BD81D003813C2 /* Sharing.swift */,
+				0E152871277BD81C003813C2 /* SharingRoutes.swift */,
+				0E152873277BD81C003813C2 /* StoneBase.swift */,
+				0E152890277BD81D003813C2 /* StoneSerializers.swift */,
+				0E15287D277BD81C003813C2 /* StoneValidators.swift */,
+				0E152887277BD81D003813C2 /* Team.swift */,
+				0E152885277BD81D003813C2 /* TeamCommon.swift */,
+				0E15287E277BD81C003813C2 /* TeamLog.swift */,
+				0E152881277BD81C003813C2 /* TeamLogRoutes.swift */,
+				0E15287A277BD81C003813C2 /* TeamPolicies.swift */,
+				0E152878277BD81C003813C2 /* TeamRoutes.swift */,
+				0E152886277BD81D003813C2 /* Users.swift */,
+				0E152879277BD81C003813C2 /* UsersCommon.swift */,
+				0E15287B277BD81C003813C2 /* UsersRoutes.swift */,
 			);
 			path = Generated;
 			sourceTree = "<group>";
@@ -479,61 +479,61 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EC97D22276021D900C47B34 /* TeamCommon.swift in Sources */,
+				0E1528BC277BD81D003813C2 /* AccountRoutes.swift in Sources */,
+				0E15289E277BD81D003813C2 /* ContactsRoutes.swift in Sources */,
+				0E15289A277BD81D003813C2 /* Base.swift in Sources */,
+				0E1528C6277BD81D003813C2 /* FilesRoutes.swift in Sources */,
+				0E1528D0277BD81D003813C2 /* Sharing.swift in Sources */,
+				0E1528CC277BD81D003813C2 /* FileRequests.swift in Sources */,
+				0E1528C0277BD81D003813C2 /* TeamCommon.swift in Sources */,
 				BF082C262464BE7A000C8469 /* OAuthUtils.swift in Sources */,
-				0EC97D1A276021D900C47B34 /* Auth.swift in Sources */,
-				0EC97CF6276021D900C47B34 /* FilePropertiesRoutes.swift in Sources */,
-				0EC97D1C276021D900C47B34 /* AccountRoutes.swift in Sources */,
-				0EC97D20276021D900C47B34 /* Check.swift in Sources */,
+				0E152894277BD81D003813C2 /* SecondaryEmails.swift in Sources */,
+				0E1528D6277BD81D003813C2 /* StoneSerializers.swift in Sources */,
+				0E1528A2277BD81D003813C2 /* FilePropertiesRoutes.swift in Sources */,
+				0E1528A8277BD81D003813C2 /* UsersCommon.swift in Sources */,
 				F2478F2C1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
-				0EC97D1E276021D900C47B34 /* Async.swift in Sources */,
+				0E1528D8277BD81D003813C2 /* Async.swift in Sources */,
+				0E1528A6277BD81D003813C2 /* TeamRoutes.swift in Sources */,
+				0E1528A0277BD81D003813C2 /* Paper.swift in Sources */,
 				BF4CC9A2247842250005CADF /* Request+TokenRefresh.swift in Sources */,
-				0EC97D10276021D900C47B34 /* UsersRoutes.swift in Sources */,
-				0EC97D18276021D900C47B34 /* Account.swift in Sources */,
 				F2478F361ECCD0B300BAF014 /* TransportConfig.swift in Sources */,
-				0EC97CFE276021D900C47B34 /* Paper.swift in Sources */,
-				0EC97CF2276021D900C47B34 /* TeamLog.swift in Sources */,
+				0E1528B6277BD81D003813C2 /* AuthRoutes.swift in Sources */,
+				0E1528BA277BD81D003813C2 /* Check.swift in Sources */,
 				F2478F301ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */,
+				0E1528AA277BD81D003813C2 /* TeamPolicies.swift in Sources */,
 				F2478F241ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
+				0E1528C4277BD81D003813C2 /* Team.swift in Sources */,
 				F265BD0B1E68072500CC38C8 /* OAuthMobile.swift in Sources */,
-				0EC97CFA276021D900C47B34 /* StoneValidators.swift in Sources */,
+				0E1528A4277BD81D003813C2 /* Common.swift in Sources */,
+				0E1528AC277BD81D003813C2 /* UsersRoutes.swift in Sources */,
 				BF3A927424DE2EB7000BA354 /* OAuthTokenRequest.swift in Sources */,
-				0EC97D34276021DA00C47B34 /* TeamLogRoutes.swift in Sources */,
 				F2478F2E1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
-				0EC97D04276021D900C47B34 /* BaseTeam.swift in Sources */,
 				BF082C2A2464C4B7000C8469 /* LoadingViewController.swift in Sources */,
-				0EC97D24276021D900C47B34 /* Users.swift in Sources */,
-				0EC97D28276021D900C47B34 /* UsersCommon.swift in Sources */,
-				0EC97D14276021D900C47B34 /* CheckRoutes.swift in Sources */,
-				0EC97D02276021D900C47B34 /* SeenState.swift in Sources */,
+				0E152898277BD81D003813C2 /* SharingRoutes.swift in Sources */,
+				0E1528B8277BD81D003813C2 /* TeamLogRoutes.swift in Sources */,
 				BF4CC99F247750E50005CADF /* AccessTokenProvider.swift in Sources */,
+				0E152896277BD81D003813C2 /* PaperRoutes.swift in Sources */,
 				BF082C2C246620D2000C8469 /* OAuthConstants.swift in Sources */,
-				0EC97D30276021DA00C47B34 /* Common.swift in Sources */,
+				0E1528B0277BD81D003813C2 /* StoneValidators.swift in Sources */,
+				0E1528B4277BD81D003813C2 /* CheckRoutes.swift in Sources */,
+				0E1528B2277BD81D003813C2 /* TeamLog.swift in Sources */,
+				0E1528D2277BD81D003813C2 /* FileProperties.swift in Sources */,
+				0E1528C2277BD81D003813C2 /* Users.swift in Sources */,
 				F2478F391ECCD2FF00BAF014 /* SDKConstants.swift in Sources */,
+				0E1528BE277BD81D003813C2 /* SeenState.swift in Sources */,
+				0E1528C8277BD81D003813C2 /* Contacts.swift in Sources */,
+				0E15289C277BD81D003813C2 /* StoneBase.swift in Sources */,
+				0E1528D4277BD81D003813C2 /* Account.swift in Sources */,
 				F2478F201ECCD0B300BAF014 /* Custom.swift in Sources */,
-				0EC97D26276021D900C47B34 /* Sharing.swift in Sources */,
-				0EC97D0A276021D900C47B34 /* FileProperties.swift in Sources */,
+				0E1528AE277BD81D003813C2 /* Files.swift in Sources */,
 				F2478F321ECCD0B300BAF014 /* OAuth.swift in Sources */,
-				0EC97CFC276021D900C47B34 /* Base.swift in Sources */,
-				0EC97D12276021D900C47B34 /* SecondaryEmails.swift in Sources */,
-				0EC97D16276021D900C47B34 /* ContactsRoutes.swift in Sources */,
-				0EC97D0E276021D900C47B34 /* Team.swift in Sources */,
-				0EC97D36276021DA00C47B34 /* Contacts.swift in Sources */,
+				0E152892277BD81D003813C2 /* Auth.swift in Sources */,
+				0E1528CA277BD81D003813C2 /* BaseTeam.swift in Sources */,
+				0E1528CE277BD81D003813C2 /* FileRequestsRoutes.swift in Sources */,
 				BFDD66C9250310F7009D9B6D /* ChunkInputStream.swift in Sources */,
-				0EC97CF0276021D900C47B34 /* TeamRoutes.swift in Sources */,
-				0EC97D0C276021D900C47B34 /* FilesRoutes.swift in Sources */,
 				F2478F2A1ECCD0B300BAF014 /* DropboxClient.swift in Sources */,
-				0EC97D00276021D900C47B34 /* StoneSerializers.swift in Sources */,
-				0EC97D2C276021DA00C47B34 /* StoneBase.swift in Sources */,
-				0EC97CF8276021D900C47B34 /* TeamPolicies.swift in Sources */,
-				0EC97D2E276021DA00C47B34 /* Files.swift in Sources */,
-				0EC97D06276021D900C47B34 /* AuthRoutes.swift in Sources */,
-				0EC97D08276021D900C47B34 /* SharingRoutes.swift in Sources */,
-				0EC97D2A276021DA00C47B34 /* PaperRoutes.swift in Sources */,
 				BF082C242464B7C6000C8469 /* AuthSession.swift in Sources */,
-				0EC97D32276021DA00C47B34 /* FileRequests.swift in Sources */,
 				F2478F221ECCD0B300BAF014 /* CustomRoutes.swift in Sources */,
-				0EC97CF4276021D900C47B34 /* FileRequestsRoutes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,60 +541,60 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EC97D1D276021D900C47B34 /* AccountRoutes.swift in Sources */,
-				0EC97D09276021D900C47B34 /* SharingRoutes.swift in Sources */,
-				0EC97D37276021DA00C47B34 /* Contacts.swift in Sources */,
+				0E1528AD277BD81D003813C2 /* UsersRoutes.swift in Sources */,
+				0E1528D5277BD81D003813C2 /* Account.swift in Sources */,
+				0E152899277BD81D003813C2 /* SharingRoutes.swift in Sources */,
 				F2478F2D1ECCD0B300BAF014 /* DropboxClientsManager.swift in Sources */,
 				F2478F371ECCD0B400BAF014 /* TransportConfig.swift in Sources */,
-				0EC97CF7276021D900C47B34 /* FilePropertiesRoutes.swift in Sources */,
 				F2478F311ECCD0B300BAF014 /* DropboxTransportClient.swift in Sources */,
-				0EC97D2B276021DA00C47B34 /* PaperRoutes.swift in Sources */,
-				0EC97D21276021D900C47B34 /* Check.swift in Sources */,
+				0E15289F277BD81D003813C2 /* ContactsRoutes.swift in Sources */,
+				0E1528BF277BD81D003813C2 /* SeenState.swift in Sources */,
+				0E1528A9277BD81D003813C2 /* UsersCommon.swift in Sources */,
+				0E1528C5277BD81D003813C2 /* Team.swift in Sources */,
+				0E152897277BD81D003813C2 /* PaperRoutes.swift in Sources */,
+				0E1528C7277BD81D003813C2 /* FilesRoutes.swift in Sources */,
+				0E1528D3277BD81D003813C2 /* FileProperties.swift in Sources */,
+				0E1528B5277BD81D003813C2 /* CheckRoutes.swift in Sources */,
 				BF4CC9A0247750E50005CADF /* AccessTokenProvider.swift in Sources */,
 				F2478F251ECCD0B300BAF014 /* CustomTasks.swift in Sources */,
-				0EC97D13276021D900C47B34 /* SecondaryEmails.swift in Sources */,
+				0E1528D1277BD81D003813C2 /* Sharing.swift in Sources */,
+				0E152893277BD81D003813C2 /* Auth.swift in Sources */,
 				BFDD66CA250310F7009D9B6D /* ChunkInputStream.swift in Sources */,
-				0EC97D1F276021D900C47B34 /* Async.swift in Sources */,
-				0EC97D0F276021D900C47B34 /* Team.swift in Sources */,
-				0EC97D07276021D900C47B34 /* AuthRoutes.swift in Sources */,
-				0EC97CFD276021D900C47B34 /* Base.swift in Sources */,
-				0EC97CF5276021D900C47B34 /* FileRequestsRoutes.swift in Sources */,
-				0EC97D27276021D900C47B34 /* Sharing.swift in Sources */,
-				0EC97D01276021D900C47B34 /* StoneSerializers.swift in Sources */,
-				0EC97D19276021D900C47B34 /* Account.swift in Sources */,
-				0EC97D1B276021D900C47B34 /* Auth.swift in Sources */,
+				0E1528D7277BD81D003813C2 /* StoneSerializers.swift in Sources */,
+				0E1528B9277BD81D003813C2 /* TeamLogRoutes.swift in Sources */,
+				0E152895277BD81D003813C2 /* SecondaryEmails.swift in Sources */,
 				F265BD101E68073A00CC38C8 /* OAuthDesktop.swift in Sources */,
+				0E1528A7277BD81D003813C2 /* TeamRoutes.swift in Sources */,
+				0E1528CF277BD81D003813C2 /* FileRequestsRoutes.swift in Sources */,
 				F2478F2F1ECCD0B300BAF014 /* DropboxTeamClient.swift in Sources */,
-				0EC97D29276021D900C47B34 /* UsersCommon.swift in Sources */,
-				0EC97CFB276021D900C47B34 /* StoneValidators.swift in Sources */,
+				0E1528A3277BD81D003813C2 /* FilePropertiesRoutes.swift in Sources */,
 				BF082C2D246620D5000C8469 /* OAuthConstants.swift in Sources */,
+				0E1528C3277BD81D003813C2 /* Users.swift in Sources */,
+				0E1528BB277BD81D003813C2 /* Check.swift in Sources */,
+				0E1528BD277BD81D003813C2 /* AccountRoutes.swift in Sources */,
+				0E1528C9277BD81D003813C2 /* Contacts.swift in Sources */,
+				0E1528AB277BD81D003813C2 /* TeamPolicies.swift in Sources */,
 				F2478F3A1ECCD2FF00BAF014 /* SDKConstants.swift in Sources */,
-				0EC97D11276021D900C47B34 /* UsersRoutes.swift in Sources */,
+				0E1528B7277BD81D003813C2 /* AuthRoutes.swift in Sources */,
 				BF3A927224DE2DF1000BA354 /* AuthSession.swift in Sources */,
 				F2478F211ECCD0B300BAF014 /* Custom.swift in Sources */,
 				F2478F331ECCD0B300BAF014 /* OAuth.swift in Sources */,
-				0EC97D05276021D900C47B34 /* BaseTeam.swift in Sources */,
-				0EC97D35276021DA00C47B34 /* TeamLogRoutes.swift in Sources */,
-				0EC97D03276021D900C47B34 /* SeenState.swift in Sources */,
-				0EC97D15276021D900C47B34 /* CheckRoutes.swift in Sources */,
-				0EC97D31276021DA00C47B34 /* Common.swift in Sources */,
+				0E1528AF277BD81D003813C2 /* Files.swift in Sources */,
 				F2478F2B1ECCD0B300BAF014 /* DropboxClient.swift in Sources */,
+				0E1528D9277BD81D003813C2 /* Async.swift in Sources */,
+				0E1528A5277BD81D003813C2 /* Common.swift in Sources */,
 				BF4CC9A3247842250005CADF /* Request+TokenRefresh.swift in Sources */,
+				0E15289B277BD81D003813C2 /* Base.swift in Sources */,
 				BF3A927524DE2EB7000BA354 /* OAuthTokenRequest.swift in Sources */,
-				0EC97D0D276021D900C47B34 /* FilesRoutes.swift in Sources */,
+				0E1528A1277BD81D003813C2 /* Paper.swift in Sources */,
+				0E1528B1277BD81D003813C2 /* StoneValidators.swift in Sources */,
+				0E1528CD277BD81D003813C2 /* FileRequests.swift in Sources */,
 				BF082C272464BE7A000C8469 /* OAuthUtils.swift in Sources */,
-				0EC97CF9276021D900C47B34 /* TeamPolicies.swift in Sources */,
-				0EC97D25276021D900C47B34 /* Users.swift in Sources */,
-				0EC97CFF276021D900C47B34 /* Paper.swift in Sources */,
-				0EC97D0B276021D900C47B34 /* FileProperties.swift in Sources */,
-				0EC97D2D276021DA00C47B34 /* StoneBase.swift in Sources */,
-				0EC97D33276021DA00C47B34 /* FileRequests.swift in Sources */,
-				0EC97D23276021D900C47B34 /* TeamCommon.swift in Sources */,
-				0EC97D17276021D900C47B34 /* ContactsRoutes.swift in Sources */,
-				0EC97CF3276021D900C47B34 /* TeamLog.swift in Sources */,
-				0EC97D2F276021DA00C47B34 /* Files.swift in Sources */,
+				0E1528B3277BD81D003813C2 /* TeamLog.swift in Sources */,
+				0E1528C1277BD81D003813C2 /* TeamCommon.swift in Sources */,
+				0E15289D277BD81D003813C2 /* StoneBase.swift in Sources */,
+				0E1528CB277BD81D003813C2 /* BaseTeam.swift in Sources */,
 				F2478F231ECCD0B300BAF014 /* CustomRoutes.swift in Sources */,
-				0EC97CF1276021D900C47B34 /* TeamRoutes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,7 +732,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../Carthage/Build/iOS/";
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -758,7 +757,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../Carthage/Build/iOS/";
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -784,7 +782,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../Carthage/Build/Mac/";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -813,7 +810,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../Carthage/Build/Mac/";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/Platform/SwiftyDropbox_macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
