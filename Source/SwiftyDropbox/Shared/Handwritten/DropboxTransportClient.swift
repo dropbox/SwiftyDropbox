@@ -703,11 +703,6 @@ open class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSerialize
                 let result = caseInsensitiveLookup("Dropbox-Api-Result", dictionary: headerFields)!
                 let resultData = result.data(using: .utf8, allowLossyConversion: false)
                 let resultObject = strongSelf.responseSerializer.deserialize(SerializeUtil.parseJSON(resultData!))
-
-                // An empty file can cause the response data to be nil.
-                // If nil is encountered, we now convert to an empty Data object.
-                // Previously, this was a forced unwrap, which would crash for
-                // empty files. See https://github.com/dropbox/SwiftyDropbox/issues/344
                 completionHandler((resultObject, response.data ?? Data()), nil)
             }
         }))
