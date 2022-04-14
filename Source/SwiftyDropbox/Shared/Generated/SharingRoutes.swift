@@ -19,7 +19,8 @@ open class SharingRoutes {
     /// - parameter members: Members to add. Note that even an email address is given, this may result in a user being
     /// directly added to the membership if that email is the user's main account email.
     /// - parameter customMessage: Message to send to added members in their invitation.
-    /// - parameter quiet: Whether added members should be notified via device notifications of their invitation.
+    /// - parameter quiet: Whether added members should be notified via email and device notifications of their
+    /// invitation.
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
     /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file.
     ///

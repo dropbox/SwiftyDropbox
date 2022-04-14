@@ -388,43 +388,6 @@ open class Files {
         }
     }
 
-    /// The CommitInfoWithProperties struct
-    open class CommitInfoWithProperties: Files.CommitInfo {
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoWithPropertiesSerializer().serialize(self)))"
-        }
-    }
-    open class CommitInfoWithPropertiesSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: CommitInfoWithProperties) -> JSON {
-            let output = [ 
-            "path": Serialization._StringSerializer.serialize(value.path),
-            "mode": Files.WriteModeSerializer().serialize(value.mode),
-            "autorename": Serialization._BoolSerializer.serialize(value.autorename),
-            "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
-            "mute": Serialization._BoolSerializer.serialize(value.mute),
-            "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
-            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> CommitInfoWithProperties {
-            switch json {
-                case .dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
-                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
-                    let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
-                    return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
-                default:
-                    fatalError("Type error deserializing")
-            }
-        }
-    }
-
     /// The ContentSyncSetting struct
     open class ContentSyncSetting: CustomStringConvertible {
         /// Id of the item this setting is applied to.
@@ -1423,7 +1386,9 @@ open class Files {
         public let pathDisplay: String?
         /// Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo instead.
         public let parentSharedFolderId: String?
-        public init(name: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil) {
+        /// The preview URL of the file.
+        public let previewUrl: String?
+        public init(name: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, previewUrl: String? = nil) {
             stringValidator()(name)
             self.name = name
             nullableValidator(stringValidator())(pathLower)
@@ -1432,6 +1397,8 @@ open class Files {
             self.pathDisplay = pathDisplay
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
+            nullableValidator(stringValidator())(previewUrl)
+            self.previewUrl = previewUrl
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(MetadataSerializer().serialize(self)))"
@@ -1445,6 +1412,7 @@ open class Files {
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "preview_url": NullableSerializer(Serialization._StringSerializer).serialize(value.previewUrl),
             ]
             switch value {
                 case let file as Files.FileMetadata:
@@ -1500,6 +1468,7 @@ open class Files {
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "preview_url": NullableSerializer(Serialization._StringSerializer).serialize(value.previewUrl),
             ]
             return .dictionary(output)
         }
@@ -1510,7 +1479,8 @@ open class Files {
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                     let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
-                    return DeletedMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+                    let previewUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["preview_url"] ?? .null)
+                    return DeletedMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2279,7 +2249,7 @@ open class Files {
         public let contentHash: String?
         /// If present, the metadata associated with the file's current lock.
         public let fileLockInfo: Files.FileLockMetadata?
-        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, isDownloadable: Bool = true, exportInfo: Files.ExportInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil, fileLockInfo: Files.FileLockMetadata? = nil) {
+        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, previewUrl: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, isDownloadable: Bool = true, exportInfo: Files.ExportInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil, fileLockInfo: Files.FileLockMetadata? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
             self.clientModified = clientModified
@@ -2298,7 +2268,7 @@ open class Files {
             nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
             self.contentHash = contentHash
             self.fileLockInfo = fileLockInfo
-            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FileMetadataSerializer().serialize(self)))"
@@ -2317,6 +2287,7 @@ open class Files {
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "preview_url": NullableSerializer(Serialization._StringSerializer).serialize(value.previewUrl),
             "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
             "symlink_info": NullableSerializer(Files.SymlinkInfoSerializer()).serialize(value.symlinkInfo),
             "sharing_info": NullableSerializer(Files.FileSharingInfoSerializer()).serialize(value.sharingInfo),
@@ -2341,6 +2312,7 @@ open class Files {
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                     let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let previewUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["preview_url"] ?? .null)
                     let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .null)
                     let symlinkInfo = NullableSerializer(Files.SymlinkInfoSerializer()).deserialize(dict["symlink_info"] ?? .null)
                     let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
@@ -2350,7 +2322,7 @@ open class Files {
                     let hasExplicitSharedMembers = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .null)
                     let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
                     let fileLockInfo = NullableSerializer(Files.FileLockMetadataSerializer()).deserialize(dict["file_lock_info"] ?? .null)
-                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, symlinkInfo: symlinkInfo, sharingInfo: sharingInfo, isDownloadable: isDownloadable, exportInfo: exportInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash, fileLockInfo: fileLockInfo)
+                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl, mediaInfo: mediaInfo, symlinkInfo: symlinkInfo, sharingInfo: sharingInfo, isDownloadable: isDownloadable, exportInfo: exportInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash, fileLockInfo: fileLockInfo)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2489,14 +2461,14 @@ open class Files {
         /// Additional information if the file has custom properties with the property template specified. Note that
         /// only properties associated with user-owned templates, not team-owned templates, can be attached to folders.
         public let propertyGroups: Array<FileProperties.PropertyGroup>?
-        public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
+        public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, previewUrl: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.sharingInfo = sharingInfo
             self.propertyGroups = propertyGroups
-            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
+            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FolderMetadataSerializer().serialize(self)))"
@@ -2511,6 +2483,7 @@ open class Files {
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+            "preview_url": NullableSerializer(Serialization._StringSerializer).serialize(value.previewUrl),
             "shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.sharedFolderId),
             "sharing_info": NullableSerializer(Files.FolderSharingInfoSerializer()).serialize(value.sharingInfo),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
@@ -2525,10 +2498,11 @@ open class Files {
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                     let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let previewUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["preview_url"] ?? .null)
                     let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .null)
                     let sharingInfo = NullableSerializer(Files.FolderSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
-                    return FolderMetadata(name: name, id: id, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, sharingInfo: sharingInfo, propertyGroups: propertyGroups)
+                    return FolderMetadata(name: name, id: id, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl, sharedFolderId: sharedFolderId, sharingInfo: sharingInfo, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4203,8 +4177,8 @@ open class Files {
         case notFile
         /// We were expecting a folder, but the given path refers to something that isn't a folder.
         case notFolder
-        /// The file cannot be transferred because the content is restricted.  For example, sometimes there are legal
-        /// restrictions due to copyright claims.
+        /// The file cannot be transferred because the content is restricted. For example, we might restrict a file due
+        /// to legal requirements.
         case restrictedContent
         /// This operation is not supported for this content type.
         case unsupportedContentType
@@ -4551,6 +4525,49 @@ open class Files {
                     return MoveBatchArg(entries: entries, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The MoveIntoFamilyError union
+    public enum MoveIntoFamilyError: CustomStringConvertible {
+        /// Moving shared folder into Family Room folder is not allowed.
+        case isSharedFolder
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(MoveIntoFamilyErrorSerializer().serialize(self)))"
+        }
+    }
+    open class MoveIntoFamilyErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: MoveIntoFamilyError) -> JSON {
+            switch value {
+                case .isSharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_shared_folder")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> MoveIntoFamilyError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "is_shared_folder":
+                            return MoveIntoFamilyError.isSharedFolder
+                        case "other":
+                            return MoveIntoFamilyError.other
+                        default:
+                            return MoveIntoFamilyError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -5506,6 +5523,8 @@ open class Files {
         case cantMoveSharedFolder
         /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
         case cantMoveIntoVault(Files.MoveIntoVaultError)
+        /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
+        case cantMoveIntoFamily(Files.MoveIntoFamilyError)
         /// An unspecified error.
         case other
 
@@ -5569,6 +5588,10 @@ open class Files {
                     var d = ["cant_move_into_vault": Files.MoveIntoVaultErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("cant_move_into_vault")
                     return .dictionary(d)
+                case .cantMoveIntoFamily(let arg):
+                    var d = ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("cant_move_into_family")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5610,6 +5633,9 @@ open class Files {
                         case "cant_move_into_vault":
                             let v = Files.MoveIntoVaultErrorSerializer().deserialize(d["cant_move_into_vault"] ?? .null)
                             return RelocationError.cantMoveIntoVault(v)
+                        case "cant_move_into_family":
+                            let v = Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
+                            return RelocationError.cantMoveIntoFamily(v)
                         case "other":
                             return RelocationError.other
                         default:
@@ -5651,6 +5677,8 @@ open class Files {
         case cantMoveSharedFolder
         /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
         case cantMoveIntoVault(Files.MoveIntoVaultError)
+        /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
+        case cantMoveIntoFamily(Files.MoveIntoFamilyError)
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -5716,6 +5744,10 @@ open class Files {
                     var d = ["cant_move_into_vault": Files.MoveIntoVaultErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("cant_move_into_vault")
                     return .dictionary(d)
+                case .cantMoveIntoFamily(let arg):
+                    var d = ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("cant_move_into_family")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5761,6 +5793,9 @@ open class Files {
                         case "cant_move_into_vault":
                             let v = Files.MoveIntoVaultErrorSerializer().deserialize(d["cant_move_into_vault"] ?? .null)
                             return RelocationBatchError.cantMoveIntoVault(v)
+                        case "cant_move_into_family":
+                            let v = Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
+                            return RelocationBatchError.cantMoveIntoFamily(v)
                         case "other":
                             return RelocationBatchError.other
                         case "too_many_write_operations":
@@ -8287,12 +8322,64 @@ open class Files {
         }
     }
 
+    /// The UploadArg struct
+    open class UploadArg: Files.CommitInfo {
+        /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
+        /// hash, an error will be returned. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String?
+        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, strictConflict: Bool = false, contentHash: String? = nil) {
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
+            self.contentHash = contentHash
+            super.init(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict)
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadArgSerializer().serialize(self)))"
+        }
+    }
+    open class UploadArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            "mode": Files.WriteModeSerializer().serialize(value.mode),
+            "autorename": Serialization._BoolSerializer.serialize(value.autorename),
+            "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
+            "mute": Serialization._BoolSerializer.serialize(value.mute),
+            "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
+            "strict_conflict": Serialization._BoolSerializer.serialize(value.strictConflict),
+            "content_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UploadArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
+                    let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
+                    let strictConflict = Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
+                    let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
+                    return UploadArg(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups, strictConflict: strictConflict, contentHash: contentHash)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The UploadError union
     public enum UploadError: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
         /// The supplied property group is invalid. The file has uploaded without property groups.
         case propertiesError(FileProperties.InvalidPropertyGroupError)
+        /// The request payload must be at most 150 MB.
+        case payloadTooLarge
+        /// The content received by the Dropbox server in this call does not match the provided content hash.
+        case contentHashMismatch
         /// An unspecified error.
         case other
 
@@ -8312,6 +8399,14 @@ open class Files {
                     var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("properties_error")
                     return .dictionary(d)
+                case .payloadTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("payload_too_large")
+                    return .dictionary(d)
+                case .contentHashMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_hash_mismatch")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -8329,63 +8424,14 @@ open class Files {
                         case "properties_error":
                             let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
                             return UploadError.propertiesError(v)
+                        case "payload_too_large":
+                            return UploadError.payloadTooLarge
+                        case "content_hash_mismatch":
+                            return UploadError.contentHashMismatch
                         case "other":
                             return UploadError.other
                         default:
                             return UploadError.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// The UploadErrorWithProperties union
-    public enum UploadErrorWithProperties: CustomStringConvertible {
-        /// Unable to save the uploaded contents to a file.
-        case path(Files.UploadWriteFailed)
-        /// The supplied property group is invalid. The file has uploaded without property groups.
-        case propertiesError(FileProperties.InvalidPropertyGroupError)
-        /// An unspecified error.
-        case other
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorWithPropertiesSerializer().serialize(self)))"
-        }
-    }
-    open class UploadErrorWithPropertiesSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UploadErrorWithProperties) -> JSON {
-            switch value {
-                case .path(let arg):
-                    var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
-                    d[".tag"] = .str("path")
-                    return .dictionary(d)
-                case .propertiesError(let arg):
-                    var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
-                    d[".tag"] = .str("properties_error")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> UploadErrorWithProperties {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "path":
-                            let v = Files.UploadWriteFailedSerializer().deserialize(json)
-                            return UploadErrorWithProperties.path(v)
-                        case "properties_error":
-                            let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
-                            return UploadErrorWithProperties.propertiesError(v)
-                        case "other":
-                            return UploadErrorWithProperties.other
-                        default:
-                            fatalError("Unknown tag \(tag)")
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -8400,9 +8446,15 @@ open class Files {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
         public let close: Bool
-        public init(cursor: Files.UploadSessionCursor, close: Bool = false) {
+        /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
+        /// hash, an error will be returned. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String?
+        public init(cursor: Files.UploadSessionCursor, close: Bool = false, contentHash: String? = nil) {
             self.cursor = cursor
             self.close = close
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
+            self.contentHash = contentHash
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionAppendArgSerializer().serialize(self)))"
@@ -8414,6 +8466,7 @@ open class Files {
             let output = [ 
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "close": Serialization._BoolSerializer.serialize(value.close),
+            "content_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
             ]
             return .dictionary(output)
         }
@@ -8422,9 +8475,224 @@ open class Files {
                 case .dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
                     let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
-                    return UploadSessionAppendArg(cursor: cursor, close: close)
+                    let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
+                    return UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
                 default:
                     fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionLookupError union
+    public enum UploadSessionLookupError: CustomStringConvertible {
+        /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+        case notFound
+        /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
+        /// previous request was received and processed successfully but the client did not receive the response, e.g.
+        /// due to a network error.
+        case incorrectOffset(Files.UploadSessionOffsetError)
+        /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
+        case closed
+        /// The session must be closed before calling upload_session/finish_batch.
+        case notClosed
+        /// You can not append to the upload session because the size of a file should not reach the max file size limit
+        /// (i.e. 350GB).
+        case tooLarge
+        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+        case concurrentSessionInvalidOffset
+        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+        case concurrentSessionInvalidDataSize
+        /// The request payload must be at most 150 MB.
+        case payloadTooLarge
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionLookupErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionLookupError) -> JSON {
+            switch value {
+                case .notFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_found")
+                    return .dictionary(d)
+                case .incorrectOffset(let arg):
+                    var d = Serialization.getFields(Files.UploadSessionOffsetErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("incorrect_offset")
+                    return .dictionary(d)
+                case .closed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("closed")
+                    return .dictionary(d)
+                case .notClosed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_closed")
+                    return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
+                case .concurrentSessionInvalidOffset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_offset")
+                    return .dictionary(d)
+                case .concurrentSessionInvalidDataSize:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_data_size")
+                    return .dictionary(d)
+                case .payloadTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("payload_too_large")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionLookupError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "not_found":
+                            return UploadSessionLookupError.notFound
+                        case "incorrect_offset":
+                            let v = Files.UploadSessionOffsetErrorSerializer().deserialize(json)
+                            return UploadSessionLookupError.incorrectOffset(v)
+                        case "closed":
+                            return UploadSessionLookupError.closed
+                        case "not_closed":
+                            return UploadSessionLookupError.notClosed
+                        case "too_large":
+                            return UploadSessionLookupError.tooLarge
+                        case "concurrent_session_invalid_offset":
+                            return UploadSessionLookupError.concurrentSessionInvalidOffset
+                        case "concurrent_session_invalid_data_size":
+                            return UploadSessionLookupError.concurrentSessionInvalidDataSize
+                        case "payload_too_large":
+                            return UploadSessionLookupError.payloadTooLarge
+                        case "other":
+                            return UploadSessionLookupError.other
+                        default:
+                            return UploadSessionLookupError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The UploadSessionAppendError union
+    public enum UploadSessionAppendError: CustomStringConvertible {
+        /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+        case notFound
+        /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
+        /// previous request was received and processed successfully but the client did not receive the response, e.g.
+        /// due to a network error.
+        case incorrectOffset(Files.UploadSessionOffsetError)
+        /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
+        case closed
+        /// The session must be closed before calling upload_session/finish_batch.
+        case notClosed
+        /// You can not append to the upload session because the size of a file should not reach the max file size limit
+        /// (i.e. 350GB).
+        case tooLarge
+        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+        case concurrentSessionInvalidOffset
+        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+        case concurrentSessionInvalidDataSize
+        /// The request payload must be at most 150 MB.
+        case payloadTooLarge
+        /// An unspecified error.
+        case other
+        /// The content received by the Dropbox server in this call does not match the provided content hash.
+        case contentHashMismatch
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionAppendErrorSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionAppendErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionAppendError) -> JSON {
+            switch value {
+                case .notFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_found")
+                    return .dictionary(d)
+                case .incorrectOffset(let arg):
+                    var d = Serialization.getFields(Files.UploadSessionOffsetErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("incorrect_offset")
+                    return .dictionary(d)
+                case .closed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("closed")
+                    return .dictionary(d)
+                case .notClosed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_closed")
+                    return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
+                case .concurrentSessionInvalidOffset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_offset")
+                    return .dictionary(d)
+                case .concurrentSessionInvalidDataSize:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("concurrent_session_invalid_data_size")
+                    return .dictionary(d)
+                case .payloadTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("payload_too_large")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .contentHashMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_hash_mismatch")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionAppendError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "not_found":
+                            return UploadSessionAppendError.notFound
+                        case "incorrect_offset":
+                            let v = Files.UploadSessionOffsetErrorSerializer().deserialize(json)
+                            return UploadSessionAppendError.incorrectOffset(v)
+                        case "closed":
+                            return UploadSessionAppendError.closed
+                        case "not_closed":
+                            return UploadSessionAppendError.notClosed
+                        case "too_large":
+                            return UploadSessionAppendError.tooLarge
+                        case "concurrent_session_invalid_offset":
+                            return UploadSessionAppendError.concurrentSessionInvalidOffset
+                        case "concurrent_session_invalid_data_size":
+                            return UploadSessionAppendError.concurrentSessionInvalidDataSize
+                        case "payload_too_large":
+                            return UploadSessionAppendError.payloadTooLarge
+                        case "other":
+                            return UploadSessionAppendError.other
+                        case "content_hash_mismatch":
+                            return UploadSessionAppendError.contentHashMismatch
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
             }
         }
     }
@@ -8473,9 +8741,15 @@ open class Files {
         public let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
         public let commit: Files.CommitInfo
-        public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo) {
+        /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
+        /// hash, an error will be returned. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String?
+        public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, contentHash: String? = nil) {
             self.cursor = cursor
             self.commit = commit
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
+            self.contentHash = contentHash
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionFinishArgSerializer().serialize(self)))"
@@ -8487,6 +8761,7 @@ open class Files {
             let output = [ 
             "cursor": Files.UploadSessionCursorSerializer().serialize(value.cursor),
             "commit": Files.CommitInfoSerializer().serialize(value.commit),
+            "content_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
             ]
             return .dictionary(output)
         }
@@ -8495,7 +8770,8 @@ open class Files {
                 case .dictionary(let dict):
                     let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
                     let commit = Files.CommitInfoSerializer().deserialize(dict["commit"] ?? .null)
-                    return UploadSessionFinishArg(cursor: cursor, commit: commit)
+                    let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
+                    return UploadSessionFinishArg(cursor: cursor, commit: commit, contentHash: contentHash)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8727,6 +9003,10 @@ open class Files {
         case concurrentSessionNotClosed
         /// Not all pieces of data were uploaded before trying to finish the session.
         case concurrentSessionMissingData
+        /// The request payload must be at most 150 MB.
+        case payloadTooLarge
+        /// The content received by the Dropbox server in this call does not match the provided content hash.
+        case contentHashMismatch
         /// An unspecified error.
         case other
 
@@ -8770,6 +9050,14 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("concurrent_session_missing_data")
                     return .dictionary(d)
+                case .payloadTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("payload_too_large")
+                    return .dictionary(d)
+                case .contentHashMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_hash_mismatch")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -8800,105 +9088,14 @@ open class Files {
                             return UploadSessionFinishError.concurrentSessionNotClosed
                         case "concurrent_session_missing_data":
                             return UploadSessionFinishError.concurrentSessionMissingData
+                        case "payload_too_large":
+                            return UploadSessionFinishError.payloadTooLarge
+                        case "content_hash_mismatch":
+                            return UploadSessionFinishError.contentHashMismatch
                         case "other":
                             return UploadSessionFinishError.other
                         default:
                             return UploadSessionFinishError.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// The UploadSessionLookupError union
-    public enum UploadSessionLookupError: CustomStringConvertible {
-        /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
-        case notFound
-        /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
-        /// previous request was received and processed successfully but the client did not receive the response, e.g.
-        /// due to a network error.
-        case incorrectOffset(Files.UploadSessionOffsetError)
-        /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
-        case closed
-        /// The session must be closed before calling upload_session/finish_batch.
-        case notClosed
-        /// You can not append to the upload session because the size of a file should not reach the max file size limit
-        /// (i.e. 350GB).
-        case tooLarge
-        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
-        case concurrentSessionInvalidOffset
-        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
-        case concurrentSessionInvalidDataSize
-        /// An unspecified error.
-        case other
-
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionLookupErrorSerializer().serialize(self)))"
-        }
-    }
-    open class UploadSessionLookupErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UploadSessionLookupError) -> JSON {
-            switch value {
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .incorrectOffset(let arg):
-                    var d = Serialization.getFields(Files.UploadSessionOffsetErrorSerializer().serialize(arg))
-                    d[".tag"] = .str("incorrect_offset")
-                    return .dictionary(d)
-                case .closed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("closed")
-                    return .dictionary(d)
-                case .notClosed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_closed")
-                    return .dictionary(d)
-                case .tooLarge:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("too_large")
-                    return .dictionary(d)
-                case .concurrentSessionInvalidOffset:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("concurrent_session_invalid_offset")
-                    return .dictionary(d)
-                case .concurrentSessionInvalidDataSize:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("concurrent_session_invalid_data_size")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> UploadSessionLookupError {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "not_found":
-                            return UploadSessionLookupError.notFound
-                        case "incorrect_offset":
-                            let v = Files.UploadSessionOffsetErrorSerializer().deserialize(json)
-                            return UploadSessionLookupError.incorrectOffset(v)
-                        case "closed":
-                            return UploadSessionLookupError.closed
-                        case "not_closed":
-                            return UploadSessionLookupError.notClosed
-                        case "too_large":
-                            return UploadSessionLookupError.tooLarge
-                        case "concurrent_session_invalid_offset":
-                            return UploadSessionLookupError.concurrentSessionInvalidOffset
-                        case "concurrent_session_invalid_data_size":
-                            return UploadSessionLookupError.concurrentSessionInvalidDataSize
-                        case "other":
-                            return UploadSessionLookupError.other
-                        default:
-                            return UploadSessionLookupError.other
                     }
                 default:
                     fatalError("Failed to deserialize")
@@ -8944,9 +9141,15 @@ open class Files {
         public let close: Bool
         /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
         public let sessionType: Files.UploadSessionType?
-        public init(close: Bool = false, sessionType: Files.UploadSessionType? = nil) {
+        /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
+        /// hash, an error will be returned. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
+        public let contentHash: String?
+        public init(close: Bool = false, sessionType: Files.UploadSessionType? = nil, contentHash: String? = nil) {
             self.close = close
             self.sessionType = sessionType
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
+            self.contentHash = contentHash
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartArgSerializer().serialize(self)))"
@@ -8958,6 +9161,7 @@ open class Files {
             let output = [ 
             "close": Serialization._BoolSerializer.serialize(value.close),
             "session_type": NullableSerializer(Files.UploadSessionTypeSerializer()).serialize(value.sessionType),
+            "content_hash": NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
             ]
             return .dictionary(output)
         }
@@ -8966,7 +9170,8 @@ open class Files {
                 case .dictionary(let dict):
                     let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
                     let sessionType = NullableSerializer(Files.UploadSessionTypeSerializer()).deserialize(dict["session_type"] ?? .null)
-                    return UploadSessionStartArg(close: close, sessionType: sessionType)
+                    let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
+                    return UploadSessionStartArg(close: close, sessionType: sessionType, contentHash: contentHash)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -8979,6 +9184,10 @@ open class Files {
         case concurrentSessionDataNotAllowed
         /// Can not start a closed concurrent upload session.
         case concurrentSessionCloseNotAllowed
+        /// The request payload must be at most 150 MB.
+        case payloadTooLarge
+        /// The content received by the Dropbox server in this call does not match the provided content hash.
+        case contentHashMismatch
         /// An unspecified error.
         case other
 
@@ -8998,6 +9207,14 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("concurrent_session_close_not_allowed")
                     return .dictionary(d)
+                case .payloadTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("payload_too_large")
+                    return .dictionary(d)
+                case .contentHashMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_hash_mismatch")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -9013,6 +9230,10 @@ open class Files {
                             return UploadSessionStartError.concurrentSessionDataNotAllowed
                         case "concurrent_session_close_not_allowed":
                             return UploadSessionStartError.concurrentSessionCloseNotAllowed
+                        case "payload_too_large":
+                            return UploadSessionStartError.payloadTooLarge
+                        case "content_hash_mismatch":
+                            return UploadSessionStartError.contentHashMismatch
                         case "other":
                             return UploadSessionStartError.other
                         default:
@@ -9456,9 +9677,9 @@ open class Files {
         version: 1,
         namespace: "files",
         deprecated: true,
-        argSerializer: Files.CommitInfoWithPropertiesSerializer(),
+        argSerializer: Files.UploadArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
-        errorSerializer: Files.UploadErrorWithPropertiesSerializer(),
+        errorSerializer: Files.UploadErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "content",
                 "style": "upload"]
@@ -10164,7 +10385,7 @@ open class Files {
         version: 1,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.CommitInfoSerializer(),
+        argSerializer: Files.UploadArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadErrorSerializer(),
         attrs: ["auth": "user",
@@ -10178,7 +10399,7 @@ open class Files {
         deprecated: false,
         argSerializer: Files.UploadSessionAppendArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
-        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
+        errorSerializer: Files.UploadSessionAppendErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "content",
                 "style": "upload"]
@@ -10190,7 +10411,7 @@ open class Files {
         deprecated: true,
         argSerializer: Files.UploadSessionCursorSerializer(),
         responseSerializer: Serialization._VoidSerializer,
-        errorSerializer: Files.UploadSessionLookupErrorSerializer(),
+        errorSerializer: Files.UploadSessionAppendErrorSerializer(),
         attrs: ["auth": "user",
                 "host": "content",
                 "style": "upload"]

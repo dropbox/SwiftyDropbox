@@ -4658,6 +4658,116 @@ open class TeamLog {
         }
     }
 
+    /// Requested data residency migration for team data.
+    open class DataResidencyMigrationRequestSuccessfulDetails: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DataResidencyMigrationRequestSuccessfulDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DataResidencyMigrationRequestSuccessfulDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DataResidencyMigrationRequestSuccessfulDetails) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DataResidencyMigrationRequestSuccessfulDetails {
+            switch json {
+                case .dictionary(_):
+                    return DataResidencyMigrationRequestSuccessfulDetails()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DataResidencyMigrationRequestSuccessfulType struct
+    open class DataResidencyMigrationRequestSuccessfulType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DataResidencyMigrationRequestSuccessfulTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DataResidencyMigrationRequestSuccessfulTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DataResidencyMigrationRequestSuccessfulType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DataResidencyMigrationRequestSuccessfulType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DataResidencyMigrationRequestSuccessfulType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Request for data residency migration for team data has failed.
+    open class DataResidencyMigrationRequestUnsuccessfulDetails: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DataResidencyMigrationRequestUnsuccessfulDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DataResidencyMigrationRequestUnsuccessfulDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DataResidencyMigrationRequestUnsuccessfulDetails) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DataResidencyMigrationRequestUnsuccessfulDetails {
+            switch json {
+                case .dictionary(_):
+                    return DataResidencyMigrationRequestUnsuccessfulDetails()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DataResidencyMigrationRequestUnsuccessfulType struct
+    open class DataResidencyMigrationRequestUnsuccessfulType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DataResidencyMigrationRequestUnsuccessfulTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DataResidencyMigrationRequestUnsuccessfulTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DataResidencyMigrationRequestUnsuccessfulType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DataResidencyMigrationRequestUnsuccessfulType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DataResidencyMigrationRequestUnsuccessfulType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Policy for the default number of days until an externally shared link expires
     public enum DefaultLinkExpirationDaysPolicy: CustomStringConvertible {
         /// An unspecified error.
@@ -7213,6 +7323,131 @@ open class TeamLog {
         }
     }
 
+    /// Policy for deciding whether team users can use Dropbox Passwords
+    public enum DropboxPasswordsPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case default_
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsPolicySerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsPolicy) -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return DropboxPasswordsPolicy.default_
+                        case "disabled":
+                            return DropboxPasswordsPolicy.disabled
+                        case "enabled":
+                            return DropboxPasswordsPolicy.enabled
+                        case "other":
+                            return DropboxPasswordsPolicy.other
+                        default:
+                            return DropboxPasswordsPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed Dropbox Passwords policy for team.
+    open class DropboxPasswordsPolicyChangedDetails: CustomStringConvertible {
+        /// To.
+        public let newValue: TeamLog.DropboxPasswordsPolicy
+        /// From.
+        public let previousValue: TeamLog.DropboxPasswordsPolicy
+        public init(newValue: TeamLog.DropboxPasswordsPolicy, previousValue: TeamLog.DropboxPasswordsPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.DropboxPasswordsPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.DropboxPasswordsPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.DropboxPasswordsPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.DropboxPasswordsPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return DropboxPasswordsPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DropboxPasswordsPolicyChangedType struct
+    open class DropboxPasswordsPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DropboxPasswordsPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class DropboxPasswordsPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DropboxPasswordsPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DropboxPasswordsPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return DropboxPasswordsPolicyChangedType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Represents a time duration: unit and amount
     open class DurationLogInfo: CustomStringConvertible {
         /// Time unit.
@@ -7249,7 +7484,7 @@ open class TeamLog {
         }
     }
 
-    /// Policy for deciding whether a team can use Email to my Dropbox feature
+    /// Policy for deciding whether a team can use Email to Dropbox feature
     public enum EmailIngestPolicy: CustomStringConvertible {
         /// An unspecified error.
         case disabled
@@ -7300,7 +7535,7 @@ open class TeamLog {
         }
     }
 
-    /// Changed email to my Dropbox policy for team.
+    /// Changed email to Dropbox policy for team.
     open class EmailIngestPolicyChangedDetails: CustomStringConvertible {
         /// To.
         public let newValue: TeamLog.EmailIngestPolicy
@@ -7366,7 +7601,7 @@ open class TeamLog {
         }
     }
 
-    /// Received files via Email to my Dropbox.
+    /// Received files via Email to Dropbox.
     open class EmailIngestReceiveFileDetails: CustomStringConvertible {
         /// Inbox name.
         public let inboxName: String
@@ -9110,6 +9345,8 @@ open class TeamLog {
         /// An unspecified error.
         case directoryRestrictionsRemoveMembersDetails(TeamLog.DirectoryRestrictionsRemoveMembersDetails)
         /// An unspecified error.
+        case dropboxPasswordsPolicyChangedDetails(TeamLog.DropboxPasswordsPolicyChangedDetails)
+        /// An unspecified error.
         case emailIngestPolicyChangedDetails(TeamLog.EmailIngestPolicyChangedDetails)
         /// An unspecified error.
         case emmAddExceptionDetails(TeamLog.EmmAddExceptionDetails)
@@ -9239,6 +9476,10 @@ open class TeamLog {
         case webSessionsChangeFixedLengthPolicyDetails(TeamLog.WebSessionsChangeFixedLengthPolicyDetails)
         /// An unspecified error.
         case webSessionsChangeIdleLengthPolicyDetails(TeamLog.WebSessionsChangeIdleLengthPolicyDetails)
+        /// An unspecified error.
+        case dataResidencyMigrationRequestSuccessfulDetails(TeamLog.DataResidencyMigrationRequestSuccessfulDetails)
+        /// An unspecified error.
+        case dataResidencyMigrationRequestUnsuccessfulDetails(TeamLog.DataResidencyMigrationRequestUnsuccessfulDetails)
         /// An unspecified error.
         case teamMergeFromDetails(TeamLog.TeamMergeFromDetails)
         /// An unspecified error.
@@ -10812,6 +11053,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.DirectoryRestrictionsRemoveMembersDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("directory_restrictions_remove_members_details")
                     return .dictionary(d)
+                case .dropboxPasswordsPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_policy_changed_details")
+                    return .dictionary(d)
                 case .emailIngestPolicyChangedDetails(let arg):
                     var d = Serialization.getFields(TeamLog.EmailIngestPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("email_ingest_policy_changed_details")
@@ -11071,6 +11316,14 @@ open class TeamLog {
                 case .webSessionsChangeIdleLengthPolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.WebSessionsChangeIdleLengthPolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("web_sessions_change_idle_length_policy_details")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestSuccessfulDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DataResidencyMigrationRequestSuccessfulDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("data_residency_migration_request_successful_details")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestUnsuccessfulDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.DataResidencyMigrationRequestUnsuccessfulDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("data_residency_migration_request_unsuccessful_details")
                     return .dictionary(d)
                 case .teamMergeFromDetails(let arg):
                     var d = Serialization.getFields(TeamLog.TeamMergeFromDetailsSerializer().serialize(arg))
@@ -12362,6 +12615,9 @@ open class TeamLog {
                         case "directory_restrictions_remove_members_details":
                             let v = TeamLog.DirectoryRestrictionsRemoveMembersDetailsSerializer().deserialize(json)
                             return EventDetails.directoryRestrictionsRemoveMembersDetails(v)
+                        case "dropbox_passwords_policy_changed_details":
+                            let v = TeamLog.DropboxPasswordsPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.dropboxPasswordsPolicyChangedDetails(v)
                         case "email_ingest_policy_changed_details":
                             let v = TeamLog.EmailIngestPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.emailIngestPolicyChangedDetails(v)
@@ -12557,6 +12813,12 @@ open class TeamLog {
                         case "web_sessions_change_idle_length_policy_details":
                             let v = TeamLog.WebSessionsChangeIdleLengthPolicyDetailsSerializer().deserialize(json)
                             return EventDetails.webSessionsChangeIdleLengthPolicyDetails(v)
+                        case "data_residency_migration_request_successful_details":
+                            let v = TeamLog.DataResidencyMigrationRequestSuccessfulDetailsSerializer().deserialize(json)
+                            return EventDetails.dataResidencyMigrationRequestSuccessfulDetails(v)
+                        case "data_residency_migration_request_unsuccessful_details":
+                            let v = TeamLog.DataResidencyMigrationRequestUnsuccessfulDetailsSerializer().deserialize(json)
+                            return EventDetails.dataResidencyMigrationRequestUnsuccessfulDetails(v)
                         case "team_merge_from_details":
                             let v = TeamLog.TeamMergeFromDetailsSerializer().deserialize(json)
                             return EventDetails.teamMergeFromDetails(v)
@@ -12897,7 +13159,7 @@ open class TeamLog {
         case userTagsAdded(TeamLog.UserTagsAddedType)
         /// (file_operations) Removed tags
         case userTagsRemoved(TeamLog.UserTagsRemovedType)
-        /// (file_requests) Received files via Email to my Dropbox
+        /// (file_requests) Received files via Email to Dropbox
         case emailIngestReceiveFile(TeamLog.EmailIngestReceiveFileType)
         /// (file_requests) Changed file request
         case fileRequestChange(TeamLog.FileRequestChangeType)
@@ -13439,7 +13701,9 @@ open class TeamLog {
         case directoryRestrictionsAddMembers(TeamLog.DirectoryRestrictionsAddMembersType)
         /// (team_policies) Removed members from directory restrictions list
         case directoryRestrictionsRemoveMembers(TeamLog.DirectoryRestrictionsRemoveMembersType)
-        /// (team_policies) Changed email to my Dropbox policy for team
+        /// (team_policies) Changed Dropbox Passwords policy for team
+        case dropboxPasswordsPolicyChanged(TeamLog.DropboxPasswordsPolicyChangedType)
+        /// (team_policies) Changed email to Dropbox policy for team
         case emailIngestPolicyChanged(TeamLog.EmailIngestPolicyChangedType)
         /// (team_policies) Added members to EMM exception list
         case emmAddException(TeamLog.EmmAddExceptionType)
@@ -13574,6 +13838,10 @@ open class TeamLog {
         case webSessionsChangeFixedLengthPolicy(TeamLog.WebSessionsChangeFixedLengthPolicyType)
         /// (team_policies) Changed how long team members can be idle while signed in to Dropbox.com
         case webSessionsChangeIdleLengthPolicy(TeamLog.WebSessionsChangeIdleLengthPolicyType)
+        /// (team_profile) Requested data residency migration for team data
+        case dataResidencyMigrationRequestSuccessful(TeamLog.DataResidencyMigrationRequestSuccessfulType)
+        /// (team_profile) Request for data residency migration for team data has failed
+        case dataResidencyMigrationRequestUnsuccessful(TeamLog.DataResidencyMigrationRequestUnsuccessfulType)
         /// (team_profile) Merged another team into this team
         case teamMergeFrom(TeamLog.TeamMergeFromType)
         /// (team_profile) Merged this team into another team
@@ -15147,6 +15415,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.DirectoryRestrictionsRemoveMembersTypeSerializer().serialize(arg))
                     d[".tag"] = .str("directory_restrictions_remove_members")
                     return .dictionary(d)
+                case .dropboxPasswordsPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.DropboxPasswordsPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("dropbox_passwords_policy_changed")
+                    return .dictionary(d)
                 case .emailIngestPolicyChanged(let arg):
                     var d = Serialization.getFields(TeamLog.EmailIngestPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("email_ingest_policy_changed")
@@ -15406,6 +15678,14 @@ open class TeamLog {
                 case .webSessionsChangeIdleLengthPolicy(let arg):
                     var d = Serialization.getFields(TeamLog.WebSessionsChangeIdleLengthPolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("web_sessions_change_idle_length_policy")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestSuccessful(let arg):
+                    var d = Serialization.getFields(TeamLog.DataResidencyMigrationRequestSuccessfulTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("data_residency_migration_request_successful")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestUnsuccessful(let arg):
+                    var d = Serialization.getFields(TeamLog.DataResidencyMigrationRequestUnsuccessfulTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("data_residency_migration_request_unsuccessful")
                     return .dictionary(d)
                 case .teamMergeFrom(let arg):
                     var d = Serialization.getFields(TeamLog.TeamMergeFromTypeSerializer().serialize(arg))
@@ -16693,6 +16973,9 @@ open class TeamLog {
                         case "directory_restrictions_remove_members":
                             let v = TeamLog.DirectoryRestrictionsRemoveMembersTypeSerializer().deserialize(json)
                             return EventType.directoryRestrictionsRemoveMembers(v)
+                        case "dropbox_passwords_policy_changed":
+                            let v = TeamLog.DropboxPasswordsPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.dropboxPasswordsPolicyChanged(v)
                         case "email_ingest_policy_changed":
                             let v = TeamLog.EmailIngestPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.emailIngestPolicyChanged(v)
@@ -16888,6 +17171,12 @@ open class TeamLog {
                         case "web_sessions_change_idle_length_policy":
                             let v = TeamLog.WebSessionsChangeIdleLengthPolicyTypeSerializer().deserialize(json)
                             return EventType.webSessionsChangeIdleLengthPolicy(v)
+                        case "data_residency_migration_request_successful":
+                            let v = TeamLog.DataResidencyMigrationRequestSuccessfulTypeSerializer().deserialize(json)
+                            return EventType.dataResidencyMigrationRequestSuccessful(v)
+                        case "data_residency_migration_request_unsuccessful":
+                            let v = TeamLog.DataResidencyMigrationRequestUnsuccessfulTypeSerializer().deserialize(json)
+                            return EventType.dataResidencyMigrationRequestUnsuccessful(v)
                         case "team_merge_from":
                             let v = TeamLog.TeamMergeFromTypeSerializer().deserialize(json)
                             return EventType.teamMergeFrom(v)
@@ -17225,7 +17514,7 @@ open class TeamLog {
         case userTagsAdded
         /// (file_operations) Removed tags
         case userTagsRemoved
-        /// (file_requests) Received files via Email to my Dropbox
+        /// (file_requests) Received files via Email to Dropbox
         case emailIngestReceiveFile
         /// (file_requests) Changed file request
         case fileRequestChange
@@ -17767,7 +18056,9 @@ open class TeamLog {
         case directoryRestrictionsAddMembers
         /// (team_policies) Removed members from directory restrictions list
         case directoryRestrictionsRemoveMembers
-        /// (team_policies) Changed email to my Dropbox policy for team
+        /// (team_policies) Changed Dropbox Passwords policy for team
+        case dropboxPasswordsPolicyChanged
+        /// (team_policies) Changed email to Dropbox policy for team
         case emailIngestPolicyChanged
         /// (team_policies) Added members to EMM exception list
         case emmAddException
@@ -17902,6 +18193,10 @@ open class TeamLog {
         case webSessionsChangeFixedLengthPolicy
         /// (team_policies) Changed how long team members can be idle while signed in to Dropbox.com
         case webSessionsChangeIdleLengthPolicy
+        /// (team_profile) Requested data residency migration for team data
+        case dataResidencyMigrationRequestSuccessful
+        /// (team_profile) Request for data residency migration for team data has failed
+        case dataResidencyMigrationRequestUnsuccessful
         /// (team_profile) Merged another team into this team
         case teamMergeFrom
         /// (team_profile) Merged this team into another team
@@ -19475,6 +19770,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("directory_restrictions_remove_members")
                     return .dictionary(d)
+                case .dropboxPasswordsPolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("dropbox_passwords_policy_changed")
+                    return .dictionary(d)
                 case .emailIngestPolicyChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("email_ingest_policy_changed")
@@ -19734,6 +20033,14 @@ open class TeamLog {
                 case .webSessionsChangeIdleLengthPolicy:
                     var d = [String: JSON]()
                     d[".tag"] = .str("web_sessions_change_idle_length_policy")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestSuccessful:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("data_residency_migration_request_successful")
+                    return .dictionary(d)
+                case .dataResidencyMigrationRequestUnsuccessful:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("data_residency_migration_request_unsuccessful")
                     return .dictionary(d)
                 case .teamMergeFrom:
                     var d = [String: JSON]()
@@ -20652,6 +20959,8 @@ open class TeamLog {
                             return EventTypeArg.directoryRestrictionsAddMembers
                         case "directory_restrictions_remove_members":
                             return EventTypeArg.directoryRestrictionsRemoveMembers
+                        case "dropbox_passwords_policy_changed":
+                            return EventTypeArg.dropboxPasswordsPolicyChanged
                         case "email_ingest_policy_changed":
                             return EventTypeArg.emailIngestPolicyChanged
                         case "emm_add_exception":
@@ -20782,6 +21091,10 @@ open class TeamLog {
                             return EventTypeArg.webSessionsChangeFixedLengthPolicy
                         case "web_sessions_change_idle_length_policy":
                             return EventTypeArg.webSessionsChangeIdleLengthPolicy
+                        case "data_residency_migration_request_successful":
+                            return EventTypeArg.dataResidencyMigrationRequestSuccessful
+                        case "data_residency_migration_request_unsuccessful":
+                            return EventTypeArg.dataResidencyMigrationRequestUnsuccessful
                         case "team_merge_from":
                             return EventTypeArg.teamMergeFrom
                         case "team_merge_to":

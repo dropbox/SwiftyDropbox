@@ -70,6 +70,8 @@ open class Sharing {
         case viewer
         /// The collaborator can only view the shared folder and does not have any access to comments.
         case viewerNoComment
+        /// The collaborator can only view the shared folder that they have access to.
+        case traverse
         /// An unspecified error.
         case other
 
@@ -97,6 +99,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("viewer_no_comment")
                     return .dictionary(d)
+                case .traverse:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("traverse")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -116,6 +122,8 @@ open class Sharing {
                             return AccessLevel.viewer
                         case "viewer_no_comment":
                             return AccessLevel.viewerNoComment
+                        case "traverse":
+                            return AccessLevel.traverse
                         case "other":
                             return AccessLevel.other
                         default:
@@ -188,7 +196,7 @@ open class Sharing {
         public let members: Array<Sharing.MemberSelector>
         /// Message to send to added members in their invitation.
         public let customMessage: String?
-        /// Whether added members should be notified via device notifications of their invitation.
+        /// Whether added members should be notified via email and device notifications of their invitation.
         public let quiet: Bool
         /// AccessLevel union object, describing what access level we want to give new members.
         public let accessLevel: Sharing.AccessLevel
