@@ -1,5 +1,7 @@
 # Dropbox for Swift
 
+## If you’re integrating with Dropbox on iOS or macOS, please take a few moments to fill out this survey to help us understand your needs better: https://forms.gle/etRxB3rDioF4SS6a6
+
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
 Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest/).
