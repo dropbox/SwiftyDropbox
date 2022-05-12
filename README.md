@@ -766,7 +766,7 @@ For most apps, it is reasonable to assume that only one Dropbox account (and acc
 
 The `DropboxClient` (or `DropboxTeamClient`) is then used to make all of the desired API calls.
 
-* call `unlinkClients` to logout Dropbox user and clear all access tokens
+* On `DropboxClientsManager`, call `unlinkClients` to logout Dropbox user and clear all access tokens
 
 #### Multiple Dropbox user case
 
@@ -784,7 +784,7 @@ For some apps, it is necessary to manage more than one Dropbox account (and acce
 
 The `DropboxClient` (or `DropboxTeamClient`) is then used to make all of the desired API calls.
 
-* call `resetClients` to logout Dropbox user but not clear any access tokens
+* On `DropboxClientsManager` call `resetClients` to logout Dropbox user but not clear any access tokens
 * if specific access tokens need to be removed, use the `clearStoredAccessToken` method in `DropboxOAuthManager`
 
 ---
