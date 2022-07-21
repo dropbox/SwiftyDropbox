@@ -270,11 +270,11 @@ func myButtonInControllerPressed() {
     // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
     // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
     // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
-    DropboxClientsManager.authorizeFromController(UIApplication.shared,
-                                                  controller: self,
-                                                  openURL: { (url: URL) -> Void in
-                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                                                  })
+    // DropboxClientsManager.authorizeFromController(UIApplication.shared,
+    //                                               controller: self,
+    //                                               openURL: { (url: URL) -> Void in
+    //                                                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    //                                               })
 }
 
 ```
@@ -298,11 +298,11 @@ func myButtonInControllerPressed() {
     // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
     // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
     // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
-    DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
-                                                  controller: self,
-                                                  openURL: { (url: URL) -> Void in
-                                                    NSWorkspace.shared.open(url)
-                                                  })
+    // DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
+    //                                               controller: self,
+    //                                               openURL: { (url: URL) -> Void in
+    //                                                 NSWorkspace.shared.open(url)
+    //                                               })
 }
 ```
 
