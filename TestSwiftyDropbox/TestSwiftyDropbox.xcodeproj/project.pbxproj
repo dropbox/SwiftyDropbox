@@ -345,7 +345,7 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = Dropbox;
 				TargetAttributes = {
 					E76F57811BB5C18600FE5EFB = {
@@ -378,10 +378,9 @@
 			};
 			buildConfigurationList = E76F577D1BB5C18600FE5EFB /* Build configuration list for PBXProject "TestSwiftyDropbox" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -803,7 +802,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = G7HH3F8CAK;
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwiftyDropbox-iOS-Test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -822,7 +821,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = G7HH3F8CAK;
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dropbox.TestSwiftyDropbox-iOS-Test";
 				PRODUCT_NAME = "$(TARGET_NAME)";
