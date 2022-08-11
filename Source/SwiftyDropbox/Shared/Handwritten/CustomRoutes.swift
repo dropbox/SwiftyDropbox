@@ -10,7 +10,7 @@ let timeoutInSec = 200
 
 extension FilesRoutes {
 
-    @discardableResult open func batchUploadFiles(fileUrlsToCommitInfo: [URL: Files.CommitInfo], queue: DispatchQueue? = nil, progressBlock: ProgressBlock? = nil, responseBlock: @escaping BatchUploadResponseBlock) -> BatchUploadTask {
+    @discardableResult public func batchUploadFiles(fileUrlsToCommitInfo: [URL: Files.CommitInfo], queue: DispatchQueue? = nil, progressBlock: ProgressBlock? = nil, responseBlock: @escaping BatchUploadResponseBlock) -> BatchUploadTask {
         let uploadData = BatchUploadData(fileCommitInfo: fileUrlsToCommitInfo, progressBlock: progressBlock, responseBlock: responseBlock, queue: queue ?? DispatchQueue.main)
         let uploadTask = BatchUploadTask(uploadData: uploadData)
         let fileUrls = fileUrlsToCommitInfo.keys
