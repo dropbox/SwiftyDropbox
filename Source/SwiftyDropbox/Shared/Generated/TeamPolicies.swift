@@ -287,6 +287,65 @@ open class TeamPolicies {
         }
     }
 
+    /// The FileProviderMigrationPolicyState union
+    public enum FileProviderMigrationPolicyState: CustomStringConvertible {
+        /// Team admin has opted out of File Provider Migration for team members.
+        case disabled
+        /// Team admin has not opted out of File Provider Migration for team members.
+        case enabled
+        /// Team admin has default value based on team tier.
+        case default_
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileProviderMigrationPolicyStateSerializer().serialize(self)))"
+        }
+    }
+    open class FileProviderMigrationPolicyStateSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileProviderMigrationPolicyState) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> FileProviderMigrationPolicyState {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return FileProviderMigrationPolicyState.disabled
+                        case "enabled":
+                            return FileProviderMigrationPolicyState.enabled
+                        case "default":
+                            return FileProviderMigrationPolicyState.default_
+                        case "other":
+                            return FileProviderMigrationPolicyState.other
+                        default:
+                            return FileProviderMigrationPolicyState.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The GroupCreation union
     public enum GroupCreation: CustomStringConvertible {
         /// Team admins and members can create groups.

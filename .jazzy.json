@@ -38,6 +38,7 @@
         "FileProperties",
         "FileRequests",
         "Files",
+        "Openid",
         "Paper",
         "SecondaryEmails",
         "SeenState",

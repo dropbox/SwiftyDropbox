@@ -13,7 +13,7 @@ open class Check {
         /// The string that you'd like to be echoed back to you.
         public let query: String
         public init(query: String = "") {
-            stringValidator()(query)
+            stringValidator(maxLength: 500)(query)
             self.query = query
         }
         open var description: String {

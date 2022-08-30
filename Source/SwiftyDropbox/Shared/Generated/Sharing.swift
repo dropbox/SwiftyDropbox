@@ -1843,9 +1843,18 @@ open class Sharing {
         public let member: Sharing.MemberSelector
         /// The outcome of the action on this member.
         public let result: Sharing.FileMemberActionIndividualResult
-        public init(member: Sharing.MemberSelector, result: Sharing.FileMemberActionIndividualResult) {
+        /// The SHA-1 encrypted shared content key.
+        public let sckeySha1: String?
+        /// The sharing sender-recipient invitation signatures for the input member_id. A member_id can be a group and
+        /// thus have multiple users and multiple invitation signatures.
+        public let invitationSignature: Array<String>?
+        public init(member: Sharing.MemberSelector, result: Sharing.FileMemberActionIndividualResult, sckeySha1: String? = nil, invitationSignature: Array<String>? = nil) {
             self.member = member
             self.result = result
+            nullableValidator(stringValidator())(sckeySha1)
+            self.sckeySha1 = sckeySha1
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(invitationSignature)
+            self.invitationSignature = invitationSignature
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(FileMemberActionResultSerializer().serialize(self)))"
@@ -1857,6 +1866,8 @@ open class Sharing {
             let output = [ 
             "member": Sharing.MemberSelectorSerializer().serialize(value.member),
             "result": Sharing.FileMemberActionIndividualResultSerializer().serialize(value.result),
+            "sckey_sha1": NullableSerializer(Serialization._StringSerializer).serialize(value.sckeySha1),
+            "invitation_signature": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.invitationSignature),
             ]
             return .dictionary(output)
         }
@@ -1865,7 +1876,9 @@ open class Sharing {
                 case .dictionary(let dict):
                     let member = Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
                     let result = Sharing.FileMemberActionIndividualResultSerializer().deserialize(dict["result"] ?? .null)
-                    return FileMemberActionResult(member: member, result: result)
+                    let sckeySha1 = NullableSerializer(Serialization._StringSerializer).deserialize(dict["sckey_sha1"] ?? .null)
+                    let invitationSignature = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["invitation_signature"] ?? .null)
+                    return FileMemberActionResult(member: member, result: result, sckeySha1: sckeySha1, invitationSignature: invitationSignature)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9146,7 +9159,7 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.SharedLinkErrorSerializer(),
-        attrs: ["auth": "user",
+        attrs: ["auth": "app, user",
                 "host": "api",
                 "style": "rpc"]
     )

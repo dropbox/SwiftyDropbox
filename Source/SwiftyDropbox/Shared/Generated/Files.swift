@@ -7198,7 +7198,9 @@ open class Files {
         public let fileExtensions: Array<String>?
         /// Restricts search to only the file categories specified. Only supported for active file search.
         public let fileCategories: Array<Files.FileCategory>?
-        public init(path: String? = nil, maxResults: UInt64 = 100, orderBy: Files.SearchOrderBy? = nil, fileStatus: Files.FileStatus = .active, filenameOnly: Bool = false, fileExtensions: Array<String>? = nil, fileCategories: Array<Files.FileCategory>? = nil) {
+        /// Restricts results to the given account id.
+        public let accountId: String?
+        public init(path: String? = nil, maxResults: UInt64 = 100, orderBy: Files.SearchOrderBy? = nil, fileStatus: Files.FileStatus = .active, filenameOnly: Bool = false, fileExtensions: Array<String>? = nil, fileCategories: Array<Files.FileCategory>? = nil, accountId: String? = nil) {
             nullableValidator(stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)"))(path)
             self.path = path
             comparableValidator(minValue: 1, maxValue: 1000)(maxResults)
@@ -7209,6 +7211,8 @@ open class Files {
             nullableValidator(arrayValidator(itemValidator: stringValidator()))(fileExtensions)
             self.fileExtensions = fileExtensions
             self.fileCategories = fileCategories
+            nullableValidator(stringValidator(minLength: 40, maxLength: 40))(accountId)
+            self.accountId = accountId
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SearchOptionsSerializer().serialize(self)))"
@@ -7225,6 +7229,7 @@ open class Files {
             "filename_only": Serialization._BoolSerializer.serialize(value.filenameOnly),
             "file_extensions": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.fileExtensions),
             "file_categories": NullableSerializer(ArraySerializer(Files.FileCategorySerializer())).serialize(value.fileCategories),
+            "account_id": NullableSerializer(Serialization._StringSerializer).serialize(value.accountId),
             ]
             return .dictionary(output)
         }
@@ -7238,7 +7243,8 @@ open class Files {
                     let filenameOnly = Serialization._BoolSerializer.deserialize(dict["filename_only"] ?? .number(0))
                     let fileExtensions = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["file_extensions"] ?? .null)
                     let fileCategories = NullableSerializer(ArraySerializer(Files.FileCategorySerializer())).deserialize(dict["file_categories"] ?? .null)
-                    return SearchOptions(path: path, maxResults: maxResults, orderBy: orderBy, fileStatus: fileStatus, filenameOnly: filenameOnly, fileExtensions: fileExtensions, fileCategories: fileCategories)
+                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
+                    return SearchOptions(path: path, maxResults: maxResults, orderBy: orderBy, fileStatus: fileStatus, filenameOnly: filenameOnly, fileExtensions: fileExtensions, fileCategories: fileCategories, accountId: accountId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -9178,6 +9184,74 @@ open class Files {
         }
     }
 
+    /// The UploadSessionStartBatchArg struct
+    open class UploadSessionStartBatchArg: CustomStringConvertible {
+        /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
+        public let sessionType: Files.UploadSessionType?
+        /// The number of upload sessions to start.
+        public let numSessions: UInt64
+        public init(numSessions: UInt64, sessionType: Files.UploadSessionType? = nil) {
+            self.sessionType = sessionType
+            comparableValidator(minValue: 1, maxValue: 1000)(numSessions)
+            self.numSessions = numSessions
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartBatchArgSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionStartBatchArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionStartBatchArg) -> JSON {
+            let output = [ 
+            "num_sessions": Serialization._UInt64Serializer.serialize(value.numSessions),
+            "session_type": NullableSerializer(Files.UploadSessionTypeSerializer()).serialize(value.sessionType),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionStartBatchArg {
+            switch json {
+                case .dictionary(let dict):
+                    let numSessions = Serialization._UInt64Serializer.deserialize(dict["num_sessions"] ?? .null)
+                    let sessionType = NullableSerializer(Files.UploadSessionTypeSerializer()).deserialize(dict["session_type"] ?? .null)
+                    return UploadSessionStartBatchArg(numSessions: numSessions, sessionType: sessionType)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The UploadSessionStartBatchResult struct
+    open class UploadSessionStartBatchResult: CustomStringConvertible {
+        /// A List of unique identifiers for the upload session. Pass each session_id to uploadSessionAppendV2 and
+        /// uploadSessionFinish.
+        public let sessionIds: Array<String>
+        public init(sessionIds: Array<String>) {
+            arrayValidator(itemValidator: stringValidator())(sessionIds)
+            self.sessionIds = sessionIds
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(UploadSessionStartBatchResultSerializer().serialize(self)))"
+        }
+    }
+    open class UploadSessionStartBatchResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: UploadSessionStartBatchResult) -> JSON {
+            let output = [ 
+            "session_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.sessionIds),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> UploadSessionStartBatchResult {
+            switch json {
+                case .dictionary(let dict):
+                    let sessionIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["session_ids"] ?? .null)
+                    return UploadSessionStartBatchResult(sessionIds: sessionIds)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The UploadSessionStartError union
     public enum UploadSessionStartError: CustomStringConvertible {
         /// Uploading data not allowed when starting concurrent upload session.
@@ -10475,5 +10549,17 @@ open class Files {
         attrs: ["auth": "user",
                 "host": "content",
                 "style": "upload"]
+    )
+    static let uploadSessionStartBatch = Route(
+        name: "upload_session/start_batch",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.UploadSessionStartBatchArgSerializer(),
+        responseSerializer: Files.UploadSessionStartBatchResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
     )
 }
