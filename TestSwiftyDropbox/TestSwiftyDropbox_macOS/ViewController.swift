@@ -29,7 +29,7 @@ class ViewController: NSViewController {
                 scopeRequest = ScopeRequest(scopeType: .team, scopes: DropboxTeamTester.scopes, includeGrantedScopes: false)
             }
             DropboxClientsManager.authorizeFromControllerV2(
-                sharedWorkspace: NSWorkspace.shared,
+                sharedApplication: NSApplication.shared,
                 controller: self,
                 loadingStatusDelegate: nil,
                 openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},

@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (5.4.3)
-  - SwiftyDropbox (8.3.0):
+  - SwiftyDropbox (9.0.0):
     - Alamofire (~> 5.4.3)
 
 DEPENDENCIES:
@@ -16,8 +16,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
-  SwiftyDropbox: 7a4f15fb93c75d0dd4b52aa7385394dd6062196d
+  SwiftyDropbox: 3cec2a063c77148398a78aa0e9e89fb48b82a206
 
-PODFILE CHECKSUM: fd02c042f42dc748ac1a8340d3e2a24241d0324f
+PODFILE CHECKSUM: 5db844d07d81e771829a61e505709b98d44d5d4a
 
 COCOAPODS: 1.11.3
