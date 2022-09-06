@@ -25,3 +25,11 @@ end
 target "TestSwiftyDropbox_macOSTests" do
     shared_macOS_pods
 end
+
+target "TestSwiftyDropbox_SwiftUI (iOS)" do
+    shared_iOS_pods
+end
+
+target "TestSwiftyDropbox_SwiftUI (macOS)" do
+    shared_macOS_pods
+end
