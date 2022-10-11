@@ -1174,7 +1174,7 @@ open class FilesRoutes {
     /// than 20 tags can be added to a given item.
     ///
     /// - parameter path: Path to the item to be tagged.
-    /// - parameter tagText: The value of the tag to add.
+    /// - parameter tagText: The value of the tag to add. Will be automatically converted to lowercase letters.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.AddTagError` object on failure.
@@ -1199,7 +1199,7 @@ open class FilesRoutes {
     /// Remove a tag from an item.
     ///
     /// - parameter path: Path to the item to tag.
-    /// - parameter tagText: The tag to remove.
+    /// - parameter tagText: The tag to remove. Will be automatically converted to lowercase letters.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.RemoveTagError` object on failure.

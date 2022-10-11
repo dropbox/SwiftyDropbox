@@ -1793,8 +1793,10 @@ open class Sharing {
 
     /// The FileMemberActionIndividualResult union
     public enum FileMemberActionIndividualResult: CustomStringConvertible {
-        /// Member was successfully removed from this file. If AccessLevel is given, the member still has access via a
-        /// parent shared folder.
+        /// Part of the response for both add_file_member and remove_file_member_v1 (deprecated). For add_file_member,
+        /// indicates giving access was successful and at what AccessLevel. For remove_file_member_v1, indicates member
+        /// was successfully removed from the file. If AccessLevel is given, the member still has access via a parent
+        /// shared folder.
         case success(Sharing.AccessLevel?)
         /// User was not able to perform this action.
         case memberError(Sharing.FileMemberActionError)

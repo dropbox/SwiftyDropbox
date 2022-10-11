@@ -87,7 +87,7 @@ open class Openid {
     open class UserInfoError: CustomStringConvertible {
         /// (no description)
         public let err: Openid.ErrUnion?
-        /// (no description)
+        /// Brief explanation of the error.
         public let errorMessage: String
         public init(err: Openid.ErrUnion? = nil, errorMessage: String = "") {
             self.err = err
@@ -121,17 +121,18 @@ open class Openid {
 
     /// The UserInfoResult struct
     open class UserInfoResult: CustomStringConvertible {
-        /// (no description)
+        /// Last name of user.
         public let familyName: String?
-        /// (no description)
+        /// First name of user.
         public let givenName: String?
-        /// (no description)
+        /// Email address of user.
         public let email: String?
-        /// (no description)
+        /// If user is email verified.
         public let emailVerified: Bool?
-        /// (no description)
+        /// Issuer of token (in this case Dropbox).
         public let iss: String
-        /// (no description)
+        /// An identifier for the user. This is the Dropbox account_id, a string value such as
+        /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc.
         public let sub: String
         public init(familyName: String? = nil, givenName: String? = nil, email: String? = nil, emailVerified: Bool? = nil, iss: String = "", sub: String = "") {
             nullableValidator(stringValidator())(familyName)
@@ -223,4 +224,19 @@ open class Openid {
         }
     }
 
+
+    /// Stone Route Objects
+
+    static let userinfo = Route(
+        name: "userinfo",
+        version: 1,
+        namespace: "openid",
+        deprecated: false,
+        argSerializer: Openid.UserInfoArgsSerializer(),
+        responseSerializer: Openid.UserInfoResultSerializer(),
+        errorSerializer: Openid.UserInfoErrorSerializer(),
+        attrs: ["auth": "user",
+                "host": "api",
+                "style": "rpc"]
+    )
 }

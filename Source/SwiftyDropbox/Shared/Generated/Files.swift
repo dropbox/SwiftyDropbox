@@ -12,7 +12,7 @@ open class Files {
     open class AddTagArg: CustomStringConvertible {
         /// Path to the item to be tagged.
         public let path: String
-        /// The value of the tag to add.
+        /// The value of the tag to add. Will be automatically converted to lowercase letters.
         public let tagText: String
         public init(path: String, tagText: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
@@ -6250,7 +6250,7 @@ open class Files {
     open class RemoveTagArg: CustomStringConvertible {
         /// Path to the item to tag.
         public let path: String
-        /// The tag to remove.
+        /// The tag to remove. Will be automatically converted to lowercase letters.
         public let tagText: String
         public init(path: String, tagText: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)

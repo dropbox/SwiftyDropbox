@@ -19,6 +19,7 @@
         "FilePropertiesRoutes",
         "FileRequestsRoutes",
         "FilesRoutes",
+        "OpenidRoutes",
         "PaperRoutes",
         "SharingRoutes",
         "TeamRoutes",

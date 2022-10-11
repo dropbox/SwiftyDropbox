@@ -1622,7 +1622,7 @@ open class TeamLog {
         }
     }
 
-    /// Changed admin email reminder policy for team requests to join.
+    /// Changed admin reminder settings for requests to join the team.
     open class AdminEmailRemindersChangedDetails: CustomStringConvertible {
         /// To.
         public let newValue: TeamLog.AdminEmailRemindersPolicy
@@ -9506,6 +9506,8 @@ open class TeamLog {
         /// An unspecified error.
         case fileLockingPolicyChangedDetails(TeamLog.FileLockingPolicyChangedDetails)
         /// An unspecified error.
+        case fileProviderMigrationPolicyChangedDetails(TeamLog.FileProviderMigrationPolicyChangedDetails)
+        /// An unspecified error.
         case fileRequestsChangePolicyDetails(TeamLog.FileRequestsChangePolicyDetails)
         /// An unspecified error.
         case fileRequestsEmailsEnabledDetails(TeamLog.FileRequestsEmailsEnabledDetails)
@@ -11244,6 +11246,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileLockingPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_locking_policy_changed_details")
                     return .dictionary(d)
+                case .fileProviderMigrationPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.FileProviderMigrationPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("file_provider_migration_policy_changed_details")
+                    return .dictionary(d)
                 case .fileRequestsChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.FileRequestsChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_requests_change_policy_details")
@@ -12806,6 +12812,9 @@ open class TeamLog {
                         case "file_locking_policy_changed_details":
                             let v = TeamLog.FileLockingPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.fileLockingPolicyChangedDetails(v)
+                        case "file_provider_migration_policy_changed_details":
+                            let v = TeamLog.FileProviderMigrationPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.fileProviderMigrationPolicyChangedDetails(v)
                         case "file_requests_change_policy_details":
                             let v = TeamLog.FileRequestsChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.fileRequestsChangePolicyDetails(v)
@@ -13833,7 +13842,7 @@ open class TeamLog {
         case teamSelectiveSyncSettingsChanged(TeamLog.TeamSelectiveSyncSettingsChangedType)
         /// (team_policies) Changed account capture setting on team domain
         case accountCaptureChangePolicy(TeamLog.AccountCaptureChangePolicyType)
-        /// (team_policies) Changed admin email reminder policy for team requests to join
+        /// (team_policies) Changed admin reminder settings for requests to join the team
         case adminEmailRemindersChanged(TeamLog.AdminEmailRemindersChangedType)
         /// (team_policies) Disabled downloads (deprecated, no longer logged)
         case allowDownloadDisabled(TeamLog.AllowDownloadDisabledType)
@@ -13889,6 +13898,8 @@ open class TeamLog {
         case fileCommentsChangePolicy(TeamLog.FileCommentsChangePolicyType)
         /// (team_policies) Changed file locking policy for team
         case fileLockingPolicyChanged(TeamLog.FileLockingPolicyChangedType)
+        /// (team_policies) Changed File Provider Migration policy for team
+        case fileProviderMigrationPolicyChanged(TeamLog.FileProviderMigrationPolicyChangedType)
         /// (team_policies) Enabled/disabled file requests
         case fileRequestsChangePolicy(TeamLog.FileRequestsChangePolicyType)
         /// (team_policies) Enabled file request emails for everyone (deprecated, no longer logged)
@@ -15633,6 +15644,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileLockingPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_locking_policy_changed")
                     return .dictionary(d)
+                case .fileProviderMigrationPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.FileProviderMigrationPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("file_provider_migration_policy_changed")
+                    return .dictionary(d)
                 case .fileRequestsChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.FileRequestsChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_requests_change_policy")
@@ -17191,6 +17206,9 @@ open class TeamLog {
                         case "file_locking_policy_changed":
                             let v = TeamLog.FileLockingPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.fileLockingPolicyChanged(v)
+                        case "file_provider_migration_policy_changed":
+                            let v = TeamLog.FileProviderMigrationPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.fileProviderMigrationPolicyChanged(v)
                         case "file_requests_change_policy":
                             let v = TeamLog.FileRequestsChangePolicyTypeSerializer().deserialize(json)
                             return EventType.fileRequestsChangePolicy(v)
@@ -18215,7 +18233,7 @@ open class TeamLog {
         case teamSelectiveSyncSettingsChanged
         /// (team_policies) Changed account capture setting on team domain
         case accountCaptureChangePolicy
-        /// (team_policies) Changed admin email reminder policy for team requests to join
+        /// (team_policies) Changed admin reminder settings for requests to join the team
         case adminEmailRemindersChanged
         /// (team_policies) Disabled downloads (deprecated, no longer logged)
         case allowDownloadDisabled
@@ -18271,6 +18289,8 @@ open class TeamLog {
         case fileCommentsChangePolicy
         /// (team_policies) Changed file locking policy for team
         case fileLockingPolicyChanged
+        /// (team_policies) Changed File Provider Migration policy for team
+        case fileProviderMigrationPolicyChanged
         /// (team_policies) Enabled/disabled file requests
         case fileRequestsChangePolicy
         /// (team_policies) Enabled file request emails for everyone (deprecated, no longer logged)
@@ -20015,6 +20035,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("file_locking_policy_changed")
                     return .dictionary(d)
+                case .fileProviderMigrationPolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("file_provider_migration_policy_changed")
+                    return .dictionary(d)
                 case .fileRequestsChangePolicy:
                     var d = [String: JSON]()
                     d[".tag"] = .str("file_requests_change_policy")
@@ -21192,6 +21216,8 @@ open class TeamLog {
                             return EventTypeArg.fileCommentsChangePolicy
                         case "file_locking_policy_changed":
                             return EventTypeArg.fileLockingPolicyChanged
+                        case "file_provider_migration_policy_changed":
+                            return EventTypeArg.fileProviderMigrationPolicyChanged
                         case "file_requests_change_policy":
                             return EventTypeArg.fileRequestsChangePolicy
                         case "file_requests_emails_enabled":
@@ -23694,6 +23720,72 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return FilePreviewType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Changed File Provider Migration policy for team.
+    open class FileProviderMigrationPolicyChangedDetails: CustomStringConvertible {
+        /// To.
+        public let newValue: TeamPolicies.FileProviderMigrationPolicyState
+        /// From.
+        public let previousValue: TeamPolicies.FileProviderMigrationPolicyState
+        public init(newValue: TeamPolicies.FileProviderMigrationPolicyState, previousValue: TeamPolicies.FileProviderMigrationPolicyState) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileProviderMigrationPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class FileProviderMigrationPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileProviderMigrationPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamPolicies.FileProviderMigrationPolicyStateSerializer().serialize(value.newValue),
+            "previous_value": TeamPolicies.FileProviderMigrationPolicyStateSerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileProviderMigrationPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamPolicies.FileProviderMigrationPolicyStateSerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamPolicies.FileProviderMigrationPolicyStateSerializer().deserialize(dict["previous_value"] ?? .null)
+                    return FileProviderMigrationPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The FileProviderMigrationPolicyChangedType struct
+    open class FileProviderMigrationPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileProviderMigrationPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class FileProviderMigrationPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileProviderMigrationPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileProviderMigrationPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return FileProviderMigrationPolicyChangedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -48903,6 +48995,8 @@ open class TeamLog {
         /// An unspecified error.
         case full
         /// An unspecified error.
+        case guest
+        /// An unspecified error.
         case other
 
         public var description: String {
@@ -48921,6 +49015,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("full")
                     return .dictionary(d)
+                case .guest:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("guest")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -48936,6 +49034,8 @@ open class TeamLog {
                             return TeamMembershipType.free
                         case "full":
                             return TeamMembershipType.full
+                        case "guest":
+                            return TeamMembershipType.guest
                         case "other":
                             return TeamMembershipType.other
                         default:

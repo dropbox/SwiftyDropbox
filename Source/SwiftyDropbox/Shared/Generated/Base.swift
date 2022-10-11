@@ -23,6 +23,8 @@ open class DropboxBase {
     open var file_requests: FileRequestsRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
     open var files: FilesRoutes!
+    /// Routes within the openid namespace. See OpenidRoutes for details.
+    open var openid: OpenidRoutes!
     /// Routes within the paper namespace. See PaperRoutes for details.
     open var paper: PaperRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
@@ -40,6 +42,7 @@ open class DropboxBase {
         self.file_properties = FilePropertiesRoutes(client: client)
         self.file_requests = FileRequestsRoutes(client: client)
         self.files = FilesRoutes(client: client)
+        self.openid = OpenidRoutes(client: client)
         self.paper = PaperRoutes(client: client)
         self.sharing = SharingRoutes(client: client)
         self.team_log = TeamLogRoutes(client: client)
