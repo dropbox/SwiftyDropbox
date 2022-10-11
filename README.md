@@ -245,7 +245,7 @@ func applicationDidFinishLaunching(_ aNotification: Notification) {
 #### Begin the authorization flow
 
 You can commence the auth flow by calling `authorizeFromController:controller:openURL` method in your application's
-view controller. Note that the controller reference will be weakly held.
+view controller. Note that the controller reference will be weakly held. For SwiftUI applications nil can be passed in for the controller argument and the app's root view controller will be used to present the flow.
 
 From your view controller:
 
@@ -286,7 +286,7 @@ func myButtonInControllerPressed() {
     // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
     let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
     DropboxClientsManager.authorizeFromControllerV2(
-        sharedWorkspace: NSWorkspace.shared,
+        sharedApplication: NSApplication.shared,
         controller: self,
         loadingStatusDelegate: nil,
         openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
@@ -296,7 +296,7 @@ func myButtonInControllerPressed() {
     // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
     // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
     // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
-    // DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
+    // DropboxClientsManager.authorizeFromController(sharedApplication: NSApplication.shared,
     //                                               controller: self,
     //                                               openURL: { (url: URL) -> Void in
     //                                                 NSWorkspace.shared.open(url)
