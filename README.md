@@ -219,6 +219,8 @@ To facilitate the above authorization flows, you should take the following steps
 
 From your application delegate:
 
+_SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
+
 ##### iOS
 
 ```Swift
@@ -317,6 +319,8 @@ Beginning the authentication flow via in-app webview will launch a window like t
 
 To handle the redirection back into the Swift SDK once the authentication flow is complete, you should add the following code in your application's delegate:
 
+_SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
+
 ##### iOS
 
 ```Swift
@@ -341,6 +345,8 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 
 ```
 Or if your app is iOS13+, or your app also supports Scenes, add the following code into your application's main scene delegate:
+
+Note: You may need to create a Scene Delegate if your application doesn't have one._
 ```Swift
 import SwiftyDropbox
 
@@ -772,9 +778,11 @@ For some apps, it is necessary to manage more than one Dropbox account (and acce
 
 * access token uids are managed by the app that is integrating with the SDK for later lookup
 * call `setupWithAppKeyMultiUser`/`setupWithAppKeyMultiUserDesktop` (or `setupWithTeamAppKeyMultiUser`/`setupWithTeamAppKeyMultiUserDesktop`) in integrating app's app delegate
+    * _SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
 * client manager determines whether an access token is stored with the`tokenUid` as a key -- if one exists, this token is chosen to use
 * if no token is found, call `authorizeFromController`/`authorizeFromControllerDesktop` to initiate the OAuth flow
 * if auth flow is initiated, call `handleRedirectURL` (or `handleRedirectURLTeam`) in integrating app's app delegate to handle auth redirect back into the app and store the retrieved access token (using a `DropboxOAuthManager` instance)
+    * _SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
 * at this point, the app that is integrating with the SDK should persistently save the `tokenUid` from the `DropboxAccessToken` field of the `DropboxOAuthResult` object returned from the `handleRedirectURL` (or `handleRedirectURLTeam`) method
 * `tokenUid` can be reused either to authorize a new user mid-way through an app's lifecycle via `reauthorizeClient` (or `reauthorizeTeamClient`) or when the app initially launches via `setupWithAppKeyMultiUser`/`setupWithAppKeyMultiUserDesktop` (or `setupWithTeamAppKeyMultiUser`/`setupWithTeamAppKeyMultiUserDesktop`)
 * client manager instantiates a `DropboxTransportClient` (if not supplied by the user)
