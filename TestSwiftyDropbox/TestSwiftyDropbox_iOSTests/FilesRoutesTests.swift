@@ -18,7 +18,7 @@ import XCTest
 class FilesRoutesTests: XCTestCase {
 
     private var userClient: UsersRoutes!
-    private var tester: DropboxTester!
+    private var tester: DropboxTester?
 
     override func setUp() {
         // You need an API app with the "Full Dropbox" permission type and at least the scopes in DropboxTester.scopes
@@ -56,8 +56,10 @@ class FilesRoutesTests: XCTestCase {
         print("tearDown: delete folder")
         let flag = XCTestExpectation()
 
-        FilesTests(tester: tester).deleteV2 {
-            flag.fulfill()
+        if let tester = tester {
+            FilesTests(tester: tester).deleteV2 {
+                flag.fulfill()
+            }
         }
 
         _ = XCTWaiter.wait(for: [flag], timeout: 30) // don't need to check result on tear down
@@ -70,7 +72,7 @@ class FilesRoutesTests: XCTestCase {
             flag.fulfill()
         }
 
-        tester.testFilesActions(nextTest, asMember: false)
+        tester?.testFilesActions(nextTest, asMember: false)
 
         let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
         XCTAssertEqual(result, .completed, "Error: timeout on file routes tests")
