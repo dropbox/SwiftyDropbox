@@ -55,7 +55,6 @@ open class DropboxTransportClient {
         sessionDelegate: SessionDelegate? = nil,
         longpollSessionDelegate: SessionDelegate? = nil,
         serverTrustPolicyManager: ServerTrustManager? = nil,
-        sharedContainerIdentifier: String? = nil,
         pathRoot: Common.PathRoot? = nil
     ) {
         self.init(
@@ -67,7 +66,6 @@ open class DropboxTransportClient {
             sessionDelegate: sessionDelegate,
             longpollSessionDelegate: longpollSessionDelegate,
             serverTrustPolicyManager: serverTrustPolicyManager,
-            sharedContainerIdentifier: sharedContainerIdentifier,
             pathRoot: pathRoot
         )
     }
@@ -90,7 +88,6 @@ open class DropboxTransportClient {
         sessionDelegate: SessionDelegate? = nil,
         longpollSessionDelegate: SessionDelegate? = nil,
         serverTrustPolicyManager: ServerTrustManager? = nil,
-        sharedContainerIdentifier: String? = nil,
         pathRoot: Common.PathRoot? = nil
     ) {
         let config = config ?? URLSessionConfiguration.default
