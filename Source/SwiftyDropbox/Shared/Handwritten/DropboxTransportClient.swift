@@ -51,6 +51,7 @@ open class DropboxTransportClient {
         baseHosts: [String: String]?,
         userAgent: String?,
         selectUser: String?,
+        config: URLSessionConfiguration? = nil,
         sessionDelegate: SessionDelegate? = nil,
         longpollSessionDelegate: SessionDelegate? = nil,
         serverTrustPolicyManager: ServerTrustManager? = nil,
@@ -62,6 +63,7 @@ open class DropboxTransportClient {
             baseHosts: baseHosts,
             userAgent: userAgent,
             selectUser: selectUser,
+            config: config,
             sessionDelegate: sessionDelegate,
             longpollSessionDelegate: longpollSessionDelegate,
             serverTrustPolicyManager: serverTrustPolicyManager,
@@ -84,13 +86,14 @@ open class DropboxTransportClient {
         baseHosts: [String: String]?,
         userAgent: String?,
         selectUser: String?,
+        config: URLSessionConfiguration? = nil,
         sessionDelegate: SessionDelegate? = nil,
         longpollSessionDelegate: SessionDelegate? = nil,
         serverTrustPolicyManager: ServerTrustManager? = nil,
         sharedContainerIdentifier: String? = nil,
         pathRoot: Common.PathRoot? = nil
     ) {
-        let config = URLSessionConfiguration.default
+        let config = config ?? URLSessionConfiguration.default
         let delegate = sessionDelegate ?? SessionDelegate()
         let serverTrustPolicyManager = serverTrustPolicyManager ?? nil
         let manager = Session(configuration: config,
@@ -98,7 +101,7 @@ open class DropboxTransportClient {
                               startRequestsImmediately: false,
                               serverTrustManager: serverTrustPolicyManager)
 
-        let longpollConfig = URLSessionConfiguration.default
+        let longpollConfig = config.copy() as! URLSessionConfiguration
         longpollConfig.timeoutIntervalForRequest = 480.0
 
         let longpollSessionDelegate = longpollSessionDelegate ?? SessionDelegate()
