@@ -12,7 +12,7 @@ class LoadingViewController: UIViewController {
     private let loadingSpinner: UIActivityIndicatorView
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        if #available(iOS 13.0, *) {
+		if #available(iOS 13.0, tvOS 13.0, *) {
             loadingSpinner = UIActivityIndicatorView(style: .large)
         } else {
             loadingSpinner = UIActivityIndicatorView(style: .whiteLarge)
