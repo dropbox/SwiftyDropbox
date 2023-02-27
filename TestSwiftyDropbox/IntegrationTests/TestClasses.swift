@@ -1301,8 +1301,9 @@ open class TeamTests {
     func groupsUpdate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
+        let newGroupName = "New Group Name" + TestData.testId
 
-        tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name").response { response, error in
+        tester.team.groupsUpdate(group: groupSelector, newGroupName: newGroupName).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
