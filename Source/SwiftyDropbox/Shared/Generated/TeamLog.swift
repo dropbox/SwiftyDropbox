@@ -9516,6 +9516,8 @@ open class TeamLog {
         /// An unspecified error.
         case fileTransfersPolicyChangedDetails(TeamLog.FileTransfersPolicyChangedDetails)
         /// An unspecified error.
+        case folderLinkRestrictionPolicyChangedDetails(TeamLog.FolderLinkRestrictionPolicyChangedDetails)
+        /// An unspecified error.
         case googleSsoChangePolicyDetails(TeamLog.GoogleSsoChangePolicyDetails)
         /// An unspecified error.
         case groupUserManagementChangePolicyDetails(TeamLog.GroupUserManagementChangePolicyDetails)
@@ -11266,6 +11268,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileTransfersPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("file_transfers_policy_changed_details")
                     return .dictionary(d)
+                case .folderLinkRestrictionPolicyChangedDetails(let arg):
+                    var d = Serialization.getFields(TeamLog.FolderLinkRestrictionPolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("folder_link_restriction_policy_changed_details")
+                    return .dictionary(d)
                 case .googleSsoChangePolicyDetails(let arg):
                     var d = Serialization.getFields(TeamLog.GoogleSsoChangePolicyDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("google_sso_change_policy_details")
@@ -12827,6 +12833,9 @@ open class TeamLog {
                         case "file_transfers_policy_changed_details":
                             let v = TeamLog.FileTransfersPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.fileTransfersPolicyChangedDetails(v)
+                        case "folder_link_restriction_policy_changed_details":
+                            let v = TeamLog.FolderLinkRestrictionPolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.folderLinkRestrictionPolicyChangedDetails(v)
                         case "google_sso_change_policy_details":
                             let v = TeamLog.GoogleSsoChangePolicyDetailsSerializer().deserialize(json)
                             return EventDetails.googleSsoChangePolicyDetails(v)
@@ -13908,6 +13917,8 @@ open class TeamLog {
         case fileRequestsEmailsRestrictedToTeamOnly(TeamLog.FileRequestsEmailsRestrictedToTeamOnlyType)
         /// (team_policies) Changed file transfers policy for team
         case fileTransfersPolicyChanged(TeamLog.FileTransfersPolicyChangedType)
+        /// (team_policies) Changed folder link restrictions policy for team
+        case folderLinkRestrictionPolicyChanged(TeamLog.FolderLinkRestrictionPolicyChangedType)
         /// (team_policies) Enabled/disabled Google single sign-on for team
         case googleSsoChangePolicy(TeamLog.GoogleSsoChangePolicyType)
         /// (team_policies) Changed who can create groups
@@ -15664,6 +15675,10 @@ open class TeamLog {
                     var d = Serialization.getFields(TeamLog.FileTransfersPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("file_transfers_policy_changed")
                     return .dictionary(d)
+                case .folderLinkRestrictionPolicyChanged(let arg):
+                    var d = Serialization.getFields(TeamLog.FolderLinkRestrictionPolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("folder_link_restriction_policy_changed")
+                    return .dictionary(d)
                 case .googleSsoChangePolicy(let arg):
                     var d = Serialization.getFields(TeamLog.GoogleSsoChangePolicyTypeSerializer().serialize(arg))
                     d[".tag"] = .str("google_sso_change_policy")
@@ -17221,6 +17236,9 @@ open class TeamLog {
                         case "file_transfers_policy_changed":
                             let v = TeamLog.FileTransfersPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.fileTransfersPolicyChanged(v)
+                        case "folder_link_restriction_policy_changed":
+                            let v = TeamLog.FolderLinkRestrictionPolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.folderLinkRestrictionPolicyChanged(v)
                         case "google_sso_change_policy":
                             let v = TeamLog.GoogleSsoChangePolicyTypeSerializer().deserialize(json)
                             return EventType.googleSsoChangePolicy(v)
@@ -18299,6 +18317,8 @@ open class TeamLog {
         case fileRequestsEmailsRestrictedToTeamOnly
         /// (team_policies) Changed file transfers policy for team
         case fileTransfersPolicyChanged
+        /// (team_policies) Changed folder link restrictions policy for team
+        case folderLinkRestrictionPolicyChanged
         /// (team_policies) Enabled/disabled Google single sign-on for team
         case googleSsoChangePolicy
         /// (team_policies) Changed who can create groups
@@ -20055,6 +20075,10 @@ open class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("file_transfers_policy_changed")
                     return .dictionary(d)
+                case .folderLinkRestrictionPolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_link_restriction_policy_changed")
+                    return .dictionary(d)
                 case .googleSsoChangePolicy:
                     var d = [String: JSON]()
                     d[".tag"] = .str("google_sso_change_policy")
@@ -21226,6 +21250,8 @@ open class TeamLog {
                             return EventTypeArg.fileRequestsEmailsRestrictedToTeamOnly
                         case "file_transfers_policy_changed":
                             return EventTypeArg.fileTransfersPolicyChanged
+                        case "folder_link_restriction_policy_changed":
+                            return EventTypeArg.folderLinkRestrictionPolicyChanged
                         case "google_sso_change_policy":
                             return EventTypeArg.googleSsoChangePolicy
                         case "group_user_management_change_policy":
@@ -25343,6 +25369,123 @@ open class TeamLog {
                 case .dictionary(let dict):
                     let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
                     return FileUnresolveCommentType(description_: description_)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// Policy for deciding whether applying link restrictions on all team owned folders
+    public enum FolderLinkRestrictionPolicy: CustomStringConvertible {
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderLinkRestrictionPolicySerializer().serialize(self)))"
+        }
+    }
+    open class FolderLinkRestrictionPolicySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FolderLinkRestrictionPolicy) -> JSON {
+            switch value {
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> FolderLinkRestrictionPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return FolderLinkRestrictionPolicy.disabled
+                        case "enabled":
+                            return FolderLinkRestrictionPolicy.enabled
+                        case "other":
+                            return FolderLinkRestrictionPolicy.other
+                        default:
+                            return FolderLinkRestrictionPolicy.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Changed folder link restrictions policy for team.
+    open class FolderLinkRestrictionPolicyChangedDetails: CustomStringConvertible {
+        /// To.
+        public let newValue: TeamLog.FolderLinkRestrictionPolicy
+        /// From.
+        public let previousValue: TeamLog.FolderLinkRestrictionPolicy
+        public init(newValue: TeamLog.FolderLinkRestrictionPolicy, previousValue: TeamLog.FolderLinkRestrictionPolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderLinkRestrictionPolicyChangedDetailsSerializer().serialize(self)))"
+        }
+    }
+    open class FolderLinkRestrictionPolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FolderLinkRestrictionPolicyChangedDetails) -> JSON {
+            let output = [ 
+            "new_value": TeamLog.FolderLinkRestrictionPolicySerializer().serialize(value.newValue),
+            "previous_value": TeamLog.FolderLinkRestrictionPolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FolderLinkRestrictionPolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = TeamLog.FolderLinkRestrictionPolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = TeamLog.FolderLinkRestrictionPolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return FolderLinkRestrictionPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The FolderLinkRestrictionPolicyChangedType struct
+    open class FolderLinkRestrictionPolicyChangedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FolderLinkRestrictionPolicyChangedTypeSerializer().serialize(self)))"
+        }
+    }
+    open class FolderLinkRestrictionPolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FolderLinkRestrictionPolicyChangedType) -> JSON {
+            let output = [ 
+            "description": Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FolderLinkRestrictionPolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return FolderLinkRestrictionPolicyChangedType(description_: description_)
                 default:
                     fatalError("Type error deserializing")
             }
