@@ -10195,6 +10195,468 @@ open class Team {
         }
     }
 
+    /// Structure representing Approve List entries. Domain and emails are supported. At least one entry of any
+    /// supported type is required.
+    open class SharingAllowlistAddArgs: CustomStringConvertible {
+        /// List of domains represented by valid string representation (RFC-1034/5).
+        public let domains: Array<String>?
+        /// List of emails represented by valid string representation (RFC-5322/822).
+        public let emails: Array<String>?
+        public init(domains: Array<String>? = nil, emails: Array<String>? = nil) {
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(domains)
+            self.domains = domains
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(emails)
+            self.emails = emails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistAddArgsSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistAddArgsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistAddArgs) -> JSON {
+            let output = [ 
+            "domains": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.domains),
+            "emails": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.emails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistAddArgs {
+            switch json {
+                case .dictionary(let dict):
+                    let domains = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["domains"] ?? .null)
+                    let emails = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["emails"] ?? .null)
+                    return SharingAllowlistAddArgs(domains: domains, emails: emails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistAddError union
+    public enum SharingAllowlistAddError: CustomStringConvertible {
+        /// One of provided values is not valid.
+        case malformedEntry(String)
+        /// Neither single domain nor email provided.
+        case noEntriesProvided
+        /// Too many entries provided within one call.
+        case tooManyEntriesProvided
+        /// Team entries limit reached.
+        case teamLimitReached
+        /// Unknown error.
+        case unknownError
+        /// Entries already exists.
+        case entriesAlreadyExist(String)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistAddErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistAddErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistAddError) -> JSON {
+            switch value {
+                case .malformedEntry(let arg):
+                    var d = ["malformed_entry": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("malformed_entry")
+                    return .dictionary(d)
+                case .noEntriesProvided:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_entries_provided")
+                    return .dictionary(d)
+                case .tooManyEntriesProvided:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_entries_provided")
+                    return .dictionary(d)
+                case .teamLimitReached:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_limit_reached")
+                    return .dictionary(d)
+                case .unknownError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_error")
+                    return .dictionary(d)
+                case .entriesAlreadyExist(let arg):
+                    var d = ["entries_already_exist": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("entries_already_exist")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistAddError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "malformed_entry":
+                            let v = Serialization._StringSerializer.deserialize(d["malformed_entry"] ?? .null)
+                            return SharingAllowlistAddError.malformedEntry(v)
+                        case "no_entries_provided":
+                            return SharingAllowlistAddError.noEntriesProvided
+                        case "too_many_entries_provided":
+                            return SharingAllowlistAddError.tooManyEntriesProvided
+                        case "team_limit_reached":
+                            return SharingAllowlistAddError.teamLimitReached
+                        case "unknown_error":
+                            return SharingAllowlistAddError.unknownError
+                        case "entries_already_exist":
+                            let v = Serialization._StringSerializer.deserialize(d["entries_already_exist"] ?? .null)
+                            return SharingAllowlistAddError.entriesAlreadyExist(v)
+                        case "other":
+                            return SharingAllowlistAddError.other
+                        default:
+                            return SharingAllowlistAddError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    open class SharingAllowlistAddResponse: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistAddResponseSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistAddResponseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistAddResponse) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistAddResponse {
+            switch json {
+                case .dictionary(_):
+                    return SharingAllowlistAddResponse()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistListArg struct
+    open class SharingAllowlistListArg: CustomStringConvertible {
+        /// The number of entries to fetch at one time.
+        public let limit: UInt32
+        public init(limit: UInt32 = 1000) {
+            comparableValidator(minValue: 1, maxValue: 1000)(limit)
+            self.limit = limit
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistListArgSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistListArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistListArg) -> JSON {
+            let output = [ 
+            "limit": Serialization._UInt32Serializer.serialize(value.limit),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistListArg {
+            switch json {
+                case .dictionary(let dict):
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    return SharingAllowlistListArg(limit: limit)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistListContinueArg struct
+    open class SharingAllowlistListContinueArg: CustomStringConvertible {
+        /// The cursor returned from a previous call to sharingAllowlistList or sharingAllowlistListContinue.
+        public let cursor: String
+        public init(cursor: String) {
+            stringValidator()(cursor)
+            self.cursor = cursor
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistListContinueArgSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistListContinueArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistListContinueArg) -> JSON {
+            let output = [ 
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistListContinueArg {
+            switch json {
+                case .dictionary(let dict):
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return SharingAllowlistListContinueArg(cursor: cursor)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistListContinueError union
+    public enum SharingAllowlistListContinueError: CustomStringConvertible {
+        /// Provided cursor is not valid.
+        case invalidCursor
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistListContinueErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistListContinueErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistListContinueError) -> JSON {
+            switch value {
+                case .invalidCursor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_cursor")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistListContinueError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_cursor":
+                            return SharingAllowlistListContinueError.invalidCursor
+                        case "other":
+                            return SharingAllowlistListContinueError.other
+                        default:
+                            return SharingAllowlistListContinueError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    open class SharingAllowlistListError: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistListErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistListErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistListError) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistListError {
+            switch json {
+                case .dictionary(_):
+                    return SharingAllowlistListError()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistListResponse struct
+    open class SharingAllowlistListResponse: CustomStringConvertible {
+        /// List of domains represented by valid string representation (RFC-1034/5).
+        public let domains: Array<String>
+        /// List of emails represented by valid string representation (RFC-5322/822).
+        public let emails: Array<String>
+        /// If this is nonempty, there are more entries that can be fetched with sharingAllowlistListContinue.
+        public let cursor: String
+        /// if true indicates that more entries can be fetched with sharingAllowlistListContinue.
+        public let hasMore: Bool
+        public init(domains: Array<String>, emails: Array<String>, cursor: String = "", hasMore: Bool = false) {
+            arrayValidator(itemValidator: stringValidator())(domains)
+            self.domains = domains
+            arrayValidator(itemValidator: stringValidator())(emails)
+            self.emails = emails
+            stringValidator()(cursor)
+            self.cursor = cursor
+            self.hasMore = hasMore
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistListResponseSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistListResponseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistListResponse) -> JSON {
+            let output = [ 
+            "domains": ArraySerializer(Serialization._StringSerializer).serialize(value.domains),
+            "emails": ArraySerializer(Serialization._StringSerializer).serialize(value.emails),
+            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistListResponse {
+            switch json {
+                case .dictionary(let dict):
+                    let domains = ArraySerializer(Serialization._StringSerializer).deserialize(dict["domains"] ?? .null)
+                    let emails = ArraySerializer(Serialization._StringSerializer).deserialize(dict["emails"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .str(""))
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .number(0))
+                    return SharingAllowlistListResponse(domains: domains, emails: emails, cursor: cursor, hasMore: hasMore)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistRemoveArgs struct
+    open class SharingAllowlistRemoveArgs: CustomStringConvertible {
+        /// List of domains represented by valid string representation (RFC-1034/5).
+        public let domains: Array<String>?
+        /// List of emails represented by valid string representation (RFC-5322/822).
+        public let emails: Array<String>?
+        public init(domains: Array<String>? = nil, emails: Array<String>? = nil) {
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(domains)
+            self.domains = domains
+            nullableValidator(arrayValidator(itemValidator: stringValidator()))(emails)
+            self.emails = emails
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistRemoveArgsSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistRemoveArgsSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistRemoveArgs) -> JSON {
+            let output = [ 
+            "domains": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.domains),
+            "emails": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.emails),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistRemoveArgs {
+            switch json {
+                case .dictionary(let dict):
+                    let domains = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["domains"] ?? .null)
+                    let emails = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["emails"] ?? .null)
+                    return SharingAllowlistRemoveArgs(domains: domains, emails: emails)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SharingAllowlistRemoveError union
+    public enum SharingAllowlistRemoveError: CustomStringConvertible {
+        /// One of provided values is not valid.
+        case malformedEntry(String)
+        /// One or more provided values do not exist.
+        case entriesDoNotExist(String)
+        /// Neither single domain nor email provided.
+        case noEntriesProvided
+        /// Too many entries provided within one call.
+        case tooManyEntriesProvided
+        /// Unknown error.
+        case unknownError
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistRemoveErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistRemoveErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistRemoveError) -> JSON {
+            switch value {
+                case .malformedEntry(let arg):
+                    var d = ["malformed_entry": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("malformed_entry")
+                    return .dictionary(d)
+                case .entriesDoNotExist(let arg):
+                    var d = ["entries_do_not_exist": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("entries_do_not_exist")
+                    return .dictionary(d)
+                case .noEntriesProvided:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_entries_provided")
+                    return .dictionary(d)
+                case .tooManyEntriesProvided:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_entries_provided")
+                    return .dictionary(d)
+                case .unknownError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistRemoveError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "malformed_entry":
+                            let v = Serialization._StringSerializer.deserialize(d["malformed_entry"] ?? .null)
+                            return SharingAllowlistRemoveError.malformedEntry(v)
+                        case "entries_do_not_exist":
+                            let v = Serialization._StringSerializer.deserialize(d["entries_do_not_exist"] ?? .null)
+                            return SharingAllowlistRemoveError.entriesDoNotExist(v)
+                        case "no_entries_provided":
+                            return SharingAllowlistRemoveError.noEntriesProvided
+                        case "too_many_entries_provided":
+                            return SharingAllowlistRemoveError.tooManyEntriesProvided
+                        case "unknown_error":
+                            return SharingAllowlistRemoveError.unknownError
+                        case "other":
+                            return SharingAllowlistRemoveError.other
+                        default:
+                            return SharingAllowlistRemoveError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    open class SharingAllowlistRemoveResponse: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SharingAllowlistRemoveResponseSerializer().serialize(self)))"
+        }
+    }
+    open class SharingAllowlistRemoveResponseSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SharingAllowlistRemoveResponse) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SharingAllowlistRemoveResponse {
+            switch json {
+                case .dictionary(_):
+                    return SharingAllowlistRemoveResponse()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// Describes the number of users in a specific storage bucket.
     open class StorageBucket: CustomStringConvertible {
         /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up to 1 Giga.
@@ -11447,9 +11909,11 @@ open class Team {
         public let numLicensedUsers: UInt32
         /// The number of accounts that have been invited or are already active members of the team.
         public let numProvisionedUsers: UInt32
+        /// The number of licenses used on the team.
+        public let numUsedLicenses: UInt32
         /// (no description)
         public let policies: TeamPolicies.TeamMemberPolicies
-        public init(name: String, teamId: String, numLicensedUsers: UInt32, numProvisionedUsers: UInt32, policies: TeamPolicies.TeamMemberPolicies) {
+        public init(name: String, teamId: String, numLicensedUsers: UInt32, numProvisionedUsers: UInt32, numUsedLicenses: UInt32, policies: TeamPolicies.TeamMemberPolicies) {
             stringValidator()(name)
             self.name = name
             stringValidator()(teamId)
@@ -11458,6 +11922,8 @@ open class Team {
             self.numLicensedUsers = numLicensedUsers
             comparableValidator()(numProvisionedUsers)
             self.numProvisionedUsers = numProvisionedUsers
+            comparableValidator()(numUsedLicenses)
+            self.numUsedLicenses = numUsedLicenses
             self.policies = policies
         }
         open var description: String {
@@ -11472,6 +11938,7 @@ open class Team {
             "team_id": Serialization._StringSerializer.serialize(value.teamId),
             "num_licensed_users": Serialization._UInt32Serializer.serialize(value.numLicensedUsers),
             "num_provisioned_users": Serialization._UInt32Serializer.serialize(value.numProvisionedUsers),
+            "num_used_licenses": Serialization._UInt32Serializer.serialize(value.numUsedLicenses),
             "policies": TeamPolicies.TeamMemberPoliciesSerializer().serialize(value.policies),
             ]
             return .dictionary(output)
@@ -11483,8 +11950,9 @@ open class Team {
                     let teamId = Serialization._StringSerializer.deserialize(dict["team_id"] ?? .null)
                     let numLicensedUsers = Serialization._UInt32Serializer.deserialize(dict["num_licensed_users"] ?? .null)
                     let numProvisionedUsers = Serialization._UInt32Serializer.deserialize(dict["num_provisioned_users"] ?? .null)
+                    let numUsedLicenses = Serialization._UInt32Serializer.deserialize(dict["num_used_licenses"] ?? .null)
                     let policies = TeamPolicies.TeamMemberPoliciesSerializer().deserialize(dict["policies"] ?? .null)
-                    return TeamGetInfoResult(name: name, teamId: teamId, numLicensedUsers: numLicensedUsers, numProvisionedUsers: numProvisionedUsers, policies: policies)
+                    return TeamGetInfoResult(name: name, teamId: teamId, numLicensedUsers: numLicensedUsers, numProvisionedUsers: numProvisionedUsers, numUsedLicenses: numUsedLicenses, policies: policies)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -13640,6 +14108,54 @@ open class Team {
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetStorageReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let sharingAllowlistAdd = Route(
+        name: "sharing_allowlist/add",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.SharingAllowlistAddArgsSerializer(),
+        responseSerializer: Team.SharingAllowlistAddResponseSerializer(),
+        errorSerializer: Team.SharingAllowlistAddErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let sharingAllowlistList = Route(
+        name: "sharing_allowlist/list",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.SharingAllowlistListArgSerializer(),
+        responseSerializer: Team.SharingAllowlistListResponseSerializer(),
+        errorSerializer: Team.SharingAllowlistListErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let sharingAllowlistListContinue = Route(
+        name: "sharing_allowlist/list/continue",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.SharingAllowlistListContinueArgSerializer(),
+        responseSerializer: Team.SharingAllowlistListResponseSerializer(),
+        errorSerializer: Team.SharingAllowlistListContinueErrorSerializer(),
+        attrs: ["auth": "team",
+                "host": "api",
+                "style": "rpc"]
+    )
+    static let sharingAllowlistRemove = Route(
+        name: "sharing_allowlist/remove",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.SharingAllowlistRemoveArgsSerializer(),
+        responseSerializer: Team.SharingAllowlistRemoveResponseSerializer(),
+        errorSerializer: Team.SharingAllowlistRemoveErrorSerializer(),
         attrs: ["auth": "team",
                 "host": "api",
                 "style": "rpc"]

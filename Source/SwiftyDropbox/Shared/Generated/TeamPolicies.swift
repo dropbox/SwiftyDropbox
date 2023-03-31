@@ -1409,10 +1409,13 @@ open class TeamPolicies {
         public let sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy
         /// Who can view shared links owned by team members.
         public let sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy
-        public init(sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy, sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy, sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy) {
+        /// Who can create groups.
+        public let groupCreationPolicy: TeamPolicies.GroupCreation
+        public init(sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy, sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy, sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy, groupCreationPolicy: TeamPolicies.GroupCreation) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
             self.sharedFolderJoinPolicy = sharedFolderJoinPolicy
             self.sharedLinkCreatePolicy = sharedLinkCreatePolicy
+            self.groupCreationPolicy = groupCreationPolicy
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSharingPoliciesSerializer().serialize(self)))"
@@ -1425,6 +1428,7 @@ open class TeamPolicies {
             "shared_folder_member_policy": TeamPolicies.SharedFolderMemberPolicySerializer().serialize(value.sharedFolderMemberPolicy),
             "shared_folder_join_policy": TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
             "shared_link_create_policy": TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),
+            "group_creation_policy": TeamPolicies.GroupCreationSerializer().serialize(value.groupCreationPolicy),
             ]
             return .dictionary(output)
         }
@@ -1434,7 +1438,8 @@ open class TeamPolicies {
                     let sharedFolderMemberPolicy = TeamPolicies.SharedFolderMemberPolicySerializer().deserialize(dict["shared_folder_member_policy"] ?? .null)
                     let sharedFolderJoinPolicy = TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
                     let sharedLinkCreatePolicy = TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
-                    return TeamSharingPolicies(sharedFolderMemberPolicy: sharedFolderMemberPolicy, sharedFolderJoinPolicy: sharedFolderJoinPolicy, sharedLinkCreatePolicy: sharedLinkCreatePolicy)
+                    let groupCreationPolicy = TeamPolicies.GroupCreationSerializer().deserialize(dict["group_creation_policy"] ?? .null)
+                    return TeamSharingPolicies(sharedFolderMemberPolicy: sharedFolderMemberPolicy, sharedFolderJoinPolicy: sharedFolderJoinPolicy, sharedLinkCreatePolicy: sharedLinkCreatePolicy, groupCreationPolicy: groupCreationPolicy)
                 default:
                     fatalError("Type error deserializing")
             }

@@ -1106,6 +1106,65 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in transaction. In
+    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails (RFC-5322/822)
+    /// are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100 entries per call is
+    /// allowed.
+    ///
+    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
+    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object
+    /// on success or a `Team.SharingAllowlistAddError` object on failure.
+    @discardableResult open func sharingAllowlistAdd(domains: Array<String>? = nil, emails: Array<String>? = nil) -> RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer> {
+        let route = Team.sharingAllowlistAdd
+        let serverArgs = Team.SharingAllowlistAddArgs(domains: domains, emails: emails)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Lists Approve List entries for given team, from newest to oldest, returning up to `limit` entries at a time. If
+    /// there are more than `limit` entries associated with the current team, more can be fetched by passing the
+    /// returned `cursor` to sharingAllowlistListContinue.
+    ///
+    /// - parameter limit: The number of entries to fetch at one time.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
+    /// on success or a `Team.SharingAllowlistListError` object on failure.
+    @discardableResult open func sharingAllowlistList(limit: UInt32 = 1000) -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer> {
+        let route = Team.sharingAllowlistList
+        let serverArgs = Team.SharingAllowlistListArg(limit: limit)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Lists entries associated with given team, starting from a the cursor. See sharingAllowlistList.
+    ///
+    /// - parameter cursor: The cursor returned from a previous call to sharingAllowlistList or
+    /// sharingAllowlistListContinue.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
+    /// on success or a `Team.SharingAllowlistListContinueError` object on failure.
+    @discardableResult open func sharingAllowlistListContinue(cursor: String) -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer> {
+        let route = Team.sharingAllowlistListContinue
+        let serverArgs = Team.SharingAllowlistListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed in transaction.
+    /// In case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
+    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per call
+    /// is allowed.
+    ///
+    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
+    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse`
+    /// object on success or a `Team.SharingAllowlistRemoveError` object on failure.
+    @discardableResult open func sharingAllowlistRemove(domains: Array<String>? = nil, emails: Array<String>? = nil) -> RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer> {
+        let route = Team.sharingAllowlistRemove
+        let serverArgs = Team.SharingAllowlistRemoveArgs(domains: domains, emails: emails)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Sets an archived team folder's status to active. Permission : Team member file access.
     ///
     /// - parameter teamFolderId: The ID of the team folder.

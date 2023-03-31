@@ -6226,6 +6226,8 @@ open class Sharing {
         case editor
         /// Request for the maximum access level you can set the link to.
         case max
+        /// Request for the default access level the user has set.
+        case default_
         /// An unspecified error.
         case other
 
@@ -6249,6 +6251,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("max")
                     return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -6266,6 +6272,8 @@ open class Sharing {
                             return RequestedLinkAccessLevel.editor
                         case "max":
                             return RequestedLinkAccessLevel.max
+                        case "default":
+                            return RequestedLinkAccessLevel.default_
                         case "other":
                             return RequestedLinkAccessLevel.other
                         default:

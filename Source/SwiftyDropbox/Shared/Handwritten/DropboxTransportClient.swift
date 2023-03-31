@@ -449,16 +449,16 @@ func utf8Decode(_ data: Data) -> String {
 
 func asciiEscape(_ s: String) -> String {
     var out: String = ""
+    out.reserveCapacity(s.maximumLengthOfBytes(using: .utf16))
 
-    for char in s.unicodeScalars {
-        var esc = "\(char)"
-        if !char.isASCII {
-            esc = NSString(format:"\\u%04x", char.value) as String
+    for char in s.utf16 {
+        var esc: String
+        if let unicodeScalar = Unicode.Scalar(char), unicodeScalar.isASCII {
+            esc = "\(unicodeScalar)"
         } else {
-            esc = "\(char)"
+            esc = String(format: "\\u%04x", char)
         }
         out += esc
-
     }
     return out
 }
