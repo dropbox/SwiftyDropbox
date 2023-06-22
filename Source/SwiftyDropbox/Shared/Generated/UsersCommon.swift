@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the users_common namespace
-open class UsersCommon {
+public class UsersCommon {
     /// What type of account this user has.
     public enum AccountType: CustomStringConvertible {
         /// The basic account type.
@@ -18,45 +18,50 @@ open class UsersCommon {
         case business
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AccountTypeSerializer().serialize(self)))"
-        }
-    }
-    open class AccountTypeSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: AccountType) -> JSON {
-            switch value {
-                case .basic:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("basic")
-                    return .dictionary(d)
-                case .pro:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("pro")
-                    return .dictionary(d)
-                case .business:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("business")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> AccountType {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "basic":
-                            return AccountType.basic
-                        case "pro":
-                            return AccountType.pro
-                        case "business":
-                            return AccountType.business
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AccountTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
     }
 
+    public class AccountTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AccountType) throws -> JSON {
+            switch value {
+            case .basic:
+                var d = [String: JSON]()
+                d[".tag"] = .str("basic")
+                return .dictionary(d)
+            case .pro:
+                var d = [String: JSON]()
+                d[".tag"] = .str("pro")
+                return .dictionary(d)
+            case .business:
+                var d = [String: JSON]()
+                d[".tag"] = .str("business")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> AccountType {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "basic":
+                    return AccountType.basic
+                case "pro":
+                    return AccountType.pro
+                case "business":
+                    return AccountType.business
+                default:
+                    throw JSONSerializerError.unknownTag(type: AccountType.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: AccountType.self, json: json)
+            }
+        }
+    }
 }

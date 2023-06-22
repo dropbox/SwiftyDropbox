@@ -15,7 +15,7 @@ class LoadingViewController: UIViewController {
         if #available(iOS 13.0, *) {
             loadingSpinner = UIActivityIndicatorView(style: .large)
         } else {
-            loadingSpinner = UIActivityIndicatorView(style: .whiteLarge)
+            self.loadingSpinner = UIActivityIndicatorView(style: .whiteLarge)
         }
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -31,7 +31,7 @@ class LoadingViewController: UIViewController {
         loadingSpinner.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             loadingSpinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
         loadingSpinner.startAnimating()
     }

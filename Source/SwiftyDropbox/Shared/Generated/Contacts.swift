@@ -7,34 +7,44 @@
 import Foundation
 
 /// Datatypes and serializers for the contacts namespace
-open class Contacts {
+public class Contacts {
     /// The DeleteManualContactsArg struct
-    open class DeleteManualContactsArg: CustomStringConvertible {
+    public class DeleteManualContactsArg: CustomStringConvertible {
         /// List of manually added contacts to be deleted.
-        public let emailAddresses: Array<String>
-        public init(emailAddresses: Array<String>) {
-            arrayValidator(itemValidator: stringValidator(maxLength: 255, pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"))(emailAddresses)
+        public let emailAddresses: [String]
+        public init(emailAddresses: [String]) {
+            arrayValidator(itemValidator: stringValidator(
+                maxLength: 255,
+                pattern: "^['#&A-Za-z0-9._%+-]+@[A-Za-z0-9-][A-Za-z0-9.-]*\\.[A-Za-z]{2,15}$"
+            ))(emailAddresses)
             self.emailAddresses = emailAddresses
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteManualContactsArgSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteManualContactsArgSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class DeleteManualContactsArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteManualContactsArg) -> JSON {
-            let output = [ 
-            "email_addresses": ArraySerializer(Serialization._StringSerializer).serialize(value.emailAddresses),
+
+    public class DeleteManualContactsArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteManualContactsArg) throws -> JSON {
+            let output = [
+                "email_addresses": try ArraySerializer(Serialization._StringSerializer).serialize(value.emailAddresses),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> DeleteManualContactsArg {
+
+        public func deserialize(_ json: JSON) throws -> DeleteManualContactsArg {
             switch json {
-                case .dictionary(let dict):
-                    let emailAddresses = ArraySerializer(Serialization._StringSerializer).deserialize(dict["email_addresses"] ?? .null)
-                    return DeleteManualContactsArg(emailAddresses: emailAddresses)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let emailAddresses = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["email_addresses"] ?? .null)
+                return DeleteManualContactsArg(emailAddresses: emailAddresses)
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteManualContactsArg.self, json: json)
             }
         }
     }
@@ -43,47 +53,52 @@ open class Contacts {
     public enum DeleteManualContactsError: CustomStringConvertible {
         /// Can't delete contacts from this list. Make sure the list only has manually added contacts. The deletion was
         /// cancelled.
-        case contactsNotFound(Array<String>)
+        case contactsNotFound([String])
         /// An unspecified error.
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteManualContactsErrorSerializer().serialize(self)))"
-        }
-    }
-    open class DeleteManualContactsErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteManualContactsError) -> JSON {
-            switch value {
-                case .contactsNotFound(let arg):
-                    var d = ["contacts_not_found": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
-                    d[".tag"] = .str("contacts_not_found")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> DeleteManualContactsError {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "contacts_not_found":
-                            let v = ArraySerializer(Serialization._StringSerializer).deserialize(d["contacts_not_found"] ?? .null)
-                            return DeleteManualContactsError.contactsNotFound(v)
-                        case "other":
-                            return DeleteManualContactsError.other
-                        default:
-                            return DeleteManualContactsError.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteManualContactsErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
     }
 
+    public class DeleteManualContactsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteManualContactsError) throws -> JSON {
+            switch value {
+            case .contactsNotFound(let arg):
+                var d = try ["contacts_not_found": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                d[".tag"] = .str("contacts_not_found")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteManualContactsError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "contacts_not_found":
+                    let v = try ArraySerializer(Serialization._StringSerializer).deserialize(d["contacts_not_found"] ?? .null)
+                    return DeleteManualContactsError.contactsNotFound(v)
+                case "other":
+                    return DeleteManualContactsError.other
+                default:
+                    return DeleteManualContactsError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteManualContactsError.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -95,9 +110,11 @@ open class Contacts {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let deleteManualContactsBatch = Route(
         name: "delete_manual_contacts_batch",
@@ -107,8 +124,10 @@ open class Contacts {
         argSerializer: Contacts.DeleteManualContactsArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Contacts.DeleteManualContactsErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

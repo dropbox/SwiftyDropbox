@@ -6,35 +6,37 @@
 
 import Foundation
 
-import Alamofire
+public class DropboxBase {
+    public var client: DropboxTransportClient
 
-open class DropboxBase {
     /// Routes within the account namespace. See AccountRoutes for details.
-    open var account: AccountRoutes!
+    public var account: AccountRoutes!
     /// Routes within the auth namespace. See AuthRoutes for details.
-    open var auth: AuthRoutes!
+    public var auth: AuthRoutes!
     /// Routes within the check namespace. See CheckRoutes for details.
-    open var check: CheckRoutes!
+    public var check: CheckRoutes!
     /// Routes within the contacts namespace. See ContactsRoutes for details.
-    open var contacts: ContactsRoutes!
+    public var contacts: ContactsRoutes!
     /// Routes within the file_properties namespace. See FilePropertiesRoutes for details.
-    open var file_properties: FilePropertiesRoutes!
+    public var file_properties: FilePropertiesRoutes!
     /// Routes within the file_requests namespace. See FileRequestsRoutes for details.
-    open var file_requests: FileRequestsRoutes!
+    public var file_requests: FileRequestsRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
-    open var files: FilesRoutes!
+    public var files: FilesRoutes!
     /// Routes within the openid namespace. See OpenidRoutes for details.
-    open var openid: OpenidRoutes!
+    public var openid: OpenidRoutes!
     /// Routes within the paper namespace. See PaperRoutes for details.
-    open var paper: PaperRoutes!
+    public var paper: PaperRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
-    open var sharing: SharingRoutes!
+    public var sharing: SharingRoutes!
     /// Routes within the team_log namespace. See TeamLogRoutes for details.
-    open var team_log: TeamLogRoutes!
+    public var team_log: TeamLogRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
-    open var users: UsersRoutes!
+    public var users: UsersRoutes!
 
     public init(client: DropboxTransportClient) {
+        self.client = client
+
         self.account = AccountRoutes(client: client)
         self.auth = AuthRoutes(client: client)
         self.check = CheckRoutes(client: client)

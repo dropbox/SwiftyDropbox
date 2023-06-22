@@ -10,11 +10,11 @@ import UIKit
 @available(iOS 13.0, *)
 extension UIApplication {
     public func findKeyWindow() -> UIWindow? {
-        return connectedScenes
-            .filter({$0.activationState == .foregroundActive})
-            .compactMap({$0 as? UIWindowScene})
+        connectedScenes
+            .filter({ $0.activationState == .foregroundActive })
+            .compactMap({ $0 as? UIWindowScene })
             .first?.windows
-            .filter({$0.isKeyWindow}).first
+            .filter(\.isKeyWindow).first
     }
 }
 

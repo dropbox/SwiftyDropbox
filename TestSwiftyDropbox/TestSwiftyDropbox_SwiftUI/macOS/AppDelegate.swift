@@ -17,17 +17,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
             return
         }
 
-        if (TestData.fullDropboxAppKey.range(of:"<") != nil) {
+        if TestData.fullDropboxAppKey.range(of: "<") != nil {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
-            exit(0);
+            exit(0)
         }
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
             DropboxClientsManager.setupWithAppKeyDesktop(TestData.fullDropboxAppKey)
         case .fullDropboxScopedForTeamTesting:
             DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.fullDropboxAppKey)
         }
-        NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+        NSAppleEventManager.shared()
+            .setEventHandler(
+                self,
+                andSelector: #selector(handleGetURLEvent),
+                forEventClass: AEEventClass(kInternetEventClass),
+                andEventID: AEEventID(kAEGetURL)
+            )
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
@@ -50,7 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
                     }
                 }
 
-                switch(appPermission) {
+                switch appPermission {
                 case .fullDropboxScoped:
                     DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
                 case .fullDropboxScopedForTeamTesting:

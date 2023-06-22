@@ -3,15 +3,21 @@ use_frameworks!
 def shared_iOS_pods
     platform :ios, '11.0'
     pod 'SwiftyDropbox', :path => '../'
+    pod 'SwiftyDropboxObjC', :path => '../'
 end
 
 def shared_macOS_pods
-    platform :osx, '10.12'
+    platform :osx, '10.13'
     pod 'SwiftyDropbox', :path => '../'
+    pod 'SwiftyDropboxObjC', :path => '../'
 end
 
 target "TestSwiftyDropbox_iOS" do
     shared_iOS_pods
+
+    target 'TestSwiftyDropbox_ActionExtension' do
+        inherit! :search_paths
+    end
 end
 
 target "TestSwiftyDropbox_iOSTests" do

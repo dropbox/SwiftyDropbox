@@ -6,23 +6,22 @@ import Cocoa
 import SwiftyDropbox
 
 class ViewController: NSViewController {
-    @IBOutlet weak var oauthCodeFlowLinkButton: NSButton!
-    @IBOutlet weak var oauthUnlinkButton: NSButton!
-    @IBOutlet weak var runApiTestsButton: NSButton!
-    
+    @IBOutlet var oauthCodeFlowLinkButton: NSButton!
+    @IBOutlet var oauthUnlinkButton: NSButton!
+    @IBOutlet var runApiTestsButton: NSButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    override func viewWillAppear() {
-    }
+
+    override func viewWillAppear() {}
 
     @IBAction func oauthCodeFlowLinkButtonPressed(_ sender: AnyObject) {
         if DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil {
             let scopeRequest: ScopeRequest
             // note if you add new scopes, you need to relogin to update your token
 
-            switch(appPermission) {
+            switch appPermission {
             case .fullDropboxScoped:
                 scopeRequest = ScopeRequest(scopeType: .user, scopes: DropboxTester.scopes, includeGrantedScopes: false)
             case .fullDropboxScopedForTeamTesting:
@@ -32,7 +31,7 @@ class ViewController: NSViewController {
                 sharedApplication: NSApplication.shared,
                 controller: self,
                 loadingStatusDelegate: nil,
-                openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+                openURL: { (url: URL) -> Void in NSWorkspace.shared.open(url) },
                 scopeRequest: scopeRequest
             )
         }
@@ -42,7 +41,7 @@ class ViewController: NSViewController {
         DropboxClientsManager.unlinkClients()
         checkButtons()
     }
-    
+
     @IBAction func runApiTestsButtonPressed(_ sender: AnyObject) {
         let unlink = {
             DropboxClientsManager.unlinkClients()
@@ -50,9 +49,9 @@ class ViewController: NSViewController {
             exit(0)
         }
 
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
-            DropboxTester().testAllUserEndpoints(asMember: false, nextTest:unlink)
+            DropboxTester().testAllUserEndpoints(asMember: false, nextTest: unlink)
         case .fullDropboxScopedForTeamTesting:
             DropboxTeamTester().testTeamMemberFileAcessActions({
                 DropboxTeamTester().testTeamMemberManagementActions(unlink)
@@ -71,24 +70,24 @@ class ViewController: NSViewController {
             runApiTestsButton.isHidden = true
         }
     }
-    
+
     /**
      To run these unit tests, you will need to do the following:
-     
+
      Navigate to TestSwifty/ and run `pod install` to install AlamoFire dependencies.
-     
+
      There are three types of unit tests here:
-     
+
      1.) Regular Dropbox User API tests (requires app with 'Full Dropbox' permissions)
      2.) Dropbox Business API tests (requires app with 'Team member file access' permissions)
      3.) Dropbox Business API tests (requires app with 'Team member management' permissions)
-     
+
      To run all of these tests, you will need three apps, one for each of the above permission types.
-     
+
      You must test these apps one at a time.
-     
+
      Once you have these apps, you will need to do the following:
-     
+
      1.) Fill in user-specific data in `TestData` and `TestTeamData` in TestData.swift
      2.) For each of the above apps, you will need to add a user-specific app key. For each test run, you
      will need to call `DropboxClientsManager.setupWithAppKey` (or `DropboxClientsManager.setupWithTeamAppKey`) and supply the
@@ -98,11 +97,11 @@ class ViewController: NSViewController {
      4.) For each of the above apps, you will need to add a user-specific URL scheme in Info.plist >
      URL types > Item 0 (Editor) > URL Schemes > click '+'. URL scheme value should be 'db-<APP KEY>'
      where '<APP KEY>' is value of your particular app's key
-     
+
      To create an app or to locate your app's app key, please visit the App Console here:
-     
+
      https://www.dropbox.com/developers/apps
      */
-    
+
     // Test user app with 'Full Dropbox' permission
 }

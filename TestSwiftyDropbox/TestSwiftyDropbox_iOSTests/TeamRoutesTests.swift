@@ -11,7 +11,6 @@ import XCTest
 @testable import SwiftyDropbox
 
 class TeamRoutesTests: XCTestCase {
-
     private var teamClient: TeamRoutes!
     private var tester: DropboxTeamTester!
 
@@ -78,7 +77,7 @@ class TeamRoutesTests: XCTestCase {
             flag.fulfill()
         }
 
-        let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
+        let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
         XCTAssertEqual(result, .completed, "Error: timeout on team management routes tests")
     }
 
@@ -89,7 +88,7 @@ class TeamRoutesTests: XCTestCase {
             flag.fulfill()
         }
 
-        let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
+        let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
         XCTAssertEqual(result, .completed, "Error: timeout on team management routes tests")
     }
 }

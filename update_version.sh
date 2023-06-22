@@ -13,10 +13,14 @@ arg_version_regex="^[0-9]+\.[0-9]+\.[0-9]+$"
 version_regex="[0-9]+\.[0-9]+\.[0-9]+"
 
 podspec=./SwiftyDropbox.podspec
+objc_podspec=./SwiftyDropboxObjC.podspec
 readme=./README.md
 user_agent=Source/SwiftyDropbox/Shared/Handwritten/SDKConstants.swift
 ios_version=Source/SwiftyDropbox/Platform/SwiftyDropbox_iOS/Info.plist
 mac_version=Source/SwiftyDropbox/Platform/SwiftyDropbox_macOS/Info.plist
+ios_objc_version=Source/SwiftyDropboxObjC/Platform/SwiftyDropbox_iOS/Info.plist
+mac_objc_version=Source/SwiftyDropboxObjC/Platform/SwiftyDropbox_macOS/Info.plist
+
 
 if ! [[ $1 =~ $arg_version_regex ]]; then
     echo "\"$1\" version string must have format x.x.x"
@@ -32,6 +36,14 @@ echo "Replacing podspec version number..."
 sed -i '' -E "s/s.version      = '$version_regex'/s.version      = '$1'/" $podspec
 echo '--------------------'
 cat $podspec | grep $1
+echo '--------------------'
+echo
+
+echo "Replacing ObjC podspec version number..."
+sed -i '' -E "s/s.version      = '$version_regex'/s.version      = '$1'/" $objc_podspec
+sed -i '' -E "s/s.dependency 'SwiftyDropbox', '~> $version_regex'/s.dependency 'SwiftyDropbox', '~> $1'/" $objc_podspec
+echo '--------------------'
+cat $objc_podspec | grep $1
 echo '--------------------'
 echo
 
@@ -62,6 +74,21 @@ echo '--------------------'
 cat $mac_version | grep $1
 echo '--------------------'
 echo
+
+echo "Replacing iOS objc xcodeproj version number..."
+sed -i '' -E "s/$version_regex/$1/" $ios_objc_version
+echo '--------------------'
+cat $ios_objc_version | grep $1
+echo '--------------------'
+echo
+
+echo "Replacing macOS objc xcodeproj version number..."
+sed -i '' -E "s/$version_regex/$1/" $mac_objc_version
+echo '--------------------'
+cat $mac_objc_version | grep $1
+echo '--------------------'
+echo
+
 echo
 echo "Committing changes and tagging commit."
 git commit -am "$1 release."

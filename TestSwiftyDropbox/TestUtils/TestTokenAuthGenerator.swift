@@ -1,10 +1,10 @@
-import XCTest
 @testable import SwiftyDropbox
+import XCTest
 
 let TestUid = "test" // non-empty string needed here as subsequent tokens will share the uid and macOS keychain drops the attribute if empty
 enum TestAuthTokenGenerator {
     static func transportClient(with refreshToken: String, apiKey: String, scopes: [String]) -> DropboxTransportClient? {
-        let manager = SwiftyDropbox.DropboxOAuthManager(appKey: apiKey)
+        let manager = SwiftyDropbox.DropboxOAuthManager(appKey: apiKey, secureStorageAccess: SecureStorageAccesDefaultImpl())
 
         let defaultToken = DropboxAccessToken(
             accessToken: "",
@@ -20,7 +20,8 @@ enum TestAuthTokenGenerator {
         manager.refreshAccessToken(
             defaultToken,
             scopes: scopes,
-            queue: DispatchQueue.global(qos: .userInitiated)) { result in
+            queue: DispatchQueue.global(qos: .userInitiated)
+        ) { result in
 
             switch result {
             case .success(let authToken)?:
@@ -42,6 +43,6 @@ enum TestAuthTokenGenerator {
             XCTFail("AccessToken creation failed")
             fatalError("AccessToken creation failed")
         }
-        return DropboxTransportClient(accessTokenProvider: manager.accessTokenProviderForToken(accessToken))
+        return DropboxTransportClientImpl(accessTokenProvider: manager.accessTokenProviderForToken(accessToken))
     }
 }
