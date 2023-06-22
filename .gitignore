@@ -9,9 +9,9 @@ build/
 ## CocoaPods
 Pods/
 
-## Carthage
-Carthage/
-
 ## Swift Package Manager
 Packages/
 .build/
+.swiftpm/xcode/xcuserdata
+.swiftpm/xcode/package.xcworkspace/xcuserdata
+

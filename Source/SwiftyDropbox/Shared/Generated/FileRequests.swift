@@ -7,7 +7,7 @@
 import Foundation
 
 /// Datatypes and serializers for the file_requests namespace
-open class FileRequests {
+public class FileRequests {
     /// There is an error accessing the file requests functionality.
     public enum GeneralFileRequestsError: CustomStringConvertible {
         /// This user's Dropbox Business team doesn't allow file requests.
@@ -16,37 +16,43 @@ open class FileRequests {
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GeneralFileRequestsErrorSerializer().serialize(self)))"
-        }
-    }
-    open class GeneralFileRequestsErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: GeneralFileRequestsError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GeneralFileRequestsErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> GeneralFileRequestsError {
+    }
+
+    public class GeneralFileRequestsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GeneralFileRequestsError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GeneralFileRequestsError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return GeneralFileRequestsError.disabledForTeam
-                        case "other":
-                            return GeneralFileRequestsError.other
-                        default:
-                            return GeneralFileRequestsError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return GeneralFileRequestsError.disabledForTeam
+                case "other":
+                    return GeneralFileRequestsError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return GeneralFileRequestsError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GeneralFileRequestsError.self, json: json)
             }
         }
     }
@@ -59,74 +65,87 @@ open class FileRequests {
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CountFileRequestsErrorSerializer().serialize(self)))"
-        }
-    }
-    open class CountFileRequestsErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: CountFileRequestsError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try CountFileRequestsErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> CountFileRequestsError {
+    }
+
+    public class CountFileRequestsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: CountFileRequestsError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> CountFileRequestsError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return CountFileRequestsError.disabledForTeam
-                        case "other":
-                            return CountFileRequestsError.other
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return CountFileRequestsError.disabledForTeam
+                case "other":
+                    return CountFileRequestsError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: CountFileRequestsError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: CountFileRequestsError.self, json: json)
             }
         }
     }
 
     /// Result for count.
-    open class CountFileRequestsResult: CustomStringConvertible {
+    public class CountFileRequestsResult: CustomStringConvertible {
         /// The number file requests owner by this user.
         public let fileRequestCount: UInt64
         public init(fileRequestCount: UInt64) {
             comparableValidator()(fileRequestCount)
             self.fileRequestCount = fileRequestCount
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CountFileRequestsResultSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try CountFileRequestsResultSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class CountFileRequestsResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: CountFileRequestsResult) -> JSON {
-            let output = [ 
-            "file_request_count": Serialization._UInt64Serializer.serialize(value.fileRequestCount),
+
+    public class CountFileRequestsResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: CountFileRequestsResult) throws -> JSON {
+            let output = [
+                "file_request_count": try Serialization._UInt64Serializer.serialize(value.fileRequestCount),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> CountFileRequestsResult {
+
+        public func deserialize(_ json: JSON) throws -> CountFileRequestsResult {
             switch json {
-                case .dictionary(let dict):
-                    let fileRequestCount = Serialization._UInt64Serializer.deserialize(dict["file_request_count"] ?? .null)
-                    return CountFileRequestsResult(fileRequestCount: fileRequestCount)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let fileRequestCount = try Serialization._UInt64Serializer.deserialize(dict["file_request_count"] ?? .null)
+                return CountFileRequestsResult(fileRequestCount: fileRequestCount)
+            default:
+                throw JSONSerializerError.deserializeError(type: CountFileRequestsResult.self, json: json)
             }
         }
     }
 
     /// Arguments for create.
-    open class CreateFileRequestArgs: CustomStringConvertible {
+    public class CreateFileRequestArgs: CustomStringConvertible {
         /// The title of the file request. Must not be empty.
         public let title: String
         /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
@@ -149,33 +168,40 @@ open class FileRequests {
             nullableValidator(stringValidator())(description_)
             self.description_ = description_
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CreateFileRequestArgsSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try CreateFileRequestArgsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class CreateFileRequestArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: CreateFileRequestArgs) -> JSON {
-            let output = [ 
-            "title": Serialization._StringSerializer.serialize(value.title),
-            "destination": Serialization._StringSerializer.serialize(value.destination),
-            "deadline": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
-            "open": Serialization._BoolSerializer.serialize(value.open),
-            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+
+    public class CreateFileRequestArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: CreateFileRequestArgs) throws -> JSON {
+            let output = [
+                "title": try Serialization._StringSerializer.serialize(value.title),
+                "destination": try Serialization._StringSerializer.serialize(value.destination),
+                "deadline": try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
+                "open": try Serialization._BoolSerializer.serialize(value.open),
+                "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> CreateFileRequestArgs {
+
+        public func deserialize(_ json: JSON) throws -> CreateFileRequestArgs {
             switch json {
-                case .dictionary(let dict):
-                    let title = Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                    let destination = Serialization._StringSerializer.deserialize(dict["destination"] ?? .null)
-                    let deadline = NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
-                    let open = Serialization._BoolSerializer.deserialize(dict["open"] ?? .number(1))
-                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                    return CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                let destination = try Serialization._StringSerializer.deserialize(dict["destination"] ?? .null)
+                let deadline = try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
+                let open = try Serialization._BoolSerializer.deserialize(dict["open"] ?? .number(1))
+                let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                return CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: CreateFileRequestArgs.self, json: json)
             }
         }
     }
@@ -203,73 +229,79 @@ open class FileRequests {
         case validationError
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileRequestErrorSerializer().serialize(self)))"
-        }
-    }
-    open class FileRequestErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FileRequestError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> FileRequestError {
+    }
+
+    public class FileRequestErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FileRequestError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> FileRequestError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return FileRequestError.disabledForTeam
-                        case "other":
-                            return FileRequestError.other
-                        case "not_found":
-                            return FileRequestError.notFound
-                        case "not_a_folder":
-                            return FileRequestError.notAFolder
-                        case "app_lacks_access":
-                            return FileRequestError.appLacksAccess
-                        case "no_permission":
-                            return FileRequestError.noPermission
-                        case "email_unverified":
-                            return FileRequestError.emailUnverified
-                        case "validation_error":
-                            return FileRequestError.validationError
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return FileRequestError.disabledForTeam
+                case "other":
+                    return FileRequestError.other
+                case "not_found":
+                    return FileRequestError.notFound
+                case "not_a_folder":
+                    return FileRequestError.notAFolder
+                case "app_lacks_access":
+                    return FileRequestError.appLacksAccess
+                case "no_permission":
+                    return FileRequestError.noPermission
+                case "email_unverified":
+                    return FileRequestError.emailUnverified
+                case "validation_error":
+                    return FileRequestError.validationError
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: FileRequestError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: FileRequestError.self, json: json)
             }
         }
     }
@@ -302,85 +334,91 @@ open class FileRequests {
         case rateLimit
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CreateFileRequestErrorSerializer().serialize(self)))"
-        }
-    }
-    open class CreateFileRequestErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: CreateFileRequestError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
-                case .invalidLocation:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_location")
-                    return .dictionary(d)
-                case .rateLimit:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("rate_limit")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try CreateFileRequestErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> CreateFileRequestError {
+    }
+
+    public class CreateFileRequestErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: CreateFileRequestError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            case .invalidLocation:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_location")
+                return .dictionary(d)
+            case .rateLimit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("rate_limit")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> CreateFileRequestError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return CreateFileRequestError.disabledForTeam
-                        case "other":
-                            return CreateFileRequestError.other
-                        case "not_found":
-                            return CreateFileRequestError.notFound
-                        case "not_a_folder":
-                            return CreateFileRequestError.notAFolder
-                        case "app_lacks_access":
-                            return CreateFileRequestError.appLacksAccess
-                        case "no_permission":
-                            return CreateFileRequestError.noPermission
-                        case "email_unverified":
-                            return CreateFileRequestError.emailUnverified
-                        case "validation_error":
-                            return CreateFileRequestError.validationError
-                        case "invalid_location":
-                            return CreateFileRequestError.invalidLocation
-                        case "rate_limit":
-                            return CreateFileRequestError.rateLimit
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return CreateFileRequestError.disabledForTeam
+                case "other":
+                    return CreateFileRequestError.other
+                case "not_found":
+                    return CreateFileRequestError.notFound
+                case "not_a_folder":
+                    return CreateFileRequestError.notAFolder
+                case "app_lacks_access":
+                    return CreateFileRequestError.appLacksAccess
+                case "no_permission":
+                    return CreateFileRequestError.noPermission
+                case "email_unverified":
+                    return CreateFileRequestError.emailUnverified
+                case "validation_error":
+                    return CreateFileRequestError.validationError
+                case "invalid_location":
+                    return CreateFileRequestError.invalidLocation
+                case "rate_limit":
+                    return CreateFileRequestError.rateLimit
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: CreateFileRequestError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: CreateFileRequestError.self, json: json)
             }
         }
     }
@@ -408,134 +446,154 @@ open class FileRequests {
         case validationError
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteAllClosedFileRequestsErrorSerializer().serialize(self)))"
-        }
-    }
-    open class DeleteAllClosedFileRequestsErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteAllClosedFileRequestsError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteAllClosedFileRequestsErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> DeleteAllClosedFileRequestsError {
+    }
+
+    public class DeleteAllClosedFileRequestsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteAllClosedFileRequestsError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteAllClosedFileRequestsError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return DeleteAllClosedFileRequestsError.disabledForTeam
-                        case "other":
-                            return DeleteAllClosedFileRequestsError.other
-                        case "not_found":
-                            return DeleteAllClosedFileRequestsError.notFound
-                        case "not_a_folder":
-                            return DeleteAllClosedFileRequestsError.notAFolder
-                        case "app_lacks_access":
-                            return DeleteAllClosedFileRequestsError.appLacksAccess
-                        case "no_permission":
-                            return DeleteAllClosedFileRequestsError.noPermission
-                        case "email_unverified":
-                            return DeleteAllClosedFileRequestsError.emailUnverified
-                        case "validation_error":
-                            return DeleteAllClosedFileRequestsError.validationError
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return DeleteAllClosedFileRequestsError.disabledForTeam
+                case "other":
+                    return DeleteAllClosedFileRequestsError.other
+                case "not_found":
+                    return DeleteAllClosedFileRequestsError.notFound
+                case "not_a_folder":
+                    return DeleteAllClosedFileRequestsError.notAFolder
+                case "app_lacks_access":
+                    return DeleteAllClosedFileRequestsError.appLacksAccess
+                case "no_permission":
+                    return DeleteAllClosedFileRequestsError.noPermission
+                case "email_unverified":
+                    return DeleteAllClosedFileRequestsError.emailUnverified
+                case "validation_error":
+                    return DeleteAllClosedFileRequestsError.validationError
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: DeleteAllClosedFileRequestsError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteAllClosedFileRequestsError.self, json: json)
             }
         }
     }
 
     /// Result for deleteAllClosed.
-    open class DeleteAllClosedFileRequestsResult: CustomStringConvertible {
+    public class DeleteAllClosedFileRequestsResult: CustomStringConvertible {
         /// The file requests deleted for this user.
-        public let fileRequests: Array<FileRequests.FileRequest>
-        public init(fileRequests: Array<FileRequests.FileRequest>) {
+        public let fileRequests: [FileRequests.FileRequest]
+        public init(fileRequests: [FileRequests.FileRequest]) {
             self.fileRequests = fileRequests
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteAllClosedFileRequestsResultSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteAllClosedFileRequestsResultSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class DeleteAllClosedFileRequestsResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteAllClosedFileRequestsResult) -> JSON {
-            let output = [ 
-            "file_requests": ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
+
+    public class DeleteAllClosedFileRequestsResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteAllClosedFileRequestsResult) throws -> JSON {
+            let output = [
+                "file_requests": try ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> DeleteAllClosedFileRequestsResult {
+
+        public func deserialize(_ json: JSON) throws -> DeleteAllClosedFileRequestsResult {
             switch json {
-                case .dictionary(let dict):
-                    let fileRequests = ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
-                    return DeleteAllClosedFileRequestsResult(fileRequests: fileRequests)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let fileRequests = try ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
+                return DeleteAllClosedFileRequestsResult(fileRequests: fileRequests)
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteAllClosedFileRequestsResult.self, json: json)
             }
         }
     }
 
     /// Arguments for delete.
-    open class DeleteFileRequestArgs: CustomStringConvertible {
+    public class DeleteFileRequestArgs: CustomStringConvertible {
         /// List IDs of the file requests to delete.
-        public let ids: Array<String>
-        public init(ids: Array<String>) {
+        public let ids: [String]
+        public init(ids: [String]) {
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+"))(ids)
             self.ids = ids
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteFileRequestArgsSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestArgsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class DeleteFileRequestArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteFileRequestArgs) -> JSON {
-            let output = [ 
-            "ids": ArraySerializer(Serialization._StringSerializer).serialize(value.ids),
+
+    public class DeleteFileRequestArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteFileRequestArgs) throws -> JSON {
+            let output = [
+                "ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.ids),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> DeleteFileRequestArgs {
+
+        public func deserialize(_ json: JSON) throws -> DeleteFileRequestArgs {
             switch json {
-                case .dictionary(let dict):
-                    let ids = ArraySerializer(Serialization._StringSerializer).deserialize(dict["ids"] ?? .null)
-                    return DeleteFileRequestArgs(ids: ids)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let ids = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["ids"] ?? .null)
+                return DeleteFileRequestArgs(ids: ids)
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteFileRequestArgs.self, json: json)
             }
         }
     }
@@ -565,115 +623,128 @@ open class FileRequests {
         case fileRequestOpen
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteFileRequestErrorSerializer().serialize(self)))"
-        }
-    }
-    open class DeleteFileRequestErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteFileRequestError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
-                case .fileRequestOpen:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("file_request_open")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> DeleteFileRequestError {
+    }
+
+    public class DeleteFileRequestErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteFileRequestError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            case .fileRequestOpen:
+                var d = [String: JSON]()
+                d[".tag"] = .str("file_request_open")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteFileRequestError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return DeleteFileRequestError.disabledForTeam
-                        case "other":
-                            return DeleteFileRequestError.other
-                        case "not_found":
-                            return DeleteFileRequestError.notFound
-                        case "not_a_folder":
-                            return DeleteFileRequestError.notAFolder
-                        case "app_lacks_access":
-                            return DeleteFileRequestError.appLacksAccess
-                        case "no_permission":
-                            return DeleteFileRequestError.noPermission
-                        case "email_unverified":
-                            return DeleteFileRequestError.emailUnverified
-                        case "validation_error":
-                            return DeleteFileRequestError.validationError
-                        case "file_request_open":
-                            return DeleteFileRequestError.fileRequestOpen
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return DeleteFileRequestError.disabledForTeam
+                case "other":
+                    return DeleteFileRequestError.other
+                case "not_found":
+                    return DeleteFileRequestError.notFound
+                case "not_a_folder":
+                    return DeleteFileRequestError.notAFolder
+                case "app_lacks_access":
+                    return DeleteFileRequestError.appLacksAccess
+                case "no_permission":
+                    return DeleteFileRequestError.noPermission
+                case "email_unverified":
+                    return DeleteFileRequestError.emailUnverified
+                case "validation_error":
+                    return DeleteFileRequestError.validationError
+                case "file_request_open":
+                    return DeleteFileRequestError.fileRequestOpen
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: DeleteFileRequestError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteFileRequestError.self, json: json)
             }
         }
     }
 
     /// Result for delete.
-    open class DeleteFileRequestsResult: CustomStringConvertible {
+    public class DeleteFileRequestsResult: CustomStringConvertible {
         /// The file requests deleted by the request.
-        public let fileRequests: Array<FileRequests.FileRequest>
-        public init(fileRequests: Array<FileRequests.FileRequest>) {
+        public let fileRequests: [FileRequests.FileRequest]
+        public init(fileRequests: [FileRequests.FileRequest]) {
             self.fileRequests = fileRequests
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DeleteFileRequestsResultSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestsResultSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class DeleteFileRequestsResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DeleteFileRequestsResult) -> JSON {
-            let output = [ 
-            "file_requests": ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
+
+    public class DeleteFileRequestsResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteFileRequestsResult) throws -> JSON {
+            let output = [
+                "file_requests": try ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> DeleteFileRequestsResult {
+
+        public func deserialize(_ json: JSON) throws -> DeleteFileRequestsResult {
             switch json {
-                case .dictionary(let dict):
-                    let fileRequests = ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
-                    return DeleteFileRequestsResult(fileRequests: fileRequests)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let fileRequests = try ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
+                return DeleteFileRequestsResult(fileRequests: fileRequests)
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteFileRequestsResult.self, json: json)
             }
         }
     }
 
     /// A file request https://www.dropbox.com/help/9090 for receiving files into the user's Dropbox account.
-    open class FileRequest: CustomStringConvertible {
+    public class FileRequest: CustomStringConvertible {
         /// The ID of the file request.
         public let id: String
         /// The URL of the file request.
@@ -694,7 +765,17 @@ open class FileRequests {
         public let fileCount: Int64
         /// A description of the file request.
         public let description_: String?
-        public init(id: String, url: String, title: String, created: Date, isOpen: Bool, fileCount: Int64, destination: String? = nil, deadline: FileRequests.FileRequestDeadline? = nil, description_: String? = nil) {
+        public init(
+            id: String,
+            url: String,
+            title: String,
+            created: Date,
+            isOpen: Bool,
+            fileCount: Int64,
+            destination: String? = nil,
+            deadline: FileRequests.FileRequestDeadline? = nil,
+            description_: String? = nil
+        ) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
             stringValidator(minLength: 1)(url)
@@ -711,47 +792,64 @@ open class FileRequests {
             nullableValidator(stringValidator())(description_)
             self.description_ = description_
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileRequestSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class FileRequestSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FileRequest) -> JSON {
-            let output = [ 
-            "id": Serialization._StringSerializer.serialize(value.id),
-            "url": Serialization._StringSerializer.serialize(value.url),
-            "title": Serialization._StringSerializer.serialize(value.title),
-            "created": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.created),
-            "is_open": Serialization._BoolSerializer.serialize(value.isOpen),
-            "file_count": Serialization._Int64Serializer.serialize(value.fileCount),
-            "destination": NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
-            "deadline": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
-            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+
+    public class FileRequestSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FileRequest) throws -> JSON {
+            let output = [
+                "id": try Serialization._StringSerializer.serialize(value.id),
+                "url": try Serialization._StringSerializer.serialize(value.url),
+                "title": try Serialization._StringSerializer.serialize(value.title),
+                "created": try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.created),
+                "is_open": try Serialization._BoolSerializer.serialize(value.isOpen),
+                "file_count": try Serialization._Int64Serializer.serialize(value.fileCount),
+                "destination": try NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
+                "deadline": try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
+                "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> FileRequest {
+
+        public func deserialize(_ json: JSON) throws -> FileRequest {
             switch json {
-                case .dictionary(let dict):
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                    let url = Serialization._StringSerializer.deserialize(dict["url"] ?? .null)
-                    let title = Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                    let created = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["created"] ?? .null)
-                    let isOpen = Serialization._BoolSerializer.deserialize(dict["is_open"] ?? .null)
-                    let fileCount = Serialization._Int64Serializer.deserialize(dict["file_count"] ?? .null)
-                    let destination = NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
-                    let deadline = NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
-                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                    return FileRequest(id: id, url: url, title: title, created: created, isOpen: isOpen, fileCount: fileCount, destination: destination, deadline: deadline, description_: description_)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                let url = try Serialization._StringSerializer.deserialize(dict["url"] ?? .null)
+                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                let created = try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["created"] ?? .null)
+                let isOpen = try Serialization._BoolSerializer.deserialize(dict["is_open"] ?? .null)
+                let fileCount = try Serialization._Int64Serializer.deserialize(dict["file_count"] ?? .null)
+                let destination = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
+                let deadline = try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
+                let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                return FileRequest(
+                    id: id,
+                    url: url,
+                    title: title,
+                    created: created,
+                    isOpen: isOpen,
+                    fileCount: fileCount,
+                    destination: destination,
+                    deadline: deadline,
+                    description_: description_
+                )
+            default:
+                throw JSONSerializerError.deserializeError(type: FileRequest.self, json: json)
             }
         }
     }
 
     /// The FileRequestDeadline struct
-    open class FileRequestDeadline: CustomStringConvertible {
+    public class FileRequestDeadline: CustomStringConvertible {
         /// The deadline for this file request.
         public let deadline: Date
         /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
@@ -760,58 +858,72 @@ open class FileRequests {
             self.deadline = deadline
             self.allowLateUploads = allowLateUploads
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileRequestDeadlineSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestDeadlineSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class FileRequestDeadlineSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FileRequestDeadline) -> JSON {
-            let output = [ 
-            "deadline": NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.deadline),
-            "allow_late_uploads": NullableSerializer(FileRequests.GracePeriodSerializer()).serialize(value.allowLateUploads),
+
+    public class FileRequestDeadlineSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FileRequestDeadline) throws -> JSON {
+            let output = [
+                "deadline": try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.deadline),
+                "allow_late_uploads": try NullableSerializer(FileRequests.GracePeriodSerializer()).serialize(value.allowLateUploads),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> FileRequestDeadline {
+
+        public func deserialize(_ json: JSON) throws -> FileRequestDeadline {
             switch json {
-                case .dictionary(let dict):
-                    let deadline = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["deadline"] ?? .null)
-                    let allowLateUploads = NullableSerializer(FileRequests.GracePeriodSerializer()).deserialize(dict["allow_late_uploads"] ?? .null)
-                    return FileRequestDeadline(deadline: deadline, allowLateUploads: allowLateUploads)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let deadline = try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["deadline"] ?? .null)
+                let allowLateUploads = try NullableSerializer(FileRequests.GracePeriodSerializer()).deserialize(dict["allow_late_uploads"] ?? .null)
+                return FileRequestDeadline(deadline: deadline, allowLateUploads: allowLateUploads)
+            default:
+                throw JSONSerializerError.deserializeError(type: FileRequestDeadline.self, json: json)
             }
         }
     }
 
     /// Arguments for get.
-    open class GetFileRequestArgs: CustomStringConvertible {
+    public class GetFileRequestArgs: CustomStringConvertible {
         /// The ID of the file request to retrieve.
         public let id: String
         public init(id: String) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GetFileRequestArgsSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetFileRequestArgsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class GetFileRequestArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: GetFileRequestArgs) -> JSON {
-            let output = [ 
-            "id": Serialization._StringSerializer.serialize(value.id),
+
+    public class GetFileRequestArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetFileRequestArgs) throws -> JSON {
+            let output = [
+                "id": try Serialization._StringSerializer.serialize(value.id),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> GetFileRequestArgs {
+
+        public func deserialize(_ json: JSON) throws -> GetFileRequestArgs {
             switch json {
-                case .dictionary(let dict):
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                    return GetFileRequestArgs(id: id)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                return GetFileRequestArgs(id: id)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetFileRequestArgs.self, json: json)
             }
         }
     }
@@ -839,73 +951,79 @@ open class FileRequests {
         case validationError
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GetFileRequestErrorSerializer().serialize(self)))"
-        }
-    }
-    open class GetFileRequestErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: GetFileRequestError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetFileRequestErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> GetFileRequestError {
+    }
+
+    public class GetFileRequestErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetFileRequestError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetFileRequestError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return GetFileRequestError.disabledForTeam
-                        case "other":
-                            return GetFileRequestError.other
-                        case "not_found":
-                            return GetFileRequestError.notFound
-                        case "not_a_folder":
-                            return GetFileRequestError.notAFolder
-                        case "app_lacks_access":
-                            return GetFileRequestError.appLacksAccess
-                        case "no_permission":
-                            return GetFileRequestError.noPermission
-                        case "email_unverified":
-                            return GetFileRequestError.emailUnverified
-                        case "validation_error":
-                            return GetFileRequestError.validationError
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return GetFileRequestError.disabledForTeam
+                case "other":
+                    return GetFileRequestError.other
+                case "not_found":
+                    return GetFileRequestError.notFound
+                case "not_a_folder":
+                    return GetFileRequestError.notAFolder
+                case "app_lacks_access":
+                    return GetFileRequestError.appLacksAccess
+                case "no_permission":
+                    return GetFileRequestError.noPermission
+                case "email_unverified":
+                    return GetFileRequestError.emailUnverified
+                case "validation_error":
+                    return GetFileRequestError.validationError
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: GetFileRequestError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GetFileRequestError.self, json: json)
             }
         }
     }
@@ -926,123 +1044,143 @@ open class FileRequests {
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(GracePeriodSerializer().serialize(self)))"
-        }
-    }
-    open class GracePeriodSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: GracePeriod) -> JSON {
-            switch value {
-                case .oneDay:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("one_day")
-                    return .dictionary(d)
-                case .twoDays:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("two_days")
-                    return .dictionary(d)
-                case .sevenDays:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("seven_days")
-                    return .dictionary(d)
-                case .thirtyDays:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("thirty_days")
-                    return .dictionary(d)
-                case .always:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("always")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GracePeriodSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> GracePeriod {
+    }
+
+    public class GracePeriodSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GracePeriod) throws -> JSON {
+            switch value {
+            case .oneDay:
+                var d = [String: JSON]()
+                d[".tag"] = .str("one_day")
+                return .dictionary(d)
+            case .twoDays:
+                var d = [String: JSON]()
+                d[".tag"] = .str("two_days")
+                return .dictionary(d)
+            case .sevenDays:
+                var d = [String: JSON]()
+                d[".tag"] = .str("seven_days")
+                return .dictionary(d)
+            case .thirtyDays:
+                var d = [String: JSON]()
+                d[".tag"] = .str("thirty_days")
+                return .dictionary(d)
+            case .always:
+                var d = [String: JSON]()
+                d[".tag"] = .str("always")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GracePeriod {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "one_day":
-                            return GracePeriod.oneDay
-                        case "two_days":
-                            return GracePeriod.twoDays
-                        case "seven_days":
-                            return GracePeriod.sevenDays
-                        case "thirty_days":
-                            return GracePeriod.thirtyDays
-                        case "always":
-                            return GracePeriod.always
-                        case "other":
-                            return GracePeriod.other
-                        default:
-                            return GracePeriod.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "one_day":
+                    return GracePeriod.oneDay
+                case "two_days":
+                    return GracePeriod.twoDays
+                case "seven_days":
+                    return GracePeriod.sevenDays
+                case "thirty_days":
+                    return GracePeriod.thirtyDays
+                case "always":
+                    return GracePeriod.always
+                case "other":
+                    return GracePeriod.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return GracePeriod.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GracePeriod.self, json: json)
             }
         }
     }
 
     /// Arguments for listV2.
-    open class ListFileRequestsArg: CustomStringConvertible {
+    public class ListFileRequestsArg: CustomStringConvertible {
         /// The maximum number of file requests that should be returned per request.
         public let limit: UInt64
-        public init(limit: UInt64 = 1000) {
+        public init(limit: UInt64 = 1_000) {
             comparableValidator()(limit)
             self.limit = limit
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsArgSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsArgSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class ListFileRequestsArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsArg) -> JSON {
-            let output = [ 
-            "limit": Serialization._UInt64Serializer.serialize(value.limit),
+
+    public class ListFileRequestsArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsArg) throws -> JSON {
+            let output = [
+                "limit": try Serialization._UInt64Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsArg {
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsArg {
             switch json {
-                case .dictionary(let dict):
-                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(1000))
-                    return ListFileRequestsArg(limit: limit)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let limit = try Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(1_000))
+                return ListFileRequestsArg(limit: limit)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsArg.self, json: json)
             }
         }
     }
 
     /// The ListFileRequestsContinueArg struct
-    open class ListFileRequestsContinueArg: CustomStringConvertible {
+    public class ListFileRequestsContinueArg: CustomStringConvertible {
         /// The cursor returned by the previous API call specified in the endpoint description.
         public let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsContinueArgSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsContinueArgSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class ListFileRequestsContinueArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsContinueArg) -> JSON {
-            let output = [ 
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+
+    public class ListFileRequestsContinueArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsContinueArg) throws -> JSON {
+            let output = [
+                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsContinueArg {
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsContinueArg {
             switch json {
-                case .dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    return ListFileRequestsContinueArg(cursor: cursor)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                return ListFileRequestsContinueArg(cursor: cursor)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsContinueArg.self, json: json)
             }
         }
     }
@@ -1057,43 +1195,49 @@ open class FileRequests {
         case invalidCursor
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsContinueErrorSerializer().serialize(self)))"
-        }
-    }
-    open class ListFileRequestsContinueErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsContinueError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .invalidCursor:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_cursor")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsContinueErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsContinueError {
+    }
+
+    public class ListFileRequestsContinueErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsContinueError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .invalidCursor:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_cursor")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsContinueError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return ListFileRequestsContinueError.disabledForTeam
-                        case "other":
-                            return ListFileRequestsContinueError.other
-                        case "invalid_cursor":
-                            return ListFileRequestsContinueError.invalidCursor
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return ListFileRequestsContinueError.disabledForTeam
+                case "other":
+                    return ListFileRequestsContinueError.other
+                case "invalid_cursor":
+                    return ListFileRequestsContinueError.invalidCursor
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: ListFileRequestsContinueError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsContinueError.self, json: json)
             }
         }
     }
@@ -1106,117 +1250,137 @@ open class FileRequests {
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsErrorSerializer().serialize(self)))"
-        }
-    }
-    open class ListFileRequestsErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsError {
+    }
+
+    public class ListFileRequestsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return ListFileRequestsError.disabledForTeam
-                        case "other":
-                            return ListFileRequestsError.other
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return ListFileRequestsError.disabledForTeam
+                case "other":
+                    return ListFileRequestsError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: ListFileRequestsError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsError.self, json: json)
             }
         }
     }
 
     /// Result for list_.
-    open class ListFileRequestsResult: CustomStringConvertible {
+    public class ListFileRequestsResult: CustomStringConvertible {
         /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
         /// their app folder.
-        public let fileRequests: Array<FileRequests.FileRequest>
-        public init(fileRequests: Array<FileRequests.FileRequest>) {
+        public let fileRequests: [FileRequests.FileRequest]
+        public init(fileRequests: [FileRequests.FileRequest]) {
             self.fileRequests = fileRequests
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsResultSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsResultSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class ListFileRequestsResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsResult) -> JSON {
-            let output = [ 
-            "file_requests": ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
+
+    public class ListFileRequestsResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsResult) throws -> JSON {
+            let output = [
+                "file_requests": try ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsResult {
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsResult {
             switch json {
-                case .dictionary(let dict):
-                    let fileRequests = ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
-                    return ListFileRequestsResult(fileRequests: fileRequests)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let fileRequests = try ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
+                return ListFileRequestsResult(fileRequests: fileRequests)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsResult.self, json: json)
             }
         }
     }
 
     /// Result for listV2 and listContinue.
-    open class ListFileRequestsV2Result: CustomStringConvertible {
+    public class ListFileRequestsV2Result: CustomStringConvertible {
         /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
         /// their app folder.
-        public let fileRequests: Array<FileRequests.FileRequest>
+        public let fileRequests: [FileRequests.FileRequest]
         /// Pass the cursor into listContinue to obtain additional file requests.
         public let cursor: String
         /// Is true if there are additional file requests that have not been returned yet. An additional call to
         /// :route:list/continue` can retrieve them.
         public let hasMore: Bool
-        public init(fileRequests: Array<FileRequests.FileRequest>, cursor: String, hasMore: Bool) {
+        public init(fileRequests: [FileRequests.FileRequest], cursor: String, hasMore: Bool) {
             self.fileRequests = fileRequests
             stringValidator()(cursor)
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListFileRequestsV2ResultSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsV2ResultSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class ListFileRequestsV2ResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListFileRequestsV2Result) -> JSON {
-            let output = [ 
-            "file_requests": ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+
+    public class ListFileRequestsV2ResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListFileRequestsV2Result) throws -> JSON {
+            let output = [
+                "file_requests": try ArraySerializer(FileRequests.FileRequestSerializer()).serialize(value.fileRequests),
+                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
+                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListFileRequestsV2Result {
+
+        public func deserialize(_ json: JSON) throws -> ListFileRequestsV2Result {
             switch json {
-                case .dictionary(let dict):
-                    let fileRequests = ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                    return ListFileRequestsV2Result(fileRequests: fileRequests, cursor: cursor, hasMore: hasMore)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let fileRequests = try ArraySerializer(FileRequests.FileRequestSerializer()).deserialize(dict["file_requests"] ?? .null)
+                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                return ListFileRequestsV2Result(fileRequests: fileRequests, cursor: cursor, hasMore: hasMore)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListFileRequestsV2Result.self, json: json)
             }
         }
     }
 
     /// Arguments for update.
-    open class UpdateFileRequestArgs: CustomStringConvertible {
+    public class UpdateFileRequestArgs: CustomStringConvertible {
         /// The ID of the file request to update.
         public let id: String
         /// The new title of the file request. Must not be empty.
@@ -1230,7 +1394,14 @@ open class FileRequests {
         public let open: Bool?
         /// The description of the file request.
         public let description_: String?
-        public init(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil, description_: String? = nil) {
+        public init(
+            id: String,
+            title: String? = nil,
+            destination: String? = nil,
+            deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate,
+            open: Bool? = nil,
+            description_: String? = nil
+        ) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
             nullableValidator(stringValidator(minLength: 1))(title)
@@ -1242,35 +1413,43 @@ open class FileRequests {
             nullableValidator(stringValidator())(description_)
             self.description_ = description_
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFileRequestArgsSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestArgsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
         }
     }
-    open class UpdateFileRequestArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UpdateFileRequestArgs) -> JSON {
-            let output = [ 
-            "id": Serialization._StringSerializer.serialize(value.id),
-            "title": NullableSerializer(Serialization._StringSerializer).serialize(value.title),
-            "destination": NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
-            "deadline": FileRequests.UpdateFileRequestDeadlineSerializer().serialize(value.deadline),
-            "open": NullableSerializer(Serialization._BoolSerializer).serialize(value.open),
-            "description": NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+
+    public class UpdateFileRequestArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UpdateFileRequestArgs) throws -> JSON {
+            let output = [
+                "id": try Serialization._StringSerializer.serialize(value.id),
+                "title": try NullableSerializer(Serialization._StringSerializer).serialize(value.title),
+                "destination": try NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
+                "deadline": try FileRequests.UpdateFileRequestDeadlineSerializer().serialize(value.deadline),
+                "open": try NullableSerializer(Serialization._BoolSerializer).serialize(value.open),
+                "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> UpdateFileRequestArgs {
+
+        public func deserialize(_ json: JSON) throws -> UpdateFileRequestArgs {
             switch json {
-                case .dictionary(let dict):
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                    let title = NullableSerializer(Serialization._StringSerializer).deserialize(dict["title"] ?? .null)
-                    let destination = NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
-                    let deadline = FileRequests.UpdateFileRequestDeadlineSerializer().deserialize(dict["deadline"] ?? FileRequests.UpdateFileRequestDeadlineSerializer().serialize(.noUpdate))
-                    let open = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["open"] ?? .null)
-                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                    return UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                let title = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["title"] ?? .null)
+                let destination = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
+                let deadline = try FileRequests.UpdateFileRequestDeadlineSerializer()
+                    .deserialize(dict["deadline"] ?? FileRequests.UpdateFileRequestDeadlineSerializer().serialize(.noUpdate))
+                let open = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["open"] ?? .null)
+                let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                return UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: UpdateFileRequestArgs.self, json: json)
             }
         }
     }
@@ -1285,44 +1464,50 @@ open class FileRequests {
         case other
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFileRequestDeadlineSerializer().serialize(self)))"
-        }
-    }
-    open class UpdateFileRequestDeadlineSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UpdateFileRequestDeadline) -> JSON {
-            switch value {
-                case .noUpdate:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_update")
-                    return .dictionary(d)
-                case .update(let arg):
-                    var d = ["update": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(arg)]
-                    d[".tag"] = .str("update")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestDeadlineSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
-        open func deserialize(_ json: JSON) -> UpdateFileRequestDeadline {
+    }
+
+    public class UpdateFileRequestDeadlineSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UpdateFileRequestDeadline) throws -> JSON {
+            switch value {
+            case .noUpdate:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_update")
+                return .dictionary(d)
+            case .update(let arg):
+                var d = try ["update": NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(arg)]
+                d[".tag"] = .str("update")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UpdateFileRequestDeadline {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "no_update":
-                            return UpdateFileRequestDeadline.noUpdate
-                        case "update":
-                            let v = NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(d["update"] ?? .null)
-                            return UpdateFileRequestDeadline.update(v)
-                        case "other":
-                            return UpdateFileRequestDeadline.other
-                        default:
-                            return UpdateFileRequestDeadline.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "no_update":
+                    return UpdateFileRequestDeadline.noUpdate
+                case "update":
+                    let v = try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(d["update"] ?? .null)
+                    return UpdateFileRequestDeadline.update(v)
+                case "other":
+                    return UpdateFileRequestDeadline.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return UpdateFileRequestDeadline.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UpdateFileRequestDeadline.self, json: json)
             }
         }
     }
@@ -1350,77 +1535,82 @@ open class FileRequests {
         case validationError
 
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UpdateFileRequestErrorSerializer().serialize(self)))"
-        }
-    }
-    open class UpdateFileRequestErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UpdateFileRequestError) -> JSON {
-            switch value {
-                case .disabledForTeam:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled_for_team")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .notFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_found")
-                    return .dictionary(d)
-                case .notAFolder:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("not_a_folder")
-                    return .dictionary(d)
-                case .appLacksAccess:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("app_lacks_access")
-                    return .dictionary(d)
-                case .noPermission:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_permission")
-                    return .dictionary(d)
-                case .emailUnverified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("email_unverified")
-                    return .dictionary(d)
-                case .validationError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("validation_error")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> UpdateFileRequestError {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "disabled_for_team":
-                            return UpdateFileRequestError.disabledForTeam
-                        case "other":
-                            return UpdateFileRequestError.other
-                        case "not_found":
-                            return UpdateFileRequestError.notFound
-                        case "not_a_folder":
-                            return UpdateFileRequestError.notAFolder
-                        case "app_lacks_access":
-                            return UpdateFileRequestError.appLacksAccess
-                        case "no_permission":
-                            return UpdateFileRequestError.noPermission
-                        case "email_unverified":
-                            return UpdateFileRequestError.emailUnverified
-                        case "validation_error":
-                            return UpdateFileRequestError.validationError
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestErrorSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
             }
         }
     }
 
+    public class UpdateFileRequestErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UpdateFileRequestError) throws -> JSON {
+            switch value {
+            case .disabledForTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled_for_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .notAFolder:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_a_folder")
+                return .dictionary(d)
+            case .appLacksAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("app_lacks_access")
+                return .dictionary(d)
+            case .noPermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
+            case .emailUnverified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("email_unverified")
+                return .dictionary(d)
+            case .validationError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("validation_error")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UpdateFileRequestError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "disabled_for_team":
+                    return UpdateFileRequestError.disabledForTeam
+                case "other":
+                    return UpdateFileRequestError.other
+                case "not_found":
+                    return UpdateFileRequestError.notFound
+                case "not_a_folder":
+                    return UpdateFileRequestError.notAFolder
+                case "app_lacks_access":
+                    return UpdateFileRequestError.appLacksAccess
+                case "no_permission":
+                    return UpdateFileRequestError.noPermission
+                case "email_unverified":
+                    return UpdateFileRequestError.emailUnverified
+                case "validation_error":
+                    return UpdateFileRequestError.validationError
+                default:
+                    throw JSONSerializerError.unknownTag(type: UpdateFileRequestError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UpdateFileRequestError.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -1432,9 +1622,11 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.CountFileRequestsResultSerializer(),
         errorSerializer: FileRequests.CountFileRequestsErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let create = Route(
         name: "create",
@@ -1444,9 +1636,11 @@ open class FileRequests {
         argSerializer: FileRequests.CreateFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.CreateFileRequestErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let delete = Route(
         name: "delete",
@@ -1456,9 +1650,11 @@ open class FileRequests {
         argSerializer: FileRequests.DeleteFileRequestArgsSerializer(),
         responseSerializer: FileRequests.DeleteFileRequestsResultSerializer(),
         errorSerializer: FileRequests.DeleteFileRequestErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let deleteAllClosed = Route(
         name: "delete_all_closed",
@@ -1468,9 +1664,11 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.DeleteAllClosedFileRequestsResultSerializer(),
         errorSerializer: FileRequests.DeleteAllClosedFileRequestsErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let get = Route(
         name: "get",
@@ -1480,21 +1678,25 @@ open class FileRequests {
         argSerializer: FileRequests.GetFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.GetFileRequestErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let listV2 = Route(
-        name: "list",
+        name: "list_v2",
         version: 2,
         namespace: "file_requests",
         deprecated: false,
         argSerializer: FileRequests.ListFileRequestsArgSerializer(),
         responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let list_ = Route(
         name: "list",
@@ -1504,9 +1706,11 @@ open class FileRequests {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.ListFileRequestsResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let listContinue = Route(
         name: "list/continue",
@@ -1516,9 +1720,11 @@ open class FileRequests {
         argSerializer: FileRequests.ListFileRequestsContinueArgSerializer(),
         responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsContinueErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let update = Route(
         name: "update",
@@ -1528,8 +1734,10 @@ open class FileRequests {
         argSerializer: FileRequests.UpdateFileRequestArgsSerializer(),
         responseSerializer: FileRequests.FileRequestSerializer(),
         errorSerializer: FileRequests.UpdateFileRequestErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

@@ -32,9 +32,9 @@ struct ContentView: View {
             exit(0)
         }
 
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
-            DropboxTester().testAllUserEndpoints(asMember: false, nextTest:unlink)
+            DropboxTester().testAllUserEndpoints(asMember: false, nextTest: unlink)
         case .fullDropboxScopedForTeamTesting:
             DropboxTeamTester().testTeamMemberFileAcessActions(unlink)
         }
@@ -49,7 +49,7 @@ struct ContentView: View {
     func link() {
         let scopeRequest: ScopeRequest
         // note if you add new scopes, you need to relogin to update your token
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
             scopeRequest = ScopeRequest(scopeType: .user, scopes: DropboxTester.scopes, includeGrantedScopes: false)
         case .fullDropboxScopedForTeamTesting:
@@ -60,7 +60,7 @@ struct ContentView: View {
             sharedApplication: NSApplication.shared,
             controller: nil,
             loadingStatusDelegate: nil,
-            openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+            openURL: { (url: URL) -> Void in NSWorkspace.shared.open(url) },
             scopeRequest: scopeRequest
         )
     }
@@ -70,7 +70,7 @@ class ViewModel: ObservableObject {
     @Published var isLinked: Bool
 
     init() {
-        isLinked = ViewModel.sdkIsLinked()
+        self.isLinked = ViewModel.sdkIsLinked()
     }
 
     func checkIsLinked() {
@@ -78,7 +78,7 @@ class ViewModel: ObservableObject {
     }
 
     private static func sdkIsLinked() -> Bool {
-        return DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil
+        DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil
     }
 }
 

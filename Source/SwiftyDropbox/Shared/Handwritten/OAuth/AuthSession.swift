@@ -2,8 +2,8 @@
 /// Copyright (c) 2020 Dropbox, Inc. All rights reserved.
 ///
 
-import Foundation
 import CommonCrypto
+import Foundation
 
 // MARK: Public
 
@@ -16,14 +16,14 @@ public struct ScopeRequest {
     }
 
     /// An array of scopes to be granted.
-    let scopes: [String]
+    public let scopes: [String]
     /// Boolean indicating whether to keep all previously granted scopes.
-    let includeGrantedScopes: Bool
+    public let includeGrantedScopes: Bool
     /// Type of the scopes to be granted.
-    let scopeType: ScopeType
+    public let scopeType: ScopeType
 
     /// String representation of the scopes, used in URL query. Nil if the array is empty.
-    var scopeString: String? {
+    public var scopeString: String? {
         guard !scopes.isEmpty else { return nil }
         return scopes.joined(separator: " ")
     }
@@ -53,7 +53,7 @@ struct OAuthPKCESession {
     // PKCE data generated for this auth session.
     let pkceData: PkceData
     // A string of colon-delimited options/state - used primarily to indicate if the token type to be returned.
-    let state: String
+    private(set) var state: String
     // Token access type, hardcoded to "offline" to indicate short-lived access token + refresh token.
     let tokenAccessType = "offline"
     // Type of the auth response, hardcoded to "code" to indicate code flow.
@@ -81,6 +81,12 @@ struct OAuthPKCESession {
     }
 }
 
+extension OAuthPKCESession {
+    mutating func __test_only_setState(value: String) {
+        state = value
+    }
+}
+
 /// PKCE data for OAuth 2 Authorization Code Flow.
 struct PkceData {
     // A random string generated for each code flow.
@@ -96,12 +102,12 @@ struct PkceData {
 
     private static func randomStringOfLength(_ length: Int) -> String {
         let alphanumerics = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0..<length).map { _ in alphanumerics.randomElement()! })
+        return String((0 ..< length).map { _ in alphanumerics.randomElement()! })
     }
 
     private static func codeChallengeFromCodeVerifier(_ codeVerifier: String) -> String {
         guard let data = codeVerifier.data(using: .ascii) else { fatalError("Failed to create code challenge.") }
-        var digest = [UInt8](repeating: 0, count:Int(CC_SHA256_DIGEST_LENGTH))
+        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         _ = data.withUnsafeBytes {
             CC_SHA256($0.baseAddress, UInt32(data.count), &digest)
         }

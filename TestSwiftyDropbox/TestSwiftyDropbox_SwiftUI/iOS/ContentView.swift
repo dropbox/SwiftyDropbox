@@ -15,8 +15,6 @@ struct ContentView: View {
             VStack {
                 Button("Run API Tests", action: runApiTests)
                     .padding()
-                Button("Run Batch Upload Tests", action: runBatchUploadTests)
-                    .padding()
                 Button("Unlink Dropbox Account", action: unlink)
                     .padding()
             }
@@ -35,16 +33,12 @@ struct ContentView: View {
             exit(0)
         }
 
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
-            DropboxTester().testAllUserEndpoints(asMember: false, nextTest:unlink)
+            DropboxTester().testAllUserEndpoints(asMember: false, nextTest: unlink)
         case .fullDropboxScopedForTeamTesting:
             DropboxTeamTester().testTeamMemberFileAcessActions(unlink)
         }
-    }
-
-    func runBatchUploadTests() {
-        DropboxTester().testBatchUpload()
     }
 
     func unlink() {
@@ -56,17 +50,19 @@ struct ContentView: View {
     func link() {
         let scopeRequest: ScopeRequest
         // note if you add new scopes, you need to relogin to update your token
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
             scopeRequest = ScopeRequest(scopeType: .user, scopes: DropboxTester.scopes, includeGrantedScopes: false)
         case .fullDropboxScopedForTeamTesting:
             scopeRequest = ScopeRequest(scopeType: .team, scopes: DropboxTeamTester.scopes, includeGrantedScopes: false)
         }
-        DropboxClientsManager.authorizeFromControllerV2(UIApplication.shared,
-                                                        controller: nil,
-                                                        loadingStatusDelegate: nil,
-                                                        openURL: {(url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
-                                                        scopeRequest: scopeRequest)
+        DropboxClientsManager.authorizeFromControllerV2(
+            UIApplication.shared,
+            controller: nil,
+            loadingStatusDelegate: nil,
+            openURL: { (url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
+            scopeRequest: scopeRequest
+        )
     }
 }
 
@@ -74,7 +70,7 @@ class ViewModel: ObservableObject {
     @Published var isLinked: Bool
 
     init() {
-        isLinked = ViewModel.sdkIsLinked()
+        self.isLinked = ViewModel.sdkIsLinked()
     }
 
     func checkIsLinked() {
@@ -82,7 +78,7 @@ class ViewModel: ObservableObject {
     }
 
     private static func sdkIsLinked() -> Bool {
-        return DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil
+        DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil
     }
 }
 
