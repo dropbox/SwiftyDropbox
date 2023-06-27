@@ -108,8 +108,7 @@ target '<YOUR_PROJECT_NAME>' do
     pod 'SwiftyDropbox'
 end
 ```
-
-If your project is contains Objective-C code that will need to have access to Dropbox SDK there is a separate pod called `SwiftyDropboxObjC` that contains an Objective-C compatibility layer for the SDK. Add this pod to your `Podfile` as well. For more information refer to the [Objective-C](#objective-c) section of this README.
+If your project contains Objective-C code that will need to have access to Dropbox SDK there is a separate pod called `SwiftyDropboxObjC` that contains an Objective-C compatibility layer for the SDK. Add this pod to your `Podfile` (in addition to `SwiftyDropbox` or on its own). For more information refer to the [Objective-C](#objective-c) section of this README.
 
 Then, run the following command to install the dependency:
 
@@ -122,8 +121,6 @@ Once your project is integrated with the Dropbox Swift SDK, you can pull SDK upd
 ```bash
 $ pod update
 ```
-
-**Note**: SwiftyDropbox requires CocoaPods 1.0.0+ when using Alamofire 4.0.0+. Because of this requirement, the CocoaPods App (which uses CocoaPods 1.0.0) cannot be used.
 
 ---
 
@@ -308,7 +305,7 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
           }
       }
     }
-    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, includeBackgroundClient: false, completion: oauthCompletion)
     return canHandleUrl
 }
 
@@ -335,7 +332,7 @@ func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>)
 
     for context in URLContexts {
         // stop iterating after the first handle-able url
-        if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
+        if DropboxClientsManager.handleRedirectURL(context.url, includeBackgroundClient: false, completion: oauthCompletion) { break }
     }
 }
 ```
@@ -370,7 +367,7 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
                     }
                 }
             }
-            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+            DropboxClientsManager.handleRedirectURL(url, includeBackgroundClient: false, completion: oauthCompletion)
             // this brings your application back the foreground on redirect
             NSApp.activate(ignoringOtherApps: true)
         }
@@ -948,11 +945,13 @@ The Objective-C compatibility layer is in the same package outlined in [SDK dist
 
 #### Cocoapods
 
+For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (or in addition to) `SwiftyDropbox`.
+
 ```ruby
 use_frameworks!
 
 target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropboxObjC'
+    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.1'
 end
 ```
 
@@ -979,7 +978,7 @@ DropboxClientsManager.team.membersGetInfo(members: [userSelectArg]).response { r
 
 Objective-C:
 ```objc
-#import <SwiftyDropboxObjC/SwiftyDropboxObjC-Swift.h>
+@import SwiftyDropboxObjC;
 
 DBXTeamUserSelectorArgEmail *selector = [[DBXTeamUserSelectorArgEmail alloc] init:@"some@email.com"]
 [[DBXDropboxClientsManager.authorizedTeamClient.team membersGetInfoWithMembers:@[selector]] responseWithCompletionHandler:^(NSArray<DBXTeamMembersGetInfoItem *> * _Nullable result, DBXTeamMembersGetInfoError * _Nullable routeError, DBXCallError * _Nullable error) {

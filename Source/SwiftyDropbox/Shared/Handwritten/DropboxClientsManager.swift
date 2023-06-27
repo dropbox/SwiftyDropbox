@@ -318,6 +318,7 @@ public class DropboxClientsManager {
     ///
     /// - parameters:
     ///     - url: The URL to attempt to handle.
+    ///     - includeBackgroundClient: Whether to additionally initialize an authorized background client.
     ///     - completion: The callback closure to receive auth result.
     /// - returns: Whether the redirect URL can be handled.
     ///
