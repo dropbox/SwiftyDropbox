@@ -20,7 +20,7 @@ else
             mkdir $docs_location
 
             echo "Generating documents..."
-            cd ../Source/SwiftyDropbox
+            cd ..
                 jazzy --readme $sdk_repo_location/README.md --config $sdk_repo_location/.jazzy.json --github_url https://github.com/dropbox/SwiftyDropbox --module-version $sdk_version --module SwiftyDropbox -o $docs_location
             cd -
 
