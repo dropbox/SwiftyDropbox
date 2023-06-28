@@ -1047,6 +1047,8 @@ DBXTeamUserSelectorArgEmail *userSelectArg = [[DBXTeamUserSelectorArgEmail alloc
 
 5.) When working with tasks you no longer need to manually `start` the tasks. They are automatically started on creation.
 
+6.) DropboxOAuthCompletion is no longer a typealias and is instead typed as `(DBXDropboxOAuthResult?) -> Void`
+
 ---
 
 ## Changes in version 10.0.0
