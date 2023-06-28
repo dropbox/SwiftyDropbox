@@ -76,6 +76,20 @@ extension DBXDropboxClientsManager {
 
     @objc
     public static func setupWithAppKey(
+        _ appKey: String
+    ) {
+        setupWithAppKey(
+            appKey,
+            transportClient: nil,
+            backgroundTransportClient: nil,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            includeBackgroundClient: false,
+            requestsToReconnect: nil
+        )
+    }
+
+    @objc
+    public static func setupWithAppKey(
         _ appKey: String,
         transportClient: DBXDropboxTransportClient? = nil,
         backgroundTransportClient: DBXDropboxTransportClient? = nil,
@@ -116,6 +130,22 @@ extension DBXDropboxClientsManager {
         )
     }
 
+    @objc
+    public static func setupWithAppKey(
+        _ appKey: String, backgroundSessionIdentifier: String,
+        sharedContainerIdentifier: String? = nil,
+        requestsToReconnect: @escaping ([DBXReconnectionResult]) -> Void
+    ) {
+        setupWithAppKey(
+            appKey,
+            backgroundSessionIdentifier: backgroundSessionIdentifier,
+            sharedContainerIdentifier: sharedContainerIdentifier,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            requestsToReconnect: requestsToReconnect
+        )
+    }
+
+    @objc
     public static func setupWithAppKey(
         _ appKey: String, backgroundSessionIdentifier: String,
         sharedContainerIdentifier: String? = nil,
@@ -133,6 +163,22 @@ extension DBXDropboxClientsManager {
             secureStorageAccess: secureStorageAccess,
             includeBackgroundClient: true,
             requestsToReconnect: requestsToReconnect
+        )
+    }
+
+    @objc
+    public static func setupWithAppKeyMultiUser(
+        _ appKey: String,
+        tokenUid: String?
+    ) {
+        setupWithAppKeyMultiUser(
+            appKey,
+            transportClient: nil,
+            backgroundTransportClient: nil,
+            tokenUid: tokenUid,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            includeBackgroundClient: false,
+            requestsToReconnect: nil
         )
     }
 
@@ -187,6 +233,24 @@ extension DBXDropboxClientsManager {
         backgroundSessionIdentifier: String,
         sharedContainerIdentifier: String? = nil,
         tokenUid: String?,
+        requestsToReconnect: @escaping ([DBXReconnectionResult]) -> Void
+    ) {
+        setupWithAppKeyMultiUser(
+            appKey,
+            backgroundSessionIdentifier: backgroundSessionIdentifier,
+            sharedContainerIdentifier: sharedContainerIdentifier,
+            tokenUid: tokenUid,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            requestsToReconnect: requestsToReconnect
+        )
+    }
+
+    @objc
+    public static func setupWithAppKeyMultiUser(
+        _ appKey: String,
+        backgroundSessionIdentifier: String,
+        sharedContainerIdentifier: String? = nil,
+        tokenUid: String?,
         secureStorageAccess: DBXSecureStorageAccess = DBXSecureStorageAccessDefaultImpl(),
         requestsToReconnect: @escaping ([DBXReconnectionResult]) -> Void
     ) {
@@ -203,6 +267,13 @@ extension DBXDropboxClientsManager {
             includeBackgroundClient: true,
             requestsToReconnect: requestsToReconnect
         )
+    }
+
+    @objc
+    public static func setupWithTeamAppKey(
+        _ appKey: String
+    ) {
+        setupWithTeamAppKey(appKey, transportClient: nil, secureStorageAccess: DBXSecureStorageAccessDefaultImpl())
     }
 
     @objc
@@ -234,6 +305,19 @@ extension DBXDropboxClientsManager {
             appKey,
             transportClient: transportClient?.swift,
             secureStorageAccess: secureStorageAccess.swift,
+            tokenUid: tokenUid
+        )
+    }
+
+    @objc
+    public static func setupWithTeamAppKeyMultiUser(
+        _ appKey: String,
+        tokenUid: String?
+    ) {
+        setupWithTeamAppKeyMultiUser(
+            appKey,
+            transportClient: nil,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
             tokenUid: tokenUid
         )
     }

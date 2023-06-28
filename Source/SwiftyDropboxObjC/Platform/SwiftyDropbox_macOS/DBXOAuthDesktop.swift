@@ -75,11 +75,31 @@ extension DBXDropboxClientsManager {
 
     @objc
     public static func setupWithAppKeyDesktop(
+        _ appKey: String
+    ) {
+        setupWithAppKeyDesktop(appKey, transportClient: nil, secureStorageAccess: DBXSecureStorageAccessDefaultImpl())
+    }
+
+    @objc
+    public static func setupWithAppKeyDesktop(
         _ appKey: String,
         transportClient: DBXDropboxTransportClient? = nil,
         secureStorageAccess: DBXSecureStorageAccess = DBXSecureStorageAccessDefaultImpl()
     ) {
         DropboxClientsManager.setupWithAppKeyDesktop(appKey, transportClient: transportClient?.swift, secureStorageAccess: secureStorageAccess.swift)
+    }
+
+    @objc
+    public static func setupWithAppKeyMultiUserDesktop(
+        _ appKey: String,
+        tokenUid: String?
+    ) {
+        setupWithAppKeyMultiUserDesktop(
+            appKey,
+            transportClient: nil,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            tokenUid: tokenUid
+        )
     }
 
     @objc
@@ -99,11 +119,31 @@ extension DBXDropboxClientsManager {
 
     @objc
     public static func setupWithTeamAppKeyDesktop(
+        _ appKey: String
+    ) {
+        setupWithTeamAppKeyDesktop(appKey, transportClient: nil, secureStorageAccess: DBXSecureStorageAccessDefaultImpl())
+    }
+
+    @objc
+    public static func setupWithTeamAppKeyDesktop(
         _ appKey: String,
         transportClient: DBXDropboxTransportClient? = nil,
         secureStorageAccess: DBXSecureStorageAccess = DBXSecureStorageAccessDefaultImpl()
     ) {
         DropboxClientsManager.setupWithTeamAppKeyDesktop(appKey, transportClient: transportClient?.swift, secureStorageAccess: secureStorageAccess.swift)
+    }
+
+    @objc
+    public static func setupWithTeamAppKeyMultiUserDesktop(
+        _ appKey: String,
+        tokenUid: String?
+    ) {
+        setupWithTeamAppKeyMultiUserDesktop(
+            appKey,
+            transportClient: nil,
+            secureStorageAccess: DBXSecureStorageAccessDefaultImpl(),
+            tokenUid: tokenUid
+        )
     }
 
     @objc
