@@ -1,10 +1,10 @@
 # Dropbox for Swift
 
-## Version 10.0.0-beta.1 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0-beta.1](#changes-in-version-10.0.0-beta.1) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
+## Version 10.0.0 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-10.0.0) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
 
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
-Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0-beta.1/).
+Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0-beta.2/).
 
 ---
 
@@ -45,7 +45,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0
   * [Objective-C Compaibility Layer Distribution](#objective-c-compaibility-layer-distribution)
   * [Using the Objective-C Compatbility Layer](#using-the-objective-c-compatbility-layer)
   * [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
-* [Changes in version 10.0.0-beta.1](#changes-in-version-10.0.0-beta.1)
+* [Changes in version 10.0.0](#changes-in-version-10.0.0)
 * [Examples](#examples)
 * [Documentation](#documentation)
 * [Stone](#stone)
@@ -953,7 +953,7 @@ For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (o
 use_frameworks!
 
 target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.1'
+    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.2'
 end
 ```
 
@@ -1051,9 +1051,9 @@ DBXTeamUserSelectorArgEmail *userSelectArg = [[DBXTeamUserSelectorArgEmail alloc
 
 ---
 
-## Changes in version 10.0.0-beta.1
+## Changes in version 10.0.0
 
-Version 10.0.0-beta.1 of SwiftyDropbox differs significantly from version 9.2.0. It aims to support Objective-C, remove AlamoFire as a dependency, support background networking, replace fatal errors during serialization, add unit tests, and better support testing.
+Version 10.0.0 of SwiftyDropbox differs significantly from version 9.2.0. It aims to support Objective-C, remove AlamoFire as a dependency, support background networking, replace fatal errors during serialization, add unit tests, and better support testing.
 
 These additional features are the greatest differences, but even simple upgrades that don't utilize these new features should consider the other notable changes.
 
