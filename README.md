@@ -1,6 +1,6 @@
 # Dropbox for Swift
 
-## Version 10.0.0 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-10.0.0) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
+## Version 10.0.0 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-1000) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
 
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
@@ -17,7 +17,6 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0
 * [SDK distribution](#sdk-distribution)
   * [Swift Package Manager](#swift-package-manager)
   * [CocoaPods](#cocoapods)
-  * [Manually add subproject](#manually-add-subproject)
 * [Configure your project](#configure-your-project)
   * [Application `.plist` file](#application-plist-file)
   * [Handling the authorization flow](#handling-the-authorization-flow)
@@ -42,10 +41,10 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0
     * [Single Dropbox user case](#single-dropbox-user-case)
     * [Multiple Dropbox user case](#multiple-dropbox-user-case)
 * [Objective-C](#objective-c)
-  * [Objective-C Compaibility Layer Distribution](#objective-c-compaibility-layer-distribution)
+  * [Objective-C Compatibility Layer Distribution](#objective-c-compatibility-layer-distribution)
   * [Using the Objective-C Compatbility Layer](#using-the-objective-c-compatbility-layer)
   * [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
-* [Changes in version 10.0.0](#changes-in-version-10.0.0)
+* [Changes in version 10.0.0](#changes-in-version-1000)
 * [Examples](#examples)
 * [Documentation](#documentation)
 * [Stone](#stone)
@@ -939,11 +938,11 @@ The `DropboxClient` (or `DropboxTeamClient`) is then used to make all of the des
 
 If you need to interact with the Dropbox SDK in Objective-C code there is an Objective-C compatibility layer for the SDK that can be used.
 
-### Objective-C Compaibility Layer Distribution
+### Objective-C Compatibility Layer Distribution
 
 #### Swift Package Manager
 
-The Objective-C compatibility layer is in the same package outlined in [SDK distribution](#sdk-distribution). After adding the package you will see a target named `SwiftyDropboxObjC` that can be added in the same way as the Swift SDK.
+The Objective-C compatibility layer is in the same package outlined in [SDK distribution](#sdk-distribution). After adding the package you will see a target named `SwiftyDropboxObjC` that can be added in the same way as the Swift SDK and used in its place.
 
 #### Cocoapods
 
@@ -959,7 +958,7 @@ end
 
 ### Using the Objective-C Compatbility Layer
 
-The objective-c interface was built to mimic the Swift interface as closely as possible while still maintaining good Objective-C patterns and practices (for example full verbose names instead of the namespacing relied on in Swift). Other than the naming and some other small tweaks to accomodate Objective-C the usage of the SDK should be extremely similar in both languages, thus the instructions above should apply even when in Objective-C.
+The Objective-C interface was built to mimic the Swift interface as closely as possible while still maintaining good Objective-C patterns and practices (for example full verbose names instead of the namespacing relied on in Swift). Other than the naming and some other small tweaks to accomodate Objective-C the usage of the SDK should be extremely similar in both languages, thus the instructions above should apply even when in Objective-C.
 
 An example of the differences between Swift and Objective-C:
 
@@ -967,9 +966,8 @@ Swift:
 ```Swift
 import SwiftyDropbox
 
-let selector = Team.UserSelectorArg.email("some@email.com")
+let userSelectArg = Team.UserSelectorArg.email("some@email.com")
 DropboxClientsManager.team.membersGetInfo(members: [userSelectArg]).response { response, error in
-    if (result) {
     if let result = response {
         // Handle result
     } else {
@@ -1013,7 +1011,7 @@ DBXClientsManager
 
 dropbox-sdk-obj-c:
 ```objc
-[[[[DBClientsManager authorizedClient] createFolderV2:@"some/folder/path"]
+[[[DBClientsManager authorizedClient].filesRoutes createFolderV2:@"/some/folder/path"]
   setResponseBlock:^(DBFILESCreateFolderResult * _Nullable result, DBFILESCreateFolderError * _Nullable routeError, DBRequestError * _Nullable networkError) {
     // Handle response
 }];
@@ -1063,7 +1061,7 @@ These additional features are the greatest differences, but even simple upgrades
 
 - Serialization inconsistencies that used to cause fatal errors now are represented as errors piped through to the requests' completion handlers. It is up to the calling app to decide how to handle them.
 
-- Carthage is no longer supported, pleases use Swift Package Manager or Cocoapods.
+- Carthage is no longer supported, please use Swift Package Manager or Cocoapods.
 
 - SDK classes can no longer be subclassed. If this disrupts your usage, please [let us know](https://github.com/dropbox/SwiftyDropbox/issues).
 
@@ -1073,15 +1071,18 @@ These additional features are the greatest differences, but even simple upgrades
 
 For notes on Objective-C support see [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
 
-The SDK's background networking support simplifies the reconnection of completion handlers to URLSession tasks. See `TestSwiftyDropbox/DebugBackgroundSessionViewModel` for code that exercises various background networking scenarios. See `TestSwiftDrobopx/ActionRequestHandler` for usage from an app extension.
+The SDK's background networking support simplifies the reconnection of completion handlers to URLSession tasks. See [`TestSwiftyDropbox/DebugBackgroundSessionViewModel`](https://github.com/dropbox/SwiftyDropbox/tree/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_SwiftUI/iOS) for code that exercises various background networking scenarios. See [`TestSwiftDropbox/ActionRequestHandler`](https://github.com/dropbox/SwiftyDropbox/blob/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_ActionExtension/ActionRequestHandler.swift) for usage from an app extension.
 
 ### Testing Support
 
 Initialize a DropboxClient with a MockDropboxTransportClient to facillitate route response mocking in tests. Supply this client to your code under test, excercise the code, then pipe in responses as illustrated below and assert against your code's behavior.
 
 ```
-let transportClient =  MockDropboxTransportClient()
-let client = DropboxClient(transportClient: transportClient)
+let transportClient = MockDropboxTransportClient()
+
+let client = DropboxClient(
+    transportClient: transportClient
+)
 
 let feature = SystemUnderTest(client: client)
 
@@ -1089,7 +1090,7 @@ let json: [String: Any] = ["fileNames": ["first"]]
 
 let request = transportClient.getLastRequest()
 
-request.handleMockInput(.success(json: json)
+request.handleMockInput(.success(json: json))
 
 XCTAssert(<state of feature>, <expected state>)
 
