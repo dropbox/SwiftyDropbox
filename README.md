@@ -996,7 +996,7 @@ If you previously integrated with [dropbox-sdk-obj-c](https://github.com/dropbox
 
 In order to maintain as consistent of an interface between Swift and Objective-C as possible in this SDK the interface did have to differ slightly from [dropbox-sdk-obj-c](https://github.com/dropbox/dropbox-sdk-obj-c). The primary differences are as follows:
 
-1.) Type names are derived from SwiftyDropbox types prefixed with DBX. There are generally some differences in naming from dropbox-sdk-obj-c, and with Swift's more granular access control some previously accessbile types are now internal to the SDK only. See [Common type migration reference](common-type–migration-reference).
+1.) Type names are derived from SwiftyDropbox types prefixed with DBX. There are generally some differences in naming from dropbox-sdk-obj-c, and with Swift's more granular access control some previously accessbile types are now internal to the SDK only. See [Common type migration reference](#common-type-migration-reference).
 
 2.) Some function names have changed slightly to be more verbose about arguments and/or to better match the Swift interface. In the following example note `createFolderV2` vs `createFolderV2WithPath` and `responseWithCompletionHandler` vs `setResponseBlock`:
 
