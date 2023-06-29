@@ -4,7 +4,7 @@
 
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
-Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0-beta.2/).
+Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0-beta.3/).
 
 ---
 
@@ -952,7 +952,7 @@ For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (o
 use_frameworks!
 
 target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.2'
+    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.3'
 end
 ```
 
