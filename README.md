@@ -996,16 +996,7 @@ If you previously integrated with [dropbox-sdk-obj-c](https://github.com/dropbox
 
 In order to maintain as consistent of an interface between Swift and Objective-C as possible in this SDK the interface did have to differ slightly from [dropbox-sdk-obj-c](https://github.com/dropbox/dropbox-sdk-obj-c). The primary differences are as follows:
 
-1.) Prefix has changed from DB to DBX
-
-dropbox-sdk-obj-c:
-```objc
-DBClientsManager
-```
-SwiftyDropboxObjC:
-```objc
-DBXClientsManager
-```
+1.) Type names are derived from SwiftyDropbox types prefixed with DBX. There are generally some differences in naming from dropbox-sdk-obj-c, and with Swift's more granular access control some previously accessbile types are now internal to the SDK only. See [Common type migration reference](common-type–migration-reference).
 
 2.) Some function names have changed slightly to be more verbose about arguments and/or to better match the Swift interface. In the following example note `createFolderV2` vs `createFolderV2WithPath` and `responseWithCompletionHandler` vs `setResponseBlock`:
 
@@ -1047,7 +1038,42 @@ DBXTeamUserSelectorArgEmail *userSelectArg = [[DBXTeamUserSelectorArgEmail alloc
 
 5.) When working with tasks you no longer need to manually `start` the tasks. They are automatically started on creation.
 
-6.) DropboxOAuthCompletion is no longer a typealias and is instead typed as `(DBXDropboxOAuthResult?) -> Void`
+6.) SwiftyDropbox relies on generics for typed completion handlers on Requests. This is not bridgeable to Objective-C. Instead, for each route there is an additional Request type with the correctly typed completion handler. E.g., `DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>` is represented in Objective-C as `DBXFilesDownloadDownloadRequestFile`.
+
+### Common type migration reference
+| dropbox-sdk-objc-c                             | SwiftyDropbox                 | SwiftyDropbox                                              |
+|------------------------------------------------|-------------------------------|------------------------------------------------------------|
+| DBAppClient                                    | DropboxAppClient              | DBXDropboxAppBase                                          |
+| DBClientsManager                               | DropboxClientsManager         | DBXDropboxClientsManager                                   |
+| DBTeamClient                                   | DropboxTeamClient             | DBXDropboxTeamClient                                       |
+| DBUserClient                                   | DropboxClient                 | DBXDropboxClient                                           |
+| DBRequestErrors                                | CallError                     | DBXCallError                                               |
+| DBRpcTask                                      | RpcRequest                    | DBX<route-name>RpcRequest                                  |
+| DBUploadTask                                   | UploadRequest                 | DBX<route-name>UploadRequest                               |
+| DBDownloadUrlTask                              | DownloadRequestFile           | DBX<route-name>DownloadRequestFile                         |
+| DBDownloadDataTask                             | DownloadRequestMemory         | DBX<route-name>DownloadRequestMemory                       |
+| DBTransportBaseClient/DBTransportDefaultClient | DropboxTransportClientImpl    | DBXDropboxTransportClient                                  |
+| DBTransportBaseHostnameConfig                  | BaseHosts                     | DBXBaseHosts                                               |
+| DBAccessTokenProvider                          | AccessTokenProvider           | DBXAccessTokenProvider                                     |
+| DBLongLivedAccessTokenProvider                 | LongLivedAccessTokenProvider  | DBXLongLivedAccessTokenProvider                            |
+| DBShortLivedAccessTokenProvider                | ShortLivedAccessTokenProvider | DBXShortLivedAccessTokenProvider                           |
+| DBLoadingStatusDelegate                        | LoadingStatusDelegate         | DBXLoadingStatusDelegate                                   |
+| DBOAuthManager                                 | DropboxOAuthManager           | DBXDropboxOAuthManager                                     |
+| DBAccessToken                                  | DropboxAccessToken            | DBXDropboxAccessToken                                      |
+| DBAccessTokenRefreshing                        | AccessTokenRefreshing         | DBXAccessTokenRefreshing                                   |
+| DBOAuthResult                                  | DropboxOAuthResult            | DBXDropboxOAuthResult                                      |
+| DBOAuthResultCompletion                        | DropboxOAuthCompletion        | (DBXDropboxOAuthResult?) -> Void                           |
+| DBScopeRequest                                 | ScopeRequest                  | DBXScopeRequest                                            |
+| DBSDKKeychain                                  | SecureStorageAccess           | DBXSecureStorageAccess / DBXSecureStorageAccessDefaultImpl |
+| DBDelegate                                     | n/a                           | n/a                                                        |
+| DBGlobalErrorResponseHandler                   | n/a                           | n/a                                                        |
+| DBSDKReachability                              | n/a                           | n/a                                                        |
+| DBSessionData                                  | n/a                           | n/a                                                        |
+| DBTransportDefaultConfig                       | n/a                           | n/a                                                        |
+| DBURLSessionTaskResponseBlockWrapper           | n/a                           | n/a                                                        |
+| DBURLSessionTaskWithTokenRefresh               | n/a                           | n/a                                                        |
+| DBOAuthPKCESession                             | n/a                           | n/a                                                        |
+| DBOAuthTokenRequest                            | n/a                           | n/a                                                        |
 
 ---
 
