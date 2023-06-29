@@ -507,7 +507,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
     }
 }
 
-@objc(DBBaseHosts)
+@objc(DBXBaseHosts)
 public class BaseHosts: NSObject {
     @objc
     let apiHost: String

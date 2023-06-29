@@ -36,7 +36,7 @@ public protocol AccessTokenRefreshing {
 
 /// Protocol for handling loading status during auth flow.
 /// Implementing class could show custom UX to reflect loading status.
-@objc(DBLoadingStatusDelegate)
+@objc(DBXLoadingStatusDelegate)
 public protocol LoadingStatusDelegate: AnyObject {
     // Called when auth flow is loading/waiting for some data. e.g. Waiting for a network request to finish.
     func showLoading()
