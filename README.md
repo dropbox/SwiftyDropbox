@@ -1041,7 +1041,7 @@ DBXTeamUserSelectorArgEmail *userSelectArg = [[DBXTeamUserSelectorArgEmail alloc
 6.) SwiftyDropbox relies on generics for typed completion handlers on Requests. This is not bridgeable to Objective-C. Instead, for each route there is an additional Request type with the correctly typed completion handler. E.g., `DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>` is represented in Objective-C as `DBXFilesDownloadDownloadRequestFile`.
 
 ### Common type migration reference
-| dropbox-sdk-objc-c                             | SwiftyDropbox                 | SwiftyDropbox                                              |
+| dropbox-sdk-objc-c                             | SwiftyDropbox                 | SwiftyDropboxObjC                                              |
 |------------------------------------------------|-------------------------------|------------------------------------------------------------|
 | DBAppClient                                    | DropboxAppClient              | DBXDropboxAppBase                                          |
 | DBClientsManager                               | DropboxClientsManager         | DBXDropboxClientsManager                                   |
@@ -1103,7 +1103,7 @@ The SDK's background networking support simplifies the reconnection of completio
 
 ### Testing Support
 
-Initialize a DropboxClient with a MockDropboxTransportClient to facillitate route response mocking in tests. Supply this client to your code under test, excercise the code, then pipe in responses as illustrated below and assert against your code's behavior.
+Initialize a `DropboxClient` with a `MockDropboxTransportClient` to facillitate route response mocking in tests. Supply this client to your code under test, excercise the code, then pipe in responses as illustrated below and assert against your code's behavior.
 
 ```
 let transportClient = MockDropboxTransportClient()
