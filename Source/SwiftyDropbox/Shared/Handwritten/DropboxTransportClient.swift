@@ -271,7 +271,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         if manager.isBackgroundManager {
             let persistedInfo = ReconnectionHelpers.PersistedRequestInfo.upload(
                 .init(
-                    originalSDKGitSha: ReconnectionHelpers.GitSha,
+                    originalSDKVersion: DropboxClientsManager.sdkVersion,
                     routeName: route.name,
                     routeNamespace: route.namespace,
                     clientProvidedInfo: nil
@@ -310,7 +310,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         if manager.isBackgroundManager {
             let persistedInfo = ReconnectionHelpers.PersistedRequestInfo.downloadFile(
                 .init(
-                    originalSDKGitSha: ReconnectionHelpers.GitSha,
+                    originalSDKVersion: DropboxClientsManager.sdkVersion,
                     routeName: route.name,
                     routeNamespace: route.namespace,
                     clientProvidedInfo: nil,

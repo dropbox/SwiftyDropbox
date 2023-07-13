@@ -8,7 +8,6 @@ import Foundation
 import XCTest
 
 final class TestReconnectionHelperPersistedRequestInfo: XCTestCase {
-    let gitSha = "acdef12"
     let routeName = "deleteV2"
     let routeNamespace = "files"
     let clientProvidedInfo = "example"
@@ -18,7 +17,7 @@ final class TestReconnectionHelperPersistedRequestInfo: XCTestCase {
 
     lazy var uploadInfo: ReconnectionHelpers.PersistedRequestInfo = .upload(
         ReconnectionHelpers.PersistedRequestInfo.StandardInfo(
-            originalSDKGitSha: gitSha,
+            originalSDKVersion: DropboxClientsManager.sdkVersion,
             routeName: routeName,
             routeNamespace: routeNamespace,
             clientProvidedInfo: clientProvidedInfo
@@ -27,7 +26,7 @@ final class TestReconnectionHelperPersistedRequestInfo: XCTestCase {
 
     lazy var downloadFileInfo: ReconnectionHelpers.PersistedRequestInfo = .downloadFile(
         ReconnectionHelpers.PersistedRequestInfo.DownloadFileInfo(
-            originalSDKGitSha: gitSha,
+            originalSDKVersion: DropboxClientsManager.sdkVersion,
             routeName: routeName,
             routeNamespace: routeNamespace,
             clientProvidedInfo: clientProvidedInfo,
