@@ -51,7 +51,7 @@ extension ReconnectionHelpers {
             let jsonData = try JSONEncoder().encode(self)
             let jsonString = String(data: jsonData, encoding: .utf8)
 
-            // We encode the SDK Version outside of the JSON so we can condition JSON decoding on a sha match
+            // We encode the SDK Version outside of the JSON so we can condition JSON decoding on a version match
             return DropboxClientsManager.sdkVersion + Separator + (try jsonString.orThrow())
         }
 
