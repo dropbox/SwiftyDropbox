@@ -5,9 +5,6 @@
 import Foundation
 
 enum ReconnectionHelpers {
-    /// Seven character SDK git sha: `git rev-parse --short HEAD`
-    static let GitSha = "ff8f7b1"
-
     static func rebuildRequest(apiRequest: ApiRequest, client: DropboxTransportClientInternal) throws -> DropboxBaseRequestBox {
         let info = try persistedRequestInfo(from: apiRequest)
 

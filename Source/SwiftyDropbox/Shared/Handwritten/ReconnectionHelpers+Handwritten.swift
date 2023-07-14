@@ -6,7 +6,7 @@ import Foundation
 
 public enum ReconnectionErrorKind: String, Error {
     case noPersistedInfo
-    case gitShaMismatch
+    case versionMismatch
     case badPersistedStringFormat
     case missingReconnectionCase
     case unknown
@@ -18,7 +18,7 @@ public struct ReconnectionError: Error {
 }
 
 protocol PersistedRequestInfoBaseInfo {
-    var originalSDKGitSha: String { get }
+    var originalSDKVersion: String { get }
     var routeName: String { get }
     var routeNamespace: String { get }
     var clientProvidedInfo: String? { get set }
@@ -32,14 +32,14 @@ extension ReconnectionHelpers {
         case downloadFile(DownloadFileInfo)
 
         struct StandardInfo: PersistedRequestInfoBaseInfo, Codable, Equatable {
-            let originalSDKGitSha: String
+            let originalSDKVersion: String
             let routeName: String
             let routeNamespace: String
             var clientProvidedInfo: String?
         }
 
         struct DownloadFileInfo: PersistedRequestInfoBaseInfo, Codable, Equatable {
-            let originalSDKGitSha: String
+            let originalSDKVersion: String
             let routeName: String
             let routeNamespace: String
             var clientProvidedInfo: String?
@@ -51,8 +51,8 @@ extension ReconnectionHelpers {
             let jsonData = try JSONEncoder().encode(self)
             let jsonString = String(data: jsonData, encoding: .utf8)
 
-            // We encode the GitSha outside of the JSON so we can condition JSON decoding on a sha match
-            return GitSha + Separator + (try jsonString.orThrow())
+            // We encode the SDK Version outside of the JSON so we can condition JSON decoding on a version match
+            return DropboxClientsManager.sdkVersion + Separator + (try jsonString.orThrow())
         }
 
         static func from(jsonString: String) throws -> Self {
@@ -101,14 +101,14 @@ extension ReconnectionHelpers {
         guard let taskDescription = apiRequest.taskDescription else {
             throw ReconnectionErrorKind.noPersistedInfo
         }
-        guard try gitSha(fromJsonString: taskDescription) == GitSha else {
-            throw ReconnectionErrorKind.gitShaMismatch
+        guard try originalSdkVersion(fromJsonString: taskDescription) == DropboxClientsManager.sdkVersion else {
+            throw ReconnectionErrorKind.versionMismatch
         }
 
         return try PersistedRequestInfo.from(jsonString: taskDescription)
     }
 
-    static func gitSha(fromJsonString jsonString: String) throws -> String {
+    static func originalSdkVersion(fromJsonString jsonString: String) throws -> String {
         let components = jsonString.components(separatedBy: Separator)
         guard components.count == 2 else {
             throw ReconnectionErrorKind.badPersistedStringFormat

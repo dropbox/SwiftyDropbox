@@ -31,7 +31,7 @@ final class TestRequest: XCTestCase {
 
         persistedInfo = ReconnectionHelpers.PersistedRequestInfo.downloadFile(
             .init(
-                originalSDKGitSha: ReconnectionHelpers.GitSha,
+                originalSDKVersion: DropboxClientsManager.sdkVersion,
                 routeName: "downloadRequestFile",
                 routeNamespace: "Files",
                 clientProvidedInfo: nil,
