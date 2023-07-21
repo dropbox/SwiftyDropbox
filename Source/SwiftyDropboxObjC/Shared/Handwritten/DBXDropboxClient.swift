@@ -5,19 +5,21 @@
 import Foundation
 import SwiftyDropbox
 
-/// The client for the User API. Call routes using the namespaces inside this object (inherited from parent).
-
 extension DropboxClient {
     var objc: DBXDropboxClient {
         DBXDropboxClient(swift: self)
     }
 }
 
+/// The client for the User API. Call routes using the namespaces inside this object (inherited from parent).
 @objc
 public class DBXDropboxClient: DBXDropboxBase {
     let subSwift: DropboxClient
 
-    fileprivate init(swift: DropboxClient) {
+    /// Initialize a client from swift using an existing Swift client.
+    ///
+    /// - Parameter swift: The underlying DropboxClient to make API calls.
+    public init(swift: DropboxClient) {
         self.subSwift = swift
         super.init(swiftClient: swift.client)
     }
