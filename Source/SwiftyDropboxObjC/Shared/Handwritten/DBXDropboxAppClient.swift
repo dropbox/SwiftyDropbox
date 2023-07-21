@@ -6,7 +6,6 @@ import Foundation
 import SwiftyDropbox
 
 /// The client for the App API. Call routes using the namespaces inside this object (inherited from parent).
-
 @objc
 public class DBXDropboxAppClient: DBXDropboxAppBase {
     let subSwift: DropboxAppClient
