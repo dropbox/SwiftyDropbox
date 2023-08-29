@@ -1,5 +1,13 @@
 # Dropbox for Swift
 
+---
+### Check out the beta version of a significant update to this SDK: SwiftyDropbox 10.0.0-beta.3
+
+### The beta version has several significant improvements, including support for background sessions, as well as compatibility for Objective-C code bases. You can find more information in the beta [release notes](https://github.com/dropbox/SwiftyDropbox/releases/tag/10.0.0-beta.3) and [README file](https://github.com/dropbox/SwiftyDropbox/blob/branch_10.0.0-beta/README.md#dropbox-for-swift).
+
+### Please try it out and [report any issues or feedback](https://github.com/dropbox/SwiftyDropbox/issues); be sure to include the version number of the SDK you're using when doing so. Thanks!
+---
+
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
 Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/8.2.0/).
