@@ -121,8 +121,7 @@ public class DBXDropboxClientsManager: NSObject {
     ///
     /// - parameters:
     ///     - identifier: The identifier of the URLSession for which events must be handled.
-    ///     - backgroundExtensionSessionIdentifier: The identifier of the background URLSession used in the app extension, if applicable.
-    ///     - sharedContainerIdentifier: The identifier of the shared container to which background URLSessions download files, if applicable.
+    ///     - creationInfos: Information to configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
     ///     - completionHandler: The completion handler to be executed when the underlying URLSessionDelegate recieves urlSessionDidFinishEvents(forBackgroundURLSession:).
     ///     - requestsToReconnect: The callback closure to receive requests for reconnection.
     @objc
@@ -147,8 +146,7 @@ public class DBXDropboxClientsManager: NSObject {
     /// - parameters:
     ///     - identifier: The identifier of the URLSession for which events must be handled.
     ///     - tokenUid: The uid of the token to authenticate this client with.
-    ///     - backgroundExtensionSessionIdentifier: The identifier of the background URLSession used in the app extension, if applicable.
-    ///     - sharedContainerIdentifier: The identifier of the shared container to which background URLSessions download files, if applicable.
+    ///     - creationInfos: Information to configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
     ///     - completionHandler: The completion handler to be executed when the underlying URLSessionDelegate recieves urlSessionDidFinishEvents(forBackgroundURLSession:).
     ///     - requestsToReconnect: The callback closure to receive requests for reconnection.
     @objc

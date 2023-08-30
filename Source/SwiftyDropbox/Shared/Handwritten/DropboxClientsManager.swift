@@ -384,7 +384,7 @@ public class DropboxClientsManager {
     ///
     /// - parameters:
     ///     - identifier: The identifier of the URLSession for which events must be handled.
-    ///     - creationInfos: Informantion configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
+    ///     - creationInfos: Information to configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
     ///     - completionHandler: The completion handler to be executed when the underlying URLSessionDelegate recieves urlSessionDidFinishEvents(forBackgroundURLSession:).
     ///     - requestsToReconnect: The callback closure to receive requests for reconnection.
     public static func handleEventsForBackgroundURLSession(
@@ -407,7 +407,7 @@ public class DropboxClientsManager {
     /// - parameters:
     ///     - identifier: The identifier of the URLSession for which events must be handled.
     ///     - tokenUid: The uid of the token to authenticate this client with.
-    ///     - creationInfos: Informantion configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
+    ///     - creationInfos: Information to configure extension DropboxClients in the event that they must be recreated in the main app to handle events.
     ///     - completionHandler: The completion handler to be executed when the underlying URLSessionDelegate recieves urlSessionDidFinishEvents(forBackgroundURLSession:).
     ///     - requestsToReconnect: The callback closure to receive requests for reconnection.
     public static func handleEventsForBackgroundURLSessionMultiUser(
