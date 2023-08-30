@@ -394,7 +394,12 @@ extension RequestWithTokenRefresh {
         }
 
         progress.completedUnitCount = completed
-        mutableState.progressHandler?(progress)
+
+        if let progressHandler = mutableState.progressHandler {
+            mutableState.completionHandlerQueue.async {
+                progressHandler(progress)
+            }
+        }
     }
 
     func handleDownloadFinished(location: URL) {
