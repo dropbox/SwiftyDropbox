@@ -718,9 +718,11 @@ client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustom
 
 #### Mock API responses in tests
 
-When testing code that depends upon the SDK, it can be useful to mock arbitrary API responses from JSON fixtures. We recommend using dependency injection rather than accessing the client via the convenience singletons.
+When testing code that depends upon the SDK, it can be useful to mock arbitrary API responses from JSON fixtures. We recommend using dependency injection rather than accessing the client via the convenience singletons. Note that the mocks are not public, they are only available in tests when SwiftyDropbox is imported using the `@testable` attribute.
 
 ```Swift
+@testable import SwiftyDropbox
+
 let transportClient = MockDropboxTransportClient()
 let dropboxClient = DropboxClient(transportClient: transportClient)
 
