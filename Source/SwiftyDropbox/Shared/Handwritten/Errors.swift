@@ -23,7 +23,7 @@ public enum SerializationError: Error {
     case missingResultData
 }
 
-public enum CallError<EType>: CustomStringConvertible {
+public enum CallError<EType>: Error, CustomStringConvertible {
     case internalServerError(Int, String?, String?)
     case badInputError(String?, String?)
     case rateLimitError(Auth.RateLimitError, LocalizedUserMessage?, String?, String?)
