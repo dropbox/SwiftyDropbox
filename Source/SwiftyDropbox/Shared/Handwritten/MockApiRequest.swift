@@ -16,7 +16,18 @@ class MockApiRequest: ApiRequest {
     }
 
     var requestUrl: URL?
-    var completionHandler: RequestCompletionHandler?
+    var completionHandler: RequestCompletionHandler? {
+        didSet {
+            guard completionHandler != nil else {
+                return
+            }
+            mockInput.flatMap { try? _handleMockInput($0) }
+            mockInput = nil
+        }
+    }
+
+    /// If the completionHandler is not set yet, we keep around MockInput so we can call it later
+    private var mockInput: MockInput?
 
     public init(identifier: Int = Int.random(in: 1 ..< Int.max), requestUrl: URL? = nil) {
         self.identifier = identifier
@@ -75,6 +86,11 @@ enum MockApiRequestError: Error {
 
 extension MockApiRequest {
     func _handleMockInput(_ mockInput: MockInput) throws {
+        guard completionHandler != nil else {
+            self.mockInput = mockInput
+            return
+        }
+
         func callCompletion(data: Data?, response: HTTPURLResponse?, error: Error?, downloadLocation: URL? = nil) {
             switch completionHandler {
             case .dataCompletionHandler(let handler):
