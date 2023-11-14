@@ -19,11 +19,25 @@ class MockDropboxTransportClient: DropboxTransportClient {
     // MARK: Request Mocking
 
     fileprivate var allRequests = Requests()
+    typealias MockRequestHandler = ((MockApiRequest) -> Void)
+    /// This is called whenever a mock API request is created. By default it will do nothing, but you may be interested in  `MockDropboxTransportClient.alwaysFailMockRequestHandler` to always fail requests
+    var mockRequestHandler: MockRequestHandler = noopMockRequestHandler
+    /// No-op: Does nothing additional to the request
+    static let noopMockRequestHandler: MockRequestHandler = { _ in }
+    /// Always fails the request with `MockError.intentionalFailure`
+    static let alwaysFailMockRequestHandler: MockRequestHandler = {
+        enum MockError: Error {
+            case intentionalFailure
+        }
+        try? $0.handleMockInput(.clientError(error: .other(MockError.intentionalFailure)))
+    }
 
     private func createRegisteredApiRequest<ASerial, RSerial, ESerial>(
         for route: Route<ASerial, RSerial, ESerial>
-    ) -> ApiRequest {
+    ) -> MockApiRequest {
         let apiRequest = MockApiRequest(requestUrl: DropboxTransportClientImpl.url(for: route))
+
+        mockRequestHandler(apiRequest)
 
         allRequests.record(request: apiRequest, with: route.name)
 
