@@ -17,7 +17,7 @@ public protocol HasRequestResponse {
 
 @available(iOS 13.0, macOS 10.15, *)
 extension HasRequestResponse {
-    /// Async wrapper for retreiving a request's response
+    /// Async wrapper for retrieving a request's response
     ///
     /// This could have a better name, but this avoids a collision with the other `response` methods
     public func responseResult(
@@ -36,7 +36,7 @@ extension HasRequestResponse {
         }
     }
 
-    /// Async wrapper for retreiving a request's response
+    /// Async wrapper for retrieving a request's response
     ///
     /// Same thing as `responseResult` but using async throws instead of returing a Result
     public func response(
