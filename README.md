@@ -427,6 +427,14 @@ The response handlers for each request type are similar to one another. The argu
 
 Note: Response handlers are required for all endpoints. Progress handlers, on the other hand, are optional for all endpoints.
 
+#### Swift Concurrency
+
+As of the 10.0.0 release, all of the request types also support Swift Concurrency (`async`/`await`) via the async `response()` function.
+
+```swift
+let response = try await client.files.createFolder(path: "/test/path/in/Dropbox/account").response()
+```
+
 ---
 
 ### Request types
