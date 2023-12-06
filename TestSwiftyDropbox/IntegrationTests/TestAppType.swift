@@ -4,6 +4,7 @@
 
 import Foundation
 
+
 public enum AppPermission {
     case fullDropboxScoped
     case fullDropboxScopedForTeamTesting
