@@ -5,58 +5,72 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-struct FileBrowserView: View {
-    @Environment(\.presentationMode) var presentationMode
+func MakeFileBrowserView(localURL: URL) -> FileBrowserView {
+    FileBrowserView(viewModel: FileBrowserViewModel(localURL: localURL))
+}
+
+@available(iOS 16.0, *)
+class FileBrowserViewModel: ObservableObject {
     let localURL: URL
-    @State private var files: [URL] = []
-    @State private var showAlert = false
-    @State private var selectedFileContent: String = ""
+    @Published var files: [URL] = []
+    @Published var showAlert = false
+    @Published var selectedFileContent: String = ""
+
+    init(localURL: URL) {
+        self.localURL = localURL
+
+        let fileManager = FileManager.default
+
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: localURL, includingPropertiesForKeys: nil)
+            files = fileURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
+        } catch {
+            print("Error loading files: \(error)")
+        }
+    }
+
+    func showFile(fileURL: URL) -> () -> Void {
+        {
+            do {
+                self.selectedFileContent = String(try String(contentsOf: fileURL).prefix(10_000))
+                self.showAlert = true
+            } catch {
+                print("Error reading file: \(error)")
+            }
+        }
+    }
+}
+
+@available(iOS 16.0, *)
+struct FileBrowserView: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var viewModel: FileBrowserViewModel
 
     var body: some View {
         NavigationView {
             VStack {
-                Text("Files Count: \(files.count)")
-                if files.isEmpty {
+                Text("Files Count: \(viewModel.files.count)")
+                if viewModel.files.isEmpty {
                     Text("Folder doesn't exist or is empty")
                         .foregroundColor(.red)
                 } else {
-                    List(files, id: \.self) { fileURL in
-                        Button(action: {
-                            do {
-                                selectedFileContent = String(try String(contentsOf: fileURL).prefix(10_000))
-                                showAlert = true
-                            } catch {
-                                print("Error reading file: \(error)")
-                            }
-                        }) {
+                    List(viewModel.files, id: \.self) { fileURL in
+                        Button(action: viewModel.showFile(fileURL: fileURL)) {
                             Text(fileURL.lastPathComponent)
                         }
                     }
                 }
             }
-            .onAppear(perform: loadFiles)
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("File Content"), message: Text(selectedFileContent), dismissButton: .default(Text("Close")))
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(title: Text("File Content"), message: Text(viewModel.selectedFileContent), dismissButton: .default(Text("Close")))
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Close") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
-        }
-    }
-
-    func loadFiles() {
-        let fileManager = FileManager.default
-
-        do {
-            let fileURLs = try fileManager.contentsOfDirectory(at: localURL, includingPropertiesForKeys: nil)
-
-            files = fileURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
-        } catch {
-            print("Error loading files: \(error)")
         }
     }
 }
@@ -64,6 +78,6 @@ struct FileBrowserView: View {
 @available(iOS 16.0, *)
 struct FileBrowserView_Previews: PreviewProvider {
     static var previews: some View {
-        FileBrowserView(localURL: URL(string: NSTemporaryDirectory())!)
+        FileBrowserView(viewModel: FileBrowserViewModel(localURL: URL(string: "/some/url")!))
     }
 }
