@@ -4,7 +4,8 @@ on: [pull_request, workflow_dispatch]
 jobs:
   test:
     name: Run Unit Tests
-    runs-on: macos-latest
+    runs-on: macos-13
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
