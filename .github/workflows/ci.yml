@@ -25,7 +25,7 @@ jobs:
           ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
           ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
           platform: ${{ 'iOS Simulator' }}
-          device: ${{ 'iPhone 13' }}
+          device: ${{ 'iPhone 14' }}
         run: |
           xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
             -destination "platform=$platform,name=$device" \
