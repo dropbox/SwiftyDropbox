@@ -8,7 +8,7 @@ import Foundation
 
 /// Datatypes and serializers for the check namespace
 public class Check {
-    /// EchoArg contains the arguments to be sent to the Dropbox servers.
+    /// Contains the arguments to be sent to the Dropbox servers.
     public class EchoArg: CustomStringConvertible {
         /// The string that you'd like to be echoed back to you.
         public let query: String

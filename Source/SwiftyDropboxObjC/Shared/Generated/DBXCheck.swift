@@ -10,7 +10,7 @@ import SwiftyDropbox
 /// Objective-C compatible datatypes for the check namespace
 /// For Swift see check
 
-/// EchoArg contains the arguments to be sent to the Dropbox servers.
+/// Contains the arguments to be sent to the Dropbox servers.
 @objc
 public class DBXCheckEchoArg: NSObject {
     /// The string that you'd like to be echoed back to you.

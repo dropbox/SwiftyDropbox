@@ -21,6 +21,7 @@ public class AuthAppAuthRoutes {
     ///
     /// - returns: Through the response callback, the caller will receive a `Auth.TokenFromOAuth1Result` object on
     /// success or a `Auth.TokenFromOAuth1Error` object on failure.
+    @available(*, unavailable, message: "tokenFromOauth1 is deprecated.")
     @discardableResult public func tokenFromOauth1(
         oauth1Token: String,
         oauth1TokenSecret: String

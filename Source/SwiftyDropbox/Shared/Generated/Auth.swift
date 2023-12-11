@@ -562,7 +562,7 @@ public class Auth {
         name: "token/from_oauth1",
         version: 1,
         namespace: "auth",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Auth.TokenFromOAuth1ArgSerializer(),
         responseSerializer: Auth.TokenFromOAuth1ResultSerializer(),
         errorSerializer: Auth.TokenFromOAuth1ErrorSerializer(),

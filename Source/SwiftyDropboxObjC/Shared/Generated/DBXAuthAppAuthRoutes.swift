@@ -18,19 +18,6 @@ public class DBXAuthAppAuthRoutes: NSObject {
     }
 
     public let client: DBXDropboxTransportClient
-
-    /// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
-    ///
-    /// - parameter oauth1Token: The supplied OAuth 1.0 access token.
-    /// - parameter oauth1TokenSecret: The token secret associated with the supplied access token.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Auth.TokenFromOAuth1Result` object on
-    /// success or a `Auth.TokenFromOAuth1Error` object on failure.
-    @objc
-    @discardableResult public func tokenFromOauth1(oauth1Token: String, oauth1TokenSecret: String) -> DBXAuthTokenFromOauth1RpcRequest {
-        let swift = swift.tokenFromOauth1(oauth1Token: oauth1Token, oauth1TokenSecret: oauth1TokenSecret)
-        return DBXAuthTokenFromOauth1RpcRequest(swift: swift)
-    }
 }
 
 @objc

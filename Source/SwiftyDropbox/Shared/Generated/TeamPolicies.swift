@@ -904,6 +904,63 @@ public class TeamPolicies {
         }
     }
 
+    /// Policy governing whether shared folder membership is required to access shared links.
+    public enum SharedFolderBlanketLinkRestrictionPolicy: CustomStringConvertible {
+        /// Only members of shared folders can access folder content via shared link.
+        case members
+        /// Anyone can access folder content via shared link.
+        case anyone
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderBlanketLinkRestrictionPolicySerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class SharedFolderBlanketLinkRestrictionPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SharedFolderBlanketLinkRestrictionPolicy) throws -> JSON {
+            switch value {
+            case .members:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members")
+                return .dictionary(d)
+            case .anyone:
+                var d = [String: JSON]()
+                d[".tag"] = .str("anyone")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> SharedFolderBlanketLinkRestrictionPolicy {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "members":
+                    return SharedFolderBlanketLinkRestrictionPolicy.members
+                case "anyone":
+                    return SharedFolderBlanketLinkRestrictionPolicy.anyone
+                case "other":
+                    return SharedFolderBlanketLinkRestrictionPolicy.other
+                default:
+                    return SharedFolderBlanketLinkRestrictionPolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: SharedFolderBlanketLinkRestrictionPolicy.self, json: json)
+            }
+        }
+    }
+
     /// Policy governing which shared folders a team member can join.
     public enum SharedFolderJoinPolicy: CustomStringConvertible {
         /// Team members can only join folders shared by teammates.
@@ -1573,16 +1630,20 @@ public class TeamPolicies {
         public let sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy
         /// Who can create groups.
         public let groupCreationPolicy: TeamPolicies.GroupCreation
+        /// Who can view links to content in shared folders.
+        public let sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
         public init(
             sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy,
             sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy,
             sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy,
-            groupCreationPolicy: TeamPolicies.GroupCreation
+            groupCreationPolicy: TeamPolicies.GroupCreation,
+            sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
         ) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
             self.sharedFolderJoinPolicy = sharedFolderJoinPolicy
             self.sharedLinkCreatePolicy = sharedLinkCreatePolicy
             self.groupCreationPolicy = groupCreationPolicy
+            self.sharedFolderLinkRestrictionPolicy = sharedFolderLinkRestrictionPolicy
         }
 
         public var description: String {
@@ -1602,6 +1663,8 @@ public class TeamPolicies {
                 "shared_folder_join_policy": try TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
                 "shared_link_create_policy": try TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),
                 "group_creation_policy": try TeamPolicies.GroupCreationSerializer().serialize(value.groupCreationPolicy),
+                "shared_folder_link_restriction_policy": try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
+                    .serialize(value.sharedFolderLinkRestrictionPolicy),
             ]
             return .dictionary(output)
         }
@@ -1614,11 +1677,14 @@ public class TeamPolicies {
                 let sharedFolderJoinPolicy = try TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
                 let sharedLinkCreatePolicy = try TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
                 let groupCreationPolicy = try TeamPolicies.GroupCreationSerializer().deserialize(dict["group_creation_policy"] ?? .null)
+                let sharedFolderLinkRestrictionPolicy = try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
+                    .deserialize(dict["shared_folder_link_restriction_policy"] ?? .null)
                 return TeamSharingPolicies(
                     sharedFolderMemberPolicy: sharedFolderMemberPolicy,
                     sharedFolderJoinPolicy: sharedFolderJoinPolicy,
                     sharedLinkCreatePolicy: sharedLinkCreatePolicy,
-                    groupCreationPolicy: groupCreationPolicy
+                    groupCreationPolicy: groupCreationPolicy,
+                    sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: TeamSharingPolicies.self, json: json)
