@@ -5,7 +5,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-func MakeFileTextView(fileURL: URL) -> FileTextView {
+func MakeFileTextView(fileURL: URL?) -> FileTextView {
     FileTextView(viewModel: FileTextViewModel(fileURL: fileURL))
 }
 
@@ -13,21 +13,21 @@ func MakeFileTextView(fileURL: URL) -> FileTextView {
 class FileTextViewModel: ObservableObject {
     @Published var fileContent: String = ""
 
-    let fileURL: URL
+    let fileURL: URL?
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
-    init(fileURL: URL) {
+    init(fileURL: URL?) {
         self.fileURL = fileURL
     }
 
     func updateFileContent() {
         DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let contents = try String(contentsOf: self.fileURL).suffix(10_000)
+            if let fileURL = self.fileURL,
+               let contents = try? String(contentsOf: fileURL).suffix(10_000) {
                 DispatchQueue.main.async {
                     self.fileContent = String(contents)
                 }
-            } catch {
+            } else {
                 DispatchQueue.main.async {
                     self.fileContent = "Error: Unable to read file contents."
                 }
@@ -37,8 +37,12 @@ class FileTextViewModel: ObservableObject {
 
     func flushLogs() {
         DispatchQueue.global(qos: .userInitiated).async {
+            guard let fileURL = self.fileURL else {
+                return
+            }
+
             do {
-                try "".write(to: self.fileURL, atomically: true, encoding: .utf8)
+                try "".write(to: fileURL, atomically: true, encoding: .utf8)
                 DispatchQueue.main.async {
                     self.fileContent = ""
                 }

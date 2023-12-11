@@ -5,21 +5,25 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
-func MakeFileBrowserView(localURL: URL) -> FileBrowserView {
+func MakeFileBrowserView(localURL: URL?) -> FileBrowserView {
     FileBrowserView(viewModel: FileBrowserViewModel(localURL: localURL))
 }
 
 @available(iOS 16.0, *)
 class FileBrowserViewModel: ObservableObject {
-    let localURL: URL
+    let localURL: URL?
     @Published var files: [URL] = []
     @Published var showAlert = false
     @Published var selectedFileContent: String = ""
 
-    init(localURL: URL) {
+    init(localURL: URL?) {
         self.localURL = localURL
 
         let fileManager = FileManager.default
+
+        guard let localURL = localURL else {
+            return
+        }
 
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: localURL, includingPropertiesForKeys: nil)
@@ -78,6 +82,6 @@ struct FileBrowserView: View {
 @available(iOS 16.0, *)
 struct FileBrowserView_Previews: PreviewProvider {
     static var previews: some View {
-        FileBrowserView(viewModel: FileBrowserViewModel(localURL: URL(string: "/some/url")!))
+        FileBrowserView(viewModel: FileBrowserViewModel(localURL: nil))
     }
 }

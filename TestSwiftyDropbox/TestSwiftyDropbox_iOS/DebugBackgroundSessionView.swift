@@ -7,9 +7,9 @@ import SwiftyDropbox
 
 @available(iOS 16.0, *)
 struct DebugBackgroundSession: View {
-    @ObservedObject var viewModel = DebugBackgroundSessionViewModel()
+    @StateObject var viewModel = DebugBackgroundSessionViewModel()
 
-    let debugLogFileURL: URL
+    let debugLogFileURL: URL?
 
     var body: some View {
         VStack {
@@ -114,6 +114,6 @@ struct BackgroundDebugTextField: TextFieldStyle {
 @available(iOS 16.0, *)
 struct DebugBackgroundSession_Previews: PreviewProvider {
     static var previews: some View {
-        DebugBackgroundSession(debugLogFileURL: URL(string: "/some/url")!)
+        DebugBackgroundSession(debugLogFileURL: nil)
     }
 }
