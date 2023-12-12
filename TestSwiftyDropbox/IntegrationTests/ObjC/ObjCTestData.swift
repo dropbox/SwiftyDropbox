@@ -33,6 +33,7 @@ open class DBXTestData: NSObject {
     @objc static var testIdTeam: String { get { TestData.testIdTeam } set { TestData.testIdTeam = newValue } }
     @objc static var groupName: String { get { TestData.groupName } set { TestData.groupName = newValue } }
     @objc static var groupExternalId: String { get { TestData.groupExternalId } set { TestData.groupExternalId = newValue } }
+    @objc static var groupExternalIdDashObjc: String { get { TestData.groupExternalId + "-objc" } }
 
     @objc static var teamMemberEmail: String { get { TestData.teamMemberEmail } set { TestData.teamMemberEmail = newValue } }
     @objc static var newMemberEmail: String { get { TestData.newMemberEmail } set { TestData.newMemberEmail = newValue } }

@@ -1238,7 +1238,7 @@ void MyLog(NSString *format, ...) {
 - (void)groupsCreate:(void (^)(void))nextTest {
     [TestFormat printSubTestBegin:NSStringFromSelector(_cmd)];
     NSString *groupName = [[NSString alloc] initWithFormat: @"objc-compatibility-%@", DBXTestData.groupName];
-    [[_tester.team groupsCreateWithGroupName:groupName addCreatorAsOwner:[NSNumber numberWithBool:NO] groupExternalId:DBXTestData.groupExternalId groupManagementType:nil] responseWithCompletionHandler:^(DBXTeamGroupFullInfo * _Nullable result, DBXTeamGroupCreateError * _Nullable routeError, DBXCallError * _Nullable error) {
+    [[_tester.team groupsCreateWithGroupName:groupName addCreatorAsOwner:[NSNumber numberWithBool:NO] groupExternalId:DBXTestData.groupExternalIdDashObjc groupManagementType:nil] responseWithCompletionHandler:^(DBXTeamGroupFullInfo * _Nullable result, DBXTeamGroupCreateError * _Nullable routeError, DBXCallError * _Nullable error) {
         if (result) {
             MyLog(@"%@\n", result);
             [TestFormat printSubTestEnd:NSStringFromSelector(_cmd)];
@@ -1251,7 +1251,7 @@ void MyLog(NSString *format, ...) {
 
 - (void)groupsGetInfo:(void (^)(void))nextTest {
     [TestFormat printSubTestBegin:NSStringFromSelector(_cmd)];
-    DBXTeamGroupsSelector * groupsSelector = [[DBXTeamGroupsSelectorGroupExternalIds alloc] init:@[DBXTestData.groupExternalId]];
+    DBXTeamGroupsSelector * groupsSelector = [[DBXTeamGroupsSelectorGroupExternalIds alloc] init:@[DBXTestData.groupExternalIdDashObjc]];
     [[_tester.team groupsGetInfoWithGroupsSelector:groupsSelector] responseWithCompletionHandler:^(NSArray<DBXTeamGroupsGetInfoItem *> * _Nullable result, DBXTeamGroupsGetInfoError * _Nullable routeError, DBXCallError * _Nullable error) {
         if (result) {
             MyLog(@"%@\n", result);
@@ -1278,7 +1278,7 @@ void MyLog(NSString *format, ...) {
 
 - (void)groupsMembersAdd:(void (^)(void))nextTest {
     [TestFormat printSubTestBegin:NSStringFromSelector(_cmd)];
-    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalId];
+    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalIdDashObjc];
     DBXTeamUserSelectorArg *userSelectorArg = [[DBXTeamUserSelectorArgTeamMemberId alloc] init:_teamMemberId];
     DBXTeamGroupAccessTypeMember *accessType = [[DBXTeamGroupAccessTypeMember alloc] init];
     DBXTeamMemberAccess *memberAccess = [[DBXTeamMemberAccess alloc] initWithUser:userSelectorArg accessType:accessType];
@@ -1296,7 +1296,7 @@ void MyLog(NSString *format, ...) {
 
 - (void)groupsMembersList:(void (^)(void))nextTest {
     [TestFormat printSubTestBegin:NSStringFromSelector(_cmd)];
-    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalId];
+    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalIdDashObjc];
 
     [[_tester.team groupsMembersListWithGroup:groupSelector] responseWithCompletionHandler:^(DBXTeamGroupsMembersListResult * _Nullable result, DBXTeamGroupSelectorError * _Nullable routeError, DBXCallError * _Nullable error) {
         if (result) {
@@ -1311,7 +1311,7 @@ void MyLog(NSString *format, ...) {
 
 - (void)groupsUpdate:(void (^)(void))nextTest {
 //    [TestFormat printSubTestBegin:NSStringFromSelector(_cmd)];
-//    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalId];
+//    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalIdDashObjc];
 //
 //    [[_tester.team groupsUpdateWithGroup:groupSelector returnMembers:[NSNumber numberWithBool:YES] newGroupName:@"New Group Name ObjC" newGroupExternalId:nil newGroupManagementType:nil] responseWithCompletionHandler:^(DBXTeamGroupFullInfo * _Nullable result, DBXTeamGroupUpdateError * _Nullable routeError, DBXCallError * _Nullable error) {
 //        if (result) {
@@ -1353,7 +1353,7 @@ void MyLog(NSString *format, ...) {
         [self checkGroupDeleteStatus:jobId nextTest:nextTest retryCount:3];
     };
 
-    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalId];
+    DBXTeamGroupSelectorGroupExternalId *groupSelector = [[DBXTeamGroupSelectorGroupExternalId alloc] init:DBXTestData.groupExternalIdDashObjc];
 
     [[_tester.team groupsDeleteWithGroupSelector:groupSelector] responseWithCompletionHandler:^(DBXAsyncLaunchEmptyResult * _Nullable result, DBXTeamGroupDeleteError * _Nullable routeError, DBXCallError * _Nullable error) {
         if (result) {
