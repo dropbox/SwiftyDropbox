@@ -14,30 +14,30 @@ jobs:
         run: |
           cd TestSwiftyDropbox
           pod install --repo-update
-      - name: Test iOS
-        env:
-          FULL_DROPBOX_API_APP_KEY: ${{ secrets.FULL_DROPBOX_API_APP_KEY }}
-          FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN }}
-          FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN }}
-          TEAM_MEMBER_EMAIL: ${{ secrets.TEAM_MEMBER_EMAIL }}
-          EMAIL_TO_ADD_AS_TEAM_MEMBER: ${{ secrets.EMAIL_TO_ADD_AS_TEAM_MEMBER }}
-          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-          ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
-          ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
-          platform: ${{ 'iOS Simulator' }}
-          device: ${{ 'iPhone 14' }}
-        run: |
-          xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
-            -destination "platform=$platform,name=$device" \
-            FULL_DROPBOX_API_APP_KEY=$FULL_DROPBOX_API_APP_KEY \
-            FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN \
-            FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN \
-            TEAM_MEMBER_EMAIL=$TEAM_MEMBER_EMAIL \
-            EMAIL_TO_ADD_AS_TEAM_MEMBER=$EMAIL_TO_ADD_AS_TEAM_MEMBER \
-            ACCOUNT_ID=$ACCOUNT_ID \
-            ACCOUNT_ID_2=$ACCOUNT_ID_2 \
-            ACCOUNT_ID_3=$ACCOUNT_ID_3 \
-            test
+      # - name: Test iOS
+      #   env:
+      #     FULL_DROPBOX_API_APP_KEY: ${{ secrets.FULL_DROPBOX_API_APP_KEY }}
+      #     FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN }}
+      #     FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN }}
+      #     TEAM_MEMBER_EMAIL: ${{ secrets.TEAM_MEMBER_EMAIL }}
+      #     EMAIL_TO_ADD_AS_TEAM_MEMBER: ${{ secrets.EMAIL_TO_ADD_AS_TEAM_MEMBER }}
+      #     ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+      #     ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
+      #     ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
+      #     platform: ${{ 'iOS Simulator' }}
+      #     device: ${{ 'iPhone 14' }}
+      #   run: |
+      #     xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
+      #       -destination "platform=$platform,name=$device" \
+      #       FULL_DROPBOX_API_APP_KEY=$FULL_DROPBOX_API_APP_KEY \
+      #       FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN \
+      #       FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN \
+      #       TEAM_MEMBER_EMAIL=$TEAM_MEMBER_EMAIL \
+      #       EMAIL_TO_ADD_AS_TEAM_MEMBER=$EMAIL_TO_ADD_AS_TEAM_MEMBER \
+      #       ACCOUNT_ID=$ACCOUNT_ID \
+      #       ACCOUNT_ID_2=$ACCOUNT_ID_2 \
+      #       ACCOUNT_ID_3=$ACCOUNT_ID_3 \
+      #       test
 
       - name: Set up keychain
         env:

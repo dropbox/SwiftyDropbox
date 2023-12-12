@@ -20,6 +20,8 @@ class FilesRoutesTests: XCTestCase {
     private var tester: DropboxTester!
 
     override func setUp() {
+        print("[DEBUG CI HANG] setUp start")
+
         // You need an API app with the "Full Dropbox" permission type and at least the scopes in DropboxTester.scopes
         // and no team scopes.
         // You can create one for testing here: https://www.dropbox.com/developers/apps/create
@@ -28,15 +30,22 @@ class FilesRoutesTests: XCTestCase {
 
         continueAfterFailure = false
 
+        print("[DEBUG CI HANG] setUp 1")
         if DropboxClientsManager.authorizedClient == nil {
+            print("[DEBUG CI HANG] setUp 2")
             setupDropboxClientsManager()
         }
 
+        print("[DEBUG CI HANG] setUp 3")
         userClient = DropboxClientsManager.authorizedClient!.users!
+        print("[DEBUG CI HANG] setUp 4")
         tester = DropboxTester()
+        print("[DEBUG CI HANG] setUp end")
     }
 
     func setupDropboxClientsManager() {
+        print("[DEBUG CI HANG] setupDropboxClientsManager start")
+
         let processInfo = ProcessInfo.processInfo.environment
 
         guard let apiAppKey = processInfo["FULL_DROPBOX_API_APP_KEY"] else {
@@ -50,11 +59,14 @@ class FilesRoutesTests: XCTestCase {
             return XCTFail("Error: Access token creation failed")
         }
 
+        print("[DEBUG CI HANG] setupDropboxClientsManager token generated")
+
         #if os(OSX)
-        DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient) // could be getting here
         #elseif os(iOS)
         DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient)
         #endif
+        print("[DEBUG CI HANG] setupDropboxClientsManager end")
     }
 
     override func tearDown() {
@@ -69,15 +81,23 @@ class FilesRoutesTests: XCTestCase {
     }
 
     func testFileRoutes() {
+        print("[DEBUG CI HANG] testFileRoutes 1")
+
         let flag = XCTestExpectation()
 
         let nextTest = {
             flag.fulfill()
         }
 
+        print("[DEBUG CI HANG] testFileRoutes 2")
         tester.testFilesActions(nextTest, asMember: false)
 
+        print("[DEBUG CI HANG] testFileRoutes 3")
+
         let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
+        print("[DEBUG CI HANG] testFileRoutes 4")
+
         XCTAssertEqual(result, .completed, "Error: timeout on file routes tests")
+        print("[DEBUG CI HANG] testFileRoutes 5")
     }
 }
