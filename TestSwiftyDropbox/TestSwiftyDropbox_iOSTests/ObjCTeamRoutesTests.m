@@ -33,7 +33,7 @@
         XCTFail(@"FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme");
     }
 
-    DBXDropboxOAuthManager *manager = [[DBXDropboxOAuthManager alloc] initWithAppKey:apiAppKey secureStorageAccess:[[DBXSecureStorageAccessDefaultImpl alloc] init]];
+    DBXDropboxOAuthManager *manager = [[DBXDropboxOAuthManager alloc] initWithAppKey:apiAppKey secureStorageAccess:[[DBXSecureStorageAccessTestImpl alloc] init]];
     DBXDropboxAccessToken *defaultToken = [[DBXDropboxAccessToken alloc] initWithAccessToken:@"" uid:@"test" refreshToken:refreshToken tokenExpirationTimestamp:0];
 
     XCTestExpectation *flag = [[XCTestExpectation alloc] initWithDescription:@"setupDropboxClientsManager"];
@@ -61,7 +61,7 @@
     DBXDropboxTransportClient *transportClient = [[DBXDropboxTransportClient alloc] initWithAccessTokenProvider:tokenProvider selectUser:nil sessionConfiguration:nil pathRoot:nil];
 
 #if TARGET_OS_IPHONE
-    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessDefaultImpl alloc] init];
+    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
     if (DBXDropboxClientsManager.authorizedClient == nil) {
         [DBXDropboxClientsManager setupWithTeamAppKeyMultiUser:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
     } else {
@@ -69,7 +69,7 @@
     }
 
 #elif TARGET_OS_MAC
-    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessDefaultImpl alloc] init];
+    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
     if (DBXDropboxClientsManager.authorizedClient == nil) {
         [DBXDropboxClientsManager setupWithTeamAppKeyMultiUserDesktop:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
     } else {

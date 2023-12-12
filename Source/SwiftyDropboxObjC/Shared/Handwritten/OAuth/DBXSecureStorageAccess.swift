@@ -96,3 +96,37 @@ public class SecureStorageAccessBridge: NSObject, SecureStorageAccess {
         objc.deleteInfoForAllKeys()
     }
 }
+
+@objc
+public class DBXSecureStorageAccessTestImpl: NSObject, DBXSecureStorageAccess {
+    let swift: SecureStorageAccesTestImpl
+
+    @objc
+    public override init() {
+        self.swift = SecureStorageAccesTestImpl()
+    }
+
+    public func checkAccessibilityMigrationOneTime() {
+        swift.checkAccessibilityMigrationOneTime()
+    }
+
+    public func setAccessTokenData(for userId: String, data: Data) -> Bool {
+        swift.setAccessTokenData(for: userId, data: data)
+    }
+
+    public func getAllUserIds() -> [String] {
+        swift.getAllUserIds()
+    }
+
+    public func getDropboxAccessToken(for key: String) -> DBXDropboxAccessToken? {
+        swift.getDropboxAccessToken(for: key)?.objc
+    }
+
+    public func deleteInfo(for key: String) -> Bool {
+        swift.deleteInfo(for: key)
+    }
+
+    public func deleteInfoForAllKeys() -> Bool {
+        swift.deleteInfoForAllKeys()
+    }
+}

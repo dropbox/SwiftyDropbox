@@ -51,9 +51,9 @@ class FilesRoutesTests: XCTestCase {
         }
 
         #if os(OSX)
-        DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccesTestImpl())
         #elseif os(iOS)
-        DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccesTestImpl())
         #endif
     }
 
