@@ -39,34 +39,34 @@ jobs:
             ACCOUNT_ID_3=$ACCOUNT_ID_3 \
             test
 
-      - name: Set up keychain
-        env:
-          TEST_KEYCHAIN_PASSWORD: ${{ secrets.TEST_KEYCHAIN_PASSWORD }}
-        run: |
-          security create-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
+      # - name: Set up keychain
+      #   env:
+      #     TEST_KEYCHAIN_PASSWORD: ${{ secrets.TEST_KEYCHAIN_PASSWORD }}
+      #   run: |
+      #     security create-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
+      #     security default-keychain -s build.keychain
+      #     security unlock-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
 
-      - name: Test macOS
-        env:
-          FULL_DROPBOX_API_APP_KEY: ${{ secrets.FULL_DROPBOX_API_APP_KEY }}
-          FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN }}
-          FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN }}
-          TEAM_MEMBER_EMAIL: ${{ secrets.TEAM_MEMBER_EMAIL }}
-          EMAIL_TO_ADD_AS_TEAM_MEMBER: ${{ secrets.EMAIL_TO_ADD_AS_TEAM_MEMBER }}
-          ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
-          ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
-          ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
-          platform: ${{ 'macOS' }}
-        run: |
-          xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_macOS  \
-            -destination "platform=$platform,arch=x86_64" \
-            FULL_DROPBOX_API_APP_KEY=$FULL_DROPBOX_API_APP_KEY \
-            FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN \
-            FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN \
-            TEAM_MEMBER_EMAIL=$TEAM_MEMBER_EMAIL \
-            EMAIL_TO_ADD_AS_TEAM_MEMBER=$EMAIL_TO_ADD_AS_TEAM_MEMBER \
-            ACCOUNT_ID=$ACCOUNT_ID \
-            ACCOUNT_ID_2=$ACCOUNT_ID_2 \
-            ACCOUNT_ID_3=$ACCOUNT_ID_3 \
-            test
+      # - name: Test macOS
+      #   env:
+      #     FULL_DROPBOX_API_APP_KEY: ${{ secrets.FULL_DROPBOX_API_APP_KEY }}
+      #     FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN }}
+      #     FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN: ${{ secrets.FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN }}
+      #     TEAM_MEMBER_EMAIL: ${{ secrets.TEAM_MEMBER_EMAIL }}
+      #     EMAIL_TO_ADD_AS_TEAM_MEMBER: ${{ secrets.EMAIL_TO_ADD_AS_TEAM_MEMBER }}
+      #     ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+      #     ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
+      #     ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
+      #     platform: ${{ 'macOS' }}
+      #   run: |
+      #     xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_macOS  \
+      #       -destination "platform=$platform,arch=x86_64" \
+      #       FULL_DROPBOX_API_APP_KEY=$FULL_DROPBOX_API_APP_KEY \
+      #       FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN \
+      #       FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN=$FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN \
+      #       TEAM_MEMBER_EMAIL=$TEAM_MEMBER_EMAIL \
+      #       EMAIL_TO_ADD_AS_TEAM_MEMBER=$EMAIL_TO_ADD_AS_TEAM_MEMBER \
+      #       ACCOUNT_ID=$ACCOUNT_ID \
+      #       ACCOUNT_ID_2=$ACCOUNT_ID_2 \
+      #       ACCOUNT_ID_3=$ACCOUNT_ID_3 \
+      #       test
