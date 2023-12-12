@@ -11,19 +11,22 @@
     DropboxTeamTester *_tester;
 }
 
++ (void)setUp {
+    [super setUp];
+
+    [DBXDropboxOAuthManager __test_only_resetForTeamSetup];
+    [ObjCTeamRoutesTests setupDropboxClientsManager];
+}
+
 - (void)setUp {
     self.continueAfterFailure = false;
-
-    if (DBXDropboxClientsManager.authorizedTeamClient == nil) {
-        [self setupDropboxClientsManager];
-    }
 
     _tester = [[DropboxTeamTester alloc] init];
 
     [self setupTestData];
 }
 
-- (void)setupDropboxClientsManager {
++ (void)setupDropboxClientsManager {
     NSDictionary<NSString *,NSString *> *processInfo = NSProcessInfo.processInfo.environment;
 
     NSString *apiAppKey = processInfo[@"FULL_DROPBOX_API_APP_KEY"];
@@ -63,20 +66,12 @@
     DBXDropboxTransportClient *transportClient = [[DBXDropboxTransportClient alloc] initWithAccessTokenProvider:tokenProvider selectUser:nil sessionConfiguration:nil pathRoot:nil];
 
 #if TARGET_OS_IPHONE
-    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
-    if (DBXDropboxClientsManager.authorizedClient == nil) {
-        [DBXDropboxClientsManager setupWithTeamAppKeyMultiUser:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
-    } else {
-        [DBXDropboxClientsManager reauthorizeTeamClient:@"test"];
-    }
+    DBXSecureStorageAccessTestImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
+    [DBXDropboxClientsManager setupWithTeamAppKeyMultiUser:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
 
 #elif TARGET_OS_MAC
-    DBXSecureStorageAccessDefaultImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
-    if (DBXDropboxClientsManager.authorizedClient == nil) {
-        [DBXDropboxClientsManager setupWithTeamAppKeyMultiUserDesktop:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
-    } else {
-        [DBXDropboxClientsManager reauthorizeTeamClient:@"test"];
-    }
+    DBXSecureStorageAccessTestImpl *secureStorageAccess = [[DBXSecureStorageAccessTestImpl alloc] init];
+    [DBXDropboxClientsManager setupWithTeamAppKeyMultiUserDesktop:apiAppKey transportClient:transportClient secureStorageAccess:secureStorageAccess tokenUid:@"test"];
 #endif
 }
 

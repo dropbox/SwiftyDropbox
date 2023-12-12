@@ -189,4 +189,10 @@ public class DBXDropboxOAuthManager: NSObject {
     public func accessTokenProviderForToken(_ token: DBXDropboxAccessToken) -> DBXAccessTokenProvider {
         swift.accessTokenProviderForToken(token.swift).objc
     }
+
+    /// Only for use in tests. Resets DropboxOAuthManager so a new one for Team client use can be set up.
+    @objc
+    public static func __test_only_resetForTeamSetup() {
+        DropboxOAuthManager.sharedOAuthManager = nil
+    }
 }
