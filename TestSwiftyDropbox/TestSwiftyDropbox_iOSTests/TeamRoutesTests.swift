@@ -52,9 +52,9 @@ class TeamRoutesTests: XCTestCase {
         DropboxOAuthManager.sharedOAuthManager = nil
 
         #if os(OSX)
-        DropboxClientsManager.setupWithTeamAppKeyMultiUserDesktop(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUserDesktop(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccesTestImpl(), tokenUid: TestUid)
         #elseif os(iOS)
-        DropboxClientsManager.setupWithTeamAppKeyMultiUser(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUser(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccesTestImpl(), tokenUid: TestUid)
         #endif
 
         teamClient = DropboxClientsManager.authorizedTeamClient?.team

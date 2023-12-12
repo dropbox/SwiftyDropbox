@@ -14,7 +14,9 @@
 - (void)setUp {
     self.continueAfterFailure = false;
 
-    [self setupDropboxClientsManager];
+    if (DBXDropboxClientsManager.authorizedTeamClient == nil) {
+        [self setupDropboxClientsManager];
+    }
 
     _tester = [[DropboxTeamTester alloc] init];
 
