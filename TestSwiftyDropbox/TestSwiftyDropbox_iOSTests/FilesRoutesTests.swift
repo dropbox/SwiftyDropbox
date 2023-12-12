@@ -47,14 +47,16 @@ class FilesRoutesTests: XCTestCase {
         print("[DEBUG CI HANG] setupDropboxClientsManager start")
 
         let processInfo = ProcessInfo.processInfo.environment
-
+        print("[DEBUG CI HANG] setupDropboxClientsManager 1")
         guard let apiAppKey = processInfo["FULL_DROPBOX_API_APP_KEY"] else {
             return XCTFail("FULL_DROPBOX_API_APP_KEY needs to be set in the test Scheme")
         }
+        print("[DEBUG CI HANG] setupDropboxClientsManager 2")
         guard let refreshToken = processInfo["FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN"] else {
             return XCTFail("FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN needs to be set in the test Scheme")
         }
 
+        print("[DEBUG CI HANG] setupDropboxClientsManager 3")
         guard let transportClient = TestAuthTokenGenerator.transportClient(with: refreshToken, apiKey: apiAppKey, scopes: DropboxTester.scopes) else {
             return XCTFail("Error: Access token creation failed")
         }
