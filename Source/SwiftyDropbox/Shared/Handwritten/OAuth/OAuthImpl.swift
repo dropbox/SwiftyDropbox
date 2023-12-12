@@ -415,20 +415,32 @@ public class DropboxOAuthManager: AccessTokenRefreshing {
         queue: DispatchQueue?,
         completion: @escaping DropboxOAuthCompletion
     ) {
+        print("[DEBUG CI HANG] refreshAccessToken 1")
         guard let refreshToken = accessToken.refreshToken else {
+            print("[DEBUG CI HANG] refreshAccessToken 2")
             completion(.error(.unknown, "Long-lived token can't be refreshed."))
             return
         }
+        print("[DEBUG CI HANG] refreshAccessToken 3")
         let uid = accessToken.uid
+        print("[DEBUG CI HANG] refreshAccessToken 4")
         let refreshRequest = OAuthTokenRefreshRequest(
             dataTaskCreation: networkSession.dataTask(request:networkTaskTag:completionHandler:),
             uid: uid, refreshToken: refreshToken, scopes: scopes, appKey: appKey, locale: localeIdentifier
         )
+        print("[DEBUG CI HANG] refreshAccessToken 5")
         refreshRequest.start(queue: DispatchQueue.main) { [weak self] result in
+            print("[DEBUG CI HANG] refreshAccessToken 6")
             if case let .success(token) = result {
+                print("[DEBUG CI HANG] refreshAccessToken 7")
                 self?.storeAccessToken(token)
             }
-            (queue ?? DispatchQueue.main).async { completion(result) }
+            print("[DEBUG CI HANG] refreshAccessToken 8")
+            (queue ?? DispatchQueue.main).async {
+                completion(result)
+                print("[DEBUG CI HANG] refreshAccessToken 9")
+            }
+            print("[DEBUG CI HANG] refreshAccessToken 10")
         }
     }
 

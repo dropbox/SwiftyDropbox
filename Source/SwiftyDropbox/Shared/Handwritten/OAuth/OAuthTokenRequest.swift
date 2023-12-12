@@ -146,10 +146,14 @@ class OAuthTokenRequest {
     func start(queue: DispatchQueue = DispatchQueue.main, completion: @escaping DropboxOAuthCompletion) {
         retainSelf = self
         var oauthResult: DropboxOAuthResult?
+        print("[DEBUG CI HANG] start 1")
 
         let task = dataTaskCreation(request, "OAuthTokenRequest") { [weak self] result in
+            print("[DEBUG CI HANG] start 2")
+
             switch result {
             case .success((let data, _)):
+                print("[DEBUG CI HANG] start 3")
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
                     let token: DropboxAccessToken = try (self?.handleResultDict(json)).orThrow()
@@ -157,20 +161,30 @@ class OAuthTokenRequest {
                 } catch {
                     oauthResult = .error(.unknown, "Invalid response.")
                 }
+                print("[DEBUG CI HANG] start 4")
             case .failure(let error):
+                print("[DEBUG CI HANG] start 5")
                 switch error {
                 case .badStatusCode(let data, _, _):
                     oauthResult = Self.resultFromErrorData(data)
                 case .failedWithError(let error):
                     oauthResult = .error(.unknown, "Transport error: \(error.localizedDescription)")
                 }
+                print("[DEBUG CI HANG] start 6")
             }
-
+            print("[DEBUG CI HANG] start 7")
             self?.retainSelf = nil
-            queue.async { completion(oauthResult) }
+            print("[DEBUG CI HANG] start 8")
+            queue.async {
+                print("[DEBUG CI HANG] start 9")
+                completion(oauthResult)
+                print("[DEBUG CI HANG] start 10")
+            }
+            print("[DEBUG CI HANG] start 11")
         }
         self.task = task
         task.resume()
+        print("[DEBUG CI HANG] start 12")
     }
 
     func cancel() {
