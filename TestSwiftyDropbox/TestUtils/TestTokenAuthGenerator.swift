@@ -6,7 +6,7 @@ enum TestAuthTokenGenerator {
     static func transportClient(with refreshToken: String, apiKey: String, scopes: [String]) -> DropboxTransportClient? {
         print("[DEBUG CI HANG] transportClient 1")
 
-        let manager = SwiftyDropbox.DropboxOAuthManager(appKey: apiKey, secureStorageAccess: SecureStorageAccesDefaultImpl())
+        let manager = SwiftyDropbox.DropboxOAuthManager(appKey: apiKey, secureStorageAccess: SecureStorageAccesTestImpl())
         print("[DEBUG CI HANG] transportClient 2")
 
         let defaultToken = DropboxAccessToken(
