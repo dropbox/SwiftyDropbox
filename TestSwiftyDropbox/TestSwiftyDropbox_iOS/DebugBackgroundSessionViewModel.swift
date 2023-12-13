@@ -7,23 +7,13 @@ import SwiftUI
 import SwiftyDropbox
 
 @available(iOS 16.0, *)
-class DebugBackgroundSessionViewModel {
-    var numberOfDownloads: Int = 0
-    var numberOfUploads: Int = 0
-    var sizeOfDownload: Int = 0
-    var sizeOfUpload: String = ""
-    var exitOnBackgrounding: Bool = false
-
-    var sizeOfUploadBinding: Binding<String> {
-        Binding<String>(
-            get: { self.sizeOfUpload },
-            set: { newValue in
-                if Float(newValue) != nil {
-                    self.sizeOfUpload = newValue
-                }
-            }
-        )
-    }
+class DebugBackgroundSessionViewModel: ObservableObject {
+    @Published var numberOfDownloads: Int = 0
+    @Published var numberOfUploads: Int = 0
+    @Published var sizeOfUpload: String = ""
+    @Published var exitOnBackgrounding: Bool = false
+    @Published var showFileBrowser = false
+    @Published var showLogBrowser = false
 
     func startDownloads() {
         for i in 0 ..< numberOfDownloads {
@@ -39,7 +29,7 @@ class DebugBackgroundSessionViewModel {
     }
 
     func startUploads() {
-        TestUtilities.createFileToUpload(sizeInMBs: Double(sizeOfUpload) ?? 1)
+        TestUtilities.createFileToUpload(sizeInKBs: Double(sizeOfUpload) ?? 1)
 
         for i in 0 ..< numberOfUploads {
             let path = TestConstants.dropboxTestFolder + "/test_\(i).txt"

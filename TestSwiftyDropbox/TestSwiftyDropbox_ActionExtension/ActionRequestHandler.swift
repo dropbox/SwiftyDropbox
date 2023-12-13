@@ -110,7 +110,7 @@ class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
             client = DropboxClientsManager.authorizedClient
         }
 
-        TestUtilities.createFileToUpload(sizeInMBs: 1)
+        TestUtilities.createFileToUpload(sizeInKBs: 1000)
         let fileName = "/test_action_extension.txt"
         let path = TestConstants.dropboxTestFolder + fileName
         let input = TestConstants.fileToUpload
