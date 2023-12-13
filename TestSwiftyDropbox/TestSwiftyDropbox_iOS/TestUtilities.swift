@@ -13,8 +13,8 @@ public enum TestConstants {
 }
 
 public class TestUtilities {
-    public static func createFileToUpload(sizeInMBs: Double) {
-        let sizeInBytes = Int(1_024 * 1_024 * sizeInMBs)
+    public static func createFileToUpload(sizeInKBs: Double) {
+        let sizeInBytes = Int(1_024 * sizeInKBs)
         writeFile(ofSize: sizeInBytes, at: TestConstants.fileToUpload)
     }
 
