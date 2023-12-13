@@ -25,12 +25,12 @@ public class DBXDropboxBase: NSObject {
     /// Routes within the contacts namespace. See DBContactsRoutes for details.
     @objc
     public var contacts: DBXContactsRoutes!
-    /// Routes within the file_properties namespace. See DBFilePropertiesRoutes for details.
+    /// Routes within the fileProperties namespace. See DBFilePropertiesRoutes for details.
     @objc
-    public var file_properties: DBXFilePropertiesRoutes!
-    /// Routes within the file_requests namespace. See DBFileRequestsRoutes for details.
+    public var fileProperties: DBXFilePropertiesRoutes!
+    /// Routes within the fileRequests namespace. See DBFileRequestsRoutes for details.
     @objc
-    public var file_requests: DBXFileRequestsRoutes!
+    public var fileRequests: DBXFileRequestsRoutes!
     /// Routes within the files namespace. See DBFilesRoutes for details.
     @objc
     public var files: DBXFilesRoutes!
@@ -43,9 +43,9 @@ public class DBXDropboxBase: NSObject {
     /// Routes within the sharing namespace. See DBSharingRoutes for details.
     @objc
     public var sharing: DBXSharingRoutes!
-    /// Routes within the team_log namespace. See DBTeamLogRoutes for details.
+    /// Routes within the teamLog namespace. See DBTeamLogRoutes for details.
     @objc
-    public var team_log: DBXTeamLogRoutes!
+    public var teamLog: DBXTeamLogRoutes!
     /// Routes within the users namespace. See DBUsersRoutes for details.
     @objc
     public var users: DBXUsersRoutes!
@@ -62,13 +62,13 @@ public class DBXDropboxBase: NSObject {
         self.auth = DBXAuthRoutes(swift: swift.auth)
         self.check = DBXCheckRoutes(swift: swift.check)
         self.contacts = DBXContactsRoutes(swift: swift.contacts)
-        self.file_properties = DBXFilePropertiesRoutes(swift: swift.file_properties)
-        self.file_requests = DBXFileRequestsRoutes(swift: swift.file_requests)
+        self.fileProperties = DBXFilePropertiesRoutes(swift: swift.fileProperties)
+        self.fileRequests = DBXFileRequestsRoutes(swift: swift.fileRequests)
         self.files = DBXFilesRoutes(swift: swift.files)
         self.openid = DBXOpenidRoutes(swift: swift.openid)
         self.paper = DBXPaperRoutes(swift: swift.paper)
         self.sharing = DBXSharingRoutes(swift: swift.sharing)
-        self.team_log = DBXTeamLogRoutes(swift: swift.team_log)
+        self.teamLog = DBXTeamLogRoutes(swift: swift.teamLog)
         self.users = DBXUsersRoutes(swift: swift.users)
     }
 }

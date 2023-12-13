@@ -19,7 +19,7 @@ class MockDropboxTransportClient: DropboxTransportClient {
     // MARK: Request Mocking
 
     fileprivate var allRequests = Requests()
-    typealias MockRequestHandler = ((MockApiRequest) -> Void)
+    typealias MockRequestHandler = (MockApiRequest) -> Void
     /// This is called whenever a mock API request is created. By default it will do nothing, but you may be interested in  `MockDropboxTransportClient.alwaysFailMockRequestHandler` to always fail requests
     var mockRequestHandler: MockRequestHandler = noopMockRequestHandler
     /// No-op: Does nothing additional to the request
