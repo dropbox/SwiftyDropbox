@@ -17,10 +17,10 @@ public class DropboxBase {
     public var check: CheckRoutes!
     /// Routes within the contacts namespace. See ContactsRoutes for details.
     public var contacts: ContactsRoutes!
-    /// Routes within the file_properties namespace. See FilePropertiesRoutes for details.
-    public var file_properties: FilePropertiesRoutes!
-    /// Routes within the file_requests namespace. See FileRequestsRoutes for details.
-    public var file_requests: FileRequestsRoutes!
+    /// Routes within the fileProperties namespace. See FilePropertiesRoutes for details.
+    public var fileProperties: FilePropertiesRoutes!
+    /// Routes within the fileRequests namespace. See FileRequestsRoutes for details.
+    public var fileRequests: FileRequestsRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
     public var files: FilesRoutes!
     /// Routes within the openid namespace. See OpenidRoutes for details.
@@ -29,8 +29,8 @@ public class DropboxBase {
     public var paper: PaperRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
     public var sharing: SharingRoutes!
-    /// Routes within the team_log namespace. See TeamLogRoutes for details.
-    public var team_log: TeamLogRoutes!
+    /// Routes within the teamLog namespace. See TeamLogRoutes for details.
+    public var teamLog: TeamLogRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
     public var users: UsersRoutes!
 
@@ -41,13 +41,13 @@ public class DropboxBase {
         self.auth = AuthRoutes(client: client)
         self.check = CheckRoutes(client: client)
         self.contacts = ContactsRoutes(client: client)
-        self.file_properties = FilePropertiesRoutes(client: client)
-        self.file_requests = FileRequestsRoutes(client: client)
+        self.fileProperties = FilePropertiesRoutes(client: client)
+        self.fileRequests = FileRequestsRoutes(client: client)
         self.files = FilesRoutes(client: client)
         self.openid = OpenidRoutes(client: client)
         self.paper = PaperRoutes(client: client)
         self.sharing = SharingRoutes(client: client)
-        self.team_log = TeamLogRoutes(client: client)
+        self.teamLog = TeamLogRoutes(client: client)
         self.users = UsersRoutes(client: client)
     }
 }
