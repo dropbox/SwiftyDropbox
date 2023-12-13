@@ -78,6 +78,10 @@ public class Sharing {
         case viewerNoComment
         /// The collaborator can only view the shared folder that they have access to.
         case traverse
+        /// If there is a Righteous Link on the folder which grants access and the user has visited such link, they are
+        /// allowed to perform certain action (i.e. add themselves to the folder) via the link access even
+        /// though the user themselves are not a member on the shared folder yet.
+        case noAccess
         /// An unspecified error.
         case other
 
@@ -114,6 +118,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("traverse")
                 return .dictionary(d)
+            case .noAccess:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_access")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -136,6 +144,8 @@ public class Sharing {
                     return AccessLevel.viewerNoComment
                 case "traverse":
                     return AccessLevel.traverse
+                case "no_access":
+                    return AccessLevel.noAccess
                 case "other":
                     return AccessLevel.other
                 default:
@@ -7476,7 +7486,7 @@ public class Sharing {
         public let forceAsync: Bool
         /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
         public let memberPolicy: Sharing.MemberPolicy?
-        /// The path to the folder to share. If it does not exist, then a new one is created.
+        /// The path or the file id to the folder to share. If it does not exist, then a new one is created.
         public let path: String
         /// The policy to apply to shared links created for content inside this shared folder.  The current user must be
         /// on a team to set this policy to members in SharedLinkPolicy.
@@ -7497,7 +7507,7 @@ public class Sharing {
             self.aclUpdatePolicy = aclUpdatePolicy
             self.forceAsync = forceAsync
             self.memberPolicy = memberPolicy
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
             self.sharedLinkPolicy = sharedLinkPolicy
             self.viewerInfoPolicy = viewerInfoPolicy
@@ -8386,6 +8396,8 @@ public class Sharing {
         case invalidId
         /// The user is not a member of the shared folder thus cannot access it.
         case notAMember
+        /// The user does not exist or their account is disabled.
+        case invalidMember
         /// Never set.
         case emailUnverified
         /// The shared folder is unmounted.
@@ -8414,6 +8426,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("not_a_member")
                 return .dictionary(d)
+            case .invalidMember:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_member")
+                return .dictionary(d)
             case .emailUnverified:
                 var d = [String: JSON]()
                 d[".tag"] = .str("email_unverified")
@@ -8438,6 +8454,8 @@ public class Sharing {
                     return SharedFolderAccessError.invalidId
                 case "not_a_member":
                     return SharedFolderAccessError.notAMember
+                case "invalid_member":
+                    return SharedFolderAccessError.invalidMember
                 case "email_unverified":
                     return SharedFolderAccessError.emailUnverified
                 case "unmounted":
@@ -8594,6 +8612,8 @@ public class Sharing {
         /// The ID of the parent shared folder. This field is present only if the folder is contained within another
         /// shared folder.
         public let parentSharedFolderId: String?
+        /// The full path of this shared folder. Absent for unmounted folders.
+        public let pathDisplay: String?
         /// The lower-cased full path of this shared folder. Absent for unmounted folders.
         public let pathLower: String?
         /// Display name for the parent folder.
@@ -8605,6 +8625,7 @@ public class Sharing {
             ownerDisplayNames: [String]? = nil,
             ownerTeam: Users.Team? = nil,
             parentSharedFolderId: String? = nil,
+            pathDisplay: String? = nil,
             pathLower: String? = nil,
             parentFolderName: String? = nil
         ) {
@@ -8616,6 +8637,8 @@ public class Sharing {
             self.ownerTeam = ownerTeam
             nullableValidator(stringValidator(pattern: "[-_0-9a-zA-Z:]+"))(parentSharedFolderId)
             self.parentSharedFolderId = parentSharedFolderId
+            nullableValidator(stringValidator())(pathDisplay)
+            self.pathDisplay = pathDisplay
             nullableValidator(stringValidator())(pathLower)
             self.pathLower = pathLower
             nullableValidator(stringValidator())(parentFolderName)
@@ -8641,6 +8664,7 @@ public class Sharing {
                 "owner_display_names": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.ownerDisplayNames),
                 "owner_team": try NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
                 "parent_shared_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+                "path_display": try NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
                 "path_lower": try NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
                 "parent_folder_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
             ]
@@ -8657,6 +8681,7 @@ public class Sharing {
                     .deserialize(dict["owner_display_names"] ?? .null)
                 let ownerTeam = try NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                 let parentSharedFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                let pathDisplay = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                 let pathLower = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                 let parentFolderName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
                 return SharedFolderMetadataBase(
@@ -8666,6 +8691,7 @@ public class Sharing {
                     ownerDisplayNames: ownerDisplayNames,
                     ownerTeam: ownerTeam,
                     parentSharedFolderId: parentSharedFolderId,
+                    pathDisplay: pathDisplay,
                     pathLower: pathLower,
                     parentFolderName: parentFolderName
                 )
@@ -8707,6 +8733,7 @@ public class Sharing {
             ownerDisplayNames: [String]? = nil,
             ownerTeam: Users.Team? = nil,
             parentSharedFolderId: String? = nil,
+            pathDisplay: String? = nil,
             pathLower: String? = nil,
             parentFolderName: String? = nil,
             linkMetadata: Sharing.SharedContentLinkMetadata? = nil,
@@ -8731,6 +8758,7 @@ public class Sharing {
                 ownerDisplayNames: ownerDisplayNames,
                 ownerTeam: ownerTeam,
                 parentSharedFolderId: parentSharedFolderId,
+                pathDisplay: pathDisplay,
                 pathLower: pathLower,
                 parentFolderName: parentFolderName
             )
@@ -8760,6 +8788,7 @@ public class Sharing {
                 "owner_display_names": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.ownerDisplayNames),
                 "owner_team": try NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
                 "parent_shared_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
+                "path_display": try NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
                 "path_lower": try NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
                 "parent_folder_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
                 "link_metadata": try NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).serialize(value.linkMetadata),
@@ -8784,6 +8813,7 @@ public class Sharing {
                     .deserialize(dict["owner_display_names"] ?? .null)
                 let ownerTeam = try NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                 let parentSharedFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                let pathDisplay = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                 let pathLower = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
                 let parentFolderName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
                 let linkMetadata = try NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).deserialize(dict["link_metadata"] ?? .null)
@@ -8802,6 +8832,7 @@ public class Sharing {
                     ownerDisplayNames: ownerDisplayNames,
                     ownerTeam: ownerTeam,
                     parentSharedFolderId: parentSharedFolderId,
+                    pathDisplay: pathDisplay,
                     pathLower: pathLower,
                     parentFolderName: parentFolderName,
                     linkMetadata: linkMetadata,

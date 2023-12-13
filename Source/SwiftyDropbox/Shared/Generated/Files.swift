@@ -17,7 +17,7 @@ public class Files {
         public init(path: String, tagText: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
-            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[\\w]+")(tagText)
             self.tagText = tagText
         }
 
@@ -7290,7 +7290,7 @@ public class Files {
         public init(path: String, tagText: String) {
             stringValidator(pattern: "/(.|[\\r\\n])*")(path)
             self.path = path
-            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[\\w]+")(tagText)
             self.tagText = tagText
         }
 
@@ -10945,7 +10945,7 @@ public class Files {
         /// (no description)
         public let tagText: String
         public init(tagText: String) {
-            stringValidator(minLength: 1, maxLength: 32, pattern: "[A-Za-z0-9_]+")(tagText)
+            stringValidator(minLength: 1, maxLength: 32, pattern: "[\\w]+")(tagText)
             self.tagText = tagText
         }
 

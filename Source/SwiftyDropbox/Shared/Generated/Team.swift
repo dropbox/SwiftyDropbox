@@ -13873,8 +13873,8 @@ public class Team {
             teamId: String,
             numLicensedUsers: UInt32,
             numProvisionedUsers: UInt32,
-            numUsedLicenses: UInt32,
-            policies: TeamPolicies.TeamMemberPolicies
+            policies: TeamPolicies.TeamMemberPolicies,
+            numUsedLicenses: UInt32 = 0
         ) {
             stringValidator()(name)
             self.name = name
@@ -13906,8 +13906,8 @@ public class Team {
                 "team_id": try Serialization._StringSerializer.serialize(value.teamId),
                 "num_licensed_users": try Serialization._UInt32Serializer.serialize(value.numLicensedUsers),
                 "num_provisioned_users": try Serialization._UInt32Serializer.serialize(value.numProvisionedUsers),
-                "num_used_licenses": try Serialization._UInt32Serializer.serialize(value.numUsedLicenses),
                 "policies": try TeamPolicies.TeamMemberPoliciesSerializer().serialize(value.policies),
+                "num_used_licenses": try Serialization._UInt32Serializer.serialize(value.numUsedLicenses),
             ]
             return .dictionary(output)
         }
@@ -13919,15 +13919,15 @@ public class Team {
                 let teamId = try Serialization._StringSerializer.deserialize(dict["team_id"] ?? .null)
                 let numLicensedUsers = try Serialization._UInt32Serializer.deserialize(dict["num_licensed_users"] ?? .null)
                 let numProvisionedUsers = try Serialization._UInt32Serializer.deserialize(dict["num_provisioned_users"] ?? .null)
-                let numUsedLicenses = try Serialization._UInt32Serializer.deserialize(dict["num_used_licenses"] ?? .null)
                 let policies = try TeamPolicies.TeamMemberPoliciesSerializer().deserialize(dict["policies"] ?? .null)
+                let numUsedLicenses = try Serialization._UInt32Serializer.deserialize(dict["num_used_licenses"] ?? .number(0))
                 return TeamGetInfoResult(
                     name: name,
                     teamId: teamId,
                     numLicensedUsers: numLicensedUsers,
                     numProvisionedUsers: numProvisionedUsers,
-                    numUsedLicenses: numUsedLicenses,
-                    policies: policies
+                    policies: policies,
+                    numUsedLicenses: numUsedLicenses
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: TeamGetInfoResult.self, json: json)

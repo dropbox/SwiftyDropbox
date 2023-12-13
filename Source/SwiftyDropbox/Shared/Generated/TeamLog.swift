@@ -544,6 +544,8 @@ public class TeamLog {
         /// An unspecified error.
         case invitedUsers
         /// An unspecified error.
+        case preventPersonalCreation
+        /// An unspecified error.
         case other
 
         public var description: String {
@@ -571,6 +573,10 @@ public class TeamLog {
                 var d = [String: JSON]()
                 d[".tag"] = .str("invited_users")
                 return .dictionary(d)
+            case .preventPersonalCreation:
+                var d = [String: JSON]()
+                d[".tag"] = .str("prevent_personal_creation")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -589,6 +595,8 @@ public class TeamLog {
                     return AccountCapturePolicy.disabled
                 case "invited_users":
                     return AccountCapturePolicy.invitedUsers
+                case "prevent_personal_creation":
+                    return AccountCapturePolicy.preventPersonalCreation
                 case "other":
                     return AccountCapturePolicy.other
                 default:
@@ -3078,6 +3086,138 @@ public class TeamLog {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: AssetLogInfo.self, json: json)
+            }
+        }
+    }
+
+    /// Invited members to activate Backup.
+    public class BackupAdminInvitationSentDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try BackupAdminInvitationSentDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class BackupAdminInvitationSentDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: BackupAdminInvitationSentDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> BackupAdminInvitationSentDetails {
+            switch json {
+            case .dictionary:
+                return BackupAdminInvitationSentDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: BackupAdminInvitationSentDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The BackupAdminInvitationSentType struct
+    public class BackupAdminInvitationSentType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try BackupAdminInvitationSentTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class BackupAdminInvitationSentTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: BackupAdminInvitationSentType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> BackupAdminInvitationSentType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return BackupAdminInvitationSentType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: BackupAdminInvitationSentType.self, json: json)
+            }
+        }
+    }
+
+    /// Opened Backup invite.
+    public class BackupInvitationOpenedDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try BackupInvitationOpenedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class BackupInvitationOpenedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: BackupInvitationOpenedDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> BackupInvitationOpenedDetails {
+            switch json {
+            case .dictionary:
+                return BackupInvitationOpenedDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: BackupInvitationOpenedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The BackupInvitationOpenedType struct
+    public class BackupInvitationOpenedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try BackupInvitationOpenedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class BackupInvitationOpenedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: BackupInvitationOpenedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> BackupInvitationOpenedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return BackupInvitationOpenedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: BackupInvitationOpenedType.self, json: json)
             }
         }
     }
@@ -10117,6 +10257,8 @@ public class TeamLog {
         case devices
         /// Events that involve domain management feature: domain verification, invite enforcement and account capture.
         case domains
+        /// Events that involve encryption.
+        case encryption
         /// Events that have to do with filesystem operations on files and folders: copy, move, delete, etc.
         case fileOperations
         /// Events that apply to the file requests feature.
@@ -10190,6 +10332,10 @@ public class TeamLog {
             case .domains:
                 var d = [String: JSON]()
                 d[".tag"] = .str("domains")
+                return .dictionary(d)
+            case .encryption:
+                var d = [String: JSON]()
+                d[".tag"] = .str("encryption")
                 return .dictionary(d)
             case .fileOperations:
                 var d = [String: JSON]()
@@ -10279,6 +10425,8 @@ public class TeamLog {
                     return EventCategory.devices
                 case "domains":
                     return EventCategory.domains
+                case "encryption":
+                    return EventCategory.encryption
                 case "file_operations":
                     return EventCategory.fileOperations
                 case "file_requests":
@@ -10330,6 +10478,10 @@ public class TeamLog {
         case adminAlertingChangedAlertConfigDetails(TeamLog.AdminAlertingChangedAlertConfigDetails)
         /// An unspecified error.
         case adminAlertingTriggeredAlertDetails(TeamLog.AdminAlertingTriggeredAlertDetails)
+        /// An unspecified error.
+        case ransomwareRestoreProcessCompletedDetails(TeamLog.RansomwareRestoreProcessCompletedDetails)
+        /// An unspecified error.
+        case ransomwareRestoreProcessStartedDetails(TeamLog.RansomwareRestoreProcessStartedDetails)
         /// An unspecified error.
         case appBlockedByPermissionsDetails(TeamLog.AppBlockedByPermissionsDetails)
         /// An unspecified error.
@@ -10469,11 +10621,27 @@ public class TeamLog {
         /// An unspecified error.
         case enabledDomainInvitesDetails(TeamLog.EnabledDomainInvitesDetails)
         /// An unspecified error.
+        case teamEncryptionKeyCancelKeyDeletionDetails(TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyCreateKeyDetails(TeamLog.TeamEncryptionKeyCreateKeyDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyDeleteKeyDetails(TeamLog.TeamEncryptionKeyDeleteKeyDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyDisableKeyDetails(TeamLog.TeamEncryptionKeyDisableKeyDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyEnableKeyDetails(TeamLog.TeamEncryptionKeyEnableKeyDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyRotateKeyDetails(TeamLog.TeamEncryptionKeyRotateKeyDetails)
+        /// An unspecified error.
+        case teamEncryptionKeyScheduleKeyDeletionDetails(TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails)
+        /// An unspecified error.
         case applyNamingConventionDetails(TeamLog.ApplyNamingConventionDetails)
         /// An unspecified error.
         case createFolderDetails(TeamLog.CreateFolderDetails)
         /// An unspecified error.
         case fileAddDetails(TeamLog.FileAddDetails)
+        /// An unspecified error.
+        case fileAddFromAutomationDetails(TeamLog.FileAddFromAutomationDetails)
         /// An unspecified error.
         case fileCopyDetails(TeamLog.FileCopyDetails)
         /// An unspecified error.
@@ -10516,6 +10684,8 @@ public class TeamLog {
         case objectLabelUpdatedValueDetails(TeamLog.ObjectLabelUpdatedValueDetails)
         /// An unspecified error.
         case organizeFolderWithTidyDetails(TeamLog.OrganizeFolderWithTidyDetails)
+        /// An unspecified error.
+        case replayFileDeleteDetails(TeamLog.ReplayFileDeleteDetails)
         /// An unspecified error.
         case rewindFolderDetails(TeamLog.RewindFolderDetails)
         /// An unspecified error.
@@ -10588,6 +10758,10 @@ public class TeamLog {
         case signInAsSessionStartDetails(TeamLog.SignInAsSessionStartDetails)
         /// An unspecified error.
         case ssoErrorDetails(TeamLog.SsoErrorDetails)
+        /// An unspecified error.
+        case backupAdminInvitationSentDetails(TeamLog.BackupAdminInvitationSentDetails)
+        /// An unspecified error.
+        case backupInvitationOpenedDetails(TeamLog.BackupInvitationOpenedDetails)
         /// An unspecified error.
         case createTeamInviteLinkDetails(TeamLog.CreateTeamInviteLinkDetails)
         /// An unspecified error.
@@ -10779,6 +10953,10 @@ public class TeamLog {
         /// An unspecified error.
         case paperAdminExportStartDetails(TeamLog.PaperAdminExportStartDetails)
         /// An unspecified error.
+        case ransomwareAlertCreateReportDetails(TeamLog.RansomwareAlertCreateReportDetails)
+        /// An unspecified error.
+        case ransomwareAlertCreateReportFailedDetails(TeamLog.RansomwareAlertCreateReportFailedDetails)
+        /// An unspecified error.
         case smartSyncCreateAdminPrivilegeReportDetails(TeamLog.SmartSyncCreateAdminPrivilegeReportDetails)
         /// An unspecified error.
         case teamActivityCreateReportDetails(TeamLog.TeamActivityCreateReportDetails)
@@ -10808,6 +10986,14 @@ public class TeamLog {
         case noteShareReceiveDetails(TeamLog.NoteShareReceiveDetails)
         /// An unspecified error.
         case openNoteSharedDetails(TeamLog.OpenNoteSharedDetails)
+        /// An unspecified error.
+        case replayFileSharedLinkCreatedDetails(TeamLog.ReplayFileSharedLinkCreatedDetails)
+        /// An unspecified error.
+        case replayFileSharedLinkModifiedDetails(TeamLog.ReplayFileSharedLinkModifiedDetails)
+        /// An unspecified error.
+        case replayProjectTeamAddDetails(TeamLog.ReplayProjectTeamAddDetails)
+        /// An unspecified error.
+        case replayProjectTeamDeleteDetails(TeamLog.ReplayProjectTeamDeleteDetails)
         /// An unspecified error.
         case sfAddGroupDetails(TeamLog.SfAddGroupDetails)
         /// An unspecified error.
@@ -11322,6 +11508,14 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.AdminAlertingTriggeredAlertDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("admin_alerting_triggered_alert_details")
                 return .dictionary(d)
+            case .ransomwareRestoreProcessCompletedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareRestoreProcessCompletedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_restore_process_completed_details")
+                return .dictionary(d)
+            case .ransomwareRestoreProcessStartedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareRestoreProcessStartedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_restore_process_started_details")
+                return .dictionary(d)
             case .appBlockedByPermissionsDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.AppBlockedByPermissionsDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("app_blocked_by_permissions_details")
@@ -11598,6 +11792,34 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.EnabledDomainInvitesDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("enabled_domain_invites_details")
                 return .dictionary(d)
+            case .teamEncryptionKeyCancelKeyDeletionDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyCancelKeyDeletionDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_cancel_key_deletion_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyCreateKeyDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyCreateKeyDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_create_key_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyDeleteKeyDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyDeleteKeyDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_delete_key_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyDisableKeyDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyDisableKeyDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_disable_key_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyEnableKeyDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyEnableKeyDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_enable_key_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyRotateKeyDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyRotateKeyDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_rotate_key_details")
+                return .dictionary(d)
+            case .teamEncryptionKeyScheduleKeyDeletionDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_schedule_key_deletion_details")
+                return .dictionary(d)
             case .applyNamingConventionDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.ApplyNamingConventionDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("apply_naming_convention_details")
@@ -11609,6 +11831,10 @@ public class TeamLog {
             case .fileAddDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.FileAddDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("file_add_details")
+                return .dictionary(d)
+            case .fileAddFromAutomationDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.FileAddFromAutomationDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("file_add_from_automation_details")
                 return .dictionary(d)
             case .fileCopyDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.FileCopyDetailsSerializer().serialize(arg))
@@ -11693,6 +11919,10 @@ public class TeamLog {
             case .organizeFolderWithTidyDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.OrganizeFolderWithTidyDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("organize_folder_with_tidy_details")
+                return .dictionary(d)
+            case .replayFileDeleteDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileDeleteDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_delete_details")
                 return .dictionary(d)
             case .rewindFolderDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.RewindFolderDetailsSerializer().serialize(arg))
@@ -11837,6 +12067,14 @@ public class TeamLog {
             case .ssoErrorDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.SsoErrorDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("sso_error_details")
+                return .dictionary(d)
+            case .backupAdminInvitationSentDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.BackupAdminInvitationSentDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("backup_admin_invitation_sent_details")
+                return .dictionary(d)
+            case .backupInvitationOpenedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.BackupInvitationOpenedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("backup_invitation_opened_details")
                 return .dictionary(d)
             case .createTeamInviteLinkDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.CreateTeamInviteLinkDetailsSerializer().serialize(arg))
@@ -12218,6 +12456,14 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.PaperAdminExportStartDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("paper_admin_export_start_details")
                 return .dictionary(d)
+            case .ransomwareAlertCreateReportDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareAlertCreateReportDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_alert_create_report_details")
+                return .dictionary(d)
+            case .ransomwareAlertCreateReportFailedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareAlertCreateReportFailedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_alert_create_report_failed_details")
+                return .dictionary(d)
             case .smartSyncCreateAdminPrivilegeReportDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.SmartSyncCreateAdminPrivilegeReportDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("smart_sync_create_admin_privilege_report_details")
@@ -12277,6 +12523,22 @@ public class TeamLog {
             case .openNoteSharedDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.OpenNoteSharedDetailsSerializer().serialize(arg))
                 d[".tag"] = .str("open_note_shared_details")
+                return .dictionary(d)
+            case .replayFileSharedLinkCreatedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileSharedLinkCreatedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_shared_link_created_details")
+                return .dictionary(d)
+            case .replayFileSharedLinkModifiedDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileSharedLinkModifiedDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_shared_link_modified_details")
+                return .dictionary(d)
+            case .replayProjectTeamAddDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayProjectTeamAddDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("replay_project_team_add_details")
+                return .dictionary(d)
+            case .replayProjectTeamDeleteDetails(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayProjectTeamDeleteDetailsSerializer().serialize(arg))
+                d[".tag"] = .str("replay_project_team_delete_details")
                 return .dictionary(d)
             case .sfAddGroupDetails(let arg):
                 var d = try Serialization.getFields(TeamLog.SfAddGroupDetailsSerializer().serialize(arg))
@@ -13271,6 +13533,12 @@ public class TeamLog {
                 case "admin_alerting_triggered_alert_details":
                     let v = try TeamLog.AdminAlertingTriggeredAlertDetailsSerializer().deserialize(json)
                     return EventDetails.adminAlertingTriggeredAlertDetails(v)
+                case "ransomware_restore_process_completed_details":
+                    let v = try TeamLog.RansomwareRestoreProcessCompletedDetailsSerializer().deserialize(json)
+                    return EventDetails.ransomwareRestoreProcessCompletedDetails(v)
+                case "ransomware_restore_process_started_details":
+                    let v = try TeamLog.RansomwareRestoreProcessStartedDetailsSerializer().deserialize(json)
+                    return EventDetails.ransomwareRestoreProcessStartedDetails(v)
                 case "app_blocked_by_permissions_details":
                     let v = try TeamLog.AppBlockedByPermissionsDetailsSerializer().deserialize(json)
                     return EventDetails.appBlockedByPermissionsDetails(v)
@@ -13478,6 +13746,27 @@ public class TeamLog {
                 case "enabled_domain_invites_details":
                     let v = try TeamLog.EnabledDomainInvitesDetailsSerializer().deserialize(json)
                     return EventDetails.enabledDomainInvitesDetails(v)
+                case "team_encryption_key_cancel_key_deletion_details":
+                    let v = try TeamLog.TeamEncryptionKeyCancelKeyDeletionDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyCancelKeyDeletionDetails(v)
+                case "team_encryption_key_create_key_details":
+                    let v = try TeamLog.TeamEncryptionKeyCreateKeyDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyCreateKeyDetails(v)
+                case "team_encryption_key_delete_key_details":
+                    let v = try TeamLog.TeamEncryptionKeyDeleteKeyDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyDeleteKeyDetails(v)
+                case "team_encryption_key_disable_key_details":
+                    let v = try TeamLog.TeamEncryptionKeyDisableKeyDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyDisableKeyDetails(v)
+                case "team_encryption_key_enable_key_details":
+                    let v = try TeamLog.TeamEncryptionKeyEnableKeyDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyEnableKeyDetails(v)
+                case "team_encryption_key_rotate_key_details":
+                    let v = try TeamLog.TeamEncryptionKeyRotateKeyDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyRotateKeyDetails(v)
+                case "team_encryption_key_schedule_key_deletion_details":
+                    let v = try TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetailsSerializer().deserialize(json)
+                    return EventDetails.teamEncryptionKeyScheduleKeyDeletionDetails(v)
                 case "apply_naming_convention_details":
                     let v = try TeamLog.ApplyNamingConventionDetailsSerializer().deserialize(json)
                     return EventDetails.applyNamingConventionDetails(v)
@@ -13487,6 +13776,9 @@ public class TeamLog {
                 case "file_add_details":
                     let v = try TeamLog.FileAddDetailsSerializer().deserialize(json)
                     return EventDetails.fileAddDetails(v)
+                case "file_add_from_automation_details":
+                    let v = try TeamLog.FileAddFromAutomationDetailsSerializer().deserialize(json)
+                    return EventDetails.fileAddFromAutomationDetails(v)
                 case "file_copy_details":
                     let v = try TeamLog.FileCopyDetailsSerializer().deserialize(json)
                     return EventDetails.fileCopyDetails(v)
@@ -13550,6 +13842,9 @@ public class TeamLog {
                 case "organize_folder_with_tidy_details":
                     let v = try TeamLog.OrganizeFolderWithTidyDetailsSerializer().deserialize(json)
                     return EventDetails.organizeFolderWithTidyDetails(v)
+                case "replay_file_delete_details":
+                    let v = try TeamLog.ReplayFileDeleteDetailsSerializer().deserialize(json)
+                    return EventDetails.replayFileDeleteDetails(v)
                 case "rewind_folder_details":
                     let v = try TeamLog.RewindFolderDetailsSerializer().deserialize(json)
                     return EventDetails.rewindFolderDetails(v)
@@ -13658,6 +13953,12 @@ public class TeamLog {
                 case "sso_error_details":
                     let v = try TeamLog.SsoErrorDetailsSerializer().deserialize(json)
                     return EventDetails.ssoErrorDetails(v)
+                case "backup_admin_invitation_sent_details":
+                    let v = try TeamLog.BackupAdminInvitationSentDetailsSerializer().deserialize(json)
+                    return EventDetails.backupAdminInvitationSentDetails(v)
+                case "backup_invitation_opened_details":
+                    let v = try TeamLog.BackupInvitationOpenedDetailsSerializer().deserialize(json)
+                    return EventDetails.backupInvitationOpenedDetails(v)
                 case "create_team_invite_link_details":
                     let v = try TeamLog.CreateTeamInviteLinkDetailsSerializer().deserialize(json)
                     return EventDetails.createTeamInviteLinkDetails(v)
@@ -13943,6 +14244,12 @@ public class TeamLog {
                 case "paper_admin_export_start_details":
                     let v = try TeamLog.PaperAdminExportStartDetailsSerializer().deserialize(json)
                     return EventDetails.paperAdminExportStartDetails(v)
+                case "ransomware_alert_create_report_details":
+                    let v = try TeamLog.RansomwareAlertCreateReportDetailsSerializer().deserialize(json)
+                    return EventDetails.ransomwareAlertCreateReportDetails(v)
+                case "ransomware_alert_create_report_failed_details":
+                    let v = try TeamLog.RansomwareAlertCreateReportFailedDetailsSerializer().deserialize(json)
+                    return EventDetails.ransomwareAlertCreateReportFailedDetails(v)
                 case "smart_sync_create_admin_privilege_report_details":
                     let v = try TeamLog.SmartSyncCreateAdminPrivilegeReportDetailsSerializer().deserialize(json)
                     return EventDetails.smartSyncCreateAdminPrivilegeReportDetails(v)
@@ -13988,6 +14295,18 @@ public class TeamLog {
                 case "open_note_shared_details":
                     let v = try TeamLog.OpenNoteSharedDetailsSerializer().deserialize(json)
                     return EventDetails.openNoteSharedDetails(v)
+                case "replay_file_shared_link_created_details":
+                    let v = try TeamLog.ReplayFileSharedLinkCreatedDetailsSerializer().deserialize(json)
+                    return EventDetails.replayFileSharedLinkCreatedDetails(v)
+                case "replay_file_shared_link_modified_details":
+                    let v = try TeamLog.ReplayFileSharedLinkModifiedDetailsSerializer().deserialize(json)
+                    return EventDetails.replayFileSharedLinkModifiedDetails(v)
+                case "replay_project_team_add_details":
+                    let v = try TeamLog.ReplayProjectTeamAddDetailsSerializer().deserialize(json)
+                    return EventDetails.replayProjectTeamAddDetails(v)
+                case "replay_project_team_delete_details":
+                    let v = try TeamLog.ReplayProjectTeamDeleteDetailsSerializer().deserialize(json)
+                    return EventDetails.replayProjectTeamDeleteDetails(v)
                 case "sf_add_group_details":
                     let v = try TeamLog.SfAddGroupDetailsSerializer().deserialize(json)
                     return EventDetails.sfAddGroupDetails(v)
@@ -14736,6 +15055,10 @@ public class TeamLog {
         case adminAlertingChangedAlertConfig(TeamLog.AdminAlertingChangedAlertConfigType)
         /// (admin_alerting) Triggered security alert
         case adminAlertingTriggeredAlert(TeamLog.AdminAlertingTriggeredAlertType)
+        /// (admin_alerting) Completed ransomware restore process
+        case ransomwareRestoreProcessCompleted(TeamLog.RansomwareRestoreProcessCompletedType)
+        /// (admin_alerting) Started ransomware restore process
+        case ransomwareRestoreProcessStarted(TeamLog.RansomwareRestoreProcessStartedType)
         /// (apps) Failed to connect app for member
         case appBlockedByPermissions(TeamLog.AppBlockedByPermissionsType)
         /// (apps) Linked app for team
@@ -14874,12 +15197,28 @@ public class TeamLog {
         case domainVerificationRemoveDomain(TeamLog.DomainVerificationRemoveDomainType)
         /// (domains) Enabled domain invites (deprecated, no longer logged)
         case enabledDomainInvites(TeamLog.EnabledDomainInvitesType)
+        /// (encryption) Canceled team encryption key deletion
+        case teamEncryptionKeyCancelKeyDeletion(TeamLog.TeamEncryptionKeyCancelKeyDeletionType)
+        /// (encryption) Created team encryption key
+        case teamEncryptionKeyCreateKey(TeamLog.TeamEncryptionKeyCreateKeyType)
+        /// (encryption) Deleted team encryption key
+        case teamEncryptionKeyDeleteKey(TeamLog.TeamEncryptionKeyDeleteKeyType)
+        /// (encryption) Disabled team encryption key
+        case teamEncryptionKeyDisableKey(TeamLog.TeamEncryptionKeyDisableKeyType)
+        /// (encryption) Enabled team encryption key
+        case teamEncryptionKeyEnableKey(TeamLog.TeamEncryptionKeyEnableKeyType)
+        /// (encryption) Rotated team encryption key (deprecated, no longer logged)
+        case teamEncryptionKeyRotateKey(TeamLog.TeamEncryptionKeyRotateKeyType)
+        /// (encryption) Scheduled encryption key deletion
+        case teamEncryptionKeyScheduleKeyDeletion(TeamLog.TeamEncryptionKeyScheduleKeyDeletionType)
         /// (file_operations) Applied naming convention
         case applyNamingConvention(TeamLog.ApplyNamingConventionType)
         /// (file_operations) Created folders (deprecated, no longer logged)
         case createFolder(TeamLog.CreateFolderType)
         /// (file_operations) Added files and/or folders
         case fileAdd(TeamLog.FileAddType)
+        /// (file_operations) Added files and/or folders from automation
+        case fileAddFromAutomation(TeamLog.FileAddFromAutomationType)
         /// (file_operations) Copied files and/or folders
         case fileCopy(TeamLog.FileCopyType)
         /// (file_operations) Deleted files and/or folders
@@ -14922,6 +15261,8 @@ public class TeamLog {
         case objectLabelUpdatedValue(TeamLog.ObjectLabelUpdatedValueType)
         /// (file_operations) Organized a folder with multi-file organize
         case organizeFolderWithTidy(TeamLog.OrganizeFolderWithTidyType)
+        /// (file_operations) Deleted files in Replay
+        case replayFileDelete(TeamLog.ReplayFileDeleteType)
         /// (file_operations) Rewound a folder
         case rewindFolder(TeamLog.RewindFolderType)
         /// (file_operations) Reverted naming convention
@@ -14994,6 +15335,10 @@ public class TeamLog {
         case signInAsSessionStart(TeamLog.SignInAsSessionStartType)
         /// (logins) Failed to sign in via SSO (deprecated, replaced by 'Failed to sign in')
         case ssoError(TeamLog.SsoErrorType)
+        /// (members) Invited members to activate Backup
+        case backupAdminInvitationSent(TeamLog.BackupAdminInvitationSentType)
+        /// (members) Opened Backup invite
+        case backupInvitationOpened(TeamLog.BackupInvitationOpenedType)
         /// (members) Created team invite link
         case createTeamInviteLink(TeamLog.CreateTeamInviteLinkType)
         /// (members) Deleted team invite link
@@ -15184,6 +15529,10 @@ public class TeamLog {
         case outdatedLinkViewReportFailed(TeamLog.OutdatedLinkViewReportFailedType)
         /// (reports) Exported all team Paper docs
         case paperAdminExportStart(TeamLog.PaperAdminExportStartType)
+        /// (reports) Created ransomware report
+        case ransomwareAlertCreateReport(TeamLog.RansomwareAlertCreateReportType)
+        /// (reports) Couldn't generate ransomware report
+        case ransomwareAlertCreateReportFailed(TeamLog.RansomwareAlertCreateReportFailedType)
         /// (reports) Created Smart Sync non-admin devices report
         case smartSyncCreateAdminPrivilegeReport(TeamLog.SmartSyncCreateAdminPrivilegeReportType)
         /// (reports) Created team activity report
@@ -15214,6 +15563,14 @@ public class TeamLog {
         case noteShareReceive(TeamLog.NoteShareReceiveType)
         /// (sharing) Opened shared Paper doc (deprecated, no longer logged)
         case openNoteShared(TeamLog.OpenNoteSharedType)
+        /// (sharing) Created shared link in Replay
+        case replayFileSharedLinkCreated(TeamLog.ReplayFileSharedLinkCreatedType)
+        /// (sharing) Modified shared link in Replay
+        case replayFileSharedLinkModified(TeamLog.ReplayFileSharedLinkModifiedType)
+        /// (sharing) Added member to Replay Project
+        case replayProjectTeamAdd(TeamLog.ReplayProjectTeamAddType)
+        /// (sharing) Removed member from Replay Project
+        case replayProjectTeamDelete(TeamLog.ReplayProjectTeamDeleteType)
         /// (sharing) Added team to shared folder (deprecated, no longer logged)
         case sfAddGroup(TeamLog.SfAddGroupType)
         /// (sharing) Allowed non-collaborators to view links to files in shared folder (deprecated, no longer logged)
@@ -15735,6 +16092,14 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.AdminAlertingTriggeredAlertTypeSerializer().serialize(arg))
                 d[".tag"] = .str("admin_alerting_triggered_alert")
                 return .dictionary(d)
+            case .ransomwareRestoreProcessCompleted(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareRestoreProcessCompletedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_restore_process_completed")
+                return .dictionary(d)
+            case .ransomwareRestoreProcessStarted(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareRestoreProcessStartedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_restore_process_started")
+                return .dictionary(d)
             case .appBlockedByPermissions(let arg):
                 var d = try Serialization.getFields(TeamLog.AppBlockedByPermissionsTypeSerializer().serialize(arg))
                 d[".tag"] = .str("app_blocked_by_permissions")
@@ -16011,6 +16376,34 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.EnabledDomainInvitesTypeSerializer().serialize(arg))
                 d[".tag"] = .str("enabled_domain_invites")
                 return .dictionary(d)
+            case .teamEncryptionKeyCancelKeyDeletion(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyCancelKeyDeletionTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_cancel_key_deletion")
+                return .dictionary(d)
+            case .teamEncryptionKeyCreateKey(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyCreateKeyTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_create_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyDeleteKey(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyDeleteKeyTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_delete_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyDisableKey(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyDisableKeyTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_disable_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyEnableKey(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyEnableKeyTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_enable_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyRotateKey(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyRotateKeyTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_rotate_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyScheduleKeyDeletion(let arg):
+                var d = try Serialization.getFields(TeamLog.TeamEncryptionKeyScheduleKeyDeletionTypeSerializer().serialize(arg))
+                d[".tag"] = .str("team_encryption_key_schedule_key_deletion")
+                return .dictionary(d)
             case .applyNamingConvention(let arg):
                 var d = try Serialization.getFields(TeamLog.ApplyNamingConventionTypeSerializer().serialize(arg))
                 d[".tag"] = .str("apply_naming_convention")
@@ -16022,6 +16415,10 @@ public class TeamLog {
             case .fileAdd(let arg):
                 var d = try Serialization.getFields(TeamLog.FileAddTypeSerializer().serialize(arg))
                 d[".tag"] = .str("file_add")
+                return .dictionary(d)
+            case .fileAddFromAutomation(let arg):
+                var d = try Serialization.getFields(TeamLog.FileAddFromAutomationTypeSerializer().serialize(arg))
+                d[".tag"] = .str("file_add_from_automation")
                 return .dictionary(d)
             case .fileCopy(let arg):
                 var d = try Serialization.getFields(TeamLog.FileCopyTypeSerializer().serialize(arg))
@@ -16106,6 +16503,10 @@ public class TeamLog {
             case .organizeFolderWithTidy(let arg):
                 var d = try Serialization.getFields(TeamLog.OrganizeFolderWithTidyTypeSerializer().serialize(arg))
                 d[".tag"] = .str("organize_folder_with_tidy")
+                return .dictionary(d)
+            case .replayFileDelete(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileDeleteTypeSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_delete")
                 return .dictionary(d)
             case .rewindFolder(let arg):
                 var d = try Serialization.getFields(TeamLog.RewindFolderTypeSerializer().serialize(arg))
@@ -16250,6 +16651,14 @@ public class TeamLog {
             case .ssoError(let arg):
                 var d = try Serialization.getFields(TeamLog.SsoErrorTypeSerializer().serialize(arg))
                 d[".tag"] = .str("sso_error")
+                return .dictionary(d)
+            case .backupAdminInvitationSent(let arg):
+                var d = try Serialization.getFields(TeamLog.BackupAdminInvitationSentTypeSerializer().serialize(arg))
+                d[".tag"] = .str("backup_admin_invitation_sent")
+                return .dictionary(d)
+            case .backupInvitationOpened(let arg):
+                var d = try Serialization.getFields(TeamLog.BackupInvitationOpenedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("backup_invitation_opened")
                 return .dictionary(d)
             case .createTeamInviteLink(let arg):
                 var d = try Serialization.getFields(TeamLog.CreateTeamInviteLinkTypeSerializer().serialize(arg))
@@ -16631,6 +17040,14 @@ public class TeamLog {
                 var d = try Serialization.getFields(TeamLog.PaperAdminExportStartTypeSerializer().serialize(arg))
                 d[".tag"] = .str("paper_admin_export_start")
                 return .dictionary(d)
+            case .ransomwareAlertCreateReport(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareAlertCreateReportTypeSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_alert_create_report")
+                return .dictionary(d)
+            case .ransomwareAlertCreateReportFailed(let arg):
+                var d = try Serialization.getFields(TeamLog.RansomwareAlertCreateReportFailedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("ransomware_alert_create_report_failed")
+                return .dictionary(d)
             case .smartSyncCreateAdminPrivilegeReport(let arg):
                 var d = try Serialization.getFields(TeamLog.SmartSyncCreateAdminPrivilegeReportTypeSerializer().serialize(arg))
                 d[".tag"] = .str("smart_sync_create_admin_privilege_report")
@@ -16690,6 +17107,22 @@ public class TeamLog {
             case .openNoteShared(let arg):
                 var d = try Serialization.getFields(TeamLog.OpenNoteSharedTypeSerializer().serialize(arg))
                 d[".tag"] = .str("open_note_shared")
+                return .dictionary(d)
+            case .replayFileSharedLinkCreated(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileSharedLinkCreatedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_shared_link_created")
+                return .dictionary(d)
+            case .replayFileSharedLinkModified(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayFileSharedLinkModifiedTypeSerializer().serialize(arg))
+                d[".tag"] = .str("replay_file_shared_link_modified")
+                return .dictionary(d)
+            case .replayProjectTeamAdd(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayProjectTeamAddTypeSerializer().serialize(arg))
+                d[".tag"] = .str("replay_project_team_add")
+                return .dictionary(d)
+            case .replayProjectTeamDelete(let arg):
+                var d = try Serialization.getFields(TeamLog.ReplayProjectTeamDeleteTypeSerializer().serialize(arg))
+                d[".tag"] = .str("replay_project_team_delete")
                 return .dictionary(d)
             case .sfAddGroup(let arg):
                 var d = try Serialization.getFields(TeamLog.SfAddGroupTypeSerializer().serialize(arg))
@@ -17680,6 +18113,12 @@ public class TeamLog {
                 case "admin_alerting_triggered_alert":
                     let v = try TeamLog.AdminAlertingTriggeredAlertTypeSerializer().deserialize(json)
                     return EventType.adminAlertingTriggeredAlert(v)
+                case "ransomware_restore_process_completed":
+                    let v = try TeamLog.RansomwareRestoreProcessCompletedTypeSerializer().deserialize(json)
+                    return EventType.ransomwareRestoreProcessCompleted(v)
+                case "ransomware_restore_process_started":
+                    let v = try TeamLog.RansomwareRestoreProcessStartedTypeSerializer().deserialize(json)
+                    return EventType.ransomwareRestoreProcessStarted(v)
                 case "app_blocked_by_permissions":
                     let v = try TeamLog.AppBlockedByPermissionsTypeSerializer().deserialize(json)
                     return EventType.appBlockedByPermissions(v)
@@ -17887,6 +18326,27 @@ public class TeamLog {
                 case "enabled_domain_invites":
                     let v = try TeamLog.EnabledDomainInvitesTypeSerializer().deserialize(json)
                     return EventType.enabledDomainInvites(v)
+                case "team_encryption_key_cancel_key_deletion":
+                    let v = try TeamLog.TeamEncryptionKeyCancelKeyDeletionTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyCancelKeyDeletion(v)
+                case "team_encryption_key_create_key":
+                    let v = try TeamLog.TeamEncryptionKeyCreateKeyTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyCreateKey(v)
+                case "team_encryption_key_delete_key":
+                    let v = try TeamLog.TeamEncryptionKeyDeleteKeyTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyDeleteKey(v)
+                case "team_encryption_key_disable_key":
+                    let v = try TeamLog.TeamEncryptionKeyDisableKeyTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyDisableKey(v)
+                case "team_encryption_key_enable_key":
+                    let v = try TeamLog.TeamEncryptionKeyEnableKeyTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyEnableKey(v)
+                case "team_encryption_key_rotate_key":
+                    let v = try TeamLog.TeamEncryptionKeyRotateKeyTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyRotateKey(v)
+                case "team_encryption_key_schedule_key_deletion":
+                    let v = try TeamLog.TeamEncryptionKeyScheduleKeyDeletionTypeSerializer().deserialize(json)
+                    return EventType.teamEncryptionKeyScheduleKeyDeletion(v)
                 case "apply_naming_convention":
                     let v = try TeamLog.ApplyNamingConventionTypeSerializer().deserialize(json)
                     return EventType.applyNamingConvention(v)
@@ -17896,6 +18356,9 @@ public class TeamLog {
                 case "file_add":
                     let v = try TeamLog.FileAddTypeSerializer().deserialize(json)
                     return EventType.fileAdd(v)
+                case "file_add_from_automation":
+                    let v = try TeamLog.FileAddFromAutomationTypeSerializer().deserialize(json)
+                    return EventType.fileAddFromAutomation(v)
                 case "file_copy":
                     let v = try TeamLog.FileCopyTypeSerializer().deserialize(json)
                     return EventType.fileCopy(v)
@@ -17959,6 +18422,9 @@ public class TeamLog {
                 case "organize_folder_with_tidy":
                     let v = try TeamLog.OrganizeFolderWithTidyTypeSerializer().deserialize(json)
                     return EventType.organizeFolderWithTidy(v)
+                case "replay_file_delete":
+                    let v = try TeamLog.ReplayFileDeleteTypeSerializer().deserialize(json)
+                    return EventType.replayFileDelete(v)
                 case "rewind_folder":
                     let v = try TeamLog.RewindFolderTypeSerializer().deserialize(json)
                     return EventType.rewindFolder(v)
@@ -18067,6 +18533,12 @@ public class TeamLog {
                 case "sso_error":
                     let v = try TeamLog.SsoErrorTypeSerializer().deserialize(json)
                     return EventType.ssoError(v)
+                case "backup_admin_invitation_sent":
+                    let v = try TeamLog.BackupAdminInvitationSentTypeSerializer().deserialize(json)
+                    return EventType.backupAdminInvitationSent(v)
+                case "backup_invitation_opened":
+                    let v = try TeamLog.BackupInvitationOpenedTypeSerializer().deserialize(json)
+                    return EventType.backupInvitationOpened(v)
                 case "create_team_invite_link":
                     let v = try TeamLog.CreateTeamInviteLinkTypeSerializer().deserialize(json)
                     return EventType.createTeamInviteLink(v)
@@ -18352,6 +18824,12 @@ public class TeamLog {
                 case "paper_admin_export_start":
                     let v = try TeamLog.PaperAdminExportStartTypeSerializer().deserialize(json)
                     return EventType.paperAdminExportStart(v)
+                case "ransomware_alert_create_report":
+                    let v = try TeamLog.RansomwareAlertCreateReportTypeSerializer().deserialize(json)
+                    return EventType.ransomwareAlertCreateReport(v)
+                case "ransomware_alert_create_report_failed":
+                    let v = try TeamLog.RansomwareAlertCreateReportFailedTypeSerializer().deserialize(json)
+                    return EventType.ransomwareAlertCreateReportFailed(v)
                 case "smart_sync_create_admin_privilege_report":
                     let v = try TeamLog.SmartSyncCreateAdminPrivilegeReportTypeSerializer().deserialize(json)
                     return EventType.smartSyncCreateAdminPrivilegeReport(v)
@@ -18397,6 +18875,18 @@ public class TeamLog {
                 case "open_note_shared":
                     let v = try TeamLog.OpenNoteSharedTypeSerializer().deserialize(json)
                     return EventType.openNoteShared(v)
+                case "replay_file_shared_link_created":
+                    let v = try TeamLog.ReplayFileSharedLinkCreatedTypeSerializer().deserialize(json)
+                    return EventType.replayFileSharedLinkCreated(v)
+                case "replay_file_shared_link_modified":
+                    let v = try TeamLog.ReplayFileSharedLinkModifiedTypeSerializer().deserialize(json)
+                    return EventType.replayFileSharedLinkModified(v)
+                case "replay_project_team_add":
+                    let v = try TeamLog.ReplayProjectTeamAddTypeSerializer().deserialize(json)
+                    return EventType.replayProjectTeamAdd(v)
+                case "replay_project_team_delete":
+                    let v = try TeamLog.ReplayProjectTeamDeleteTypeSerializer().deserialize(json)
+                    return EventType.replayProjectTeamDelete(v)
                 case "sf_add_group":
                     let v = try TeamLog.SfAddGroupTypeSerializer().deserialize(json)
                     return EventType.sfAddGroup(v)
@@ -19142,6 +19632,10 @@ public class TeamLog {
         case adminAlertingChangedAlertConfig
         /// (admin_alerting) Triggered security alert
         case adminAlertingTriggeredAlert
+        /// (admin_alerting) Completed ransomware restore process
+        case ransomwareRestoreProcessCompleted
+        /// (admin_alerting) Started ransomware restore process
+        case ransomwareRestoreProcessStarted
         /// (apps) Failed to connect app for member
         case appBlockedByPermissions
         /// (apps) Linked app for team
@@ -19280,12 +19774,28 @@ public class TeamLog {
         case domainVerificationRemoveDomain
         /// (domains) Enabled domain invites (deprecated, no longer logged)
         case enabledDomainInvites
+        /// (encryption) Canceled team encryption key deletion
+        case teamEncryptionKeyCancelKeyDeletion
+        /// (encryption) Created team encryption key
+        case teamEncryptionKeyCreateKey
+        /// (encryption) Deleted team encryption key
+        case teamEncryptionKeyDeleteKey
+        /// (encryption) Disabled team encryption key
+        case teamEncryptionKeyDisableKey
+        /// (encryption) Enabled team encryption key
+        case teamEncryptionKeyEnableKey
+        /// (encryption) Rotated team encryption key (deprecated, no longer logged)
+        case teamEncryptionKeyRotateKey
+        /// (encryption) Scheduled encryption key deletion
+        case teamEncryptionKeyScheduleKeyDeletion
         /// (file_operations) Applied naming convention
         case applyNamingConvention
         /// (file_operations) Created folders (deprecated, no longer logged)
         case createFolder
         /// (file_operations) Added files and/or folders
         case fileAdd
+        /// (file_operations) Added files and/or folders from automation
+        case fileAddFromAutomation
         /// (file_operations) Copied files and/or folders
         case fileCopy
         /// (file_operations) Deleted files and/or folders
@@ -19328,6 +19838,8 @@ public class TeamLog {
         case objectLabelUpdatedValue
         /// (file_operations) Organized a folder with multi-file organize
         case organizeFolderWithTidy
+        /// (file_operations) Deleted files in Replay
+        case replayFileDelete
         /// (file_operations) Rewound a folder
         case rewindFolder
         /// (file_operations) Reverted naming convention
@@ -19400,6 +19912,10 @@ public class TeamLog {
         case signInAsSessionStart
         /// (logins) Failed to sign in via SSO (deprecated, replaced by 'Failed to sign in')
         case ssoError
+        /// (members) Invited members to activate Backup
+        case backupAdminInvitationSent
+        /// (members) Opened Backup invite
+        case backupInvitationOpened
         /// (members) Created team invite link
         case createTeamInviteLink
         /// (members) Deleted team invite link
@@ -19590,6 +20106,10 @@ public class TeamLog {
         case outdatedLinkViewReportFailed
         /// (reports) Exported all team Paper docs
         case paperAdminExportStart
+        /// (reports) Created ransomware report
+        case ransomwareAlertCreateReport
+        /// (reports) Couldn't generate ransomware report
+        case ransomwareAlertCreateReportFailed
         /// (reports) Created Smart Sync non-admin devices report
         case smartSyncCreateAdminPrivilegeReport
         /// (reports) Created team activity report
@@ -19620,6 +20140,14 @@ public class TeamLog {
         case noteShareReceive
         /// (sharing) Opened shared Paper doc (deprecated, no longer logged)
         case openNoteShared
+        /// (sharing) Created shared link in Replay
+        case replayFileSharedLinkCreated
+        /// (sharing) Modified shared link in Replay
+        case replayFileSharedLinkModified
+        /// (sharing) Added member to Replay Project
+        case replayProjectTeamAdd
+        /// (sharing) Removed member from Replay Project
+        case replayProjectTeamDelete
         /// (sharing) Added team to shared folder (deprecated, no longer logged)
         case sfAddGroup
         /// (sharing) Allowed non-collaborators to view links to files in shared folder (deprecated, no longer logged)
@@ -20141,6 +20669,14 @@ public class TeamLog {
                 var d = [String: JSON]()
                 d[".tag"] = .str("admin_alerting_triggered_alert")
                 return .dictionary(d)
+            case .ransomwareRestoreProcessCompleted:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ransomware_restore_process_completed")
+                return .dictionary(d)
+            case .ransomwareRestoreProcessStarted:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ransomware_restore_process_started")
+                return .dictionary(d)
             case .appBlockedByPermissions:
                 var d = [String: JSON]()
                 d[".tag"] = .str("app_blocked_by_permissions")
@@ -20417,6 +20953,34 @@ public class TeamLog {
                 var d = [String: JSON]()
                 d[".tag"] = .str("enabled_domain_invites")
                 return .dictionary(d)
+            case .teamEncryptionKeyCancelKeyDeletion:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_cancel_key_deletion")
+                return .dictionary(d)
+            case .teamEncryptionKeyCreateKey:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_create_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyDeleteKey:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_delete_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyDisableKey:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_disable_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyEnableKey:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_enable_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyRotateKey:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_rotate_key")
+                return .dictionary(d)
+            case .teamEncryptionKeyScheduleKeyDeletion:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_encryption_key_schedule_key_deletion")
+                return .dictionary(d)
             case .applyNamingConvention:
                 var d = [String: JSON]()
                 d[".tag"] = .str("apply_naming_convention")
@@ -20428,6 +20992,10 @@ public class TeamLog {
             case .fileAdd:
                 var d = [String: JSON]()
                 d[".tag"] = .str("file_add")
+                return .dictionary(d)
+            case .fileAddFromAutomation:
+                var d = [String: JSON]()
+                d[".tag"] = .str("file_add_from_automation")
                 return .dictionary(d)
             case .fileCopy:
                 var d = [String: JSON]()
@@ -20512,6 +21080,10 @@ public class TeamLog {
             case .organizeFolderWithTidy:
                 var d = [String: JSON]()
                 d[".tag"] = .str("organize_folder_with_tidy")
+                return .dictionary(d)
+            case .replayFileDelete:
+                var d = [String: JSON]()
+                d[".tag"] = .str("replay_file_delete")
                 return .dictionary(d)
             case .rewindFolder:
                 var d = [String: JSON]()
@@ -20656,6 +21228,14 @@ public class TeamLog {
             case .ssoError:
                 var d = [String: JSON]()
                 d[".tag"] = .str("sso_error")
+                return .dictionary(d)
+            case .backupAdminInvitationSent:
+                var d = [String: JSON]()
+                d[".tag"] = .str("backup_admin_invitation_sent")
+                return .dictionary(d)
+            case .backupInvitationOpened:
+                var d = [String: JSON]()
+                d[".tag"] = .str("backup_invitation_opened")
                 return .dictionary(d)
             case .createTeamInviteLink:
                 var d = [String: JSON]()
@@ -21037,6 +21617,14 @@ public class TeamLog {
                 var d = [String: JSON]()
                 d[".tag"] = .str("paper_admin_export_start")
                 return .dictionary(d)
+            case .ransomwareAlertCreateReport:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ransomware_alert_create_report")
+                return .dictionary(d)
+            case .ransomwareAlertCreateReportFailed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ransomware_alert_create_report_failed")
+                return .dictionary(d)
             case .smartSyncCreateAdminPrivilegeReport:
                 var d = [String: JSON]()
                 d[".tag"] = .str("smart_sync_create_admin_privilege_report")
@@ -21096,6 +21684,22 @@ public class TeamLog {
             case .openNoteShared:
                 var d = [String: JSON]()
                 d[".tag"] = .str("open_note_shared")
+                return .dictionary(d)
+            case .replayFileSharedLinkCreated:
+                var d = [String: JSON]()
+                d[".tag"] = .str("replay_file_shared_link_created")
+                return .dictionary(d)
+            case .replayFileSharedLinkModified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("replay_file_shared_link_modified")
+                return .dictionary(d)
+            case .replayProjectTeamAdd:
+                var d = [String: JSON]()
+                d[".tag"] = .str("replay_project_team_add")
+                return .dictionary(d)
+            case .replayProjectTeamDelete:
+                var d = [String: JSON]()
+                d[".tag"] = .str("replay_project_team_delete")
                 return .dictionary(d)
             case .sfAddGroup:
                 var d = [String: JSON]()
@@ -22083,6 +22687,10 @@ public class TeamLog {
                     return EventTypeArg.adminAlertingChangedAlertConfig
                 case "admin_alerting_triggered_alert":
                     return EventTypeArg.adminAlertingTriggeredAlert
+                case "ransomware_restore_process_completed":
+                    return EventTypeArg.ransomwareRestoreProcessCompleted
+                case "ransomware_restore_process_started":
+                    return EventTypeArg.ransomwareRestoreProcessStarted
                 case "app_blocked_by_permissions":
                     return EventTypeArg.appBlockedByPermissions
                 case "app_link_team":
@@ -22221,12 +22829,28 @@ public class TeamLog {
                     return EventTypeArg.domainVerificationRemoveDomain
                 case "enabled_domain_invites":
                     return EventTypeArg.enabledDomainInvites
+                case "team_encryption_key_cancel_key_deletion":
+                    return EventTypeArg.teamEncryptionKeyCancelKeyDeletion
+                case "team_encryption_key_create_key":
+                    return EventTypeArg.teamEncryptionKeyCreateKey
+                case "team_encryption_key_delete_key":
+                    return EventTypeArg.teamEncryptionKeyDeleteKey
+                case "team_encryption_key_disable_key":
+                    return EventTypeArg.teamEncryptionKeyDisableKey
+                case "team_encryption_key_enable_key":
+                    return EventTypeArg.teamEncryptionKeyEnableKey
+                case "team_encryption_key_rotate_key":
+                    return EventTypeArg.teamEncryptionKeyRotateKey
+                case "team_encryption_key_schedule_key_deletion":
+                    return EventTypeArg.teamEncryptionKeyScheduleKeyDeletion
                 case "apply_naming_convention":
                     return EventTypeArg.applyNamingConvention
                 case "create_folder":
                     return EventTypeArg.createFolder
                 case "file_add":
                     return EventTypeArg.fileAdd
+                case "file_add_from_automation":
+                    return EventTypeArg.fileAddFromAutomation
                 case "file_copy":
                     return EventTypeArg.fileCopy
                 case "file_delete":
@@ -22269,6 +22893,8 @@ public class TeamLog {
                     return EventTypeArg.objectLabelUpdatedValue
                 case "organize_folder_with_tidy":
                     return EventTypeArg.organizeFolderWithTidy
+                case "replay_file_delete":
+                    return EventTypeArg.replayFileDelete
                 case "rewind_folder":
                     return EventTypeArg.rewindFolder
                 case "undo_naming_convention":
@@ -22341,6 +22967,10 @@ public class TeamLog {
                     return EventTypeArg.signInAsSessionStart
                 case "sso_error":
                     return EventTypeArg.ssoError
+                case "backup_admin_invitation_sent":
+                    return EventTypeArg.backupAdminInvitationSent
+                case "backup_invitation_opened":
+                    return EventTypeArg.backupInvitationOpened
                 case "create_team_invite_link":
                     return EventTypeArg.createTeamInviteLink
                 case "delete_team_invite_link":
@@ -22531,6 +23161,10 @@ public class TeamLog {
                     return EventTypeArg.outdatedLinkViewReportFailed
                 case "paper_admin_export_start":
                     return EventTypeArg.paperAdminExportStart
+                case "ransomware_alert_create_report":
+                    return EventTypeArg.ransomwareAlertCreateReport
+                case "ransomware_alert_create_report_failed":
+                    return EventTypeArg.ransomwareAlertCreateReportFailed
                 case "smart_sync_create_admin_privilege_report":
                     return EventTypeArg.smartSyncCreateAdminPrivilegeReport
                 case "team_activity_create_report":
@@ -22561,6 +23195,14 @@ public class TeamLog {
                     return EventTypeArg.noteShareReceive
                 case "open_note_shared":
                     return EventTypeArg.openNoteShared
+                case "replay_file_shared_link_created":
+                    return EventTypeArg.replayFileSharedLinkCreated
+                case "replay_file_shared_link_modified":
+                    return EventTypeArg.replayFileSharedLinkModified
+                case "replay_project_team_add":
+                    return EventTypeArg.replayProjectTeamAdd
+                case "replay_project_team_delete":
+                    return EventTypeArg.replayProjectTeamDelete
                 case "sf_add_group":
                     return EventTypeArg.sfAddGroup
                 case "sf_allow_non_members_to_view_shared_links":
@@ -24429,6 +25071,72 @@ public class TeamLog {
                 return FileAddDetails()
             default:
                 throw JSONSerializerError.deserializeError(type: FileAddDetails.self, json: json)
+            }
+        }
+    }
+
+    /// Added files and/or folders from automation.
+    public class FileAddFromAutomationDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FileAddFromAutomationDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class FileAddFromAutomationDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FileAddFromAutomationDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> FileAddFromAutomationDetails {
+            switch json {
+            case .dictionary:
+                return FileAddFromAutomationDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: FileAddFromAutomationDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The FileAddFromAutomationType struct
+    public class FileAddFromAutomationType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FileAddFromAutomationTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class FileAddFromAutomationTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FileAddFromAutomationType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> FileAddFromAutomationType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return FileAddFromAutomationType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: FileAddFromAutomationType.self, json: json)
             }
         }
     }
@@ -33356,6 +34064,8 @@ public class TeamLog {
         /// An unspecified error.
         case googleOauth
         /// An unspecified error.
+        case lenovoOauth
+        /// An unspecified error.
         case password
         /// An unspecified error.
         case qrCode
@@ -33392,6 +34102,10 @@ public class TeamLog {
             case .googleOauth:
                 var d = [String: JSON]()
                 d[".tag"] = .str("google_oauth")
+                return .dictionary(d)
+            case .lenovoOauth:
+                var d = [String: JSON]()
+                d[".tag"] = .str("lenovo_oauth")
                 return .dictionary(d)
             case .password:
                 var d = [String: JSON]()
@@ -33431,6 +34145,8 @@ public class TeamLog {
                     return LoginMethod.firstPartyTokenExchange
                 case "google_oauth":
                     return LoginMethod.googleOauth
+                case "lenovo_oauth":
+                    return LoginMethod.lenovoOauth
                 case "password":
                     return LoginMethod.password
                 case "qr_code":
@@ -43480,6 +44196,315 @@ public class TeamLog {
         }
     }
 
+    /// Created ransomware report.
+    public class RansomwareAlertCreateReportDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareAlertCreateReportDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareAlertCreateReportDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareAlertCreateReportDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareAlertCreateReportDetails {
+            switch json {
+            case .dictionary:
+                return RansomwareAlertCreateReportDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareAlertCreateReportDetails.self, json: json)
+            }
+        }
+    }
+
+    /// Couldn't generate ransomware report.
+    public class RansomwareAlertCreateReportFailedDetails: CustomStringConvertible {
+        /// Failure reason.
+        public let failureReason: Team.TeamReportFailureReason
+        public init(failureReason: Team.TeamReportFailureReason) {
+            self.failureReason = failureReason
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareAlertCreateReportFailedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareAlertCreateReportFailedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareAlertCreateReportFailedDetails) throws -> JSON {
+            let output = [
+                "failure_reason": try Team.TeamReportFailureReasonSerializer().serialize(value.failureReason),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareAlertCreateReportFailedDetails {
+            switch json {
+            case .dictionary(let dict):
+                let failureReason = try Team.TeamReportFailureReasonSerializer().deserialize(dict["failure_reason"] ?? .null)
+                return RansomwareAlertCreateReportFailedDetails(failureReason: failureReason)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareAlertCreateReportFailedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The RansomwareAlertCreateReportFailedType struct
+    public class RansomwareAlertCreateReportFailedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareAlertCreateReportFailedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareAlertCreateReportFailedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareAlertCreateReportFailedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareAlertCreateReportFailedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return RansomwareAlertCreateReportFailedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareAlertCreateReportFailedType.self, json: json)
+            }
+        }
+    }
+
+    /// The RansomwareAlertCreateReportType struct
+    public class RansomwareAlertCreateReportType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareAlertCreateReportTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareAlertCreateReportTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareAlertCreateReportType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareAlertCreateReportType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return RansomwareAlertCreateReportType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareAlertCreateReportType.self, json: json)
+            }
+        }
+    }
+
+    /// Completed ransomware restore process.
+    public class RansomwareRestoreProcessCompletedDetails: CustomStringConvertible {
+        /// The status of the restore process.
+        public let status: String
+        /// Restored files count.
+        public let restoredFilesCount: Int64
+        /// Restored files failed count.
+        public let restoredFilesFailedCount: Int64
+        public init(status: String, restoredFilesCount: Int64, restoredFilesFailedCount: Int64) {
+            stringValidator()(status)
+            self.status = status
+            comparableValidator()(restoredFilesCount)
+            self.restoredFilesCount = restoredFilesCount
+            comparableValidator()(restoredFilesFailedCount)
+            self.restoredFilesFailedCount = restoredFilesFailedCount
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareRestoreProcessCompletedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareRestoreProcessCompletedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareRestoreProcessCompletedDetails) throws -> JSON {
+            let output = [
+                "status": try Serialization._StringSerializer.serialize(value.status),
+                "restored_files_count": try Serialization._Int64Serializer.serialize(value.restoredFilesCount),
+                "restored_files_failed_count": try Serialization._Int64Serializer.serialize(value.restoredFilesFailedCount),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareRestoreProcessCompletedDetails {
+            switch json {
+            case .dictionary(let dict):
+                let status = try Serialization._StringSerializer.deserialize(dict["status"] ?? .null)
+                let restoredFilesCount = try Serialization._Int64Serializer.deserialize(dict["restored_files_count"] ?? .null)
+                let restoredFilesFailedCount = try Serialization._Int64Serializer.deserialize(dict["restored_files_failed_count"] ?? .null)
+                return RansomwareRestoreProcessCompletedDetails(
+                    status: status,
+                    restoredFilesCount: restoredFilesCount,
+                    restoredFilesFailedCount: restoredFilesFailedCount
+                )
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareRestoreProcessCompletedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The RansomwareRestoreProcessCompletedType struct
+    public class RansomwareRestoreProcessCompletedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareRestoreProcessCompletedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareRestoreProcessCompletedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareRestoreProcessCompletedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareRestoreProcessCompletedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return RansomwareRestoreProcessCompletedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareRestoreProcessCompletedType.self, json: json)
+            }
+        }
+    }
+
+    /// Started ransomware restore process.
+    public class RansomwareRestoreProcessStartedDetails: CustomStringConvertible {
+        /// Ransomware filename extension.
+        public let extension_: String
+        public init(extension_: String) {
+            stringValidator()(extension_)
+            self.extension_ = extension_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareRestoreProcessStartedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareRestoreProcessStartedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareRestoreProcessStartedDetails) throws -> JSON {
+            let output = [
+                "extension": try Serialization._StringSerializer.serialize(value.extension_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareRestoreProcessStartedDetails {
+            switch json {
+            case .dictionary(let dict):
+                let extension_ = try Serialization._StringSerializer.deserialize(dict["extension"] ?? .null)
+                return RansomwareRestoreProcessStartedDetails(extension_: extension_)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareRestoreProcessStartedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The RansomwareRestoreProcessStartedType struct
+    public class RansomwareRestoreProcessStartedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RansomwareRestoreProcessStartedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class RansomwareRestoreProcessStartedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RansomwareRestoreProcessStartedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> RansomwareRestoreProcessStartedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return RansomwareRestoreProcessStartedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: RansomwareRestoreProcessStartedType.self, json: json)
+            }
+        }
+    }
+
     /// Recipients Configuration
     public class RecipientsConfiguration: CustomStringConvertible {
         /// Recipients setting type.
@@ -43570,6 +44595,336 @@ public class TeamLog {
                 return RelocateAssetReferencesLogInfo(srcAssetIndex: srcAssetIndex, destAssetIndex: destAssetIndex)
             default:
                 throw JSONSerializerError.deserializeError(type: RelocateAssetReferencesLogInfo.self, json: json)
+            }
+        }
+    }
+
+    /// Deleted files in Replay.
+    public class ReplayFileDeleteDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileDeleteDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileDeleteDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileDeleteDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileDeleteDetails {
+            switch json {
+            case .dictionary:
+                return ReplayFileDeleteDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileDeleteDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ReplayFileDeleteType struct
+    public class ReplayFileDeleteType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileDeleteTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileDeleteTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileDeleteType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileDeleteType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return ReplayFileDeleteType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileDeleteType.self, json: json)
+            }
+        }
+    }
+
+    /// Created shared link in Replay.
+    public class ReplayFileSharedLinkCreatedDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileSharedLinkCreatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileSharedLinkCreatedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileSharedLinkCreatedDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileSharedLinkCreatedDetails {
+            switch json {
+            case .dictionary:
+                return ReplayFileSharedLinkCreatedDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileSharedLinkCreatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ReplayFileSharedLinkCreatedType struct
+    public class ReplayFileSharedLinkCreatedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileSharedLinkCreatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileSharedLinkCreatedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileSharedLinkCreatedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileSharedLinkCreatedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return ReplayFileSharedLinkCreatedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileSharedLinkCreatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Modified shared link in Replay.
+    public class ReplayFileSharedLinkModifiedDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileSharedLinkModifiedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileSharedLinkModifiedDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileSharedLinkModifiedDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileSharedLinkModifiedDetails {
+            switch json {
+            case .dictionary:
+                return ReplayFileSharedLinkModifiedDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileSharedLinkModifiedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ReplayFileSharedLinkModifiedType struct
+    public class ReplayFileSharedLinkModifiedType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayFileSharedLinkModifiedTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayFileSharedLinkModifiedTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayFileSharedLinkModifiedType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayFileSharedLinkModifiedType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return ReplayFileSharedLinkModifiedType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayFileSharedLinkModifiedType.self, json: json)
+            }
+        }
+    }
+
+    /// Added member to Replay Project.
+    public class ReplayProjectTeamAddDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayProjectTeamAddDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayProjectTeamAddDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayProjectTeamAddDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayProjectTeamAddDetails {
+            switch json {
+            case .dictionary:
+                return ReplayProjectTeamAddDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayProjectTeamAddDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ReplayProjectTeamAddType struct
+    public class ReplayProjectTeamAddType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayProjectTeamAddTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayProjectTeamAddTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayProjectTeamAddType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayProjectTeamAddType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return ReplayProjectTeamAddType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayProjectTeamAddType.self, json: json)
+            }
+        }
+    }
+
+    /// Removed member from Replay Project.
+    public class ReplayProjectTeamDeleteDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayProjectTeamDeleteDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayProjectTeamDeleteDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayProjectTeamDeleteDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayProjectTeamDeleteDetails {
+            switch json {
+            case .dictionary:
+                return ReplayProjectTeamDeleteDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayProjectTeamDeleteDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ReplayProjectTeamDeleteType struct
+    public class ReplayProjectTeamDeleteType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ReplayProjectTeamDeleteTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class ReplayProjectTeamDeleteTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ReplayProjectTeamDeleteType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ReplayProjectTeamDeleteType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return ReplayProjectTeamDeleteType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: ReplayProjectTeamDeleteType.self, json: json)
             }
         }
     }
@@ -55612,6 +56967,468 @@ public class TeamLog {
                 return TeamDetails(team: team)
             default:
                 throw JSONSerializerError.deserializeError(type: TeamDetails.self, json: json)
+            }
+        }
+    }
+
+    /// Canceled team encryption key deletion.
+    public class TeamEncryptionKeyCancelKeyDeletionDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyCancelKeyDeletionDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyCancelKeyDeletionDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyCancelKeyDeletionDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyCancelKeyDeletionDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyCancelKeyDeletionDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyCancelKeyDeletionDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyCancelKeyDeletionType struct
+    public class TeamEncryptionKeyCancelKeyDeletionType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyCancelKeyDeletionTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyCancelKeyDeletionTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyCancelKeyDeletionType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyCancelKeyDeletionType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyCancelKeyDeletionType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyCancelKeyDeletionType.self, json: json)
+            }
+        }
+    }
+
+    /// Created team encryption key.
+    public class TeamEncryptionKeyCreateKeyDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyCreateKeyDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyCreateKeyDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyCreateKeyDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyCreateKeyDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyCreateKeyDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyCreateKeyDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyCreateKeyType struct
+    public class TeamEncryptionKeyCreateKeyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyCreateKeyTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyCreateKeyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyCreateKeyType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyCreateKeyType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyCreateKeyType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyCreateKeyType.self, json: json)
+            }
+        }
+    }
+
+    /// Deleted team encryption key.
+    public class TeamEncryptionKeyDeleteKeyDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyDeleteKeyDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyDeleteKeyDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyDeleteKeyDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyDeleteKeyDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyDeleteKeyDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyDeleteKeyDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyDeleteKeyType struct
+    public class TeamEncryptionKeyDeleteKeyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyDeleteKeyTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyDeleteKeyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyDeleteKeyType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyDeleteKeyType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyDeleteKeyType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyDeleteKeyType.self, json: json)
+            }
+        }
+    }
+
+    /// Disabled team encryption key.
+    public class TeamEncryptionKeyDisableKeyDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyDisableKeyDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyDisableKeyDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyDisableKeyDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyDisableKeyDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyDisableKeyDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyDisableKeyDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyDisableKeyType struct
+    public class TeamEncryptionKeyDisableKeyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyDisableKeyTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyDisableKeyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyDisableKeyType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyDisableKeyType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyDisableKeyType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyDisableKeyType.self, json: json)
+            }
+        }
+    }
+
+    /// Enabled team encryption key.
+    public class TeamEncryptionKeyEnableKeyDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyEnableKeyDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyEnableKeyDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyEnableKeyDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyEnableKeyDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyEnableKeyDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyEnableKeyDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyEnableKeyType struct
+    public class TeamEncryptionKeyEnableKeyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyEnableKeyTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyEnableKeyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyEnableKeyType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyEnableKeyType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyEnableKeyType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyEnableKeyType.self, json: json)
+            }
+        }
+    }
+
+    /// Rotated team encryption key.
+    public class TeamEncryptionKeyRotateKeyDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyRotateKeyDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyRotateKeyDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyRotateKeyDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyRotateKeyDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyRotateKeyDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyRotateKeyDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyRotateKeyType struct
+    public class TeamEncryptionKeyRotateKeyType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyRotateKeyTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyRotateKeyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyRotateKeyType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyRotateKeyType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyRotateKeyType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyRotateKeyType.self, json: json)
+            }
+        }
+    }
+
+    /// Scheduled encryption key deletion.
+    public class TeamEncryptionKeyScheduleKeyDeletionDetails: CustomStringConvertible {
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyScheduleKeyDeletionDetailsSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyScheduleKeyDeletionDetailsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyScheduleKeyDeletionDetails) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyScheduleKeyDeletionDetails {
+            switch json {
+            case .dictionary:
+                return TeamEncryptionKeyScheduleKeyDeletionDetails()
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyScheduleKeyDeletionDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamEncryptionKeyScheduleKeyDeletionType struct
+    public class TeamEncryptionKeyScheduleKeyDeletionType: CustomStringConvertible {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamEncryptionKeyScheduleKeyDeletionTypeSerializer().serialize(self)))"
+            } catch {
+                return "\(self)"
+            }
+        }
+    }
+
+    public class TeamEncryptionKeyScheduleKeyDeletionTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamEncryptionKeyScheduleKeyDeletionType) throws -> JSON {
+            let output = [
+                "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamEncryptionKeyScheduleKeyDeletionType {
+            switch json {
+            case .dictionary(let dict):
+                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                return TeamEncryptionKeyScheduleKeyDeletionType(description_: description_)
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamEncryptionKeyScheduleKeyDeletionType.self, json: json)
             }
         }
     }

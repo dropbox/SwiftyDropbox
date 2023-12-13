@@ -675,8 +675,9 @@ public class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000 members can be
-    /// specified in a single call.
+    /// Get users custom quota. A maximum of 1000 members can be specified in a single call. Note: to apply a custom
+    /// space limit, a team admin needs to set a member space limit for the team first. (the team admin can check
+    /// the settings here: https://www.dropbox.com/team/admin/settings/space).
     ///
     /// - scope: members.read
     ///
@@ -691,7 +692,9 @@ public class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
+    /// Remove users custom quota. A maximum of 1000 members can be specified in a single call. Note: to apply a custom
+    /// space limit, a team admin needs to set a member space limit for the team first. (the team admin can check
+    /// the settings here: https://www.dropbox.com/team/admin/settings/space).
     ///
     /// - scope: members.write
     ///
@@ -707,7 +710,8 @@ public class TeamRoutes {
     }
 
     /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be specified in a
-    /// single call.
+    /// single call. Note: to apply a custom space limit, a team admin needs to set a member space limit for the
+    /// team first. (the team admin can check the settings here: https://www.dropbox.com/team/admin/settings/space).
     ///
     /// - scope: members.read
     ///
