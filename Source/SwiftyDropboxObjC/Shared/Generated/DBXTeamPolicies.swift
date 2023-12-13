@@ -1131,6 +1131,75 @@ public class DBXTeamPoliciesRolloutMethodAddMemberToExceptions: DBXTeamPoliciesR
     }
 }
 
+/// Policy governing whether shared folder membership is required to access shared links.
+@objc
+public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy: NSObject {
+    let swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
+
+    public init(swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy) -> DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
+        switch swift {
+        case .members:
+            return DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyMembers()
+        case .anyone:
+            return DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyAnyone()
+        case .other:
+            return DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asMembers: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyMembers? {
+        self as? DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyMembers
+    }
+
+    @objc
+    public var asAnyone: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyAnyone? {
+        self as? DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyAnyone
+    }
+
+    @objc
+    public var asOther: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyOther? {
+        self as? DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyOther
+    }
+}
+
+/// Only members of shared folders can access folder content via shared link.
+@objc
+public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyMembers: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy.members
+        super.init(swift: swift)
+    }
+}
+
+/// Anyone can access folder content via shared link.
+@objc
+public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyAnyone: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy.anyone
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyOther: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy.other
+        super.init(swift: swift)
+    }
+}
+
 /// Policy governing which shared folders a team member can join.
 @objc
 public class DBXTeamPoliciesSharedFolderJoinPolicy: NSObject {
@@ -1939,19 +2008,26 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
     /// Who can create groups.
     @objc
     public var groupCreationPolicy: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation(swift: swift.groupCreationPolicy) }
+    /// Who can view links to content in shared folders.
+    @objc
+    public var sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
+        DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy(swift: swift.sharedFolderLinkRestrictionPolicy)
+    }
 
     @objc
     public init(
         sharedFolderMemberPolicy: DBXTeamPoliciesSharedFolderMemberPolicy,
         sharedFolderJoinPolicy: DBXTeamPoliciesSharedFolderJoinPolicy,
         sharedLinkCreatePolicy: DBXTeamPoliciesSharedLinkCreatePolicy,
-        groupCreationPolicy: DBXTeamPoliciesGroupCreation
+        groupCreationPolicy: DBXTeamPoliciesGroupCreation,
+        sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy
     ) {
         self.swift = TeamPolicies.TeamSharingPolicies(
             sharedFolderMemberPolicy: sharedFolderMemberPolicy.swift,
             sharedFolderJoinPolicy: sharedFolderJoinPolicy.swift,
             sharedLinkCreatePolicy: sharedLinkCreatePolicy.swift,
-            groupCreationPolicy: groupCreationPolicy.swift
+            groupCreationPolicy: groupCreationPolicy.swift,
+            sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy.swift
         )
     }
 

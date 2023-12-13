@@ -523,6 +523,8 @@ public class DBXTeamLogAccountCapturePolicy: NSObject {
             return DBXTeamLogAccountCapturePolicyDisabled()
         case .invitedUsers:
             return DBXTeamLogAccountCapturePolicyInvitedUsers()
+        case .preventPersonalCreation:
+            return DBXTeamLogAccountCapturePolicyPreventPersonalCreation()
         case .other:
             return DBXTeamLogAccountCapturePolicyOther()
         }
@@ -544,6 +546,11 @@ public class DBXTeamLogAccountCapturePolicy: NSObject {
     @objc
     public var asInvitedUsers: DBXTeamLogAccountCapturePolicyInvitedUsers? {
         self as? DBXTeamLogAccountCapturePolicyInvitedUsers
+    }
+
+    @objc
+    public var asPreventPersonalCreation: DBXTeamLogAccountCapturePolicyPreventPersonalCreation? {
+        self as? DBXTeamLogAccountCapturePolicyPreventPersonalCreation
     }
 
     @objc
@@ -578,6 +585,16 @@ public class DBXTeamLogAccountCapturePolicyInvitedUsers: DBXTeamLogAccountCaptur
     @objc
     public init() {
         let swift = TeamLog.AccountCapturePolicy.invitedUsers
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogAccountCapturePolicyPreventPersonalCreation: DBXTeamLogAccountCapturePolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.AccountCapturePolicy.preventPersonalCreation
         super.init(swift: swift)
     }
 }
@@ -3027,6 +3044,76 @@ public class DBXTeamLogAssetLogInfoOther: DBXTeamLogAssetLogInfo {
         let swift = TeamLog.AssetLogInfo.other
         super.init(swift: swift)
     }
+}
+
+/// Invited members to activate Backup.
+@objc
+public class DBXTeamLogBackupAdminInvitationSentDetails: NSObject {
+    let swift: TeamLog.BackupAdminInvitationSentDetails
+
+    public init(swift: TeamLog.BackupAdminInvitationSentDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible BackupAdminInvitationSentType struct
+@objc
+public class DBXTeamLogBackupAdminInvitationSentType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.BackupAdminInvitationSentType(description_: description_)
+    }
+
+    let swift: TeamLog.BackupAdminInvitationSentType
+
+    public init(swift: TeamLog.BackupAdminInvitationSentType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Opened Backup invite.
+@objc
+public class DBXTeamLogBackupInvitationOpenedDetails: NSObject {
+    let swift: TeamLog.BackupInvitationOpenedDetails
+
+    public init(swift: TeamLog.BackupInvitationOpenedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible BackupInvitationOpenedType struct
+@objc
+public class DBXTeamLogBackupInvitationOpenedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.BackupInvitationOpenedType(description_: description_)
+    }
+
+    let swift: TeamLog.BackupInvitationOpenedType
+
+    public init(swift: TeamLog.BackupInvitationOpenedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
 }
 
 /// Backup status
@@ -7922,6 +8009,8 @@ public class DBXTeamLogEventCategory: NSObject {
             return DBXTeamLogEventCategoryDevices()
         case .domains:
             return DBXTeamLogEventCategoryDomains()
+        case .encryption:
+            return DBXTeamLogEventCategoryEncryption()
         case .fileOperations:
             return DBXTeamLogEventCategoryFileOperations()
         case .fileRequests:
@@ -7990,6 +8079,11 @@ public class DBXTeamLogEventCategory: NSObject {
     @objc
     public var asDomains: DBXTeamLogEventCategoryDomains? {
         self as? DBXTeamLogEventCategoryDomains
+    }
+
+    @objc
+    public var asEncryption: DBXTeamLogEventCategoryEncryption? {
+        self as? DBXTeamLogEventCategoryEncryption
     }
 
     @objc
@@ -8134,6 +8228,16 @@ public class DBXTeamLogEventCategoryDomains: DBXTeamLogEventCategory {
     @objc
     public init() {
         let swift = TeamLog.EventCategory.domains
+        super.init(swift: swift)
+    }
+}
+
+/// Events that involve encryption.
+@objc
+public class DBXTeamLogEventCategoryEncryption: DBXTeamLogEventCategory {
+    @objc
+    public init() {
+        let swift = TeamLog.EventCategory.encryption
         super.init(swift: swift)
     }
 }
@@ -8330,6 +8434,12 @@ public class DBXTeamLogEventDetails: NSObject {
         case .adminAlertingTriggeredAlertDetails(let swiftArg):
             let arg = DBXTeamLogAdminAlertingTriggeredAlertDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsAdminAlertingTriggeredAlertDetails(arg)
+        case .ransomwareRestoreProcessCompletedDetails(let swiftArg):
+            let arg = DBXTeamLogRansomwareRestoreProcessCompletedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsRansomwareRestoreProcessCompletedDetails(arg)
+        case .ransomwareRestoreProcessStartedDetails(let swiftArg):
+            let arg = DBXTeamLogRansomwareRestoreProcessStartedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsRansomwareRestoreProcessStartedDetails(arg)
         case .appBlockedByPermissionsDetails(let swiftArg):
             let arg = DBXTeamLogAppBlockedByPermissionsDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsAppBlockedByPermissionsDetails(arg)
@@ -8537,6 +8647,27 @@ public class DBXTeamLogEventDetails: NSObject {
         case .enabledDomainInvitesDetails(let swiftArg):
             let arg = DBXTeamLogEnabledDomainInvitesDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsEnabledDomainInvitesDetails(arg)
+        case .teamEncryptionKeyCancelKeyDeletionDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyCancelKeyDeletionDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyCancelKeyDeletionDetails(arg)
+        case .teamEncryptionKeyCreateKeyDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyCreateKeyDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyCreateKeyDetails(arg)
+        case .teamEncryptionKeyDeleteKeyDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyDeleteKeyDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyDeleteKeyDetails(arg)
+        case .teamEncryptionKeyDisableKeyDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyDisableKeyDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyDisableKeyDetails(arg)
+        case .teamEncryptionKeyEnableKeyDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyEnableKeyDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyEnableKeyDetails(arg)
+        case .teamEncryptionKeyRotateKeyDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyRotateKeyDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyRotateKeyDetails(arg)
+        case .teamEncryptionKeyScheduleKeyDeletionDetails(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamEncryptionKeyScheduleKeyDeletionDetails(arg)
         case .applyNamingConventionDetails(let swiftArg):
             let arg = DBXTeamLogApplyNamingConventionDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsApplyNamingConventionDetails(arg)
@@ -8546,6 +8677,9 @@ public class DBXTeamLogEventDetails: NSObject {
         case .fileAddDetails(let swiftArg):
             let arg = DBXTeamLogFileAddDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsFileAddDetails(arg)
+        case .fileAddFromAutomationDetails(let swiftArg):
+            let arg = DBXTeamLogFileAddFromAutomationDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsFileAddFromAutomationDetails(arg)
         case .fileCopyDetails(let swiftArg):
             let arg = DBXTeamLogFileCopyDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsFileCopyDetails(arg)
@@ -8609,6 +8743,9 @@ public class DBXTeamLogEventDetails: NSObject {
         case .organizeFolderWithTidyDetails(let swiftArg):
             let arg = DBXTeamLogOrganizeFolderWithTidyDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsOrganizeFolderWithTidyDetails(arg)
+        case .replayFileDeleteDetails(let swiftArg):
+            let arg = DBXTeamLogReplayFileDeleteDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsReplayFileDeleteDetails(arg)
         case .rewindFolderDetails(let swiftArg):
             let arg = DBXTeamLogRewindFolderDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsRewindFolderDetails(arg)
@@ -8717,6 +8854,12 @@ public class DBXTeamLogEventDetails: NSObject {
         case .ssoErrorDetails(let swiftArg):
             let arg = DBXTeamLogSsoErrorDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsSsoErrorDetails(arg)
+        case .backupAdminInvitationSentDetails(let swiftArg):
+            let arg = DBXTeamLogBackupAdminInvitationSentDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsBackupAdminInvitationSentDetails(arg)
+        case .backupInvitationOpenedDetails(let swiftArg):
+            let arg = DBXTeamLogBackupInvitationOpenedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsBackupInvitationOpenedDetails(arg)
         case .createTeamInviteLinkDetails(let swiftArg):
             let arg = DBXTeamLogCreateTeamInviteLinkDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsCreateTeamInviteLinkDetails(arg)
@@ -9002,6 +9145,12 @@ public class DBXTeamLogEventDetails: NSObject {
         case .paperAdminExportStartDetails(let swiftArg):
             let arg = DBXTeamLogPaperAdminExportStartDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsPaperAdminExportStartDetails(arg)
+        case .ransomwareAlertCreateReportDetails(let swiftArg):
+            let arg = DBXTeamLogRansomwareAlertCreateReportDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsRansomwareAlertCreateReportDetails(arg)
+        case .ransomwareAlertCreateReportFailedDetails(let swiftArg):
+            let arg = DBXTeamLogRansomwareAlertCreateReportFailedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsRansomwareAlertCreateReportFailedDetails(arg)
         case .smartSyncCreateAdminPrivilegeReportDetails(let swiftArg):
             let arg = DBXTeamLogSmartSyncCreateAdminPrivilegeReportDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsSmartSyncCreateAdminPrivilegeReportDetails(arg)
@@ -9047,6 +9196,18 @@ public class DBXTeamLogEventDetails: NSObject {
         case .openNoteSharedDetails(let swiftArg):
             let arg = DBXTeamLogOpenNoteSharedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsOpenNoteSharedDetails(arg)
+        case .replayFileSharedLinkCreatedDetails(let swiftArg):
+            let arg = DBXTeamLogReplayFileSharedLinkCreatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsReplayFileSharedLinkCreatedDetails(arg)
+        case .replayFileSharedLinkModifiedDetails(let swiftArg):
+            let arg = DBXTeamLogReplayFileSharedLinkModifiedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsReplayFileSharedLinkModifiedDetails(arg)
+        case .replayProjectTeamAddDetails(let swiftArg):
+            let arg = DBXTeamLogReplayProjectTeamAddDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsReplayProjectTeamAddDetails(arg)
+        case .replayProjectTeamDeleteDetails(let swiftArg):
+            let arg = DBXTeamLogReplayProjectTeamDeleteDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsReplayProjectTeamDeleteDetails(arg)
         case .sfAddGroupDetails(let swiftArg):
             let arg = DBXTeamLogSfAddGroupDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsSfAddGroupDetails(arg)
@@ -9800,6 +9961,16 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asRansomwareRestoreProcessCompletedDetails: DBXTeamLogEventDetailsRansomwareRestoreProcessCompletedDetails? {
+        self as? DBXTeamLogEventDetailsRansomwareRestoreProcessCompletedDetails
+    }
+
+    @objc
+    public var asRansomwareRestoreProcessStartedDetails: DBXTeamLogEventDetailsRansomwareRestoreProcessStartedDetails? {
+        self as? DBXTeamLogEventDetailsRansomwareRestoreProcessStartedDetails
+    }
+
+    @objc
     public var asAppBlockedByPermissionsDetails: DBXTeamLogEventDetailsAppBlockedByPermissionsDetails? {
         self as? DBXTeamLogEventDetailsAppBlockedByPermissionsDetails
     }
@@ -10145,6 +10316,41 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asTeamEncryptionKeyCancelKeyDeletionDetails: DBXTeamLogEventDetailsTeamEncryptionKeyCancelKeyDeletionDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyCancelKeyDeletionDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyCreateKeyDetails: DBXTeamLogEventDetailsTeamEncryptionKeyCreateKeyDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyCreateKeyDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDeleteKeyDetails: DBXTeamLogEventDetailsTeamEncryptionKeyDeleteKeyDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyDeleteKeyDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDisableKeyDetails: DBXTeamLogEventDetailsTeamEncryptionKeyDisableKeyDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyDisableKeyDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyEnableKeyDetails: DBXTeamLogEventDetailsTeamEncryptionKeyEnableKeyDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyEnableKeyDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyRotateKeyDetails: DBXTeamLogEventDetailsTeamEncryptionKeyRotateKeyDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyRotateKeyDetails
+    }
+
+    @objc
+    public var asTeamEncryptionKeyScheduleKeyDeletionDetails: DBXTeamLogEventDetailsTeamEncryptionKeyScheduleKeyDeletionDetails? {
+        self as? DBXTeamLogEventDetailsTeamEncryptionKeyScheduleKeyDeletionDetails
+    }
+
+    @objc
     public var asApplyNamingConventionDetails: DBXTeamLogEventDetailsApplyNamingConventionDetails? {
         self as? DBXTeamLogEventDetailsApplyNamingConventionDetails
     }
@@ -10157,6 +10363,11 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asFileAddDetails: DBXTeamLogEventDetailsFileAddDetails? {
         self as? DBXTeamLogEventDetailsFileAddDetails
+    }
+
+    @objc
+    public var asFileAddFromAutomationDetails: DBXTeamLogEventDetailsFileAddFromAutomationDetails? {
+        self as? DBXTeamLogEventDetailsFileAddFromAutomationDetails
     }
 
     @objc
@@ -10262,6 +10473,11 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asOrganizeFolderWithTidyDetails: DBXTeamLogEventDetailsOrganizeFolderWithTidyDetails? {
         self as? DBXTeamLogEventDetailsOrganizeFolderWithTidyDetails
+    }
+
+    @objc
+    public var asReplayFileDeleteDetails: DBXTeamLogEventDetailsReplayFileDeleteDetails? {
+        self as? DBXTeamLogEventDetailsReplayFileDeleteDetails
     }
 
     @objc
@@ -10442,6 +10658,16 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asSsoErrorDetails: DBXTeamLogEventDetailsSsoErrorDetails? {
         self as? DBXTeamLogEventDetailsSsoErrorDetails
+    }
+
+    @objc
+    public var asBackupAdminInvitationSentDetails: DBXTeamLogEventDetailsBackupAdminInvitationSentDetails? {
+        self as? DBXTeamLogEventDetailsBackupAdminInvitationSentDetails
+    }
+
+    @objc
+    public var asBackupInvitationOpenedDetails: DBXTeamLogEventDetailsBackupInvitationOpenedDetails? {
+        self as? DBXTeamLogEventDetailsBackupInvitationOpenedDetails
     }
 
     @objc
@@ -10920,6 +11146,16 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asRansomwareAlertCreateReportDetails: DBXTeamLogEventDetailsRansomwareAlertCreateReportDetails? {
+        self as? DBXTeamLogEventDetailsRansomwareAlertCreateReportDetails
+    }
+
+    @objc
+    public var asRansomwareAlertCreateReportFailedDetails: DBXTeamLogEventDetailsRansomwareAlertCreateReportFailedDetails? {
+        self as? DBXTeamLogEventDetailsRansomwareAlertCreateReportFailedDetails
+    }
+
+    @objc
     public var asSmartSyncCreateAdminPrivilegeReportDetails: DBXTeamLogEventDetailsSmartSyncCreateAdminPrivilegeReportDetails? {
         self as? DBXTeamLogEventDetailsSmartSyncCreateAdminPrivilegeReportDetails
     }
@@ -10992,6 +11228,26 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asOpenNoteSharedDetails: DBXTeamLogEventDetailsOpenNoteSharedDetails? {
         self as? DBXTeamLogEventDetailsOpenNoteSharedDetails
+    }
+
+    @objc
+    public var asReplayFileSharedLinkCreatedDetails: DBXTeamLogEventDetailsReplayFileSharedLinkCreatedDetails? {
+        self as? DBXTeamLogEventDetailsReplayFileSharedLinkCreatedDetails
+    }
+
+    @objc
+    public var asReplayFileSharedLinkModifiedDetails: DBXTeamLogEventDetailsReplayFileSharedLinkModifiedDetails? {
+        self as? DBXTeamLogEventDetailsReplayFileSharedLinkModifiedDetails
+    }
+
+    @objc
+    public var asReplayProjectTeamAddDetails: DBXTeamLogEventDetailsReplayProjectTeamAddDetails? {
+        self as? DBXTeamLogEventDetailsReplayProjectTeamAddDetails
+    }
+
+    @objc
+    public var asReplayProjectTeamDeleteDetails: DBXTeamLogEventDetailsReplayProjectTeamDeleteDetails? {
+        self as? DBXTeamLogEventDetailsReplayProjectTeamDeleteDetails
     }
 
     @objc
@@ -12259,6 +12515,34 @@ public class DBXTeamLogEventDetailsAdminAlertingTriggeredAlertDetails: DBXTeamLo
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsRansomwareRestoreProcessCompletedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var ransomwareRestoreProcessCompletedDetails: DBXTeamLogRansomwareRestoreProcessCompletedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareRestoreProcessCompletedDetails) {
+        self.ransomwareRestoreProcessCompletedDetails = arg
+        let swift = TeamLog.EventDetails.ransomwareRestoreProcessCompletedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsRansomwareRestoreProcessStartedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var ransomwareRestoreProcessStartedDetails: DBXTeamLogRansomwareRestoreProcessStartedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareRestoreProcessStartedDetails) {
+        self.ransomwareRestoreProcessStartedDetails = arg
+        let swift = TeamLog.EventDetails.ransomwareRestoreProcessStartedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsAppBlockedByPermissionsDetails: DBXTeamLogEventDetails {
     @objc
     public var appBlockedByPermissionsDetails: DBXTeamLogAppBlockedByPermissionsDetails
@@ -13225,6 +13509,104 @@ public class DBXTeamLogEventDetailsEnabledDomainInvitesDetails: DBXTeamLogEventD
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyCancelKeyDeletionDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyCancelKeyDeletionDetails: DBXTeamLogTeamEncryptionKeyCancelKeyDeletionDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyCancelKeyDeletionDetails) {
+        self.teamEncryptionKeyCancelKeyDeletionDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyCancelKeyDeletionDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyCreateKeyDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyCreateKeyDetails: DBXTeamLogTeamEncryptionKeyCreateKeyDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyCreateKeyDetails) {
+        self.teamEncryptionKeyCreateKeyDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyCreateKeyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyDeleteKeyDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyDeleteKeyDetails: DBXTeamLogTeamEncryptionKeyDeleteKeyDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyDeleteKeyDetails) {
+        self.teamEncryptionKeyDeleteKeyDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyDeleteKeyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyDisableKeyDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyDisableKeyDetails: DBXTeamLogTeamEncryptionKeyDisableKeyDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyDisableKeyDetails) {
+        self.teamEncryptionKeyDisableKeyDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyDisableKeyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyEnableKeyDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyEnableKeyDetails: DBXTeamLogTeamEncryptionKeyEnableKeyDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyEnableKeyDetails) {
+        self.teamEncryptionKeyEnableKeyDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyEnableKeyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyRotateKeyDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyRotateKeyDetails: DBXTeamLogTeamEncryptionKeyRotateKeyDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyRotateKeyDetails) {
+        self.teamEncryptionKeyRotateKeyDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyRotateKeyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamEncryptionKeyScheduleKeyDeletionDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamEncryptionKeyScheduleKeyDeletionDetails: DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionDetails) {
+        self.teamEncryptionKeyScheduleKeyDeletionDetails = arg
+        let swift = TeamLog.EventDetails.teamEncryptionKeyScheduleKeyDeletionDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsApplyNamingConventionDetails: DBXTeamLogEventDetails {
     @objc
     public var applyNamingConventionDetails: DBXTeamLogApplyNamingConventionDetails
@@ -13261,6 +13643,20 @@ public class DBXTeamLogEventDetailsFileAddDetails: DBXTeamLogEventDetails {
     public init(_ arg: DBXTeamLogFileAddDetails) {
         self.fileAddDetails = arg
         let swift = TeamLog.EventDetails.fileAddDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsFileAddFromAutomationDetails: DBXTeamLogEventDetails {
+    @objc
+    public var fileAddFromAutomationDetails: DBXTeamLogFileAddFromAutomationDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogFileAddFromAutomationDetails) {
+        self.fileAddFromAutomationDetails = arg
+        let swift = TeamLog.EventDetails.fileAddFromAutomationDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -13555,6 +13951,20 @@ public class DBXTeamLogEventDetailsOrganizeFolderWithTidyDetails: DBXTeamLogEven
     public init(_ arg: DBXTeamLogOrganizeFolderWithTidyDetails) {
         self.organizeFolderWithTidyDetails = arg
         let swift = TeamLog.EventDetails.organizeFolderWithTidyDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsReplayFileDeleteDetails: DBXTeamLogEventDetails {
+    @objc
+    public var replayFileDeleteDetails: DBXTeamLogReplayFileDeleteDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileDeleteDetails) {
+        self.replayFileDeleteDetails = arg
+        let swift = TeamLog.EventDetails.replayFileDeleteDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -14059,6 +14469,34 @@ public class DBXTeamLogEventDetailsSsoErrorDetails: DBXTeamLogEventDetails {
     public init(_ arg: DBXTeamLogSsoErrorDetails) {
         self.ssoErrorDetails = arg
         let swift = TeamLog.EventDetails.ssoErrorDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsBackupAdminInvitationSentDetails: DBXTeamLogEventDetails {
+    @objc
+    public var backupAdminInvitationSentDetails: DBXTeamLogBackupAdminInvitationSentDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogBackupAdminInvitationSentDetails) {
+        self.backupAdminInvitationSentDetails = arg
+        let swift = TeamLog.EventDetails.backupAdminInvitationSentDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsBackupInvitationOpenedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var backupInvitationOpenedDetails: DBXTeamLogBackupInvitationOpenedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogBackupInvitationOpenedDetails) {
+        self.backupInvitationOpenedDetails = arg
+        let swift = TeamLog.EventDetails.backupInvitationOpenedDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -15395,6 +15833,34 @@ public class DBXTeamLogEventDetailsPaperAdminExportStartDetails: DBXTeamLogEvent
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsRansomwareAlertCreateReportDetails: DBXTeamLogEventDetails {
+    @objc
+    public var ransomwareAlertCreateReportDetails: DBXTeamLogRansomwareAlertCreateReportDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareAlertCreateReportDetails) {
+        self.ransomwareAlertCreateReportDetails = arg
+        let swift = TeamLog.EventDetails.ransomwareAlertCreateReportDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsRansomwareAlertCreateReportFailedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var ransomwareAlertCreateReportFailedDetails: DBXTeamLogRansomwareAlertCreateReportFailedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareAlertCreateReportFailedDetails) {
+        self.ransomwareAlertCreateReportFailedDetails = arg
+        let swift = TeamLog.EventDetails.ransomwareAlertCreateReportFailedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsSmartSyncCreateAdminPrivilegeReportDetails: DBXTeamLogEventDetails {
     @objc
     public var smartSyncCreateAdminPrivilegeReportDetails: DBXTeamLogSmartSyncCreateAdminPrivilegeReportDetails
@@ -15599,6 +16065,62 @@ public class DBXTeamLogEventDetailsOpenNoteSharedDetails: DBXTeamLogEventDetails
     public init(_ arg: DBXTeamLogOpenNoteSharedDetails) {
         self.openNoteSharedDetails = arg
         let swift = TeamLog.EventDetails.openNoteSharedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsReplayFileSharedLinkCreatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var replayFileSharedLinkCreatedDetails: DBXTeamLogReplayFileSharedLinkCreatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileSharedLinkCreatedDetails) {
+        self.replayFileSharedLinkCreatedDetails = arg
+        let swift = TeamLog.EventDetails.replayFileSharedLinkCreatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsReplayFileSharedLinkModifiedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var replayFileSharedLinkModifiedDetails: DBXTeamLogReplayFileSharedLinkModifiedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileSharedLinkModifiedDetails) {
+        self.replayFileSharedLinkModifiedDetails = arg
+        let swift = TeamLog.EventDetails.replayFileSharedLinkModifiedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsReplayProjectTeamAddDetails: DBXTeamLogEventDetails {
+    @objc
+    public var replayProjectTeamAddDetails: DBXTeamLogReplayProjectTeamAddDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayProjectTeamAddDetails) {
+        self.replayProjectTeamAddDetails = arg
+        let swift = TeamLog.EventDetails.replayProjectTeamAddDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsReplayProjectTeamDeleteDetails: DBXTeamLogEventDetails {
+    @objc
+    public var replayProjectTeamDeleteDetails: DBXTeamLogReplayProjectTeamDeleteDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayProjectTeamDeleteDetails) {
+        self.replayProjectTeamDeleteDetails = arg
+        let swift = TeamLog.EventDetails.replayProjectTeamDeleteDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -19035,6 +19557,12 @@ public class DBXTeamLogEventType: NSObject {
         case .adminAlertingTriggeredAlert(let swiftArg):
             let arg = DBXTeamLogAdminAlertingTriggeredAlertType(swift: swiftArg)
             return DBXTeamLogEventTypeAdminAlertingTriggeredAlert(arg)
+        case .ransomwareRestoreProcessCompleted(let swiftArg):
+            let arg = DBXTeamLogRansomwareRestoreProcessCompletedType(swift: swiftArg)
+            return DBXTeamLogEventTypeRansomwareRestoreProcessCompleted(arg)
+        case .ransomwareRestoreProcessStarted(let swiftArg):
+            let arg = DBXTeamLogRansomwareRestoreProcessStartedType(swift: swiftArg)
+            return DBXTeamLogEventTypeRansomwareRestoreProcessStarted(arg)
         case .appBlockedByPermissions(let swiftArg):
             let arg = DBXTeamLogAppBlockedByPermissionsType(swift: swiftArg)
             return DBXTeamLogEventTypeAppBlockedByPermissions(arg)
@@ -19242,6 +19770,27 @@ public class DBXTeamLogEventType: NSObject {
         case .enabledDomainInvites(let swiftArg):
             let arg = DBXTeamLogEnabledDomainInvitesType(swift: swiftArg)
             return DBXTeamLogEventTypeEnabledDomainInvites(arg)
+        case .teamEncryptionKeyCancelKeyDeletion(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyCancelKeyDeletion(arg)
+        case .teamEncryptionKeyCreateKey(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyCreateKeyType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyCreateKey(arg)
+        case .teamEncryptionKeyDeleteKey(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyDeleteKeyType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyDeleteKey(arg)
+        case .teamEncryptionKeyDisableKey(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyDisableKeyType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyDisableKey(arg)
+        case .teamEncryptionKeyEnableKey(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyEnableKeyType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyEnableKey(arg)
+        case .teamEncryptionKeyRotateKey(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyRotateKeyType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyRotateKey(arg)
+        case .teamEncryptionKeyScheduleKeyDeletion(let swiftArg):
+            let arg = DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamEncryptionKeyScheduleKeyDeletion(arg)
         case .applyNamingConvention(let swiftArg):
             let arg = DBXTeamLogApplyNamingConventionType(swift: swiftArg)
             return DBXTeamLogEventTypeApplyNamingConvention(arg)
@@ -19251,6 +19800,9 @@ public class DBXTeamLogEventType: NSObject {
         case .fileAdd(let swiftArg):
             let arg = DBXTeamLogFileAddType(swift: swiftArg)
             return DBXTeamLogEventTypeFileAdd(arg)
+        case .fileAddFromAutomation(let swiftArg):
+            let arg = DBXTeamLogFileAddFromAutomationType(swift: swiftArg)
+            return DBXTeamLogEventTypeFileAddFromAutomation(arg)
         case .fileCopy(let swiftArg):
             let arg = DBXTeamLogFileCopyType(swift: swiftArg)
             return DBXTeamLogEventTypeFileCopy(arg)
@@ -19314,6 +19866,9 @@ public class DBXTeamLogEventType: NSObject {
         case .organizeFolderWithTidy(let swiftArg):
             let arg = DBXTeamLogOrganizeFolderWithTidyType(swift: swiftArg)
             return DBXTeamLogEventTypeOrganizeFolderWithTidy(arg)
+        case .replayFileDelete(let swiftArg):
+            let arg = DBXTeamLogReplayFileDeleteType(swift: swiftArg)
+            return DBXTeamLogEventTypeReplayFileDelete(arg)
         case .rewindFolder(let swiftArg):
             let arg = DBXTeamLogRewindFolderType(swift: swiftArg)
             return DBXTeamLogEventTypeRewindFolder(arg)
@@ -19422,6 +19977,12 @@ public class DBXTeamLogEventType: NSObject {
         case .ssoError(let swiftArg):
             let arg = DBXTeamLogSsoErrorType(swift: swiftArg)
             return DBXTeamLogEventTypeSsoError(arg)
+        case .backupAdminInvitationSent(let swiftArg):
+            let arg = DBXTeamLogBackupAdminInvitationSentType(swift: swiftArg)
+            return DBXTeamLogEventTypeBackupAdminInvitationSent(arg)
+        case .backupInvitationOpened(let swiftArg):
+            let arg = DBXTeamLogBackupInvitationOpenedType(swift: swiftArg)
+            return DBXTeamLogEventTypeBackupInvitationOpened(arg)
         case .createTeamInviteLink(let swiftArg):
             let arg = DBXTeamLogCreateTeamInviteLinkType(swift: swiftArg)
             return DBXTeamLogEventTypeCreateTeamInviteLink(arg)
@@ -19707,6 +20268,12 @@ public class DBXTeamLogEventType: NSObject {
         case .paperAdminExportStart(let swiftArg):
             let arg = DBXTeamLogPaperAdminExportStartType(swift: swiftArg)
             return DBXTeamLogEventTypePaperAdminExportStart(arg)
+        case .ransomwareAlertCreateReport(let swiftArg):
+            let arg = DBXTeamLogRansomwareAlertCreateReportType(swift: swiftArg)
+            return DBXTeamLogEventTypeRansomwareAlertCreateReport(arg)
+        case .ransomwareAlertCreateReportFailed(let swiftArg):
+            let arg = DBXTeamLogRansomwareAlertCreateReportFailedType(swift: swiftArg)
+            return DBXTeamLogEventTypeRansomwareAlertCreateReportFailed(arg)
         case .smartSyncCreateAdminPrivilegeReport(let swiftArg):
             let arg = DBXTeamLogSmartSyncCreateAdminPrivilegeReportType(swift: swiftArg)
             return DBXTeamLogEventTypeSmartSyncCreateAdminPrivilegeReport(arg)
@@ -19752,6 +20319,18 @@ public class DBXTeamLogEventType: NSObject {
         case .openNoteShared(let swiftArg):
             let arg = DBXTeamLogOpenNoteSharedType(swift: swiftArg)
             return DBXTeamLogEventTypeOpenNoteShared(arg)
+        case .replayFileSharedLinkCreated(let swiftArg):
+            let arg = DBXTeamLogReplayFileSharedLinkCreatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeReplayFileSharedLinkCreated(arg)
+        case .replayFileSharedLinkModified(let swiftArg):
+            let arg = DBXTeamLogReplayFileSharedLinkModifiedType(swift: swiftArg)
+            return DBXTeamLogEventTypeReplayFileSharedLinkModified(arg)
+        case .replayProjectTeamAdd(let swiftArg):
+            let arg = DBXTeamLogReplayProjectTeamAddType(swift: swiftArg)
+            return DBXTeamLogEventTypeReplayProjectTeamAdd(arg)
+        case .replayProjectTeamDelete(let swiftArg):
+            let arg = DBXTeamLogReplayProjectTeamDeleteType(swift: swiftArg)
+            return DBXTeamLogEventTypeReplayProjectTeamDelete(arg)
         case .sfAddGroup(let swiftArg):
             let arg = DBXTeamLogSfAddGroupType(swift: swiftArg)
             return DBXTeamLogEventTypeSfAddGroup(arg)
@@ -20502,6 +21081,16 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asRansomwareRestoreProcessCompleted: DBXTeamLogEventTypeRansomwareRestoreProcessCompleted? {
+        self as? DBXTeamLogEventTypeRansomwareRestoreProcessCompleted
+    }
+
+    @objc
+    public var asRansomwareRestoreProcessStarted: DBXTeamLogEventTypeRansomwareRestoreProcessStarted? {
+        self as? DBXTeamLogEventTypeRansomwareRestoreProcessStarted
+    }
+
+    @objc
     public var asAppBlockedByPermissions: DBXTeamLogEventTypeAppBlockedByPermissions? {
         self as? DBXTeamLogEventTypeAppBlockedByPermissions
     }
@@ -20847,6 +21436,41 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asTeamEncryptionKeyCancelKeyDeletion: DBXTeamLogEventTypeTeamEncryptionKeyCancelKeyDeletion? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyCancelKeyDeletion
+    }
+
+    @objc
+    public var asTeamEncryptionKeyCreateKey: DBXTeamLogEventTypeTeamEncryptionKeyCreateKey? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyCreateKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDeleteKey: DBXTeamLogEventTypeTeamEncryptionKeyDeleteKey? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyDeleteKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDisableKey: DBXTeamLogEventTypeTeamEncryptionKeyDisableKey? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyDisableKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyEnableKey: DBXTeamLogEventTypeTeamEncryptionKeyEnableKey? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyEnableKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyRotateKey: DBXTeamLogEventTypeTeamEncryptionKeyRotateKey? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyRotateKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyScheduleKeyDeletion: DBXTeamLogEventTypeTeamEncryptionKeyScheduleKeyDeletion? {
+        self as? DBXTeamLogEventTypeTeamEncryptionKeyScheduleKeyDeletion
+    }
+
+    @objc
     public var asApplyNamingConvention: DBXTeamLogEventTypeApplyNamingConvention? {
         self as? DBXTeamLogEventTypeApplyNamingConvention
     }
@@ -20859,6 +21483,11 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asFileAdd: DBXTeamLogEventTypeFileAdd? {
         self as? DBXTeamLogEventTypeFileAdd
+    }
+
+    @objc
+    public var asFileAddFromAutomation: DBXTeamLogEventTypeFileAddFromAutomation? {
+        self as? DBXTeamLogEventTypeFileAddFromAutomation
     }
 
     @objc
@@ -20964,6 +21593,11 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asOrganizeFolderWithTidy: DBXTeamLogEventTypeOrganizeFolderWithTidy? {
         self as? DBXTeamLogEventTypeOrganizeFolderWithTidy
+    }
+
+    @objc
+    public var asReplayFileDelete: DBXTeamLogEventTypeReplayFileDelete? {
+        self as? DBXTeamLogEventTypeReplayFileDelete
     }
 
     @objc
@@ -21144,6 +21778,16 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asSsoError: DBXTeamLogEventTypeSsoError? {
         self as? DBXTeamLogEventTypeSsoError
+    }
+
+    @objc
+    public var asBackupAdminInvitationSent: DBXTeamLogEventTypeBackupAdminInvitationSent? {
+        self as? DBXTeamLogEventTypeBackupAdminInvitationSent
+    }
+
+    @objc
+    public var asBackupInvitationOpened: DBXTeamLogEventTypeBackupInvitationOpened? {
+        self as? DBXTeamLogEventTypeBackupInvitationOpened
     }
 
     @objc
@@ -21622,6 +22266,16 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asRansomwareAlertCreateReport: DBXTeamLogEventTypeRansomwareAlertCreateReport? {
+        self as? DBXTeamLogEventTypeRansomwareAlertCreateReport
+    }
+
+    @objc
+    public var asRansomwareAlertCreateReportFailed: DBXTeamLogEventTypeRansomwareAlertCreateReportFailed? {
+        self as? DBXTeamLogEventTypeRansomwareAlertCreateReportFailed
+    }
+
+    @objc
     public var asSmartSyncCreateAdminPrivilegeReport: DBXTeamLogEventTypeSmartSyncCreateAdminPrivilegeReport? {
         self as? DBXTeamLogEventTypeSmartSyncCreateAdminPrivilegeReport
     }
@@ -21694,6 +22348,26 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asOpenNoteShared: DBXTeamLogEventTypeOpenNoteShared? {
         self as? DBXTeamLogEventTypeOpenNoteShared
+    }
+
+    @objc
+    public var asReplayFileSharedLinkCreated: DBXTeamLogEventTypeReplayFileSharedLinkCreated? {
+        self as? DBXTeamLogEventTypeReplayFileSharedLinkCreated
+    }
+
+    @objc
+    public var asReplayFileSharedLinkModified: DBXTeamLogEventTypeReplayFileSharedLinkModified? {
+        self as? DBXTeamLogEventTypeReplayFileSharedLinkModified
+    }
+
+    @objc
+    public var asReplayProjectTeamAdd: DBXTeamLogEventTypeReplayProjectTeamAdd? {
+        self as? DBXTeamLogEventTypeReplayProjectTeamAdd
+    }
+
+    @objc
+    public var asReplayProjectTeamDelete: DBXTeamLogEventTypeReplayProjectTeamDelete? {
+        self as? DBXTeamLogEventTypeReplayProjectTeamDelete
     }
 
     @objc
@@ -22954,6 +23628,34 @@ public class DBXTeamLogEventTypeAdminAlertingTriggeredAlert: DBXTeamLogEventType
     }
 }
 
+/// (admin_alerting) Completed ransomware restore process
+@objc
+public class DBXTeamLogEventTypeRansomwareRestoreProcessCompleted: DBXTeamLogEventType {
+    @objc
+    public var ransomwareRestoreProcessCompleted: DBXTeamLogRansomwareRestoreProcessCompletedType
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareRestoreProcessCompletedType) {
+        self.ransomwareRestoreProcessCompleted = arg
+        let swift = TeamLog.EventType.ransomwareRestoreProcessCompleted(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (admin_alerting) Started ransomware restore process
+@objc
+public class DBXTeamLogEventTypeRansomwareRestoreProcessStarted: DBXTeamLogEventType {
+    @objc
+    public var ransomwareRestoreProcessStarted: DBXTeamLogRansomwareRestoreProcessStartedType
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareRestoreProcessStartedType) {
+        self.ransomwareRestoreProcessStarted = arg
+        let swift = TeamLog.EventType.ransomwareRestoreProcessStarted(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (apps) Failed to connect app for member
 @objc
 public class DBXTeamLogEventTypeAppBlockedByPermissions: DBXTeamLogEventType {
@@ -23920,6 +24622,104 @@ public class DBXTeamLogEventTypeEnabledDomainInvites: DBXTeamLogEventType {
     }
 }
 
+/// (encryption) Canceled team encryption key deletion
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyCancelKeyDeletion: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyCancelKeyDeletion: DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType) {
+        self.teamEncryptionKeyCancelKeyDeletion = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyCancelKeyDeletion(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Created team encryption key
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyCreateKey: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyCreateKey: DBXTeamLogTeamEncryptionKeyCreateKeyType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyCreateKeyType) {
+        self.teamEncryptionKeyCreateKey = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyCreateKey(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Deleted team encryption key
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyDeleteKey: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyDeleteKey: DBXTeamLogTeamEncryptionKeyDeleteKeyType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyDeleteKeyType) {
+        self.teamEncryptionKeyDeleteKey = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyDeleteKey(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Disabled team encryption key
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyDisableKey: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyDisableKey: DBXTeamLogTeamEncryptionKeyDisableKeyType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyDisableKeyType) {
+        self.teamEncryptionKeyDisableKey = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyDisableKey(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Enabled team encryption key
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyEnableKey: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyEnableKey: DBXTeamLogTeamEncryptionKeyEnableKeyType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyEnableKeyType) {
+        self.teamEncryptionKeyEnableKey = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyEnableKey(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Rotated team encryption key (deprecated, no longer logged)
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyRotateKey: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyRotateKey: DBXTeamLogTeamEncryptionKeyRotateKeyType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyRotateKeyType) {
+        self.teamEncryptionKeyRotateKey = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyRotateKey(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Scheduled encryption key deletion
+@objc
+public class DBXTeamLogEventTypeTeamEncryptionKeyScheduleKeyDeletion: DBXTeamLogEventType {
+    @objc
+    public var teamEncryptionKeyScheduleKeyDeletion: DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionType) {
+        self.teamEncryptionKeyScheduleKeyDeletion = arg
+        let swift = TeamLog.EventType.teamEncryptionKeyScheduleKeyDeletion(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (file_operations) Applied naming convention
 @objc
 public class DBXTeamLogEventTypeApplyNamingConvention: DBXTeamLogEventType {
@@ -23958,6 +24758,20 @@ public class DBXTeamLogEventTypeFileAdd: DBXTeamLogEventType {
     public init(_ arg: DBXTeamLogFileAddType) {
         self.fileAdd = arg
         let swift = TeamLog.EventType.fileAdd(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (file_operations) Added files and/or folders from automation
+@objc
+public class DBXTeamLogEventTypeFileAddFromAutomation: DBXTeamLogEventType {
+    @objc
+    public var fileAddFromAutomation: DBXTeamLogFileAddFromAutomationType
+
+    @objc
+    public init(_ arg: DBXTeamLogFileAddFromAutomationType) {
+        self.fileAddFromAutomation = arg
+        let swift = TeamLog.EventType.fileAddFromAutomation(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -24252,6 +25066,20 @@ public class DBXTeamLogEventTypeOrganizeFolderWithTidy: DBXTeamLogEventType {
     public init(_ arg: DBXTeamLogOrganizeFolderWithTidyType) {
         self.organizeFolderWithTidy = arg
         let swift = TeamLog.EventType.organizeFolderWithTidy(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (file_operations) Deleted files in Replay
+@objc
+public class DBXTeamLogEventTypeReplayFileDelete: DBXTeamLogEventType {
+    @objc
+    public var replayFileDelete: DBXTeamLogReplayFileDeleteType
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileDeleteType) {
+        self.replayFileDelete = arg
+        let swift = TeamLog.EventType.replayFileDelete(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -24756,6 +25584,34 @@ public class DBXTeamLogEventTypeSsoError: DBXTeamLogEventType {
     public init(_ arg: DBXTeamLogSsoErrorType) {
         self.ssoError = arg
         let swift = TeamLog.EventType.ssoError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (members) Invited members to activate Backup
+@objc
+public class DBXTeamLogEventTypeBackupAdminInvitationSent: DBXTeamLogEventType {
+    @objc
+    public var backupAdminInvitationSent: DBXTeamLogBackupAdminInvitationSentType
+
+    @objc
+    public init(_ arg: DBXTeamLogBackupAdminInvitationSentType) {
+        self.backupAdminInvitationSent = arg
+        let swift = TeamLog.EventType.backupAdminInvitationSent(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (members) Opened Backup invite
+@objc
+public class DBXTeamLogEventTypeBackupInvitationOpened: DBXTeamLogEventType {
+    @objc
+    public var backupInvitationOpened: DBXTeamLogBackupInvitationOpenedType
+
+    @objc
+    public init(_ arg: DBXTeamLogBackupInvitationOpenedType) {
+        self.backupInvitationOpened = arg
+        let swift = TeamLog.EventType.backupInvitationOpened(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -26090,6 +26946,34 @@ public class DBXTeamLogEventTypePaperAdminExportStart: DBXTeamLogEventType {
     }
 }
 
+/// (reports) Created ransomware report
+@objc
+public class DBXTeamLogEventTypeRansomwareAlertCreateReport: DBXTeamLogEventType {
+    @objc
+    public var ransomwareAlertCreateReport: DBXTeamLogRansomwareAlertCreateReportType
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareAlertCreateReportType) {
+        self.ransomwareAlertCreateReport = arg
+        let swift = TeamLog.EventType.ransomwareAlertCreateReport(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (reports) Couldn't generate ransomware report
+@objc
+public class DBXTeamLogEventTypeRansomwareAlertCreateReportFailed: DBXTeamLogEventType {
+    @objc
+    public var ransomwareAlertCreateReportFailed: DBXTeamLogRansomwareAlertCreateReportFailedType
+
+    @objc
+    public init(_ arg: DBXTeamLogRansomwareAlertCreateReportFailedType) {
+        self.ransomwareAlertCreateReportFailed = arg
+        let swift = TeamLog.EventType.ransomwareAlertCreateReportFailed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (reports) Created Smart Sync non-admin devices report
 @objc
 public class DBXTeamLogEventTypeSmartSyncCreateAdminPrivilegeReport: DBXTeamLogEventType {
@@ -26296,6 +27180,62 @@ public class DBXTeamLogEventTypeOpenNoteShared: DBXTeamLogEventType {
     public init(_ arg: DBXTeamLogOpenNoteSharedType) {
         self.openNoteShared = arg
         let swift = TeamLog.EventType.openNoteShared(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Created shared link in Replay
+@objc
+public class DBXTeamLogEventTypeReplayFileSharedLinkCreated: DBXTeamLogEventType {
+    @objc
+    public var replayFileSharedLinkCreated: DBXTeamLogReplayFileSharedLinkCreatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileSharedLinkCreatedType) {
+        self.replayFileSharedLinkCreated = arg
+        let swift = TeamLog.EventType.replayFileSharedLinkCreated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Modified shared link in Replay
+@objc
+public class DBXTeamLogEventTypeReplayFileSharedLinkModified: DBXTeamLogEventType {
+    @objc
+    public var replayFileSharedLinkModified: DBXTeamLogReplayFileSharedLinkModifiedType
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayFileSharedLinkModifiedType) {
+        self.replayFileSharedLinkModified = arg
+        let swift = TeamLog.EventType.replayFileSharedLinkModified(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Added member to Replay Project
+@objc
+public class DBXTeamLogEventTypeReplayProjectTeamAdd: DBXTeamLogEventType {
+    @objc
+    public var replayProjectTeamAdd: DBXTeamLogReplayProjectTeamAddType
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayProjectTeamAddType) {
+        self.replayProjectTeamAdd = arg
+        let swift = TeamLog.EventType.replayProjectTeamAdd(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Removed member from Replay Project
+@objc
+public class DBXTeamLogEventTypeReplayProjectTeamDelete: DBXTeamLogEventType {
+    @objc
+    public var replayProjectTeamDelete: DBXTeamLogReplayProjectTeamDeleteType
+
+    @objc
+    public init(_ arg: DBXTeamLogReplayProjectTeamDeleteType) {
+        self.replayProjectTeamDelete = arg
+        let swift = TeamLog.EventType.replayProjectTeamDelete(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -29724,6 +30664,10 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgAdminAlertingChangedAlertConfig()
         case .adminAlertingTriggeredAlert:
             return DBXTeamLogEventTypeArgAdminAlertingTriggeredAlert()
+        case .ransomwareRestoreProcessCompleted:
+            return DBXTeamLogEventTypeArgRansomwareRestoreProcessCompleted()
+        case .ransomwareRestoreProcessStarted:
+            return DBXTeamLogEventTypeArgRansomwareRestoreProcessStarted()
         case .appBlockedByPermissions:
             return DBXTeamLogEventTypeArgAppBlockedByPermissions()
         case .appLinkTeam:
@@ -29862,12 +30806,28 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgDomainVerificationRemoveDomain()
         case .enabledDomainInvites:
             return DBXTeamLogEventTypeArgEnabledDomainInvites()
+        case .teamEncryptionKeyCancelKeyDeletion:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyCancelKeyDeletion()
+        case .teamEncryptionKeyCreateKey:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyCreateKey()
+        case .teamEncryptionKeyDeleteKey:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyDeleteKey()
+        case .teamEncryptionKeyDisableKey:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyDisableKey()
+        case .teamEncryptionKeyEnableKey:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyEnableKey()
+        case .teamEncryptionKeyRotateKey:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyRotateKey()
+        case .teamEncryptionKeyScheduleKeyDeletion:
+            return DBXTeamLogEventTypeArgTeamEncryptionKeyScheduleKeyDeletion()
         case .applyNamingConvention:
             return DBXTeamLogEventTypeArgApplyNamingConvention()
         case .createFolder:
             return DBXTeamLogEventTypeArgCreateFolder()
         case .fileAdd:
             return DBXTeamLogEventTypeArgFileAdd()
+        case .fileAddFromAutomation:
+            return DBXTeamLogEventTypeArgFileAddFromAutomation()
         case .fileCopy:
             return DBXTeamLogEventTypeArgFileCopy()
         case .fileDelete:
@@ -29910,6 +30870,8 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgObjectLabelUpdatedValue()
         case .organizeFolderWithTidy:
             return DBXTeamLogEventTypeArgOrganizeFolderWithTidy()
+        case .replayFileDelete:
+            return DBXTeamLogEventTypeArgReplayFileDelete()
         case .rewindFolder:
             return DBXTeamLogEventTypeArgRewindFolder()
         case .undoNamingConvention:
@@ -29982,6 +30944,10 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgSignInAsSessionStart()
         case .ssoError:
             return DBXTeamLogEventTypeArgSsoError()
+        case .backupAdminInvitationSent:
+            return DBXTeamLogEventTypeArgBackupAdminInvitationSent()
+        case .backupInvitationOpened:
+            return DBXTeamLogEventTypeArgBackupInvitationOpened()
         case .createTeamInviteLink:
             return DBXTeamLogEventTypeArgCreateTeamInviteLink()
         case .deleteTeamInviteLink:
@@ -30172,6 +31138,10 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgOutdatedLinkViewReportFailed()
         case .paperAdminExportStart:
             return DBXTeamLogEventTypeArgPaperAdminExportStart()
+        case .ransomwareAlertCreateReport:
+            return DBXTeamLogEventTypeArgRansomwareAlertCreateReport()
+        case .ransomwareAlertCreateReportFailed:
+            return DBXTeamLogEventTypeArgRansomwareAlertCreateReportFailed()
         case .smartSyncCreateAdminPrivilegeReport:
             return DBXTeamLogEventTypeArgSmartSyncCreateAdminPrivilegeReport()
         case .teamActivityCreateReport:
@@ -30202,6 +31172,14 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgNoteShareReceive()
         case .openNoteShared:
             return DBXTeamLogEventTypeArgOpenNoteShared()
+        case .replayFileSharedLinkCreated:
+            return DBXTeamLogEventTypeArgReplayFileSharedLinkCreated()
+        case .replayFileSharedLinkModified:
+            return DBXTeamLogEventTypeArgReplayFileSharedLinkModified()
+        case .replayProjectTeamAdd:
+            return DBXTeamLogEventTypeArgReplayProjectTeamAdd()
+        case .replayProjectTeamDelete:
+            return DBXTeamLogEventTypeArgReplayProjectTeamDelete()
         case .sfAddGroup:
             return DBXTeamLogEventTypeArgSfAddGroup()
         case .sfAllowNonMembersToViewSharedLinks:
@@ -30710,6 +31688,16 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asRansomwareRestoreProcessCompleted: DBXTeamLogEventTypeArgRansomwareRestoreProcessCompleted? {
+        self as? DBXTeamLogEventTypeArgRansomwareRestoreProcessCompleted
+    }
+
+    @objc
+    public var asRansomwareRestoreProcessStarted: DBXTeamLogEventTypeArgRansomwareRestoreProcessStarted? {
+        self as? DBXTeamLogEventTypeArgRansomwareRestoreProcessStarted
+    }
+
+    @objc
     public var asAppBlockedByPermissions: DBXTeamLogEventTypeArgAppBlockedByPermissions? {
         self as? DBXTeamLogEventTypeArgAppBlockedByPermissions
     }
@@ -31055,6 +32043,41 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asTeamEncryptionKeyCancelKeyDeletion: DBXTeamLogEventTypeArgTeamEncryptionKeyCancelKeyDeletion? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyCancelKeyDeletion
+    }
+
+    @objc
+    public var asTeamEncryptionKeyCreateKey: DBXTeamLogEventTypeArgTeamEncryptionKeyCreateKey? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyCreateKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDeleteKey: DBXTeamLogEventTypeArgTeamEncryptionKeyDeleteKey? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyDeleteKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyDisableKey: DBXTeamLogEventTypeArgTeamEncryptionKeyDisableKey? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyDisableKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyEnableKey: DBXTeamLogEventTypeArgTeamEncryptionKeyEnableKey? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyEnableKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyRotateKey: DBXTeamLogEventTypeArgTeamEncryptionKeyRotateKey? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyRotateKey
+    }
+
+    @objc
+    public var asTeamEncryptionKeyScheduleKeyDeletion: DBXTeamLogEventTypeArgTeamEncryptionKeyScheduleKeyDeletion? {
+        self as? DBXTeamLogEventTypeArgTeamEncryptionKeyScheduleKeyDeletion
+    }
+
+    @objc
     public var asApplyNamingConvention: DBXTeamLogEventTypeArgApplyNamingConvention? {
         self as? DBXTeamLogEventTypeArgApplyNamingConvention
     }
@@ -31067,6 +32090,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asFileAdd: DBXTeamLogEventTypeArgFileAdd? {
         self as? DBXTeamLogEventTypeArgFileAdd
+    }
+
+    @objc
+    public var asFileAddFromAutomation: DBXTeamLogEventTypeArgFileAddFromAutomation? {
+        self as? DBXTeamLogEventTypeArgFileAddFromAutomation
     }
 
     @objc
@@ -31172,6 +32200,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asOrganizeFolderWithTidy: DBXTeamLogEventTypeArgOrganizeFolderWithTidy? {
         self as? DBXTeamLogEventTypeArgOrganizeFolderWithTidy
+    }
+
+    @objc
+    public var asReplayFileDelete: DBXTeamLogEventTypeArgReplayFileDelete? {
+        self as? DBXTeamLogEventTypeArgReplayFileDelete
     }
 
     @objc
@@ -31352,6 +32385,16 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asSsoError: DBXTeamLogEventTypeArgSsoError? {
         self as? DBXTeamLogEventTypeArgSsoError
+    }
+
+    @objc
+    public var asBackupAdminInvitationSent: DBXTeamLogEventTypeArgBackupAdminInvitationSent? {
+        self as? DBXTeamLogEventTypeArgBackupAdminInvitationSent
+    }
+
+    @objc
+    public var asBackupInvitationOpened: DBXTeamLogEventTypeArgBackupInvitationOpened? {
+        self as? DBXTeamLogEventTypeArgBackupInvitationOpened
     }
 
     @objc
@@ -31830,6 +32873,16 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asRansomwareAlertCreateReport: DBXTeamLogEventTypeArgRansomwareAlertCreateReport? {
+        self as? DBXTeamLogEventTypeArgRansomwareAlertCreateReport
+    }
+
+    @objc
+    public var asRansomwareAlertCreateReportFailed: DBXTeamLogEventTypeArgRansomwareAlertCreateReportFailed? {
+        self as? DBXTeamLogEventTypeArgRansomwareAlertCreateReportFailed
+    }
+
+    @objc
     public var asSmartSyncCreateAdminPrivilegeReport: DBXTeamLogEventTypeArgSmartSyncCreateAdminPrivilegeReport? {
         self as? DBXTeamLogEventTypeArgSmartSyncCreateAdminPrivilegeReport
     }
@@ -31902,6 +32955,26 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asOpenNoteShared: DBXTeamLogEventTypeArgOpenNoteShared? {
         self as? DBXTeamLogEventTypeArgOpenNoteShared
+    }
+
+    @objc
+    public var asReplayFileSharedLinkCreated: DBXTeamLogEventTypeArgReplayFileSharedLinkCreated? {
+        self as? DBXTeamLogEventTypeArgReplayFileSharedLinkCreated
+    }
+
+    @objc
+    public var asReplayFileSharedLinkModified: DBXTeamLogEventTypeArgReplayFileSharedLinkModified? {
+        self as? DBXTeamLogEventTypeArgReplayFileSharedLinkModified
+    }
+
+    @objc
+    public var asReplayProjectTeamAdd: DBXTeamLogEventTypeArgReplayProjectTeamAdd? {
+        self as? DBXTeamLogEventTypeArgReplayProjectTeamAdd
+    }
+
+    @objc
+    public var asReplayProjectTeamDelete: DBXTeamLogEventTypeArgReplayProjectTeamDelete? {
+        self as? DBXTeamLogEventTypeArgReplayProjectTeamDelete
     }
 
     @objc
@@ -33150,6 +34223,26 @@ public class DBXTeamLogEventTypeArgAdminAlertingTriggeredAlert: DBXTeamLogEventT
     }
 }
 
+/// (admin_alerting) Completed ransomware restore process
+@objc
+public class DBXTeamLogEventTypeArgRansomwareRestoreProcessCompleted: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.ransomwareRestoreProcessCompleted
+        super.init(swift: swift)
+    }
+}
+
+/// (admin_alerting) Started ransomware restore process
+@objc
+public class DBXTeamLogEventTypeArgRansomwareRestoreProcessStarted: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.ransomwareRestoreProcessStarted
+        super.init(swift: swift)
+    }
+}
+
 /// (apps) Failed to connect app for member
 @objc
 public class DBXTeamLogEventTypeArgAppBlockedByPermissions: DBXTeamLogEventTypeArg {
@@ -33840,6 +34933,76 @@ public class DBXTeamLogEventTypeArgEnabledDomainInvites: DBXTeamLogEventTypeArg 
     }
 }
 
+/// (encryption) Canceled team encryption key deletion
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyCancelKeyDeletion: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyCancelKeyDeletion
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Created team encryption key
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyCreateKey: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyCreateKey
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Deleted team encryption key
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyDeleteKey: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyDeleteKey
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Disabled team encryption key
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyDisableKey: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyDisableKey
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Enabled team encryption key
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyEnableKey: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyEnableKey
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Rotated team encryption key (deprecated, no longer logged)
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyRotateKey: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyRotateKey
+        super.init(swift: swift)
+    }
+}
+
+/// (encryption) Scheduled encryption key deletion
+@objc
+public class DBXTeamLogEventTypeArgTeamEncryptionKeyScheduleKeyDeletion: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamEncryptionKeyScheduleKeyDeletion
+        super.init(swift: swift)
+    }
+}
+
 /// (file_operations) Applied naming convention
 @objc
 public class DBXTeamLogEventTypeArgApplyNamingConvention: DBXTeamLogEventTypeArg {
@@ -33866,6 +35029,16 @@ public class DBXTeamLogEventTypeArgFileAdd: DBXTeamLogEventTypeArg {
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.fileAdd
+        super.init(swift: swift)
+    }
+}
+
+/// (file_operations) Added files and/or folders from automation
+@objc
+public class DBXTeamLogEventTypeArgFileAddFromAutomation: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.fileAddFromAutomation
         super.init(swift: swift)
     }
 }
@@ -34076,6 +35249,16 @@ public class DBXTeamLogEventTypeArgOrganizeFolderWithTidy: DBXTeamLogEventTypeAr
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.organizeFolderWithTidy
+        super.init(swift: swift)
+    }
+}
+
+/// (file_operations) Deleted files in Replay
+@objc
+public class DBXTeamLogEventTypeArgReplayFileDelete: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.replayFileDelete
         super.init(swift: swift)
     }
 }
@@ -34436,6 +35619,26 @@ public class DBXTeamLogEventTypeArgSsoError: DBXTeamLogEventTypeArg {
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.ssoError
+        super.init(swift: swift)
+    }
+}
+
+/// (members) Invited members to activate Backup
+@objc
+public class DBXTeamLogEventTypeArgBackupAdminInvitationSent: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.backupAdminInvitationSent
+        super.init(swift: swift)
+    }
+}
+
+/// (members) Opened Backup invite
+@objc
+public class DBXTeamLogEventTypeArgBackupInvitationOpened: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.backupInvitationOpened
         super.init(swift: swift)
     }
 }
@@ -35390,6 +36593,26 @@ public class DBXTeamLogEventTypeArgPaperAdminExportStart: DBXTeamLogEventTypeArg
     }
 }
 
+/// (reports) Created ransomware report
+@objc
+public class DBXTeamLogEventTypeArgRansomwareAlertCreateReport: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.ransomwareAlertCreateReport
+        super.init(swift: swift)
+    }
+}
+
+/// (reports) Couldn't generate ransomware report
+@objc
+public class DBXTeamLogEventTypeArgRansomwareAlertCreateReportFailed: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.ransomwareAlertCreateReportFailed
+        super.init(swift: swift)
+    }
+}
+
 /// (reports) Created Smart Sync non-admin devices report
 @objc
 public class DBXTeamLogEventTypeArgSmartSyncCreateAdminPrivilegeReport: DBXTeamLogEventTypeArg {
@@ -35536,6 +36759,46 @@ public class DBXTeamLogEventTypeArgOpenNoteShared: DBXTeamLogEventTypeArg {
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.openNoteShared
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Created shared link in Replay
+@objc
+public class DBXTeamLogEventTypeArgReplayFileSharedLinkCreated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.replayFileSharedLinkCreated
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Modified shared link in Replay
+@objc
+public class DBXTeamLogEventTypeArgReplayFileSharedLinkModified: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.replayFileSharedLinkModified
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Added member to Replay Project
+@objc
+public class DBXTeamLogEventTypeArgReplayProjectTeamAdd: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.replayProjectTeamAdd
+        super.init(swift: swift)
+    }
+}
+
+/// (sharing) Removed member from Replay Project
+@objc
+public class DBXTeamLogEventTypeArgReplayProjectTeamDelete: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.replayProjectTeamDelete
         super.init(swift: swift)
     }
 }
@@ -39230,6 +40493,41 @@ public class DBXTeamLogFileAddDetails: NSObject {
     let swift: TeamLog.FileAddDetails
 
     public init(swift: TeamLog.FileAddDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Added files and/or folders from automation.
+@objc
+public class DBXTeamLogFileAddFromAutomationDetails: NSObject {
+    let swift: TeamLog.FileAddFromAutomationDetails
+
+    public init(swift: TeamLog.FileAddFromAutomationDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible FileAddFromAutomationType struct
+@objc
+public class DBXTeamLogFileAddFromAutomationType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.FileAddFromAutomationType(description_: description_)
+    }
+
+    let swift: TeamLog.FileAddFromAutomationType
+
+    public init(swift: TeamLog.FileAddFromAutomationType) {
         self.swift = swift
     }
 
@@ -45167,6 +46465,8 @@ public class DBXTeamLogLoginMethod: NSObject {
             return DBXTeamLogLoginMethodFirstPartyTokenExchange()
         case .googleOauth:
             return DBXTeamLogLoginMethodGoogleOauth()
+        case .lenovoOauth:
+            return DBXTeamLogLoginMethodLenovoOauth()
         case .password:
             return DBXTeamLogLoginMethodPassword()
         case .qrCode:
@@ -45198,6 +46498,11 @@ public class DBXTeamLogLoginMethod: NSObject {
     @objc
     public var asGoogleOauth: DBXTeamLogLoginMethodGoogleOauth? {
         self as? DBXTeamLogLoginMethodGoogleOauth
+    }
+
+    @objc
+    public var asLenovoOauth: DBXTeamLogLoginMethodLenovoOauth? {
+        self as? DBXTeamLogLoginMethodLenovoOauth
     }
 
     @objc
@@ -45257,6 +46562,16 @@ public class DBXTeamLogLoginMethodGoogleOauth: DBXTeamLogLoginMethod {
     @objc
     public init() {
         let swift = TeamLog.LoginMethod.googleOauth
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogLoginMethodLenovoOauth: DBXTeamLogLoginMethod {
+    @objc
+    public init() {
+        let swift = TeamLog.LoginMethod.lenovoOauth
         super.init(swift: swift)
     }
 }
@@ -51981,6 +53296,183 @@ public class DBXTeamLogQuickActionTypeOther: DBXTeamLogQuickActionType {
     }
 }
 
+/// Created ransomware report.
+@objc
+public class DBXTeamLogRansomwareAlertCreateReportDetails: NSObject {
+    let swift: TeamLog.RansomwareAlertCreateReportDetails
+
+    public init(swift: TeamLog.RansomwareAlertCreateReportDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Couldn't generate ransomware report.
+@objc
+public class DBXTeamLogRansomwareAlertCreateReportFailedDetails: NSObject {
+    /// Failure reason.
+    @objc
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+
+    @objc
+    public init(failureReason: DBXTeamTeamReportFailureReason) {
+        self.swift = TeamLog.RansomwareAlertCreateReportFailedDetails(failureReason: failureReason.swift)
+    }
+
+    let swift: TeamLog.RansomwareAlertCreateReportFailedDetails
+
+    public init(swift: TeamLog.RansomwareAlertCreateReportFailedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible RansomwareAlertCreateReportFailedType struct
+@objc
+public class DBXTeamLogRansomwareAlertCreateReportFailedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.RansomwareAlertCreateReportFailedType(description_: description_)
+    }
+
+    let swift: TeamLog.RansomwareAlertCreateReportFailedType
+
+    public init(swift: TeamLog.RansomwareAlertCreateReportFailedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible RansomwareAlertCreateReportType struct
+@objc
+public class DBXTeamLogRansomwareAlertCreateReportType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.RansomwareAlertCreateReportType(description_: description_)
+    }
+
+    let swift: TeamLog.RansomwareAlertCreateReportType
+
+    public init(swift: TeamLog.RansomwareAlertCreateReportType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Completed ransomware restore process.
+@objc
+public class DBXTeamLogRansomwareRestoreProcessCompletedDetails: NSObject {
+    /// The status of the restore process.
+    @objc
+    public var status: String { swift.status }
+    /// Restored files count.
+    @objc
+    public var restoredFilesCount: NSNumber { swift.restoredFilesCount as NSNumber }
+    /// Restored files failed count.
+    @objc
+    public var restoredFilesFailedCount: NSNumber { swift.restoredFilesFailedCount as NSNumber }
+
+    @objc
+    public init(status: String, restoredFilesCount: NSNumber, restoredFilesFailedCount: NSNumber) {
+        self.swift = TeamLog.RansomwareRestoreProcessCompletedDetails(
+            status: status,
+            restoredFilesCount: restoredFilesCount.int64Value,
+            restoredFilesFailedCount: restoredFilesFailedCount.int64Value
+        )
+    }
+
+    let swift: TeamLog.RansomwareRestoreProcessCompletedDetails
+
+    public init(swift: TeamLog.RansomwareRestoreProcessCompletedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible RansomwareRestoreProcessCompletedType struct
+@objc
+public class DBXTeamLogRansomwareRestoreProcessCompletedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.RansomwareRestoreProcessCompletedType(description_: description_)
+    }
+
+    let swift: TeamLog.RansomwareRestoreProcessCompletedType
+
+    public init(swift: TeamLog.RansomwareRestoreProcessCompletedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Started ransomware restore process.
+@objc
+public class DBXTeamLogRansomwareRestoreProcessStartedDetails: NSObject {
+    /// Ransomware filename extension.
+    @objc
+    public var extension_: String { swift.extension_ }
+
+    @objc
+    public init(extension_: String) {
+        self.swift = TeamLog.RansomwareRestoreProcessStartedDetails(extension_: extension_)
+    }
+
+    let swift: TeamLog.RansomwareRestoreProcessStartedDetails
+
+    public init(swift: TeamLog.RansomwareRestoreProcessStartedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible RansomwareRestoreProcessStartedType struct
+@objc
+public class DBXTeamLogRansomwareRestoreProcessStartedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.RansomwareRestoreProcessStartedType(description_: description_)
+    }
+
+    let swift: TeamLog.RansomwareRestoreProcessStartedType
+
+    public init(swift: TeamLog.RansomwareRestoreProcessStartedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Recipients Configuration
 @objc
 public class DBXTeamLogRecipientsConfiguration: NSObject {
@@ -52030,6 +53522,181 @@ public class DBXTeamLogRelocateAssetReferencesLogInfo: NSObject {
     let swift: TeamLog.RelocateAssetReferencesLogInfo
 
     public init(swift: TeamLog.RelocateAssetReferencesLogInfo) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Deleted files in Replay.
+@objc
+public class DBXTeamLogReplayFileDeleteDetails: NSObject {
+    let swift: TeamLog.ReplayFileDeleteDetails
+
+    public init(swift: TeamLog.ReplayFileDeleteDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ReplayFileDeleteType struct
+@objc
+public class DBXTeamLogReplayFileDeleteType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ReplayFileDeleteType(description_: description_)
+    }
+
+    let swift: TeamLog.ReplayFileDeleteType
+
+    public init(swift: TeamLog.ReplayFileDeleteType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Created shared link in Replay.
+@objc
+public class DBXTeamLogReplayFileSharedLinkCreatedDetails: NSObject {
+    let swift: TeamLog.ReplayFileSharedLinkCreatedDetails
+
+    public init(swift: TeamLog.ReplayFileSharedLinkCreatedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ReplayFileSharedLinkCreatedType struct
+@objc
+public class DBXTeamLogReplayFileSharedLinkCreatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ReplayFileSharedLinkCreatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ReplayFileSharedLinkCreatedType
+
+    public init(swift: TeamLog.ReplayFileSharedLinkCreatedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Modified shared link in Replay.
+@objc
+public class DBXTeamLogReplayFileSharedLinkModifiedDetails: NSObject {
+    let swift: TeamLog.ReplayFileSharedLinkModifiedDetails
+
+    public init(swift: TeamLog.ReplayFileSharedLinkModifiedDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ReplayFileSharedLinkModifiedType struct
+@objc
+public class DBXTeamLogReplayFileSharedLinkModifiedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ReplayFileSharedLinkModifiedType(description_: description_)
+    }
+
+    let swift: TeamLog.ReplayFileSharedLinkModifiedType
+
+    public init(swift: TeamLog.ReplayFileSharedLinkModifiedType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Added member to Replay Project.
+@objc
+public class DBXTeamLogReplayProjectTeamAddDetails: NSObject {
+    let swift: TeamLog.ReplayProjectTeamAddDetails
+
+    public init(swift: TeamLog.ReplayProjectTeamAddDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ReplayProjectTeamAddType struct
+@objc
+public class DBXTeamLogReplayProjectTeamAddType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ReplayProjectTeamAddType(description_: description_)
+    }
+
+    let swift: TeamLog.ReplayProjectTeamAddType
+
+    public init(swift: TeamLog.ReplayProjectTeamAddType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Removed member from Replay Project.
+@objc
+public class DBXTeamLogReplayProjectTeamDeleteDetails: NSObject {
+    let swift: TeamLog.ReplayProjectTeamDeleteDetails
+
+    public init(swift: TeamLog.ReplayProjectTeamDeleteDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ReplayProjectTeamDeleteType struct
+@objc
+public class DBXTeamLogReplayProjectTeamDeleteType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ReplayProjectTeamDeleteType(description_: description_)
+    }
+
+    let swift: TeamLog.ReplayProjectTeamDeleteType
+
+    public init(swift: TeamLog.ReplayProjectTeamDeleteType) {
         self.swift = swift
     }
 
@@ -59841,6 +61508,251 @@ public class DBXTeamLogTeamDetails: NSObject {
     let swift: TeamLog.TeamDetails
 
     public init(swift: TeamLog.TeamDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Canceled team encryption key deletion.
+@objc
+public class DBXTeamLogTeamEncryptionKeyCancelKeyDeletionDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyCancelKeyDeletionType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyCancelKeyDeletionType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionType
+
+    public init(swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Created team encryption key.
+@objc
+public class DBXTeamLogTeamEncryptionKeyCreateKeyDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyCreateKeyDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyCreateKeyDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyCreateKeyType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyCreateKeyType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyCreateKeyType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyCreateKeyType
+
+    public init(swift: TeamLog.TeamEncryptionKeyCreateKeyType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Deleted team encryption key.
+@objc
+public class DBXTeamLogTeamEncryptionKeyDeleteKeyDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyDeleteKeyDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyDeleteKeyDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyDeleteKeyType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyDeleteKeyType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyDeleteKeyType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyDeleteKeyType
+
+    public init(swift: TeamLog.TeamEncryptionKeyDeleteKeyType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Disabled team encryption key.
+@objc
+public class DBXTeamLogTeamEncryptionKeyDisableKeyDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyDisableKeyDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyDisableKeyDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyDisableKeyType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyDisableKeyType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyDisableKeyType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyDisableKeyType
+
+    public init(swift: TeamLog.TeamEncryptionKeyDisableKeyType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Enabled team encryption key.
+@objc
+public class DBXTeamLogTeamEncryptionKeyEnableKeyDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyEnableKeyDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyEnableKeyDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyEnableKeyType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyEnableKeyType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyEnableKeyType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyEnableKeyType
+
+    public init(swift: TeamLog.TeamEncryptionKeyEnableKeyType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Rotated team encryption key.
+@objc
+public class DBXTeamLogTeamEncryptionKeyRotateKeyDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyRotateKeyDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyRotateKeyDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyRotateKeyType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyRotateKeyType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyRotateKeyType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyRotateKeyType
+
+    public init(swift: TeamLog.TeamEncryptionKeyRotateKeyType) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Scheduled encryption key deletion.
+@objc
+public class DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionDetails: NSObject {
+    let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails
+
+    public init(swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamEncryptionKeyScheduleKeyDeletionType struct
+@objc
+public class DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamEncryptionKeyScheduleKeyDeletionType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionType
+
+    public init(swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionType) {
         self.swift = swift
     }
 

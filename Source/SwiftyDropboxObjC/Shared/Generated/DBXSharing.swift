@@ -100,6 +100,8 @@ public class DBXSharingAccessLevel: NSObject {
             return DBXSharingAccessLevelViewerNoComment()
         case .traverse:
             return DBXSharingAccessLevelTraverse()
+        case .noAccess:
+            return DBXSharingAccessLevelNoAccess()
         case .other:
             return DBXSharingAccessLevelOther()
         }
@@ -131,6 +133,11 @@ public class DBXSharingAccessLevel: NSObject {
     @objc
     public var asTraverse: DBXSharingAccessLevelTraverse? {
         self as? DBXSharingAccessLevelTraverse
+    }
+
+    @objc
+    public var asNoAccess: DBXSharingAccessLevelNoAccess? {
+        self as? DBXSharingAccessLevelNoAccess
     }
 
     @objc
@@ -186,6 +193,18 @@ public class DBXSharingAccessLevelTraverse: DBXSharingAccessLevel {
     @objc
     public init() {
         let swift = Sharing.AccessLevel.traverse
+        super.init(swift: swift)
+    }
+}
+
+/// If there is a Righteous Link on the folder which grants access and the user has visited such link, they are
+/// allowed to perform certain action (i.e. add themselves to the folder) via the link access even
+/// though the user themselves are not a member on the shared folder yet.
+@objc
+public class DBXSharingAccessLevelNoAccess: DBXSharingAccessLevel {
+    @objc
+    public init() {
+        let swift = Sharing.AccessLevel.noAccess
         super.init(swift: swift)
     }
 }
@@ -8032,7 +8051,7 @@ public class DBXSharingShareFolderArgBase: NSObject {
         return DBXSharingMemberPolicy(swift: swift)
     }
 
-    /// The path to the folder to share. If it does not exist, then a new one is created.
+    /// The path or the file id to the folder to share. If it does not exist, then a new one is created.
     @objc
     public var path: String { swift.path }
     /// The policy to apply to shared links created for content inside this shared folder.  The current user must be
@@ -9046,6 +9065,8 @@ public class DBXSharingSharedFolderAccessError: NSObject {
             return DBXSharingSharedFolderAccessErrorInvalidId()
         case .notAMember:
             return DBXSharingSharedFolderAccessErrorNotAMember()
+        case .invalidMember:
+            return DBXSharingSharedFolderAccessErrorInvalidMember()
         case .emailUnverified:
             return DBXSharingSharedFolderAccessErrorEmailUnverified()
         case .unmounted:
@@ -9066,6 +9087,11 @@ public class DBXSharingSharedFolderAccessError: NSObject {
     @objc
     public var asNotAMember: DBXSharingSharedFolderAccessErrorNotAMember? {
         self as? DBXSharingSharedFolderAccessErrorNotAMember
+    }
+
+    @objc
+    public var asInvalidMember: DBXSharingSharedFolderAccessErrorInvalidMember? {
+        self as? DBXSharingSharedFolderAccessErrorInvalidMember
     }
 
     @objc
@@ -9100,6 +9126,16 @@ public class DBXSharingSharedFolderAccessErrorNotAMember: DBXSharingSharedFolder
     @objc
     public init() {
         let swift = Sharing.SharedFolderAccessError.notAMember
+        super.init(swift: swift)
+    }
+}
+
+/// The user does not exist or their account is disabled.
+@objc
+public class DBXSharingSharedFolderAccessErrorInvalidMember: DBXSharingSharedFolderAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedFolderAccessError.invalidMember
         super.init(swift: swift)
     }
 }
@@ -9288,6 +9324,9 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
     /// shared folder.
     @objc
     public var parentSharedFolderId: String? { swift.parentSharedFolderId }
+    /// The full path of this shared folder. Absent for unmounted folders.
+    @objc
+    public var pathDisplay: String? { swift.pathDisplay }
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
     @objc
     public var pathLower: String? { swift.pathLower }
@@ -9303,6 +9342,7 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
         ownerDisplayNames: [String]?,
         ownerTeam: DBXUsersTeam?,
         parentSharedFolderId: String?,
+        pathDisplay: String?,
         pathLower: String?,
         parentFolderName: String?
     ) {
@@ -9313,6 +9353,7 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
             ownerDisplayNames: ownerDisplayNames,
             ownerTeam: ownerTeam?.swift,
             parentSharedFolderId: parentSharedFolderId,
+            pathDisplay: pathDisplay,
             pathLower: pathLower,
             parentFolderName: parentFolderName
         )
@@ -9374,6 +9415,7 @@ public class DBXSharingSharedFolderMetadata: DBXSharingSharedFolderMetadataBase 
         ownerDisplayNames: [String]?,
         ownerTeam: DBXUsersTeam?,
         parentSharedFolderId: String?,
+        pathDisplay: String?,
         pathLower: String?,
         parentFolderName: String?,
         linkMetadata: DBXSharingSharedContentLinkMetadata?,
@@ -9392,6 +9434,7 @@ public class DBXSharingSharedFolderMetadata: DBXSharingSharedFolderMetadataBase 
             ownerDisplayNames: ownerDisplayNames,
             ownerTeam: ownerTeam?.swift,
             parentSharedFolderId: parentSharedFolderId,
+            pathDisplay: pathDisplay,
             pathLower: pathLower,
             parentFolderName: parentFolderName,
             linkMetadata: linkMetadata?.subSwift,

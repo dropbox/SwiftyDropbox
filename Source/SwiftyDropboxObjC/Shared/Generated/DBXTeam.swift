@@ -14336,16 +14336,16 @@ public class DBXTeamTeamGetInfoResult: NSObject {
         teamId: String,
         numLicensedUsers: NSNumber,
         numProvisionedUsers: NSNumber,
-        numUsedLicenses: NSNumber,
-        policies: DBXTeamPoliciesTeamMemberPolicies
+        policies: DBXTeamPoliciesTeamMemberPolicies,
+        numUsedLicenses: NSNumber
     ) {
         self.swift = Team.TeamGetInfoResult(
             name: name,
             teamId: teamId,
             numLicensedUsers: numLicensedUsers.uint32Value,
             numProvisionedUsers: numProvisionedUsers.uint32Value,
-            numUsedLicenses: numUsedLicenses.uint32Value,
-            policies: policies.swift
+            policies: policies.swift,
+            numUsedLicenses: numUsedLicenses.uint32Value
         )
     }
 
