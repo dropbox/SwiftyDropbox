@@ -144,37 +144,3 @@ public class SecureStorageAccessDefaultImpl: SecureStorageAccess {
         }
     }
 }
-
-public class SecureStorageAccessTestImpl: SecureStorageAccess {
-    private var accessTokenData: Data?
-
-    public init() {}
-
-    public func checkAccessibilityMigrationOneTime() {}
-
-    public func setAccessTokenData(for userId: String, data: Data) -> Bool {
-        accessTokenData = data
-        return true
-    }
-
-    public func getAllUserIds() -> [String] {
-        []
-    }
-
-    public func getDropboxAccessToken(for key: String) -> DropboxAccessToken? {
-        guard let accessTokenData = accessTokenData else {
-            return nil
-        }
-
-        let jsonDecoder = JSONDecoder()
-        return try? jsonDecoder.decode(DropboxAccessToken.self, from: accessTokenData)
-    }
-
-    public func deleteInfo(for key: String) -> Bool {
-        return true
-    }
-
-    public func deleteInfoForAllKeys() -> Bool {
-        return true
-    }
-}

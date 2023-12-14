@@ -69,6 +69,8 @@
 		F907ED4729F32CCF0049A603 /* DebugBackgroundSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F907ED4629F32CCF0049A603 /* DebugBackgroundSessionView.swift */; };
 		F907ED4929F3345B0049A603 /* FileTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F907ED4829F3345B0049A603 /* FileTextView.swift */; };
 		F907ED4B29F584550049A603 /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F907ED4A29F584550049A603 /* FileBrowserView.swift */; };
+		F91CEDE92B2A95F5009EED11 /* SwiftyDropboxTestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F4B822B2A7F1800C237FB /* SwiftyDropboxTestExtensions.swift */; };
+		F91CEDEA2B2A95F5009EED11 /* SwiftyDropboxTestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F95F4B822B2A7F1800C237FB /* SwiftyDropboxTestExtensions.swift */; };
 		F937A6A828E355DE00A98E99 /* BackgroundSessionTestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F937A6A728E355DE00A98E99 /* BackgroundSessionTestClasses.swift */; };
 		F937A6A928E355DE00A98E99 /* BackgroundSessionTestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F937A6A728E355DE00A98E99 /* BackgroundSessionTestClasses.swift */; };
 		F937A6AC28E355DE00A98E99 /* BackgroundSessionTestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = F937A6A728E355DE00A98E99 /* BackgroundSessionTestClasses.swift */; };
@@ -209,6 +211,7 @@
 		F937A6A728E355DE00A98E99 /* BackgroundSessionTestClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSessionTestClasses.swift; sourceTree = "<group>"; };
 		F948416429F6BCF400D0EE7B /* DebugBackgroundSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugBackgroundSessionViewModel.swift; sourceTree = "<group>"; };
 		F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamRoutesTests.swift; sourceTree = "<group>"; };
+		F95F4B822B2A7F1800C237FB /* SwiftyDropboxTestExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyDropboxTestExtensions.swift; sourceTree = "<group>"; };
 		F975E5ED265702F400A17965 /* TestSwiftyDropbox_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestSwiftyDropbox_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F975E5EF265702F400A17965 /* FilesRoutesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesRoutesTests.swift; sourceTree = "<group>"; };
 		F975E5F1265702F400A17965 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -465,6 +468,7 @@
 				F975E5EF265702F400A17965 /* FilesRoutesTests.swift */,
 				F949339E265D7ABA005DCA3C /* TeamRoutesTests.swift */,
 				1A2038B128E74BAC00FFF227 /* CustomRoutesTests.swift */,
+				F95F4B822B2A7F1800C237FB /* SwiftyDropboxTestExtensions.swift */,
 				1A5E38ED28F62667000DDA19 /* ObjCFilesRoutesTests.h */,
 				1A5E38EE28F62667000DDA19 /* ObjCFilesRoutesTests.m */,
 				1AC07D67294D2ADE00ACB584 /* ObjCTeamRoutesTests.h */,
@@ -1132,6 +1136,7 @@
 				1AC07D69294D2ADE00ACB584 /* ObjCTeamRoutesTests.m in Sources */,
 				F975E5F0265702F400A17965 /* FilesRoutesTests.swift in Sources */,
 				1A2038B228E74BAC00FFF227 /* CustomRoutesTests.swift in Sources */,
+				F91CEDE92B2A95F5009EED11 /* SwiftyDropboxTestExtensions.swift in Sources */,
 				1A5E38EF28F62667000DDA19 /* ObjCFilesRoutesTests.m in Sources */,
 				F949339F265D7ABA005DCA3C /* TeamRoutesTests.swift in Sources */,
 				F9C66FDE266A5EE50042C899 /* TestTokenAuthGenerator.swift in Sources */,
@@ -1145,6 +1150,7 @@
 				1AC07D6A294D2ADE00ACB584 /* ObjCTeamRoutesTests.m in Sources */,
 				F9B7C82E2672DBD40099E24D /* TeamRoutesTests.swift in Sources */,
 				1A2038B328E74BAC00FFF227 /* CustomRoutesTests.swift in Sources */,
+				F91CEDEA2B2A95F5009EED11 /* SwiftyDropboxTestExtensions.swift in Sources */,
 				1A5E38F028F62667000DDA19 /* ObjCFilesRoutesTests.m in Sources */,
 				F9B7C82A2672DBD00099E24D /* FilesRoutesTests.swift in Sources */,
 				F9C67018266A64D40042C899 /* TestTokenAuthGenerator.swift in Sources */,
@@ -1439,6 +1445,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1497,6 +1504,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1527,6 +1535,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestSwiftyDropbox_iOS/TestSwiftyDropbox.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1549,6 +1558,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestSwiftyDropbox_iOS/TestSwiftyDropbox.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1570,6 +1580,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = TestSwiftyDropbox_macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1592,6 +1603,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = TestSwiftyDropbox_macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1617,6 +1629,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropbox-iOS/SwiftyDropbox.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropboxObjC-iOS/SwiftyDropboxObjC.framework/Headers\"",
+				);
 				INFOPLIST_FILE = TestSwiftyDropbox_iOSTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1647,6 +1664,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropbox-iOS/SwiftyDropbox.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropboxObjC-iOS/SwiftyDropboxObjC.framework/Headers\"",
+				);
 				INFOPLIST_FILE = TestSwiftyDropbox_iOSTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1675,6 +1697,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropbox-macOS/SwiftyDropbox.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropboxObjC-macOS/SwiftyDropboxObjC.framework/Headers\"",
+				);
 				INFOPLIST_FILE = TestSwiftyDropbox_macOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1706,6 +1733,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropbox-macOS/SwiftyDropbox.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyDropboxObjC-macOS/SwiftyDropboxObjC.framework/Headers\"",
+				);
 				INFOPLIST_FILE = TestSwiftyDropbox_macOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;

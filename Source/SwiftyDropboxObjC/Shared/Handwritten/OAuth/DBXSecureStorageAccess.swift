@@ -21,17 +21,11 @@ extension SecureStorageAccessDefaultImpl {
     }
 }
 
-extension SecureStorageAccessTestImpl {
-    var objc: DBXSecureStorageAccessTestImpl {
-        DBXSecureStorageAccessTestImpl(swift: self)
-    }
-}
-
 @objc
-public class DBXSecureStorageAccessImpl: NSObject, DBXSecureStorageAccess {
+open class DBXSecureStorageAccessImpl: NSObject, DBXSecureStorageAccess {
     let swift: SecureStorageAccess
 
-    fileprivate init(swift: SecureStorageAccess) {
+    public init(swift: SecureStorageAccess) {
         self.swift = swift
     }
 
@@ -68,18 +62,6 @@ public class DBXSecureStorageAccessDefaultImpl: DBXSecureStorageAccessImpl {
     }
 
     fileprivate init(swift: SecureStorageAccessDefaultImpl) {
-        super.init(swift: swift)
-    }
-}
-
-@objc
-public class DBXSecureStorageAccessTestImpl: DBXSecureStorageAccessImpl {
-    @objc
-    public convenience init() {
-        self.init(swift: SecureStorageAccessTestImpl())
-    }
-
-    fileprivate init(swift: SecureStorageAccessTestImpl) {
         super.init(swift: swift)
     }
 }

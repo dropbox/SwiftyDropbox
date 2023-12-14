@@ -5,6 +5,11 @@
 #import "ObjCTeamRoutesTests.h"
 #import "ObjCTestClasses.h"
 
+#if TARGET_OS_IPHONE
+#import "TestSwiftyDropbox_iOSTests-Swift.h"
+#elif TARGET_OS_MAC
+#import "TestSwiftyDropbox_macOSTests-Swift.h"
+#endif
 
 @implementation ObjCTeamRoutesTests {
     NSOperationQueue *_delegateQueue;
