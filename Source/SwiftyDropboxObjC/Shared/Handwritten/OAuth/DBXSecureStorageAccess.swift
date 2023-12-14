@@ -15,23 +15,18 @@ public protocol DBXSecureStorageAccess {
     func deleteInfoForAllKeys() -> Bool
 }
 
-extension SecureStorageAccesDefaultImpl {
+extension SecureStorageAccessDefaultImpl {
     var objc: DBXSecureStorageAccessDefaultImpl {
         DBXSecureStorageAccessDefaultImpl(swift: self)
     }
 }
 
 @objc
-public class DBXSecureStorageAccessDefaultImpl: NSObject, DBXSecureStorageAccess {
-    let swift: SecureStorageAccesDefaultImpl
+open class DBXSecureStorageAccessImpl: NSObject, DBXSecureStorageAccess {
+    let swift: SecureStorageAccess
 
-    fileprivate init(swift: SecureStorageAccesDefaultImpl) {
+    public init(swift: SecureStorageAccess) {
         self.swift = swift
-    }
-
-    @objc
-    public override convenience init() {
-        self.init(swift: SecureStorageAccesDefaultImpl())
     }
 
     public func checkAccessibilityMigrationOneTime() {
@@ -56,6 +51,18 @@ public class DBXSecureStorageAccessDefaultImpl: NSObject, DBXSecureStorageAccess
 
     public func deleteInfoForAllKeys() -> Bool {
         swift.deleteInfoForAllKeys()
+    }
+}
+
+@objc
+public class DBXSecureStorageAccessDefaultImpl: DBXSecureStorageAccessImpl {
+    @objc
+    public convenience init() {
+        self.init(swift: SecureStorageAccessDefaultImpl())
+    }
+
+    fileprivate init(swift: SecureStorageAccessDefaultImpl) {
+        super.init(swift: swift)
     }
 }
 

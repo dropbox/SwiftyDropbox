@@ -1353,7 +1353,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
 
-        tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name Swift").response { response, error in
+        tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name Swift" + TestData.groupExternalId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)

@@ -85,7 +85,7 @@ extension DropboxClientsManager {
     public static func setupWithAppKeyDesktop(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl()
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl()
     ) {
         setupWithOAuthManager(
             appKey,
@@ -99,7 +99,7 @@ extension DropboxClientsManager {
     public static func setupWithAppKeyMultiUserDesktop(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         tokenUid: String?
     ) {
         setupWithOAuthManager(
@@ -114,7 +114,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKeyDesktop(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl()
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl()
     ) {
         setupWithOAuthManager(
             appKey,
@@ -128,7 +128,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKeyMultiUserDesktop(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         tokenUid: String?
     ) {
         setupWithOAuthManager(
