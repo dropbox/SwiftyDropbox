@@ -13,7 +13,7 @@ public protocol SecureStorageAccess {
     func deleteInfoForAllKeys() -> Bool
 }
 
-public class SecureStorageAccesDefaultImpl: SecureStorageAccess {
+public class SecureStorageAccessDefaultImpl: SecureStorageAccess {
     private let _checkAccessibilityMigrationOneTime: () = {
         checkAccessibilityMigration()
     }()

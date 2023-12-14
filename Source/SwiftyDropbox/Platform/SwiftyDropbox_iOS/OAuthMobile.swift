@@ -85,7 +85,7 @@ extension DropboxClientsManager {
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
         backgroundTransportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         includeBackgroundClient: Bool = false,
         requestsToReconnect: RequestsToReconnect? = nil
     ) {
@@ -103,7 +103,7 @@ extension DropboxClientsManager {
         _ appKey: String,
         sessionConfiguration: NetworkSessionConfiguration?,
         backgroundSessionConfiguration: NetworkSessionConfiguration?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         includeBackgroundClient: Bool = false,
         requestsToReconnect: RequestsToReconnect? = nil
     ) {
@@ -121,7 +121,7 @@ extension DropboxClientsManager {
         _ appKey: String,
         backgroundSessionIdentifier: String,
         sharedContainerIdentifier: String? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         requestsToReconnect: @escaping RequestsToReconnect
     ) {
         let backgroundNetworkSessionConfiguration = NetworkSessionConfiguration.background(
@@ -143,7 +143,7 @@ extension DropboxClientsManager {
         transportClient: DropboxTransportClient? = nil,
         backgroundTransportClient: DropboxTransportClient? = nil,
         tokenUid: String?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         includeBackgroundClient: Bool = false,
         requestsToReconnect: RequestsToReconnect? = nil
     ) {
@@ -162,7 +162,7 @@ extension DropboxClientsManager {
         sessionConfiguration: NetworkSessionConfiguration?,
         backgroundSessionConfiguration: NetworkSessionConfiguration?,
         tokenUid: String?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         includeBackgroundClient: Bool = false,
         requestsToReconnect: RequestsToReconnect? = nil
     ) {
@@ -181,7 +181,7 @@ extension DropboxClientsManager {
         backgroundSessionIdentifier: String,
         sharedContainerIdentifier: String? = nil,
         tokenUid: String?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         requestsToReconnect: @escaping RequestsToReconnect
     ) {
         let backgroundNetworkSessionConfiguration = NetworkSessionConfiguration.background(
@@ -202,7 +202,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKey(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl()
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl()
     ) {
         setupWithOAuthManager(
             appKey,
@@ -216,7 +216,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKey(
         _ appKey: String,
         sessionConfiguration: NetworkSessionConfiguration?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl()
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl()
     ) {
         setupWithOAuthManager(
             appKey,
@@ -229,7 +229,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKeyMultiUser(
         _ appKey: String,
         transportClient: DropboxTransportClient? = nil,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         tokenUid: String?
     ) {
         setupWithOAuthManager(
@@ -244,7 +244,7 @@ extension DropboxClientsManager {
     public static func setupWithTeamAppKeyMultiUser(
         _ appKey: String,
         sessionConfiguration: NetworkSessionConfiguration?,
-        secureStorageAccess: SecureStorageAccess = SecureStorageAccesDefaultImpl(),
+        secureStorageAccess: SecureStorageAccess = SecureStorageAccessDefaultImpl(),
         tokenUid: String?
     ) {
         setupWithOAuthManager(
