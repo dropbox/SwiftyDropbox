@@ -55,10 +55,10 @@ public class SecureStorageAccessTestImpl: SecureStorageAccess {
     }
 
     public func deleteInfo(for key: String) -> Bool {
-        return true
+        true
     }
 
     public func deleteInfoForAllKeys() -> Bool {
-        return true
+        true
     }
 }
