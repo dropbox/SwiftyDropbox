@@ -4,6 +4,29 @@
 
 import Foundation
 
+protocol DropboxTransportClientOwning {
+    var client: DropboxTransportClient { get }
+    init(client: DropboxTransportClient)
+}
+
+protocol JSONRepresentable {
+    func json() throws -> JSON
+}
+
+enum MockingUtilities {
+    static func makeRoutesObject<T: DropboxTransportClientOwning>(forType: T.Type) -> (T, MockDropboxTransportClient) {
+        let mockTransportClient = MockDropboxTransportClient()
+        let namespaceObject = T(client: mockTransportClient)
+        return (namespaceObject, mockTransportClient)
+    }
+
+    static func jsonObject<T: JSONRepresentable>(from result: T) throws -> [String: Any] {
+        let json = try result.json()
+        let jsonObject = try (SerializeUtil.prepareJSONForSerialization(json) as? [String: Any]).orThrow()
+        return jsonObject
+    }
+}
+
 class MockDropboxTransportClient: DropboxTransportClient {
     var identifier: String?
     let filesAccess: FilesAccess = FilesAccessImpl()

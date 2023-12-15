@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the users namespace
 /// For Objective-C compatible routes see DBUsersRoutes
-public class UsersRoutes {
+public class UsersRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

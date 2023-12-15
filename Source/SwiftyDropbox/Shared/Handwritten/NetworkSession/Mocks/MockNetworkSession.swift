@@ -89,3 +89,11 @@ enum MockInput {
     case routeError(json: [String: Any])
     case clientError(error: ClientError)
 }
+
+enum MockInputWithModel {
+    case none
+    case success(model: JSONRepresentable)
+    case downloadSuccess(model: JSONRepresentable, downloadLocation: URL)
+    case requestError(model: JSONRepresentable, code: NetworkStatusCode)
+    case routeError(model: JSONRepresentable)
+}

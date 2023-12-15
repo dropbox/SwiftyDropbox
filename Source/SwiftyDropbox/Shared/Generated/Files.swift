@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the files namespace
 public class Files {
     /// The AddTagArg struct
-    public class AddTagArg: CustomStringConvertible {
+    public class AddTagArg: CustomStringConvertible, JSONRepresentable {
         /// Path to the item to be tagged.
         public let path: String
         /// The value of the tag to add. Will be automatically converted to lowercase letters.
@@ -21,11 +21,15 @@ public class Files {
             self.tagText = tagText
         }
 
+        func json() throws -> JSON {
+            try AddTagArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddTagArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddTagArg: \(error)"
             }
         }
     }
@@ -53,17 +57,21 @@ public class Files {
     }
 
     /// The BaseTagError union
-    public enum BaseTagError: CustomStringConvertible {
+    public enum BaseTagError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try BaseTagErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try BaseTagErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for BaseTagError: \(error)"
             }
         }
     }
@@ -103,7 +111,7 @@ public class Files {
     }
 
     /// The AddTagError union
-    public enum AddTagError: CustomStringConvertible {
+    public enum AddTagError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
@@ -111,11 +119,15 @@ public class Files {
         /// The item already has the maximum supported number of tags.
         case tooManyTags
 
+        func json() throws -> JSON {
+            try AddTagErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddTagErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddTagError: \(error)"
             }
         }
     }
@@ -161,7 +173,7 @@ public class Files {
     }
 
     /// The GetMetadataArg struct
-    public class GetMetadataArg: CustomStringConvertible {
+    public class GetMetadataArg: CustomStringConvertible, JSONRepresentable {
         /// The path of a file or folder on Dropbox.
         public let path: String
         /// If true, mediaInfo in FileMetadata is set for photo and video.
@@ -190,11 +202,15 @@ public class Files {
             self.includePropertyGroups = includePropertyGroups
         }
 
+        func json() throws -> JSON {
+            try GetMetadataArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetMetadataArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetMetadataArg: \(error)"
             }
         }
     }
@@ -263,7 +279,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AlphaGetMetadataArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AlphaGetMetadataArg: \(error)"
             }
         }
     }
@@ -310,15 +326,19 @@ public class Files {
     }
 
     /// The GetMetadataError union
-    public enum GetMetadataError: CustomStringConvertible {
+    public enum GetMetadataError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
+
+        func json() throws -> JSON {
+            try GetMetadataErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetMetadataErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetMetadataError: \(error)"
             }
         }
     }
@@ -352,17 +372,21 @@ public class Files {
     }
 
     /// The AlphaGetMetadataError union
-    public enum AlphaGetMetadataError: CustomStringConvertible {
+    public enum AlphaGetMetadataError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
         case propertiesError(FileProperties.LookUpPropertiesError)
 
+        func json() throws -> JSON {
+            try AlphaGetMetadataErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AlphaGetMetadataErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AlphaGetMetadataError: \(error)"
             }
         }
     }
@@ -403,7 +427,7 @@ public class Files {
     }
 
     /// The CommitInfo struct
-    public class CommitInfo: CustomStringConvertible {
+    public class CommitInfo: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to save the file.
         public let path: String
         /// Selects what to do if the file already exists.
@@ -445,11 +469,15 @@ public class Files {
             self.strictConflict = strictConflict
         }
 
+        func json() throws -> JSON {
+            try CommitInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CommitInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CommitInfo: \(error)"
             }
         }
     }
@@ -496,7 +524,7 @@ public class Files {
     }
 
     /// The ContentSyncSetting struct
-    public class ContentSyncSetting: CustomStringConvertible {
+    public class ContentSyncSetting: CustomStringConvertible, JSONRepresentable {
         /// Id of the item this setting is applied to.
         public let id: String
         /// Setting for this item.
@@ -507,11 +535,15 @@ public class Files {
             self.syncSetting = syncSetting
         }
 
+        func json() throws -> JSON {
+            try ContentSyncSettingSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ContentSyncSettingSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ContentSyncSetting: \(error)"
             }
         }
     }
@@ -539,7 +571,7 @@ public class Files {
     }
 
     /// The ContentSyncSettingArg struct
-    public class ContentSyncSettingArg: CustomStringConvertible {
+    public class ContentSyncSettingArg: CustomStringConvertible, JSONRepresentable {
         /// Id of the item this setting is applied to.
         public let id: String
         /// Setting for this item.
@@ -550,11 +582,15 @@ public class Files {
             self.syncSetting = syncSetting
         }
 
+        func json() throws -> JSON {
+            try ContentSyncSettingArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ContentSyncSettingArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ContentSyncSettingArg: \(error)"
             }
         }
     }
@@ -582,7 +618,7 @@ public class Files {
     }
 
     /// The CreateFolderArg struct
-    public class CreateFolderArg: CustomStringConvertible {
+    public class CreateFolderArg: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to create.
         public let path: String
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
@@ -593,11 +629,15 @@ public class Files {
             self.autorename = autorename
         }
 
+        func json() throws -> JSON {
+            try CreateFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderArg: \(error)"
             }
         }
     }
@@ -625,7 +665,7 @@ public class Files {
     }
 
     /// The CreateFolderBatchArg struct
-    public class CreateFolderBatchArg: CustomStringConvertible {
+    public class CreateFolderBatchArg: CustomStringConvertible, JSONRepresentable {
         /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are considered only
         /// once.
         public let paths: [String]
@@ -640,11 +680,15 @@ public class Files {
             self.forceAsync = forceAsync
         }
 
+        func json() throws -> JSON {
+            try CreateFolderBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchArg: \(error)"
             }
         }
     }
@@ -674,17 +718,21 @@ public class Files {
     }
 
     /// The CreateFolderBatchError union
-    public enum CreateFolderBatchError: CustomStringConvertible {
+    public enum CreateFolderBatchError: CustomStringConvertible, JSONRepresentable {
         /// The operation would involve too many files or folders.
         case tooManyFiles
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CreateFolderBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchError: \(error)"
             }
         }
     }
@@ -723,7 +771,7 @@ public class Files {
     }
 
     /// The CreateFolderBatchJobStatus union
-    public enum CreateFolderBatchJobStatus: CustomStringConvertible {
+    public enum CreateFolderBatchJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The batch create folder has finished.
@@ -733,11 +781,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CreateFolderBatchJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchJobStatus: \(error)"
             }
         }
     }
@@ -790,7 +842,7 @@ public class Files {
     }
 
     /// Result returned by createFolderBatch that may either launch an asynchronous job or complete synchronously.
-    public enum CreateFolderBatchLaunch: CustomStringConvertible {
+    public enum CreateFolderBatchLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
@@ -799,11 +851,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CreateFolderBatchLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchLaunch: \(error)"
             }
         }
     }
@@ -850,12 +906,16 @@ public class Files {
     }
 
     /// The FileOpsResult struct
-    public class FileOpsResult: CustomStringConvertible {
+    public class FileOpsResult: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try FileOpsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileOpsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileOpsResult: \(error)"
             }
         }
     }
@@ -891,7 +951,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchResult: \(error)"
             }
         }
     }
@@ -917,17 +977,21 @@ public class Files {
     }
 
     /// The CreateFolderBatchResultEntry union
-    public enum CreateFolderBatchResultEntry: CustomStringConvertible {
+    public enum CreateFolderBatchResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.CreateFolderEntryResult)
         /// An unspecified error.
         case failure(Files.CreateFolderEntryError)
 
+        func json() throws -> JSON {
+            try CreateFolderBatchResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderBatchResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderBatchResultEntry: \(error)"
             }
         }
     }
@@ -968,17 +1032,21 @@ public class Files {
     }
 
     /// The CreateFolderEntryError union
-    public enum CreateFolderEntryError: CustomStringConvertible {
+    public enum CreateFolderEntryError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.WriteError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CreateFolderEntryErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderEntryErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderEntryError: \(error)"
             }
         }
     }
@@ -1018,18 +1086,22 @@ public class Files {
     }
 
     /// The CreateFolderEntryResult struct
-    public class CreateFolderEntryResult: CustomStringConvertible {
+    public class CreateFolderEntryResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the created folder.
         public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try CreateFolderEntryResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderEntryResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderEntryResult: \(error)"
             }
         }
     }
@@ -1055,15 +1127,19 @@ public class Files {
     }
 
     /// The CreateFolderError union
-    public enum CreateFolderError: CustomStringConvertible {
+    public enum CreateFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.WriteError)
+
+        func json() throws -> JSON {
+            try CreateFolderErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderError: \(error)"
             }
         }
     }
@@ -1109,7 +1185,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFolderResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFolderResult: \(error)"
             }
         }
     }
@@ -1135,7 +1211,7 @@ public class Files {
     }
 
     /// The DeleteArg struct
-    public class DeleteArg: CustomStringConvertible {
+    public class DeleteArg: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to delete.
         public let path: String
         /// Perform delete if given "rev" matches the existing file's latest "rev". This field does not support deleting
@@ -1148,11 +1224,15 @@ public class Files {
             self.parentRev = parentRev
         }
 
+        func json() throws -> JSON {
+            try DeleteArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteArg: \(error)"
             }
         }
     }
@@ -1180,18 +1260,22 @@ public class Files {
     }
 
     /// The DeleteBatchArg struct
-    public class DeleteBatchArg: CustomStringConvertible {
+    public class DeleteBatchArg: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let entries: [Files.DeleteArg]
         public init(entries: [Files.DeleteArg]) {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try DeleteBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchArg: \(error)"
             }
         }
     }
@@ -1217,18 +1301,22 @@ public class Files {
     }
 
     /// The DeleteBatchError union
-    public enum DeleteBatchError: CustomStringConvertible {
+    public enum DeleteBatchError: CustomStringConvertible, JSONRepresentable {
         /// Use tooManyWriteOperations in DeleteError. deleteBatch now provides smaller granularity about which entry
         /// has failed because of this.
         case tooManyWriteOperations
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchError: \(error)"
             }
         }
     }
@@ -1267,7 +1355,7 @@ public class Files {
     }
 
     /// The DeleteBatchJobStatus union
-    public enum DeleteBatchJobStatus: CustomStringConvertible {
+    public enum DeleteBatchJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The batch delete has finished.
@@ -1277,11 +1365,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteBatchJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchJobStatus: \(error)"
             }
         }
     }
@@ -1334,7 +1426,7 @@ public class Files {
     }
 
     /// Result returned by deleteBatch that may either launch an asynchronous job or complete synchronously.
-    public enum DeleteBatchLaunch: CustomStringConvertible {
+    public enum DeleteBatchLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
@@ -1343,11 +1435,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteBatchLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchLaunch: \(error)"
             }
         }
     }
@@ -1407,7 +1503,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchResult: \(error)"
             }
         }
     }
@@ -1433,18 +1529,22 @@ public class Files {
     }
 
     /// The DeleteBatchResultData struct
-    public class DeleteBatchResultData: CustomStringConvertible {
+    public class DeleteBatchResultData: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the deleted object.
         public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try DeleteBatchResultDataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchResultDataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchResultData: \(error)"
             }
         }
     }
@@ -1470,17 +1570,21 @@ public class Files {
     }
 
     /// The DeleteBatchResultEntry union
-    public enum DeleteBatchResultEntry: CustomStringConvertible {
+    public enum DeleteBatchResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.DeleteBatchResultData)
         /// An unspecified error.
         case failure(Files.DeleteError)
 
+        func json() throws -> JSON {
+            try DeleteBatchResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteBatchResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteBatchResultEntry: \(error)"
             }
         }
     }
@@ -1521,7 +1625,7 @@ public class Files {
     }
 
     /// The DeleteError union
-    public enum DeleteError: CustomStringConvertible {
+    public enum DeleteError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case pathLookup(Files.LookupError)
         /// An unspecified error.
@@ -1533,11 +1637,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteError: \(error)"
             }
         }
     }
@@ -1608,7 +1716,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteResult: \(error)"
             }
         }
     }
@@ -1634,7 +1742,7 @@ public class Files {
     }
 
     /// Metadata for a file or folder.
-    public class Metadata: CustomStringConvertible {
+    public class Metadata: CustomStringConvertible, JSONRepresentable {
         /// The last component of the path (including extension). This never contains a slash.
         public let name: String
         /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will be null if
@@ -1663,11 +1771,15 @@ public class Files {
             self.previewUrl = previewUrl
         }
 
+        func json() throws -> JSON {
+            try MetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Metadata: \(error)"
             }
         }
     }
@@ -1730,7 +1842,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeletedMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeletedMetadata: \(error)"
             }
         }
     }
@@ -1770,7 +1882,7 @@ public class Files {
     }
 
     /// Dimensions for a photo or video.
-    public class Dimensions: CustomStringConvertible {
+    public class Dimensions: CustomStringConvertible, JSONRepresentable {
         /// Height of the photo/video.
         public let height: UInt64
         /// Width of the photo/video.
@@ -1782,11 +1894,15 @@ public class Files {
             self.width = width
         }
 
+        func json() throws -> JSON {
+            try DimensionsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DimensionsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Dimensions: \(error)"
             }
         }
     }
@@ -1814,7 +1930,7 @@ public class Files {
     }
 
     /// The DownloadArg struct
-    public class DownloadArg: CustomStringConvertible {
+    public class DownloadArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the file to download.
         public let path: String
         /// Please specify revision in path instead.
@@ -1826,11 +1942,15 @@ public class Files {
             self.rev = rev
         }
 
+        func json() throws -> JSON {
+            try DownloadArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DownloadArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DownloadArg: \(error)"
             }
         }
     }
@@ -1858,7 +1978,7 @@ public class Files {
     }
 
     /// The DownloadError union
-    public enum DownloadError: CustomStringConvertible {
+    public enum DownloadError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// This file type cannot be downloaded directly; use export instead.
@@ -1866,11 +1986,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DownloadErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DownloadErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DownloadError: \(error)"
             }
         }
     }
@@ -1916,7 +2040,7 @@ public class Files {
     }
 
     /// The DownloadZipArg struct
-    public class DownloadZipArg: CustomStringConvertible {
+    public class DownloadZipArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the folder to download.
         public let path: String
         public init(path: String) {
@@ -1924,11 +2048,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try DownloadZipArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DownloadZipArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DownloadZipArg: \(error)"
             }
         }
     }
@@ -1954,7 +2082,7 @@ public class Files {
     }
 
     /// The DownloadZipError union
-    public enum DownloadZipError: CustomStringConvertible {
+    public enum DownloadZipError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// The folder or a file is too large to download.
@@ -1964,11 +2092,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DownloadZipErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DownloadZipErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DownloadZipError: \(error)"
             }
         }
     }
@@ -2020,18 +2152,22 @@ public class Files {
     }
 
     /// The DownloadZipResult struct
-    public class DownloadZipResult: CustomStringConvertible {
+    public class DownloadZipResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let metadata: Files.FolderMetadata
         public init(metadata: Files.FolderMetadata) {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try DownloadZipResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DownloadZipResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DownloadZipResult: \(error)"
             }
         }
     }
@@ -2057,7 +2193,7 @@ public class Files {
     }
 
     /// The ExportArg struct
-    public class ExportArg: CustomStringConvertible {
+    public class ExportArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the file to be exported.
         public let path: String
         /// The file format to which the file should be exported. This must be one of the formats listed in the file's
@@ -2071,11 +2207,15 @@ public class Files {
             self.exportFormat = exportFormat
         }
 
+        func json() throws -> JSON {
+            try ExportArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportArg: \(error)"
             }
         }
     }
@@ -2103,7 +2243,7 @@ public class Files {
     }
 
     /// The ExportError union
-    public enum ExportError: CustomStringConvertible {
+    public enum ExportError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// This file type cannot be exported. Use download instead.
@@ -2115,11 +2255,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExportErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportError: \(error)"
             }
         }
     }
@@ -2177,7 +2321,7 @@ public class Files {
     }
 
     /// Export information for a file.
-    public class ExportInfo: CustomStringConvertible {
+    public class ExportInfo: CustomStringConvertible, JSONRepresentable {
         /// Format to which the file can be exported to.
         public let exportAs: String?
         /// Additional formats to which the file can be exported. These values can be specified as the export_format in
@@ -2190,11 +2334,15 @@ public class Files {
             self.exportOptions = exportOptions
         }
 
+        func json() throws -> JSON {
+            try ExportInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportInfo: \(error)"
             }
         }
     }
@@ -2222,7 +2370,7 @@ public class Files {
     }
 
     /// The ExportMetadata struct
-    public class ExportMetadata: CustomStringConvertible {
+    public class ExportMetadata: CustomStringConvertible, JSONRepresentable {
         /// The last component of the path (including extension). This never contains a slash.
         public let name: String
         /// The file size in bytes.
@@ -2244,11 +2392,15 @@ public class Files {
             self.paperRevision = paperRevision
         }
 
+        func json() throws -> JSON {
+            try ExportMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportMetadata: \(error)"
             }
         }
     }
@@ -2280,7 +2432,7 @@ public class Files {
     }
 
     /// The ExportResult struct
-    public class ExportResult: CustomStringConvertible {
+    public class ExportResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata for the exported version of the file.
         public let exportMetadata: Files.ExportMetadata
         /// Metadata for the original file.
@@ -2290,11 +2442,15 @@ public class Files {
             self.fileMetadata = fileMetadata
         }
 
+        func json() throws -> JSON {
+            try ExportResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportResult: \(error)"
             }
         }
     }
@@ -2322,7 +2478,7 @@ public class Files {
     }
 
     /// The FileCategory union
-    public enum FileCategory: CustomStringConvertible {
+    public enum FileCategory: CustomStringConvertible, JSONRepresentable {
         /// jpg, png, gif, and more.
         case image
         /// doc, docx, txt, and more.
@@ -2346,11 +2502,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileCategorySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileCategorySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileCategory: \(error)"
             }
         }
     }
@@ -2443,18 +2603,22 @@ public class Files {
     }
 
     /// The FileLock struct
-    public class FileLock: CustomStringConvertible {
+    public class FileLock: CustomStringConvertible, JSONRepresentable {
         /// The lock description.
         public let content: Files.FileLockContent
         public init(content: Files.FileLockContent) {
             self.content = content
         }
 
+        func json() throws -> JSON {
+            try FileLockSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLockSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLock: \(error)"
             }
         }
     }
@@ -2480,7 +2644,7 @@ public class Files {
     }
 
     /// The FileLockContent union
-    public enum FileLockContent: CustomStringConvertible {
+    public enum FileLockContent: CustomStringConvertible, JSONRepresentable {
         /// Empty type to indicate no lock.
         case unlocked
         /// A lock held by a single user.
@@ -2488,11 +2652,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileLockContentSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLockContentSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLockContent: \(error)"
             }
         }
     }
@@ -2538,7 +2706,7 @@ public class Files {
     }
 
     /// The FileLockMetadata struct
-    public class FileLockMetadata: CustomStringConvertible {
+    public class FileLockMetadata: CustomStringConvertible, JSONRepresentable {
         /// True if caller holds the file lock.
         public let isLockholder: Bool?
         /// The display name of the lock holder.
@@ -2556,11 +2724,15 @@ public class Files {
             self.created = created
         }
 
+        func json() throws -> JSON {
+            try FileLockMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLockMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLockMetadata: \(error)"
             }
         }
     }
@@ -2682,7 +2854,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileMetadata: \(error)"
             }
         }
     }
@@ -2766,18 +2938,22 @@ public class Files {
     }
 
     /// Sharing info for a file or folder.
-    public class SharingInfo: CustomStringConvertible {
+    public class SharingInfo: CustomStringConvertible, JSONRepresentable {
         /// True if the file or folder is inside a read-only shared folder.
         public let readOnly: Bool
         public init(readOnly: Bool) {
             self.readOnly = readOnly
         }
 
+        func json() throws -> JSON {
+            try SharingInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingInfo: \(error)"
             }
         }
     }
@@ -2820,7 +2996,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileSharingInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileSharingInfo: \(error)"
             }
         }
     }
@@ -2850,7 +3026,7 @@ public class Files {
     }
 
     /// The FileStatus union
-    public enum FileStatus: CustomStringConvertible {
+    public enum FileStatus: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case active
         /// An unspecified error.
@@ -2858,11 +3034,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileStatus: \(error)"
             }
         }
     }
@@ -2942,7 +3122,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderMetadata: \(error)"
             }
         }
     }
@@ -3020,7 +3200,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderSharingInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderSharingInfo: \(error)"
             }
         }
     }
@@ -3060,7 +3240,7 @@ public class Files {
     }
 
     /// The GetCopyReferenceArg struct
-    public class GetCopyReferenceArg: CustomStringConvertible {
+    public class GetCopyReferenceArg: CustomStringConvertible, JSONRepresentable {
         /// The path to the file or folder you want to get a copy reference to.
         public let path: String
         public init(path: String) {
@@ -3068,11 +3248,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try GetCopyReferenceArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetCopyReferenceArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetCopyReferenceArg: \(error)"
             }
         }
     }
@@ -3098,17 +3282,21 @@ public class Files {
     }
 
     /// The GetCopyReferenceError union
-    public enum GetCopyReferenceError: CustomStringConvertible {
+    public enum GetCopyReferenceError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetCopyReferenceErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetCopyReferenceErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetCopyReferenceError: \(error)"
             }
         }
     }
@@ -3148,7 +3336,7 @@ public class Files {
     }
 
     /// The GetCopyReferenceResult struct
-    public class GetCopyReferenceResult: CustomStringConvertible {
+    public class GetCopyReferenceResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the file or folder.
         public let metadata: Files.Metadata
         /// A copy reference to the file or folder.
@@ -3163,11 +3351,15 @@ public class Files {
             self.expires = expires
         }
 
+        func json() throws -> JSON {
+            try GetCopyReferenceResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetCopyReferenceResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetCopyReferenceResult: \(error)"
             }
         }
     }
@@ -3197,7 +3389,7 @@ public class Files {
     }
 
     /// The GetTagsArg struct
-    public class GetTagsArg: CustomStringConvertible {
+    public class GetTagsArg: CustomStringConvertible, JSONRepresentable {
         /// Path to the items.
         public let paths: [String]
         public init(paths: [String]) {
@@ -3205,11 +3397,15 @@ public class Files {
             self.paths = paths
         }
 
+        func json() throws -> JSON {
+            try GetTagsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTagsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTagsArg: \(error)"
             }
         }
     }
@@ -3235,18 +3431,22 @@ public class Files {
     }
 
     /// The GetTagsResult struct
-    public class GetTagsResult: CustomStringConvertible {
+    public class GetTagsResult: CustomStringConvertible, JSONRepresentable {
         /// List of paths and their corresponding tags.
         public let pathsToTags: [Files.PathToTags]
         public init(pathsToTags: [Files.PathToTags]) {
             self.pathsToTags = pathsToTags
         }
 
+        func json() throws -> JSON {
+            try GetTagsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTagsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTagsResult: \(error)"
             }
         }
     }
@@ -3272,7 +3472,7 @@ public class Files {
     }
 
     /// The GetTemporaryLinkArg struct
-    public class GetTemporaryLinkArg: CustomStringConvertible {
+    public class GetTemporaryLinkArg: CustomStringConvertible, JSONRepresentable {
         /// The path to the file you want a temporary link to.
         public let path: String
         public init(path: String) {
@@ -3280,11 +3480,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try GetTemporaryLinkArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemporaryLinkArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemporaryLinkArg: \(error)"
             }
         }
     }
@@ -3310,7 +3514,7 @@ public class Files {
     }
 
     /// The GetTemporaryLinkError union
-    public enum GetTemporaryLinkError: CustomStringConvertible {
+    public enum GetTemporaryLinkError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
@@ -3325,11 +3529,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetTemporaryLinkErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemporaryLinkErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemporaryLinkError: \(error)"
             }
         }
     }
@@ -3387,7 +3595,7 @@ public class Files {
     }
 
     /// The GetTemporaryLinkResult struct
-    public class GetTemporaryLinkResult: CustomStringConvertible {
+    public class GetTemporaryLinkResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the file.
         public let metadata: Files.FileMetadata
         /// The temporary link which can be used to stream content the file.
@@ -3398,11 +3606,15 @@ public class Files {
             self.link = link
         }
 
+        func json() throws -> JSON {
+            try GetTemporaryLinkResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemporaryLinkResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemporaryLinkResult: \(error)"
             }
         }
     }
@@ -3430,7 +3642,7 @@ public class Files {
     }
 
     /// The GetTemporaryUploadLinkArg struct
-    public class GetTemporaryUploadLinkArg: CustomStringConvertible {
+    public class GetTemporaryUploadLinkArg: CustomStringConvertible, JSONRepresentable {
         /// Contains the path and other optional modifiers for the future upload commit. Equivalent to the parameters
         /// provided to upload.
         public let commitInfo: Files.CommitInfo
@@ -3443,11 +3655,15 @@ public class Files {
             self.duration = duration
         }
 
+        func json() throws -> JSON {
+            try GetTemporaryUploadLinkArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemporaryUploadLinkArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemporaryUploadLinkArg: \(error)"
             }
         }
     }
@@ -3475,7 +3691,7 @@ public class Files {
     }
 
     /// The GetTemporaryUploadLinkResult struct
-    public class GetTemporaryUploadLinkResult: CustomStringConvertible {
+    public class GetTemporaryUploadLinkResult: CustomStringConvertible, JSONRepresentable {
         /// The temporary link which can be used to stream a file to a Dropbox location.
         public let link: String
         public init(link: String) {
@@ -3483,11 +3699,15 @@ public class Files {
             self.link = link
         }
 
+        func json() throws -> JSON {
+            try GetTemporaryUploadLinkResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemporaryUploadLinkResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemporaryUploadLinkResult: \(error)"
             }
         }
     }
@@ -3513,18 +3733,22 @@ public class Files {
     }
 
     /// Arguments for getThumbnailBatch.
-    public class GetThumbnailBatchArg: CustomStringConvertible {
+    public class GetThumbnailBatchArg: CustomStringConvertible, JSONRepresentable {
         /// List of files to get thumbnails.
         public let entries: [Files.ThumbnailArg]
         public init(entries: [Files.ThumbnailArg]) {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try GetThumbnailBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetThumbnailBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetThumbnailBatchArg: \(error)"
             }
         }
     }
@@ -3550,17 +3774,21 @@ public class Files {
     }
 
     /// The GetThumbnailBatchError union
-    public enum GetThumbnailBatchError: CustomStringConvertible {
+    public enum GetThumbnailBatchError: CustomStringConvertible, JSONRepresentable {
         /// The operation involves more than 25 files.
         case tooManyFiles
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetThumbnailBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetThumbnailBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetThumbnailBatchError: \(error)"
             }
         }
     }
@@ -3599,18 +3827,22 @@ public class Files {
     }
 
     /// The GetThumbnailBatchResult struct
-    public class GetThumbnailBatchResult: CustomStringConvertible {
+    public class GetThumbnailBatchResult: CustomStringConvertible, JSONRepresentable {
         /// List of files and their thumbnails.
         public let entries: [Files.GetThumbnailBatchResultEntry]
         public init(entries: [Files.GetThumbnailBatchResultEntry]) {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try GetThumbnailBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetThumbnailBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetThumbnailBatchResult: \(error)"
             }
         }
     }
@@ -3636,7 +3868,7 @@ public class Files {
     }
 
     /// The GetThumbnailBatchResultData struct
-    public class GetThumbnailBatchResultData: CustomStringConvertible {
+    public class GetThumbnailBatchResultData: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let metadata: Files.FileMetadata
         /// A string containing the base64-encoded thumbnail data for this file.
@@ -3647,11 +3879,15 @@ public class Files {
             self.thumbnail = thumbnail
         }
 
+        func json() throws -> JSON {
+            try GetThumbnailBatchResultDataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetThumbnailBatchResultDataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetThumbnailBatchResultData: \(error)"
             }
         }
     }
@@ -3679,7 +3915,7 @@ public class Files {
     }
 
     /// The GetThumbnailBatchResultEntry union
-    public enum GetThumbnailBatchResultEntry: CustomStringConvertible {
+    public enum GetThumbnailBatchResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.GetThumbnailBatchResultData)
         /// The result for this file if it was an error.
@@ -3687,11 +3923,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetThumbnailBatchResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetThumbnailBatchResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetThumbnailBatchResultEntry: \(error)"
             }
         }
     }
@@ -3738,7 +3978,7 @@ public class Files {
     }
 
     /// GPS coordinates for a photo or video.
-    public class GpsCoordinates: CustomStringConvertible {
+    public class GpsCoordinates: CustomStringConvertible, JSONRepresentable {
         /// Latitude of the GPS coordinates.
         public let latitude: Double
         /// Longitude of the GPS coordinates.
@@ -3750,11 +3990,15 @@ public class Files {
             self.longitude = longitude
         }
 
+        func json() throws -> JSON {
+            try GpsCoordinatesSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GpsCoordinatesSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GpsCoordinates: \(error)"
             }
         }
     }
@@ -3782,7 +4026,7 @@ public class Files {
     }
 
     /// The HighlightSpan struct
-    public class HighlightSpan: CustomStringConvertible {
+    public class HighlightSpan: CustomStringConvertible, JSONRepresentable {
         /// String to be determined whether it should be highlighted or not.
         public let highlightStr: String
         /// The string should be highlighted or not.
@@ -3793,11 +4037,15 @@ public class Files {
             self.isHighlighted = isHighlighted
         }
 
+        func json() throws -> JSON {
+            try HighlightSpanSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try HighlightSpanSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for HighlightSpan: \(error)"
             }
         }
     }
@@ -3825,7 +4073,7 @@ public class Files {
     }
 
     /// The import format of the incoming Paper doc content.
-    public enum ImportFormat: CustomStringConvertible {
+    public enum ImportFormat: CustomStringConvertible, JSONRepresentable {
         /// The provided data is interpreted as standard HTML.
         case html
         /// The provided data is interpreted as markdown.
@@ -3835,11 +4083,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ImportFormatSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ImportFormatSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ImportFormat: \(error)"
             }
         }
     }
@@ -3890,7 +4142,7 @@ public class Files {
     }
 
     /// The ListFolderArg struct
-    public class ListFolderArg: CustomStringConvertible {
+    public class ListFolderArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file.
         public let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
@@ -3945,11 +4197,15 @@ public class Files {
             self.includeNonDownloadableFiles = includeNonDownloadableFiles
         }
 
+        func json() throws -> JSON {
+            try ListFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderArg: \(error)"
             }
         }
     }
@@ -4006,7 +4262,7 @@ public class Files {
     }
 
     /// The ListFolderContinueArg struct
-    public class ListFolderContinueArg: CustomStringConvertible {
+    public class ListFolderContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by your last call to listFolder or listFolderContinue.
         public let cursor: String
         public init(cursor: String) {
@@ -4014,11 +4270,15 @@ public class Files {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFolderContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderContinueArg: \(error)"
             }
         }
     }
@@ -4044,7 +4304,7 @@ public class Files {
     }
 
     /// The ListFolderContinueError union
-    public enum ListFolderContinueError: CustomStringConvertible {
+    public enum ListFolderContinueError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
@@ -4052,11 +4312,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFolderContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderContinueError: \(error)"
             }
         }
     }
@@ -4102,7 +4366,7 @@ public class Files {
     }
 
     /// The ListFolderError union
-    public enum ListFolderError: CustomStringConvertible {
+    public enum ListFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
@@ -4110,11 +4374,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderError: \(error)"
             }
         }
     }
@@ -4161,7 +4429,7 @@ public class Files {
     }
 
     /// The ListFolderGetLatestCursorResult struct
-    public class ListFolderGetLatestCursorResult: CustomStringConvertible {
+    public class ListFolderGetLatestCursorResult: CustomStringConvertible, JSONRepresentable {
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
         public let cursor: String
         public init(cursor: String) {
@@ -4169,11 +4437,15 @@ public class Files {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFolderGetLatestCursorResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderGetLatestCursorResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderGetLatestCursorResult: \(error)"
             }
         }
     }
@@ -4199,7 +4471,7 @@ public class Files {
     }
 
     /// The ListFolderLongpollArg struct
-    public class ListFolderLongpollArg: CustomStringConvertible {
+    public class ListFolderLongpollArg: CustomStringConvertible, JSONRepresentable {
         /// A cursor as returned by listFolder or listFolderContinue. Cursors retrieved by setting includeMediaInfo in
         /// ListFolderArg to true are not supported.
         public let cursor: String
@@ -4214,11 +4486,15 @@ public class Files {
             self.timeout = timeout
         }
 
+        func json() throws -> JSON {
+            try ListFolderLongpollArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderLongpollArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderLongpollArg: \(error)"
             }
         }
     }
@@ -4246,17 +4522,21 @@ public class Files {
     }
 
     /// The ListFolderLongpollError union
-    public enum ListFolderLongpollError: CustomStringConvertible {
+    public enum ListFolderLongpollError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call listFolder to obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFolderLongpollErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderLongpollErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderLongpollError: \(error)"
             }
         }
     }
@@ -4295,7 +4575,7 @@ public class Files {
     }
 
     /// The ListFolderLongpollResult struct
-    public class ListFolderLongpollResult: CustomStringConvertible {
+    public class ListFolderLongpollResult: CustomStringConvertible, JSONRepresentable {
         /// Indicates whether new changes are available. If true, call listFolderContinue to retrieve the changes.
         public let changes: Bool
         /// If present, backoff for at least this many seconds before calling listFolderLongpoll again.
@@ -4306,11 +4586,15 @@ public class Files {
             self.backoff = backoff
         }
 
+        func json() throws -> JSON {
+            try ListFolderLongpollResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderLongpollResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderLongpollResult: \(error)"
             }
         }
     }
@@ -4338,7 +4622,7 @@ public class Files {
     }
 
     /// The ListFolderResult struct
-    public class ListFolderResult: CustomStringConvertible {
+    public class ListFolderResult: CustomStringConvertible, JSONRepresentable {
         /// The files and (direct) subfolders in the folder.
         public let entries: [Files.Metadata]
         /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
@@ -4352,11 +4636,15 @@ public class Files {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ListFolderResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderResult: \(error)"
             }
         }
     }
@@ -4386,7 +4674,7 @@ public class Files {
     }
 
     /// The ListRevisionsArg struct
-    public class ListRevisionsArg: CustomStringConvertible {
+    public class ListRevisionsArg: CustomStringConvertible, JSONRepresentable {
         /// The path to the file you want to see the revisions of.
         public let path: String
         /// Determines the behavior of the API in listing the revisions for a given file path or id.
@@ -4401,11 +4689,15 @@ public class Files {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListRevisionsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListRevisionsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListRevisionsArg: \(error)"
             }
         }
     }
@@ -4435,17 +4727,21 @@ public class Files {
     }
 
     /// The ListRevisionsError union
-    public enum ListRevisionsError: CustomStringConvertible {
+    public enum ListRevisionsError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListRevisionsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListRevisionsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListRevisionsError: \(error)"
             }
         }
     }
@@ -4485,7 +4781,7 @@ public class Files {
     }
 
     /// The ListRevisionsMode union
-    public enum ListRevisionsMode: CustomStringConvertible {
+    public enum ListRevisionsMode: CustomStringConvertible, JSONRepresentable {
         /// Returns revisions with the same file path as identified by the latest file entry at the given file path or
         /// id.
         case path
@@ -4494,11 +4790,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListRevisionsModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListRevisionsModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListRevisionsMode: \(error)"
             }
         }
     }
@@ -4543,7 +4843,7 @@ public class Files {
     }
 
     /// The ListRevisionsResult struct
-    public class ListRevisionsResult: CustomStringConvertible {
+    public class ListRevisionsResult: CustomStringConvertible, JSONRepresentable {
         /// If the file identified by the latest revision in the response is either deleted or moved.
         public let isDeleted: Bool
         /// The time of deletion if the file was deleted.
@@ -4556,11 +4856,15 @@ public class Files {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try ListRevisionsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListRevisionsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListRevisionsResult: \(error)"
             }
         }
     }
@@ -4590,18 +4894,22 @@ public class Files {
     }
 
     /// The LockConflictError struct
-    public class LockConflictError: CustomStringConvertible {
+    public class LockConflictError: CustomStringConvertible, JSONRepresentable {
         /// The lock that caused the conflict.
         public let lock: Files.FileLock
         public init(lock: Files.FileLock) {
             self.lock = lock
         }
 
+        func json() throws -> JSON {
+            try LockConflictErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockConflictErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockConflictError: \(error)"
             }
         }
     }
@@ -4627,7 +4935,7 @@ public class Files {
     }
 
     /// The LockFileArg struct
-    public class LockFileArg: CustomStringConvertible {
+    public class LockFileArg: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to a file.
         public let path: String
         public init(path: String) {
@@ -4635,11 +4943,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try LockFileArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileArg: \(error)"
             }
         }
     }
@@ -4665,7 +4977,7 @@ public class Files {
     }
 
     /// The LockFileBatchArg struct
-    public class LockFileBatchArg: CustomStringConvertible {
+    public class LockFileBatchArg: CustomStringConvertible, JSONRepresentable {
         /// List of 'entries'. Each 'entry' contains a path of the file which will be locked or queried. Duplicate path
         /// arguments in the batch are considered only once.
         public let entries: [Files.LockFileArg]
@@ -4673,11 +4985,15 @@ public class Files {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try LockFileBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileBatchArg: \(error)"
             }
         }
     }
@@ -4716,7 +5032,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileBatchResult: \(error)"
             }
         }
     }
@@ -4742,7 +5058,7 @@ public class Files {
     }
 
     /// The LockFileError union
-    public enum LockFileError: CustomStringConvertible {
+    public enum LockFileError: CustomStringConvertible, JSONRepresentable {
         /// Could not find the specified resource.
         case pathLookup(Files.LookupError)
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -4763,11 +5079,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LockFileErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileError: \(error)"
             }
         }
     }
@@ -4850,7 +5170,7 @@ public class Files {
     }
 
     /// The LockFileResult struct
-    public class LockFileResult: CustomStringConvertible {
+    public class LockFileResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the file.
         public let metadata: Files.Metadata
         /// The file lock state after the operation.
@@ -4860,11 +5180,15 @@ public class Files {
             self.lock = lock
         }
 
+        func json() throws -> JSON {
+            try LockFileResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileResult: \(error)"
             }
         }
     }
@@ -4892,17 +5216,21 @@ public class Files {
     }
 
     /// The LockFileResultEntry union
-    public enum LockFileResultEntry: CustomStringConvertible {
+    public enum LockFileResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.LockFileResult)
         /// An unspecified error.
         case failure(Files.LockFileError)
 
+        func json() throws -> JSON {
+            try LockFileResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LockFileResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LockFileResultEntry: \(error)"
             }
         }
     }
@@ -4943,7 +5271,7 @@ public class Files {
     }
 
     /// The LookupError union
-    public enum LookupError: CustomStringConvertible {
+    public enum LookupError: CustomStringConvertible, JSONRepresentable {
         /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
         /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more
         /// information.
@@ -4964,11 +5292,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LookupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LookupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LookupError: \(error)"
             }
         }
     }
@@ -5044,17 +5376,21 @@ public class Files {
     }
 
     /// The MediaInfo union
-    public enum MediaInfo: CustomStringConvertible {
+    public enum MediaInfo: CustomStringConvertible, JSONRepresentable {
         /// Indicate the photo/video is still under processing and metadata is not available yet.
         case pending
         /// The metadata for the photo/video.
         case metadata(Files.MediaMetadata)
 
+        func json() throws -> JSON {
+            try MediaInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MediaInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MediaInfo: \(error)"
             }
         }
     }
@@ -5094,7 +5430,7 @@ public class Files {
     }
 
     /// Metadata for a photo or video.
-    public class MediaMetadata: CustomStringConvertible {
+    public class MediaMetadata: CustomStringConvertible, JSONRepresentable {
         /// Dimension of the photo/video.
         public let dimensions: Files.Dimensions?
         /// The GPS coordinate of the photo/video.
@@ -5107,11 +5443,15 @@ public class Files {
             self.timeTaken = timeTaken
         }
 
+        func json() throws -> JSON {
+            try MediaMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MediaMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MediaMetadata: \(error)"
             }
         }
     }
@@ -5160,17 +5500,21 @@ public class Files {
     }
 
     /// Metadata for a file, folder or other resource types.
-    public enum MetadataV2: CustomStringConvertible {
+    public enum MetadataV2: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case metadata(Files.Metadata)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MetadataV2Serializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MetadataV2Serializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MetadataV2: \(error)"
             }
         }
     }
@@ -5210,7 +5554,7 @@ public class Files {
     }
 
     /// The MinimalFileLinkMetadata struct
-    public class MinimalFileLinkMetadata: CustomStringConvertible {
+    public class MinimalFileLinkMetadata: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link.
         public let url: String
         /// Unique identifier for the linked file.
@@ -5232,11 +5576,15 @@ public class Files {
             self.rev = rev
         }
 
+        func json() throws -> JSON {
+            try MinimalFileLinkMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MinimalFileLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MinimalFileLinkMetadata: \(error)"
             }
         }
     }
@@ -5268,7 +5616,7 @@ public class Files {
     }
 
     /// The RelocationBatchArgBase struct
-    public class RelocationBatchArgBase: CustomStringConvertible {
+    public class RelocationBatchArgBase: CustomStringConvertible, JSONRepresentable {
         /// List of entries to be moved or copied. Each entry is RelocationPath.
         public let entries: [Files.RelocationPath]
         /// If there's a conflict with any file, have the Dropbox server try to autorename that file to avoid the
@@ -5279,11 +5627,15 @@ public class Files {
             self.autorename = autorename
         }
 
+        func json() throws -> JSON {
+            try RelocationBatchArgBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchArgBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchArgBase: \(error)"
             }
         }
     }
@@ -5324,7 +5676,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MoveBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MoveBatchArg: \(error)"
             }
         }
     }
@@ -5354,17 +5706,21 @@ public class Files {
     }
 
     /// The MoveIntoFamilyError union
-    public enum MoveIntoFamilyError: CustomStringConvertible {
+    public enum MoveIntoFamilyError: CustomStringConvertible, JSONRepresentable {
         /// Moving shared folder into Family Room folder is not allowed.
         case isSharedFolder
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MoveIntoFamilyErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MoveIntoFamilyErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MoveIntoFamilyError: \(error)"
             }
         }
     }
@@ -5403,17 +5759,21 @@ public class Files {
     }
 
     /// The MoveIntoVaultError union
-    public enum MoveIntoVaultError: CustomStringConvertible {
+    public enum MoveIntoVaultError: CustomStringConvertible, JSONRepresentable {
         /// Moving shared folder into Vault is not allowed.
         case isSharedFolder
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MoveIntoVaultErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MoveIntoVaultErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MoveIntoVaultError: \(error)"
             }
         }
     }
@@ -5452,7 +5812,7 @@ public class Files {
     }
 
     /// The PaperContentError union
-    public enum PaperContentError: CustomStringConvertible {
+    public enum PaperContentError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to edit Paper docs.
         case insufficientPermissions
         /// The provided content was malformed and cannot be imported to Paper.
@@ -5465,11 +5825,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperContentErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperContentErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperContentError: \(error)"
             }
         }
     }
@@ -5526,7 +5890,7 @@ public class Files {
     }
 
     /// The PaperCreateArg struct
-    public class PaperCreateArg: CustomStringConvertible {
+    public class PaperCreateArg: CustomStringConvertible, JSONRepresentable {
         /// The fully qualified path to the location in the user's Dropbox where the Paper Doc should be created. This
         /// should include the document's title and end with .paper.
         public let path: String
@@ -5538,11 +5902,15 @@ public class Files {
             self.importFormat = importFormat
         }
 
+        func json() throws -> JSON {
+            try PaperCreateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperCreateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperCreateArg: \(error)"
             }
         }
     }
@@ -5570,7 +5938,7 @@ public class Files {
     }
 
     /// The PaperCreateError union
-    public enum PaperCreateError: CustomStringConvertible {
+    public enum PaperCreateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to edit Paper docs.
         case insufficientPermissions
         /// The provided content was malformed and cannot be imported to Paper.
@@ -5591,11 +5959,15 @@ public class Files {
         /// Paper is disabled for your team.
         case paperDisabled
 
+        func json() throws -> JSON {
+            try PaperCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperCreateError: \(error)"
             }
         }
     }
@@ -5676,7 +6048,7 @@ public class Files {
     }
 
     /// The PaperCreateResult struct
-    public class PaperCreateResult: CustomStringConvertible {
+    public class PaperCreateResult: CustomStringConvertible, JSONRepresentable {
         /// URL to open the Paper Doc.
         public let url: String
         /// The fully qualified path the Paper Doc was actually created at.
@@ -5696,11 +6068,15 @@ public class Files {
             self.paperRevision = paperRevision
         }
 
+        func json() throws -> JSON {
+            try PaperCreateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperCreateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperCreateResult: \(error)"
             }
         }
     }
@@ -5732,7 +6108,7 @@ public class Files {
     }
 
     /// The PaperDocUpdatePolicy union
-    public enum PaperDocUpdatePolicy: CustomStringConvertible {
+    public enum PaperDocUpdatePolicy: CustomStringConvertible, JSONRepresentable {
         /// Sets the doc content to the provided content if the provided paper_revision matches the latest doc revision.
         /// Otherwise, returns an error.
         case update
@@ -5745,11 +6121,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDocUpdatePolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdatePolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocUpdatePolicy: \(error)"
             }
         }
     }
@@ -5806,7 +6186,7 @@ public class Files {
     }
 
     /// The PaperUpdateArg struct
-    public class PaperUpdateArg: CustomStringConvertible {
+    public class PaperUpdateArg: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to update. The path must correspond to a Paper doc or an error will be returned.
         public let path: String
         /// The format of the provided data.
@@ -5825,11 +6205,15 @@ public class Files {
             self.paperRevision = paperRevision
         }
 
+        func json() throws -> JSON {
+            try PaperUpdateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperUpdateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperUpdateArg: \(error)"
             }
         }
     }
@@ -5861,7 +6245,7 @@ public class Files {
     }
 
     /// The PaperUpdateError union
-    public enum PaperUpdateError: CustomStringConvertible {
+    public enum PaperUpdateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to edit Paper docs.
         case insufficientPermissions
         /// The provided content was malformed and cannot be imported to Paper.
@@ -5882,11 +6266,15 @@ public class Files {
         /// This operation is not allowed on deleted Paper docs.
         case docDeleted
 
+        func json() throws -> JSON {
+            try PaperUpdateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperUpdateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperUpdateError: \(error)"
             }
         }
     }
@@ -5968,7 +6356,7 @@ public class Files {
     }
 
     /// The PaperUpdateResult struct
-    public class PaperUpdateResult: CustomStringConvertible {
+    public class PaperUpdateResult: CustomStringConvertible, JSONRepresentable {
         /// The current doc revision.
         public let paperRevision: Int64
         public init(paperRevision: Int64) {
@@ -5976,11 +6364,15 @@ public class Files {
             self.paperRevision = paperRevision
         }
 
+        func json() throws -> JSON {
+            try PaperUpdateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperUpdateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperUpdateResult: \(error)"
             }
         }
     }
@@ -6006,7 +6398,7 @@ public class Files {
     }
 
     /// The PathOrLink union
-    public enum PathOrLink: CustomStringConvertible {
+    public enum PathOrLink: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(String)
         /// An unspecified error.
@@ -6014,11 +6406,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PathOrLinkSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PathOrLinkSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PathOrLink: \(error)"
             }
         }
     }
@@ -6065,7 +6461,7 @@ public class Files {
     }
 
     /// The PathToTags struct
-    public class PathToTags: CustomStringConvertible {
+    public class PathToTags: CustomStringConvertible, JSONRepresentable {
         /// Path of the item.
         public let path: String
         /// Tags assigned to this item.
@@ -6076,11 +6472,15 @@ public class Files {
             self.tags = tags
         }
 
+        func json() throws -> JSON {
+            try PathToTagsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PathToTagsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PathToTags: \(error)"
             }
         }
     }
@@ -6113,7 +6513,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PhotoMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PhotoMetadata: \(error)"
             }
         }
     }
@@ -6143,7 +6543,7 @@ public class Files {
     }
 
     /// The PreviewArg struct
-    public class PreviewArg: CustomStringConvertible {
+    public class PreviewArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the file to preview.
         public let path: String
         /// Please specify revision in path instead.
@@ -6155,11 +6555,15 @@ public class Files {
             self.rev = rev
         }
 
+        func json() throws -> JSON {
+            try PreviewArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PreviewArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PreviewArg: \(error)"
             }
         }
     }
@@ -6187,7 +6591,7 @@ public class Files {
     }
 
     /// The PreviewError union
-    public enum PreviewError: CustomStringConvertible {
+    public enum PreviewError: CustomStringConvertible, JSONRepresentable {
         /// An error occurs when downloading metadata for the file.
         case path(Files.LookupError)
         /// This preview generation is still in progress and the file is not ready  for preview yet.
@@ -6197,11 +6601,15 @@ public class Files {
         /// The file content is not supported for preview generation.
         case unsupportedContent
 
+        func json() throws -> JSON {
+            try PreviewErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PreviewErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PreviewError: \(error)"
             }
         }
     }
@@ -6253,7 +6661,7 @@ public class Files {
     }
 
     /// The PreviewResult struct
-    public class PreviewResult: CustomStringConvertible {
+    public class PreviewResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata corresponding to the file received as an argument. Will be populated if the endpoint is called with
         /// a path (ReadPath).
         public let fileMetadata: Files.FileMetadata?
@@ -6265,11 +6673,15 @@ public class Files {
             self.linkMetadata = linkMetadata
         }
 
+        func json() throws -> JSON {
+            try PreviewResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PreviewResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PreviewResult: \(error)"
             }
         }
     }
@@ -6297,7 +6709,7 @@ public class Files {
     }
 
     /// The RelocationPath struct
-    public class RelocationPath: CustomStringConvertible {
+    public class RelocationPath: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to be copied or moved.
         public let fromPath: String
         /// Path in the user's Dropbox that is the destination.
@@ -6309,11 +6721,15 @@ public class Files {
             self.toPath = toPath
         }
 
+        func json() throws -> JSON {
+            try RelocationPathSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationPathSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationPath: \(error)"
             }
         }
     }
@@ -6360,7 +6776,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationArg: \(error)"
             }
         }
     }
@@ -6416,7 +6832,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchArg: \(error)"
             }
         }
     }
@@ -6453,7 +6869,7 @@ public class Files {
     }
 
     /// The RelocationError union
-    public enum RelocationError: CustomStringConvertible {
+    public enum RelocationError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case fromLookup(Files.LookupError)
         /// An unspecified error.
@@ -6487,11 +6903,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelocationErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationError: \(error)"
             }
         }
     }
@@ -6613,7 +7033,7 @@ public class Files {
     }
 
     /// The RelocationBatchError union
-    public enum RelocationBatchError: CustomStringConvertible {
+    public enum RelocationBatchError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case fromLookup(Files.LookupError)
         /// An unspecified error.
@@ -6649,11 +7069,15 @@ public class Files {
         /// There are too many write operations in user's Dropbox. Please retry this request.
         case tooManyWriteOperations
 
+        func json() throws -> JSON {
+            try RelocationBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchError: \(error)"
             }
         }
     }
@@ -6781,7 +7205,7 @@ public class Files {
     }
 
     /// The RelocationBatchErrorEntry union
-    public enum RelocationBatchErrorEntry: CustomStringConvertible {
+    public enum RelocationBatchErrorEntry: CustomStringConvertible, JSONRepresentable {
         /// User errors that retry won't help.
         case relocationError(Files.RelocationError)
         /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
@@ -6792,11 +7216,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelocationBatchErrorEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchErrorEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchErrorEntry: \(error)"
             }
         }
     }
@@ -6848,7 +7276,7 @@ public class Files {
     }
 
     /// The RelocationBatchJobStatus union
-    public enum RelocationBatchJobStatus: CustomStringConvertible {
+    public enum RelocationBatchJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The copy or move batch job has finished.
@@ -6856,11 +7284,15 @@ public class Files {
         /// The copy or move batch job has failed with exception.
         case failed(Files.RelocationBatchError)
 
+        func json() throws -> JSON {
+            try RelocationBatchJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchJobStatus: \(error)"
             }
         }
     }
@@ -6907,7 +7339,7 @@ public class Files {
     }
 
     /// Result returned by copyBatch or moveBatch that may either launch an asynchronous job or complete synchronously.
-    public enum RelocationBatchLaunch: CustomStringConvertible {
+    public enum RelocationBatchLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
@@ -6916,11 +7348,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelocationBatchLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchLaunch: \(error)"
             }
         }
     }
@@ -6979,7 +7415,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchResult: \(error)"
             }
         }
     }
@@ -7005,18 +7441,22 @@ public class Files {
     }
 
     /// The RelocationBatchResultData struct
-    public class RelocationBatchResultData: CustomStringConvertible {
+    public class RelocationBatchResultData: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the relocated object.
         public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try RelocationBatchResultDataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchResultDataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchResultData: \(error)"
             }
         }
     }
@@ -7042,7 +7482,7 @@ public class Files {
     }
 
     /// The RelocationBatchResultEntry union
-    public enum RelocationBatchResultEntry: CustomStringConvertible {
+    public enum RelocationBatchResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.Metadata)
         /// An unspecified error.
@@ -7050,11 +7490,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelocationBatchResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchResultEntry: \(error)"
             }
         }
     }
@@ -7102,17 +7546,21 @@ public class Files {
 
     /// Result returned by copyBatchCheckV2 or moveBatchCheckV2 that may either be in progress or completed with result
     /// for each entry.
-    public enum RelocationBatchV2JobStatus: CustomStringConvertible {
+    public enum RelocationBatchV2JobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The copy or move batch job has finished.
         case complete(Files.RelocationBatchV2Result)
 
+        func json() throws -> JSON {
+            try RelocationBatchV2JobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchV2JobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchV2JobStatus: \(error)"
             }
         }
     }
@@ -7153,18 +7601,22 @@ public class Files {
 
     /// Result returned by copyBatchV2 or moveBatchV2 that may either launch an asynchronous job or complete
     /// synchronously.
-    public enum RelocationBatchV2Launch: CustomStringConvertible {
+    public enum RelocationBatchV2Launch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// An unspecified error.
         case complete(Files.RelocationBatchV2Result)
 
+        func json() throws -> JSON {
+            try RelocationBatchV2LaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchV2LaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchV2Launch: \(error)"
             }
         }
     }
@@ -7218,7 +7670,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationBatchV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationBatchV2Result: \(error)"
             }
         }
     }
@@ -7256,7 +7708,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelocationResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelocationResult: \(error)"
             }
         }
     }
@@ -7282,7 +7734,7 @@ public class Files {
     }
 
     /// The RemoveTagArg struct
-    public class RemoveTagArg: CustomStringConvertible {
+    public class RemoveTagArg: CustomStringConvertible, JSONRepresentable {
         /// Path to the item to tag.
         public let path: String
         /// The tag to remove. Will be automatically converted to lowercase letters.
@@ -7294,11 +7746,15 @@ public class Files {
             self.tagText = tagText
         }
 
+        func json() throws -> JSON {
+            try RemoveTagArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveTagArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveTagArg: \(error)"
             }
         }
     }
@@ -7326,7 +7782,7 @@ public class Files {
     }
 
     /// The RemoveTagError union
-    public enum RemoveTagError: CustomStringConvertible {
+    public enum RemoveTagError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
@@ -7334,11 +7790,15 @@ public class Files {
         /// That tag doesn't exist at this path.
         case tagNotPresent
 
+        func json() throws -> JSON {
+            try RemoveTagErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveTagErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveTagError: \(error)"
             }
         }
     }
@@ -7384,7 +7844,7 @@ public class Files {
     }
 
     /// The RestoreArg struct
-    public class RestoreArg: CustomStringConvertible {
+    public class RestoreArg: CustomStringConvertible, JSONRepresentable {
         /// The path to save the restored file.
         public let path: String
         /// The revision to restore.
@@ -7396,11 +7856,15 @@ public class Files {
             self.rev = rev
         }
 
+        func json() throws -> JSON {
+            try RestoreArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RestoreArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RestoreArg: \(error)"
             }
         }
     }
@@ -7428,7 +7892,7 @@ public class Files {
     }
 
     /// The RestoreError union
-    public enum RestoreError: CustomStringConvertible {
+    public enum RestoreError: CustomStringConvertible, JSONRepresentable {
         /// An error occurs when downloading metadata for the file.
         case pathLookup(Files.LookupError)
         /// An error occurs when trying to restore the file to that path.
@@ -7440,11 +7904,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RestoreErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RestoreErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RestoreError: \(error)"
             }
         }
     }
@@ -7503,7 +7971,7 @@ public class Files {
     }
 
     /// The SaveCopyReferenceArg struct
-    public class SaveCopyReferenceArg: CustomStringConvertible {
+    public class SaveCopyReferenceArg: CustomStringConvertible, JSONRepresentable {
         /// A copy reference returned by copyReferenceGet.
         public let copyReference: String
         /// Path in the user's Dropbox that is the destination.
@@ -7515,11 +7983,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try SaveCopyReferenceArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveCopyReferenceArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveCopyReferenceArg: \(error)"
             }
         }
     }
@@ -7547,7 +8019,7 @@ public class Files {
     }
 
     /// The SaveCopyReferenceError union
-    public enum SaveCopyReferenceError: CustomStringConvertible {
+    public enum SaveCopyReferenceError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.WriteError)
         /// The copy reference is invalid.
@@ -7562,11 +8034,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SaveCopyReferenceErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveCopyReferenceErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveCopyReferenceError: \(error)"
             }
         }
     }
@@ -7630,18 +8106,22 @@ public class Files {
     }
 
     /// The SaveCopyReferenceResult struct
-    public class SaveCopyReferenceResult: CustomStringConvertible {
+    public class SaveCopyReferenceResult: CustomStringConvertible, JSONRepresentable {
         /// The metadata of the saved file or folder in the user's Dropbox.
         public let metadata: Files.Metadata
         public init(metadata: Files.Metadata) {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try SaveCopyReferenceResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveCopyReferenceResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveCopyReferenceResult: \(error)"
             }
         }
     }
@@ -7667,7 +8147,7 @@ public class Files {
     }
 
     /// The SaveUrlArg struct
-    public class SaveUrlArg: CustomStringConvertible {
+    public class SaveUrlArg: CustomStringConvertible, JSONRepresentable {
         /// The path in Dropbox where the URL will be saved to.
         public let path: String
         /// The URL to be saved.
@@ -7679,11 +8159,15 @@ public class Files {
             self.url = url
         }
 
+        func json() throws -> JSON {
+            try SaveUrlArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveUrlArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveUrlArg: \(error)"
             }
         }
     }
@@ -7711,7 +8195,7 @@ public class Files {
     }
 
     /// The SaveUrlError union
-    public enum SaveUrlError: CustomStringConvertible {
+    public enum SaveUrlError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.WriteError)
         /// Failed downloading the given URL. The URL may be  password-protected and the password provided was
@@ -7724,11 +8208,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SaveUrlErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveUrlErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveUrlError: \(error)"
             }
         }
     }
@@ -7786,7 +8274,7 @@ public class Files {
     }
 
     /// The SaveUrlJobStatus union
-    public enum SaveUrlJobStatus: CustomStringConvertible {
+    public enum SaveUrlJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// Metadata of the file where the URL is saved to.
@@ -7794,11 +8282,15 @@ public class Files {
         /// An unspecified error.
         case failed(Files.SaveUrlError)
 
+        func json() throws -> JSON {
+            try SaveUrlJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveUrlJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveUrlJobStatus: \(error)"
             }
         }
     }
@@ -7845,18 +8337,22 @@ public class Files {
     }
 
     /// The SaveUrlResult union
-    public enum SaveUrlResult: CustomStringConvertible {
+    public enum SaveUrlResult: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// Metadata of the file where the URL is saved to.
         case complete(Files.FileMetadata)
 
+        func json() throws -> JSON {
+            try SaveUrlResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SaveUrlResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SaveUrlResult: \(error)"
             }
         }
     }
@@ -7897,7 +8393,7 @@ public class Files {
     }
 
     /// The SearchArg struct
-    public class SearchArg: CustomStringConvertible {
+    public class SearchArg: CustomStringConvertible, JSONRepresentable {
         /// The path in the user's Dropbox to search. Should probably be a folder.
         public let path: String
         /// The string to search for. Query string may be rewritten to improve relevance of results. The string is split
@@ -7923,11 +8419,15 @@ public class Files {
             self.mode = mode
         }
 
+        func json() throws -> JSON {
+            try SearchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchArg: \(error)"
             }
         }
     }
@@ -7961,7 +8461,7 @@ public class Files {
     }
 
     /// The SearchError union
-    public enum SearchError: CustomStringConvertible {
+    public enum SearchError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
@@ -7971,11 +8471,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SearchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchError: \(error)"
             }
         }
     }
@@ -8028,7 +8532,7 @@ public class Files {
     }
 
     /// The SearchMatch struct
-    public class SearchMatch: CustomStringConvertible {
+    public class SearchMatch: CustomStringConvertible, JSONRepresentable {
         /// The type of the match.
         public let matchType: Files.SearchMatchType
         /// The metadata for the matched file or folder.
@@ -8038,11 +8542,15 @@ public class Files {
             self.metadata = metadata
         }
 
+        func json() throws -> JSON {
+            try SearchMatchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchMatchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMatch: \(error)"
             }
         }
     }
@@ -8070,18 +8578,22 @@ public class Files {
     }
 
     /// The SearchMatchFieldOptions struct
-    public class SearchMatchFieldOptions: CustomStringConvertible {
+    public class SearchMatchFieldOptions: CustomStringConvertible, JSONRepresentable {
         /// Whether to include highlight span from file title.
         public let includeHighlights: Bool
         public init(includeHighlights: Bool = false) {
             self.includeHighlights = includeHighlights
         }
 
+        func json() throws -> JSON {
+            try SearchMatchFieldOptionsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchMatchFieldOptionsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMatchFieldOptions: \(error)"
             }
         }
     }
@@ -8107,7 +8619,7 @@ public class Files {
     }
 
     /// Indicates what type of match was found for a given item.
-    public enum SearchMatchType: CustomStringConvertible {
+    public enum SearchMatchType: CustomStringConvertible, JSONRepresentable {
         /// This item was matched on its file or folder name.
         case filename
         /// This item was matched based on its file contents.
@@ -8115,11 +8627,15 @@ public class Files {
         /// This item was matched based on both its contents and its file name.
         case both
 
+        func json() throws -> JSON {
+            try SearchMatchTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchMatchTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMatchType: \(error)"
             }
         }
     }
@@ -8164,7 +8680,7 @@ public class Files {
     }
 
     /// Indicates what type of match was found for a given item.
-    public enum SearchMatchTypeV2: CustomStringConvertible {
+    public enum SearchMatchTypeV2: CustomStringConvertible, JSONRepresentable {
         /// This item was matched on its file or folder name.
         case filename
         /// This item was matched based on its file contents.
@@ -8176,11 +8692,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SearchMatchTypeV2Serializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchMatchTypeV2Serializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMatchTypeV2: \(error)"
             }
         }
     }
@@ -8237,7 +8757,7 @@ public class Files {
     }
 
     /// The SearchMatchV2 struct
-    public class SearchMatchV2: CustomStringConvertible {
+    public class SearchMatchV2: CustomStringConvertible, JSONRepresentable {
         /// The metadata for the matched file or folder.
         public let metadata: Files.MetadataV2
         /// The type of the match.
@@ -8250,11 +8770,15 @@ public class Files {
             self.highlightSpans = highlightSpans
         }
 
+        func json() throws -> JSON {
+            try SearchMatchV2Serializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchMatchV2Serializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMatchV2: \(error)"
             }
         }
     }
@@ -8284,7 +8808,7 @@ public class Files {
     }
 
     /// The SearchMode union
-    public enum SearchMode: CustomStringConvertible {
+    public enum SearchMode: CustomStringConvertible, JSONRepresentable {
         /// Search file and folder names.
         case filename
         /// Search file and folder names as well as file contents.
@@ -8292,11 +8816,15 @@ public class Files {
         /// Search for deleted file and folder names.
         case deletedFilename
 
+        func json() throws -> JSON {
+            try SearchModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchMode: \(error)"
             }
         }
     }
@@ -8341,7 +8869,7 @@ public class Files {
     }
 
     /// The SearchOptions struct
-    public class SearchOptions: CustomStringConvertible {
+    public class SearchOptions: CustomStringConvertible, JSONRepresentable {
         /// Scopes the search to a path in the user's Dropbox. Searches the entire Dropbox if not specified.
         public let path: String?
         /// The maximum number of search results to return.
@@ -8382,11 +8910,15 @@ public class Files {
             self.accountId = accountId
         }
 
+        func json() throws -> JSON {
+            try SearchOptionsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchOptionsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchOptions: \(error)"
             }
         }
     }
@@ -8435,7 +8967,7 @@ public class Files {
     }
 
     /// The SearchOrderBy union
-    public enum SearchOrderBy: CustomStringConvertible {
+    public enum SearchOrderBy: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case relevance
         /// An unspecified error.
@@ -8443,11 +8975,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SearchOrderBySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchOrderBySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchOrderBy: \(error)"
             }
         }
     }
@@ -8492,7 +9028,7 @@ public class Files {
     }
 
     /// The SearchResult struct
-    public class SearchResult: CustomStringConvertible {
+    public class SearchResult: CustomStringConvertible, JSONRepresentable {
         /// A list (possibly empty) of matches for the query.
         public let matches: [Files.SearchMatch]
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
@@ -8507,11 +9043,15 @@ public class Files {
             self.start = start
         }
 
+        func json() throws -> JSON {
+            try SearchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchResult: \(error)"
             }
         }
     }
@@ -8541,7 +9081,7 @@ public class Files {
     }
 
     /// The SearchV2Arg struct
-    public class SearchV2Arg: CustomStringConvertible {
+    public class SearchV2Arg: CustomStringConvertible, JSONRepresentable {
         /// The string to search for. May match across multiple fields based on the request arguments.
         public let query: String
         /// Options for more targeted search results.
@@ -8563,11 +9103,15 @@ public class Files {
             self.includeHighlights = includeHighlights
         }
 
+        func json() throws -> JSON {
+            try SearchV2ArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchV2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchV2Arg: \(error)"
             }
         }
     }
@@ -8599,7 +9143,7 @@ public class Files {
     }
 
     /// The SearchV2ContinueArg struct
-    public class SearchV2ContinueArg: CustomStringConvertible {
+    public class SearchV2ContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by your last call to searchV2. Used to fetch the next page of results.
         public let cursor: String
         public init(cursor: String) {
@@ -8607,11 +9151,15 @@ public class Files {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try SearchV2ContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchV2ContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchV2ContinueArg: \(error)"
             }
         }
     }
@@ -8637,7 +9185,7 @@ public class Files {
     }
 
     /// The SearchV2Result struct
-    public class SearchV2Result: CustomStringConvertible {
+    public class SearchV2Result: CustomStringConvertible, JSONRepresentable {
         /// A list (possibly empty) of matches for the query.
         public let matches: [Files.SearchMatchV2]
         /// Used for paging. If true, indicates there is another page of results available that can be fetched by
@@ -8652,11 +9200,15 @@ public class Files {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try SearchV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SearchV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SearchV2Result: \(error)"
             }
         }
     }
@@ -8686,7 +9238,7 @@ public class Files {
     }
 
     /// The SharedLink struct
-    public class SharedLink: CustomStringConvertible {
+    public class SharedLink: CustomStringConvertible, JSONRepresentable {
         /// Shared link url.
         public let url: String
         /// Password for the shared link.
@@ -8698,11 +9250,15 @@ public class Files {
             self.password = password
         }
 
+        func json() throws -> JSON {
+            try SharedLinkSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLink: \(error)"
             }
         }
     }
@@ -8730,7 +9286,7 @@ public class Files {
     }
 
     /// The SharedLinkFileInfo struct
-    public class SharedLinkFileInfo: CustomStringConvertible {
+    public class SharedLinkFileInfo: CustomStringConvertible, JSONRepresentable {
         /// The shared link corresponding to either a file or shared link to a folder. If it is for a folder shared
         /// link, we use the path param to determine for which file in the folder the view is for.
         public let url: String
@@ -8748,11 +9304,15 @@ public class Files {
             self.password = password
         }
 
+        func json() throws -> JSON {
+            try SharedLinkFileInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkFileInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkFileInfo: \(error)"
             }
         }
     }
@@ -8782,7 +9342,7 @@ public class Files {
     }
 
     /// The SingleUserLock struct
-    public class SingleUserLock: CustomStringConvertible {
+    public class SingleUserLock: CustomStringConvertible, JSONRepresentable {
         /// The time the lock was created.
         public let created: Date
         /// The account ID of the lock holder if known.
@@ -8797,11 +9357,15 @@ public class Files {
             self.lockHolderTeamId = lockHolderTeamId
         }
 
+        func json() throws -> JSON {
+            try SingleUserLockSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SingleUserLockSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SingleUserLock: \(error)"
             }
         }
     }
@@ -8831,7 +9395,7 @@ public class Files {
     }
 
     /// The SymlinkInfo struct
-    public class SymlinkInfo: CustomStringConvertible {
+    public class SymlinkInfo: CustomStringConvertible, JSONRepresentable {
         /// The target this symlink points to.
         public let target: String
         public init(target: String) {
@@ -8839,11 +9403,15 @@ public class Files {
             self.target = target
         }
 
+        func json() throws -> JSON {
+            try SymlinkInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SymlinkInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SymlinkInfo: \(error)"
             }
         }
     }
@@ -8869,7 +9437,7 @@ public class Files {
     }
 
     /// The SyncSetting union
-    public enum SyncSetting: CustomStringConvertible {
+    public enum SyncSetting: CustomStringConvertible, JSONRepresentable {
         /// On first sync to members' computers, the specified folder will follow its parent folder's setting or
         /// otherwise follow default sync behavior.
         case default_
@@ -8881,11 +9449,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SyncSettingSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SyncSettingSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SyncSetting: \(error)"
             }
         }
     }
@@ -8936,7 +9508,7 @@ public class Files {
     }
 
     /// The SyncSettingArg union
-    public enum SyncSettingArg: CustomStringConvertible {
+    public enum SyncSettingArg: CustomStringConvertible, JSONRepresentable {
         /// On first sync to members' computers, the specified folder will follow its parent folder's setting or
         /// otherwise follow default sync behavior.
         case default_
@@ -8945,11 +9517,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SyncSettingArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SyncSettingArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SyncSettingArg: \(error)"
             }
         }
     }
@@ -8994,7 +9570,7 @@ public class Files {
     }
 
     /// The SyncSettingsError union
-    public enum SyncSettingsError: CustomStringConvertible {
+    public enum SyncSettingsError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// Setting this combination of sync settings simultaneously is not supported.
@@ -9004,11 +9580,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SyncSettingsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SyncSettingsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SyncSettingsError: \(error)"
             }
         }
     }
@@ -9060,17 +9640,21 @@ public class Files {
     }
 
     /// Tag that can be added in multiple ways.
-    public enum Tag: CustomStringConvertible {
+    public enum Tag: CustomStringConvertible, JSONRepresentable {
         /// Tag generated by the user.
         case userGeneratedTag(Files.UserGeneratedTag)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TagSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TagSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Tag: \(error)"
             }
         }
     }
@@ -9110,7 +9694,7 @@ public class Files {
     }
 
     /// The ThumbnailArg struct
-    public class ThumbnailArg: CustomStringConvertible {
+    public class ThumbnailArg: CustomStringConvertible, JSONRepresentable {
         /// The path to the image file you want to thumbnail.
         public let path: String
         /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
@@ -9128,11 +9712,15 @@ public class Files {
             self.mode = mode
         }
 
+        func json() throws -> JSON {
+            try ThumbnailArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailArg: \(error)"
             }
         }
     }
@@ -9164,7 +9752,7 @@ public class Files {
     }
 
     /// The ThumbnailError union
-    public enum ThumbnailError: CustomStringConvertible {
+    public enum ThumbnailError: CustomStringConvertible, JSONRepresentable {
         /// An error occurs when downloading metadata for the image.
         case path(Files.LookupError)
         /// The file extension doesn't allow conversion to a thumbnail.
@@ -9174,11 +9762,15 @@ public class Files {
         /// An error occurs during thumbnail conversion.
         case conversionError
 
+        func json() throws -> JSON {
+            try ThumbnailErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailError: \(error)"
             }
         }
     }
@@ -9230,17 +9822,21 @@ public class Files {
     }
 
     /// The ThumbnailFormat union
-    public enum ThumbnailFormat: CustomStringConvertible {
+    public enum ThumbnailFormat: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case jpeg
         /// An unspecified error.
         case png
 
+        func json() throws -> JSON {
+            try ThumbnailFormatSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailFormatSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailFormat: \(error)"
             }
         }
     }
@@ -9279,7 +9875,7 @@ public class Files {
     }
 
     /// The ThumbnailMode union
-    public enum ThumbnailMode: CustomStringConvertible {
+    public enum ThumbnailMode: CustomStringConvertible, JSONRepresentable {
         /// Scale down the image to fit within the given size.
         case strict
         /// Scale down the image to fit within the given size or its transpose.
@@ -9287,11 +9883,15 @@ public class Files {
         /// Scale down the image to completely cover the given size or its transpose.
         case fitoneBestfit
 
+        func json() throws -> JSON {
+            try ThumbnailModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailMode: \(error)"
             }
         }
     }
@@ -9336,7 +9936,7 @@ public class Files {
     }
 
     /// The ThumbnailSize union
-    public enum ThumbnailSize: CustomStringConvertible {
+    public enum ThumbnailSize: CustomStringConvertible, JSONRepresentable {
         /// 32 by 32 px.
         case w32h32
         /// 64 by 64 px.
@@ -9356,11 +9956,15 @@ public class Files {
         /// 2048 by 1536 px.
         case w2048h1536
 
+        func json() throws -> JSON {
+            try ThumbnailSizeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailSizeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailSize: \(error)"
             }
         }
     }
@@ -9441,7 +10045,7 @@ public class Files {
     }
 
     /// The ThumbnailV2Arg struct
-    public class ThumbnailV2Arg: CustomStringConvertible {
+    public class ThumbnailV2Arg: CustomStringConvertible, JSONRepresentable {
         /// Information specifying which file to preview. This could be a path to a file, a shared link pointing to a
         /// file, or a shared link pointing to a folder, with a relative path.
         public let resource: Files.PathOrLink
@@ -9464,11 +10068,15 @@ public class Files {
             self.mode = mode
         }
 
+        func json() throws -> JSON {
+            try ThumbnailV2ArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailV2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailV2Arg: \(error)"
             }
         }
     }
@@ -9500,7 +10108,7 @@ public class Files {
     }
 
     /// The ThumbnailV2Error union
-    public enum ThumbnailV2Error: CustomStringConvertible {
+    public enum ThumbnailV2Error: CustomStringConvertible, JSONRepresentable {
         /// An error occurred when downloading metadata for the image.
         case path(Files.LookupError)
         /// The file extension doesn't allow conversion to a thumbnail.
@@ -9516,11 +10124,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ThumbnailV2ErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailV2ErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ThumbnailV2Error: \(error)"
             }
         }
     }
@@ -9590,7 +10202,7 @@ public class Files {
     }
 
     /// The UnlockFileArg struct
-    public class UnlockFileArg: CustomStringConvertible {
+    public class UnlockFileArg: CustomStringConvertible, JSONRepresentable {
         /// Path in the user's Dropbox to a file.
         public let path: String
         public init(path: String) {
@@ -9598,11 +10210,15 @@ public class Files {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try UnlockFileArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnlockFileArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnlockFileArg: \(error)"
             }
         }
     }
@@ -9628,7 +10244,7 @@ public class Files {
     }
 
     /// The UnlockFileBatchArg struct
-    public class UnlockFileBatchArg: CustomStringConvertible {
+    public class UnlockFileBatchArg: CustomStringConvertible, JSONRepresentable {
         /// List of 'entries'. Each 'entry' contains a path of the file which will be unlocked. Duplicate path arguments
         /// in the batch are considered only once.
         public let entries: [Files.UnlockFileArg]
@@ -9636,11 +10252,15 @@ public class Files {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try UnlockFileBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnlockFileBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnlockFileBatchArg: \(error)"
             }
         }
     }
@@ -9698,7 +10318,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadArg: \(error)"
             }
         }
     }
@@ -9748,7 +10368,7 @@ public class Files {
     }
 
     /// The UploadError union
-    public enum UploadError: CustomStringConvertible {
+    public enum UploadError: CustomStringConvertible, JSONRepresentable {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
         /// The supplied property group is invalid. The file has uploaded without property groups.
@@ -9760,11 +10380,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadError: \(error)"
             }
         }
     }
@@ -9823,7 +10447,7 @@ public class Files {
     }
 
     /// The UploadSessionAppendArg struct
-    public class UploadSessionAppendArg: CustomStringConvertible {
+    public class UploadSessionAppendArg: CustomStringConvertible, JSONRepresentable {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
@@ -9840,11 +10464,15 @@ public class Files {
             self.contentHash = contentHash
         }
 
+        func json() throws -> JSON {
+            try UploadSessionAppendArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionAppendArg: \(error)"
             }
         }
     }
@@ -9874,7 +10502,7 @@ public class Files {
     }
 
     /// The UploadSessionLookupError union
-    public enum UploadSessionLookupError: CustomStringConvertible {
+    public enum UploadSessionLookupError: CustomStringConvertible, JSONRepresentable {
         /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
         case notFound
         /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
@@ -9897,11 +10525,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadSessionLookupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionLookupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionLookupError: \(error)"
             }
         }
     }
@@ -9983,7 +10615,7 @@ public class Files {
     }
 
     /// The UploadSessionAppendError union
-    public enum UploadSessionAppendError: CustomStringConvertible {
+    public enum UploadSessionAppendError: CustomStringConvertible, JSONRepresentable {
         /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
         case notFound
         /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
@@ -10008,11 +10640,15 @@ public class Files {
         /// The content received by the Dropbox server in this call does not match the provided content hash.
         case contentHashMismatch
 
+        func json() throws -> JSON {
+            try UploadSessionAppendErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionAppendError: \(error)"
             }
         }
     }
@@ -10100,7 +10736,7 @@ public class Files {
     }
 
     /// The UploadSessionCursor struct
-    public class UploadSessionCursor: CustomStringConvertible {
+    public class UploadSessionCursor: CustomStringConvertible, JSONRepresentable {
         /// The upload session ID (returned by uploadSessionStart).
         public let sessionId: String
         /// Offset in bytes at which data should be appended. We use this to make sure upload data isn't lost or
@@ -10113,11 +10749,15 @@ public class Files {
             self.offset = offset
         }
 
+        func json() throws -> JSON {
+            try UploadSessionCursorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionCursorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionCursor: \(error)"
             }
         }
     }
@@ -10145,7 +10785,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishArg struct
-    public class UploadSessionFinishArg: CustomStringConvertible {
+    public class UploadSessionFinishArg: CustomStringConvertible, JSONRepresentable {
         /// Contains the upload session ID and the offset.
         public let cursor: Files.UploadSessionCursor
         /// Contains the path and other optional modifiers for the commit.
@@ -10161,11 +10801,15 @@ public class Files {
             self.contentHash = contentHash
         }
 
+        func json() throws -> JSON {
+            try UploadSessionFinishArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishArg: \(error)"
             }
         }
     }
@@ -10195,18 +10839,22 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchArg struct
-    public class UploadSessionFinishBatchArg: CustomStringConvertible {
+    public class UploadSessionFinishBatchArg: CustomStringConvertible, JSONRepresentable {
         /// Commit information for each file in the batch.
         public let entries: [Files.UploadSessionFinishArg]
         public init(entries: [Files.UploadSessionFinishArg]) {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try UploadSessionFinishBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishBatchArg: \(error)"
             }
         }
     }
@@ -10232,17 +10880,21 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchJobStatus union
-    public enum UploadSessionFinishBatchJobStatus: CustomStringConvertible {
+    public enum UploadSessionFinishBatchJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The uploadSessionFinishBatch has finished.
         case complete(Files.UploadSessionFinishBatchResult)
 
+        func json() throws -> JSON {
+            try UploadSessionFinishBatchJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishBatchJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishBatchJobStatus: \(error)"
             }
         }
     }
@@ -10283,7 +10935,7 @@ public class Files {
 
     /// Result returned by uploadSessionFinishBatch that may either launch an asynchronous job or complete
     /// synchronously.
-    public enum UploadSessionFinishBatchLaunch: CustomStringConvertible {
+    public enum UploadSessionFinishBatchLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
@@ -10292,11 +10944,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadSessionFinishBatchLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishBatchLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishBatchLaunch: \(error)"
             }
         }
     }
@@ -10343,7 +10999,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchResult struct
-    public class UploadSessionFinishBatchResult: CustomStringConvertible {
+    public class UploadSessionFinishBatchResult: CustomStringConvertible, JSONRepresentable {
         /// Each entry in entries in UploadSessionFinishBatchArg will appear at the same position inside entries in
         /// UploadSessionFinishBatchResult.
         public let entries: [Files.UploadSessionFinishBatchResultEntry]
@@ -10351,11 +11007,15 @@ public class Files {
             self.entries = entries
         }
 
+        func json() throws -> JSON {
+            try UploadSessionFinishBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishBatchResult: \(error)"
             }
         }
     }
@@ -10381,17 +11041,21 @@ public class Files {
     }
 
     /// The UploadSessionFinishBatchResultEntry union
-    public enum UploadSessionFinishBatchResultEntry: CustomStringConvertible {
+    public enum UploadSessionFinishBatchResultEntry: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case success(Files.FileMetadata)
         /// An unspecified error.
         case failure(Files.UploadSessionFinishError)
 
+        func json() throws -> JSON {
+            try UploadSessionFinishBatchResultEntrySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishBatchResultEntrySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishBatchResultEntry: \(error)"
             }
         }
     }
@@ -10432,7 +11096,7 @@ public class Files {
     }
 
     /// The UploadSessionFinishError union
-    public enum UploadSessionFinishError: CustomStringConvertible {
+    public enum UploadSessionFinishError: CustomStringConvertible, JSONRepresentable {
         /// The session arguments are incorrect; the value explains the reason.
         case lookupFailed(Files.UploadSessionLookupError)
         /// Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please
@@ -10458,11 +11122,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadSessionFinishErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionFinishErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionFinishError: \(error)"
             }
         }
     }
@@ -10558,7 +11226,7 @@ public class Files {
     }
 
     /// The UploadSessionOffsetError struct
-    public class UploadSessionOffsetError: CustomStringConvertible {
+    public class UploadSessionOffsetError: CustomStringConvertible, JSONRepresentable {
         /// The offset up to which data has been collected.
         public let correctOffset: UInt64
         public init(correctOffset: UInt64) {
@@ -10566,11 +11234,15 @@ public class Files {
             self.correctOffset = correctOffset
         }
 
+        func json() throws -> JSON {
+            try UploadSessionOffsetErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionOffsetErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionOffsetError: \(error)"
             }
         }
     }
@@ -10596,7 +11268,7 @@ public class Files {
     }
 
     /// The UploadSessionStartArg struct
-    public class UploadSessionStartArg: CustomStringConvertible {
+    public class UploadSessionStartArg: CustomStringConvertible, JSONRepresentable {
         /// If true, the current session will be closed, at which point you won't be able to call uploadSessionAppendV2
         /// anymore with the current session.
         public let close: Bool
@@ -10613,11 +11285,15 @@ public class Files {
             self.contentHash = contentHash
         }
 
+        func json() throws -> JSON {
+            try UploadSessionStartArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionStartArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionStartArg: \(error)"
             }
         }
     }
@@ -10647,7 +11323,7 @@ public class Files {
     }
 
     /// The UploadSessionStartBatchArg struct
-    public class UploadSessionStartBatchArg: CustomStringConvertible {
+    public class UploadSessionStartBatchArg: CustomStringConvertible, JSONRepresentable {
         /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
         public let sessionType: Files.UploadSessionType?
         /// The number of upload sessions to start.
@@ -10658,11 +11334,15 @@ public class Files {
             self.numSessions = numSessions
         }
 
+        func json() throws -> JSON {
+            try UploadSessionStartBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionStartBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionStartBatchArg: \(error)"
             }
         }
     }
@@ -10690,7 +11370,7 @@ public class Files {
     }
 
     /// The UploadSessionStartBatchResult struct
-    public class UploadSessionStartBatchResult: CustomStringConvertible {
+    public class UploadSessionStartBatchResult: CustomStringConvertible, JSONRepresentable {
         /// A List of unique identifiers for the upload session. Pass each session_id to uploadSessionAppendV2 and
         /// uploadSessionFinish.
         public let sessionIds: [String]
@@ -10699,11 +11379,15 @@ public class Files {
             self.sessionIds = sessionIds
         }
 
+        func json() throws -> JSON {
+            try UploadSessionStartBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionStartBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionStartBatchResult: \(error)"
             }
         }
     }
@@ -10729,7 +11413,7 @@ public class Files {
     }
 
     /// The UploadSessionStartError union
-    public enum UploadSessionStartError: CustomStringConvertible {
+    public enum UploadSessionStartError: CustomStringConvertible, JSONRepresentable {
         /// Uploading data not allowed when starting concurrent upload session.
         case concurrentSessionDataNotAllowed
         /// Can not start a closed concurrent upload session.
@@ -10741,11 +11425,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadSessionStartErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionStartErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionStartError: \(error)"
             }
         }
     }
@@ -10802,7 +11490,7 @@ public class Files {
     }
 
     /// The UploadSessionStartResult struct
-    public class UploadSessionStartResult: CustomStringConvertible {
+    public class UploadSessionStartResult: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the upload session. Pass this to uploadSessionAppendV2 and uploadSessionFinish.
         public let sessionId: String
         public init(sessionId: String) {
@@ -10810,11 +11498,15 @@ public class Files {
             self.sessionId = sessionId
         }
 
+        func json() throws -> JSON {
+            try UploadSessionStartResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionStartResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionStartResult: \(error)"
             }
         }
     }
@@ -10840,7 +11532,7 @@ public class Files {
     }
 
     /// The UploadSessionType union
-    public enum UploadSessionType: CustomStringConvertible {
+    public enum UploadSessionType: CustomStringConvertible, JSONRepresentable {
         /// Pieces of data are uploaded sequentially one after another. This is the default behavior.
         case sequential
         /// Pieces of data can be uploaded in concurrent RPCs in any order.
@@ -10848,11 +11540,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadSessionTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadSessionType: \(error)"
             }
         }
     }
@@ -10897,7 +11593,7 @@ public class Files {
     }
 
     /// The UploadWriteFailed struct
-    public class UploadWriteFailed: CustomStringConvertible {
+    public class UploadWriteFailed: CustomStringConvertible, JSONRepresentable {
         /// The reason why the file couldn't be saved.
         public let reason: Files.WriteError
         /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
@@ -10909,11 +11605,15 @@ public class Files {
             self.uploadSessionId = uploadSessionId
         }
 
+        func json() throws -> JSON {
+            try UploadWriteFailedSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadWriteFailedSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadWriteFailed: \(error)"
             }
         }
     }
@@ -10941,7 +11641,7 @@ public class Files {
     }
 
     /// The UserGeneratedTag struct
-    public class UserGeneratedTag: CustomStringConvertible {
+    public class UserGeneratedTag: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let tagText: String
         public init(tagText: String) {
@@ -10949,11 +11649,15 @@ public class Files {
             self.tagText = tagText
         }
 
+        func json() throws -> JSON {
+            try UserGeneratedTagSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserGeneratedTagSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserGeneratedTag: \(error)"
             }
         }
     }
@@ -10992,7 +11696,7 @@ public class Files {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try VideoMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for VideoMetadata: \(error)"
             }
         }
     }
@@ -11024,7 +11728,7 @@ public class Files {
     }
 
     /// The WriteConflictError union
-    public enum WriteConflictError: CustomStringConvertible {
+    public enum WriteConflictError: CustomStringConvertible, JSONRepresentable {
         /// There's a file in the way.
         case file
         /// There's a folder in the way.
@@ -11034,11 +11738,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try WriteConflictErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try WriteConflictErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for WriteConflictError: \(error)"
             }
         }
     }
@@ -11089,7 +11797,7 @@ public class Files {
     }
 
     /// The WriteError union
-    public enum WriteError: CustomStringConvertible {
+    public enum WriteError: CustomStringConvertible, JSONRepresentable {
         /// The given path does not satisfy the required path format. Please refer to the Path formats documentation
         /// https://www.dropbox.com/developers/documentation/http/documentation#path-formats for more
         /// information.
@@ -11111,11 +11819,15 @@ public class Files {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try WriteErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try WriteErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for WriteError: \(error)"
             }
         }
     }
@@ -11203,7 +11915,7 @@ public class Files {
     /// folder, it's always a conflict. (c) If the target path refers to a file with identical contents, nothing
     /// gets written; no conflict. The conflict checking differs in the case where there's a file at the target path
     /// with contents different from the contents you're trying to write.
-    public enum WriteMode: CustomStringConvertible {
+    public enum WriteMode: CustomStringConvertible, JSONRepresentable {
         /// Do not overwrite an existing file if there is a conflict. The autorename strategy is to append a number to
         /// the file name. For example, "document.txt" might become "document (2).txt".
         case add
@@ -11217,11 +11929,15 @@ public class Files {
         /// "document (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
         case update(String)
 
+        func json() throws -> JSON {
+            try WriteModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try WriteModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for WriteMode: \(error)"
             }
         }
     }

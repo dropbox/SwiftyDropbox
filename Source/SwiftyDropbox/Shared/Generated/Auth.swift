@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the auth namespace
 public class Auth {
     /// Error occurred because the account doesn't have permission to access the resource.
-    public enum AccessError: CustomStringConvertible {
+    public enum AccessError: CustomStringConvertible, JSONRepresentable {
         /// Current account type cannot access the resource.
         case invalidAccountType(Auth.InvalidAccountTypeError)
         /// Current account cannot access Paper.
@@ -17,11 +17,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AccessErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AccessErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AccessError: \(error)"
             }
         }
     }
@@ -68,7 +72,7 @@ public class Auth {
     }
 
     /// Errors occurred during authentication.
-    public enum AuthError: CustomStringConvertible {
+    public enum AuthError: CustomStringConvertible, JSONRepresentable {
         /// The access token is invalid.
         case invalidAccessToken
         /// The user specified in 'Dropbox-API-Select-User' is no longer on the team.
@@ -86,11 +90,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AuthErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AuthErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AuthError: \(error)"
             }
         }
     }
@@ -166,7 +174,7 @@ public class Auth {
     }
 
     /// The InvalidAccountTypeError union
-    public enum InvalidAccountTypeError: CustomStringConvertible {
+    public enum InvalidAccountTypeError: CustomStringConvertible, JSONRepresentable {
         /// Current account type doesn't have permission to access this route endpoint.
         case endpoint
         /// Current account type doesn't have permission to access this feature.
@@ -174,11 +182,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try InvalidAccountTypeErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InvalidAccountTypeErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InvalidAccountTypeError: \(error)"
             }
         }
     }
@@ -223,7 +235,7 @@ public class Auth {
     }
 
     /// The PaperAccessError union
-    public enum PaperAccessError: CustomStringConvertible {
+    public enum PaperAccessError: CustomStringConvertible, JSONRepresentable {
         /// Paper is disabled.
         case paperDisabled
         /// The provided user has not used Paper yet.
@@ -231,11 +243,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperAccessErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperAccessErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperAccessError: \(error)"
             }
         }
     }
@@ -280,7 +296,7 @@ public class Auth {
     }
 
     /// Error occurred because the app is being rate limited.
-    public class RateLimitError: CustomStringConvertible {
+    public class RateLimitError: CustomStringConvertible, JSONRepresentable {
         /// The reason why the app is being rate limited.
         public let reason: Auth.RateLimitReason
         /// The number of seconds that the app should wait before making another request.
@@ -291,11 +307,15 @@ public class Auth {
             self.retryAfter = retryAfter
         }
 
+        func json() throws -> JSON {
+            try RateLimitErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RateLimitErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RateLimitError: \(error)"
             }
         }
     }
@@ -323,7 +343,7 @@ public class Auth {
     }
 
     /// The RateLimitReason union
-    public enum RateLimitReason: CustomStringConvertible {
+    public enum RateLimitReason: CustomStringConvertible, JSONRepresentable {
         /// You are making too many requests in the past few minutes.
         case tooManyRequests
         /// There are currently too many write operations happening in the user's Dropbox.
@@ -331,11 +351,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RateLimitReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RateLimitReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RateLimitReason: \(error)"
             }
         }
     }
@@ -380,7 +404,7 @@ public class Auth {
     }
 
     /// The TokenFromOAuth1Arg struct
-    public class TokenFromOAuth1Arg: CustomStringConvertible {
+    public class TokenFromOAuth1Arg: CustomStringConvertible, JSONRepresentable {
         /// The supplied OAuth 1.0 access token.
         public let oauth1Token: String
         /// The token secret associated with the supplied access token.
@@ -392,11 +416,15 @@ public class Auth {
             self.oauth1TokenSecret = oauth1TokenSecret
         }
 
+        func json() throws -> JSON {
+            try TokenFromOAuth1ArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenFromOAuth1ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenFromOAuth1Arg: \(error)"
             }
         }
     }
@@ -424,7 +452,7 @@ public class Auth {
     }
 
     /// The TokenFromOAuth1Error union
-    public enum TokenFromOAuth1Error: CustomStringConvertible {
+    public enum TokenFromOAuth1Error: CustomStringConvertible, JSONRepresentable {
         /// Part or all of the OAuth 1.0 access token info is invalid.
         case invalidOauth1TokenInfo
         /// The authorized app does not match the app associated with the supplied access token.
@@ -432,11 +460,15 @@ public class Auth {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TokenFromOAuth1ErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenFromOAuth1ErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenFromOAuth1Error: \(error)"
             }
         }
     }
@@ -481,7 +513,7 @@ public class Auth {
     }
 
     /// The TokenFromOAuth1Result struct
-    public class TokenFromOAuth1Result: CustomStringConvertible {
+    public class TokenFromOAuth1Result: CustomStringConvertible, JSONRepresentable {
         /// The OAuth 2.0 token generated from the supplied OAuth 1.0 token.
         public let oauth2Token: String
         public init(oauth2Token: String) {
@@ -489,11 +521,15 @@ public class Auth {
             self.oauth2Token = oauth2Token
         }
 
+        func json() throws -> JSON {
+            try TokenFromOAuth1ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenFromOAuth1ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenFromOAuth1Result: \(error)"
             }
         }
     }
@@ -519,7 +555,7 @@ public class Auth {
     }
 
     /// The TokenScopeError struct
-    public class TokenScopeError: CustomStringConvertible {
+    public class TokenScopeError: CustomStringConvertible, JSONRepresentable {
         /// The required scope to access the route.
         public let requiredScope: String
         public init(requiredScope: String) {
@@ -527,11 +563,15 @@ public class Auth {
             self.requiredScope = requiredScope
         }
 
+        func json() throws -> JSON {
+            try TokenScopeErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenScopeErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenScopeError: \(error)"
             }
         }
     }
