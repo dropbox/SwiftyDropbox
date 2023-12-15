@@ -27,7 +27,7 @@ class FileBrowserViewModel: ObservableObject {
 
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: localURL, includingPropertiesForKeys: nil)
-            files = fileURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
+            self.files = fileURLs.sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
         } catch {
             print("Error loading files: \(error)")
         }

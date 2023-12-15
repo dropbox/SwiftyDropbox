@@ -94,7 +94,7 @@ struct BlueButton: ButtonStyle {
             .font(.caption)
             .fontWeight(.bold)
             .padding()
-            .background(configuration.isPressed ? .indigo : .blue )
+            .background(configuration.isPressed ? .indigo : .blue)
             .foregroundStyle(.white)
             .clipShape(Capsule())
     }

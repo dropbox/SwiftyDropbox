@@ -44,11 +44,11 @@ class MockDropboxTransportClient: DropboxTransportClient {
         return apiRequest
     }
 
-    func getLastRequest() -> ApiRequest? {
+    func getLastRequest() -> MockApiRequest? {
         allRequests.getLastRequest()
     }
 
-    func getRequest(with tag: String) -> ApiRequest? {
+    func getRequest(with tag: String) -> MockApiRequest? {
         allRequests.getRequest(with: tag)
     }
 
@@ -133,18 +133,18 @@ class MockDropboxTransportClient: DropboxTransportClient {
 }
 
 private class Requests {
-    var allRequests: [(String, ApiRequest)] = []
+    var allRequests: [(String, MockApiRequest)] = []
 
-    func getLastRequest() -> ApiRequest? {
+    func getLastRequest() -> MockApiRequest? {
         allRequests.last?.1
     }
 
-    func getRequest(with tag: String) -> ApiRequest? {
+    func getRequest(with tag: String) -> MockApiRequest? {
         let tagsAreEqual: (String, ApiRequest) -> Bool = { requestTag, _ in requestTag == tag }
         return allRequests.last(where: tagsAreEqual)?.1
     }
 
-    func record(request: ApiRequest, with tag: String) {
+    func record(request: MockApiRequest, with tag: String) {
         allRequests.append((tag, request))
     }
 }

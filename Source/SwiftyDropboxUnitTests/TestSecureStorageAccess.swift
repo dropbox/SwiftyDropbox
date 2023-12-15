@@ -16,12 +16,12 @@ final class TestSecureStorageAccess: XCTestCase {
     }
 
     func testCanFindAppBundleFromExtension() {
-        let bundlePath = SecureStorageAccesDefaultImpl.appBundlePath(from: extensionBundlePath)
+        let bundlePath = SecureStorageAccessDefaultImpl.appBundlePath(from: extensionBundlePath)
         XCTAssertEqual(bundlePath, appBundlePath)
     }
 
     func testCanFindAppBundleFromApp() {
-        let bundlePath = SecureStorageAccesDefaultImpl.appBundlePath(from: appBundlePath)
+        let bundlePath = SecureStorageAccessDefaultImpl.appBundlePath(from: appBundlePath)
         XCTAssertEqual(bundlePath, appBundlePath)
     }
 }
