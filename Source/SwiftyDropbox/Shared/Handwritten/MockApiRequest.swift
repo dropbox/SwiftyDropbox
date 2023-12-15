@@ -72,7 +72,7 @@ class MockApiRequest: ApiRequest {
 
 extension MockApiRequest {
     func handleMockInput(_ mockInput: MockInput) throws {
-        try self._handleMockInput(mockInput)
+        try _handleMockInput(mockInput)
     }
 }
 
