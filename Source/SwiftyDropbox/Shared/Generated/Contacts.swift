@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the contacts namespace
 public class Contacts {
     /// The DeleteManualContactsArg struct
-    public class DeleteManualContactsArg: CustomStringConvertible {
+    public class DeleteManualContactsArg: CustomStringConvertible, JSONRepresentable {
         /// List of manually added contacts to be deleted.
         public let emailAddresses: [String]
         public init(emailAddresses: [String]) {
@@ -20,11 +20,15 @@ public class Contacts {
             self.emailAddresses = emailAddresses
         }
 
+        func json() throws -> JSON {
+            try DeleteManualContactsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteManualContactsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteManualContactsArg: \(error)"
             }
         }
     }
@@ -50,18 +54,22 @@ public class Contacts {
     }
 
     /// The DeleteManualContactsError union
-    public enum DeleteManualContactsError: CustomStringConvertible {
+    public enum DeleteManualContactsError: CustomStringConvertible, JSONRepresentable {
         /// Can't delete contacts from this list. Make sure the list only has manually added contacts. The deletion was
         /// cancelled.
         case contactsNotFound([String])
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteManualContactsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteManualContactsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteManualContactsError: \(error)"
             }
         }
     }

@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the team namespace
 public class Team {
     /// The DeviceSession struct
-    public class DeviceSession: CustomStringConvertible {
+    public class DeviceSession: CustomStringConvertible, JSONRepresentable {
         /// The session id.
         public let sessionId: String
         /// The IP address of the last activity from this session.
@@ -31,11 +31,15 @@ public class Team {
             self.updated = updated
         }
 
+        func json() throws -> JSON {
+            try DeviceSessionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeviceSessionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeviceSession: \(error)"
             }
         }
     }
@@ -103,7 +107,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ActiveWebSessionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ActiveWebSession: \(error)"
             }
         }
     }
@@ -157,7 +161,7 @@ public class Team {
     /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that a secondary
     /// email was successfully added to a user. The other values explain the type of error that occurred, and
     /// include the email for which the error occurred.
-    public enum AddSecondaryEmailResult: CustomStringConvertible {
+    public enum AddSecondaryEmailResult: CustomStringConvertible, JSONRepresentable {
         /// Describes a secondary email that was successfully added to a user.
         case success(SecondaryEmails.SecondaryEmail)
         /// Secondary email is not available to be claimed by the user.
@@ -179,11 +183,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddSecondaryEmailResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddSecondaryEmailResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddSecondaryEmailResult: \(error)"
             }
         }
     }
@@ -279,18 +287,22 @@ public class Team {
     }
 
     /// The AddSecondaryEmailsArg struct
-    public class AddSecondaryEmailsArg: CustomStringConvertible {
+    public class AddSecondaryEmailsArg: CustomStringConvertible, JSONRepresentable {
         /// List of users and secondary emails to add.
         public let newSecondaryEmails: [Team.UserSecondaryEmailsArg]
         public init(newSecondaryEmails: [Team.UserSecondaryEmailsArg]) {
             self.newSecondaryEmails = newSecondaryEmails
         }
 
+        func json() throws -> JSON {
+            try AddSecondaryEmailsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddSecondaryEmailsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddSecondaryEmailsArg: \(error)"
             }
         }
     }
@@ -316,7 +328,7 @@ public class Team {
     }
 
     /// Error returned when adding secondary emails fails.
-    public enum AddSecondaryEmailsError: CustomStringConvertible {
+    public enum AddSecondaryEmailsError: CustomStringConvertible, JSONRepresentable {
         /// Secondary emails are disabled for the team.
         case secondaryEmailsDisabled
         /// A maximum of 20 secondary emails can be added in a single call.
@@ -324,11 +336,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddSecondaryEmailsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddSecondaryEmailsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddSecondaryEmailsError: \(error)"
             }
         }
     }
@@ -373,18 +389,22 @@ public class Team {
     }
 
     /// The AddSecondaryEmailsResult struct
-    public class AddSecondaryEmailsResult: CustomStringConvertible {
+    public class AddSecondaryEmailsResult: CustomStringConvertible, JSONRepresentable {
         /// List of users and secondary email results.
         public let results: [Team.UserAddResult]
         public init(results: [Team.UserAddResult]) {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try AddSecondaryEmailsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddSecondaryEmailsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddSecondaryEmailsResult: \(error)"
             }
         }
     }
@@ -410,7 +430,7 @@ public class Team {
     }
 
     /// Describes which team-related admin permissions a user has.
-    public enum AdminTier: CustomStringConvertible {
+    public enum AdminTier: CustomStringConvertible, JSONRepresentable {
         /// User is an administrator of the team - has all permissions.
         case teamAdmin
         /// User can do most user provisioning, de-provisioning and management.
@@ -421,11 +441,15 @@ public class Team {
         /// User is not an admin of the team.
         case memberOnly
 
+        func json() throws -> JSON {
+            try AdminTierSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AdminTierSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AdminTier: \(error)"
             }
         }
     }
@@ -476,7 +500,7 @@ public class Team {
     }
 
     /// Information on linked third party applications.
-    public class ApiApp: CustomStringConvertible {
+    public class ApiApp: CustomStringConvertible, JSONRepresentable {
         /// The application unique id.
         public let appId: String
         /// The application name.
@@ -502,11 +526,15 @@ public class Team {
             self.isAppFolder = isAppFolder
         }
 
+        func json() throws -> JSON {
+            try ApiAppSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ApiAppSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ApiApp: \(error)"
             }
         }
     }
@@ -542,7 +570,7 @@ public class Team {
     }
 
     /// Base report structure.
-    public class BaseDfbReport: CustomStringConvertible {
+    public class BaseDfbReport: CustomStringConvertible, JSONRepresentable {
         /// First date present in the results as 'YYYY-MM-DD' or None.
         public let startDate: String
         public init(startDate: String) {
@@ -550,11 +578,15 @@ public class Team {
             self.startDate = startDate
         }
 
+        func json() throws -> JSON {
+            try BaseDfbReportSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try BaseDfbReportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for BaseDfbReport: \(error)"
             }
         }
     }
@@ -580,7 +612,7 @@ public class Team {
     }
 
     /// Base error that all errors for existing team folders should extend.
-    public enum BaseTeamFolderError: CustomStringConvertible {
+    public enum BaseTeamFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -590,11 +622,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try BaseTeamFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try BaseTeamFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for BaseTeamFolderError: \(error)"
             }
         }
     }
@@ -648,17 +684,21 @@ public class Team {
     }
 
     /// Error returned when getting member custom quota.
-    public enum CustomQuotaError: CustomStringConvertible {
+    public enum CustomQuotaError: CustomStringConvertible, JSONRepresentable {
         /// A maximum of 1000 users can be set for a single call.
         case tooManyUsers
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CustomQuotaErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CustomQuotaErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CustomQuotaError: \(error)"
             }
         }
     }
@@ -697,7 +737,7 @@ public class Team {
     }
 
     /// User custom quota.
-    public enum CustomQuotaResult: CustomStringConvertible {
+    public enum CustomQuotaResult: CustomStringConvertible, JSONRepresentable {
         /// User's custom quota.
         case success(Team.UserCustomQuotaResult)
         /// Invalid user (not in team).
@@ -705,11 +745,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CustomQuotaResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CustomQuotaResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CustomQuotaResult: \(error)"
             }
         }
     }
@@ -756,18 +800,22 @@ public class Team {
     }
 
     /// The CustomQuotaUsersArg struct
-    public class CustomQuotaUsersArg: CustomStringConvertible {
+    public class CustomQuotaUsersArg: CustomStringConvertible, JSONRepresentable {
         /// List of users.
         public let users: [Team.UserSelectorArg]
         public init(users: [Team.UserSelectorArg]) {
             self.users = users
         }
 
+        func json() throws -> JSON {
+            try CustomQuotaUsersArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CustomQuotaUsersArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CustomQuotaUsersArg: \(error)"
             }
         }
     }
@@ -793,7 +841,7 @@ public class Team {
     }
 
     /// Input arguments that can be provided for most reports.
-    public class DateRange: CustomStringConvertible {
+    public class DateRange: CustomStringConvertible, JSONRepresentable {
         /// Optional starting date (inclusive). If start_date is None or too long ago, this field will  be set to 6
         /// months ago.
         public let startDate: Date?
@@ -804,11 +852,15 @@ public class Team {
             self.endDate = endDate
         }
 
+        func json() throws -> JSON {
+            try DateRangeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DateRangeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DateRange: \(error)"
             }
         }
     }
@@ -836,15 +888,19 @@ public class Team {
     }
 
     /// Errors that can originate from problems in input arguments to reports.
-    public enum DateRangeError: CustomStringConvertible {
+    public enum DateRangeError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case other
+
+        func json() throws -> JSON {
+            try DateRangeErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DateRangeErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DateRangeError: \(error)"
             }
         }
     }
@@ -879,7 +935,7 @@ public class Team {
     /// Result of trying to delete a secondary email address. 'success' is the only value indicating that a secondary
     /// email was successfully deleted. The other values explain the type of error that occurred, and include the
     /// email for which the error occurred.
-    public enum DeleteSecondaryEmailResult: CustomStringConvertible {
+    public enum DeleteSecondaryEmailResult: CustomStringConvertible, JSONRepresentable {
         /// The secondary email was successfully deleted.
         case success(String)
         /// The email address was not found for the user.
@@ -889,11 +945,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DeleteSecondaryEmailResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteSecondaryEmailResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteSecondaryEmailResult: \(error)"
             }
         }
     }
@@ -947,18 +1007,22 @@ public class Team {
     }
 
     /// The DeleteSecondaryEmailsArg struct
-    public class DeleteSecondaryEmailsArg: CustomStringConvertible {
+    public class DeleteSecondaryEmailsArg: CustomStringConvertible, JSONRepresentable {
         /// List of users and their secondary emails to delete.
         public let emailsToDelete: [Team.UserSecondaryEmailsArg]
         public init(emailsToDelete: [Team.UserSecondaryEmailsArg]) {
             self.emailsToDelete = emailsToDelete
         }
 
+        func json() throws -> JSON {
+            try DeleteSecondaryEmailsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteSecondaryEmailsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteSecondaryEmailsArg: \(error)"
             }
         }
     }
@@ -984,18 +1048,22 @@ public class Team {
     }
 
     /// The DeleteSecondaryEmailsResult struct
-    public class DeleteSecondaryEmailsResult: CustomStringConvertible {
+    public class DeleteSecondaryEmailsResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let results: [Team.UserDeleteResult]
         public init(results: [Team.UserDeleteResult]) {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try DeleteSecondaryEmailsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteSecondaryEmailsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteSecondaryEmailsResult: \(error)"
             }
         }
     }
@@ -1059,7 +1127,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DesktopClientSessionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DesktopClientSession: \(error)"
             }
         }
     }
@@ -1114,7 +1182,7 @@ public class Team {
     }
 
     /// The DesktopPlatform union
-    public enum DesktopPlatform: CustomStringConvertible {
+    public enum DesktopPlatform: CustomStringConvertible, JSONRepresentable {
         /// Official Windows Dropbox desktop client.
         case windows
         /// Official Mac Dropbox desktop client.
@@ -1124,11 +1192,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try DesktopPlatformSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DesktopPlatformSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DesktopPlatform: \(error)"
             }
         }
     }
@@ -1179,7 +1251,7 @@ public class Team {
     }
 
     /// The DeviceSessionArg struct
-    public class DeviceSessionArg: CustomStringConvertible {
+    public class DeviceSessionArg: CustomStringConvertible, JSONRepresentable {
         /// The session id.
         public let sessionId: String
         /// The unique id of the member owning the device.
@@ -1191,11 +1263,15 @@ public class Team {
             self.teamMemberId = teamMemberId
         }
 
+        func json() throws -> JSON {
+            try DeviceSessionArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeviceSessionArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeviceSessionArg: \(error)"
             }
         }
     }
@@ -1224,7 +1300,7 @@ public class Team {
 
     /// Each of the items is an array of values, one value per day. The value is the number of devices active within a
     /// time window, ending with that day. If there is no data for a day, then the value will be None.
-    public class DevicesActive: CustomStringConvertible {
+    public class DevicesActive: CustomStringConvertible, JSONRepresentable {
         /// Array of number of linked windows (desktop) clients with activity.
         public let windows: [UInt64?]
         /// Array of number of linked mac (desktop) clients with activity.
@@ -1256,11 +1332,15 @@ public class Team {
             self.total = total
         }
 
+        func json() throws -> JSON {
+            try DevicesActiveSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DevicesActiveSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DevicesActive: \(error)"
             }
         }
     }
@@ -1298,7 +1378,7 @@ public class Team {
     }
 
     /// Excluded users list argument.
-    public class ExcludedUsersListArg: CustomStringConvertible {
+    public class ExcludedUsersListArg: CustomStringConvertible, JSONRepresentable {
         /// Number of results to return per call.
         public let limit: UInt32
         public init(limit: UInt32 = 1_000) {
@@ -1306,11 +1386,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ExcludedUsersListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersListArg: \(error)"
             }
         }
     }
@@ -1336,7 +1420,7 @@ public class Team {
     }
 
     /// Excluded users list continue argument.
-    public class ExcludedUsersListContinueArg: CustomStringConvertible {
+    public class ExcludedUsersListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of users.
         public let cursor: String
         public init(cursor: String) {
@@ -1344,11 +1428,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ExcludedUsersListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersListContinueArg: \(error)"
             }
         }
     }
@@ -1374,17 +1462,21 @@ public class Team {
     }
 
     /// Excluded users list continue error.
-    public enum ExcludedUsersListContinueError: CustomStringConvertible {
+    public enum ExcludedUsersListContinueError: CustomStringConvertible, JSONRepresentable {
         /// The cursor is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExcludedUsersListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersListContinueError: \(error)"
             }
         }
     }
@@ -1423,17 +1515,21 @@ public class Team {
     }
 
     /// Excluded users list error.
-    public enum ExcludedUsersListError: CustomStringConvertible {
+    public enum ExcludedUsersListError: CustomStringConvertible, JSONRepresentable {
         /// An error occurred.
         case listError
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExcludedUsersListErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersListErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersListError: \(error)"
             }
         }
     }
@@ -1472,7 +1568,7 @@ public class Team {
     }
 
     /// Excluded users list result.
-    public class ExcludedUsersListResult: CustomStringConvertible {
+    public class ExcludedUsersListResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let users: [Team.MemberProfile]
         /// Pass the cursor into memberSpaceLimitsExcludedUsersListContinue to obtain additional excluded users.
@@ -1487,11 +1583,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ExcludedUsersListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersListResult: \(error)"
             }
         }
     }
@@ -1522,18 +1622,22 @@ public class Team {
 
     /// Argument of excluded users update operation. Should include a list of users to add/remove (according to
     /// endpoint), Maximum size of the list is 1000 users.
-    public class ExcludedUsersUpdateArg: CustomStringConvertible {
+    public class ExcludedUsersUpdateArg: CustomStringConvertible, JSONRepresentable {
         /// List of users to be added/removed.
         public let users: [Team.UserSelectorArg]?
         public init(users: [Team.UserSelectorArg]? = nil) {
             self.users = users
         }
 
+        func json() throws -> JSON {
+            try ExcludedUsersUpdateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersUpdateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersUpdateArg: \(error)"
             }
         }
     }
@@ -1559,7 +1663,7 @@ public class Team {
     }
 
     /// Excluded users update error.
-    public enum ExcludedUsersUpdateError: CustomStringConvertible {
+    public enum ExcludedUsersUpdateError: CustomStringConvertible, JSONRepresentable {
         /// At least one of the users is not part of your team.
         case usersNotInTeam
         /// A maximum of 1000 users for each of addition/removal can be supplied.
@@ -1567,11 +1671,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExcludedUsersUpdateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersUpdateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersUpdateError: \(error)"
             }
         }
     }
@@ -1616,18 +1724,22 @@ public class Team {
     }
 
     /// Excluded users update result.
-    public class ExcludedUsersUpdateResult: CustomStringConvertible {
+    public class ExcludedUsersUpdateResult: CustomStringConvertible, JSONRepresentable {
         /// Update status.
         public let status: Team.ExcludedUsersUpdateStatus
         public init(status: Team.ExcludedUsersUpdateStatus) {
             self.status = status
         }
 
+        func json() throws -> JSON {
+            try ExcludedUsersUpdateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersUpdateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersUpdateResult: \(error)"
             }
         }
     }
@@ -1653,17 +1765,21 @@ public class Team {
     }
 
     /// Excluded users update operation status.
-    public enum ExcludedUsersUpdateStatus: CustomStringConvertible {
+    public enum ExcludedUsersUpdateStatus: CustomStringConvertible, JSONRepresentable {
         /// Update successful.
         case success
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExcludedUsersUpdateStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExcludedUsersUpdateStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExcludedUsersUpdateStatus: \(error)"
             }
         }
     }
@@ -1702,7 +1818,7 @@ public class Team {
     }
 
     /// A set of features that a Dropbox Business account may support.
-    public enum Feature: CustomStringConvertible {
+    public enum Feature: CustomStringConvertible, JSONRepresentable {
         /// The number of upload API calls allowed per month.
         case uploadApiRateLimit
         /// Does this team have a shared team root.
@@ -1714,11 +1830,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FeatureSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FeatureSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Feature: \(error)"
             }
         }
     }
@@ -1776,7 +1896,7 @@ public class Team {
 
     /// The values correspond to entries in Feature. You may get different value according to your Dropbox Business
     /// plan.
-    public enum FeatureValue: CustomStringConvertible {
+    public enum FeatureValue: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case uploadApiRateLimit(Team.UploadApiRateLimitValue)
         /// An unspecified error.
@@ -1788,11 +1908,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FeatureValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FeatureValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FeatureValue: \(error)"
             }
         }
     }
@@ -1853,18 +1977,22 @@ public class Team {
     }
 
     /// The FeaturesGetValuesBatchArg struct
-    public class FeaturesGetValuesBatchArg: CustomStringConvertible {
+    public class FeaturesGetValuesBatchArg: CustomStringConvertible, JSONRepresentable {
         /// A list of features in Feature. If the list is empty, this route will return FeaturesGetValuesBatchError.
         public let features: [Team.Feature]
         public init(features: [Team.Feature]) {
             self.features = features
         }
 
+        func json() throws -> JSON {
+            try FeaturesGetValuesBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FeaturesGetValuesBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FeaturesGetValuesBatchArg: \(error)"
             }
         }
     }
@@ -1890,17 +2018,21 @@ public class Team {
     }
 
     /// The FeaturesGetValuesBatchError union
-    public enum FeaturesGetValuesBatchError: CustomStringConvertible {
+    public enum FeaturesGetValuesBatchError: CustomStringConvertible, JSONRepresentable {
         /// At least one Feature must be included in the FeaturesGetValuesBatchArg.features list.
         case emptyFeaturesList
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FeaturesGetValuesBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FeaturesGetValuesBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FeaturesGetValuesBatchError: \(error)"
             }
         }
     }
@@ -1939,18 +2071,22 @@ public class Team {
     }
 
     /// The FeaturesGetValuesBatchResult struct
-    public class FeaturesGetValuesBatchResult: CustomStringConvertible {
+    public class FeaturesGetValuesBatchResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let values: [Team.FeatureValue]
         public init(values: [Team.FeatureValue]) {
             self.values = values
         }
 
+        func json() throws -> JSON {
+            try FeaturesGetValuesBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FeaturesGetValuesBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FeaturesGetValuesBatchResult: \(error)"
             }
         }
     }
@@ -2059,7 +2195,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetActivityReportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetActivityReport: \(error)"
             }
         }
     }
@@ -2166,7 +2302,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetDevicesReportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetDevicesReport: \(error)"
             }
         }
     }
@@ -2235,7 +2371,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetMembershipReportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetMembershipReport: \(error)"
             }
         }
     }
@@ -2318,7 +2454,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetStorageReportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetStorageReport: \(error)"
             }
         }
     }
@@ -2361,17 +2497,21 @@ public class Team {
     }
 
     /// Role of a user in group.
-    public enum GroupAccessType: CustomStringConvertible {
+    public enum GroupAccessType: CustomStringConvertible, JSONRepresentable {
         /// User is a member of the group, but has no special permissions.
         case member
         /// User can rename the group, and add/remove members.
         case owner
 
+        func json() throws -> JSON {
+            try GroupAccessTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupAccessTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupAccessType: \(error)"
             }
         }
     }
@@ -2410,7 +2550,7 @@ public class Team {
     }
 
     /// The GroupCreateArg struct
-    public class GroupCreateArg: CustomStringConvertible {
+    public class GroupCreateArg: CustomStringConvertible, JSONRepresentable {
         /// Group name.
         public let groupName: String
         /// Automatically add the creator of the group.
@@ -2433,11 +2573,15 @@ public class Team {
             self.groupManagementType = groupManagementType
         }
 
+        func json() throws -> JSON {
+            try GroupCreateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupCreateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupCreateArg: \(error)"
             }
         }
     }
@@ -2475,7 +2619,7 @@ public class Team {
     }
 
     /// The GroupCreateError union
-    public enum GroupCreateError: CustomStringConvertible {
+    public enum GroupCreateError: CustomStringConvertible, JSONRepresentable {
         /// The requested group name is already being used by another group.
         case groupNameAlreadyUsed
         /// Group name is empty or has invalid characters.
@@ -2487,11 +2631,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupCreateError: \(error)"
             }
         }
     }
@@ -2548,17 +2696,21 @@ public class Team {
     }
 
     /// Error that can be raised when GroupSelector is used.
-    public enum GroupSelectorError: CustomStringConvertible {
+    public enum GroupSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupSelectorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupSelectorError: \(error)"
             }
         }
     }
@@ -2597,7 +2749,7 @@ public class Team {
     }
 
     /// Error that can be raised when GroupSelector is used and team groups are disallowed from being used.
-    public enum GroupSelectorWithTeamGroupError: CustomStringConvertible {
+    public enum GroupSelectorWithTeamGroupError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -2605,11 +2757,15 @@ public class Team {
         /// This operation is not supported on system-managed groups.
         case systemManagedGroupDisallowed
 
+        func json() throws -> JSON {
+            try GroupSelectorWithTeamGroupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupSelectorWithTeamGroupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupSelectorWithTeamGroupError: \(error)"
             }
         }
     }
@@ -2654,7 +2810,7 @@ public class Team {
     }
 
     /// The GroupDeleteError union
-    public enum GroupDeleteError: CustomStringConvertible {
+    public enum GroupDeleteError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -2664,11 +2820,15 @@ public class Team {
         /// This group has already been deleted.
         case groupAlreadyDeleted
 
+        func json() throws -> JSON {
+            try GroupDeleteErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupDeleteErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupDeleteError: \(error)"
             }
         }
     }
@@ -2749,7 +2909,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupFullInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupFullInfo: \(error)"
             }
         }
     }
@@ -2795,7 +2955,7 @@ public class Team {
     }
 
     /// Profile of group member, and role in group.
-    public class GroupMemberInfo: CustomStringConvertible {
+    public class GroupMemberInfo: CustomStringConvertible, JSONRepresentable {
         /// Profile of group member.
         public let profile: Team.MemberProfile
         /// The role that the user has in the group.
@@ -2805,11 +2965,15 @@ public class Team {
             self.accessType = accessType
         }
 
+        func json() throws -> JSON {
+            try GroupMemberInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMemberInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMemberInfo: \(error)"
             }
         }
     }
@@ -2837,7 +3001,7 @@ public class Team {
     }
 
     /// Argument for selecting a group and a single user.
-    public class GroupMemberSelector: CustomStringConvertible {
+    public class GroupMemberSelector: CustomStringConvertible, JSONRepresentable {
         /// Specify a group.
         public let group: Team.GroupSelector
         /// Identity of a user that is a member of group.
@@ -2847,11 +3011,15 @@ public class Team {
             self.user = user
         }
 
+        func json() throws -> JSON {
+            try GroupMemberSelectorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMemberSelectorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMemberSelector: \(error)"
             }
         }
     }
@@ -2880,7 +3048,7 @@ public class Team {
 
     /// Error that can be raised when GroupMemberSelector is used, and the user is required to be a member of the
     /// specified group.
-    public enum GroupMemberSelectorError: CustomStringConvertible {
+    public enum GroupMemberSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -2890,11 +3058,15 @@ public class Team {
         /// The specified user is not a member of this group.
         case memberNotInGroup
 
+        func json() throws -> JSON {
+            try GroupMemberSelectorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMemberSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMemberSelectorError: \(error)"
             }
         }
     }
@@ -2945,7 +3117,7 @@ public class Team {
     }
 
     /// The GroupMemberSetAccessTypeError union
-    public enum GroupMemberSetAccessTypeError: CustomStringConvertible {
+    public enum GroupMemberSetAccessTypeError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -2957,11 +3129,15 @@ public class Team {
         /// A company managed group cannot be managed by a user.
         case userCannotBeManagerOfCompanyManagedGroup
 
+        func json() throws -> JSON {
+            try GroupMemberSetAccessTypeErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMemberSetAccessTypeErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMemberSetAccessTypeError: \(error)"
             }
         }
     }
@@ -3018,7 +3194,7 @@ public class Team {
     }
 
     /// The IncludeMembersArg struct
-    public class IncludeMembersArg: CustomStringConvertible {
+    public class IncludeMembersArg: CustomStringConvertible, JSONRepresentable {
         /// Whether to return the list of members in the group.  Note that the default value will cause all the group
         /// members  to be returned in the response. This may take a long time for large groups.
         public let returnMembers: Bool
@@ -3026,11 +3202,15 @@ public class Team {
             self.returnMembers = returnMembers
         }
 
+        func json() throws -> JSON {
+            try IncludeMembersArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try IncludeMembersArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for IncludeMembersArg: \(error)"
             }
         }
     }
@@ -3071,7 +3251,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersAddArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersAddArg: \(error)"
             }
         }
     }
@@ -3101,7 +3281,7 @@ public class Team {
     }
 
     /// The GroupMembersAddError union
-    public enum GroupMembersAddError: CustomStringConvertible {
+    public enum GroupMembersAddError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -3124,11 +3304,15 @@ public class Team {
         /// A company-managed group cannot be managed by a user.
         case userCannotBeManagerOfCompanyManagedGroup([String])
 
+        func json() throws -> JSON {
+            try GroupMembersAddErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersAddErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersAddError: \(error)"
             }
         }
     }
@@ -3213,7 +3397,7 @@ public class Team {
     }
 
     /// Result returned by groupsMembersAdd and groupsMembersRemove.
-    public class GroupMembersChangeResult: CustomStringConvertible {
+    public class GroupMembersChangeResult: CustomStringConvertible, JSONRepresentable {
         /// The group info after member change operation has been performed.
         public let groupInfo: Team.GroupFullInfo
         /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID that was used to
@@ -3226,11 +3410,15 @@ public class Team {
             self.asyncJobId = asyncJobId
         }
 
+        func json() throws -> JSON {
+            try GroupMembersChangeResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersChangeResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersChangeResult: \(error)"
             }
         }
     }
@@ -3273,7 +3461,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersRemoveArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersRemoveArg: \(error)"
             }
         }
     }
@@ -3304,7 +3492,7 @@ public class Team {
 
     /// Error that can be raised when GroupMembersSelector is used, and the users are required to be members of the
     /// specified group.
-    public enum GroupMembersSelectorError: CustomStringConvertible {
+    public enum GroupMembersSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -3314,11 +3502,15 @@ public class Team {
         /// At least one of the specified users is not a member of the group.
         case memberNotInGroup
 
+        func json() throws -> JSON {
+            try GroupMembersSelectorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersSelectorError: \(error)"
             }
         }
     }
@@ -3369,7 +3561,7 @@ public class Team {
     }
 
     /// The GroupMembersRemoveError union
-    public enum GroupMembersRemoveError: CustomStringConvertible {
+    public enum GroupMembersRemoveError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -3385,11 +3577,15 @@ public class Team {
         /// These users were not found in Dropbox.
         case usersNotFound([String])
 
+        func json() throws -> JSON {
+            try GroupMembersRemoveErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersRemoveErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersRemoveError: \(error)"
             }
         }
     }
@@ -3460,7 +3656,7 @@ public class Team {
     }
 
     /// Argument for selecting a group and a list of users.
-    public class GroupMembersSelector: CustomStringConvertible {
+    public class GroupMembersSelector: CustomStringConvertible, JSONRepresentable {
         /// Specify a group.
         public let group: Team.GroupSelector
         /// A list of users that are members of group.
@@ -3470,11 +3666,15 @@ public class Team {
             self.users = users
         }
 
+        func json() throws -> JSON {
+            try GroupMembersSelectorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersSelectorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersSelector: \(error)"
             }
         }
     }
@@ -3518,7 +3718,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembersSetAccessTypeArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembersSetAccessTypeArg: \(error)"
             }
         }
     }
@@ -3550,17 +3750,21 @@ public class Team {
     }
 
     /// Argument for selecting a single group, either by group_id or by external group ID.
-    public enum GroupSelector: CustomStringConvertible {
+    public enum GroupSelector: CustomStringConvertible, JSONRepresentable {
         /// Group ID.
         case groupId(String)
         /// External ID of the group.
         case groupExternalId(String)
 
+        func json() throws -> JSON {
+            try GroupSelectorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupSelectorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupSelector: \(error)"
             }
         }
     }
@@ -3631,7 +3835,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupUpdateArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupUpdateArgs: \(error)"
             }
         }
     }
@@ -3672,7 +3876,7 @@ public class Team {
     }
 
     /// The GroupUpdateError union
-    public enum GroupUpdateError: CustomStringConvertible {
+    public enum GroupUpdateError: CustomStringConvertible, JSONRepresentable {
         /// No matching group found. No groups match the specified group ID.
         case groupNotFound
         /// An unspecified error.
@@ -3686,11 +3890,15 @@ public class Team {
         /// The requested external ID is already being used by another group.
         case externalIdAlreadyInUse
 
+        func json() throws -> JSON {
+            try GroupUpdateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupUpdateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupUpdateError: \(error)"
             }
         }
     }
@@ -3753,17 +3961,21 @@ public class Team {
     }
 
     /// The GroupsGetInfoError union
-    public enum GroupsGetInfoError: CustomStringConvertible {
+    public enum GroupsGetInfoError: CustomStringConvertible, JSONRepresentable {
         /// The group is not on your team.
         case groupNotOnTeam
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupsGetInfoErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsGetInfoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsGetInfoError: \(error)"
             }
         }
     }
@@ -3802,18 +4014,22 @@ public class Team {
     }
 
     /// The GroupsGetInfoItem union
-    public enum GroupsGetInfoItem: CustomStringConvertible {
+    public enum GroupsGetInfoItem: CustomStringConvertible, JSONRepresentable {
         /// An ID that was provided as a parameter to groupsGetInfo, and did not match a corresponding group. The ID can
         /// be a group ID, or an external ID, depending on how the method was called.
         case idNotFound(String)
         /// Info about a group.
         case groupInfo(Team.GroupFullInfo)
 
+        func json() throws -> JSON {
+            try GroupsGetInfoItemSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsGetInfoItemSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsGetInfoItem: \(error)"
             }
         }
     }
@@ -3854,7 +4070,7 @@ public class Team {
     }
 
     /// The GroupsListArg struct
-    public class GroupsListArg: CustomStringConvertible {
+    public class GroupsListArg: CustomStringConvertible, JSONRepresentable {
         /// Number of results to return per call.
         public let limit: UInt32
         public init(limit: UInt32 = 1_000) {
@@ -3862,11 +4078,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try GroupsListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsListArg: \(error)"
             }
         }
     }
@@ -3892,7 +4112,7 @@ public class Team {
     }
 
     /// The GroupsListContinueArg struct
-    public class GroupsListContinueArg: CustomStringConvertible {
+    public class GroupsListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
         public init(cursor: String) {
@@ -3900,11 +4120,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try GroupsListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsListContinueArg: \(error)"
             }
         }
     }
@@ -3930,17 +4154,21 @@ public class Team {
     }
 
     /// The GroupsListContinueError union
-    public enum GroupsListContinueError: CustomStringConvertible {
+    public enum GroupsListContinueError: CustomStringConvertible, JSONRepresentable {
         /// The cursor is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupsListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsListContinueError: \(error)"
             }
         }
     }
@@ -3979,7 +4207,7 @@ public class Team {
     }
 
     /// The GroupsListResult struct
-    public class GroupsListResult: CustomStringConvertible {
+    public class GroupsListResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let groups: [TeamCommon.GroupSummary]
         /// Pass the cursor into groupsListContinue to obtain the additional groups.
@@ -3994,11 +4222,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try GroupsListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsListResult: \(error)"
             }
         }
     }
@@ -4028,7 +4260,7 @@ public class Team {
     }
 
     /// The GroupsMembersListArg struct
-    public class GroupsMembersListArg: CustomStringConvertible {
+    public class GroupsMembersListArg: CustomStringConvertible, JSONRepresentable {
         /// The group whose members are to be listed.
         public let group: Team.GroupSelector
         /// Number of results to return per call.
@@ -4039,11 +4271,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try GroupsMembersListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsMembersListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsMembersListArg: \(error)"
             }
         }
     }
@@ -4071,7 +4307,7 @@ public class Team {
     }
 
     /// The GroupsMembersListContinueArg struct
-    public class GroupsMembersListContinueArg: CustomStringConvertible {
+    public class GroupsMembersListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of groups.
         public let cursor: String
         public init(cursor: String) {
@@ -4079,11 +4315,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try GroupsMembersListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsMembersListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsMembersListContinueArg: \(error)"
             }
         }
     }
@@ -4109,17 +4349,21 @@ public class Team {
     }
 
     /// The GroupsMembersListContinueError union
-    public enum GroupsMembersListContinueError: CustomStringConvertible {
+    public enum GroupsMembersListContinueError: CustomStringConvertible, JSONRepresentable {
         /// The cursor is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupsMembersListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsMembersListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsMembersListContinueError: \(error)"
             }
         }
     }
@@ -4158,7 +4402,7 @@ public class Team {
     }
 
     /// The GroupsMembersListResult struct
-    public class GroupsMembersListResult: CustomStringConvertible {
+    public class GroupsMembersListResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let members: [Team.GroupMemberInfo]
         /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
@@ -4173,11 +4417,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try GroupsMembersListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsMembersListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsMembersListResult: \(error)"
             }
         }
     }
@@ -4207,7 +4455,7 @@ public class Team {
     }
 
     /// The GroupsPollError union
-    public enum GroupsPollError: CustomStringConvertible {
+    public enum GroupsPollError: CustomStringConvertible, JSONRepresentable {
         /// The job ID is invalid.
         case invalidAsyncJobId
         /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
@@ -4218,11 +4466,15 @@ public class Team {
         /// You are not allowed to poll this job.
         case accessDenied
 
+        func json() throws -> JSON {
+            try GroupsPollErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsPollErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsPollError: \(error)"
             }
         }
     }
@@ -4273,17 +4525,21 @@ public class Team {
     }
 
     /// Argument for selecting a list of groups, either by group_ids, or external group IDs.
-    public enum GroupsSelector: CustomStringConvertible {
+    public enum GroupsSelector: CustomStringConvertible, JSONRepresentable {
         /// List of group IDs.
         case groupIds([String])
         /// List of external IDs of groups.
         case groupExternalIds([String])
 
+        func json() throws -> JSON {
+            try GroupsSelectorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupsSelectorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupsSelector: \(error)"
             }
         }
     }
@@ -4324,17 +4580,21 @@ public class Team {
     }
 
     /// The value for hasTeamFileEvents in Feature.
-    public enum HasTeamFileEventsValue: CustomStringConvertible {
+    public enum HasTeamFileEventsValue: CustomStringConvertible, JSONRepresentable {
         /// Does this team have file events.
         case enabled(Bool)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try HasTeamFileEventsValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try HasTeamFileEventsValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for HasTeamFileEventsValue: \(error)"
             }
         }
     }
@@ -4374,17 +4634,21 @@ public class Team {
     }
 
     /// The value for hasTeamSelectiveSync in Feature.
-    public enum HasTeamSelectiveSyncValue: CustomStringConvertible {
+    public enum HasTeamSelectiveSyncValue: CustomStringConvertible, JSONRepresentable {
         /// Does this team have team selective sync enabled.
         case hasTeamSelectiveSync(Bool)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try HasTeamSelectiveSyncValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try HasTeamSelectiveSyncValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for HasTeamSelectiveSyncValue: \(error)"
             }
         }
     }
@@ -4424,17 +4688,21 @@ public class Team {
     }
 
     /// The value for hasTeamSharedDropbox in Feature.
-    public enum HasTeamSharedDropboxValue: CustomStringConvertible {
+    public enum HasTeamSharedDropboxValue: CustomStringConvertible, JSONRepresentable {
         /// Does this team have a shared team root.
         case hasTeamSharedDropbox(Bool)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try HasTeamSharedDropboxValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try HasTeamSharedDropboxValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for HasTeamSharedDropboxValue: \(error)"
             }
         }
     }
@@ -4474,7 +4742,7 @@ public class Team {
     }
 
     /// The LegalHoldHeldRevisionMetadata struct
-    public class LegalHoldHeldRevisionMetadata: CustomStringConvertible {
+    public class LegalHoldHeldRevisionMetadata: CustomStringConvertible, JSONRepresentable {
         /// The held revision filename.
         public let newFilename: String
         /// The id of the held revision.
@@ -4528,11 +4796,15 @@ public class Team {
             self.contentHash = contentHash
         }
 
+        func json() throws -> JSON {
+            try LegalHoldHeldRevisionMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldHeldRevisionMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldHeldRevisionMetadata: \(error)"
             }
         }
     }
@@ -4587,7 +4859,7 @@ public class Team {
     }
 
     /// The LegalHoldPolicy struct
-    public class LegalHoldPolicy: CustomStringConvertible {
+    public class LegalHoldPolicy: CustomStringConvertible, JSONRepresentable {
         /// The legal hold id.
         public let id: String
         /// Policy name.
@@ -4627,11 +4899,15 @@ public class Team {
             self.endDate = endDate
         }
 
+        func json() throws -> JSON {
+            try LegalHoldPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldPolicy: \(error)"
             }
         }
     }
@@ -4680,7 +4956,7 @@ public class Team {
     }
 
     /// The LegalHoldStatus union
-    public enum LegalHoldStatus: CustomStringConvertible {
+    public enum LegalHoldStatus: CustomStringConvertible, JSONRepresentable {
         /// The legal hold policy is active.
         case active
         /// The legal hold policy was released.
@@ -4696,11 +4972,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LegalHoldStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldStatus: \(error)"
             }
         }
     }
@@ -4769,7 +5049,7 @@ public class Team {
     }
 
     /// The LegalHoldsError union
-    public enum LegalHoldsError: CustomStringConvertible {
+    public enum LegalHoldsError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -4777,11 +5057,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LegalHoldsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsError: \(error)"
             }
         }
     }
@@ -4826,7 +5110,7 @@ public class Team {
     }
 
     /// The LegalHoldsGetPolicyArg struct
-    public class LegalHoldsGetPolicyArg: CustomStringConvertible {
+    public class LegalHoldsGetPolicyArg: CustomStringConvertible, JSONRepresentable {
         /// The legal hold Id.
         public let id: String
         public init(id: String) {
@@ -4834,11 +5118,15 @@ public class Team {
             self.id = id
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsGetPolicyArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsGetPolicyArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsGetPolicyArg: \(error)"
             }
         }
     }
@@ -4864,7 +5152,7 @@ public class Team {
     }
 
     /// The LegalHoldsGetPolicyError union
-    public enum LegalHoldsGetPolicyError: CustomStringConvertible {
+    public enum LegalHoldsGetPolicyError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -4874,11 +5162,15 @@ public class Team {
         /// Legal hold policy does not exist for id in LegalHoldsGetPolicyArg.
         case legalHoldPolicyNotFound
 
+        func json() throws -> JSON {
+            try LegalHoldsGetPolicyErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsGetPolicyErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsGetPolicyError: \(error)"
             }
         }
     }
@@ -4929,7 +5221,7 @@ public class Team {
     }
 
     /// The LegalHoldsListHeldRevisionResult struct
-    public class LegalHoldsListHeldRevisionResult: CustomStringConvertible {
+    public class LegalHoldsListHeldRevisionResult: CustomStringConvertible, JSONRepresentable {
         /// List of file entries that under the hold.
         public let entries: [Team.LegalHoldHeldRevisionMetadata]
         /// The cursor idicates where to continue reading file metadata entries for the next API call. When there are no
@@ -4946,11 +5238,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsListHeldRevisionResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListHeldRevisionResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListHeldRevisionResult: \(error)"
             }
         }
     }
@@ -4980,7 +5276,7 @@ public class Team {
     }
 
     /// The LegalHoldsListHeldRevisionsArg struct
-    public class LegalHoldsListHeldRevisionsArg: CustomStringConvertible {
+    public class LegalHoldsListHeldRevisionsArg: CustomStringConvertible, JSONRepresentable {
         /// The legal hold Id.
         public let id: String
         public init(id: String) {
@@ -4988,11 +5284,15 @@ public class Team {
             self.id = id
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsListHeldRevisionsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListHeldRevisionsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListHeldRevisionsArg: \(error)"
             }
         }
     }
@@ -5018,7 +5318,7 @@ public class Team {
     }
 
     /// The LegalHoldsListHeldRevisionsContinueArg struct
-    public class LegalHoldsListHeldRevisionsContinueArg: CustomStringConvertible {
+    public class LegalHoldsListHeldRevisionsContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The legal hold Id.
         public let id: String
         /// The cursor idicates where to continue reading file metadata entries for the next API call. When there are no
@@ -5031,11 +5331,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsListHeldRevisionsContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListHeldRevisionsContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListHeldRevisionsContinueArg: \(error)"
             }
         }
     }
@@ -5063,7 +5367,7 @@ public class Team {
     }
 
     /// The LegalHoldsListHeldRevisionsContinueError union
-    public enum LegalHoldsListHeldRevisionsContinueError: CustomStringConvertible {
+    public enum LegalHoldsListHeldRevisionsContinueError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// Temporary infrastructure failure, please retry.
@@ -5074,11 +5378,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LegalHoldsListHeldRevisionsContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListHeldRevisionsContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListHeldRevisionsContinueError: \(error)"
             }
         }
     }
@@ -5129,7 +5437,7 @@ public class Team {
     }
 
     /// The LegalHoldsListHeldRevisionsError union
-    public enum LegalHoldsListHeldRevisionsError: CustomStringConvertible {
+    public enum LegalHoldsListHeldRevisionsError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -5143,11 +5451,15 @@ public class Team {
         /// Trying to list revisions for an inactive legal hold.
         case inactiveLegalHold
 
+        func json() throws -> JSON {
+            try LegalHoldsListHeldRevisionsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListHeldRevisionsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListHeldRevisionsError: \(error)"
             }
         }
     }
@@ -5210,18 +5522,22 @@ public class Team {
     }
 
     /// The LegalHoldsListPoliciesArg struct
-    public class LegalHoldsListPoliciesArg: CustomStringConvertible {
+    public class LegalHoldsListPoliciesArg: CustomStringConvertible, JSONRepresentable {
         /// Whether to return holds that were released.
         public let includeReleased: Bool
         public init(includeReleased: Bool = false) {
             self.includeReleased = includeReleased
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsListPoliciesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListPoliciesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListPoliciesArg: \(error)"
             }
         }
     }
@@ -5247,7 +5563,7 @@ public class Team {
     }
 
     /// The LegalHoldsListPoliciesError union
-    public enum LegalHoldsListPoliciesError: CustomStringConvertible {
+    public enum LegalHoldsListPoliciesError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -5257,11 +5573,15 @@ public class Team {
         /// Temporary infrastructure failure, please retry.
         case transientError
 
+        func json() throws -> JSON {
+            try LegalHoldsListPoliciesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListPoliciesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListPoliciesError: \(error)"
             }
         }
     }
@@ -5312,18 +5632,22 @@ public class Team {
     }
 
     /// The LegalHoldsListPoliciesResult struct
-    public class LegalHoldsListPoliciesResult: CustomStringConvertible {
+    public class LegalHoldsListPoliciesResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let policies: [Team.LegalHoldPolicy]
         public init(policies: [Team.LegalHoldPolicy]) {
             self.policies = policies
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsListPoliciesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsListPoliciesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsListPoliciesResult: \(error)"
             }
         }
     }
@@ -5349,7 +5673,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyCreateArg struct
-    public class LegalHoldsPolicyCreateArg: CustomStringConvertible {
+    public class LegalHoldsPolicyCreateArg: CustomStringConvertible, JSONRepresentable {
         /// Policy name.
         public let name: String
         /// A description of the legal hold policy.
@@ -5371,11 +5695,15 @@ public class Team {
             self.endDate = endDate
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyCreateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyCreateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyCreateArg: \(error)"
             }
         }
     }
@@ -5409,7 +5737,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyCreateError union
-    public enum LegalHoldsPolicyCreateError: CustomStringConvertible {
+    public enum LegalHoldsPolicyCreateError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -5433,11 +5761,15 @@ public class Team {
         /// The provided date is invalid.
         case invalidDate
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyCreateError: \(error)"
             }
         }
     }
@@ -5530,7 +5862,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyReleaseArg struct
-    public class LegalHoldsPolicyReleaseArg: CustomStringConvertible {
+    public class LegalHoldsPolicyReleaseArg: CustomStringConvertible, JSONRepresentable {
         /// The legal hold Id.
         public let id: String
         public init(id: String) {
@@ -5538,11 +5870,15 @@ public class Team {
             self.id = id
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyReleaseArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyReleaseArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyReleaseArg: \(error)"
             }
         }
     }
@@ -5568,7 +5904,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyReleaseError union
-    public enum LegalHoldsPolicyReleaseError: CustomStringConvertible {
+    public enum LegalHoldsPolicyReleaseError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -5582,11 +5918,15 @@ public class Team {
         /// Legal hold policy does not exist for id in LegalHoldsPolicyReleaseArg.
         case legalHoldPolicyNotFound
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyReleaseErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyReleaseErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyReleaseError: \(error)"
             }
         }
     }
@@ -5649,7 +5989,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyUpdateArg struct
-    public class LegalHoldsPolicyUpdateArg: CustomStringConvertible {
+    public class LegalHoldsPolicyUpdateArg: CustomStringConvertible, JSONRepresentable {
         /// The legal hold Id.
         public let id: String
         /// Policy new name.
@@ -5669,11 +6009,15 @@ public class Team {
             self.members = members
         }
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyUpdateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyUpdateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyUpdateArg: \(error)"
             }
         }
     }
@@ -5705,7 +6049,7 @@ public class Team {
     }
 
     /// The LegalHoldsPolicyUpdateError union
-    public enum LegalHoldsPolicyUpdateError: CustomStringConvertible {
+    public enum LegalHoldsPolicyUpdateError: CustomStringConvertible, JSONRepresentable {
         /// There has been an unknown legal hold error.
         case unknownLegalHoldError
         /// You don't have permissions to perform this action.
@@ -5729,11 +6073,15 @@ public class Team {
         /// Legal hold policy does not exist for id in LegalHoldsPolicyUpdateArg.
         case legalHoldPolicyNotFound
 
+        func json() throws -> JSON {
+            try LegalHoldsPolicyUpdateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LegalHoldsPolicyUpdateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LegalHoldsPolicyUpdateError: \(error)"
             }
         }
     }
@@ -5826,7 +6174,7 @@ public class Team {
     }
 
     /// The ListMemberAppsArg struct
-    public class ListMemberAppsArg: CustomStringConvertible {
+    public class ListMemberAppsArg: CustomStringConvertible, JSONRepresentable {
         /// The team member id.
         public let teamMemberId: String
         public init(teamMemberId: String) {
@@ -5834,11 +6182,15 @@ public class Team {
             self.teamMemberId = teamMemberId
         }
 
+        func json() throws -> JSON {
+            try ListMemberAppsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberAppsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberAppsArg: \(error)"
             }
         }
     }
@@ -5864,17 +6216,21 @@ public class Team {
     }
 
     /// Error returned by linkedAppsListMemberLinkedApps.
-    public enum ListMemberAppsError: CustomStringConvertible {
+    public enum ListMemberAppsError: CustomStringConvertible, JSONRepresentable {
         /// Member not found.
         case memberNotFound
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListMemberAppsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberAppsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberAppsError: \(error)"
             }
         }
     }
@@ -5913,18 +6269,22 @@ public class Team {
     }
 
     /// The ListMemberAppsResult struct
-    public class ListMemberAppsResult: CustomStringConvertible {
+    public class ListMemberAppsResult: CustomStringConvertible, JSONRepresentable {
         /// List of third party applications linked by this team member.
         public let linkedApiApps: [Team.ApiApp]
         public init(linkedApiApps: [Team.ApiApp]) {
             self.linkedApiApps = linkedApiApps
         }
 
+        func json() throws -> JSON {
+            try ListMemberAppsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberAppsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberAppsResult: \(error)"
             }
         }
     }
@@ -5950,7 +6310,7 @@ public class Team {
     }
 
     /// The ListMemberDevicesArg struct
-    public class ListMemberDevicesArg: CustomStringConvertible {
+    public class ListMemberDevicesArg: CustomStringConvertible, JSONRepresentable {
         /// The team's member id.
         public let teamMemberId: String
         /// Whether to list web sessions of the team's member.
@@ -5967,11 +6327,15 @@ public class Team {
             self.includeMobileClients = includeMobileClients
         }
 
+        func json() throws -> JSON {
+            try ListMemberDevicesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberDevicesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberDevicesArg: \(error)"
             }
         }
     }
@@ -6008,17 +6372,21 @@ public class Team {
     }
 
     /// The ListMemberDevicesError union
-    public enum ListMemberDevicesError: CustomStringConvertible {
+    public enum ListMemberDevicesError: CustomStringConvertible, JSONRepresentable {
         /// Member not found.
         case memberNotFound
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListMemberDevicesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberDevicesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberDevicesError: \(error)"
             }
         }
     }
@@ -6057,7 +6425,7 @@ public class Team {
     }
 
     /// The ListMemberDevicesResult struct
-    public class ListMemberDevicesResult: CustomStringConvertible {
+    public class ListMemberDevicesResult: CustomStringConvertible, JSONRepresentable {
         /// List of web sessions made by this team member.
         public let activeWebSessions: [Team.ActiveWebSession]?
         /// List of desktop clients used by this team member.
@@ -6074,11 +6442,15 @@ public class Team {
             self.mobileClientSessions = mobileClientSessions
         }
 
+        func json() throws -> JSON {
+            try ListMemberDevicesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMemberDevicesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMemberDevicesResult: \(error)"
             }
         }
     }
@@ -6116,7 +6488,7 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListMembersLinkedApps.
-    public class ListMembersAppsArg: CustomStringConvertible {
+    public class ListMembersAppsArg: CustomStringConvertible, JSONRepresentable {
         /// At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed. Then, if the result
         /// of the call includes a cursor, the following requests should include the received cursors in order
         /// to receive the next sub list of the team applications.
@@ -6126,11 +6498,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListMembersAppsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersAppsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersAppsArg: \(error)"
             }
         }
     }
@@ -6156,18 +6532,22 @@ public class Team {
     }
 
     /// Error returned by linkedAppsListMembersLinkedApps.
-    public enum ListMembersAppsError: CustomStringConvertible {
+    public enum ListMembersAppsError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call linkedAppsListMembersLinkedApps again with an empty
         /// cursor to obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListMembersAppsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersAppsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersAppsError: \(error)"
             }
         }
     }
@@ -6206,7 +6586,7 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListMembersLinkedApps.
-    public class ListMembersAppsResult: CustomStringConvertible {
+    public class ListMembersAppsResult: CustomStringConvertible, JSONRepresentable {
         /// The linked applications of each member of the team.
         public let apps: [Team.MemberLinkedApps]
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListMembersLinkedApps to retrieve
@@ -6221,11 +6601,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListMembersAppsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersAppsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersAppsResult: \(error)"
             }
         }
     }
@@ -6255,7 +6639,7 @@ public class Team {
     }
 
     /// The ListMembersDevicesArg struct
-    public class ListMembersDevicesArg: CustomStringConvertible {
+    public class ListMembersDevicesArg: CustomStringConvertible, JSONRepresentable {
         /// At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to
         /// receive the next sub list of team devices.
@@ -6274,11 +6658,15 @@ public class Team {
             self.includeMobileClients = includeMobileClients
         }
 
+        func json() throws -> JSON {
+            try ListMembersDevicesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersDevicesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersDevicesArg: \(error)"
             }
         }
     }
@@ -6315,18 +6703,22 @@ public class Team {
     }
 
     /// The ListMembersDevicesError union
-    public enum ListMembersDevicesError: CustomStringConvertible {
+    public enum ListMembersDevicesError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call devicesListMembersDevices again with an empty cursor to
         /// obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListMembersDevicesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersDevicesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersDevicesError: \(error)"
             }
         }
     }
@@ -6365,7 +6757,7 @@ public class Team {
     }
 
     /// The ListMembersDevicesResult struct
-    public class ListMembersDevicesResult: CustomStringConvertible {
+    public class ListMembersDevicesResult: CustomStringConvertible, JSONRepresentable {
         /// The devices of each member of the team.
         public let devices: [Team.MemberDevices]
         /// If true, then there are more devices available. Pass the cursor to devicesListMembersDevices to retrieve the
@@ -6380,11 +6772,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListMembersDevicesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListMembersDevicesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListMembersDevicesResult: \(error)"
             }
         }
     }
@@ -6414,7 +6810,7 @@ public class Team {
     }
 
     /// Arguments for linkedAppsListTeamLinkedApps.
-    public class ListTeamAppsArg: CustomStringConvertible {
+    public class ListTeamAppsArg: CustomStringConvertible, JSONRepresentable {
         /// At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then, if the result of
         /// the call includes a cursor, the following requests should include the received cursors in order to
         /// receive the next sub list of the team applications.
@@ -6424,11 +6820,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListTeamAppsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamAppsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamAppsArg: \(error)"
             }
         }
     }
@@ -6454,18 +6854,22 @@ public class Team {
     }
 
     /// Error returned by linkedAppsListTeamLinkedApps.
-    public enum ListTeamAppsError: CustomStringConvertible {
+    public enum ListTeamAppsError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call linkedAppsListTeamLinkedApps again with an empty cursor
         /// to obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListTeamAppsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamAppsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamAppsError: \(error)"
             }
         }
     }
@@ -6504,7 +6908,7 @@ public class Team {
     }
 
     /// Information returned by linkedAppsListTeamLinkedApps.
-    public class ListTeamAppsResult: CustomStringConvertible {
+    public class ListTeamAppsResult: CustomStringConvertible, JSONRepresentable {
         /// The linked applications of each member of the team.
         public let apps: [Team.MemberLinkedApps]
         /// If true, then there are more apps available. Pass the cursor to linkedAppsListTeamLinkedApps to retrieve the
@@ -6519,11 +6923,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListTeamAppsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamAppsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamAppsResult: \(error)"
             }
         }
     }
@@ -6553,7 +6961,7 @@ public class Team {
     }
 
     /// The ListTeamDevicesArg struct
-    public class ListTeamDevicesArg: CustomStringConvertible {
+    public class ListTeamDevicesArg: CustomStringConvertible, JSONRepresentable {
         /// At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the result of the
         /// call includes a cursor, the following requests should include the received cursors in order to
         /// receive the next sub list of team devices.
@@ -6572,11 +6980,15 @@ public class Team {
             self.includeMobileClients = includeMobileClients
         }
 
+        func json() throws -> JSON {
+            try ListTeamDevicesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamDevicesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamDevicesArg: \(error)"
             }
         }
     }
@@ -6613,18 +7025,22 @@ public class Team {
     }
 
     /// The ListTeamDevicesError union
-    public enum ListTeamDevicesError: CustomStringConvertible {
+    public enum ListTeamDevicesError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call devicesListTeamDevices again with an empty cursor to
         /// obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListTeamDevicesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamDevicesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamDevicesError: \(error)"
             }
         }
     }
@@ -6663,7 +7079,7 @@ public class Team {
     }
 
     /// The ListTeamDevicesResult struct
-    public class ListTeamDevicesResult: CustomStringConvertible {
+    public class ListTeamDevicesResult: CustomStringConvertible, JSONRepresentable {
         /// The devices of each member of the team.
         public let devices: [Team.MemberDevices]
         /// If true, then there are more devices available. Pass the cursor to devicesListTeamDevices to retrieve the
@@ -6678,11 +7094,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListTeamDevicesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTeamDevicesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTeamDevicesResult: \(error)"
             }
         }
     }
@@ -6712,7 +7132,7 @@ public class Team {
     }
 
     /// Specify access type a member should have when joined to a group.
-    public class MemberAccess: CustomStringConvertible {
+    public class MemberAccess: CustomStringConvertible, JSONRepresentable {
         /// Identity of a user.
         public let user: Team.UserSelectorArg
         /// Access type.
@@ -6722,11 +7142,15 @@ public class Team {
             self.accessType = accessType
         }
 
+        func json() throws -> JSON {
+            try MemberAccessSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAccessSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAccess: \(error)"
             }
         }
     }
@@ -6754,7 +7178,7 @@ public class Team {
     }
 
     /// The MemberAddArgBase struct
-    public class MemberAddArgBase: CustomStringConvertible {
+    public class MemberAddArgBase: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let memberEmail: String
         /// Member's first name.
@@ -6794,11 +7218,15 @@ public class Team {
             self.isDirectoryRestricted = isDirectoryRestricted
         }
 
+        func json() throws -> JSON {
+            try MemberAddArgBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddArgBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddArgBase: \(error)"
             }
         }
     }
@@ -6873,7 +7301,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddArg: \(error)"
             }
         }
     }
@@ -6922,7 +7350,7 @@ public class Team {
     }
 
     /// The MemberAddResultBase union
-    public enum MemberAddResultBase: CustomStringConvertible {
+    public enum MemberAddResultBase: CustomStringConvertible, JSONRepresentable {
         /// Team is already full. The organization has no available licenses.
         case teamLicenseLimit(String)
         /// Team is already full. The free team member limit has been reached.
@@ -6947,11 +7375,15 @@ public class Team {
         /// User creation has failed.
         case userCreationFailed(String)
 
+        func json() throws -> JSON {
+            try MemberAddResultBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddResultBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddResultBase: \(error)"
             }
         }
     }
@@ -7050,7 +7482,7 @@ public class Team {
     /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
     /// a user was indeed added to the team - the other values explain the type of failure that occurred, and
     /// include the email of the user for which the operation has failed.
-    public enum MemberAddResult: CustomStringConvertible {
+    public enum MemberAddResult: CustomStringConvertible, JSONRepresentable {
         /// Team is already full. The organization has no available licenses.
         case teamLicenseLimit(String)
         /// Team is already full. The free team member limit has been reached.
@@ -7077,11 +7509,15 @@ public class Team {
         /// Describes a user that was successfully added to the team.
         case success(Team.TeamMemberInfo)
 
+        func json() throws -> JSON {
+            try MemberAddResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddResult: \(error)"
             }
         }
     }
@@ -7215,7 +7651,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddV2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddV2Arg: \(error)"
             }
         }
     }
@@ -7266,7 +7702,7 @@ public class Team {
     /// Describes the result of attempting to add a single user to the team. 'success' is the only value indicating that
     /// a user was indeed added to the team - the other values explain the type of failure that occurred, and
     /// include the email of the user for which the operation has failed.
-    public enum MemberAddV2Result: CustomStringConvertible {
+    public enum MemberAddV2Result: CustomStringConvertible, JSONRepresentable {
         /// Team is already full. The organization has no available licenses.
         case teamLicenseLimit(String)
         /// Team is already full. The free team member limit has been reached.
@@ -7295,11 +7731,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MemberAddV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAddV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAddV2Result: \(error)"
             }
         }
     }
@@ -7409,7 +7849,7 @@ public class Team {
     }
 
     /// Information on devices of a team's member.
-    public class MemberDevices: CustomStringConvertible {
+    public class MemberDevices: CustomStringConvertible, JSONRepresentable {
         /// The member unique Id.
         public let teamMemberId: String
         /// List of web sessions made by this team member.
@@ -7431,11 +7871,15 @@ public class Team {
             self.mobileClients = mobileClients
         }
 
+        func json() throws -> JSON {
+            try MemberDevicesSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberDevicesSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberDevices: \(error)"
             }
         }
     }
@@ -7469,7 +7913,7 @@ public class Team {
     }
 
     /// Information on linked applications of a team member.
-    public class MemberLinkedApps: CustomStringConvertible {
+    public class MemberLinkedApps: CustomStringConvertible, JSONRepresentable {
         /// The member unique Id.
         public let teamMemberId: String
         /// List of third party applications linked by this team member.
@@ -7480,11 +7924,15 @@ public class Team {
             self.linkedApiApps = linkedApiApps
         }
 
+        func json() throws -> JSON {
+            try MemberLinkedAppsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberLinkedAppsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberLinkedApps: \(error)"
             }
         }
     }
@@ -7512,7 +7960,7 @@ public class Team {
     }
 
     /// Basic member profile.
-    public class MemberProfile: CustomStringConvertible {
+    public class MemberProfile: CustomStringConvertible, JSONRepresentable {
         /// ID of user as a member of a team.
         public let teamMemberId: String
         /// External ID that a team can attach to the user. An application using the API may find it easier to use their
@@ -7588,11 +8036,15 @@ public class Team {
             self.profilePhotoUrl = profilePhotoUrl
         }
 
+        func json() throws -> JSON {
+            try MemberProfileSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberProfileSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberProfile: \(error)"
             }
         }
     }
@@ -7663,15 +8115,19 @@ public class Team {
     }
 
     /// Error that can be returned whenever a struct derived from UserSelectorArg is used.
-    public enum UserSelectorError: CustomStringConvertible {
+    public enum UserSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
+
+        func json() throws -> JSON {
+            try UserSelectorErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserSelectorError: \(error)"
             }
         }
     }
@@ -7704,17 +8160,21 @@ public class Team {
     }
 
     /// The MemberSelectorError union
-    public enum MemberSelectorError: CustomStringConvertible {
+    public enum MemberSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
         case userNotInTeam
 
+        func json() throws -> JSON {
+            try MemberSelectorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberSelectorError: \(error)"
             }
         }
     }
@@ -7753,18 +8213,22 @@ public class Team {
     }
 
     /// The MembersAddArgBase struct
-    public class MembersAddArgBase: CustomStringConvertible {
+    public class MembersAddArgBase: CustomStringConvertible, JSONRepresentable {
         /// Whether to force the add to happen asynchronously.
         public let forceAsync: Bool
         public init(forceAsync: Bool = false) {
             self.forceAsync = forceAsync
         }
 
+        func json() throws -> JSON {
+            try MembersAddArgBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddArgBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddArgBase: \(error)"
             }
         }
     }
@@ -7802,7 +8266,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddArg: \(error)"
             }
         }
     }
@@ -7830,7 +8294,7 @@ public class Team {
     }
 
     /// The MembersAddJobStatus union
-    public enum MembersAddJobStatus: CustomStringConvertible {
+    public enum MembersAddJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
@@ -7839,11 +8303,15 @@ public class Team {
         /// The asynchronous job returned an error. The string contains an error message.
         case failed(String)
 
+        func json() throws -> JSON {
+            try MembersAddJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddJobStatus: \(error)"
             }
         }
     }
@@ -7890,7 +8358,7 @@ public class Team {
     }
 
     /// The MembersAddJobStatusV2Result union
-    public enum MembersAddJobStatusV2Result: CustomStringConvertible {
+    public enum MembersAddJobStatusV2Result: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
@@ -7901,11 +8369,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersAddJobStatusV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddJobStatusV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddJobStatusV2Result: \(error)"
             }
         }
     }
@@ -7958,18 +8430,22 @@ public class Team {
     }
 
     /// The MembersAddLaunch union
-    public enum MembersAddLaunch: CustomStringConvertible {
+    public enum MembersAddLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// An unspecified error.
         case complete([Team.MemberAddResult])
 
+        func json() throws -> JSON {
+            try MembersAddLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddLaunch: \(error)"
             }
         }
     }
@@ -8010,7 +8486,7 @@ public class Team {
     }
 
     /// The MembersAddLaunchV2Result union
-    public enum MembersAddLaunchV2Result: CustomStringConvertible {
+    public enum MembersAddLaunchV2Result: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
@@ -8019,11 +8495,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersAddLaunchV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddLaunchV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddLaunchV2Result: \(error)"
             }
         }
     }
@@ -8082,7 +8562,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersAddV2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersAddV2Arg: \(error)"
             }
         }
     }
@@ -8110,18 +8590,22 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersDeactivateBaseArg: CustomStringConvertible {
+    public class MembersDeactivateBaseArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user to remove/suspend/have their files moved.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
 
+        func json() throws -> JSON {
+            try MembersDeactivateBaseArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeactivateBaseArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDeactivateBaseArg: \(error)"
             }
         }
     }
@@ -8162,7 +8646,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDataTransferArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDataTransferArg: \(error)"
             }
         }
     }
@@ -8204,7 +8688,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeactivateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDeactivateArg: \(error)"
             }
         }
     }
@@ -8232,7 +8716,7 @@ public class Team {
     }
 
     /// The MembersDeactivateError union
-    public enum MembersDeactivateError: CustomStringConvertible {
+    public enum MembersDeactivateError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -8240,11 +8724,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersDeactivateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeactivateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDeactivateError: \(error)"
             }
         }
     }
@@ -8289,18 +8777,22 @@ public class Team {
     }
 
     /// The MembersDeleteProfilePhotoArg struct
-    public class MembersDeleteProfilePhotoArg: CustomStringConvertible {
+    public class MembersDeleteProfilePhotoArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of the user whose profile photo will be deleted.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
 
+        func json() throws -> JSON {
+            try MembersDeleteProfilePhotoArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeleteProfilePhotoArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDeleteProfilePhotoArg: \(error)"
             }
         }
     }
@@ -8326,7 +8818,7 @@ public class Team {
     }
 
     /// The MembersDeleteProfilePhotoError union
-    public enum MembersDeleteProfilePhotoError: CustomStringConvertible {
+    public enum MembersDeleteProfilePhotoError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -8336,11 +8828,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersDeleteProfilePhotoErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeleteProfilePhotoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersDeleteProfilePhotoError: \(error)"
             }
         }
     }
@@ -8391,18 +8887,22 @@ public class Team {
     }
 
     /// Available TeamMemberRole for the connected team. To be used with membersSetAdminPermissionsV2.
-    public class MembersGetAvailableTeamMemberRolesResult: CustomStringConvertible {
+    public class MembersGetAvailableTeamMemberRolesResult: CustomStringConvertible, JSONRepresentable {
         /// Available roles.
         public let roles: [Team.TeamMemberRole]
         public init(roles: [Team.TeamMemberRole]) {
             self.roles = roles
         }
 
+        func json() throws -> JSON {
+            try MembersGetAvailableTeamMemberRolesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetAvailableTeamMemberRolesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetAvailableTeamMemberRolesResult: \(error)"
             }
         }
     }
@@ -8428,18 +8928,22 @@ public class Team {
     }
 
     /// The MembersGetInfoArgs struct
-    public class MembersGetInfoArgs: CustomStringConvertible {
+    public class MembersGetInfoArgs: CustomStringConvertible, JSONRepresentable {
         /// List of team members.
         public let members: [Team.UserSelectorArg]
         public init(members: [Team.UserSelectorArg]) {
             self.members = members
         }
 
+        func json() throws -> JSON {
+            try MembersGetInfoArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoArgs: \(error)"
             }
         }
     }
@@ -8465,15 +8969,19 @@ public class Team {
     }
 
     /// The MembersGetInfoError union
-    public enum MembersGetInfoError: CustomStringConvertible {
+    public enum MembersGetInfoError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case other
+
+        func json() throws -> JSON {
+            try MembersGetInfoErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoError: \(error)"
             }
         }
     }
@@ -8506,17 +9014,21 @@ public class Team {
     }
 
     /// The MembersGetInfoItemBase union
-    public enum MembersGetInfoItemBase: CustomStringConvertible {
+    public enum MembersGetInfoItemBase: CustomStringConvertible, JSONRepresentable {
         /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
         /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
         /// the method was called.
         case idNotFound(String)
 
+        func json() throws -> JSON {
+            try MembersGetInfoItemBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoItemBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoItemBase: \(error)"
             }
         }
     }
@@ -8550,7 +9062,7 @@ public class Team {
     }
 
     /// Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfo.
-    public enum MembersGetInfoItem: CustomStringConvertible {
+    public enum MembersGetInfoItem: CustomStringConvertible, JSONRepresentable {
         /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
         /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
         /// the method was called.
@@ -8558,11 +9070,15 @@ public class Team {
         /// Info about a team member.
         case memberInfo(Team.TeamMemberInfo)
 
+        func json() throws -> JSON {
+            try MembersGetInfoItemSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoItemSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoItem: \(error)"
             }
         }
     }
@@ -8603,7 +9119,7 @@ public class Team {
     }
 
     /// Describes a result obtained for a single user whose id was specified in the parameter of membersGetInfoV2.
-    public enum MembersGetInfoItemV2: CustomStringConvertible {
+    public enum MembersGetInfoItemV2: CustomStringConvertible, JSONRepresentable {
         /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
         /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
         /// the method was called.
@@ -8613,11 +9129,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersGetInfoItemV2Serializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoItemV2Serializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoItemV2: \(error)"
             }
         }
     }
@@ -8664,18 +9184,22 @@ public class Team {
     }
 
     /// The MembersGetInfoV2Arg struct
-    public class MembersGetInfoV2Arg: CustomStringConvertible {
+    public class MembersGetInfoV2Arg: CustomStringConvertible, JSONRepresentable {
         /// List of team members.
         public let members: [Team.UserSelectorArg]
         public init(members: [Team.UserSelectorArg]) {
             self.members = members
         }
 
+        func json() throws -> JSON {
+            try MembersGetInfoV2ArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoV2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoV2Arg: \(error)"
             }
         }
     }
@@ -8701,18 +9225,22 @@ public class Team {
     }
 
     /// The MembersGetInfoV2Result struct
-    public class MembersGetInfoV2Result: CustomStringConvertible {
+    public class MembersGetInfoV2Result: CustomStringConvertible, JSONRepresentable {
         /// List of team members info.
         public let membersInfo: [Team.MembersGetInfoItemV2]
         public init(membersInfo: [Team.MembersGetInfoItemV2]) {
             self.membersInfo = membersInfo
         }
 
+        func json() throws -> JSON {
+            try MembersGetInfoV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersGetInfoV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersGetInfoV2Result: \(error)"
             }
         }
     }
@@ -8738,7 +9266,7 @@ public class Team {
     }
 
     /// The MembersInfo struct
-    public class MembersInfo: CustomStringConvertible {
+    public class MembersInfo: CustomStringConvertible, JSONRepresentable {
         /// Team member IDs of the users under this hold.
         public let teamMemberIds: [String]
         /// The number of permanently deleted users that were under this hold.
@@ -8750,11 +9278,15 @@ public class Team {
             self.permanentlyDeletedUsers = permanentlyDeletedUsers
         }
 
+        func json() throws -> JSON {
+            try MembersInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersInfo: \(error)"
             }
         }
     }
@@ -8782,7 +9314,7 @@ public class Team {
     }
 
     /// The MembersListArg struct
-    public class MembersListArg: CustomStringConvertible {
+    public class MembersListArg: CustomStringConvertible, JSONRepresentable {
         /// Number of results to return per call.
         public let limit: UInt32
         /// Whether to return removed members.
@@ -8793,11 +9325,15 @@ public class Team {
             self.includeRemoved = includeRemoved
         }
 
+        func json() throws -> JSON {
+            try MembersListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListArg: \(error)"
             }
         }
     }
@@ -8825,7 +9361,7 @@ public class Team {
     }
 
     /// The MembersListContinueArg struct
-    public class MembersListContinueArg: CustomStringConvertible {
+    public class MembersListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of members.
         public let cursor: String
         public init(cursor: String) {
@@ -8833,11 +9369,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try MembersListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListContinueArg: \(error)"
             }
         }
     }
@@ -8863,17 +9403,21 @@ public class Team {
     }
 
     /// The MembersListContinueError union
-    public enum MembersListContinueError: CustomStringConvertible {
+    public enum MembersListContinueError: CustomStringConvertible, JSONRepresentable {
         /// The cursor is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListContinueError: \(error)"
             }
         }
     }
@@ -8912,15 +9456,19 @@ public class Team {
     }
 
     /// The MembersListError union
-    public enum MembersListError: CustomStringConvertible {
+    public enum MembersListError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case other
+
+        func json() throws -> JSON {
+            try MembersListErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListError: \(error)"
             }
         }
     }
@@ -8953,7 +9501,7 @@ public class Team {
     }
 
     /// The MembersListResult struct
-    public class MembersListResult: CustomStringConvertible {
+    public class MembersListResult: CustomStringConvertible, JSONRepresentable {
         /// List of team members.
         public let members: [Team.TeamMemberInfo]
         /// Pass the cursor into membersListContinue to obtain the additional members.
@@ -8968,11 +9516,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try MembersListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListResult: \(error)"
             }
         }
     }
@@ -9002,7 +9554,7 @@ public class Team {
     }
 
     /// The MembersListV2Result struct
-    public class MembersListV2Result: CustomStringConvertible {
+    public class MembersListV2Result: CustomStringConvertible, JSONRepresentable {
         /// List of team members.
         public let members: [Team.TeamMemberInfoV2]
         /// Pass the cursor into membersListContinueV2 to obtain the additional members.
@@ -9017,11 +9569,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try MembersListV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersListV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersListV2Result: \(error)"
             }
         }
     }
@@ -9051,18 +9607,22 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersRecoverArg: CustomStringConvertible {
+    public class MembersRecoverArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user to recover.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
 
+        func json() throws -> JSON {
+            try MembersRecoverArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersRecoverArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersRecoverArg: \(error)"
             }
         }
     }
@@ -9088,7 +9648,7 @@ public class Team {
     }
 
     /// The MembersRecoverError union
-    public enum MembersRecoverError: CustomStringConvertible {
+    public enum MembersRecoverError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not recoverable.
@@ -9100,11 +9660,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersRecoverErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersRecoverErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersRecoverError: \(error)"
             }
         }
     }
@@ -9195,7 +9759,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersRemoveArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersRemoveArg: \(error)"
             }
         }
     }
@@ -9238,7 +9802,7 @@ public class Team {
     }
 
     /// The MembersTransferFilesError union
-    public enum MembersTransferFilesError: CustomStringConvertible {
+    public enum MembersTransferFilesError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -9264,11 +9828,15 @@ public class Team {
         /// The recipient user's email is not verified.
         case recipientNotVerified
 
+        func json() throws -> JSON {
+            try MembersTransferFilesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersTransferFilesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersTransferFilesError: \(error)"
             }
         }
     }
@@ -9367,7 +9935,7 @@ public class Team {
     }
 
     /// The MembersRemoveError union
-    public enum MembersRemoveError: CustomStringConvertible {
+    public enum MembersRemoveError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -9421,11 +9989,15 @@ public class Team {
         /// of service.
         case cannotKeepAccountRequiredToSignTos
 
+        func json() throws -> JSON {
+            try MembersRemoveErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersRemoveErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersRemoveError: \(error)"
             }
         }
     }
@@ -9590,7 +10162,7 @@ public class Team {
     }
 
     /// The MembersSendWelcomeError union
-    public enum MembersSendWelcomeError: CustomStringConvertible {
+    public enum MembersSendWelcomeError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -9598,11 +10170,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersSendWelcomeErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSendWelcomeErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSendWelcomeError: \(error)"
             }
         }
     }
@@ -9647,7 +10223,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersSetPermissions2Arg: CustomStringConvertible {
+    public class MembersSetPermissions2Arg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user whose role will be set.
         public let user: Team.UserSelectorArg
         /// The new roles for the member. Send empty list to make user member only. For now, only up to one role is
@@ -9659,11 +10235,15 @@ public class Team {
             self.newRoles = newRoles
         }
 
+        func json() throws -> JSON {
+            try MembersSetPermissions2ArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissions2ArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissions2Arg: \(error)"
             }
         }
     }
@@ -9691,7 +10271,7 @@ public class Team {
     }
 
     /// The MembersSetPermissions2Error union
-    public enum MembersSetPermissions2Error: CustomStringConvertible {
+    public enum MembersSetPermissions2Error: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// Cannot remove the admin setting of the last admin.
@@ -9705,11 +10285,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersSetPermissions2ErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissions2ErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissions2Error: \(error)"
             }
         }
     }
@@ -9772,7 +10356,7 @@ public class Team {
     }
 
     /// The MembersSetPermissions2Result struct
-    public class MembersSetPermissions2Result: CustomStringConvertible {
+    public class MembersSetPermissions2Result: CustomStringConvertible, JSONRepresentable {
         /// The member ID of the user to which the change was applied.
         public let teamMemberId: String
         /// The roles after the change. Empty in case the user become a non-admin.
@@ -9783,11 +10367,15 @@ public class Team {
             self.roles = roles
         }
 
+        func json() throws -> JSON {
+            try MembersSetPermissions2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissions2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissions2Result: \(error)"
             }
         }
     }
@@ -9815,7 +10403,7 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersSetPermissionsArg: CustomStringConvertible {
+    public class MembersSetPermissionsArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user whose role will be set.
         public let user: Team.UserSelectorArg
         /// The new role of the member.
@@ -9825,11 +10413,15 @@ public class Team {
             self.newRole = newRole
         }
 
+        func json() throws -> JSON {
+            try MembersSetPermissionsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissionsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissionsArg: \(error)"
             }
         }
     }
@@ -9857,7 +10449,7 @@ public class Team {
     }
 
     /// The MembersSetPermissionsError union
-    public enum MembersSetPermissionsError: CustomStringConvertible {
+    public enum MembersSetPermissionsError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// Cannot remove the admin setting of the last admin.
@@ -9871,11 +10463,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersSetPermissionsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissionsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissionsError: \(error)"
             }
         }
     }
@@ -9938,7 +10534,7 @@ public class Team {
     }
 
     /// The MembersSetPermissionsResult struct
-    public class MembersSetPermissionsResult: CustomStringConvertible {
+    public class MembersSetPermissionsResult: CustomStringConvertible, JSONRepresentable {
         /// The member ID of the user to which the change was applied.
         public let teamMemberId: String
         /// The role after the change.
@@ -9949,11 +10545,15 @@ public class Team {
             self.role = role
         }
 
+        func json() throws -> JSON {
+            try MembersSetPermissionsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetPermissionsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetPermissionsResult: \(error)"
             }
         }
     }
@@ -9982,7 +10582,7 @@ public class Team {
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account. At least one
     /// of new_email, new_external_id, new_given_name, and/or new_surname must be provided.
-    public class MembersSetProfileArg: CustomStringConvertible {
+    public class MembersSetProfileArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user whose profile will be set.
         public let user: Team.UserSelectorArg
         /// New email for member.
@@ -10020,11 +10620,15 @@ public class Team {
             self.newIsDirectoryRestricted = newIsDirectoryRestricted
         }
 
+        func json() throws -> JSON {
+            try MembersSetProfileArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetProfileArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetProfileArg: \(error)"
             }
         }
     }
@@ -10071,7 +10675,7 @@ public class Team {
     }
 
     /// The MembersSetProfileError union
-    public enum MembersSetProfileError: CustomStringConvertible {
+    public enum MembersSetProfileError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -10098,11 +10702,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersSetProfileErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetProfileErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetProfileError: \(error)"
             }
         }
     }
@@ -10201,7 +10809,7 @@ public class Team {
     }
 
     /// The MembersSetProfilePhotoArg struct
-    public class MembersSetProfilePhotoArg: CustomStringConvertible {
+    public class MembersSetProfilePhotoArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of the user whose profile photo will be set.
         public let user: Team.UserSelectorArg
         /// Image to set as the member's new profile photo.
@@ -10211,11 +10819,15 @@ public class Team {
             self.photo = photo
         }
 
+        func json() throws -> JSON {
+            try MembersSetProfilePhotoArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetProfilePhotoArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetProfilePhotoArg: \(error)"
             }
         }
     }
@@ -10243,7 +10855,7 @@ public class Team {
     }
 
     /// The MembersSetProfilePhotoError union
-    public enum MembersSetProfilePhotoError: CustomStringConvertible {
+    public enum MembersSetProfilePhotoError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -10255,11 +10867,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MembersSetProfilePhotoErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSetProfilePhotoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSetProfilePhotoError: \(error)"
             }
         }
     }
@@ -10317,7 +10933,7 @@ public class Team {
     }
 
     /// The MembersSuspendError union
-    public enum MembersSuspendError: CustomStringConvertible {
+    public enum MembersSuspendError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -10331,11 +10947,15 @@ public class Team {
         /// Team is full. The organization has no available licenses.
         case teamLicenseLimit
 
+        func json() throws -> JSON {
+            try MembersSuspendErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersSuspendError: \(error)"
             }
         }
     }
@@ -10398,7 +11018,7 @@ public class Team {
     }
 
     /// The MembersTransferFormerMembersFilesError union
-    public enum MembersTransferFormerMembersFilesError: CustomStringConvertible {
+    public enum MembersTransferFormerMembersFilesError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -10432,11 +11052,15 @@ public class Team {
         /// User's data has already been transferred to another user.
         case userDataAlreadyTransferred
 
+        func json() throws -> JSON {
+            try MembersTransferFormerMembersFilesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersTransferFormerMembersFilesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersTransferFormerMembersFilesError: \(error)"
             }
         }
     }
@@ -10559,18 +11183,22 @@ public class Team {
     }
 
     /// Exactly one of team_member_id, email, or external_id must be provided to identify the user account.
-    public class MembersUnsuspendArg: CustomStringConvertible {
+    public class MembersUnsuspendArg: CustomStringConvertible, JSONRepresentable {
         /// Identity of user to unsuspend.
         public let user: Team.UserSelectorArg
         public init(user: Team.UserSelectorArg) {
             self.user = user
         }
 
+        func json() throws -> JSON {
+            try MembersUnsuspendArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersUnsuspendArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersUnsuspendArg: \(error)"
             }
         }
     }
@@ -10596,7 +11224,7 @@ public class Team {
     }
 
     /// The MembersUnsuspendError union
-    public enum MembersUnsuspendError: CustomStringConvertible {
+    public enum MembersUnsuspendError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
         case userNotFound
         /// The user is not a member of the team.
@@ -10608,11 +11236,15 @@ public class Team {
         /// Team is full. The organization has no available licenses.
         case teamLicenseLimit
 
+        func json() throws -> JSON {
+            try MembersUnsuspendErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembersUnsuspendErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembersUnsuspendError: \(error)"
             }
         }
     }
@@ -10669,7 +11301,7 @@ public class Team {
     }
 
     /// The MobileClientPlatform union
-    public enum MobileClientPlatform: CustomStringConvertible {
+    public enum MobileClientPlatform: CustomStringConvertible, JSONRepresentable {
         /// Official Dropbox iPhone client.
         case iphone
         /// Official Dropbox iPad client.
@@ -10683,11 +11315,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MobileClientPlatformSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MobileClientPlatformSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MobileClientPlatform: \(error)"
             }
         }
     }
@@ -10789,7 +11425,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MobileClientSessionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MobileClientSession: \(error)"
             }
         }
     }
@@ -10844,7 +11480,7 @@ public class Team {
     }
 
     /// Properties of a namespace.
-    public class NamespaceMetadata: CustomStringConvertible {
+    public class NamespaceMetadata: CustomStringConvertible, JSONRepresentable {
         /// The name of this namespace.
         public let name: String
         /// The ID of this namespace.
@@ -10864,11 +11500,15 @@ public class Team {
             self.teamMemberId = teamMemberId
         }
 
+        func json() throws -> JSON {
+            try NamespaceMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try NamespaceMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for NamespaceMetadata: \(error)"
             }
         }
     }
@@ -10900,7 +11540,7 @@ public class Team {
     }
 
     /// The NamespaceType union
-    public enum NamespaceType: CustomStringConvertible {
+    public enum NamespaceType: CustomStringConvertible, JSONRepresentable {
         /// App sandbox folder.
         case appFolder
         /// Shared folder.
@@ -10912,11 +11552,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try NamespaceTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try NamespaceTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for NamespaceType: \(error)"
             }
         }
     }
@@ -10973,7 +11617,7 @@ public class Team {
     }
 
     /// User result for setting member custom quota.
-    public enum RemoveCustomQuotaResult: CustomStringConvertible {
+    public enum RemoveCustomQuotaResult: CustomStringConvertible, JSONRepresentable {
         /// Successfully removed user.
         case success(Team.UserSelectorArg)
         /// Invalid user (not in team).
@@ -10981,11 +11625,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RemoveCustomQuotaResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveCustomQuotaResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveCustomQuotaResult: \(error)"
             }
         }
     }
@@ -11032,7 +11680,7 @@ public class Team {
     }
 
     /// The RemovedStatus struct
-    public class RemovedStatus: CustomStringConvertible {
+    public class RemovedStatus: CustomStringConvertible, JSONRepresentable {
         /// True if the removed team member is recoverable.
         public let isRecoverable: Bool
         /// True if the team member's account was converted to individual account.
@@ -11042,11 +11690,15 @@ public class Team {
             self.isDisconnected = isDisconnected
         }
 
+        func json() throws -> JSON {
+            try RemovedStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemovedStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemovedStatus: \(error)"
             }
         }
     }
@@ -11076,7 +11728,7 @@ public class Team {
     /// Result of trying to resend verification email to a secondary email address. 'success' is the only value
     /// indicating that a verification email was successfully sent. The other values explain the type of error that
     /// occurred, and include the email for which the error occurred.
-    public enum ResendSecondaryEmailResult: CustomStringConvertible {
+    public enum ResendSecondaryEmailResult: CustomStringConvertible, JSONRepresentable {
         /// A verification email was successfully sent to the secondary email address.
         case success(String)
         /// This secondary email address is not pending for the user.
@@ -11086,11 +11738,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ResendSecondaryEmailResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ResendSecondaryEmailResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ResendSecondaryEmailResult: \(error)"
             }
         }
     }
@@ -11144,18 +11800,22 @@ public class Team {
     }
 
     /// The ResendVerificationEmailArg struct
-    public class ResendVerificationEmailArg: CustomStringConvertible {
+    public class ResendVerificationEmailArg: CustomStringConvertible, JSONRepresentable {
         /// List of users and secondary emails to resend verification emails to.
         public let emailsToResend: [Team.UserSecondaryEmailsArg]
         public init(emailsToResend: [Team.UserSecondaryEmailsArg]) {
             self.emailsToResend = emailsToResend
         }
 
+        func json() throws -> JSON {
+            try ResendVerificationEmailArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ResendVerificationEmailArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ResendVerificationEmailArg: \(error)"
             }
         }
     }
@@ -11181,18 +11841,22 @@ public class Team {
     }
 
     /// List of users and resend results.
-    public class ResendVerificationEmailResult: CustomStringConvertible {
+    public class ResendVerificationEmailResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let results: [Team.UserResendResult]
         public init(results: [Team.UserResendResult]) {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try ResendVerificationEmailResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ResendVerificationEmailResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ResendVerificationEmailResult: \(error)"
             }
         }
     }
@@ -11231,7 +11895,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDesktopClientArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDesktopClientArg: \(error)"
             }
         }
     }
@@ -11261,7 +11925,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionArg union
-    public enum RevokeDeviceSessionArg: CustomStringConvertible {
+    public enum RevokeDeviceSessionArg: CustomStringConvertible, JSONRepresentable {
         /// End an active session.
         case webSession(Team.DeviceSessionArg)
         /// Unlink a linked desktop device.
@@ -11269,11 +11933,15 @@ public class Team {
         /// Unlink a linked mobile device.
         case mobileClient(Team.DeviceSessionArg)
 
+        func json() throws -> JSON {
+            try RevokeDeviceSessionArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionArg: \(error)"
             }
         }
     }
@@ -11321,18 +11989,22 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchArg struct
-    public class RevokeDeviceSessionBatchArg: CustomStringConvertible {
+    public class RevokeDeviceSessionBatchArg: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let revokeDevices: [Team.RevokeDeviceSessionArg]
         public init(revokeDevices: [Team.RevokeDeviceSessionArg]) {
             self.revokeDevices = revokeDevices
         }
 
+        func json() throws -> JSON {
+            try RevokeDeviceSessionBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionBatchArg: \(error)"
             }
         }
     }
@@ -11358,15 +12030,19 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchError union
-    public enum RevokeDeviceSessionBatchError: CustomStringConvertible {
+    public enum RevokeDeviceSessionBatchError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case other
+
+        func json() throws -> JSON {
+            try RevokeDeviceSessionBatchErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionBatchError: \(error)"
             }
         }
     }
@@ -11399,18 +12075,22 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionBatchResult struct
-    public class RevokeDeviceSessionBatchResult: CustomStringConvertible {
+    public class RevokeDeviceSessionBatchResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let revokeDevicesStatus: [Team.RevokeDeviceSessionStatus]
         public init(revokeDevicesStatus: [Team.RevokeDeviceSessionStatus]) {
             self.revokeDevicesStatus = revokeDevicesStatus
         }
 
+        func json() throws -> JSON {
+            try RevokeDeviceSessionBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionBatchResult: \(error)"
             }
         }
     }
@@ -11437,7 +12117,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionError union
-    public enum RevokeDeviceSessionError: CustomStringConvertible {
+    public enum RevokeDeviceSessionError: CustomStringConvertible, JSONRepresentable {
         /// Device session not found.
         case deviceSessionNotFound
         /// Member not found.
@@ -11445,11 +12125,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RevokeDeviceSessionErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionError: \(error)"
             }
         }
     }
@@ -11494,7 +12178,7 @@ public class Team {
     }
 
     /// The RevokeDeviceSessionStatus struct
-    public class RevokeDeviceSessionStatus: CustomStringConvertible {
+    public class RevokeDeviceSessionStatus: CustomStringConvertible, JSONRepresentable {
         /// Result of the revoking request.
         public let success: Bool
         /// The error cause in case of a failure.
@@ -11504,11 +12188,15 @@ public class Team {
             self.errorType = errorType
         }
 
+        func json() throws -> JSON {
+            try RevokeDeviceSessionStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeDeviceSessionStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeDeviceSessionStatus: \(error)"
             }
         }
     }
@@ -11536,7 +12224,7 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppArg struct
-    public class RevokeLinkedApiAppArg: CustomStringConvertible {
+    public class RevokeLinkedApiAppArg: CustomStringConvertible, JSONRepresentable {
         /// The application's unique id.
         public let appId: String
         /// The unique id of the member owning the device.
@@ -11552,11 +12240,15 @@ public class Team {
             self.keepAppFolder = keepAppFolder
         }
 
+        func json() throws -> JSON {
+            try RevokeLinkedApiAppArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedApiAppArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedApiAppArg: \(error)"
             }
         }
     }
@@ -11586,18 +12278,22 @@ public class Team {
     }
 
     /// The RevokeLinkedApiAppBatchArg struct
-    public class RevokeLinkedApiAppBatchArg: CustomStringConvertible {
+    public class RevokeLinkedApiAppBatchArg: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let revokeLinkedApp: [Team.RevokeLinkedApiAppArg]
         public init(revokeLinkedApp: [Team.RevokeLinkedApiAppArg]) {
             self.revokeLinkedApp = revokeLinkedApp
         }
 
+        func json() throws -> JSON {
+            try RevokeLinkedApiAppBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedApiAppBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedApiAppBatchArg: \(error)"
             }
         }
     }
@@ -11623,15 +12319,19 @@ public class Team {
     }
 
     /// Error returned by linkedAppsRevokeLinkedAppBatch.
-    public enum RevokeLinkedAppBatchError: CustomStringConvertible {
+    public enum RevokeLinkedAppBatchError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case other
+
+        func json() throws -> JSON {
+            try RevokeLinkedAppBatchErrorSerializer().serialize(self)
+        }
 
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedAppBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedAppBatchError: \(error)"
             }
         }
     }
@@ -11664,18 +12364,22 @@ public class Team {
     }
 
     /// The RevokeLinkedAppBatchResult struct
-    public class RevokeLinkedAppBatchResult: CustomStringConvertible {
+    public class RevokeLinkedAppBatchResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let revokeLinkedAppStatus: [Team.RevokeLinkedAppStatus]
         public init(revokeLinkedAppStatus: [Team.RevokeLinkedAppStatus]) {
             self.revokeLinkedAppStatus = revokeLinkedAppStatus
         }
 
+        func json() throws -> JSON {
+            try RevokeLinkedAppBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedAppBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedAppBatchResult: \(error)"
             }
         }
     }
@@ -11702,7 +12406,7 @@ public class Team {
     }
 
     /// Error returned by linkedAppsRevokeLinkedApp.
-    public enum RevokeLinkedAppError: CustomStringConvertible {
+    public enum RevokeLinkedAppError: CustomStringConvertible, JSONRepresentable {
         /// Application not found.
         case appNotFound
         /// Member not found.
@@ -11712,11 +12416,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RevokeLinkedAppErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedAppErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedAppError: \(error)"
             }
         }
     }
@@ -11767,7 +12475,7 @@ public class Team {
     }
 
     /// The RevokeLinkedAppStatus struct
-    public class RevokeLinkedAppStatus: CustomStringConvertible {
+    public class RevokeLinkedAppStatus: CustomStringConvertible, JSONRepresentable {
         /// Result of the revoking request.
         public let success: Bool
         /// The error cause in case of a failure.
@@ -11777,11 +12485,15 @@ public class Team {
             self.errorType = errorType
         }
 
+        func json() throws -> JSON {
+            try RevokeLinkedAppStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeLinkedAppStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeLinkedAppStatus: \(error)"
             }
         }
     }
@@ -11809,18 +12521,22 @@ public class Team {
     }
 
     /// The SetCustomQuotaArg struct
-    public class SetCustomQuotaArg: CustomStringConvertible {
+    public class SetCustomQuotaArg: CustomStringConvertible, JSONRepresentable {
         /// List of users and their custom quotas.
         public let usersAndQuotas: [Team.UserCustomQuotaArg]
         public init(usersAndQuotas: [Team.UserCustomQuotaArg]) {
             self.usersAndQuotas = usersAndQuotas
         }
 
+        func json() throws -> JSON {
+            try SetCustomQuotaArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetCustomQuotaArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetCustomQuotaArg: \(error)"
             }
         }
     }
@@ -11846,7 +12562,7 @@ public class Team {
     }
 
     /// Error returned when setting member custom quota.
-    public enum SetCustomQuotaError: CustomStringConvertible {
+    public enum SetCustomQuotaError: CustomStringConvertible, JSONRepresentable {
         /// A maximum of 1000 users can be set for a single call.
         case tooManyUsers
         /// An unspecified error.
@@ -11854,11 +12570,15 @@ public class Team {
         /// Some of the users are on the excluded users list and can't have custom quota set.
         case someUsersAreExcluded
 
+        func json() throws -> JSON {
+            try SetCustomQuotaErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetCustomQuotaErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetCustomQuotaError: \(error)"
             }
         }
     }
@@ -11904,7 +12624,7 @@ public class Team {
 
     /// Structure representing Approve List entries. Domain and emails are supported. At least one entry of any
     /// supported type is required.
-    public class SharingAllowlistAddArgs: CustomStringConvertible {
+    public class SharingAllowlistAddArgs: CustomStringConvertible, JSONRepresentable {
         /// List of domains represented by valid string representation (RFC-1034/5).
         public let domains: [String]?
         /// List of emails represented by valid string representation (RFC-5322/822).
@@ -11916,11 +12636,15 @@ public class Team {
             self.emails = emails
         }
 
+        func json() throws -> JSON {
+            try SharingAllowlistAddArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistAddArgs: \(error)"
             }
         }
     }
@@ -11948,7 +12672,7 @@ public class Team {
     }
 
     /// The SharingAllowlistAddError union
-    public enum SharingAllowlistAddError: CustomStringConvertible {
+    public enum SharingAllowlistAddError: CustomStringConvertible, JSONRepresentable {
         /// One of provided values is not valid.
         case malformedEntry(String)
         /// Neither single domain nor email provided.
@@ -11964,11 +12688,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharingAllowlistAddErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistAddError: \(error)"
             }
         }
     }
@@ -12039,12 +12767,16 @@ public class Team {
     }
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistAddResponse: CustomStringConvertible {
+    public class SharingAllowlistAddResponse: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try SharingAllowlistAddResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistAddResponse: \(error)"
             }
         }
     }
@@ -12067,7 +12799,7 @@ public class Team {
     }
 
     /// The SharingAllowlistListArg struct
-    public class SharingAllowlistListArg: CustomStringConvertible {
+    public class SharingAllowlistListArg: CustomStringConvertible, JSONRepresentable {
         /// The number of entries to fetch at one time.
         public let limit: UInt32
         public init(limit: UInt32 = 1_000) {
@@ -12075,11 +12807,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try SharingAllowlistListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistListArg: \(error)"
             }
         }
     }
@@ -12105,7 +12841,7 @@ public class Team {
     }
 
     /// The SharingAllowlistListContinueArg struct
-    public class SharingAllowlistListContinueArg: CustomStringConvertible {
+    public class SharingAllowlistListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned from a previous call to sharingAllowlistList or sharingAllowlistListContinue.
         public let cursor: String
         public init(cursor: String) {
@@ -12113,11 +12849,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try SharingAllowlistListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistListContinueArg: \(error)"
             }
         }
     }
@@ -12143,17 +12883,21 @@ public class Team {
     }
 
     /// The SharingAllowlistListContinueError union
-    public enum SharingAllowlistListContinueError: CustomStringConvertible {
+    public enum SharingAllowlistListContinueError: CustomStringConvertible, JSONRepresentable {
         /// Provided cursor is not valid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharingAllowlistListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistListContinueError: \(error)"
             }
         }
     }
@@ -12192,12 +12936,16 @@ public class Team {
     }
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistListError: CustomStringConvertible {
+    public class SharingAllowlistListError: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try SharingAllowlistListErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistListError: \(error)"
             }
         }
     }
@@ -12220,7 +12968,7 @@ public class Team {
     }
 
     /// The SharingAllowlistListResponse struct
-    public class SharingAllowlistListResponse: CustomStringConvertible {
+    public class SharingAllowlistListResponse: CustomStringConvertible, JSONRepresentable {
         /// List of domains represented by valid string representation (RFC-1034/5).
         public let domains: [String]
         /// List of emails represented by valid string representation (RFC-5322/822).
@@ -12239,11 +12987,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try SharingAllowlistListResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistListResponse: \(error)"
             }
         }
     }
@@ -12275,7 +13027,7 @@ public class Team {
     }
 
     /// The SharingAllowlistRemoveArgs struct
-    public class SharingAllowlistRemoveArgs: CustomStringConvertible {
+    public class SharingAllowlistRemoveArgs: CustomStringConvertible, JSONRepresentable {
         /// List of domains represented by valid string representation (RFC-1034/5).
         public let domains: [String]?
         /// List of emails represented by valid string representation (RFC-5322/822).
@@ -12287,11 +13039,15 @@ public class Team {
             self.emails = emails
         }
 
+        func json() throws -> JSON {
+            try SharingAllowlistRemoveArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistRemoveArgs: \(error)"
             }
         }
     }
@@ -12319,7 +13075,7 @@ public class Team {
     }
 
     /// The SharingAllowlistRemoveError union
-    public enum SharingAllowlistRemoveError: CustomStringConvertible {
+    public enum SharingAllowlistRemoveError: CustomStringConvertible, JSONRepresentable {
         /// One of provided values is not valid.
         case malformedEntry(String)
         /// One or more provided values do not exist.
@@ -12333,11 +13089,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharingAllowlistRemoveErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistRemoveError: \(error)"
             }
         }
     }
@@ -12402,12 +13162,16 @@ public class Team {
     }
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistRemoveResponse: CustomStringConvertible {
+    public class SharingAllowlistRemoveResponse: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try SharingAllowlistRemoveResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingAllowlistRemoveResponse: \(error)"
             }
         }
     }
@@ -12430,7 +13194,7 @@ public class Team {
     }
 
     /// Describes the number of users in a specific storage bucket.
-    public class StorageBucket: CustomStringConvertible {
+    public class StorageBucket: CustomStringConvertible, JSONRepresentable {
         /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up to 1 Giga.
         public let bucket: String
         /// The number of people whose storage is in the range of this storage bucket.
@@ -12442,11 +13206,15 @@ public class Team {
             self.users = users
         }
 
+        func json() throws -> JSON {
+            try StorageBucketSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try StorageBucketSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for StorageBucket: \(error)"
             }
         }
     }
@@ -12474,7 +13242,7 @@ public class Team {
     }
 
     /// The TeamFolderAccessError union
-    public enum TeamFolderAccessError: CustomStringConvertible {
+    public enum TeamFolderAccessError: CustomStringConvertible, JSONRepresentable {
         /// The team folder ID is invalid.
         case invalidTeamFolderId
         /// The authenticated app does not have permission to manage that team folder.
@@ -12482,11 +13250,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderAccessErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderAccessErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderAccessError: \(error)"
             }
         }
     }
@@ -12531,7 +13303,7 @@ public class Team {
     }
 
     /// The TeamFolderActivateError union
-    public enum TeamFolderActivateError: CustomStringConvertible {
+    public enum TeamFolderActivateError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -12541,11 +13313,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderActivateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderActivateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderActivateError: \(error)"
             }
         }
     }
@@ -12599,7 +13375,7 @@ public class Team {
     }
 
     /// The TeamFolderIdArg struct
-    public class TeamFolderIdArg: CustomStringConvertible {
+    public class TeamFolderIdArg: CustomStringConvertible, JSONRepresentable {
         /// The ID of the team folder.
         public let teamFolderId: String
         public init(teamFolderId: String) {
@@ -12607,11 +13383,15 @@ public class Team {
             self.teamFolderId = teamFolderId
         }
 
+        func json() throws -> JSON {
+            try TeamFolderIdArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderIdArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderIdArg: \(error)"
             }
         }
     }
@@ -12649,7 +13429,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderArchiveArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderArchiveArg: \(error)"
             }
         }
     }
@@ -12677,7 +13457,7 @@ public class Team {
     }
 
     /// The TeamFolderArchiveError union
-    public enum TeamFolderArchiveError: CustomStringConvertible {
+    public enum TeamFolderArchiveError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -12687,11 +13467,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderArchiveErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderArchiveErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderArchiveError: \(error)"
             }
         }
     }
@@ -12745,7 +13529,7 @@ public class Team {
     }
 
     /// The TeamFolderArchiveJobStatus union
-    public enum TeamFolderArchiveJobStatus: CustomStringConvertible {
+    public enum TeamFolderArchiveJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The archive job has finished. The value is the metadata for the resulting team folder.
@@ -12753,11 +13537,15 @@ public class Team {
         /// Error occurred while performing an asynchronous job from teamFolderArchive.
         case failed(Team.TeamFolderArchiveError)
 
+        func json() throws -> JSON {
+            try TeamFolderArchiveJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderArchiveJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderArchiveJobStatus: \(error)"
             }
         }
     }
@@ -12804,18 +13592,22 @@ public class Team {
     }
 
     /// The TeamFolderArchiveLaunch union
-    public enum TeamFolderArchiveLaunch: CustomStringConvertible {
+    public enum TeamFolderArchiveLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// An unspecified error.
         case complete(Team.TeamFolderMetadata)
 
+        func json() throws -> JSON {
+            try TeamFolderArchiveLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderArchiveLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderArchiveLaunch: \(error)"
             }
         }
     }
@@ -12856,7 +13648,7 @@ public class Team {
     }
 
     /// The TeamFolderCreateArg struct
-    public class TeamFolderCreateArg: CustomStringConvertible {
+    public class TeamFolderCreateArg: CustomStringConvertible, JSONRepresentable {
         /// Name for the new team folder.
         public let name: String
         /// The sync setting to apply to this team folder. Only permitted if the team has team selective sync enabled.
@@ -12867,11 +13659,15 @@ public class Team {
             self.syncSetting = syncSetting
         }
 
+        func json() throws -> JSON {
+            try TeamFolderCreateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderCreateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderCreateArg: \(error)"
             }
         }
     }
@@ -12899,7 +13695,7 @@ public class Team {
     }
 
     /// The TeamFolderCreateError union
-    public enum TeamFolderCreateError: CustomStringConvertible {
+    public enum TeamFolderCreateError: CustomStringConvertible, JSONRepresentable {
         /// The provided name cannot be used.
         case invalidFolderName
         /// There is already a team folder with the provided name.
@@ -12911,11 +13707,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderCreateError: \(error)"
             }
         }
     }
@@ -12973,17 +13773,21 @@ public class Team {
     }
 
     /// The TeamFolderGetInfoItem union
-    public enum TeamFolderGetInfoItem: CustomStringConvertible {
+    public enum TeamFolderGetInfoItem: CustomStringConvertible, JSONRepresentable {
         /// An ID that was provided as a parameter to teamFolderGetInfo did not match any of the team's team folders.
         case idNotFound(String)
         /// Properties of a team folder.
         case teamFolderMetadata(Team.TeamFolderMetadata)
 
+        func json() throws -> JSON {
+            try TeamFolderGetInfoItemSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderGetInfoItemSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderGetInfoItem: \(error)"
             }
         }
     }
@@ -13024,7 +13828,7 @@ public class Team {
     }
 
     /// The TeamFolderIdListArg struct
-    public class TeamFolderIdListArg: CustomStringConvertible {
+    public class TeamFolderIdListArg: CustomStringConvertible, JSONRepresentable {
         /// The list of team folder IDs.
         public let teamFolderIds: [String]
         public init(teamFolderIds: [String]) {
@@ -13032,11 +13836,15 @@ public class Team {
             self.teamFolderIds = teamFolderIds
         }
 
+        func json() throws -> JSON {
+            try TeamFolderIdListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderIdListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderIdListArg: \(error)"
             }
         }
     }
@@ -13062,7 +13870,7 @@ public class Team {
     }
 
     /// The TeamFolderInvalidStatusError union
-    public enum TeamFolderInvalidStatusError: CustomStringConvertible {
+    public enum TeamFolderInvalidStatusError: CustomStringConvertible, JSONRepresentable {
         /// The folder is active and the operation did not succeed.
         case active
         /// The folder is archived and the operation did not succeed.
@@ -13072,11 +13880,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderInvalidStatusErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderInvalidStatusErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderInvalidStatusError: \(error)"
             }
         }
     }
@@ -13127,7 +13939,7 @@ public class Team {
     }
 
     /// The TeamFolderListArg struct
-    public class TeamFolderListArg: CustomStringConvertible {
+    public class TeamFolderListArg: CustomStringConvertible, JSONRepresentable {
         /// The maximum number of results to return per request.
         public let limit: UInt32
         public init(limit: UInt32 = 1_000) {
@@ -13135,11 +13947,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try TeamFolderListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderListArg: \(error)"
             }
         }
     }
@@ -13165,7 +13981,7 @@ public class Team {
     }
 
     /// The TeamFolderListContinueArg struct
-    public class TeamFolderListContinueArg: CustomStringConvertible {
+    public class TeamFolderListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of team folders.
         public let cursor: String
         public init(cursor: String) {
@@ -13173,11 +13989,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try TeamFolderListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderListContinueArg: \(error)"
             }
         }
     }
@@ -13203,17 +14023,21 @@ public class Team {
     }
 
     /// The TeamFolderListContinueError union
-    public enum TeamFolderListContinueError: CustomStringConvertible {
+    public enum TeamFolderListContinueError: CustomStringConvertible, JSONRepresentable {
         /// The cursor is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderListContinueError: \(error)"
             }
         }
     }
@@ -13252,18 +14076,22 @@ public class Team {
     }
 
     /// The TeamFolderListError struct
-    public class TeamFolderListError: CustomStringConvertible {
+    public class TeamFolderListError: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let accessError: Team.TeamFolderAccessError
         public init(accessError: Team.TeamFolderAccessError) {
             self.accessError = accessError
         }
 
+        func json() throws -> JSON {
+            try TeamFolderListErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderListErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderListError: \(error)"
             }
         }
     }
@@ -13289,7 +14117,7 @@ public class Team {
     }
 
     /// Result for teamFolderList and teamFolderListContinue.
-    public class TeamFolderListResult: CustomStringConvertible {
+    public class TeamFolderListResult: CustomStringConvertible, JSONRepresentable {
         /// List of all team folders in the authenticated team.
         public let teamFolders: [Team.TeamFolderMetadata]
         /// Pass the cursor into teamFolderListContinue to obtain additional team folders.
@@ -13304,11 +14132,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try TeamFolderListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderListResult: \(error)"
             }
         }
     }
@@ -13338,7 +14170,7 @@ public class Team {
     }
 
     /// Properties of a team folder.
-    public class TeamFolderMetadata: CustomStringConvertible {
+    public class TeamFolderMetadata: CustomStringConvertible, JSONRepresentable {
         /// The ID of the team folder.
         public let teamFolderId: String
         /// The name of the team folder.
@@ -13369,11 +14201,15 @@ public class Team {
             self.contentSyncSettings = contentSyncSettings
         }
 
+        func json() throws -> JSON {
+            try TeamFolderMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderMetadata: \(error)"
             }
         }
     }
@@ -13416,7 +14252,7 @@ public class Team {
     }
 
     /// The TeamFolderPermanentlyDeleteError union
-    public enum TeamFolderPermanentlyDeleteError: CustomStringConvertible {
+    public enum TeamFolderPermanentlyDeleteError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -13426,11 +14262,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderPermanentlyDeleteErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderPermanentlyDeleteErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderPermanentlyDeleteError: \(error)"
             }
         }
     }
@@ -13497,7 +14337,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderRenameArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderRenameArg: \(error)"
             }
         }
     }
@@ -13525,7 +14365,7 @@ public class Team {
     }
 
     /// The TeamFolderRenameError union
-    public enum TeamFolderRenameError: CustomStringConvertible {
+    public enum TeamFolderRenameError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -13541,11 +14381,15 @@ public class Team {
         /// The provided name cannot be used because it is reserved.
         case folderNameReserved
 
+        func json() throws -> JSON {
+            try TeamFolderRenameErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderRenameErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderRenameError: \(error)"
             }
         }
     }
@@ -13617,7 +14461,7 @@ public class Team {
     }
 
     /// The TeamFolderStatus union
-    public enum TeamFolderStatus: CustomStringConvertible {
+    public enum TeamFolderStatus: CustomStringConvertible, JSONRepresentable {
         /// The team folder and sub-folders are available to all members.
         case active
         /// The team folder is not accessible outside of the team folder manager.
@@ -13627,11 +14471,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderStatus: \(error)"
             }
         }
     }
@@ -13682,17 +14530,21 @@ public class Team {
     }
 
     /// The TeamFolderTeamSharedDropboxError union
-    public enum TeamFolderTeamSharedDropboxError: CustomStringConvertible {
+    public enum TeamFolderTeamSharedDropboxError: CustomStringConvertible, JSONRepresentable {
         /// This action is not allowed for a shared team root.
         case disallowed
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamFolderTeamSharedDropboxErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderTeamSharedDropboxErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderTeamSharedDropboxError: \(error)"
             }
         }
     }
@@ -13747,7 +14599,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderUpdateSyncSettingsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderUpdateSyncSettingsArg: \(error)"
             }
         }
     }
@@ -13778,7 +14630,7 @@ public class Team {
     }
 
     /// The TeamFolderUpdateSyncSettingsError union
-    public enum TeamFolderUpdateSyncSettingsError: CustomStringConvertible {
+    public enum TeamFolderUpdateSyncSettingsError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Team.TeamFolderAccessError)
         /// An unspecified error.
@@ -13790,11 +14642,15 @@ public class Team {
         /// An error occurred setting the sync settings.
         case syncSettingsError(Files.SyncSettingsError)
 
+        func json() throws -> JSON {
+            try TeamFolderUpdateSyncSettingsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamFolderUpdateSyncSettingsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamFolderUpdateSyncSettingsError: \(error)"
             }
         }
     }
@@ -13855,7 +14711,7 @@ public class Team {
     }
 
     /// The TeamGetInfoResult struct
-    public class TeamGetInfoResult: CustomStringConvertible {
+    public class TeamGetInfoResult: CustomStringConvertible, JSONRepresentable {
         /// The name of the team.
         public let name: String
         /// The ID of the team.
@@ -13889,11 +14745,15 @@ public class Team {
             self.policies = policies
         }
 
+        func json() throws -> JSON {
+            try TeamGetInfoResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamGetInfoResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamGetInfoResult: \(error)"
             }
         }
     }
@@ -13936,7 +14796,7 @@ public class Team {
     }
 
     /// Information about a team member.
-    public class TeamMemberInfo: CustomStringConvertible {
+    public class TeamMemberInfo: CustomStringConvertible, JSONRepresentable {
         /// Profile of a user as a member of a team.
         public let profile: Team.TeamMemberProfile
         /// The user's role in the team.
@@ -13946,11 +14806,15 @@ public class Team {
             self.role = role
         }
 
+        func json() throws -> JSON {
+            try TeamMemberInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberInfo: \(error)"
             }
         }
     }
@@ -13978,7 +14842,7 @@ public class Team {
     }
 
     /// Information about a team member.
-    public class TeamMemberInfoV2: CustomStringConvertible {
+    public class TeamMemberInfoV2: CustomStringConvertible, JSONRepresentable {
         /// Profile of a user as a member of a team.
         public let profile: Team.TeamMemberProfile
         /// The user's roles in the team.
@@ -13988,11 +14852,15 @@ public class Team {
             self.roles = roles
         }
 
+        func json() throws -> JSON {
+            try TeamMemberInfoV2Serializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberInfoV2Serializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberInfoV2: \(error)"
             }
         }
     }
@@ -14020,18 +14888,22 @@ public class Team {
     }
 
     /// Information about a team member, after the change, like at membersSetProfileV2.
-    public class TeamMemberInfoV2Result: CustomStringConvertible {
+    public class TeamMemberInfoV2Result: CustomStringConvertible, JSONRepresentable {
         /// Member info, after the change.
         public let memberInfo: Team.TeamMemberInfoV2
         public init(memberInfo: Team.TeamMemberInfoV2) {
             self.memberInfo = memberInfo
         }
 
+        func json() throws -> JSON {
+            try TeamMemberInfoV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberInfoV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberInfoV2Result: \(error)"
             }
         }
     }
@@ -14108,7 +14980,7 @@ public class Team {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberProfileSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberProfile: \(error)"
             }
         }
     }
@@ -14186,7 +15058,7 @@ public class Team {
 
     /// A role which can be attached to a team member. This replaces AdminTier; each AdminTier corresponds to a new
     /// TeamMemberRole with a matching name.
-    public class TeamMemberRole: CustomStringConvertible {
+    public class TeamMemberRole: CustomStringConvertible, JSONRepresentable {
         /// A string containing encoded role ID. For roles defined by Dropbox, this is the same across all teams.
         public let roleId: String
         /// The role display name.
@@ -14202,11 +15074,15 @@ public class Team {
             self.description_ = description_
         }
 
+        func json() throws -> JSON {
+            try TeamMemberRoleSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberRoleSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberRole: \(error)"
             }
         }
     }
@@ -14236,7 +15112,7 @@ public class Team {
     }
 
     /// The user's status as a member of a specific team.
-    public enum TeamMemberStatus: CustomStringConvertible {
+    public enum TeamMemberStatus: CustomStringConvertible, JSONRepresentable {
         /// User has successfully joined the team.
         case active
         /// User has been invited to a team, but has not joined the team yet.
@@ -14248,11 +15124,15 @@ public class Team {
         /// members/list.
         case removed(Team.RemovedStatus)
 
+        func json() throws -> JSON {
+            try TeamMemberStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberStatus: \(error)"
             }
         }
     }
@@ -14304,17 +15184,21 @@ public class Team {
     }
 
     /// The TeamMembershipType union
-    public enum TeamMembershipType: CustomStringConvertible {
+    public enum TeamMembershipType: CustomStringConvertible, JSONRepresentable {
         /// User uses a license and has full access to team resources like the shared quota.
         case full
         /// User does not have access to the shared quota and team admins have restricted administrative control.
         case limited
 
+        func json() throws -> JSON {
+            try TeamMembershipTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMembershipTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMembershipType: \(error)"
             }
         }
     }
@@ -14353,7 +15237,7 @@ public class Team {
     }
 
     /// The TeamNamespacesListArg struct
-    public class TeamNamespacesListArg: CustomStringConvertible {
+    public class TeamNamespacesListArg: CustomStringConvertible, JSONRepresentable {
         /// Specifying a value here has no effect.
         public let limit: UInt32
         public init(limit: UInt32 = 1_000) {
@@ -14361,11 +15245,15 @@ public class Team {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try TeamNamespacesListArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamNamespacesListArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamNamespacesListArg: \(error)"
             }
         }
     }
@@ -14391,7 +15279,7 @@ public class Team {
     }
 
     /// The TeamNamespacesListContinueArg struct
-    public class TeamNamespacesListContinueArg: CustomStringConvertible {
+    public class TeamNamespacesListContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Indicates from what point to get the next set of team-accessible namespaces.
         public let cursor: String
         public init(cursor: String) {
@@ -14399,11 +15287,15 @@ public class Team {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try TeamNamespacesListContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamNamespacesListContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamNamespacesListContinueArg: \(error)"
             }
         }
     }
@@ -14429,17 +15321,21 @@ public class Team {
     }
 
     /// The TeamNamespacesListError union
-    public enum TeamNamespacesListError: CustomStringConvertible {
+    public enum TeamNamespacesListError: CustomStringConvertible, JSONRepresentable {
         /// Argument passed in is invalid.
         case invalidArg
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamNamespacesListErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamNamespacesListErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamNamespacesListError: \(error)"
             }
         }
     }
@@ -14478,7 +15374,7 @@ public class Team {
     }
 
     /// The TeamNamespacesListContinueError union
-    public enum TeamNamespacesListContinueError: CustomStringConvertible {
+    public enum TeamNamespacesListContinueError: CustomStringConvertible, JSONRepresentable {
         /// Argument passed in is invalid.
         case invalidArg
         /// An unspecified error.
@@ -14486,11 +15382,15 @@ public class Team {
         /// The cursor is invalid.
         case invalidCursor
 
+        func json() throws -> JSON {
+            try TeamNamespacesListContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamNamespacesListContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamNamespacesListContinueError: \(error)"
             }
         }
     }
@@ -14535,7 +15435,7 @@ public class Team {
     }
 
     /// Result for namespacesList.
-    public class TeamNamespacesListResult: CustomStringConvertible {
+    public class TeamNamespacesListResult: CustomStringConvertible, JSONRepresentable {
         /// List of all namespaces the team can access.
         public let namespaces: [Team.NamespaceMetadata]
         /// Pass the cursor into namespacesListContinue to obtain additional namespaces. Note that duplicate namespaces
@@ -14550,11 +15450,15 @@ public class Team {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try TeamNamespacesListResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamNamespacesListResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamNamespacesListResult: \(error)"
             }
         }
     }
@@ -14584,7 +15488,7 @@ public class Team {
     }
 
     /// The TeamReportFailureReason union
-    public enum TeamReportFailureReason: CustomStringConvertible {
+    public enum TeamReportFailureReason: CustomStringConvertible, JSONRepresentable {
         /// We couldn't create the report, but we think this was a fluke. Everything should work if you try it again.
         case temporaryError
         /// Too many other reports are being created right now. Try creating this report again once the others finish.
@@ -14594,11 +15498,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TeamReportFailureReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamReportFailureReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamReportFailureReason: \(error)"
             }
         }
     }
@@ -14649,7 +15557,7 @@ public class Team {
     }
 
     /// Error returned by tokenGetAuthenticatedAdmin.
-    public enum TokenGetAuthenticatedAdminError: CustomStringConvertible {
+    public enum TokenGetAuthenticatedAdminError: CustomStringConvertible, JSONRepresentable {
         /// The current token is not associated with a team admin, because mappings were not recorded when the token was
         /// created. Consider re-authorizing a new access token to record its authenticating admin.
         case mappingNotFound
@@ -14659,11 +15567,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TokenGetAuthenticatedAdminErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenGetAuthenticatedAdminErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenGetAuthenticatedAdminError: \(error)"
             }
         }
     }
@@ -14708,18 +15620,22 @@ public class Team {
     }
 
     /// Results for tokenGetAuthenticatedAdmin.
-    public class TokenGetAuthenticatedAdminResult: CustomStringConvertible {
+    public class TokenGetAuthenticatedAdminResult: CustomStringConvertible, JSONRepresentable {
         /// The admin who authorized the token.
         public let adminProfile: Team.TeamMemberProfile
         public init(adminProfile: Team.TeamMemberProfile) {
             self.adminProfile = adminProfile
         }
 
+        func json() throws -> JSON {
+            try TokenGetAuthenticatedAdminResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TokenGetAuthenticatedAdminResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TokenGetAuthenticatedAdminResult: \(error)"
             }
         }
     }
@@ -14745,7 +15661,7 @@ public class Team {
     }
 
     /// The value for uploadApiRateLimit in Feature.
-    public enum UploadApiRateLimitValue: CustomStringConvertible {
+    public enum UploadApiRateLimitValue: CustomStringConvertible, JSONRepresentable {
         /// This team has unlimited upload API quota. So far both server version account and legacy  account type have
         /// unlimited monthly upload api quota.
         case unlimited
@@ -14754,11 +15670,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UploadApiRateLimitValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UploadApiRateLimitValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UploadApiRateLimitValue: \(error)"
             }
         }
     }
@@ -14806,7 +15726,7 @@ public class Team {
     /// Result of trying to add secondary emails to a user. 'success' is the only value indicating that a user was
     /// successfully retrieved for adding secondary emails. The other values explain the type of error that
     /// occurred, and include the user for which the error occurred.
-    public enum UserAddResult: CustomStringConvertible {
+    public enum UserAddResult: CustomStringConvertible, JSONRepresentable {
         /// Describes a user and the results for each attempt to add a secondary email.
         case success(Team.UserSecondaryEmailsResult)
         /// Specified user is not a valid target for adding secondary emails.
@@ -14818,11 +15738,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserAddResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserAddResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserAddResult: \(error)"
             }
         }
     }
@@ -14883,7 +15807,7 @@ public class Team {
     }
 
     /// User and their required custom quota in GB (1 TB = 1024 GB).
-    public class UserCustomQuotaArg: CustomStringConvertible {
+    public class UserCustomQuotaArg: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -14894,11 +15818,15 @@ public class Team {
             self.quotaGb = quotaGb
         }
 
+        func json() throws -> JSON {
+            try UserCustomQuotaArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserCustomQuotaArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserCustomQuotaArg: \(error)"
             }
         }
     }
@@ -14926,7 +15854,7 @@ public class Team {
     }
 
     /// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom quota set.
-    public class UserCustomQuotaResult: CustomStringConvertible {
+    public class UserCustomQuotaResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -14937,11 +15865,15 @@ public class Team {
             self.quotaGb = quotaGb
         }
 
+        func json() throws -> JSON {
+            try UserCustomQuotaResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserCustomQuotaResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserCustomQuotaResult: \(error)"
             }
         }
     }
@@ -14969,7 +15901,7 @@ public class Team {
     }
 
     /// The UserDeleteEmailsResult struct
-    public class UserDeleteEmailsResult: CustomStringConvertible {
+    public class UserDeleteEmailsResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -14979,11 +15911,15 @@ public class Team {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try UserDeleteEmailsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserDeleteEmailsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserDeleteEmailsResult: \(error)"
             }
         }
     }
@@ -15013,7 +15949,7 @@ public class Team {
     /// Result of trying to delete a user's secondary emails. 'success' is the only value indicating that a user was
     /// successfully retrieved for deleting secondary emails. The other values explain the type of error that
     /// occurred, and include the user for which the error occurred.
-    public enum UserDeleteResult: CustomStringConvertible {
+    public enum UserDeleteResult: CustomStringConvertible, JSONRepresentable {
         /// Describes a user and the results for each attempt to delete a secondary email.
         case success(Team.UserDeleteEmailsResult)
         /// Specified user is not a valid target for deleting secondary emails.
@@ -15021,11 +15957,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserDeleteResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserDeleteResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserDeleteResult: \(error)"
             }
         }
     }
@@ -15072,7 +16012,7 @@ public class Team {
     }
 
     /// The UserResendEmailsResult struct
-    public class UserResendEmailsResult: CustomStringConvertible {
+    public class UserResendEmailsResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -15082,11 +16022,15 @@ public class Team {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try UserResendEmailsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserResendEmailsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserResendEmailsResult: \(error)"
             }
         }
     }
@@ -15116,7 +16060,7 @@ public class Team {
     /// Result of trying to resend verification emails to a user. 'success' is the only value indicating that a user was
     /// successfully retrieved for sending verification emails. The other values explain the type of error that
     /// occurred, and include the user for which the error occurred.
-    public enum UserResendResult: CustomStringConvertible {
+    public enum UserResendResult: CustomStringConvertible, JSONRepresentable {
         /// Describes a user and the results for each attempt to resend verification emails.
         case success(Team.UserResendEmailsResult)
         /// Specified user is not a valid target for resending verification emails.
@@ -15124,11 +16068,15 @@ public class Team {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserResendResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserResendResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserResendResult: \(error)"
             }
         }
     }
@@ -15175,7 +16123,7 @@ public class Team {
     }
 
     /// User and a list of secondary emails.
-    public class UserSecondaryEmailsArg: CustomStringConvertible {
+    public class UserSecondaryEmailsArg: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -15189,11 +16137,15 @@ public class Team {
             self.secondaryEmails = secondaryEmails
         }
 
+        func json() throws -> JSON {
+            try UserSecondaryEmailsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserSecondaryEmailsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserSecondaryEmailsArg: \(error)"
             }
         }
     }
@@ -15221,7 +16173,7 @@ public class Team {
     }
 
     /// The UserSecondaryEmailsResult struct
-    public class UserSecondaryEmailsResult: CustomStringConvertible {
+    public class UserSecondaryEmailsResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let user: Team.UserSelectorArg
         /// (no description)
@@ -15231,11 +16183,15 @@ public class Team {
             self.results = results
         }
 
+        func json() throws -> JSON {
+            try UserSecondaryEmailsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserSecondaryEmailsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserSecondaryEmailsResult: \(error)"
             }
         }
     }
@@ -15263,7 +16219,7 @@ public class Team {
     }
 
     /// Argument for selecting a single user, either by team_member_id, external_id or email.
-    public enum UserSelectorArg: CustomStringConvertible {
+    public enum UserSelectorArg: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case teamMemberId(String)
         /// An unspecified error.
@@ -15271,11 +16227,15 @@ public class Team {
         /// An unspecified error.
         case email(String)
 
+        func json() throws -> JSON {
+            try UserSelectorArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserSelectorArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserSelectorArg: \(error)"
             }
         }
     }
@@ -15323,7 +16283,7 @@ public class Team {
     }
 
     /// Argument for selecting a list of users, either by team_member_ids, external_ids or emails.
-    public enum UsersSelectorArg: CustomStringConvertible {
+    public enum UsersSelectorArg: CustomStringConvertible, JSONRepresentable {
         /// List of member IDs.
         case teamMemberIds([String])
         /// List of external user IDs.
@@ -15331,11 +16291,15 @@ public class Team {
         /// List of email addresses.
         case emails([String])
 
+        func json() throws -> JSON {
+            try UsersSelectorArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UsersSelectorArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UsersSelectorArg: \(error)"
             }
         }
     }

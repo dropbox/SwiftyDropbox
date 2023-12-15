@@ -9,17 +9,21 @@ import Foundation
 /// Datatypes and serializers for the file_requests namespace
 public class FileRequests {
     /// There is an error accessing the file requests functionality.
-    public enum GeneralFileRequestsError: CustomStringConvertible {
+    public enum GeneralFileRequestsError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GeneralFileRequestsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GeneralFileRequestsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GeneralFileRequestsError: \(error)"
             }
         }
     }
@@ -58,17 +62,21 @@ public class FileRequests {
     }
 
     /// There was an error counting the file requests.
-    public enum CountFileRequestsError: CustomStringConvertible {
+    public enum CountFileRequestsError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CountFileRequestsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CountFileRequestsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CountFileRequestsError: \(error)"
             }
         }
     }
@@ -107,7 +115,7 @@ public class FileRequests {
     }
 
     /// Result for count.
-    public class CountFileRequestsResult: CustomStringConvertible {
+    public class CountFileRequestsResult: CustomStringConvertible, JSONRepresentable {
         /// The number file requests owner by this user.
         public let fileRequestCount: UInt64
         public init(fileRequestCount: UInt64) {
@@ -115,11 +123,15 @@ public class FileRequests {
             self.fileRequestCount = fileRequestCount
         }
 
+        func json() throws -> JSON {
+            try CountFileRequestsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CountFileRequestsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CountFileRequestsResult: \(error)"
             }
         }
     }
@@ -145,7 +157,7 @@ public class FileRequests {
     }
 
     /// Arguments for create.
-    public class CreateFileRequestArgs: CustomStringConvertible {
+    public class CreateFileRequestArgs: CustomStringConvertible, JSONRepresentable {
         /// The title of the file request. Must not be empty.
         public let title: String
         /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the app folder
@@ -169,11 +181,15 @@ public class FileRequests {
             self.description_ = description_
         }
 
+        func json() throws -> JSON {
+            try CreateFileRequestArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFileRequestArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFileRequestArgs: \(error)"
             }
         }
     }
@@ -207,7 +223,7 @@ public class FileRequests {
     }
 
     /// There is an error with the file request.
-    public enum FileRequestError: CustomStringConvertible {
+    public enum FileRequestError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -228,11 +244,15 @@ public class FileRequests {
         /// characters in the destination path.
         case validationError
 
+        func json() throws -> JSON {
+            try FileRequestErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileRequestError: \(error)"
             }
         }
     }
@@ -307,7 +327,7 @@ public class FileRequests {
     }
 
     /// There was an error creating the file request.
-    public enum CreateFileRequestError: CustomStringConvertible {
+    public enum CreateFileRequestError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -333,11 +353,15 @@ public class FileRequests {
         /// total.
         case rateLimit
 
+        func json() throws -> JSON {
+            try CreateFileRequestErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateFileRequestErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateFileRequestError: \(error)"
             }
         }
     }
@@ -424,7 +448,7 @@ public class FileRequests {
     }
 
     /// There was an error deleting all closed file requests.
-    public enum DeleteAllClosedFileRequestsError: CustomStringConvertible {
+    public enum DeleteAllClosedFileRequestsError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -445,11 +469,15 @@ public class FileRequests {
         /// characters in the destination path.
         case validationError
 
+        func json() throws -> JSON {
+            try DeleteAllClosedFileRequestsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteAllClosedFileRequestsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteAllClosedFileRequestsError: \(error)"
             }
         }
     }
@@ -524,18 +552,22 @@ public class FileRequests {
     }
 
     /// Result for deleteAllClosed.
-    public class DeleteAllClosedFileRequestsResult: CustomStringConvertible {
+    public class DeleteAllClosedFileRequestsResult: CustomStringConvertible, JSONRepresentable {
         /// The file requests deleted for this user.
         public let fileRequests: [FileRequests.FileRequest]
         public init(fileRequests: [FileRequests.FileRequest]) {
             self.fileRequests = fileRequests
         }
 
+        func json() throws -> JSON {
+            try DeleteAllClosedFileRequestsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteAllClosedFileRequestsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteAllClosedFileRequestsResult: \(error)"
             }
         }
     }
@@ -561,7 +593,7 @@ public class FileRequests {
     }
 
     /// Arguments for delete.
-    public class DeleteFileRequestArgs: CustomStringConvertible {
+    public class DeleteFileRequestArgs: CustomStringConvertible, JSONRepresentable {
         /// List IDs of the file requests to delete.
         public let ids: [String]
         public init(ids: [String]) {
@@ -569,11 +601,15 @@ public class FileRequests {
             self.ids = ids
         }
 
+        func json() throws -> JSON {
+            try DeleteFileRequestArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteFileRequestArgs: \(error)"
             }
         }
     }
@@ -599,7 +635,7 @@ public class FileRequests {
     }
 
     /// There was an error deleting these file requests.
-    public enum DeleteFileRequestError: CustomStringConvertible {
+    public enum DeleteFileRequestError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -622,11 +658,15 @@ public class FileRequests {
         /// One or more file requests currently open.
         case fileRequestOpen
 
+        func json() throws -> JSON {
+            try DeleteFileRequestErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteFileRequestError: \(error)"
             }
         }
     }
@@ -707,18 +747,22 @@ public class FileRequests {
     }
 
     /// Result for delete.
-    public class DeleteFileRequestsResult: CustomStringConvertible {
+    public class DeleteFileRequestsResult: CustomStringConvertible, JSONRepresentable {
         /// The file requests deleted by the request.
         public let fileRequests: [FileRequests.FileRequest]
         public init(fileRequests: [FileRequests.FileRequest]) {
             self.fileRequests = fileRequests
         }
 
+        func json() throws -> JSON {
+            try DeleteFileRequestsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeleteFileRequestsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DeleteFileRequestsResult: \(error)"
             }
         }
     }
@@ -744,7 +788,7 @@ public class FileRequests {
     }
 
     /// A file request https://www.dropbox.com/help/9090 for receiving files into the user's Dropbox account.
-    public class FileRequest: CustomStringConvertible {
+    public class FileRequest: CustomStringConvertible, JSONRepresentable {
         /// The ID of the file request.
         public let id: String
         /// The URL of the file request.
@@ -793,11 +837,15 @@ public class FileRequests {
             self.description_ = description_
         }
 
+        func json() throws -> JSON {
+            try FileRequestSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileRequest: \(error)"
             }
         }
     }
@@ -849,7 +897,7 @@ public class FileRequests {
     }
 
     /// The FileRequestDeadline struct
-    public class FileRequestDeadline: CustomStringConvertible {
+    public class FileRequestDeadline: CustomStringConvertible, JSONRepresentable {
         /// The deadline for this file request.
         public let deadline: Date
         /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
@@ -859,11 +907,15 @@ public class FileRequests {
             self.allowLateUploads = allowLateUploads
         }
 
+        func json() throws -> JSON {
+            try FileRequestDeadlineSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileRequestDeadlineSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileRequestDeadline: \(error)"
             }
         }
     }
@@ -891,7 +943,7 @@ public class FileRequests {
     }
 
     /// Arguments for get.
-    public class GetFileRequestArgs: CustomStringConvertible {
+    public class GetFileRequestArgs: CustomStringConvertible, JSONRepresentable {
         /// The ID of the file request to retrieve.
         public let id: String
         public init(id: String) {
@@ -899,11 +951,15 @@ public class FileRequests {
             self.id = id
         }
 
+        func json() throws -> JSON {
+            try GetFileRequestArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileRequestArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileRequestArgs: \(error)"
             }
         }
     }
@@ -929,7 +985,7 @@ public class FileRequests {
     }
 
     /// There was an error retrieving the specified file request.
-    public enum GetFileRequestError: CustomStringConvertible {
+    public enum GetFileRequestError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -950,11 +1006,15 @@ public class FileRequests {
         /// characters in the destination path.
         case validationError
 
+        func json() throws -> JSON {
+            try GetFileRequestErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileRequestErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileRequestError: \(error)"
             }
         }
     }
@@ -1029,7 +1089,7 @@ public class FileRequests {
     }
 
     /// The GracePeriod union
-    public enum GracePeriod: CustomStringConvertible {
+    public enum GracePeriod: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case oneDay
         /// An unspecified error.
@@ -1043,11 +1103,15 @@ public class FileRequests {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GracePeriodSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GracePeriodSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GracePeriod: \(error)"
             }
         }
     }
@@ -1110,7 +1174,7 @@ public class FileRequests {
     }
 
     /// Arguments for listV2.
-    public class ListFileRequestsArg: CustomStringConvertible {
+    public class ListFileRequestsArg: CustomStringConvertible, JSONRepresentable {
         /// The maximum number of file requests that should be returned per request.
         public let limit: UInt64
         public init(limit: UInt64 = 1_000) {
@@ -1118,11 +1182,15 @@ public class FileRequests {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListFileRequestsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsArg: \(error)"
             }
         }
     }
@@ -1148,7 +1216,7 @@ public class FileRequests {
     }
 
     /// The ListFileRequestsContinueArg struct
-    public class ListFileRequestsContinueArg: CustomStringConvertible {
+    public class ListFileRequestsContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by the previous API call specified in the endpoint description.
         public let cursor: String
         public init(cursor: String) {
@@ -1156,11 +1224,15 @@ public class FileRequests {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFileRequestsContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsContinueArg: \(error)"
             }
         }
     }
@@ -1186,7 +1258,7 @@ public class FileRequests {
     }
 
     /// There was an error retrieving the file requests.
-    public enum ListFileRequestsContinueError: CustomStringConvertible {
+    public enum ListFileRequestsContinueError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -1194,11 +1266,15 @@ public class FileRequests {
         /// The cursor is invalid.
         case invalidCursor
 
+        func json() throws -> JSON {
+            try ListFileRequestsContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsContinueError: \(error)"
             }
         }
     }
@@ -1243,17 +1319,21 @@ public class FileRequests {
     }
 
     /// There was an error retrieving the file requests.
-    public enum ListFileRequestsError: CustomStringConvertible {
+    public enum ListFileRequestsError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFileRequestsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsError: \(error)"
             }
         }
     }
@@ -1292,7 +1372,7 @@ public class FileRequests {
     }
 
     /// Result for list_.
-    public class ListFileRequestsResult: CustomStringConvertible {
+    public class ListFileRequestsResult: CustomStringConvertible, JSONRepresentable {
         /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
         /// their app folder.
         public let fileRequests: [FileRequests.FileRequest]
@@ -1300,11 +1380,15 @@ public class FileRequests {
             self.fileRequests = fileRequests
         }
 
+        func json() throws -> JSON {
+            try ListFileRequestsResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsResult: \(error)"
             }
         }
     }
@@ -1330,7 +1414,7 @@ public class FileRequests {
     }
 
     /// Result for listV2 and listContinue.
-    public class ListFileRequestsV2Result: CustomStringConvertible {
+    public class ListFileRequestsV2Result: CustomStringConvertible, JSONRepresentable {
         /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
         /// their app folder.
         public let fileRequests: [FileRequests.FileRequest]
@@ -1346,11 +1430,15 @@ public class FileRequests {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ListFileRequestsV2ResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileRequestsV2ResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileRequestsV2Result: \(error)"
             }
         }
     }
@@ -1380,7 +1468,7 @@ public class FileRequests {
     }
 
     /// Arguments for update.
-    public class UpdateFileRequestArgs: CustomStringConvertible {
+    public class UpdateFileRequestArgs: CustomStringConvertible, JSONRepresentable {
         /// The ID of the file request to update.
         public let id: String
         /// The new title of the file request. Must not be empty.
@@ -1414,11 +1502,15 @@ public class FileRequests {
             self.description_ = description_
         }
 
+        func json() throws -> JSON {
+            try UpdateFileRequestArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFileRequestArgs: \(error)"
             }
         }
     }
@@ -1455,7 +1547,7 @@ public class FileRequests {
     }
 
     /// The UpdateFileRequestDeadline union
-    public enum UpdateFileRequestDeadline: CustomStringConvertible {
+    public enum UpdateFileRequestDeadline: CustomStringConvertible, JSONRepresentable {
         /// Do not change the file request's deadline.
         case noUpdate
         /// If null, the file request's deadline is cleared.
@@ -1463,11 +1555,15 @@ public class FileRequests {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UpdateFileRequestDeadlineSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestDeadlineSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFileRequestDeadline: \(error)"
             }
         }
     }
@@ -1513,7 +1609,7 @@ public class FileRequests {
     }
 
     /// There is an error updating the file request.
-    public enum UpdateFileRequestError: CustomStringConvertible {
+    public enum UpdateFileRequestError: CustomStringConvertible, JSONRepresentable {
         /// This user's Dropbox Business team doesn't allow file requests.
         case disabledForTeam
         /// An unspecified error.
@@ -1534,11 +1630,15 @@ public class FileRequests {
         /// characters in the destination path.
         case validationError
 
+        func json() throws -> JSON {
+            try UpdateFileRequestErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileRequestErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFileRequestError: \(error)"
             }
         }
     }

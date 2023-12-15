@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the users_common namespace
 public class UsersCommon {
     /// What type of account this user has.
-    public enum AccountType: CustomStringConvertible {
+    public enum AccountType: CustomStringConvertible, JSONRepresentable {
         /// The basic account type.
         case basic
         /// The Dropbox Pro account type.
@@ -17,11 +17,15 @@ public class UsersCommon {
         /// The Dropbox Business account type.
         case business
 
+        func json() throws -> JSON {
+            try AccountTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AccountTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AccountType: \(error)"
             }
         }
     }

@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the paper namespace
 public class Paper {
     /// The AddMember struct
-    public class AddMember: CustomStringConvertible {
+    public class AddMember: CustomStringConvertible, JSONRepresentable {
         /// Permission for the user.
         public let permissionLevel: Paper.PaperDocPermissionLevel
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
@@ -19,11 +19,15 @@ public class Paper {
             self.member = member
         }
 
+        func json() throws -> JSON {
+            try AddMemberSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddMemberSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddMember: \(error)"
             }
         }
     }
@@ -52,7 +56,7 @@ public class Paper {
     }
 
     /// The RefPaperDoc struct
-    public class RefPaperDoc: CustomStringConvertible {
+    public class RefPaperDoc: CustomStringConvertible, JSONRepresentable {
         /// The Paper doc ID.
         public let docId: String
         public init(docId: String) {
@@ -60,11 +64,15 @@ public class Paper {
             self.docId = docId
         }
 
+        func json() throws -> JSON {
+            try RefPaperDocSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RefPaperDocSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RefPaperDoc: \(error)"
             }
         }
     }
@@ -109,7 +117,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddPaperDocUser: \(error)"
             }
         }
     }
@@ -141,7 +149,7 @@ public class Paper {
     }
 
     /// Per-member result for docsUsersAdd.
-    public class AddPaperDocUserMemberResult: CustomStringConvertible {
+    public class AddPaperDocUserMemberResult: CustomStringConvertible, JSONRepresentable {
         /// One of specified input members.
         public let member: Sharing.MemberSelector
         /// The outcome of the action on this member.
@@ -151,11 +159,15 @@ public class Paper {
             self.result = result
         }
 
+        func json() throws -> JSON {
+            try AddPaperDocUserMemberResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserMemberResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddPaperDocUserMemberResult: \(error)"
             }
         }
     }
@@ -183,7 +195,7 @@ public class Paper {
     }
 
     /// The AddPaperDocUserResult union
-    public enum AddPaperDocUserResult: CustomStringConvertible {
+    public enum AddPaperDocUserResult: CustomStringConvertible, JSONRepresentable {
         /// User was successfully added to the Paper doc.
         case success
         /// Something unexpected happened when trying to add the user to the Paper doc.
@@ -201,11 +213,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddPaperDocUserResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddPaperDocUserResult: \(error)"
             }
         }
     }
@@ -280,7 +296,7 @@ public class Paper {
     }
 
     /// The Cursor struct
-    public class Cursor: CustomStringConvertible {
+    public class Cursor: CustomStringConvertible, JSONRepresentable {
         /// The actual cursor value.
         public let value: String
         /// Expiration time of value. Some cursors might have expiration time assigned. This is a UTC value after which
@@ -299,11 +315,15 @@ public class Paper {
             self.expiration = expiration
         }
 
+        func json() throws -> JSON {
+            try CursorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CursorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Cursor: \(error)"
             }
         }
     }
@@ -331,7 +351,7 @@ public class Paper {
     }
 
     /// The PaperApiBaseError union
-    public enum PaperApiBaseError: CustomStringConvertible {
+    public enum PaperApiBaseError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -339,11 +359,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperApiBaseErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperApiBaseErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperApiBaseError: \(error)"
             }
         }
     }
@@ -382,7 +406,7 @@ public class Paper {
     }
 
     /// The DocLookupError union
-    public enum DocLookupError: CustomStringConvertible {
+    public enum DocLookupError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -392,11 +416,15 @@ public class Paper {
         /// The required doc was not found.
         case docNotFound
 
+        func json() throws -> JSON {
+            try DocLookupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DocLookupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DocLookupError: \(error)"
             }
         }
     }
@@ -441,7 +469,7 @@ public class Paper {
     }
 
     /// The subscription level of a Paper doc.
-    public enum DocSubscriptionLevel: CustomStringConvertible {
+    public enum DocSubscriptionLevel: CustomStringConvertible, JSONRepresentable {
         /// No change email messages unless you're the creator.
         case default_
         /// Ignored: Not shown in pad lists or activity and no email message is sent.
@@ -451,11 +479,15 @@ public class Paper {
         /// Unsubscribed: Shown in pad lists, but not in activity and no change email messages are sent.
         case noEmail
 
+        func json() throws -> JSON {
+            try DocSubscriptionLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DocSubscriptionLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for DocSubscriptionLevel: \(error)"
             }
         }
     }
@@ -506,7 +538,7 @@ public class Paper {
     }
 
     /// The desired export format of the Paper doc.
-    public enum ExportFormat: CustomStringConvertible {
+    public enum ExportFormat: CustomStringConvertible, JSONRepresentable {
         /// The HTML export format.
         case html
         /// The markdown export format.
@@ -514,11 +546,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExportFormatSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExportFormatSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExportFormat: \(error)"
             }
         }
     }
@@ -563,7 +599,7 @@ public class Paper {
     }
 
     /// Data structure representing a Paper folder.
-    public class Folder: CustomStringConvertible {
+    public class Folder: CustomStringConvertible, JSONRepresentable {
         /// Paper folder ID. This ID uniquely identifies the folder.
         public let id: String
         /// Paper folder name.
@@ -575,11 +611,15 @@ public class Paper {
             self.name = name
         }
 
+        func json() throws -> JSON {
+            try FolderSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Folder: \(error)"
             }
         }
     }
@@ -607,17 +647,21 @@ public class Paper {
     }
 
     /// The sharing policy of a Paper folder. The sharing policy of subfolders is inherited from the root folder.
-    public enum FolderSharingPolicyType: CustomStringConvertible {
+    public enum FolderSharingPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Everyone in your team and anyone directly invited can access this folder.
         case team
         /// Only people directly invited can access this folder.
         case inviteOnly
 
+        func json() throws -> JSON {
+            try FolderSharingPolicyTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderSharingPolicyTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderSharingPolicyType: \(error)"
             }
         }
     }
@@ -656,7 +700,7 @@ public class Paper {
     }
 
     /// The subscription level of a Paper folder.
-    public enum FolderSubscriptionLevel: CustomStringConvertible {
+    public enum FolderSubscriptionLevel: CustomStringConvertible, JSONRepresentable {
         /// Not shown in activity, no email messages.
         case none
         /// Shown in activity, no email messages.
@@ -666,11 +710,15 @@ public class Paper {
         /// Shown in activity, weekly email messages.
         case weeklyEmails
 
+        func json() throws -> JSON {
+            try FolderSubscriptionLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderSubscriptionLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderSubscriptionLevel: \(error)"
             }
         }
     }
@@ -721,7 +769,7 @@ public class Paper {
     }
 
     /// Metadata about Paper folders containing the specififed Paper doc.
-    public class FoldersContainingPaperDoc: CustomStringConvertible {
+    public class FoldersContainingPaperDoc: CustomStringConvertible, JSONRepresentable {
         /// The sharing policy of the folder containing the Paper doc.
         public let folderSharingPolicyType: Paper.FolderSharingPolicyType?
         /// The folder path. If present the first folder is the root folder.
@@ -731,11 +779,15 @@ public class Paper {
             self.folders = folders
         }
 
+        func json() throws -> JSON {
+            try FoldersContainingPaperDocSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FoldersContainingPaperDocSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FoldersContainingPaperDoc: \(error)"
             }
         }
     }
@@ -764,7 +816,7 @@ public class Paper {
     }
 
     /// The import format of the incoming data.
-    public enum ImportFormat: CustomStringConvertible {
+    public enum ImportFormat: CustomStringConvertible, JSONRepresentable {
         /// The provided data is interpreted as standard HTML.
         case html
         /// The provided data is interpreted as markdown. The first line of the provided document will be used as the
@@ -776,11 +828,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ImportFormatSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ImportFormatSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ImportFormat: \(error)"
             }
         }
     }
@@ -831,7 +887,7 @@ public class Paper {
     }
 
     /// The InviteeInfoWithPermissionLevel struct
-    public class InviteeInfoWithPermissionLevel: CustomStringConvertible {
+    public class InviteeInfoWithPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// Email address invited to the Paper doc.
         public let invitee: Sharing.InviteeInfo
         /// Permission level for the invitee.
@@ -841,11 +897,15 @@ public class Paper {
             self.permissionLevel = permissionLevel
         }
 
+        func json() throws -> JSON {
+            try InviteeInfoWithPermissionLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InviteeInfoWithPermissionLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InviteeInfoWithPermissionLevel: \(error)"
             }
         }
     }
@@ -873,17 +933,21 @@ public class Paper {
     }
 
     /// The ListDocsCursorError union
-    public enum ListDocsCursorError: CustomStringConvertible {
+    public enum ListDocsCursorError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case cursorError(Paper.PaperApiCursorError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListDocsCursorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListDocsCursorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListDocsCursorError: \(error)"
             }
         }
     }
@@ -923,7 +987,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsArgs struct
-    public class ListPaperDocsArgs: CustomStringConvertible {
+    public class ListPaperDocsArgs: CustomStringConvertible, JSONRepresentable {
         /// Allows user to specify how the Paper docs should be filtered.
         public let filterBy: Paper.ListPaperDocsFilterBy
         /// Allows user to specify how the Paper docs should be sorted.
@@ -946,11 +1010,15 @@ public class Paper {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListPaperDocsArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsArgs: \(error)"
             }
         }
     }
@@ -985,7 +1053,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsContinueArgs struct
-    public class ListPaperDocsContinueArgs: CustomStringConvertible {
+    public class ListPaperDocsContinueArgs: CustomStringConvertible, JSONRepresentable {
         /// The cursor obtained from docsList or docsListContinue. Allows for pagination.
         public let cursor: String
         public init(cursor: String) {
@@ -993,11 +1061,15 @@ public class Paper {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListPaperDocsContinueArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsContinueArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsContinueArgs: \(error)"
             }
         }
     }
@@ -1023,7 +1095,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsFilterBy union
-    public enum ListPaperDocsFilterBy: CustomStringConvertible {
+    public enum ListPaperDocsFilterBy: CustomStringConvertible, JSONRepresentable {
         /// Fetches all Paper doc IDs that the user has ever accessed.
         case docsAccessed
         /// Fetches only the Paper doc IDs that the user has created.
@@ -1031,11 +1103,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListPaperDocsFilterBySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsFilterBySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsFilterBy: \(error)"
             }
         }
     }
@@ -1080,7 +1156,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsResponse struct
-    public class ListPaperDocsResponse: CustomStringConvertible {
+    public class ListPaperDocsResponse: CustomStringConvertible, JSONRepresentable {
         /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
         /// The list is sorted in the order specified by the initial call to docsList.
         public let docIds: [String]
@@ -1098,11 +1174,15 @@ public class Paper {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ListPaperDocsResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsResponse: \(error)"
             }
         }
     }
@@ -1132,7 +1212,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsSortBy union
-    public enum ListPaperDocsSortBy: CustomStringConvertible {
+    public enum ListPaperDocsSortBy: CustomStringConvertible, JSONRepresentable {
         /// Sorts the Paper docs by the time they were last accessed.
         case accessed
         /// Sorts the Paper docs by the time they were last modified.
@@ -1142,11 +1222,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListPaperDocsSortBySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsSortBySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsSortBy: \(error)"
             }
         }
     }
@@ -1197,7 +1281,7 @@ public class Paper {
     }
 
     /// The ListPaperDocsSortOrder union
-    public enum ListPaperDocsSortOrder: CustomStringConvertible {
+    public enum ListPaperDocsSortOrder: CustomStringConvertible, JSONRepresentable {
         /// Sorts the search result in ascending order.
         case ascending
         /// Sorts the search result in descending order.
@@ -1205,11 +1289,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListPaperDocsSortOrderSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsSortOrderSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListPaperDocsSortOrder: \(error)"
             }
         }
     }
@@ -1254,7 +1342,7 @@ public class Paper {
     }
 
     /// The ListUsersCursorError union
-    public enum ListUsersCursorError: CustomStringConvertible {
+    public enum ListUsersCursorError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -1266,11 +1354,15 @@ public class Paper {
         /// An unspecified error.
         case cursorError(Paper.PaperApiCursorError)
 
+        func json() throws -> JSON {
+            try ListUsersCursorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersCursorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersCursorError: \(error)"
             }
         }
     }
@@ -1336,7 +1428,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnFolderArgs: \(error)"
             }
         }
     }
@@ -1377,7 +1469,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderContinueArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnFolderContinueArgs: \(error)"
             }
         }
     }
@@ -1405,7 +1497,7 @@ public class Paper {
     }
 
     /// The ListUsersOnFolderResponse struct
-    public class ListUsersOnFolderResponse: CustomStringConvertible {
+    public class ListUsersOnFolderResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses that are invited on the Paper folder.
         public let invitees: [Sharing.InviteeInfo]
         /// List of users that are invited on the Paper folder.
@@ -1424,11 +1516,15 @@ public class Paper {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ListUsersOnFolderResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnFolderResponse: \(error)"
             }
         }
     }
@@ -1477,7 +1573,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnPaperDocArgs: \(error)"
             }
         }
     }
@@ -1521,7 +1617,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocContinueArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnPaperDocContinueArgs: \(error)"
             }
         }
     }
@@ -1549,7 +1645,7 @@ public class Paper {
     }
 
     /// The ListUsersOnPaperDocResponse struct
-    public class ListUsersOnPaperDocResponse: CustomStringConvertible {
+    public class ListUsersOnPaperDocResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses with their respective permission levels that are invited on the Paper doc.
         public let invitees: [Paper.InviteeInfoWithPermissionLevel]
         /// List of users with their respective permission levels that are invited on the Paper folder.
@@ -1577,11 +1673,15 @@ public class Paper {
             self.hasMore = hasMore
         }
 
+        func json() throws -> JSON {
+            try ListUsersOnPaperDocResponseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocResponseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListUsersOnPaperDocResponse: \(error)"
             }
         }
     }
@@ -1615,7 +1715,7 @@ public class Paper {
     }
 
     /// The PaperApiCursorError union
-    public enum PaperApiCursorError: CustomStringConvertible {
+    public enum PaperApiCursorError: CustomStringConvertible, JSONRepresentable {
         /// The provided cursor is expired.
         case expiredCursor
         /// The provided cursor is invalid.
@@ -1628,11 +1728,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperApiCursorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperApiCursorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperApiCursorError: \(error)"
             }
         }
     }
@@ -1689,7 +1793,7 @@ public class Paper {
     }
 
     /// The PaperDocCreateArgs struct
-    public class PaperDocCreateArgs: CustomStringConvertible {
+    public class PaperDocCreateArgs: CustomStringConvertible, JSONRepresentable {
         /// The Paper folder ID where the Paper document should be created. The API user has to have write access to
         /// this folder or error is thrown.
         public let parentFolderId: String?
@@ -1701,11 +1805,15 @@ public class Paper {
             self.importFormat = importFormat
         }
 
+        func json() throws -> JSON {
+            try PaperDocCreateArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocCreateArgs: \(error)"
             }
         }
     }
@@ -1733,7 +1841,7 @@ public class Paper {
     }
 
     /// The PaperDocCreateError union
-    public enum PaperDocCreateError: CustomStringConvertible {
+    public enum PaperDocCreateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -1750,11 +1858,15 @@ public class Paper {
         /// HTML with data URI.
         case imageSizeExceeded
 
+        func json() throws -> JSON {
+            try PaperDocCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocCreateError: \(error)"
             }
         }
     }
@@ -1817,7 +1929,7 @@ public class Paper {
     }
 
     /// The PaperDocCreateUpdateResult struct
-    public class PaperDocCreateUpdateResult: CustomStringConvertible {
+    public class PaperDocCreateUpdateResult: CustomStringConvertible, JSONRepresentable {
         /// Doc ID of the newly created doc.
         public let docId: String
         /// The Paper doc revision. Simply an ever increasing number.
@@ -1833,11 +1945,15 @@ public class Paper {
             self.title = title
         }
 
+        func json() throws -> JSON {
+            try PaperDocCreateUpdateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateUpdateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocCreateUpdateResult: \(error)"
             }
         }
     }
@@ -1879,7 +1995,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocExportSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocExport: \(error)"
             }
         }
     }
@@ -1907,7 +2023,7 @@ public class Paper {
     }
 
     /// The PaperDocExportResult struct
-    public class PaperDocExportResult: CustomStringConvertible {
+    public class PaperDocExportResult: CustomStringConvertible, JSONRepresentable {
         /// The Paper doc owner's email address.
         public let owner: String
         /// The Paper doc title.
@@ -1927,11 +2043,15 @@ public class Paper {
             self.mimeType = mimeType
         }
 
+        func json() throws -> JSON {
+            try PaperDocExportResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocExportResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocExportResult: \(error)"
             }
         }
     }
@@ -1963,7 +2083,7 @@ public class Paper {
     }
 
     /// The PaperDocPermissionLevel union
-    public enum PaperDocPermissionLevel: CustomStringConvertible {
+    public enum PaperDocPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// User will be granted edit permissions.
         case edit
         /// User will be granted view and comment permissions.
@@ -1971,11 +2091,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDocPermissionLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocPermissionLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocPermissionLevel: \(error)"
             }
         }
     }
@@ -2032,7 +2156,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocSharingPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocSharingPolicy: \(error)"
             }
         }
     }
@@ -2080,7 +2204,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdateArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocUpdateArgs: \(error)"
             }
         }
     }
@@ -2112,7 +2236,7 @@ public class Paper {
     }
 
     /// The PaperDocUpdateError union
-    public enum PaperDocUpdateError: CustomStringConvertible {
+    public enum PaperDocUpdateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -2135,11 +2259,15 @@ public class Paper {
         /// This operation is not allowed on deleted Paper docs.
         case docDeleted
 
+        func json() throws -> JSON {
+            try PaperDocUpdateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocUpdateError: \(error)"
             }
         }
     }
@@ -2220,7 +2348,7 @@ public class Paper {
     }
 
     /// The PaperDocUpdatePolicy union
-    public enum PaperDocUpdatePolicy: CustomStringConvertible {
+    public enum PaperDocUpdatePolicy: CustomStringConvertible, JSONRepresentable {
         /// The content will be appended to the doc.
         case append
         /// The content will be prepended to the doc. The doc title will not be affected.
@@ -2230,11 +2358,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDocUpdatePolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdatePolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDocUpdatePolicy: \(error)"
             }
         }
     }
@@ -2285,7 +2417,7 @@ public class Paper {
     }
 
     /// The PaperFolderCreateArg struct
-    public class PaperFolderCreateArg: CustomStringConvertible {
+    public class PaperFolderCreateArg: CustomStringConvertible, JSONRepresentable {
         /// The name of the new Paper folder.
         public let name: String
         /// The encrypted Paper folder Id where the new Paper folder should be created. The API user has to have write
@@ -2305,11 +2437,15 @@ public class Paper {
             self.isTeamFolder = isTeamFolder
         }
 
+        func json() throws -> JSON {
+            try PaperFolderCreateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperFolderCreateArg: \(error)"
             }
         }
     }
@@ -2339,7 +2475,7 @@ public class Paper {
     }
 
     /// The PaperFolderCreateError union
-    public enum PaperFolderCreateError: CustomStringConvertible {
+    public enum PaperFolderCreateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -2351,11 +2487,15 @@ public class Paper {
         /// The folder id cannot be decrypted to valid folder id.
         case invalidFolderId
 
+        func json() throws -> JSON {
+            try PaperFolderCreateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperFolderCreateError: \(error)"
             }
         }
     }
@@ -2406,7 +2546,7 @@ public class Paper {
     }
 
     /// The PaperFolderCreateResult struct
-    public class PaperFolderCreateResult: CustomStringConvertible {
+    public class PaperFolderCreateResult: CustomStringConvertible, JSONRepresentable {
         /// Folder ID of the newly created folder.
         public let folderId: String
         public init(folderId: String) {
@@ -2414,11 +2554,15 @@ public class Paper {
             self.folderId = folderId
         }
 
+        func json() throws -> JSON {
+            try PaperFolderCreateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperFolderCreateResult: \(error)"
             }
         }
     }
@@ -2456,7 +2600,7 @@ public class Paper {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemovePaperDocUserSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemovePaperDocUser: \(error)"
             }
         }
     }
@@ -2484,7 +2628,7 @@ public class Paper {
     }
 
     /// Sharing policy of Paper doc.
-    public class SharingPolicy: CustomStringConvertible {
+    public class SharingPolicy: CustomStringConvertible, JSONRepresentable {
         /// This value applies to the non-team members.
         public let publicSharingPolicy: Paper.SharingPublicPolicyType?
         /// This value applies to the team members only. The value is null for all personal accounts.
@@ -2494,11 +2638,15 @@ public class Paper {
             self.teamSharingPolicy = teamSharingPolicy
         }
 
+        func json() throws -> JSON {
+            try SharingPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingPolicy: \(error)"
             }
         }
     }
@@ -2527,7 +2675,7 @@ public class Paper {
     }
 
     /// The sharing policy type of the Paper doc.
-    public enum SharingTeamPolicyType: CustomStringConvertible {
+    public enum SharingTeamPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Users who have a link to this doc can edit it.
         case peopleWithLinkCanEdit
         /// Users who have a link to this doc can view and comment on it.
@@ -2535,11 +2683,15 @@ public class Paper {
         /// Users must be explicitly invited to this doc.
         case inviteOnly
 
+        func json() throws -> JSON {
+            try SharingTeamPolicyTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingTeamPolicyTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingTeamPolicyType: \(error)"
             }
         }
     }
@@ -2584,7 +2736,7 @@ public class Paper {
     }
 
     /// The SharingPublicPolicyType union
-    public enum SharingPublicPolicyType: CustomStringConvertible {
+    public enum SharingPublicPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Users who have a link to this doc can edit it.
         case peopleWithLinkCanEdit
         /// Users who have a link to this doc can view and comment on it.
@@ -2594,11 +2746,15 @@ public class Paper {
         /// Value used to indicate that doc sharing is enabled only within team.
         case disabled
 
+        func json() throws -> JSON {
+            try SharingPublicPolicyTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingPublicPolicyTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingPublicPolicyType: \(error)"
             }
         }
     }
@@ -2649,7 +2805,7 @@ public class Paper {
     }
 
     /// The UserInfoWithPermissionLevel struct
-    public class UserInfoWithPermissionLevel: CustomStringConvertible {
+    public class UserInfoWithPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// User shared on the Paper doc.
         public let user: Sharing.UserInfo
         /// Permission level for the user.
@@ -2659,11 +2815,15 @@ public class Paper {
             self.permissionLevel = permissionLevel
         }
 
+        func json() throws -> JSON {
+            try UserInfoWithPermissionLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoWithPermissionLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserInfoWithPermissionLevel: \(error)"
             }
         }
     }
@@ -2691,7 +2851,7 @@ public class Paper {
     }
 
     /// The UserOnPaperDocFilter union
-    public enum UserOnPaperDocFilter: CustomStringConvertible {
+    public enum UserOnPaperDocFilter: CustomStringConvertible, JSONRepresentable {
         /// all users who have visited the Paper doc.
         case visited
         /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper doc as well as
@@ -2700,11 +2860,15 @@ public class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserOnPaperDocFilterSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserOnPaperDocFilterSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserOnPaperDocFilter: \(error)"
             }
         }
     }

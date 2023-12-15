@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the files namespace
 /// For Objective-C compatible routes see DBFilesRoutes
-public class FilesRoutes {
+public class FilesRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

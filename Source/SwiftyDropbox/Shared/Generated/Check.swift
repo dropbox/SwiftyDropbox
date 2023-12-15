@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the check namespace
 public class Check {
     /// Contains the arguments to be sent to the Dropbox servers.
-    public class EchoArg: CustomStringConvertible {
+    public class EchoArg: CustomStringConvertible, JSONRepresentable {
         /// The string that you'd like to be echoed back to you.
         public let query: String
         public init(query: String = "") {
@@ -17,11 +17,15 @@ public class Check {
             self.query = query
         }
 
+        func json() throws -> JSON {
+            try EchoArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try EchoArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for EchoArg: \(error)"
             }
         }
     }
@@ -47,7 +51,7 @@ public class Check {
     }
 
     /// EchoResult contains the result returned from the Dropbox servers.
-    public class EchoResult: CustomStringConvertible {
+    public class EchoResult: CustomStringConvertible, JSONRepresentable {
         /// If everything worked correctly, this would be the same as query.
         public let result: String
         public init(result: String = "") {
@@ -55,11 +59,15 @@ public class Check {
             self.result = result
         }
 
+        func json() throws -> JSON {
+            try EchoResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try EchoResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for EchoResult: \(error)"
             }
         }
     }

@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the auth namespace
 /// For Objective-C compatible routes see DBAuthRoutes
-public class AuthRoutes {
+public class AuthRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

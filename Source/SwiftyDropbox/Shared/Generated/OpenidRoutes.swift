@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the openid namespace
 /// For Objective-C compatible routes see DBOpenidRoutes
-public class OpenidRoutes {
+public class OpenidRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the team_common namespace
 public class TeamCommon {
     /// The group type determines how a group is managed.
-    public enum GroupManagementType: CustomStringConvertible {
+    public enum GroupManagementType: CustomStringConvertible, JSONRepresentable {
         /// A group which is managed by selected users.
         case userManaged
         /// A group which is managed by team admins only.
@@ -19,11 +19,15 @@ public class TeamCommon {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupManagementTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupManagementTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupManagementType: \(error)"
             }
         }
     }
@@ -74,7 +78,7 @@ public class TeamCommon {
     }
 
     /// Information about a group.
-    public class GroupSummary: CustomStringConvertible {
+    public class GroupSummary: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let groupName: String
         /// (no description)
@@ -103,11 +107,15 @@ public class TeamCommon {
             self.groupManagementType = groupManagementType
         }
 
+        func json() throws -> JSON {
+            try GroupSummarySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupSummarySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupSummary: \(error)"
             }
         }
     }
@@ -147,7 +155,7 @@ public class TeamCommon {
     }
 
     /// The group type determines how a group is created and managed.
-    public enum GroupType: CustomStringConvertible {
+    public enum GroupType: CustomStringConvertible, JSONRepresentable {
         /// A group to which team members are automatically added. Applicable to team folders
         /// https://www.dropbox.com/help/986 only.
         case team
@@ -156,11 +164,15 @@ public class TeamCommon {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GroupTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupType: \(error)"
             }
         }
     }
@@ -205,7 +217,7 @@ public class TeamCommon {
     }
 
     /// The type of the space limit imposed on a team member.
-    public enum MemberSpaceLimitType: CustomStringConvertible {
+    public enum MemberSpaceLimitType: CustomStringConvertible, JSONRepresentable {
         /// The team member does not have imposed space limit.
         case off
         /// The team member has soft imposed space limit - the limit is used for display and for notifications.
@@ -215,11 +227,15 @@ public class TeamCommon {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MemberSpaceLimitTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberSpaceLimitTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberSpaceLimitType: \(error)"
             }
         }
     }
@@ -270,7 +286,7 @@ public class TeamCommon {
     }
 
     /// Time range.
-    public class TimeRange: CustomStringConvertible {
+    public class TimeRange: CustomStringConvertible, JSONRepresentable {
         /// Optional starting time (inclusive).
         public let startTime: Date?
         /// Optional ending time (exclusive).
@@ -280,11 +296,15 @@ public class TeamCommon {
             self.endTime = endTime
         }
 
+        func json() throws -> JSON {
+            try TimeRangeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TimeRangeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TimeRange: \(error)"
             }
         }
     }
