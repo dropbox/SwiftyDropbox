@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the paper namespace
 /// For Objective-C compatible routes see DBPaperRoutes
-public class PaperRoutes {
+public class PaperRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

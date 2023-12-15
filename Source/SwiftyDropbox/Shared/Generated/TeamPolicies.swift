@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the team_policies namespace
 public class TeamPolicies {
     /// The CameraUploadsPolicyState union
-    public enum CameraUploadsPolicyState: CustomStringConvertible {
+    public enum CameraUploadsPolicyState: CustomStringConvertible, JSONRepresentable {
         /// Background camera uploads are disabled.
         case disabled
         /// Background camera uploads are allowed.
@@ -17,11 +17,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CameraUploadsPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CameraUploadsPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CameraUploadsPolicyState: \(error)"
             }
         }
     }
@@ -66,7 +70,7 @@ public class TeamPolicies {
     }
 
     /// The ComputerBackupPolicyState union
-    public enum ComputerBackupPolicyState: CustomStringConvertible {
+    public enum ComputerBackupPolicyState: CustomStringConvertible, JSONRepresentable {
         /// Computer Backup feature is disabled.
         case disabled
         /// Computer Backup feature is enabled.
@@ -76,11 +80,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ComputerBackupPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ComputerBackupPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ComputerBackupPolicyState: \(error)"
             }
         }
     }
@@ -131,7 +139,7 @@ public class TeamPolicies {
     }
 
     /// The EmmState union
-    public enum EmmState: CustomStringConvertible {
+    public enum EmmState: CustomStringConvertible, JSONRepresentable {
         /// Emm token is disabled.
         case disabled
         /// Emm token is optional.
@@ -141,11 +149,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try EmmStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try EmmStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for EmmState: \(error)"
             }
         }
     }
@@ -196,7 +208,7 @@ public class TeamPolicies {
     }
 
     /// The ExternalDriveBackupPolicyState union
-    public enum ExternalDriveBackupPolicyState: CustomStringConvertible {
+    public enum ExternalDriveBackupPolicyState: CustomStringConvertible, JSONRepresentable {
         /// External Drive Backup feature is disabled.
         case disabled
         /// External Drive Backup feature is enabled.
@@ -206,11 +218,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ExternalDriveBackupPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExternalDriveBackupPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExternalDriveBackupPolicyState: \(error)"
             }
         }
     }
@@ -261,7 +277,7 @@ public class TeamPolicies {
     }
 
     /// The FileLockingPolicyState union
-    public enum FileLockingPolicyState: CustomStringConvertible {
+    public enum FileLockingPolicyState: CustomStringConvertible, JSONRepresentable {
         /// File locking feature is disabled.
         case disabled
         /// File locking feature is allowed.
@@ -269,11 +285,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileLockingPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLockingPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLockingPolicyState: \(error)"
             }
         }
     }
@@ -318,7 +338,7 @@ public class TeamPolicies {
     }
 
     /// The FileProviderMigrationPolicyState union
-    public enum FileProviderMigrationPolicyState: CustomStringConvertible {
+    public enum FileProviderMigrationPolicyState: CustomStringConvertible, JSONRepresentable {
         /// Team admin has opted out of File Provider Migration for team members.
         case disabled
         /// Team admin has not opted out of File Provider Migration for team members.
@@ -328,11 +348,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileProviderMigrationPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileProviderMigrationPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileProviderMigrationPolicyState: \(error)"
             }
         }
     }
@@ -383,17 +407,21 @@ public class TeamPolicies {
     }
 
     /// The GroupCreation union
-    public enum GroupCreation: CustomStringConvertible {
+    public enum GroupCreation: CustomStringConvertible, JSONRepresentable {
         /// Team admins and members can create groups.
         case adminsAndMembers
         /// Only team admins can create groups.
         case adminsOnly
 
+        func json() throws -> JSON {
+            try GroupCreationSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupCreationSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupCreation: \(error)"
             }
         }
     }
@@ -432,7 +460,7 @@ public class TeamPolicies {
     }
 
     /// The OfficeAddInPolicy union
-    public enum OfficeAddInPolicy: CustomStringConvertible {
+    public enum OfficeAddInPolicy: CustomStringConvertible, JSONRepresentable {
         /// Office Add-In is disabled.
         case disabled
         /// Office Add-In is enabled.
@@ -440,11 +468,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try OfficeAddInPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try OfficeAddInPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for OfficeAddInPolicy: \(error)"
             }
         }
     }
@@ -489,7 +521,7 @@ public class TeamPolicies {
     }
 
     /// The PaperDefaultFolderPolicy union
-    public enum PaperDefaultFolderPolicy: CustomStringConvertible {
+    public enum PaperDefaultFolderPolicy: CustomStringConvertible, JSONRepresentable {
         /// Everyone in team will be the default option when creating a folder in Paper.
         case everyoneInTeam
         /// Invite only will be the default option when creating a folder in Paper.
@@ -497,11 +529,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDefaultFolderPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDefaultFolderPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDefaultFolderPolicy: \(error)"
             }
         }
     }
@@ -546,7 +582,7 @@ public class TeamPolicies {
     }
 
     /// The PaperDeploymentPolicy union
-    public enum PaperDeploymentPolicy: CustomStringConvertible {
+    public enum PaperDeploymentPolicy: CustomStringConvertible, JSONRepresentable {
         /// All team members have access to Paper.
         case full
         /// Only whitelisted team members can access Paper. To see which user is whitelisted, check
@@ -555,11 +591,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDeploymentPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDeploymentPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDeploymentPolicy: \(error)"
             }
         }
     }
@@ -604,7 +644,7 @@ public class TeamPolicies {
     }
 
     /// The PaperDesktopPolicy union
-    public enum PaperDesktopPolicy: CustomStringConvertible {
+    public enum PaperDesktopPolicy: CustomStringConvertible, JSONRepresentable {
         /// Do not allow team members to use Paper Desktop.
         case disabled
         /// Allow team members to use Paper Desktop.
@@ -612,11 +652,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperDesktopPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDesktopPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperDesktopPolicy: \(error)"
             }
         }
     }
@@ -661,7 +705,7 @@ public class TeamPolicies {
     }
 
     /// The PaperEnabledPolicy union
-    public enum PaperEnabledPolicy: CustomStringConvertible {
+    public enum PaperEnabledPolicy: CustomStringConvertible, JSONRepresentable {
         /// Paper is disabled.
         case disabled
         /// Paper is enabled.
@@ -671,11 +715,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperEnabledPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperEnabledPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperEnabledPolicy: \(error)"
             }
         }
     }
@@ -726,7 +774,7 @@ public class TeamPolicies {
     }
 
     /// The PasswordControlMode union
-    public enum PasswordControlMode: CustomStringConvertible {
+    public enum PasswordControlMode: CustomStringConvertible, JSONRepresentable {
         /// Password is disabled.
         case disabled
         /// Password is enabled.
@@ -734,11 +782,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PasswordControlModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PasswordControlModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PasswordControlMode: \(error)"
             }
         }
     }
@@ -783,7 +835,7 @@ public class TeamPolicies {
     }
 
     /// The PasswordStrengthPolicy union
-    public enum PasswordStrengthPolicy: CustomStringConvertible {
+    public enum PasswordStrengthPolicy: CustomStringConvertible, JSONRepresentable {
         /// User passwords will adhere to the minimal password strength policy.
         case minimalRequirements
         /// User passwords will adhere to the moderate password strength policy.
@@ -793,11 +845,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PasswordStrengthPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PasswordStrengthPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PasswordStrengthPolicy: \(error)"
             }
         }
     }
@@ -848,7 +904,7 @@ public class TeamPolicies {
     }
 
     /// The RolloutMethod union
-    public enum RolloutMethod: CustomStringConvertible {
+    public enum RolloutMethod: CustomStringConvertible, JSONRepresentable {
         /// Unlink all.
         case unlinkAll
         /// Unlink devices with the most inactivity.
@@ -856,11 +912,15 @@ public class TeamPolicies {
         /// Add member to Exceptions.
         case addMemberToExceptions
 
+        func json() throws -> JSON {
+            try RolloutMethodSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RolloutMethodSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RolloutMethod: \(error)"
             }
         }
     }
@@ -905,7 +965,7 @@ public class TeamPolicies {
     }
 
     /// Policy governing whether shared folder membership is required to access shared links.
-    public enum SharedFolderBlanketLinkRestrictionPolicy: CustomStringConvertible {
+    public enum SharedFolderBlanketLinkRestrictionPolicy: CustomStringConvertible, JSONRepresentable {
         /// Only members of shared folders can access folder content via shared link.
         case members
         /// Anyone can access folder content via shared link.
@@ -913,11 +973,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedFolderBlanketLinkRestrictionPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderBlanketLinkRestrictionPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderBlanketLinkRestrictionPolicy: \(error)"
             }
         }
     }
@@ -962,7 +1026,7 @@ public class TeamPolicies {
     }
 
     /// Policy governing which shared folders a team member can join.
-    public enum SharedFolderJoinPolicy: CustomStringConvertible {
+    public enum SharedFolderJoinPolicy: CustomStringConvertible, JSONRepresentable {
         /// Team members can only join folders shared by teammates.
         case fromTeamOnly
         /// Team members can join any shared folder, including those shared by users outside the team.
@@ -970,11 +1034,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedFolderJoinPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderJoinPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderJoinPolicy: \(error)"
             }
         }
     }
@@ -1019,7 +1087,7 @@ public class TeamPolicies {
     }
 
     /// Policy governing who can be a member of a folder shared by a team member.
-    public enum SharedFolderMemberPolicy: CustomStringConvertible {
+    public enum SharedFolderMemberPolicy: CustomStringConvertible, JSONRepresentable {
         /// Only a teammate can be a member of a folder shared by a team member.
         case team
         /// Anyone can be a member of a folder shared by a team member.
@@ -1027,11 +1095,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedFolderMemberPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderMemberPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderMemberPolicy: \(error)"
             }
         }
     }
@@ -1077,7 +1149,7 @@ public class TeamPolicies {
 
     /// Policy governing the visibility of shared links. This policy can apply to newly created shared links, or all
     /// shared links.
-    public enum SharedLinkCreatePolicy: CustomStringConvertible {
+    public enum SharedLinkCreatePolicy: CustomStringConvertible, JSONRepresentable {
         /// By default, anyone can access newly created shared links. No login will be required to access the shared
         /// links unless overridden.
         case defaultPublic
@@ -1093,11 +1165,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedLinkCreatePolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkCreatePolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkCreatePolicy: \(error)"
             }
         }
     }
@@ -1154,7 +1230,7 @@ public class TeamPolicies {
     }
 
     /// The ShowcaseDownloadPolicy union
-    public enum ShowcaseDownloadPolicy: CustomStringConvertible {
+    public enum ShowcaseDownloadPolicy: CustomStringConvertible, JSONRepresentable {
         /// Do not allow files to be downloaded from Showcases.
         case disabled
         /// Allow files to be downloaded from Showcases.
@@ -1162,11 +1238,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ShowcaseDownloadPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShowcaseDownloadPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShowcaseDownloadPolicy: \(error)"
             }
         }
     }
@@ -1211,7 +1291,7 @@ public class TeamPolicies {
     }
 
     /// The ShowcaseEnabledPolicy union
-    public enum ShowcaseEnabledPolicy: CustomStringConvertible {
+    public enum ShowcaseEnabledPolicy: CustomStringConvertible, JSONRepresentable {
         /// Showcase is disabled.
         case disabled
         /// Showcase is enabled.
@@ -1219,11 +1299,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ShowcaseEnabledPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShowcaseEnabledPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShowcaseEnabledPolicy: \(error)"
             }
         }
     }
@@ -1268,7 +1352,7 @@ public class TeamPolicies {
     }
 
     /// The ShowcaseExternalSharingPolicy union
-    public enum ShowcaseExternalSharingPolicy: CustomStringConvertible {
+    public enum ShowcaseExternalSharingPolicy: CustomStringConvertible, JSONRepresentable {
         /// Do not allow showcases to be shared with people not on the team.
         case disabled
         /// Allow showcases to be shared with people not on the team.
@@ -1276,11 +1360,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ShowcaseExternalSharingPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShowcaseExternalSharingPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShowcaseExternalSharingPolicy: \(error)"
             }
         }
     }
@@ -1325,7 +1413,7 @@ public class TeamPolicies {
     }
 
     /// The SmartSyncPolicy union
-    public enum SmartSyncPolicy: CustomStringConvertible {
+    public enum SmartSyncPolicy: CustomStringConvertible, JSONRepresentable {
         /// The specified content will be synced as local files by default.
         case local
         /// The specified content will be synced as on-demand files by default.
@@ -1333,11 +1421,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SmartSyncPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SmartSyncPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SmartSyncPolicy: \(error)"
             }
         }
     }
@@ -1382,7 +1474,7 @@ public class TeamPolicies {
     }
 
     /// The SmarterSmartSyncPolicyState union
-    public enum SmarterSmartSyncPolicyState: CustomStringConvertible {
+    public enum SmarterSmartSyncPolicyState: CustomStringConvertible, JSONRepresentable {
         /// Smarter Smart Sync feature is disabled.
         case disabled
         /// Smarter Smart Sync feature is enabled.
@@ -1390,11 +1482,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SmarterSmartSyncPolicyStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SmarterSmartSyncPolicyStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SmarterSmartSyncPolicyState: \(error)"
             }
         }
     }
@@ -1439,7 +1535,7 @@ public class TeamPolicies {
     }
 
     /// The SsoPolicy union
-    public enum SsoPolicy: CustomStringConvertible {
+    public enum SsoPolicy: CustomStringConvertible, JSONRepresentable {
         /// Users will be able to sign in with their Dropbox credentials.
         case disabled
         /// Users will be able to sign in with either their Dropbox or single sign-on credentials.
@@ -1449,11 +1545,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SsoPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SsoPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SsoPolicy: \(error)"
             }
         }
     }
@@ -1504,7 +1604,7 @@ public class TeamPolicies {
     }
 
     /// The SuggestMembersPolicy union
-    public enum SuggestMembersPolicy: CustomStringConvertible {
+    public enum SuggestMembersPolicy: CustomStringConvertible, JSONRepresentable {
         /// Suggest members is disabled.
         case disabled
         /// Suggest members is enabled.
@@ -1512,11 +1612,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SuggestMembersPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SuggestMembersPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SuggestMembersPolicy: \(error)"
             }
         }
     }
@@ -1561,7 +1665,7 @@ public class TeamPolicies {
     }
 
     /// Policies governing team members.
-    public class TeamMemberPolicies: CustomStringConvertible {
+    public class TeamMemberPolicies: CustomStringConvertible, JSONRepresentable {
         /// Policies governing sharing.
         public let sharing: TeamPolicies.TeamSharingPolicies
         /// This describes the Enterprise Mobility Management (EMM) state for this team. This information can be used to
@@ -1585,11 +1689,15 @@ public class TeamPolicies {
             self.suggestMembersPolicy = suggestMembersPolicy
         }
 
+        func json() throws -> JSON {
+            try TeamMemberPoliciesSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberPoliciesSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberPolicies: \(error)"
             }
         }
     }
@@ -1621,7 +1729,7 @@ public class TeamPolicies {
     }
 
     /// Policies governing sharing within and outside of the team.
-    public class TeamSharingPolicies: CustomStringConvertible {
+    public class TeamSharingPolicies: CustomStringConvertible, JSONRepresentable {
         /// Who can join folders shared by team members.
         public let sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy
         /// Which shared folders team members can join.
@@ -1646,11 +1754,15 @@ public class TeamPolicies {
             self.sharedFolderLinkRestrictionPolicy = sharedFolderLinkRestrictionPolicy
         }
 
+        func json() throws -> JSON {
+            try TeamSharingPoliciesSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamSharingPoliciesSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamSharingPolicies: \(error)"
             }
         }
     }
@@ -1693,7 +1805,7 @@ public class TeamPolicies {
     }
 
     /// The TwoStepVerificationPolicy union
-    public enum TwoStepVerificationPolicy: CustomStringConvertible {
+    public enum TwoStepVerificationPolicy: CustomStringConvertible, JSONRepresentable {
         /// Enabled require two factor authorization.
         case requireTfaEnable
         /// Disabled require two factor authorization.
@@ -1701,11 +1813,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TwoStepVerificationPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TwoStepVerificationPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TwoStepVerificationPolicy: \(error)"
             }
         }
     }
@@ -1750,7 +1866,7 @@ public class TeamPolicies {
     }
 
     /// The TwoStepVerificationState union
-    public enum TwoStepVerificationState: CustomStringConvertible {
+    public enum TwoStepVerificationState: CustomStringConvertible, JSONRepresentable {
         /// Enabled require two factor authorization.
         case required
         /// Optional require two factor authorization.
@@ -1760,11 +1876,15 @@ public class TeamPolicies {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TwoStepVerificationStateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TwoStepVerificationStateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TwoStepVerificationState: \(error)"
             }
         }
     }

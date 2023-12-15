@@ -9,17 +9,21 @@ import Foundation
 /// Datatypes and serializers for the account namespace
 public class Account {
     /// The PhotoSourceArg union
-    public enum PhotoSourceArg: CustomStringConvertible {
+    public enum PhotoSourceArg: CustomStringConvertible, JSONRepresentable {
         /// Image data in base64-encoded bytes.
         case base64Data(String)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PhotoSourceArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PhotoSourceArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PhotoSourceArg: \(error)"
             }
         }
     }
@@ -59,18 +63,22 @@ public class Account {
     }
 
     /// The SetProfilePhotoArg struct
-    public class SetProfilePhotoArg: CustomStringConvertible {
+    public class SetProfilePhotoArg: CustomStringConvertible, JSONRepresentable {
         /// Image to set as the user's new profile photo.
         public let photo: Account.PhotoSourceArg
         public init(photo: Account.PhotoSourceArg) {
             self.photo = photo
         }
 
+        func json() throws -> JSON {
+            try SetProfilePhotoArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetProfilePhotoArg: \(error)"
             }
         }
     }
@@ -96,7 +104,7 @@ public class Account {
     }
 
     /// The SetProfilePhotoError union
-    public enum SetProfilePhotoError: CustomStringConvertible {
+    public enum SetProfilePhotoError: CustomStringConvertible, JSONRepresentable {
         /// File cannot be set as profile photo.
         case fileTypeError
         /// File cannot exceed 10 MB.
@@ -110,11 +118,15 @@ public class Account {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SetProfilePhotoErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetProfilePhotoError: \(error)"
             }
         }
     }
@@ -177,7 +189,7 @@ public class Account {
     }
 
     /// The SetProfilePhotoResult struct
-    public class SetProfilePhotoResult: CustomStringConvertible {
+    public class SetProfilePhotoResult: CustomStringConvertible, JSONRepresentable {
         /// URL for the photo representing the user, if one is set.
         public let profilePhotoUrl: String
         public init(profilePhotoUrl: String) {
@@ -185,11 +197,15 @@ public class Account {
             self.profilePhotoUrl = profilePhotoUrl
         }
 
+        func json() throws -> JSON {
+            try SetProfilePhotoResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetProfilePhotoResult: \(error)"
             }
         }
     }

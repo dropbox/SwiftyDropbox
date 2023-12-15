@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the secondary_emails namespace
 public class SecondaryEmails {
     /// The SecondaryEmail struct
-    public class SecondaryEmail: CustomStringConvertible {
+    public class SecondaryEmail: CustomStringConvertible, JSONRepresentable {
         /// Secondary email address.
         public let email: String
         /// Whether or not the secondary email address is verified to be owned by a user.
@@ -20,11 +20,15 @@ public class SecondaryEmails {
             self.isVerified = isVerified
         }
 
+        func json() throws -> JSON {
+            try SecondaryEmailSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SecondaryEmailSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SecondaryEmail: \(error)"
             }
         }
     }

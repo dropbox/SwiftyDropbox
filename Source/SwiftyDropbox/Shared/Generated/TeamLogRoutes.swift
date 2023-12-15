@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the team_log namespace
 /// For Objective-C compatible routes see DBTeamLogRoutes
-public class TeamLogRoutes {
+public class TeamLogRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

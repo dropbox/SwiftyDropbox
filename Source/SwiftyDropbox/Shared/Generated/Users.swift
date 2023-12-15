@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the users namespace
 public class Users {
     /// The amount of detail revealed about an account depends on the user being queried and the user making the query.
-    public class Account: CustomStringConvertible {
+    public class Account: CustomStringConvertible, JSONRepresentable {
         /// The user's unique Dropbox ID.
         public let accountId: String
         /// Details of a user's name.
@@ -35,11 +35,15 @@ public class Users {
             self.disabled = disabled
         }
 
+        func json() throws -> JSON {
+            try AccountSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AccountSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Account: \(error)"
             }
         }
     }
@@ -109,7 +113,7 @@ public class Users {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try BasicAccountSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for BasicAccount: \(error)"
             }
         }
     }
@@ -158,18 +162,22 @@ public class Users {
     }
 
     /// The value for fileLocking in UserFeature.
-    public enum FileLockingValue: CustomStringConvertible {
+    public enum FileLockingValue: CustomStringConvertible, JSONRepresentable {
         /// When this value is True, the user can lock files in shared directories. When the value is False the user can
         /// unlock the files they have locked or request to unlock files locked by others.
         case enabled(Bool)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileLockingValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLockingValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLockingValue: \(error)"
             }
         }
     }
@@ -264,7 +272,7 @@ public class Users {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FullAccountSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FullAccount: \(error)"
             }
         }
     }
@@ -331,7 +339,7 @@ public class Users {
     }
 
     /// Information about a team.
-    public class Team: CustomStringConvertible {
+    public class Team: CustomStringConvertible, JSONRepresentable {
         /// The team's unique ID.
         public let id: String
         /// The name of the team.
@@ -343,11 +351,15 @@ public class Users {
             self.name = name
         }
 
+        func json() throws -> JSON {
+            try TeamSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Team: \(error)"
             }
         }
     }
@@ -390,7 +402,7 @@ public class Users {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FullTeamSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FullTeam: \(error)"
             }
         }
     }
@@ -422,7 +434,7 @@ public class Users {
     }
 
     /// The GetAccountArg struct
-    public class GetAccountArg: CustomStringConvertible {
+    public class GetAccountArg: CustomStringConvertible, JSONRepresentable {
         /// A user's account identifier.
         public let accountId: String
         public init(accountId: String) {
@@ -430,11 +442,15 @@ public class Users {
             self.accountId = accountId
         }
 
+        func json() throws -> JSON {
+            try GetAccountArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetAccountArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetAccountArg: \(error)"
             }
         }
     }
@@ -460,7 +476,7 @@ public class Users {
     }
 
     /// The GetAccountBatchArg struct
-    public class GetAccountBatchArg: CustomStringConvertible {
+    public class GetAccountBatchArg: CustomStringConvertible, JSONRepresentable {
         /// List of user account identifiers.  Should not contain any duplicate account IDs.
         public let accountIds: [String]
         public init(accountIds: [String]) {
@@ -468,11 +484,15 @@ public class Users {
             self.accountIds = accountIds
         }
 
+        func json() throws -> JSON {
+            try GetAccountBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetAccountBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetAccountBatchArg: \(error)"
             }
         }
     }
@@ -498,17 +518,21 @@ public class Users {
     }
 
     /// The GetAccountBatchError union
-    public enum GetAccountBatchError: CustomStringConvertible {
+    public enum GetAccountBatchError: CustomStringConvertible, JSONRepresentable {
         /// The value is an account ID specified in accountIds in GetAccountBatchArg that does not exist.
         case noAccount(String)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetAccountBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetAccountBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetAccountBatchError: \(error)"
             }
         }
     }
@@ -548,17 +572,21 @@ public class Users {
     }
 
     /// The GetAccountError union
-    public enum GetAccountError: CustomStringConvertible {
+    public enum GetAccountError: CustomStringConvertible, JSONRepresentable {
         /// The specified accountId in GetAccountArg does not exist.
         case noAccount
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetAccountErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetAccountErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetAccountError: \(error)"
             }
         }
     }
@@ -597,7 +625,7 @@ public class Users {
     }
 
     /// The IndividualSpaceAllocation struct
-    public class IndividualSpaceAllocation: CustomStringConvertible {
+    public class IndividualSpaceAllocation: CustomStringConvertible, JSONRepresentable {
         /// The total space allocated to the user's account (bytes).
         public let allocated: UInt64
         public init(allocated: UInt64) {
@@ -605,11 +633,15 @@ public class Users {
             self.allocated = allocated
         }
 
+        func json() throws -> JSON {
+            try IndividualSpaceAllocationSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try IndividualSpaceAllocationSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for IndividualSpaceAllocation: \(error)"
             }
         }
     }
@@ -635,7 +667,7 @@ public class Users {
     }
 
     /// Representations for a person's name to assist with internationalization.
-    public class Name: CustomStringConvertible {
+    public class Name: CustomStringConvertible, JSONRepresentable {
         /// Also known as a first name.
         public let givenName: String
         /// Also known as a last name or family name.
@@ -660,11 +692,15 @@ public class Users {
             self.abbreviatedName = abbreviatedName
         }
 
+        func json() throws -> JSON {
+            try NameSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try NameSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Name: \(error)"
             }
         }
     }
@@ -698,7 +734,7 @@ public class Users {
     }
 
     /// The value for paperAsFiles in UserFeature.
-    public enum PaperAsFilesValue: CustomStringConvertible {
+    public enum PaperAsFilesValue: CustomStringConvertible, JSONRepresentable {
         /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper extension and must
         /// be accessed via the /files endpoints.  When this value is false, the user's Paper docs are stored
         /// separate from Dropbox files and folders and should be accessed via the /paper endpoints.
@@ -706,11 +742,15 @@ public class Users {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PaperAsFilesValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperAsFilesValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PaperAsFilesValue: \(error)"
             }
         }
     }
@@ -750,7 +790,7 @@ public class Users {
     }
 
     /// Space is allocated differently based on the type of account.
-    public enum SpaceAllocation: CustomStringConvertible {
+    public enum SpaceAllocation: CustomStringConvertible, JSONRepresentable {
         /// The user's space allocation applies only to their individual account.
         case individual(Users.IndividualSpaceAllocation)
         /// The user shares space with other members of their team.
@@ -758,11 +798,15 @@ public class Users {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SpaceAllocationSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SpaceAllocationSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SpaceAllocation: \(error)"
             }
         }
     }
@@ -809,7 +853,7 @@ public class Users {
     }
 
     /// Information about a user's space usage and quota.
-    public class SpaceUsage: CustomStringConvertible {
+    public class SpaceUsage: CustomStringConvertible, JSONRepresentable {
         /// The user's total space usage (bytes).
         public let used: UInt64
         /// The user's space allocation.
@@ -820,11 +864,15 @@ public class Users {
             self.allocation = allocation
         }
 
+        func json() throws -> JSON {
+            try SpaceUsageSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SpaceUsageSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SpaceUsage: \(error)"
             }
         }
     }
@@ -852,7 +900,7 @@ public class Users {
     }
 
     /// The TeamSpaceAllocation struct
-    public class TeamSpaceAllocation: CustomStringConvertible {
+    public class TeamSpaceAllocation: CustomStringConvertible, JSONRepresentable {
         /// The total space currently used by the user's team (bytes).
         public let used: UInt64
         /// The total space allocated to the user's team (bytes).
@@ -882,11 +930,15 @@ public class Users {
             self.userWithinTeamSpaceUsedCached = userWithinTeamSpaceUsedCached
         }
 
+        func json() throws -> JSON {
+            try TeamSpaceAllocationSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamSpaceAllocationSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamSpaceAllocation: \(error)"
             }
         }
     }
@@ -927,7 +979,7 @@ public class Users {
     }
 
     /// A set of features that a Dropbox User account may have configured.
-    public enum UserFeature: CustomStringConvertible {
+    public enum UserFeature: CustomStringConvertible, JSONRepresentable {
         /// This feature contains information about how the user's Paper files are stored.
         case paperAsFiles
         /// This feature allows users to lock files in order to restrict other users from editing them.
@@ -935,11 +987,15 @@ public class Users {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserFeatureSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFeatureSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFeature: \(error)"
             }
         }
     }
@@ -984,7 +1040,7 @@ public class Users {
     }
 
     /// Values that correspond to entries in UserFeature.
-    public enum UserFeatureValue: CustomStringConvertible {
+    public enum UserFeatureValue: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case paperAsFiles(Users.PaperAsFilesValue)
         /// An unspecified error.
@@ -992,11 +1048,15 @@ public class Users {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserFeatureValueSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFeatureValueSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFeatureValue: \(error)"
             }
         }
     }
@@ -1043,7 +1103,7 @@ public class Users {
     }
 
     /// The UserFeaturesGetValuesBatchArg struct
-    public class UserFeaturesGetValuesBatchArg: CustomStringConvertible {
+    public class UserFeaturesGetValuesBatchArg: CustomStringConvertible, JSONRepresentable {
         /// A list of features in UserFeature. If the list is empty, this route will return
         /// UserFeaturesGetValuesBatchError.
         public let features: [Users.UserFeature]
@@ -1051,11 +1111,15 @@ public class Users {
             self.features = features
         }
 
+        func json() throws -> JSON {
+            try UserFeaturesGetValuesBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFeaturesGetValuesBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFeaturesGetValuesBatchArg: \(error)"
             }
         }
     }
@@ -1081,17 +1145,21 @@ public class Users {
     }
 
     /// The UserFeaturesGetValuesBatchError union
-    public enum UserFeaturesGetValuesBatchError: CustomStringConvertible {
+    public enum UserFeaturesGetValuesBatchError: CustomStringConvertible, JSONRepresentable {
         /// At least one UserFeature must be included in the UserFeaturesGetValuesBatchArg.features list.
         case emptyFeaturesList
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserFeaturesGetValuesBatchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFeaturesGetValuesBatchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFeaturesGetValuesBatchError: \(error)"
             }
         }
     }
@@ -1130,18 +1198,22 @@ public class Users {
     }
 
     /// The UserFeaturesGetValuesBatchResult struct
-    public class UserFeaturesGetValuesBatchResult: CustomStringConvertible {
+    public class UserFeaturesGetValuesBatchResult: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let values: [Users.UserFeatureValue]
         public init(values: [Users.UserFeatureValue]) {
             self.values = values
         }
 
+        func json() throws -> JSON {
+            try UserFeaturesGetValuesBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFeaturesGetValuesBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFeaturesGetValuesBatchResult: \(error)"
             }
         }
     }

@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the sharing namespace
 /// For Objective-C compatible routes see DBSharingRoutes
-public class SharingRoutes {
+public class SharingRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

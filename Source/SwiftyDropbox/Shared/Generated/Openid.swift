@@ -9,17 +9,21 @@ import Foundation
 /// Datatypes and serializers for the openid namespace
 public class Openid {
     /// The OpenIdError union
-    public enum OpenIdError: CustomStringConvertible {
+    public enum OpenIdError: CustomStringConvertible, JSONRepresentable {
         /// Missing openid claims for the associated access token.
         case incorrectOpenidScopes
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try OpenIdErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try OpenIdErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for OpenIdError: \(error)"
             }
         }
     }
@@ -58,12 +62,16 @@ public class Openid {
     }
 
     /// No Parameters
-    public class UserInfoArgs: CustomStringConvertible {
+    public class UserInfoArgs: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try UserInfoArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserInfoArgs: \(error)"
             }
         }
     }
@@ -86,17 +94,21 @@ public class Openid {
     }
 
     /// The UserInfoError union
-    public enum UserInfoError: CustomStringConvertible {
+    public enum UserInfoError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case openidError(Openid.OpenIdError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserInfoErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserInfoError: \(error)"
             }
         }
     }
@@ -136,7 +148,7 @@ public class Openid {
     }
 
     /// The UserInfoResult struct
-    public class UserInfoResult: CustomStringConvertible {
+    public class UserInfoResult: CustomStringConvertible, JSONRepresentable {
         /// Last name of user.
         public let familyName: String?
         /// First name of user.
@@ -164,11 +176,15 @@ public class Openid {
             self.sub = sub
         }
 
+        func json() throws -> JSON {
+            try UserInfoResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserInfoResult: \(error)"
             }
         }
     }

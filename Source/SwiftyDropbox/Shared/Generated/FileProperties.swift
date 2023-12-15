@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the file_properties namespace
 public class FileProperties {
     /// The AddPropertiesArg struct
-    public class AddPropertiesArg: CustomStringConvertible {
+    public class AddPropertiesArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
         /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
@@ -21,11 +21,15 @@ public class FileProperties {
             self.propertyGroups = propertyGroups
         }
 
+        func json() throws -> JSON {
+            try AddPropertiesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddPropertiesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddPropertiesArg: \(error)"
             }
         }
     }
@@ -53,7 +57,7 @@ public class FileProperties {
     }
 
     /// The TemplateError union
-    public enum TemplateError: CustomStringConvertible {
+    public enum TemplateError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -61,11 +65,15 @@ public class FileProperties {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TemplateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TemplateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TemplateError: \(error)"
             }
         }
     }
@@ -111,7 +119,7 @@ public class FileProperties {
     }
 
     /// The PropertiesError union
-    public enum PropertiesError: CustomStringConvertible {
+    public enum PropertiesError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -123,11 +131,15 @@ public class FileProperties {
         /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
         case unsupportedFolder
 
+        func json() throws -> JSON {
+            try PropertiesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesError: \(error)"
             }
         }
     }
@@ -186,7 +198,7 @@ public class FileProperties {
     }
 
     /// The InvalidPropertyGroupError union
-    public enum InvalidPropertyGroupError: CustomStringConvertible {
+    public enum InvalidPropertyGroupError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -204,11 +216,15 @@ public class FileProperties {
         /// There are 2 or more property groups referring to the same templates in the input.
         case duplicatePropertyGroups
 
+        func json() throws -> JSON {
+            try InvalidPropertyGroupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InvalidPropertyGroupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InvalidPropertyGroupError: \(error)"
             }
         }
     }
@@ -285,7 +301,7 @@ public class FileProperties {
     }
 
     /// The AddPropertiesError union
-    public enum AddPropertiesError: CustomStringConvertible {
+    public enum AddPropertiesError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -305,11 +321,15 @@ public class FileProperties {
         /// A property group associated with this template and file already exists.
         case propertyGroupAlreadyExists
 
+        func json() throws -> JSON {
+            try AddPropertiesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddPropertiesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddPropertiesError: \(error)"
             }
         }
     }
@@ -392,7 +412,7 @@ public class FileProperties {
     }
 
     /// Defines how a property group may be structured.
-    public class PropertyGroupTemplate: CustomStringConvertible {
+    public class PropertyGroupTemplate: CustomStringConvertible, JSONRepresentable {
         /// Display name for the template. Template names can be up to 256 bytes.
         public let name: String
         /// Description for the template. Template descriptions can be up to 1024 bytes.
@@ -408,11 +428,15 @@ public class FileProperties {
             self.fields = fields
         }
 
+        func json() throws -> JSON {
+            try PropertyGroupTemplateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyGroupTemplateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyGroupTemplate: \(error)"
             }
         }
     }
@@ -447,7 +471,7 @@ public class FileProperties {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddTemplateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddTemplateArg: \(error)"
             }
         }
     }
@@ -477,7 +501,7 @@ public class FileProperties {
     }
 
     /// The AddTemplateResult struct
-    public class AddTemplateResult: CustomStringConvertible {
+    public class AddTemplateResult: CustomStringConvertible, JSONRepresentable {
         /// An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
         public let templateId: String
         public init(templateId: String) {
@@ -485,11 +509,15 @@ public class FileProperties {
             self.templateId = templateId
         }
 
+        func json() throws -> JSON {
+            try AddTemplateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddTemplateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddTemplateResult: \(error)"
             }
         }
     }
@@ -515,7 +543,7 @@ public class FileProperties {
     }
 
     /// The GetTemplateArg struct
-    public class GetTemplateArg: CustomStringConvertible {
+    public class GetTemplateArg: CustomStringConvertible, JSONRepresentable {
         /// An identifier for template added by route  See templatesAddForUser or templatesAddForTeam.
         public let templateId: String
         public init(templateId: String) {
@@ -523,11 +551,15 @@ public class FileProperties {
             self.templateId = templateId
         }
 
+        func json() throws -> JSON {
+            try GetTemplateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemplateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemplateArg: \(error)"
             }
         }
     }
@@ -558,7 +590,7 @@ public class FileProperties {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemplateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetTemplateResult: \(error)"
             }
         }
     }
@@ -588,7 +620,7 @@ public class FileProperties {
     }
 
     /// The ListTemplateResult struct
-    public class ListTemplateResult: CustomStringConvertible {
+    public class ListTemplateResult: CustomStringConvertible, JSONRepresentable {
         /// List of identifiers for templates added by  See templatesAddForUser or templatesAddForTeam.
         public let templateIds: [String]
         public init(templateIds: [String]) {
@@ -596,11 +628,15 @@ public class FileProperties {
             self.templateIds = templateIds
         }
 
+        func json() throws -> JSON {
+            try ListTemplateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListTemplateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListTemplateResult: \(error)"
             }
         }
     }
@@ -626,17 +662,21 @@ public class FileProperties {
     }
 
     /// Logical operator to join search queries together.
-    public enum LogicalOperator: CustomStringConvertible {
+    public enum LogicalOperator: CustomStringConvertible, JSONRepresentable {
         /// Append a query with an "or" operator.
         case orOperator
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LogicalOperatorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LogicalOperatorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LogicalOperator: \(error)"
             }
         }
     }
@@ -675,17 +715,21 @@ public class FileProperties {
     }
 
     /// The LookUpPropertiesError union
-    public enum LookUpPropertiesError: CustomStringConvertible {
+    public enum LookUpPropertiesError: CustomStringConvertible, JSONRepresentable {
         /// No property group was found.
         case propertyGroupNotFound
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LookUpPropertiesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LookUpPropertiesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LookUpPropertiesError: \(error)"
             }
         }
     }
@@ -724,7 +768,7 @@ public class FileProperties {
     }
 
     /// The LookupError union
-    public enum LookupError: CustomStringConvertible {
+    public enum LookupError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case malformedPath(String)
         /// There is nothing at the given path.
@@ -739,11 +783,15 @@ public class FileProperties {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LookupErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LookupErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LookupError: \(error)"
             }
         }
     }
@@ -807,7 +855,7 @@ public class FileProperties {
     }
 
     /// The ModifyTemplateError union
-    public enum ModifyTemplateError: CustomStringConvertible {
+    public enum ModifyTemplateError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -823,11 +871,15 @@ public class FileProperties {
         /// The template name, description or one or more of the property field keys is too large.
         case templateAttributeTooLarge
 
+        func json() throws -> JSON {
+            try ModifyTemplateErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ModifyTemplateErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ModifyTemplateError: \(error)"
             }
         }
     }
@@ -897,7 +949,7 @@ public class FileProperties {
     }
 
     /// The OverwritePropertyGroupArg struct
-    public class OverwritePropertyGroupArg: CustomStringConvertible {
+    public class OverwritePropertyGroupArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
         /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
@@ -909,11 +961,15 @@ public class FileProperties {
             self.propertyGroups = propertyGroups
         }
 
+        func json() throws -> JSON {
+            try OverwritePropertyGroupArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try OverwritePropertyGroupArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for OverwritePropertyGroupArg: \(error)"
             }
         }
     }
@@ -941,7 +997,7 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchArg struct
-    public class PropertiesSearchArg: CustomStringConvertible {
+    public class PropertiesSearchArg: CustomStringConvertible, JSONRepresentable {
         /// Queries to search.
         public let queries: [FileProperties.PropertiesSearchQuery]
         /// Filter results to contain only properties associated with these template IDs.
@@ -951,11 +1007,15 @@ public class FileProperties {
             self.templateFilter = templateFilter
         }
 
+        func json() throws -> JSON {
+            try PropertiesSearchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchArg: \(error)"
             }
         }
     }
@@ -984,7 +1044,7 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchContinueArg struct
-    public class PropertiesSearchContinueArg: CustomStringConvertible {
+    public class PropertiesSearchContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by your last call to propertiesSearch or propertiesSearchContinue.
         public let cursor: String
         public init(cursor: String) {
@@ -992,11 +1052,15 @@ public class FileProperties {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try PropertiesSearchContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchContinueArg: \(error)"
             }
         }
     }
@@ -1022,17 +1086,21 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchContinueError union
-    public enum PropertiesSearchContinueError: CustomStringConvertible {
+    public enum PropertiesSearchContinueError: CustomStringConvertible, JSONRepresentable {
         /// Indicates that the cursor has been invalidated. Call propertiesSearch to obtain a new cursor.
         case reset
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PropertiesSearchContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchContinueError: \(error)"
             }
         }
     }
@@ -1071,17 +1139,21 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchError union
-    public enum PropertiesSearchError: CustomStringConvertible {
+    public enum PropertiesSearchError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case propertyGroupLookup(FileProperties.LookUpPropertiesError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PropertiesSearchErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchError: \(error)"
             }
         }
     }
@@ -1121,7 +1193,7 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchMatch struct
-    public class PropertiesSearchMatch: CustomStringConvertible {
+    public class PropertiesSearchMatch: CustomStringConvertible, JSONRepresentable {
         /// The ID for the matched file or folder.
         public let id: String
         /// The path for the matched file or folder.
@@ -1139,11 +1211,15 @@ public class FileProperties {
             self.propertyGroups = propertyGroups
         }
 
+        func json() throws -> JSON {
+            try PropertiesSearchMatchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchMatchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchMatch: \(error)"
             }
         }
     }
@@ -1175,17 +1251,21 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchMode union
-    public enum PropertiesSearchMode: CustomStringConvertible {
+    public enum PropertiesSearchMode: CustomStringConvertible, JSONRepresentable {
         /// Search for a value associated with this field name.
         case fieldName(String)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PropertiesSearchModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchMode: \(error)"
             }
         }
     }
@@ -1225,7 +1305,7 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchQuery struct
-    public class PropertiesSearchQuery: CustomStringConvertible {
+    public class PropertiesSearchQuery: CustomStringConvertible, JSONRepresentable {
         /// The property field value for which to search across templates.
         public let query: String
         /// The mode with which to perform the search.
@@ -1239,11 +1319,15 @@ public class FileProperties {
             self.logicalOperator = logicalOperator
         }
 
+        func json() throws -> JSON {
+            try PropertiesSearchQuerySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchQuerySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchQuery: \(error)"
             }
         }
     }
@@ -1274,7 +1358,7 @@ public class FileProperties {
     }
 
     /// The PropertiesSearchResult struct
-    public class PropertiesSearchResult: CustomStringConvertible {
+    public class PropertiesSearchResult: CustomStringConvertible, JSONRepresentable {
         /// A list (possibly empty) of matches for the query.
         public let matches: [FileProperties.PropertiesSearchMatch]
         /// Pass the cursor into propertiesSearchContinue to continue to receive search results. Cursor will be null
@@ -1286,11 +1370,15 @@ public class FileProperties {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try PropertiesSearchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertiesSearchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertiesSearchResult: \(error)"
             }
         }
     }
@@ -1319,7 +1407,7 @@ public class FileProperties {
 
     /// Raw key/value data to be associated with a Dropbox file. Property fields are added to Dropbox files as a
     /// PropertyGroup.
-    public class PropertyField: CustomStringConvertible {
+    public class PropertyField: CustomStringConvertible, JSONRepresentable {
         /// Key of the property field associated with a file and template. Keys can be up to 256 bytes.
         public let name: String
         /// Value of the property field associated with a file and template. Values can be up to 1024 bytes.
@@ -1331,11 +1419,15 @@ public class FileProperties {
             self.value = value
         }
 
+        func json() throws -> JSON {
+            try PropertyFieldSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyFieldSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyField: \(error)"
             }
         }
     }
@@ -1363,7 +1455,7 @@ public class FileProperties {
     }
 
     /// Defines how a single property field may be structured. Used exclusively by PropertyGroupTemplate.
-    public class PropertyFieldTemplate: CustomStringConvertible {
+    public class PropertyFieldTemplate: CustomStringConvertible, JSONRepresentable {
         /// Key of the property field being described. Property field keys can be up to 256 bytes.
         public let name: String
         /// Description of the property field. Property field descriptions can be up to 1024 bytes.
@@ -1379,11 +1471,15 @@ public class FileProperties {
             self.type = type
         }
 
+        func json() throws -> JSON {
+            try PropertyFieldTemplateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyFieldTemplateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyFieldTemplate: \(error)"
             }
         }
     }
@@ -1415,7 +1511,7 @@ public class FileProperties {
     /// A subset of the property fields described by the corresponding PropertyGroupTemplate. Properties are always
     /// added to a Dropbox file as a PropertyGroup. The possible key names and value types in this group are defined
     /// by the corresponding PropertyGroupTemplate.
-    public class PropertyGroup: CustomStringConvertible {
+    public class PropertyGroup: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the associated template.
         public let templateId: String
         /// The actual properties associated with the template. There can be up to 32 property types per template.
@@ -1426,11 +1522,15 @@ public class FileProperties {
             self.fields = fields
         }
 
+        func json() throws -> JSON {
+            try PropertyGroupSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyGroupSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyGroup: \(error)"
             }
         }
     }
@@ -1458,7 +1558,7 @@ public class FileProperties {
     }
 
     /// The PropertyGroupUpdate struct
-    public class PropertyGroupUpdate: CustomStringConvertible {
+    public class PropertyGroupUpdate: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for a property template.
         public let templateId: String
         /// Property fields to update. If the property field already exists, it is updated. If the property field
@@ -1474,11 +1574,15 @@ public class FileProperties {
             self.removeFields = removeFields
         }
 
+        func json() throws -> JSON {
+            try PropertyGroupUpdateSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyGroupUpdateSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyGroupUpdate: \(error)"
             }
         }
     }
@@ -1509,17 +1613,21 @@ public class FileProperties {
     }
 
     /// Data type of the given property field added.
-    public enum PropertyType: CustomStringConvertible {
+    public enum PropertyType: CustomStringConvertible, JSONRepresentable {
         /// The associated property field will be of type string. Unicode is supported.
         case string_
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PropertyTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PropertyTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PropertyType: \(error)"
             }
         }
     }
@@ -1558,7 +1666,7 @@ public class FileProperties {
     }
 
     /// The RemovePropertiesArg struct
-    public class RemovePropertiesArg: CustomStringConvertible {
+    public class RemovePropertiesArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
         /// A list of identifiers for a template created by templatesAddForUser or templatesAddForTeam.
@@ -1570,11 +1678,15 @@ public class FileProperties {
             self.propertyTemplateIds = propertyTemplateIds
         }
 
+        func json() throws -> JSON {
+            try RemovePropertiesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemovePropertiesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemovePropertiesArg: \(error)"
             }
         }
     }
@@ -1602,7 +1714,7 @@ public class FileProperties {
     }
 
     /// The RemovePropertiesError union
-    public enum RemovePropertiesError: CustomStringConvertible {
+    public enum RemovePropertiesError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -1616,11 +1728,15 @@ public class FileProperties {
         /// An unspecified error.
         case propertyGroupLookup(FileProperties.LookUpPropertiesError)
 
+        func json() throws -> JSON {
+            try RemovePropertiesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemovePropertiesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemovePropertiesError: \(error)"
             }
         }
     }
@@ -1686,7 +1802,7 @@ public class FileProperties {
     }
 
     /// The RemoveTemplateArg struct
-    public class RemoveTemplateArg: CustomStringConvertible {
+    public class RemoveTemplateArg: CustomStringConvertible, JSONRepresentable {
         /// An identifier for a template created by templatesAddForUser or templatesAddForTeam.
         public let templateId: String
         public init(templateId: String) {
@@ -1694,11 +1810,15 @@ public class FileProperties {
             self.templateId = templateId
         }
 
+        func json() throws -> JSON {
+            try RemoveTemplateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveTemplateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveTemplateArg: \(error)"
             }
         }
     }
@@ -1724,17 +1844,21 @@ public class FileProperties {
     }
 
     /// The TemplateFilterBase union
-    public enum TemplateFilterBase: CustomStringConvertible {
+    public enum TemplateFilterBase: CustomStringConvertible, JSONRepresentable {
         /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
         case filterSome([String])
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TemplateFilterBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TemplateFilterBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TemplateFilterBase: \(error)"
             }
         }
     }
@@ -1774,7 +1898,7 @@ public class FileProperties {
     }
 
     /// The TemplateFilter union
-    public enum TemplateFilter: CustomStringConvertible {
+    public enum TemplateFilter: CustomStringConvertible, JSONRepresentable {
         /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
         case filterSome([String])
         /// An unspecified error.
@@ -1782,11 +1906,15 @@ public class FileProperties {
         /// No templates will be filtered from the result (all templates will be returned).
         case filterNone
 
+        func json() throws -> JSON {
+            try TemplateFilterSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TemplateFilterSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TemplateFilter: \(error)"
             }
         }
     }
@@ -1832,7 +1960,7 @@ public class FileProperties {
     }
 
     /// The TemplateOwnerType union
-    public enum TemplateOwnerType: CustomStringConvertible {
+    public enum TemplateOwnerType: CustomStringConvertible, JSONRepresentable {
         /// Template will be associated with a user.
         case user
         /// Template will be associated with a team.
@@ -1840,11 +1968,15 @@ public class FileProperties {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TemplateOwnerTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TemplateOwnerTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TemplateOwnerType: \(error)"
             }
         }
     }
@@ -1889,7 +2021,7 @@ public class FileProperties {
     }
 
     /// The UpdatePropertiesArg struct
-    public class UpdatePropertiesArg: CustomStringConvertible {
+    public class UpdatePropertiesArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
         /// The property groups "delta" updates to apply.
@@ -1900,11 +2032,15 @@ public class FileProperties {
             self.updatePropertyGroups = updatePropertyGroups
         }
 
+        func json() throws -> JSON {
+            try UpdatePropertiesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdatePropertiesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdatePropertiesArg: \(error)"
             }
         }
     }
@@ -1933,7 +2069,7 @@ public class FileProperties {
     }
 
     /// The UpdatePropertiesError union
-    public enum UpdatePropertiesError: CustomStringConvertible {
+    public enum UpdatePropertiesError: CustomStringConvertible, JSONRepresentable {
         /// Template does not exist for the given identifier.
         case templateNotFound(String)
         /// You do not have permission to modify this template.
@@ -1953,11 +2089,15 @@ public class FileProperties {
         /// An unspecified error.
         case propertyGroupLookup(FileProperties.LookUpPropertiesError)
 
+        func json() throws -> JSON {
+            try UpdatePropertiesErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdatePropertiesErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdatePropertiesError: \(error)"
             }
         }
     }
@@ -2041,7 +2181,7 @@ public class FileProperties {
     }
 
     /// The UpdateTemplateArg struct
-    public class UpdateTemplateArg: CustomStringConvertible {
+    public class UpdateTemplateArg: CustomStringConvertible, JSONRepresentable {
         /// An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
         public let templateId: String
         /// A display name for the template. template names can be up to 256 bytes.
@@ -2061,11 +2201,15 @@ public class FileProperties {
             self.addFields = addFields
         }
 
+        func json() throws -> JSON {
+            try UpdateTemplateArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateTemplateArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateTemplateArg: \(error)"
             }
         }
     }
@@ -2098,7 +2242,7 @@ public class FileProperties {
     }
 
     /// The UpdateTemplateResult struct
-    public class UpdateTemplateResult: CustomStringConvertible {
+    public class UpdateTemplateResult: CustomStringConvertible, JSONRepresentable {
         /// An identifier for template added by route  See templatesAddForUser or templatesAddForTeam.
         public let templateId: String
         public init(templateId: String) {
@@ -2106,11 +2250,15 @@ public class FileProperties {
             self.templateId = templateId
         }
 
+        func json() throws -> JSON {
+            try UpdateTemplateResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateTemplateResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateTemplateResult: \(error)"
             }
         }
     }

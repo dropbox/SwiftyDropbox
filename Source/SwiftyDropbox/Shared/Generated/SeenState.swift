@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the seen_state namespace
 public class SeenState {
     /// Possible platforms on which a user may view content.
-    public enum PlatformType: CustomStringConvertible {
+    public enum PlatformType: CustomStringConvertible, JSONRepresentable {
         /// The content was viewed on the web.
         case web
         /// The content was viewed on a desktop client.
@@ -27,11 +27,15 @@ public class SeenState {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PlatformTypeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PlatformTypeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PlatformType: \(error)"
             }
         }
     }

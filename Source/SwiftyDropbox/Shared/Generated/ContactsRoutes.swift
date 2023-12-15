@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the contacts namespace
 /// For Objective-C compatible routes see DBContactsRoutes
-public class ContactsRoutes {
+public class ContactsRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

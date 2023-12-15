@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the common namespace
 public class Common {
     /// The PathRoot union
-    public enum PathRoot: CustomStringConvertible {
+    public enum PathRoot: CustomStringConvertible, JSONRepresentable {
         /// Paths are relative to the authenticating user's home namespace, whether or not that user belongs to a team.
         case home
         /// Paths are relative to the authenticating user's root namespace (This results in invalidRoot in PathRootError
@@ -21,11 +21,15 @@ public class Common {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PathRootSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PathRootSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PathRoot: \(error)"
             }
         }
     }
@@ -78,7 +82,7 @@ public class Common {
     }
 
     /// The PathRootError union
-    public enum PathRootError: CustomStringConvertible {
+    public enum PathRootError: CustomStringConvertible, JSONRepresentable {
         /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's
         /// latest root info.
         case invalidRoot(Common.RootInfo)
@@ -87,11 +91,15 @@ public class Common {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PathRootErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PathRootErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PathRootError: \(error)"
             }
         }
     }
@@ -137,7 +145,7 @@ public class Common {
     }
 
     /// Information about current user's root.
-    public class RootInfo: CustomStringConvertible {
+    public class RootInfo: CustomStringConvertible, JSONRepresentable {
         /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
         /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in
         /// RootInfo.
@@ -151,11 +159,15 @@ public class Common {
             self.homeNamespaceId = homeNamespaceId
         }
 
+        func json() throws -> JSON {
+            try RootInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RootInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RootInfo: \(error)"
             }
         }
     }
@@ -218,7 +230,7 @@ public class Common {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamRootInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamRootInfo: \(error)"
             }
         }
     }
@@ -254,7 +266,7 @@ public class Common {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserRootInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserRootInfo: \(error)"
             }
         }
     }

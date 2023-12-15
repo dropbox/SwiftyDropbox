@@ -9,7 +9,7 @@ import Foundation
 /// Datatypes and serializers for the sharing namespace
 public class Sharing {
     /// Information about the inheritance policy of a shared folder.
-    public enum AccessInheritance: CustomStringConvertible {
+    public enum AccessInheritance: CustomStringConvertible, JSONRepresentable {
         /// The shared folder inherits its members from the parent folder.
         case inherit
         /// The shared folder does not inherit its members from the parent folder.
@@ -17,11 +17,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AccessInheritanceSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AccessInheritanceSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AccessInheritance: \(error)"
             }
         }
     }
@@ -66,7 +70,7 @@ public class Sharing {
     }
 
     /// Defines the access levels for collaborators.
-    public enum AccessLevel: CustomStringConvertible {
+    public enum AccessLevel: CustomStringConvertible, JSONRepresentable {
         /// The collaborator is the owner of the shared folder. Owners can view and edit the shared folder as well as
         /// set the folder's policies using updateFolderPolicy.
         case owner
@@ -85,11 +89,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AccessLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AccessLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AccessLevel: \(error)"
             }
         }
     }
@@ -159,7 +167,7 @@ public class Sharing {
 
     /// Who can change a shared folder's access control list (ACL). In other words, who can add, remove, or change the
     /// privileges of members.
-    public enum AclUpdatePolicy: CustomStringConvertible {
+    public enum AclUpdatePolicy: CustomStringConvertible, JSONRepresentable {
         /// Only the owner can update the ACL.
         case owner
         /// Any editor can update the ACL. This may be further restricted to editors on the same team.
@@ -167,11 +175,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AclUpdatePolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AclUpdatePolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AclUpdatePolicy: \(error)"
             }
         }
     }
@@ -216,7 +228,7 @@ public class Sharing {
     }
 
     /// Arguments for addFileMember.
-    public class AddFileMemberArgs: CustomStringConvertible {
+    public class AddFileMemberArgs: CustomStringConvertible, JSONRepresentable {
         /// File to which to add members.
         public let file: String
         /// Members to add. Note that even an email address is given, this may result in a user being directly added to
@@ -248,11 +260,15 @@ public class Sharing {
             self.addMessageAsComment = addMessageAsComment
         }
 
+        func json() throws -> JSON {
+            try AddFileMemberArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddFileMemberArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddFileMemberArgs: \(error)"
             }
         }
     }
@@ -296,7 +312,7 @@ public class Sharing {
     }
 
     /// Errors for addFileMember.
-    public enum AddFileMemberError: CustomStringConvertible {
+    public enum AddFileMemberError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -308,11 +324,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddFileMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddFileMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddFileMemberError: \(error)"
             }
         }
     }
@@ -371,7 +391,7 @@ public class Sharing {
     }
 
     /// The AddFolderMemberArg struct
-    public class AddFolderMemberArg: CustomStringConvertible {
+    public class AddFolderMemberArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// The intended list of members to add.  Added members will receive invites to join the shared folder.
@@ -389,11 +409,15 @@ public class Sharing {
             self.customMessage = customMessage
         }
 
+        func json() throws -> JSON {
+            try AddFolderMemberArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddFolderMemberArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddFolderMemberArg: \(error)"
             }
         }
     }
@@ -425,7 +449,7 @@ public class Sharing {
     }
 
     /// The AddFolderMemberError union
-    public enum AddFolderMemberError: CustomStringConvertible {
+    public enum AddFolderMemberError: CustomStringConvertible, JSONRepresentable {
         /// Unable to access shared folder.
         case accessError(Sharing.SharedFolderAccessError)
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
@@ -457,11 +481,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddFolderMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddFolderMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddFolderMemberError: \(error)"
             }
         }
     }
@@ -576,7 +604,7 @@ public class Sharing {
     }
 
     /// The member and type of access the member should have when added to a shared folder.
-    public class AddMember: CustomStringConvertible {
+    public class AddMember: CustomStringConvertible, JSONRepresentable {
         /// The member to add to the shared folder.
         public let member: Sharing.MemberSelector
         /// The access level to grant member to the shared folder.  owner in AccessLevel is disallowed.
@@ -586,11 +614,15 @@ public class Sharing {
             self.accessLevel = accessLevel
         }
 
+        func json() throws -> JSON {
+            try AddMemberSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddMemberSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddMember: \(error)"
             }
         }
     }
@@ -619,7 +651,7 @@ public class Sharing {
     }
 
     /// The AddMemberSelectorError union
-    public enum AddMemberSelectorError: CustomStringConvertible {
+    public enum AddMemberSelectorError: CustomStringConvertible, JSONRepresentable {
         /// Automatically created groups can only be added to team folders.
         case automaticGroup
         /// The value is the ID that could not be identified.
@@ -636,11 +668,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AddMemberSelectorErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddMemberSelectorErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AddMemberSelectorError: \(error)"
             }
         }
     }
@@ -714,7 +750,7 @@ public class Sharing {
     /// The access permission that can be requested by the caller for the shared link. Note that the final resolved
     /// visibility of the shared link takes into account other aspects, such as team and shared folder settings.
     /// Check the ResolvedVisibility for more info on the possible resolved visibility values of shared links.
-    public enum RequestedVisibility: CustomStringConvertible {
+    public enum RequestedVisibility: CustomStringConvertible, JSONRepresentable {
         /// Anyone who has received the link can access it. No login required.
         case public_
         /// Only members of the same team can access the link. Login is required.
@@ -722,11 +758,15 @@ public class Sharing {
         /// A link-specific password is required to access the link. Login is not required.
         case password
 
+        func json() throws -> JSON {
+            try RequestedVisibilitySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RequestedVisibilitySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RequestedVisibility: \(error)"
             }
         }
     }
@@ -773,7 +813,7 @@ public class Sharing {
     /// The actual access permissions values of shared links after taking into account user preferences and the team and
     /// shared folder settings. Check the RequestedVisibility for more info on the possible visibility values that
     /// can be set by the shared link's owner.
-    public enum ResolvedVisibility: CustomStringConvertible {
+    public enum ResolvedVisibility: CustomStringConvertible, JSONRepresentable {
         /// Anyone who has received the link can access it. No login required.
         case public_
         /// Only members of the same team can access the link. Login is required.
@@ -793,11 +833,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ResolvedVisibilitySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ResolvedVisibilitySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ResolvedVisibility: \(error)"
             }
         }
     }
@@ -872,7 +916,7 @@ public class Sharing {
     }
 
     /// check documentation for ResolvedVisibility.
-    public enum AlphaResolvedVisibility: CustomStringConvertible {
+    public enum AlphaResolvedVisibility: CustomStringConvertible, JSONRepresentable {
         /// Anyone who has received the link can access it. No login required.
         case public_
         /// Only members of the same team can access the link. Login is required.
@@ -892,11 +936,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try AlphaResolvedVisibilitySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AlphaResolvedVisibilitySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AlphaResolvedVisibility: \(error)"
             }
         }
     }
@@ -971,7 +1019,7 @@ public class Sharing {
     }
 
     /// Information about the content that has a link audience different than that of this folder.
-    public class AudienceExceptionContentInfo: CustomStringConvertible {
+    public class AudienceExceptionContentInfo: CustomStringConvertible, JSONRepresentable {
         /// The name of the content, which is either a file or a folder.
         public let name: String
         public init(name: String) {
@@ -979,11 +1027,15 @@ public class Sharing {
             self.name = name
         }
 
+        func json() throws -> JSON {
+            try AudienceExceptionContentInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AudienceExceptionContentInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AudienceExceptionContentInfo: \(error)"
             }
         }
     }
@@ -1010,7 +1062,7 @@ public class Sharing {
 
     /// The total count and truncated list of information of content inside this folder that has a different audience
     /// than the link on this folder. This is only returned for folders.
-    public class AudienceExceptions: CustomStringConvertible {
+    public class AudienceExceptions: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let count: UInt32
         /// A truncated list of some of the content that is an exception. The length of this list could be smaller than
@@ -1022,11 +1074,15 @@ public class Sharing {
             self.exceptions = exceptions
         }
 
+        func json() throws -> JSON {
+            try AudienceExceptionsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AudienceExceptionsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AudienceExceptions: \(error)"
             }
         }
     }
@@ -1054,7 +1110,7 @@ public class Sharing {
     }
 
     /// Information about the shared folder that prevents the link audience for this link from being more restrictive.
-    public class AudienceRestrictingSharedFolder: CustomStringConvertible {
+    public class AudienceRestrictingSharedFolder: CustomStringConvertible, JSONRepresentable {
         /// The ID of the shared folder.
         public let sharedFolderId: String
         /// The name of the shared folder.
@@ -1069,11 +1125,15 @@ public class Sharing {
             self.audience = audience
         }
 
+        func json() throws -> JSON {
+            try AudienceRestrictingSharedFolderSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AudienceRestrictingSharedFolderSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for AudienceRestrictingSharedFolder: \(error)"
             }
         }
     }
@@ -1103,7 +1163,7 @@ public class Sharing {
     }
 
     /// Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
-    public class LinkMetadata: CustomStringConvertible {
+    public class LinkMetadata: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link.
         public let url: String
         /// Who can access the link.
@@ -1117,11 +1177,15 @@ public class Sharing {
             self.expires = expires
         }
 
+        func json() throws -> JSON {
+            try LinkMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkMetadata: \(error)"
             }
         }
     }
@@ -1178,7 +1242,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CollectionLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CollectionLinkMetadata: \(error)"
             }
         }
     }
@@ -1208,7 +1272,7 @@ public class Sharing {
     }
 
     /// The CreateSharedLinkArg struct
-    public class CreateSharedLinkArg: CustomStringConvertible {
+    public class CreateSharedLinkArg: CustomStringConvertible, JSONRepresentable {
         /// The path to share.
         public let path: String
         /// (no description)
@@ -1223,11 +1287,15 @@ public class Sharing {
             self.pendingUpload = pendingUpload
         }
 
+        func json() throws -> JSON {
+            try CreateSharedLinkArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateSharedLinkArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateSharedLinkArg: \(error)"
             }
         }
     }
@@ -1257,17 +1325,21 @@ public class Sharing {
     }
 
     /// The CreateSharedLinkError union
-    public enum CreateSharedLinkError: CustomStringConvertible {
+    public enum CreateSharedLinkError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try CreateSharedLinkErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateSharedLinkErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateSharedLinkError: \(error)"
             }
         }
     }
@@ -1307,7 +1379,7 @@ public class Sharing {
     }
 
     /// The CreateSharedLinkWithSettingsArg struct
-    public class CreateSharedLinkWithSettingsArg: CustomStringConvertible {
+    public class CreateSharedLinkWithSettingsArg: CustomStringConvertible, JSONRepresentable {
         /// The path to be shared by the shared link.
         public let path: String
         /// The requested settings for the newly created shared link.
@@ -1318,11 +1390,15 @@ public class Sharing {
             self.settings = settings
         }
 
+        func json() throws -> JSON {
+            try CreateSharedLinkWithSettingsArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateSharedLinkWithSettingsArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateSharedLinkWithSettingsArg: \(error)"
             }
         }
     }
@@ -1350,7 +1426,7 @@ public class Sharing {
     }
 
     /// The CreateSharedLinkWithSettingsError union
-    public enum CreateSharedLinkWithSettingsError: CustomStringConvertible {
+    public enum CreateSharedLinkWithSettingsError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
@@ -1366,11 +1442,15 @@ public class Sharing {
         /// https://help.dropbox.com/files-folders/share/banned-links.
         case accessDenied
 
+        func json() throws -> JSON {
+            try CreateSharedLinkWithSettingsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try CreateSharedLinkWithSettingsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for CreateSharedLinkWithSettingsError: \(error)"
             }
         }
     }
@@ -1431,7 +1511,7 @@ public class Sharing {
     }
 
     /// The SharedContentLinkMetadataBase struct
-    public class SharedContentLinkMetadataBase: CustomStringConvertible {
+    public class SharedContentLinkMetadataBase: CustomStringConvertible, JSONRepresentable {
         /// The access level on the link for this file.
         public let accessLevel: Sharing.AccessLevel?
         /// The audience options that are available for the content. Some audience options may be unavailable. For
@@ -1467,11 +1547,15 @@ public class Sharing {
             self.passwordProtected = passwordProtected
         }
 
+        func json() throws -> JSON {
+            try SharedContentLinkMetadataBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedContentLinkMetadataBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedContentLinkMetadataBase: \(error)"
             }
         }
     }
@@ -1525,7 +1609,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ExpectedSharedContentLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ExpectedSharedContentLinkMetadata: \(error)"
             }
         }
     }
@@ -1573,7 +1657,7 @@ public class Sharing {
     }
 
     /// Sharing actions that may be taken on files.
-    public enum FileAction: CustomStringConvertible {
+    public enum FileAction: CustomStringConvertible, JSONRepresentable {
         /// Disable viewer information on the file.
         case disableViewerInfo
         /// Change or edit contents of the file.
@@ -1601,11 +1685,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileActionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileActionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileAction: \(error)"
             }
         }
     }
@@ -1710,7 +1798,7 @@ public class Sharing {
     }
 
     /// The FileErrorResult union
-    public enum FileErrorResult: CustomStringConvertible {
+    public enum FileErrorResult: CustomStringConvertible, JSONRepresentable {
         /// File specified by id was not found.
         case fileNotFoundError(String)
         /// User does not have permission to take the specified action on the file.
@@ -1720,11 +1808,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileErrorResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileErrorResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileErrorResult: \(error)"
             }
         }
     }
@@ -1778,7 +1870,7 @@ public class Sharing {
     }
 
     /// The metadata of a shared link.
-    public class SharedLinkMetadata: CustomStringConvertible {
+    public class SharedLinkMetadata: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link.
         public let url: String
         /// A unique identifier for the linked file.
@@ -1822,11 +1914,15 @@ public class Sharing {
             self.contentOwnerTeamInfo = contentOwnerTeamInfo
         }
 
+        func json() throws -> JSON {
+            try SharedLinkMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkMetadata: \(error)"
             }
         }
     }
@@ -1946,7 +2042,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileLinkMetadata: \(error)"
             }
         }
     }
@@ -2007,7 +2103,7 @@ public class Sharing {
     }
 
     /// The FileMemberActionError union
-    public enum FileMemberActionError: CustomStringConvertible {
+    public enum FileMemberActionError: CustomStringConvertible, JSONRepresentable {
         /// Specified member was not found.
         case invalidMember
         /// User does not have permission to perform this action on this member.
@@ -2020,11 +2116,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileMemberActionErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileMemberActionErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileMemberActionError: \(error)"
             }
         }
     }
@@ -2083,7 +2183,7 @@ public class Sharing {
     }
 
     /// The FileMemberActionIndividualResult union
-    public enum FileMemberActionIndividualResult: CustomStringConvertible {
+    public enum FileMemberActionIndividualResult: CustomStringConvertible, JSONRepresentable {
         /// Part of the response for both add_file_member and remove_file_member_v1 (deprecated). For add_file_member,
         /// indicates giving access was successful and at what AccessLevel. For remove_file_member_v1, indicates
         /// member was successfully removed from the file. If AccessLevel is given, the member still has access
@@ -2092,11 +2192,15 @@ public class Sharing {
         /// User was not able to perform this action.
         case memberError(Sharing.FileMemberActionError)
 
+        func json() throws -> JSON {
+            try FileMemberActionIndividualResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileMemberActionIndividualResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileMemberActionIndividualResult: \(error)"
             }
         }
     }
@@ -2137,7 +2241,7 @@ public class Sharing {
     }
 
     /// Per-member result for addFileMember.
-    public class FileMemberActionResult: CustomStringConvertible {
+    public class FileMemberActionResult: CustomStringConvertible, JSONRepresentable {
         /// One of specified input members.
         public let member: Sharing.MemberSelector
         /// The outcome of the action on this member.
@@ -2161,11 +2265,15 @@ public class Sharing {
             self.invitationSignature = invitationSignature
         }
 
+        func json() throws -> JSON {
+            try FileMemberActionResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileMemberActionResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileMemberActionResult: \(error)"
             }
         }
     }
@@ -2198,7 +2306,7 @@ public class Sharing {
     }
 
     /// The FileMemberRemoveActionResult union
-    public enum FileMemberRemoveActionResult: CustomStringConvertible {
+    public enum FileMemberRemoveActionResult: CustomStringConvertible, JSONRepresentable {
         /// Member was successfully removed from this file.
         case success(Sharing.MemberAccessLevelResult)
         /// User was not able to remove this member.
@@ -2206,11 +2314,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FileMemberRemoveActionResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FileMemberRemoveActionResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FileMemberRemoveActionResult: \(error)"
             }
         }
     }
@@ -2257,7 +2369,7 @@ public class Sharing {
     }
 
     /// Whether the user is allowed to take the sharing action on the file.
-    public class FilePermission: CustomStringConvertible {
+    public class FilePermission: CustomStringConvertible, JSONRepresentable {
         /// The action that the user may wish to take on the file.
         public let action: Sharing.FileAction
         /// True if the user is allowed to take the action.
@@ -2270,11 +2382,15 @@ public class Sharing {
             self.reason = reason
         }
 
+        func json() throws -> JSON {
+            try FilePermissionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FilePermissionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FilePermission: \(error)"
             }
         }
     }
@@ -2304,7 +2420,7 @@ public class Sharing {
     }
 
     /// Actions that may be taken on shared folders.
-    public enum FolderAction: CustomStringConvertible {
+    public enum FolderAction: CustomStringConvertible, JSONRepresentable {
         /// Change folder options, such as who can be invited to join the folder.
         case changeOptions
         /// Disable viewer information for this folder.
@@ -2336,11 +2452,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try FolderActionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderActionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderAction: \(error)"
             }
         }
     }
@@ -2462,7 +2582,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderLinkMetadata: \(error)"
             }
         }
     }
@@ -2511,7 +2631,7 @@ public class Sharing {
     }
 
     /// Whether the user is allowed to take the action on the shared folder.
-    public class FolderPermission: CustomStringConvertible {
+    public class FolderPermission: CustomStringConvertible, JSONRepresentable {
         /// The action that the user may wish to take on the folder.
         public let action: Sharing.FolderAction
         /// True if the user is allowed to take the action.
@@ -2525,11 +2645,15 @@ public class Sharing {
             self.reason = reason
         }
 
+        func json() throws -> JSON {
+            try FolderPermissionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderPermissionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderPermission: \(error)"
             }
         }
     }
@@ -2559,7 +2683,7 @@ public class Sharing {
     }
 
     /// A set of policies governing membership and privileges for a shared folder.
-    public class FolderPolicy: CustomStringConvertible {
+    public class FolderPolicy: CustomStringConvertible, JSONRepresentable {
         /// Who can be a member of this shared folder, as set on the folder itself. The effective policy may differ from
         /// this value if the team-wide policy is more restrictive. Present only if the folder is owned by a
         /// team.
@@ -2588,11 +2712,15 @@ public class Sharing {
             self.viewerInfoPolicy = viewerInfoPolicy
         }
 
+        func json() throws -> JSON {
+            try FolderPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try FolderPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for FolderPolicy: \(error)"
             }
         }
     }
@@ -2632,7 +2760,7 @@ public class Sharing {
     }
 
     /// Arguments of getFileMetadata.
-    public class GetFileMetadataArg: CustomStringConvertible {
+    public class GetFileMetadataArg: CustomStringConvertible, JSONRepresentable {
         /// The file to query.
         public let file: String
         /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
@@ -2644,11 +2772,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try GetFileMetadataArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileMetadataArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileMetadataArg: \(error)"
             }
         }
     }
@@ -2676,7 +2808,7 @@ public class Sharing {
     }
 
     /// Arguments of getFileMetadataBatch.
-    public class GetFileMetadataBatchArg: CustomStringConvertible {
+    public class GetFileMetadataBatchArg: CustomStringConvertible, JSONRepresentable {
         /// The files to query.
         public let files: [String]
         /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
@@ -2688,11 +2820,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try GetFileMetadataBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileMetadataBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileMetadataBatchArg: \(error)"
             }
         }
     }
@@ -2720,7 +2856,7 @@ public class Sharing {
     }
 
     /// Per file results of getFileMetadataBatch.
-    public class GetFileMetadataBatchResult: CustomStringConvertible {
+    public class GetFileMetadataBatchResult: CustomStringConvertible, JSONRepresentable {
         /// This is the input file identifier corresponding to one of files in GetFileMetadataBatchArg.
         public let file: String
         /// The result for this particular file.
@@ -2731,11 +2867,15 @@ public class Sharing {
             self.result = result
         }
 
+        func json() throws -> JSON {
+            try GetFileMetadataBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileMetadataBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileMetadataBatchResult: \(error)"
             }
         }
     }
@@ -2763,7 +2903,7 @@ public class Sharing {
     }
 
     /// Error result for getFileMetadata.
-    public enum GetFileMetadataError: CustomStringConvertible {
+    public enum GetFileMetadataError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -2771,11 +2911,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetFileMetadataErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileMetadataErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileMetadataError: \(error)"
             }
         }
     }
@@ -2822,7 +2966,7 @@ public class Sharing {
     }
 
     /// The GetFileMetadataIndividualResult union
-    public enum GetFileMetadataIndividualResult: CustomStringConvertible {
+    public enum GetFileMetadataIndividualResult: CustomStringConvertible, JSONRepresentable {
         /// The result for this file if it was successful.
         case metadata(Sharing.SharedFileMetadata)
         /// The result for this file if it was an error.
@@ -2830,11 +2974,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetFileMetadataIndividualResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetFileMetadataIndividualResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetFileMetadataIndividualResult: \(error)"
             }
         }
     }
@@ -2881,7 +3029,7 @@ public class Sharing {
     }
 
     /// The GetMetadataArgs struct
-    public class GetMetadataArgs: CustomStringConvertible {
+    public class GetMetadataArgs: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
@@ -2894,11 +3042,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try GetMetadataArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetMetadataArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetMetadataArgs: \(error)"
             }
         }
     }
@@ -2926,7 +3078,7 @@ public class Sharing {
     }
 
     /// The SharedLinkError union
-    public enum SharedLinkError: CustomStringConvertible {
+    public enum SharedLinkError: CustomStringConvertible, JSONRepresentable {
         /// The shared link wasn't found.
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
@@ -2936,11 +3088,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedLinkErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkError: \(error)"
             }
         }
     }
@@ -2991,7 +3147,7 @@ public class Sharing {
     }
 
     /// The GetSharedLinkFileError union
-    public enum GetSharedLinkFileError: CustomStringConvertible {
+    public enum GetSharedLinkFileError: CustomStringConvertible, JSONRepresentable {
         /// The shared link wasn't found.
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
@@ -3003,11 +3159,15 @@ public class Sharing {
         /// Directories cannot be retrieved by this endpoint.
         case sharedLinkIsDirectory
 
+        func json() throws -> JSON {
+            try GetSharedLinkFileErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetSharedLinkFileErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetSharedLinkFileError: \(error)"
             }
         }
     }
@@ -3064,7 +3224,7 @@ public class Sharing {
     }
 
     /// The GetSharedLinkMetadataArg struct
-    public class GetSharedLinkMetadataArg: CustomStringConvertible {
+    public class GetSharedLinkMetadataArg: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link.
         public let url: String
         /// If the shared link is to a folder, this parameter can be used to retrieve the metadata for a specific file
@@ -3081,11 +3241,15 @@ public class Sharing {
             self.linkPassword = linkPassword
         }
 
+        func json() throws -> JSON {
+            try GetSharedLinkMetadataArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetSharedLinkMetadataArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetSharedLinkMetadataArg: \(error)"
             }
         }
     }
@@ -3115,7 +3279,7 @@ public class Sharing {
     }
 
     /// The GetSharedLinksArg struct
-    public class GetSharedLinksArg: CustomStringConvertible {
+    public class GetSharedLinksArg: CustomStringConvertible, JSONRepresentable {
         /// See getSharedLinks description.
         public let path: String?
         public init(path: String? = nil) {
@@ -3123,11 +3287,15 @@ public class Sharing {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try GetSharedLinksArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetSharedLinksArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetSharedLinksArg: \(error)"
             }
         }
     }
@@ -3153,17 +3321,21 @@ public class Sharing {
     }
 
     /// The GetSharedLinksError union
-    public enum GetSharedLinksError: CustomStringConvertible {
+    public enum GetSharedLinksError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(String?)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try GetSharedLinksErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetSharedLinksErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetSharedLinksError: \(error)"
             }
         }
     }
@@ -3203,18 +3375,22 @@ public class Sharing {
     }
 
     /// The GetSharedLinksResult struct
-    public class GetSharedLinksResult: CustomStringConvertible {
+    public class GetSharedLinksResult: CustomStringConvertible, JSONRepresentable {
         /// Shared links applicable to the path argument.
         public let links: [Sharing.LinkMetadata]
         public init(links: [Sharing.LinkMetadata]) {
             self.links = links
         }
 
+        func json() throws -> JSON {
+            try GetSharedLinksResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetSharedLinksResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GetSharedLinksResult: \(error)"
             }
         }
     }
@@ -3278,7 +3454,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupInfo: \(error)"
             }
         }
     }
@@ -3330,7 +3506,7 @@ public class Sharing {
     }
 
     /// The information about a member of the shared content.
-    public class MembershipInfo: CustomStringConvertible {
+    public class MembershipInfo: CustomStringConvertible, JSONRepresentable {
         /// The access type for this member. It contains inherited access type from parent folder, and acquired access
         /// type from this folder.
         public let accessType: Sharing.AccessLevel
@@ -3349,11 +3525,15 @@ public class Sharing {
             self.isInherited = isInherited
         }
 
+        func json() throws -> JSON {
+            try MembershipInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MembershipInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MembershipInfo: \(error)"
             }
         }
     }
@@ -3403,7 +3583,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GroupMembershipInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for GroupMembershipInfo: \(error)"
             }
         }
     }
@@ -3437,7 +3617,7 @@ public class Sharing {
     }
 
     /// The InsufficientPlan struct
-    public class InsufficientPlan: CustomStringConvertible {
+    public class InsufficientPlan: CustomStringConvertible, JSONRepresentable {
         /// A message to tell the user to upgrade in order to support expected action.
         public let message: String
         /// A URL to send the user to in order to obtain the account type they need, e.g. upgrading. Absent if there is
@@ -3450,11 +3630,15 @@ public class Sharing {
             self.upsellUrl = upsellUrl
         }
 
+        func json() throws -> JSON {
+            try InsufficientPlanSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InsufficientPlanSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InsufficientPlan: \(error)"
             }
         }
     }
@@ -3482,7 +3666,7 @@ public class Sharing {
     }
 
     /// The InsufficientQuotaAmounts struct
-    public class InsufficientQuotaAmounts: CustomStringConvertible {
+    public class InsufficientQuotaAmounts: CustomStringConvertible, JSONRepresentable {
         /// The amount of space needed to add the item (the size of the item).
         public let spaceNeeded: UInt64
         /// The amount of extra space needed to add the item.
@@ -3498,11 +3682,15 @@ public class Sharing {
             self.spaceLeft = spaceLeft
         }
 
+        func json() throws -> JSON {
+            try InsufficientQuotaAmountsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InsufficientQuotaAmountsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InsufficientQuotaAmounts: \(error)"
             }
         }
     }
@@ -3532,17 +3720,21 @@ public class Sharing {
     }
 
     /// Information about the recipient of a shared content invitation.
-    public enum InviteeInfo: CustomStringConvertible {
+    public enum InviteeInfo: CustomStringConvertible, JSONRepresentable {
         /// Email address of invited user.
         case email(String)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try InviteeInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InviteeInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InviteeInfo: \(error)"
             }
         }
     }
@@ -3604,7 +3796,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try InviteeMembershipInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for InviteeMembershipInfo: \(error)"
             }
         }
     }
@@ -3647,7 +3839,7 @@ public class Sharing {
     }
 
     /// Error occurred while performing an asynchronous job from unshareFolder or removeFolderMember.
-    public enum JobError: CustomStringConvertible {
+    public enum JobError: CustomStringConvertible, JSONRepresentable {
         /// Error occurred while performing unshareFolder action.
         case unshareFolderError(Sharing.UnshareFolderError)
         /// Error occurred while performing removeFolderMember action.
@@ -3657,11 +3849,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try JobErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try JobErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for JobError: \(error)"
             }
         }
     }
@@ -3715,7 +3911,7 @@ public class Sharing {
     }
 
     /// The JobStatus union
-    public enum JobStatus: CustomStringConvertible {
+    public enum JobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The asynchronous job has finished.
@@ -3723,11 +3919,15 @@ public class Sharing {
         /// The asynchronous job returned an error.
         case failed(Sharing.JobError)
 
+        func json() throws -> JSON {
+            try JobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try JobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for JobStatus: \(error)"
             }
         }
     }
@@ -3773,7 +3973,7 @@ public class Sharing {
     }
 
     /// The LinkAccessLevel union
-    public enum LinkAccessLevel: CustomStringConvertible {
+    public enum LinkAccessLevel: CustomStringConvertible, JSONRepresentable {
         /// Users who use the link can view and comment on the content.
         case viewer
         /// Users who use the link can edit, view and comment on the content.
@@ -3781,11 +3981,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkAccessLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkAccessLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkAccessLevel: \(error)"
             }
         }
     }
@@ -3830,7 +4034,7 @@ public class Sharing {
     }
 
     /// Actions that can be performed on a link.
-    public enum LinkAction: CustomStringConvertible {
+    public enum LinkAction: CustomStringConvertible, JSONRepresentable {
         /// Change the access level of the link.
         case changeAccessLevel
         /// Change the audience of the link.
@@ -3846,11 +4050,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkActionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkActionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkAction: \(error)"
             }
         }
     }
@@ -3919,7 +4127,7 @@ public class Sharing {
     }
 
     /// The LinkAudience union
-    public enum LinkAudience: CustomStringConvertible {
+    public enum LinkAudience: CustomStringConvertible, JSONRepresentable {
         /// Link is accessible by anyone.
         case public_
         /// Link is accessible only by team members.
@@ -3936,11 +4144,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkAudienceSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkAudienceSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkAudience: \(error)"
             }
         }
     }
@@ -4003,7 +4215,7 @@ public class Sharing {
     }
 
     /// The VisibilityPolicyDisallowedReason union
-    public enum VisibilityPolicyDisallowedReason: CustomStringConvertible {
+    public enum VisibilityPolicyDisallowedReason: CustomStringConvertible, JSONRepresentable {
         /// The user needs to delete and recreate the link to change the visibility policy.
         case deleteAndRecreate
         /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
@@ -4020,11 +4232,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try VisibilityPolicyDisallowedReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try VisibilityPolicyDisallowedReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for VisibilityPolicyDisallowedReason: \(error)"
             }
         }
     }
@@ -4093,7 +4309,7 @@ public class Sharing {
     }
 
     /// check documentation for VisibilityPolicyDisallowedReason.
-    public enum LinkAudienceDisallowedReason: CustomStringConvertible {
+    public enum LinkAudienceDisallowedReason: CustomStringConvertible, JSONRepresentable {
         /// The user needs to delete and recreate the link to change the visibility policy.
         case deleteAndRecreate
         /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
@@ -4110,11 +4326,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkAudienceDisallowedReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkAudienceDisallowedReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkAudienceDisallowedReason: \(error)"
             }
         }
     }
@@ -4183,7 +4403,7 @@ public class Sharing {
     }
 
     /// The LinkAudienceOption struct
-    public class LinkAudienceOption: CustomStringConvertible {
+    public class LinkAudienceOption: CustomStringConvertible, JSONRepresentable {
         /// Specifies who can access the link.
         public let audience: Sharing.LinkAudience
         /// Whether the user calling this API can select this audience option.
@@ -4197,11 +4417,15 @@ public class Sharing {
             self.disallowedReason = disallowedReason
         }
 
+        func json() throws -> JSON {
+            try LinkAudienceOptionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkAudienceOptionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkAudienceOption: \(error)"
             }
         }
     }
@@ -4232,7 +4456,7 @@ public class Sharing {
     }
 
     /// The LinkExpiry union
-    public enum LinkExpiry: CustomStringConvertible {
+    public enum LinkExpiry: CustomStringConvertible, JSONRepresentable {
         /// Remove the currently set expiry for the link.
         case removeExpiry
         /// Set a new expiry or change an existing expiry.
@@ -4240,11 +4464,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkExpirySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkExpirySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkExpiry: \(error)"
             }
         }
     }
@@ -4290,7 +4518,7 @@ public class Sharing {
     }
 
     /// The LinkPassword union
-    public enum LinkPassword: CustomStringConvertible {
+    public enum LinkPassword: CustomStringConvertible, JSONRepresentable {
         /// Remove the currently set password for the link.
         case removePassword
         /// Set a new password or change an existing password.
@@ -4298,11 +4526,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try LinkPasswordSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkPasswordSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkPassword: \(error)"
             }
         }
     }
@@ -4348,7 +4580,7 @@ public class Sharing {
     }
 
     /// Permissions for actions that can be performed on a link.
-    public class LinkPermission: CustomStringConvertible {
+    public class LinkPermission: CustomStringConvertible, JSONRepresentable {
         /// (no description)
         public let action: Sharing.LinkAction
         /// (no description)
@@ -4361,11 +4593,15 @@ public class Sharing {
             self.reason = reason
         }
 
+        func json() throws -> JSON {
+            try LinkPermissionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkPermissionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkPermission: \(error)"
             }
         }
     }
@@ -4395,7 +4631,7 @@ public class Sharing {
     }
 
     /// The LinkPermissions struct
-    public class LinkPermissions: CustomStringConvertible {
+    public class LinkPermissions: CustomStringConvertible, JSONRepresentable {
         /// The current visibility of the link after considering the shared links policies of the the team (in case the
         /// link's owner is part of a team) and the shared folder (in case the linked file is part of a shared
         /// folder). This field is shown only if the caller has access to this info (the link's owner always has
@@ -4490,11 +4726,15 @@ public class Sharing {
             self.canUseExtendedSharingControls = canUseExtendedSharingControls
         }
 
+        func json() throws -> JSON {
+            try LinkPermissionsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkPermissionsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkPermissions: \(error)"
             }
         }
     }
@@ -4579,7 +4819,7 @@ public class Sharing {
     }
 
     /// Settings that apply to a link.
-    public class LinkSettings: CustomStringConvertible {
+    public class LinkSettings: CustomStringConvertible, JSONRepresentable {
         /// The access level on the link for this file. Currently, it only accepts 'viewer' and 'viewer_no_comment'.
         public let accessLevel: Sharing.AccessLevel?
         /// The type of audience on the link for this file.
@@ -4600,11 +4840,15 @@ public class Sharing {
             self.password = password
         }
 
+        func json() throws -> JSON {
+            try LinkSettingsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try LinkSettingsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for LinkSettings: \(error)"
             }
         }
     }
@@ -4636,7 +4880,7 @@ public class Sharing {
     }
 
     /// Arguments for listFileMembers.
-    public class ListFileMembersArg: CustomStringConvertible {
+    public class ListFileMembersArg: CustomStringConvertible, JSONRepresentable {
         /// The file for which you want to see members.
         public let file: String
         /// The actions for which to return permissions on a member.
@@ -4654,11 +4898,15 @@ public class Sharing {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListFileMembersArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersArg: \(error)"
             }
         }
     }
@@ -4690,7 +4938,7 @@ public class Sharing {
     }
 
     /// Arguments for listFileMembersBatch.
-    public class ListFileMembersBatchArg: CustomStringConvertible {
+    public class ListFileMembersBatchArg: CustomStringConvertible, JSONRepresentable {
         /// Files for which to return members.
         public let files: [String]
         /// Number of members to return max per query. Defaults to 10 if no limit is specified.
@@ -4702,11 +4950,15 @@ public class Sharing {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListFileMembersBatchArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersBatchArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersBatchArg: \(error)"
             }
         }
     }
@@ -4734,7 +4986,7 @@ public class Sharing {
     }
 
     /// Per-file result for listFileMembersBatch.
-    public class ListFileMembersBatchResult: CustomStringConvertible {
+    public class ListFileMembersBatchResult: CustomStringConvertible, JSONRepresentable {
         /// This is the input file identifier, whether an ID or a path.
         public let file: String
         /// The result for this particular file.
@@ -4745,11 +4997,15 @@ public class Sharing {
             self.result = result
         }
 
+        func json() throws -> JSON {
+            try ListFileMembersBatchResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersBatchResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersBatchResult: \(error)"
             }
         }
     }
@@ -4777,7 +5033,7 @@ public class Sharing {
     }
 
     /// Arguments for listFileMembersContinue.
-    public class ListFileMembersContinueArg: CustomStringConvertible {
+    public class ListFileMembersContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by your last call to listFileMembers, listFileMembersContinue, or listFileMembersBatch.
         public let cursor: String
         public init(cursor: String) {
@@ -4785,11 +5041,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFileMembersContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersContinueArg: \(error)"
             }
         }
     }
@@ -4815,7 +5075,7 @@ public class Sharing {
     }
 
     /// Error for listFileMembersContinue.
-    public enum ListFileMembersContinueError: CustomStringConvertible {
+    public enum ListFileMembersContinueError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -4825,11 +5085,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFileMembersContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersContinueError: \(error)"
             }
         }
     }
@@ -4882,7 +5146,7 @@ public class Sharing {
     }
 
     /// The ListFileMembersCountResult struct
-    public class ListFileMembersCountResult: CustomStringConvertible {
+    public class ListFileMembersCountResult: CustomStringConvertible, JSONRepresentable {
         /// A list of members on this file.
         public let members: Sharing.SharedFileMembers
         /// The number of members on this file. This does not include inherited members.
@@ -4893,11 +5157,15 @@ public class Sharing {
             self.memberCount = memberCount
         }
 
+        func json() throws -> JSON {
+            try ListFileMembersCountResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersCountResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersCountResult: \(error)"
             }
         }
     }
@@ -4925,7 +5193,7 @@ public class Sharing {
     }
 
     /// Error for listFileMembers.
-    public enum ListFileMembersError: CustomStringConvertible {
+    public enum ListFileMembersError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -4933,11 +5201,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFileMembersErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersError: \(error)"
             }
         }
     }
@@ -4984,7 +5256,7 @@ public class Sharing {
     }
 
     /// The ListFileMembersIndividualResult union
-    public enum ListFileMembersIndividualResult: CustomStringConvertible {
+    public enum ListFileMembersIndividualResult: CustomStringConvertible, JSONRepresentable {
         /// The results of the query for this file if it was successful.
         case result(Sharing.ListFileMembersCountResult)
         /// The result of the query for this file if it was an error.
@@ -4992,11 +5264,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFileMembersIndividualResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFileMembersIndividualResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFileMembersIndividualResult: \(error)"
             }
         }
     }
@@ -5043,7 +5319,7 @@ public class Sharing {
     }
 
     /// Arguments for listReceivedFiles.
-    public class ListFilesArg: CustomStringConvertible {
+    public class ListFilesArg: CustomStringConvertible, JSONRepresentable {
         /// Number of files to return max per query. Defaults to 100 if no limit is specified.
         public let limit: UInt32
         /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
@@ -5055,11 +5331,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try ListFilesArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFilesArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFilesArg: \(error)"
             }
         }
     }
@@ -5087,7 +5367,7 @@ public class Sharing {
     }
 
     /// Arguments for listReceivedFilesContinue.
-    public class ListFilesContinueArg: CustomStringConvertible {
+    public class ListFilesContinueArg: CustomStringConvertible, JSONRepresentable {
         /// Cursor in cursor in ListFilesResult.
         public let cursor: String
         public init(cursor: String) {
@@ -5095,11 +5375,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFilesContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFilesContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFilesContinueArg: \(error)"
             }
         }
     }
@@ -5125,7 +5409,7 @@ public class Sharing {
     }
 
     /// Error results for listReceivedFilesContinue.
-    public enum ListFilesContinueError: CustomStringConvertible {
+    public enum ListFilesContinueError: CustomStringConvertible, JSONRepresentable {
         /// User account had a problem.
         case userError(Sharing.SharingUserError)
         /// cursor in ListFilesContinueArg is invalid.
@@ -5133,11 +5417,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFilesContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFilesContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFilesContinueError: \(error)"
             }
         }
     }
@@ -5183,7 +5471,7 @@ public class Sharing {
     }
 
     /// Success results for listReceivedFiles.
-    public class ListFilesResult: CustomStringConvertible {
+    public class ListFilesResult: CustomStringConvertible, JSONRepresentable {
         /// Information about the files shared with current user.
         public let entries: [Sharing.SharedFileMetadata]
         /// Cursor used to obtain additional shared files.
@@ -5194,11 +5482,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFilesResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFilesResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFilesResult: \(error)"
             }
         }
     }
@@ -5226,7 +5518,7 @@ public class Sharing {
     }
 
     /// The ListFolderMembersCursorArg struct
-    public class ListFolderMembersCursorArg: CustomStringConvertible {
+    public class ListFolderMembersCursorArg: CustomStringConvertible, JSONRepresentable {
         /// This is a list indicating whether each returned member will include a boolean value allow in
         /// MemberPermission that describes whether the current user can perform the MemberAction on the member.
         public let actions: [Sharing.MemberAction]?
@@ -5238,11 +5530,15 @@ public class Sharing {
             self.limit = limit
         }
 
+        func json() throws -> JSON {
+            try ListFolderMembersCursorArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderMembersCursorArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderMembersCursorArg: \(error)"
             }
         }
     }
@@ -5283,7 +5579,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderMembersArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderMembersArgs: \(error)"
             }
         }
     }
@@ -5313,7 +5609,7 @@ public class Sharing {
     }
 
     /// The ListFolderMembersContinueArg struct
-    public class ListFolderMembersContinueArg: CustomStringConvertible {
+    public class ListFolderMembersContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by your last call to listFolderMembers or listFolderMembersContinue.
         public let cursor: String
         public init(cursor: String) {
@@ -5321,11 +5617,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFolderMembersContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderMembersContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderMembersContinueArg: \(error)"
             }
         }
     }
@@ -5351,7 +5651,7 @@ public class Sharing {
     }
 
     /// The ListFolderMembersContinueError union
-    public enum ListFolderMembersContinueError: CustomStringConvertible {
+    public enum ListFolderMembersContinueError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// cursor in ListFolderMembersContinueArg is invalid.
@@ -5359,11 +5659,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFolderMembersContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFolderMembersContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFolderMembersContinueError: \(error)"
             }
         }
     }
@@ -5409,7 +5713,7 @@ public class Sharing {
     }
 
     /// The ListFoldersArgs struct
-    public class ListFoldersArgs: CustomStringConvertible {
+    public class ListFoldersArgs: CustomStringConvertible, JSONRepresentable {
         /// The maximum number of results to return per request.
         public let limit: UInt32
         /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
@@ -5422,11 +5726,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try ListFoldersArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFoldersArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFoldersArgs: \(error)"
             }
         }
     }
@@ -5454,7 +5762,7 @@ public class Sharing {
     }
 
     /// The ListFoldersContinueArg struct
-    public class ListFoldersContinueArg: CustomStringConvertible {
+    public class ListFoldersContinueArg: CustomStringConvertible, JSONRepresentable {
         /// The cursor returned by the previous API call specified in the endpoint description.
         public let cursor: String
         public init(cursor: String) {
@@ -5462,11 +5770,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFoldersContinueArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFoldersContinueArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFoldersContinueArg: \(error)"
             }
         }
     }
@@ -5492,17 +5804,21 @@ public class Sharing {
     }
 
     /// The ListFoldersContinueError union
-    public enum ListFoldersContinueError: CustomStringConvertible {
+    public enum ListFoldersContinueError: CustomStringConvertible, JSONRepresentable {
         /// cursor in ListFoldersContinueArg is invalid.
         case invalidCursor
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListFoldersContinueErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFoldersContinueErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFoldersContinueError: \(error)"
             }
         }
     }
@@ -5542,7 +5858,7 @@ public class Sharing {
 
     /// Result for listFolders or listMountableFolders, depending on which endpoint was requested. Unmounted shared
     /// folders can be identified by the absence of pathLower in SharedFolderMetadata.
-    public class ListFoldersResult: CustomStringConvertible {
+    public class ListFoldersResult: CustomStringConvertible, JSONRepresentable {
         /// List of all shared folders the authenticated user has access to.
         public let entries: [Sharing.SharedFolderMetadata]
         /// Present if there are additional shared folders that have not been returned yet. Pass the cursor into the
@@ -5555,11 +5871,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListFoldersResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListFoldersResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListFoldersResult: \(error)"
             }
         }
     }
@@ -5587,7 +5907,7 @@ public class Sharing {
     }
 
     /// The ListSharedLinksArg struct
-    public class ListSharedLinksArg: CustomStringConvertible {
+    public class ListSharedLinksArg: CustomStringConvertible, JSONRepresentable {
         /// See listSharedLinks description.
         public let path: String?
         /// The cursor returned by your last call to listSharedLinks.
@@ -5602,11 +5922,15 @@ public class Sharing {
             self.directOnly = directOnly
         }
 
+        func json() throws -> JSON {
+            try ListSharedLinksArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListSharedLinksArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListSharedLinksArg: \(error)"
             }
         }
     }
@@ -5636,7 +5960,7 @@ public class Sharing {
     }
 
     /// The ListSharedLinksError union
-    public enum ListSharedLinksError: CustomStringConvertible {
+    public enum ListSharedLinksError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
         /// Indicates that the cursor has been invalidated. Call listSharedLinks to obtain a new cursor.
@@ -5644,11 +5968,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ListSharedLinksErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListSharedLinksErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListSharedLinksError: \(error)"
             }
         }
     }
@@ -5694,7 +6022,7 @@ public class Sharing {
     }
 
     /// The ListSharedLinksResult struct
-    public class ListSharedLinksResult: CustomStringConvertible {
+    public class ListSharedLinksResult: CustomStringConvertible, JSONRepresentable {
         /// Shared links applicable to the path argument.
         public let links: [Sharing.SharedLinkMetadata]
         /// Is true if there are additional shared links that have not been returned yet. Pass the cursor into
@@ -5710,11 +6038,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try ListSharedLinksResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListSharedLinksResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ListSharedLinksResult: \(error)"
             }
         }
     }
@@ -5744,7 +6076,7 @@ public class Sharing {
     }
 
     /// Contains information about a member's access level to content after an operation.
-    public class MemberAccessLevelResult: CustomStringConvertible {
+    public class MemberAccessLevelResult: CustomStringConvertible, JSONRepresentable {
         /// The member still has this level of access to the content through a parent folder.
         public let accessLevel: Sharing.AccessLevel?
         /// A localized string with additional information about why the user has this access level to the content.
@@ -5759,11 +6091,15 @@ public class Sharing {
             self.accessDetails = accessDetails
         }
 
+        func json() throws -> JSON {
+            try MemberAccessLevelResultSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberAccessLevelResultSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAccessLevelResult: \(error)"
             }
         }
     }
@@ -5794,7 +6130,7 @@ public class Sharing {
     }
 
     /// Actions that may be taken on members of a shared folder.
-    public enum MemberAction: CustomStringConvertible {
+    public enum MemberAction: CustomStringConvertible, JSONRepresentable {
         /// Allow the member to keep a copy of the folder when removing.
         case leaveACopy
         /// Make the member an editor of the folder.
@@ -5810,11 +6146,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MemberActionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberActionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberAction: \(error)"
             }
         }
     }
@@ -5883,7 +6223,7 @@ public class Sharing {
     }
 
     /// Whether the user is allowed to take the action on the associated member.
-    public class MemberPermission: CustomStringConvertible {
+    public class MemberPermission: CustomStringConvertible, JSONRepresentable {
         /// The action that the user may wish to take on the member.
         public let action: Sharing.MemberAction
         /// True if the user is allowed to take the action.
@@ -5896,11 +6236,15 @@ public class Sharing {
             self.reason = reason
         }
 
+        func json() throws -> JSON {
+            try MemberPermissionSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberPermissionSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberPermission: \(error)"
             }
         }
     }
@@ -5930,7 +6274,7 @@ public class Sharing {
     }
 
     /// Policy governing who can be a member of a shared folder. Only applicable to folders owned by a user on a team.
-    public enum MemberPolicy: CustomStringConvertible {
+    public enum MemberPolicy: CustomStringConvertible, JSONRepresentable {
         /// Only a teammate can become a member.
         case team
         /// Anyone can become a member.
@@ -5938,11 +6282,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MemberPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberPolicy: \(error)"
             }
         }
     }
@@ -5987,7 +6335,7 @@ public class Sharing {
     }
 
     /// Includes different ways to identify a member of a shared folder.
-    public enum MemberSelector: CustomStringConvertible {
+    public enum MemberSelector: CustomStringConvertible, JSONRepresentable {
         /// Dropbox account, team member, or group ID of member.
         case dropboxId(String)
         /// Email address of member.
@@ -5995,11 +6343,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MemberSelectorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MemberSelectorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MemberSelector: \(error)"
             }
         }
     }
@@ -6046,7 +6398,7 @@ public class Sharing {
     }
 
     /// The ModifySharedLinkSettingsArgs struct
-    public class ModifySharedLinkSettingsArgs: CustomStringConvertible {
+    public class ModifySharedLinkSettingsArgs: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link to change its settings.
         public let url: String
         /// Set of settings for the shared link.
@@ -6060,11 +6412,15 @@ public class Sharing {
             self.removeExpiration = removeExpiration
         }
 
+        func json() throws -> JSON {
+            try ModifySharedLinkSettingsArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ModifySharedLinkSettingsArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ModifySharedLinkSettingsArgs: \(error)"
             }
         }
     }
@@ -6094,7 +6450,7 @@ public class Sharing {
     }
 
     /// The ModifySharedLinkSettingsError union
-    public enum ModifySharedLinkSettingsError: CustomStringConvertible {
+    public enum ModifySharedLinkSettingsError: CustomStringConvertible, JSONRepresentable {
         /// The shared link wasn't found.
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
@@ -6109,11 +6465,15 @@ public class Sharing {
         /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
 
+        func json() throws -> JSON {
+            try ModifySharedLinkSettingsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ModifySharedLinkSettingsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ModifySharedLinkSettingsError: \(error)"
             }
         }
     }
@@ -6177,7 +6537,7 @@ public class Sharing {
     }
 
     /// The MountFolderArg struct
-    public class MountFolderArg: CustomStringConvertible {
+    public class MountFolderArg: CustomStringConvertible, JSONRepresentable {
         /// The ID of the shared folder to mount.
         public let sharedFolderId: String
         public init(sharedFolderId: String) {
@@ -6185,11 +6545,15 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
 
+        func json() throws -> JSON {
+            try MountFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MountFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MountFolderArg: \(error)"
             }
         }
     }
@@ -6215,7 +6579,7 @@ public class Sharing {
     }
 
     /// The MountFolderError union
-    public enum MountFolderError: CustomStringConvertible {
+    public enum MountFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// Mounting would cause a shared folder to be inside another, which is disallowed.
@@ -6232,11 +6596,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try MountFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try MountFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for MountFolderError: \(error)"
             }
         }
     }
@@ -6307,7 +6675,7 @@ public class Sharing {
     }
 
     /// Contains information about a parent folder that a member has access to.
-    public class ParentFolderAccessInfo: CustomStringConvertible {
+    public class ParentFolderAccessInfo: CustomStringConvertible, JSONRepresentable {
         /// Display name for the folder.
         public let folderName: String
         /// The identifier of the parent shared folder.
@@ -6326,11 +6694,15 @@ public class Sharing {
             self.path = path
         }
 
+        func json() throws -> JSON {
+            try ParentFolderAccessInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ParentFolderAccessInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ParentFolderAccessInfo: \(error)"
             }
         }
     }
@@ -6375,7 +6747,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PathLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PathLinkMetadata: \(error)"
             }
         }
     }
@@ -6407,17 +6779,21 @@ public class Sharing {
     }
 
     /// Flag to indicate pending upload default (for linking to not-yet-existing paths).
-    public enum PendingUploadMode: CustomStringConvertible {
+    public enum PendingUploadMode: CustomStringConvertible, JSONRepresentable {
         /// Assume pending uploads are files.
         case file
         /// Assume pending uploads are folders.
         case folder
 
+        func json() throws -> JSON {
+            try PendingUploadModeSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PendingUploadModeSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PendingUploadMode: \(error)"
             }
         }
     }
@@ -6456,7 +6832,7 @@ public class Sharing {
     }
 
     /// Possible reasons the user is denied a permission.
-    public enum PermissionDeniedReason: CustomStringConvertible {
+    public enum PermissionDeniedReason: CustomStringConvertible, JSONRepresentable {
         /// User is not on the same team as the folder owner.
         case userNotSameTeamAsOwner
         /// User is prohibited by the owner from taking the action.
@@ -6490,11 +6866,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PermissionDeniedReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PermissionDeniedReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for PermissionDeniedReason: \(error)"
             }
         }
     }
@@ -6618,7 +6998,7 @@ public class Sharing {
     }
 
     /// The RelinquishFileMembershipArg struct
-    public class RelinquishFileMembershipArg: CustomStringConvertible {
+    public class RelinquishFileMembershipArg: CustomStringConvertible, JSONRepresentable {
         /// The path or id for the file.
         public let file: String
         public init(file: String) {
@@ -6626,11 +7006,15 @@ public class Sharing {
             self.file = file
         }
 
+        func json() throws -> JSON {
+            try RelinquishFileMembershipArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelinquishFileMembershipArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelinquishFileMembershipArg: \(error)"
             }
         }
     }
@@ -6656,7 +7040,7 @@ public class Sharing {
     }
 
     /// The RelinquishFileMembershipError union
-    public enum RelinquishFileMembershipError: CustomStringConvertible {
+    public enum RelinquishFileMembershipError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharingFileAccessError)
         /// The current user has access to the shared file via a group.  You can't relinquish membership to a file
@@ -6667,11 +7051,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelinquishFileMembershipErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelinquishFileMembershipErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelinquishFileMembershipError: \(error)"
             }
         }
     }
@@ -6723,7 +7111,7 @@ public class Sharing {
     }
 
     /// The RelinquishFolderMembershipArg struct
-    public class RelinquishFolderMembershipArg: CustomStringConvertible {
+    public class RelinquishFolderMembershipArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// Keep a copy of the folder's contents upon relinquishing membership. This must be set to false when the
@@ -6735,11 +7123,15 @@ public class Sharing {
             self.leaveACopy = leaveACopy
         }
 
+        func json() throws -> JSON {
+            try RelinquishFolderMembershipArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelinquishFolderMembershipArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelinquishFolderMembershipArg: \(error)"
             }
         }
     }
@@ -6767,7 +7159,7 @@ public class Sharing {
     }
 
     /// The RelinquishFolderMembershipError union
-    public enum RelinquishFolderMembershipError: CustomStringConvertible {
+    public enum RelinquishFolderMembershipError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
@@ -6788,11 +7180,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RelinquishFolderMembershipErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RelinquishFolderMembershipErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RelinquishFolderMembershipError: \(error)"
             }
         }
     }
@@ -6868,7 +7264,7 @@ public class Sharing {
     }
 
     /// Arguments for removeFileMember2.
-    public class RemoveFileMemberArg: CustomStringConvertible {
+    public class RemoveFileMemberArg: CustomStringConvertible, JSONRepresentable {
         /// File from which to remove members.
         public let file: String
         /// Member to remove from this file. Note that even if an email is specified, it may result in the removal of a
@@ -6880,11 +7276,15 @@ public class Sharing {
             self.member = member
         }
 
+        func json() throws -> JSON {
+            try RemoveFileMemberArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveFileMemberArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveFileMemberArg: \(error)"
             }
         }
     }
@@ -6912,7 +7312,7 @@ public class Sharing {
     }
 
     /// Errors for removeFileMember2.
-    public enum RemoveFileMemberError: CustomStringConvertible {
+    public enum RemoveFileMemberError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -6923,11 +7323,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RemoveFileMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveFileMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveFileMemberError: \(error)"
             }
         }
     }
@@ -6981,7 +7385,7 @@ public class Sharing {
     }
 
     /// The RemoveFolderMemberArg struct
-    public class RemoveFolderMemberArg: CustomStringConvertible {
+    public class RemoveFolderMemberArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// The member to remove from the folder.
@@ -6997,11 +7401,15 @@ public class Sharing {
             self.leaveACopy = leaveACopy
         }
 
+        func json() throws -> JSON {
+            try RemoveFolderMemberArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveFolderMemberArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveFolderMemberArg: \(error)"
             }
         }
     }
@@ -7031,7 +7439,7 @@ public class Sharing {
     }
 
     /// The RemoveFolderMemberError union
-    public enum RemoveFolderMemberError: CustomStringConvertible {
+    public enum RemoveFolderMemberError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// An unspecified error.
@@ -7051,11 +7459,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RemoveFolderMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveFolderMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveFolderMemberError: \(error)"
             }
         }
     }
@@ -7132,7 +7544,7 @@ public class Sharing {
     }
 
     /// The RemoveMemberJobStatus union
-    public enum RemoveMemberJobStatus: CustomStringConvertible {
+    public enum RemoveMemberJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// Removing the folder member has finished. The value is information about whether the member has another form
@@ -7141,11 +7553,15 @@ public class Sharing {
         /// An unspecified error.
         case failed(Sharing.RemoveFolderMemberError)
 
+        func json() throws -> JSON {
+            try RemoveMemberJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemoveMemberJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RemoveMemberJobStatus: \(error)"
             }
         }
     }
@@ -7192,7 +7608,7 @@ public class Sharing {
     }
 
     /// The RequestedLinkAccessLevel union
-    public enum RequestedLinkAccessLevel: CustomStringConvertible {
+    public enum RequestedLinkAccessLevel: CustomStringConvertible, JSONRepresentable {
         /// Users who use the link can view and comment on the content.
         case viewer
         /// Users who use the link can edit, view and comment on the content. Note not all file types support edit links
@@ -7205,11 +7621,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try RequestedLinkAccessLevelSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RequestedLinkAccessLevelSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RequestedLinkAccessLevel: \(error)"
             }
         }
     }
@@ -7266,7 +7686,7 @@ public class Sharing {
     }
 
     /// The RevokeSharedLinkArg struct
-    public class RevokeSharedLinkArg: CustomStringConvertible {
+    public class RevokeSharedLinkArg: CustomStringConvertible, JSONRepresentable {
         /// URL of the shared link.
         public let url: String
         public init(url: String) {
@@ -7274,11 +7694,15 @@ public class Sharing {
             self.url = url
         }
 
+        func json() throws -> JSON {
+            try RevokeSharedLinkArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeSharedLinkArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeSharedLinkArg: \(error)"
             }
         }
     }
@@ -7304,7 +7728,7 @@ public class Sharing {
     }
 
     /// The RevokeSharedLinkError union
-    public enum RevokeSharedLinkError: CustomStringConvertible {
+    public enum RevokeSharedLinkError: CustomStringConvertible, JSONRepresentable {
         /// The shared link wasn't found.
         case sharedLinkNotFound
         /// The caller is not allowed to access this shared link.
@@ -7316,11 +7740,15 @@ public class Sharing {
         /// Shared link is malformed.
         case sharedLinkMalformed
 
+        func json() throws -> JSON {
+            try RevokeSharedLinkErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RevokeSharedLinkErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for RevokeSharedLinkError: \(error)"
             }
         }
     }
@@ -7377,7 +7805,7 @@ public class Sharing {
     }
 
     /// The SetAccessInheritanceArg struct
-    public class SetAccessInheritanceArg: CustomStringConvertible {
+    public class SetAccessInheritanceArg: CustomStringConvertible, JSONRepresentable {
         /// The access inheritance settings for the folder.
         public let accessInheritance: Sharing.AccessInheritance
         /// The ID for the shared folder.
@@ -7388,11 +7816,15 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
 
+        func json() throws -> JSON {
+            try SetAccessInheritanceArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetAccessInheritanceArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetAccessInheritanceArg: \(error)"
             }
         }
     }
@@ -7421,7 +7853,7 @@ public class Sharing {
     }
 
     /// The SetAccessInheritanceError union
-    public enum SetAccessInheritanceError: CustomStringConvertible {
+    public enum SetAccessInheritanceError: CustomStringConvertible, JSONRepresentable {
         /// Unable to access shared folder.
         case accessError(Sharing.SharedFolderAccessError)
         /// The current user does not have permission to perform this action.
@@ -7429,11 +7861,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SetAccessInheritanceErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SetAccessInheritanceErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SetAccessInheritanceError: \(error)"
             }
         }
     }
@@ -7479,7 +7915,7 @@ public class Sharing {
     }
 
     /// The ShareFolderArgBase struct
-    public class ShareFolderArgBase: CustomStringConvertible {
+    public class ShareFolderArgBase: CustomStringConvertible, JSONRepresentable {
         /// Who can add and remove members of this shared folder.
         public let aclUpdatePolicy: Sharing.AclUpdatePolicy?
         /// Whether to force the share to happen asynchronously.
@@ -7514,11 +7950,15 @@ public class Sharing {
             self.accessInheritance = accessInheritance
         }
 
+        func json() throws -> JSON {
+            try ShareFolderArgBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderArgBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderArgBase: \(error)"
             }
         }
     }
@@ -7600,7 +8040,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderArg: \(error)"
             }
         }
     }
@@ -7653,7 +8093,7 @@ public class Sharing {
     }
 
     /// The ShareFolderErrorBase union
-    public enum ShareFolderErrorBase: CustomStringConvertible {
+    public enum ShareFolderErrorBase: CustomStringConvertible, JSONRepresentable {
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
         /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
@@ -7666,11 +8106,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ShareFolderErrorBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderErrorBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderErrorBase: \(error)"
             }
         }
     }
@@ -7728,7 +8172,7 @@ public class Sharing {
     }
 
     /// The ShareFolderError union
-    public enum ShareFolderError: CustomStringConvertible {
+    public enum ShareFolderError: CustomStringConvertible, JSONRepresentable {
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
         /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
@@ -7743,11 +8187,15 @@ public class Sharing {
         /// The current user does not have permission to perform this action.
         case noPermission
 
+        func json() throws -> JSON {
+            try ShareFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderError: \(error)"
             }
         }
     }
@@ -7811,7 +8259,7 @@ public class Sharing {
     }
 
     /// The ShareFolderJobStatus union
-    public enum ShareFolderJobStatus: CustomStringConvertible {
+    public enum ShareFolderJobStatus: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The share job has finished. The value is the metadata for the folder.
@@ -7819,11 +8267,15 @@ public class Sharing {
         /// An unspecified error.
         case failed(Sharing.ShareFolderError)
 
+        func json() throws -> JSON {
+            try ShareFolderJobStatusSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderJobStatusSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderJobStatus: \(error)"
             }
         }
     }
@@ -7870,18 +8322,22 @@ public class Sharing {
     }
 
     /// The ShareFolderLaunch union
-    public enum ShareFolderLaunch: CustomStringConvertible {
+    public enum ShareFolderLaunch: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// An unspecified error.
         case complete(Sharing.SharedFolderMetadata)
 
+        func json() throws -> JSON {
+            try ShareFolderLaunchSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ShareFolderLaunchSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ShareFolderLaunch: \(error)"
             }
         }
     }
@@ -7922,7 +8378,7 @@ public class Sharing {
     }
 
     /// The SharePathError union
-    public enum SharePathError: CustomStringConvertible {
+    public enum SharePathError: CustomStringConvertible, JSONRepresentable {
         /// A file is at the specified path.
         case isFile
         /// We do not support sharing a folder inside a shared folder.
@@ -7958,11 +8414,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharePathErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharePathErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharePathError: \(error)"
             }
         }
     }
@@ -8127,7 +8587,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedContentLinkMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedContentLinkMetadata: \(error)"
             }
         }
     }
@@ -8182,7 +8642,7 @@ public class Sharing {
 
     /// Shared file user, group, and invitee membership. Used for the results of listFileMembers and
     /// listFileMembersContinue, and used as part of the results for listFileMembersBatch.
-    public class SharedFileMembers: CustomStringConvertible {
+    public class SharedFileMembers: CustomStringConvertible, JSONRepresentable {
         /// The list of user members of the shared file.
         public let users: [Sharing.UserFileMembershipInfo]
         /// The list of group members of the shared file.
@@ -8205,11 +8665,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try SharedFileMembersSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFileMembersSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFileMembers: \(error)"
             }
         }
     }
@@ -8241,7 +8705,7 @@ public class Sharing {
     }
 
     /// Properties of the shared file.
-    public class SharedFileMetadata: CustomStringConvertible {
+    public class SharedFileMetadata: CustomStringConvertible, JSONRepresentable {
         /// The current user's access level for this shared file.
         public let accessType: Sharing.AccessLevel?
         /// The ID of the file.
@@ -8318,11 +8782,15 @@ public class Sharing {
             self.timeInvited = timeInvited
         }
 
+        func json() throws -> JSON {
+            try SharedFileMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFileMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFileMetadata: \(error)"
             }
         }
     }
@@ -8391,7 +8859,7 @@ public class Sharing {
     }
 
     /// There is an error accessing the shared folder.
-    public enum SharedFolderAccessError: CustomStringConvertible {
+    public enum SharedFolderAccessError: CustomStringConvertible, JSONRepresentable {
         /// This shared folder ID is invalid.
         case invalidId
         /// The user is not a member of the shared folder thus cannot access it.
@@ -8405,11 +8873,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedFolderAccessErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderAccessErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderAccessError: \(error)"
             }
         }
     }
@@ -8472,7 +8944,7 @@ public class Sharing {
     }
 
     /// The SharedFolderMemberError union
-    public enum SharedFolderMemberError: CustomStringConvertible {
+    public enum SharedFolderMemberError: CustomStringConvertible, JSONRepresentable {
         /// The target dropbox_id is invalid.
         case invalidDropboxId
         /// The target dropbox_id is not a member of the shared folder.
@@ -8482,11 +8954,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedFolderMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderMemberError: \(error)"
             }
         }
     }
@@ -8538,7 +9014,7 @@ public class Sharing {
     }
 
     /// Shared folder user and group membership.
-    public class SharedFolderMembers: CustomStringConvertible {
+    public class SharedFolderMembers: CustomStringConvertible, JSONRepresentable {
         /// The list of user members of the shared folder.
         public let users: [Sharing.UserMembershipInfo]
         /// The list of group members of the shared folder.
@@ -8561,11 +9037,15 @@ public class Sharing {
             self.cursor = cursor
         }
 
+        func json() throws -> JSON {
+            try SharedFolderMembersSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderMembersSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderMembers: \(error)"
             }
         }
     }
@@ -8597,7 +9077,7 @@ public class Sharing {
     }
 
     /// Properties of the shared folder.
-    public class SharedFolderMetadataBase: CustomStringConvertible {
+    public class SharedFolderMetadataBase: CustomStringConvertible, JSONRepresentable {
         /// The current user's access level for this shared folder.
         public let accessType: Sharing.AccessLevel
         /// Whether this folder is inside of a team folder.
@@ -8645,11 +9125,15 @@ public class Sharing {
             self.parentFolderName = parentFolderName
         }
 
+        func json() throws -> JSON {
+            try SharedFolderMetadataBaseSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderMetadataBaseSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderMetadataBase: \(error)"
             }
         }
     }
@@ -8768,7 +9252,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedFolderMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedFolderMetadata: \(error)"
             }
         }
     }
@@ -8846,7 +9330,7 @@ public class Sharing {
     }
 
     /// The SharedLinkAccessFailureReason union
-    public enum SharedLinkAccessFailureReason: CustomStringConvertible {
+    public enum SharedLinkAccessFailureReason: CustomStringConvertible, JSONRepresentable {
         /// User is not logged in.
         case loginRequired
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
@@ -8861,11 +9345,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedLinkAccessFailureReasonSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkAccessFailureReasonSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkAccessFailureReason: \(error)"
             }
         }
     }
@@ -8928,17 +9416,21 @@ public class Sharing {
     }
 
     /// The SharedLinkAlreadyExistsMetadata union
-    public enum SharedLinkAlreadyExistsMetadata: CustomStringConvertible {
+    public enum SharedLinkAlreadyExistsMetadata: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the shared link that already exists.
         case metadata(Sharing.SharedLinkMetadata)
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedLinkAlreadyExistsMetadataSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkAlreadyExistsMetadataSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkAlreadyExistsMetadata: \(error)"
             }
         }
     }
@@ -8978,7 +9470,7 @@ public class Sharing {
     }
 
     /// Who can view shared links in this folder.
-    public enum SharedLinkPolicy: CustomStringConvertible {
+    public enum SharedLinkPolicy: CustomStringConvertible, JSONRepresentable {
         /// Links can be shared with anyone.
         case anyone
         /// Links can be shared with anyone on the same team as the owner.
@@ -8988,11 +9480,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharedLinkPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkPolicy: \(error)"
             }
         }
     }
@@ -9043,7 +9539,7 @@ public class Sharing {
     }
 
     /// The SharedLinkSettings struct
-    public class SharedLinkSettings: CustomStringConvertible {
+    public class SharedLinkSettings: CustomStringConvertible, JSONRepresentable {
         /// Boolean flag to enable or disable password protection.
         public let requirePassword: Bool?
         /// If requirePassword is true, this is needed to specify the password to access the link.
@@ -9081,11 +9577,15 @@ public class Sharing {
             self.allowDownload = allowDownload
         }
 
+        func json() throws -> JSON {
+            try SharedLinkSettingsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkSettingsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkSettings: \(error)"
             }
         }
     }
@@ -9131,7 +9631,7 @@ public class Sharing {
     }
 
     /// The SharedLinkSettingsError union
-    public enum SharedLinkSettingsError: CustomStringConvertible {
+    public enum SharedLinkSettingsError: CustomStringConvertible, JSONRepresentable {
         /// The given settings are invalid (for example, all attributes of the SharedLinkSettings are empty, the
         /// requested visibility is password in RequestedVisibility but the linkPassword in SharedLinkSettings
         /// is missing, expires in SharedLinkSettings is set to the past, etc.).
@@ -9141,11 +9641,15 @@ public class Sharing {
         /// SharedLinkSettings.
         case notAuthorized
 
+        func json() throws -> JSON {
+            try SharedLinkSettingsErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkSettingsErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharedLinkSettingsError: \(error)"
             }
         }
     }
@@ -9184,7 +9688,7 @@ public class Sharing {
     }
 
     /// User could not access this file.
-    public enum SharingFileAccessError: CustomStringConvertible {
+    public enum SharingFileAccessError: CustomStringConvertible, JSONRepresentable {
         /// Current user does not have sufficient privileges to perform the desired action.
         case noPermission
         /// File specified was not found.
@@ -9198,11 +9702,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharingFileAccessErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingFileAccessErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingFileAccessError: \(error)"
             }
         }
     }
@@ -9265,18 +9773,22 @@ public class Sharing {
     }
 
     /// User account had a problem preventing this action.
-    public enum SharingUserError: CustomStringConvertible {
+    public enum SharingUserError: CustomStringConvertible, JSONRepresentable {
         /// This user's email address is not verified. This functionality is only available on accounts with a verified
         /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try SharingUserErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try SharingUserErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for SharingUserError: \(error)"
             }
         }
     }
@@ -9315,7 +9827,7 @@ public class Sharing {
     }
 
     /// Information about a team member.
-    public class TeamMemberInfo: CustomStringConvertible {
+    public class TeamMemberInfo: CustomStringConvertible, JSONRepresentable {
         /// Information about the member's team.
         public let teamInfo: Users.Team
         /// The display name of the user.
@@ -9331,11 +9843,15 @@ public class Sharing {
             self.memberId = memberId
         }
 
+        func json() throws -> JSON {
+            try TeamMemberInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamMemberInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TeamMemberInfo: \(error)"
             }
         }
     }
@@ -9365,7 +9881,7 @@ public class Sharing {
     }
 
     /// The TransferFolderArg struct
-    public class TransferFolderArg: CustomStringConvertible {
+    public class TransferFolderArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// A account or team member ID to transfer ownership to.
@@ -9377,11 +9893,15 @@ public class Sharing {
             self.toDropboxId = toDropboxId
         }
 
+        func json() throws -> JSON {
+            try TransferFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TransferFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TransferFolderArg: \(error)"
             }
         }
     }
@@ -9409,7 +9929,7 @@ public class Sharing {
     }
 
     /// The TransferFolderError union
-    public enum TransferFolderError: CustomStringConvertible {
+    public enum TransferFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// toDropboxId in TransferFolderArg is invalid.
@@ -9429,11 +9949,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try TransferFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TransferFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for TransferFolderError: \(error)"
             }
         }
     }
@@ -9509,7 +10033,7 @@ public class Sharing {
     }
 
     /// The UnmountFolderArg struct
-    public class UnmountFolderArg: CustomStringConvertible {
+    public class UnmountFolderArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         public init(sharedFolderId: String) {
@@ -9517,11 +10041,15 @@ public class Sharing {
             self.sharedFolderId = sharedFolderId
         }
 
+        func json() throws -> JSON {
+            try UnmountFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnmountFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnmountFolderArg: \(error)"
             }
         }
     }
@@ -9547,7 +10075,7 @@ public class Sharing {
     }
 
     /// The UnmountFolderError union
-    public enum UnmountFolderError: CustomStringConvertible {
+    public enum UnmountFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// The current user does not have permission to perform this action.
@@ -9558,11 +10086,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UnmountFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnmountFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnmountFolderError: \(error)"
             }
         }
     }
@@ -9614,7 +10146,7 @@ public class Sharing {
     }
 
     /// Arguments for unshareFile.
-    public class UnshareFileArg: CustomStringConvertible {
+    public class UnshareFileArg: CustomStringConvertible, JSONRepresentable {
         /// The file to unshare.
         public let file: String
         public init(file: String) {
@@ -9622,11 +10154,15 @@ public class Sharing {
             self.file = file
         }
 
+        func json() throws -> JSON {
+            try UnshareFileArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnshareFileArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnshareFileArg: \(error)"
             }
         }
     }
@@ -9652,7 +10188,7 @@ public class Sharing {
     }
 
     /// Error result for unshareFile.
-    public enum UnshareFileError: CustomStringConvertible {
+    public enum UnshareFileError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case userError(Sharing.SharingUserError)
         /// An unspecified error.
@@ -9660,11 +10196,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UnshareFileErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnshareFileErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnshareFileError: \(error)"
             }
         }
     }
@@ -9711,7 +10251,7 @@ public class Sharing {
     }
 
     /// The UnshareFolderArg struct
-    public class UnshareFolderArg: CustomStringConvertible {
+    public class UnshareFolderArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// If true, members of this shared folder will get a copy of this folder after it's unshared. Otherwise, it
@@ -9724,11 +10264,15 @@ public class Sharing {
             self.leaveACopy = leaveACopy
         }
 
+        func json() throws -> JSON {
+            try UnshareFolderArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnshareFolderArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnshareFolderArg: \(error)"
             }
         }
     }
@@ -9756,7 +10300,7 @@ public class Sharing {
     }
 
     /// The UnshareFolderError union
-    public enum UnshareFolderError: CustomStringConvertible {
+    public enum UnshareFolderError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// This action cannot be performed on a team shared folder.
@@ -9768,11 +10312,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UnshareFolderErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UnshareFolderErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UnshareFolderError: \(error)"
             }
         }
     }
@@ -9830,7 +10378,7 @@ public class Sharing {
     }
 
     /// Arguments for updateFileMember.
-    public class UpdateFileMemberArgs: CustomStringConvertible {
+    public class UpdateFileMemberArgs: CustomStringConvertible, JSONRepresentable {
         /// File for which we are changing a member's access.
         public let file: String
         /// The member whose access we are changing.
@@ -9844,11 +10392,15 @@ public class Sharing {
             self.accessLevel = accessLevel
         }
 
+        func json() throws -> JSON {
+            try UpdateFileMemberArgsSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFileMemberArgsSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFileMemberArgs: \(error)"
             }
         }
     }
@@ -9878,7 +10430,7 @@ public class Sharing {
     }
 
     /// The UpdateFolderMemberArg struct
-    public class UpdateFolderMemberArg: CustomStringConvertible {
+    public class UpdateFolderMemberArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// The member of the shared folder to update.  Only the dropboxId in MemberSelector may be set at this time.
@@ -9892,11 +10444,15 @@ public class Sharing {
             self.accessLevel = accessLevel
         }
 
+        func json() throws -> JSON {
+            try UpdateFolderMemberArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFolderMemberArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFolderMemberArg: \(error)"
             }
         }
     }
@@ -9926,7 +10482,7 @@ public class Sharing {
     }
 
     /// The UpdateFolderMemberError union
-    public enum UpdateFolderMemberError: CustomStringConvertible {
+    public enum UpdateFolderMemberError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// An unspecified error.
@@ -9943,11 +10499,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UpdateFolderMemberErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFolderMemberErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFolderMemberError: \(error)"
             }
         }
     }
@@ -10013,7 +10573,7 @@ public class Sharing {
     }
 
     /// If any of the policies are unset, then they retain their current setting.
-    public class UpdateFolderPolicyArg: CustomStringConvertible {
+    public class UpdateFolderPolicyArg: CustomStringConvertible, JSONRepresentable {
         /// The ID for the shared folder.
         public let sharedFolderId: String
         /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
@@ -10050,11 +10610,15 @@ public class Sharing {
             self.actions = actions
         }
 
+        func json() throws -> JSON {
+            try UpdateFolderPolicyArgSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFolderPolicyArgSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFolderPolicyArg: \(error)"
             }
         }
     }
@@ -10100,7 +10664,7 @@ public class Sharing {
     }
 
     /// The UpdateFolderPolicyError union
-    public enum UpdateFolderPolicyError: CustomStringConvertible {
+    public enum UpdateFolderPolicyError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case accessError(Sharing.SharedFolderAccessError)
         /// memberPolicy in UpdateFolderPolicyArg was set even though user is not on a team.
@@ -10116,11 +10680,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UpdateFolderPolicyErrorSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UpdateFolderPolicyErrorSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UpdateFolderPolicyError: \(error)"
             }
         }
     }
@@ -10208,7 +10776,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserMembershipInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserMembershipInfo: \(error)"
             }
         }
     }
@@ -10266,7 +10834,7 @@ public class Sharing {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserFileMembershipInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserFileMembershipInfo: \(error)"
             }
         }
     }
@@ -10312,7 +10880,7 @@ public class Sharing {
     }
 
     /// Basic information about a user. Use usersAccount and usersAccountBatch to obtain more detailed information.
-    public class UserInfo: CustomStringConvertible {
+    public class UserInfo: CustomStringConvertible, JSONRepresentable {
         /// The account ID of the user.
         public let accountId: String
         /// Email address of user.
@@ -10335,11 +10903,15 @@ public class Sharing {
             self.teamMemberId = teamMemberId
         }
 
+        func json() throws -> JSON {
+            try UserInfoSerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoSerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for UserInfo: \(error)"
             }
         }
     }
@@ -10373,7 +10945,7 @@ public class Sharing {
     }
 
     /// The ViewerInfoPolicy union
-    public enum ViewerInfoPolicy: CustomStringConvertible {
+    public enum ViewerInfoPolicy: CustomStringConvertible, JSONRepresentable {
         /// Viewer information is available on this file.
         case enabled
         /// Viewer information is disabled on this file.
@@ -10381,11 +10953,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try ViewerInfoPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ViewerInfoPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for ViewerInfoPolicy: \(error)"
             }
         }
     }
@@ -10431,7 +11007,7 @@ public class Sharing {
 
     /// Who can access a shared link. The most open visibility is public_. The default depends on many aspects, such as
     /// team and user preferences and shared folder settings.
-    public enum Visibility: CustomStringConvertible {
+    public enum Visibility: CustomStringConvertible, JSONRepresentable {
         /// Anyone who has received the link can access it. No login required.
         case public_
         /// Only members of the same team can access the link. Login is required.
@@ -10445,11 +11021,15 @@ public class Sharing {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try VisibilitySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try VisibilitySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for Visibility: \(error)"
             }
         }
     }
@@ -10512,7 +11092,7 @@ public class Sharing {
     }
 
     /// The VisibilityPolicy struct
-    public class VisibilityPolicy: CustomStringConvertible {
+    public class VisibilityPolicy: CustomStringConvertible, JSONRepresentable {
         /// This is the value to submit when saving the visibility setting.
         public let policy: Sharing.RequestedVisibility
         /// This is what the effective policy would be, if you selected this option. The resolved policy is obtained
@@ -10536,11 +11116,15 @@ public class Sharing {
             self.disallowedReason = disallowedReason
         }
 
+        func json() throws -> JSON {
+            try VisibilityPolicySerializer().serialize(self)
+        }
+
         public var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try VisibilityPolicySerializer().serialize(self)))"
             } catch {
-                return "\(self)"
+                return "Failed to generate description for VisibilityPolicy: \(error)"
             }
         }
     }

@@ -8,9 +8,9 @@ import Foundation
 
 /// Routes for the check namespace
 /// For Objective-C compatible routes see DBCheckRoutes
-public class CheckRoutes {
+public class CheckRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 

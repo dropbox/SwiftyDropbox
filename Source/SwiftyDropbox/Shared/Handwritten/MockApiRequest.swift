@@ -74,6 +74,25 @@ extension MockApiRequest {
     func handleMockInput(_ mockInput: MockInput) throws {
         try _handleMockInput(mockInput)
     }
+
+    func handleMockInput(_ mockInput: MockInputWithModel) throws {
+        var mappedInput: MockInput
+
+        switch mockInput {
+        case .none:
+            mappedInput = .none
+        case .success(let model):
+            mappedInput = .success(json: try MockingUtilities.jsonObject(from: model))
+        case .downloadSuccess(let model, let downloadLocation):
+            mappedInput = .downloadSuccess(json: try MockingUtilities.jsonObject(from: model), downloadLocation: downloadLocation)
+        case .requestError(let model, let code):
+            mappedInput = .requestError(json: try MockingUtilities.jsonObject(from: model), code: code)
+        case .routeError(let model):
+            mappedInput = .success(json: try MockingUtilities.jsonObject(from: model))
+        }
+
+        try _handleMockInput(mappedInput)
+    }
 }
 
 enum MockApiRequestError: Error {
