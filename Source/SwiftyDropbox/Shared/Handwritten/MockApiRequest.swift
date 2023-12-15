@@ -70,13 +70,9 @@ class MockApiRequest: ApiRequest {
     func setCleanupHandler(_ handler: @escaping () -> Void) {}
 }
 
-extension ApiRequest {
+extension MockApiRequest {
     func handleMockInput(_ mockInput: MockInput) throws {
-        if let castSelf = self as? MockApiRequest {
-            try castSelf._handleMockInput(mockInput)
-        } else {
-            throw MockApiRequestError.badApiRequestType
-        }
+        try self._handleMockInput(mockInput)
     }
 }
 
