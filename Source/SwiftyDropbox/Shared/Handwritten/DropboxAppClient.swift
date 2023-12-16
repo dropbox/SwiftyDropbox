@@ -16,4 +16,12 @@ public class DropboxAppClient: DropboxAppBase {
         self.transportClient = transportClient
         super.init(client: transportClient)
     }
+
+    /// Initializer used by DropboxTransportClientOwning in tests.
+    ///
+    /// - Parameter client: The underlying DropboxTransportClient to make API calls.
+    required convenience init(client: DropboxTransportClient) {
+        self.init(transportClient: client)
+    }
+
 }

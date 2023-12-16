@@ -13,7 +13,7 @@ public protocol DropboxTesting {
 }
 
 open class DropboxTester: DropboxTesting {
-    public static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
+    public static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write sharing.write".components(separatedBy: " ")
 
     public let auth = DropboxClientsManager.authorizedClient!.auth!
     public let users = DropboxClientsManager.authorizedClient!.users!

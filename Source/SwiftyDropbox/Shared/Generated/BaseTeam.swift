@@ -6,13 +6,13 @@
 
 import Foundation
 
-public class DropboxTeamBase {
+public class DropboxTeamBase: DropboxTransportClientOwning {
     public var client: DropboxTransportClient
 
     /// Routes within the team namespace. See TeamRoutes for details.
     public var team: TeamRoutes!
 
-    public init(client: DropboxTransportClient) {
+    public required init(client: DropboxTransportClient) {
         self.client = client
 
         self.team = TeamRoutes(client: client)

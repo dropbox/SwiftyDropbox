@@ -9,7 +9,7 @@ final class TestMockingUtilities: XCTestCase {
     func testExampleModel() throws {
         let e = expectation(description: "webservice closure called")
 
-        let (filesRoutes, mockTransportClient) = MockingUtilities.makeRoutesObject(forType: FilesRoutes.self)
+        let (filesRoutes, mockTransportClient) = MockingUtilities.makeMock(forType: FilesRoutes.self)
         let webService = ExampleWebService(routes: filesRoutes)
 
         webService.getMetadata { result, _ in
@@ -30,7 +30,7 @@ final class TestMockingUtilities: XCTestCase {
     func testExampleJsonFixture() throws {
         let e = expectation(description: "webservice closure called")
 
-        let (filesRoutes, mockTransportClient) = MockingUtilities.makeRoutesObject(forType: FilesRoutes.self)
+        let (filesRoutes, mockTransportClient) = MockingUtilities.makeMock(forType: FilesRoutes.self)
         let webService = ExampleWebService(routes: filesRoutes)
 
         webService.getMetadata { result, _ in
@@ -59,7 +59,7 @@ final class TestMockingUtilities: XCTestCase {
     func testExampleError() throws {
         let e = expectation(description: "webservice closure called")
 
-        let (filesRoutes, mockTransportClient) = MockingUtilities.makeRoutesObject(forType: FilesRoutes.self)
+        let (filesRoutes, mockTransportClient) = MockingUtilities.makeMock(forType: FilesRoutes.self)
         let webService = ExampleWebService(routes: filesRoutes)
 
         webService.getMetadata { _, error in
