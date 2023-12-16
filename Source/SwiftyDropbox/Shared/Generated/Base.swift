@@ -6,7 +6,7 @@
 
 import Foundation
 
-public class DropboxBase {
+public class DropboxBase: DropboxTransportClientOwning {
     public var client: DropboxTransportClient
 
     /// Routes within the account namespace. See AccountRoutes for details.
@@ -34,7 +34,7 @@ public class DropboxBase {
     /// Routes within the users namespace. See UsersRoutes for details.
     public var users: UsersRoutes!
 
-    public init(client: DropboxTransportClient) {
+    public required init(client: DropboxTransportClient) {
         self.client = client
 
         self.account = AccountRoutes(client: client)

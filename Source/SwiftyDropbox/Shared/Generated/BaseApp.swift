@@ -6,7 +6,7 @@
 
 import Foundation
 
-public class DropboxAppBase {
+public class DropboxAppBase: DropboxTransportClientOwning {
     public var client: DropboxTransportClient
 
     /// Routes within the auth namespace. See AuthAppAuthRoutes for details.
@@ -14,7 +14,7 @@ public class DropboxAppBase {
     /// Routes within the check namespace. See CheckAppAuthRoutes for details.
     public var check: CheckAppAuthRoutes!
 
-    public init(client: DropboxTransportClient) {
+    public required init(client: DropboxTransportClient) {
         self.client = client
 
         self.auth = AuthAppAuthRoutes(client: client)

@@ -60,6 +60,13 @@ public class DropboxTeamClient: DropboxTeamBase {
         super.init(client: transportClient)
     }
 
+    /// Initializer used by DropboxTransportClientOwning in tests.
+    ///
+    /// - Parameter client: The underlying DropboxTransportClient to make API calls.
+    required convenience init(client: DropboxTransportClient) {
+        self.init(transportClient: client)
+    }
+
     /// Creates a new DropboxClient instance for the team member id.
     ///
     /// - Parameter memberId: Team member id.

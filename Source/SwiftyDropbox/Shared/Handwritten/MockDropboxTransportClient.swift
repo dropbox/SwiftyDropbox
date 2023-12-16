@@ -14,7 +14,7 @@ protocol JSONRepresentable {
 }
 
 enum MockingUtilities {
-    static func makeRoutesObject<T: DropboxTransportClientOwning>(forType: T.Type) -> (T, MockDropboxTransportClient) {
+    static func makeMock<T: DropboxTransportClientOwning>(forType: T.Type) -> (T, MockDropboxTransportClient) {
         let mockTransportClient = MockDropboxTransportClient()
         let namespaceObject = T(client: mockTransportClient)
         return (namespaceObject, mockTransportClient)
