@@ -213,7 +213,7 @@ func applicationDidFinishLaunching(_ aNotification: Notification) {
 
 #### Begin the authorization flow
 
-You can commence the auth flow by calling `authorizeFromController:controller:openURL` method in your application's
+You can commence the auth flow by calling `authorizeFromControllerV2:controller:openURL` method in your application's
 view controller. Note that the controller reference will be weakly held. For SwiftUI applications nil can be passed in for the controller argument and the app's root view controller will be used to present the flow.
 
 From your view controller:
@@ -233,15 +233,6 @@ func myButtonInControllerPressed() {
         openURL: { (url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
         scopeRequest: scopeRequest
     )
-
-    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
-    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
-    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
-    // DropboxClientsManager.authorizeFromController(UIApplication.shared,
-    //                                               controller: self,
-    //                                               openURL: { (url: URL) -> Void in
-    //                                                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    //                                               })
 }
 
 ```
@@ -261,15 +252,6 @@ func myButtonInControllerPressed() {
         openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
         scopeRequest: scopeRequest
     )
-
-    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
-    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
-    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
-    // DropboxClientsManager.authorizeFromController(sharedApplication: NSApplication.shared,
-    //                                               controller: self,
-    //                                               openURL: { (url: URL) -> Void in
-    //                                                 NSWorkspace.shared.open(url)
-    //                                               })
 }
 ```
 
@@ -913,7 +895,7 @@ For most apps, it is reasonable to assume that only one Dropbox account (and acc
 
 * call `setupWithAppKey`/`setupWithAppKeyDesktop` (or `setupWithTeamAppKey`/`setupWithTeamAppKeyDesktop`) in integrating app's app delegate
 * client manager determines whether any access tokens are stored -- if any exist, one token is arbitrarily chosen to use
-* if no token is found, call `authorizeFromController`/`authorizeFromControllerDesktop` to initiate the OAuth flow
+* if no token is found, call `authorizeFromControllerV2` to initiate the OAuth flow
 * if auth flow is initiated, call `handleRedirectURL` (or `handleRedirectURLTeam`) in integrating app's app delegate to handle auth redirect back into the app and store the retrieved access token (using a `DropboxOAuthManager` instance)
 * client manager instantiates a `DropboxTransportClient` (if not supplied by the user)
 * client manager instantiates a `DropboxClient` (or `DropboxTeamClient`) with the transport client as a field
@@ -930,7 +912,7 @@ For some apps, it is necessary to manage more than one Dropbox account (and acce
 * call `setupWithAppKeyMultiUser`/`setupWithAppKeyMultiUserDesktop` (or `setupWithTeamAppKeyMultiUser`/`setupWithTeamAppKeyMultiUserDesktop`) in integrating app's app delegate
     * _SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
 * client manager determines whether an access token is stored with the`tokenUid` as a key -- if one exists, this token is chosen to use
-* if no token is found, call `authorizeFromController`/`authorizeFromControllerDesktop` to initiate the OAuth flow
+* if no token is found, call `authorizeFromControllerV2` to initiate the OAuth flow
 * if auth flow is initiated, call `handleRedirectURL` (or `handleRedirectURLTeam`) in integrating app's app delegate to handle auth redirect back into the app and store the retrieved access token (using a `DropboxOAuthManager` instance)
     * _SwiftUI note: You may need to create an Application Delegate if your application doesn't have one._
 * at this point, the app that is integrating with the SDK should persistently save the `tokenUid` from the `DropboxAccessToken` field of the `DropboxOAuthResult` object returned from the `handleRedirectURL` (or `handleRedirectURLTeam`) method
