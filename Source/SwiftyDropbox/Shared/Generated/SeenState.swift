@@ -7,9 +7,9 @@
 import Foundation
 
 /// Datatypes and serializers for the seen_state namespace
-open class SeenState {
+public class SeenState {
     /// Possible platforms on which a user may view content.
-    public enum PlatformType: CustomStringConvertible {
+    public enum PlatformType: CustomStringConvertible, JSONRepresentable {
         /// The content was viewed on the web.
         case web
         /// The content was viewed on a desktop client.
@@ -27,76 +27,85 @@ open class SeenState {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PlatformTypeSerializer().serialize(self)
+        }
+
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PlatformTypeSerializer().serialize(self)))"
-        }
-    }
-    open class PlatformTypeSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PlatformType) -> JSON {
-            switch value {
-                case .web:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("web")
-                    return .dictionary(d)
-                case .desktop:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("desktop")
-                    return .dictionary(d)
-                case .mobileIos:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("mobile_ios")
-                    return .dictionary(d)
-                case .mobileAndroid:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("mobile_android")
-                    return .dictionary(d)
-                case .api:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("api")
-                    return .dictionary(d)
-                case .unknown:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("unknown")
-                    return .dictionary(d)
-                case .mobile:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("mobile")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> PlatformType {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "web":
-                            return PlatformType.web
-                        case "desktop":
-                            return PlatformType.desktop
-                        case "mobile_ios":
-                            return PlatformType.mobileIos
-                        case "mobile_android":
-                            return PlatformType.mobileAndroid
-                        case "api":
-                            return PlatformType.api
-                        case "unknown":
-                            return PlatformType.unknown
-                        case "mobile":
-                            return PlatformType.mobile
-                        case "other":
-                            return PlatformType.other
-                        default:
-                            return PlatformType.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PlatformTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PlatformType: \(error)"
             }
         }
     }
 
+    public class PlatformTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PlatformType) throws -> JSON {
+            switch value {
+            case .web:
+                var d = [String: JSON]()
+                d[".tag"] = .str("web")
+                return .dictionary(d)
+            case .desktop:
+                var d = [String: JSON]()
+                d[".tag"] = .str("desktop")
+                return .dictionary(d)
+            case .mobileIos:
+                var d = [String: JSON]()
+                d[".tag"] = .str("mobile_ios")
+                return .dictionary(d)
+            case .mobileAndroid:
+                var d = [String: JSON]()
+                d[".tag"] = .str("mobile_android")
+                return .dictionary(d)
+            case .api:
+                var d = [String: JSON]()
+                d[".tag"] = .str("api")
+                return .dictionary(d)
+            case .unknown:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unknown")
+                return .dictionary(d)
+            case .mobile:
+                var d = [String: JSON]()
+                d[".tag"] = .str("mobile")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PlatformType {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "web":
+                    return PlatformType.web
+                case "desktop":
+                    return PlatformType.desktop
+                case "mobile_ios":
+                    return PlatformType.mobileIos
+                case "mobile_android":
+                    return PlatformType.mobileAndroid
+                case "api":
+                    return PlatformType.api
+                case "unknown":
+                    return PlatformType.unknown
+                case "mobile":
+                    return PlatformType.mobile
+                case "other":
+                    return PlatformType.other
+                default:
+                    return PlatformType.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PlatformType.self, json: json)
+            }
+        }
+    }
 }

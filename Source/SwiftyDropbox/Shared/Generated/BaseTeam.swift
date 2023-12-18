@@ -6,13 +6,15 @@
 
 import Foundation
 
-import Alamofire
+public class DropboxTeamBase: DropboxTransportClientOwning {
+    public var client: DropboxTransportClient
 
-open class DropboxTeamBase {
     /// Routes within the team namespace. See TeamRoutes for details.
-    open var team: TeamRoutes!
+    public var team: TeamRoutes!
 
-    public init(client: DropboxTransportClient) {
+    public required init(client: DropboxTransportClient) {
+        self.client = client
+
         self.team = TeamRoutes(client: client)
     }
 }

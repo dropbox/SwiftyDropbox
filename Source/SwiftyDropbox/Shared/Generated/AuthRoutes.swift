@@ -7,34 +7,21 @@
 import Foundation
 
 /// Routes for the auth namespace
-open class AuthRoutes {
+/// For Objective-C compatible routes see DBAuthRoutes
+public class AuthRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
-    }
-
-    /// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
-    ///
-    /// - parameter oauth1Token: The supplied OAuth 1.0 access token.
-    /// - parameter oauth1TokenSecret: The token secret associated with the supplied access token.
-    ///
-    ///  - returns: Through the response callback, the caller will receive a `Auth.TokenFromOAuth1Result` object on
-    /// success or a `Auth.TokenFromOAuth1Error` object on failure.
-    @discardableResult open func tokenFromOauth1(oauth1Token: String, oauth1TokenSecret: String) -> RpcRequest<Auth.TokenFromOAuth1ResultSerializer, Auth.TokenFromOAuth1ErrorSerializer> {
-        let route = Auth.tokenFromOauth1
-        let serverArgs = Auth.TokenFromOAuth1Arg(oauth1Token: oauth1Token, oauth1TokenSecret: oauth1TokenSecret)
-        return client.request(route, serverArgs: serverArgs)
     }
 
     /// Disables the access token used to authenticate the call. If there is a corresponding refresh token for the
     /// access token, this disables that refresh token, as well as any other access tokens for that refresh token.
     ///
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
     /// on failure.
-    @discardableResult open func tokenRevoke() -> RpcRequest<VoidSerializer, VoidSerializer> {
+    @discardableResult public func tokenRevoke() -> RpcRequest<VoidSerializer, VoidSerializer> {
         let route = Auth.tokenRevoke
         return client.request(route)
     }
-
 }

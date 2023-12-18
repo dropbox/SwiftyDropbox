@@ -16,7 +16,6 @@ import XCTest
 @testable import SwiftyDropbox
 
 class FilesRoutesTests: XCTestCase {
-
     private var userClient: UsersRoutes!
     private var tester: DropboxTester!
 
@@ -29,6 +28,15 @@ class FilesRoutesTests: XCTestCase {
 
         continueAfterFailure = false
 
+        if DropboxClientsManager.authorizedClient == nil {
+            setupDropboxClientsManager()
+        }
+
+        userClient = DropboxClientsManager.authorizedClient!.users!
+        tester = DropboxTester()
+    }
+
+    func setupDropboxClientsManager() {
         let processInfo = ProcessInfo.processInfo.environment
 
         guard let apiAppKey = processInfo["FULL_DROPBOX_API_APP_KEY"] else {
@@ -43,13 +51,10 @@ class FilesRoutesTests: XCTestCase {
         }
 
         #if os(OSX)
-            DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithAppKeyDesktop(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccessTestImpl())
         #elseif os(iOS)
-            DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient)
+        DropboxClientsManager.setupWithAppKey(apiAppKey, transportClient: transportClient, secureStorageAccess: SecureStorageAccessTestImpl())
         #endif
-
-        userClient = DropboxClientsManager.authorizedClient!.users!
-        tester = DropboxTester()
     }
 
     override func tearDown() {
@@ -72,7 +77,7 @@ class FilesRoutesTests: XCTestCase {
 
         tester.testFilesActions(nextTest, asMember: false)
 
-        let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
+        let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
         XCTAssertEqual(result, .completed, "Error: timeout on file routes tests")
     }
 }

@@ -4,7 +4,8 @@ on: [pull_request, workflow_dispatch]
 jobs:
   test:
     name: Run Unit Tests
-    runs-on: macos-latest
+    runs-on: macos-13
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -24,7 +25,7 @@ jobs:
           ACCOUNT_ID_2: ${{ secrets.ACCOUNT_ID_2 }}
           ACCOUNT_ID_3: ${{ secrets.ACCOUNT_ID_3 }}
           platform: ${{ 'iOS Simulator' }}
-          device: ${{ 'iPhone 13' }}
+          device: ${{ 'iPhone 14' }}
         run: |
           xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
             -destination "platform=$platform,name=$device" \
@@ -37,14 +38,6 @@ jobs:
             ACCOUNT_ID_2=$ACCOUNT_ID_2 \
             ACCOUNT_ID_3=$ACCOUNT_ID_3 \
             test
-
-      - name: Set up keychain
-        env:
-          TEST_KEYCHAIN_PASSWORD: ${{ secrets.TEST_KEYCHAIN_PASSWORD }}
-        run: |
-          security create-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p $TEST_KEYCHAIN_PASSWORD build.keychain
 
       - name: Test macOS
         env:

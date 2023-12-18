@@ -7,40 +7,27 @@
 import Foundation
 
 /// Routes for the check namespace
-open class CheckRoutes {
+/// For Objective-C compatible routes see DBCheckRoutes
+public class CheckRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 
-    /// This endpoint performs App Authentication, validating the supplied app key and secret, and returns the supplied
-    /// string, to allow you to test your code and connection to the Dropbox API. It has no other effect. If you receive
-    /// an HTTP 200 response with the supplied query, it indicates at least part of the Dropbox API infrastructure is
-    /// working and that the app key and secret valid.
-    ///
-    /// - parameter query: The string that you'd like to be echoed back to you.
-    ///
-    ///  - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
-    /// `Void` object on failure.
-    @discardableResult open func app(query: String = "") -> RpcRequest<Check.EchoResultSerializer, VoidSerializer> {
-        let route = Check.app
-        let serverArgs = Check.EchoArg(query: query)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
     /// This endpoint performs User Authentication, validating the supplied access token, and returns the supplied
-    /// string, to allow you to test your code and connection to the Dropbox API. It has no other effect. If you receive
-    /// an HTTP 200 response with the supplied query, it indicates at least part of the Dropbox API infrastructure is
-    /// working and that the access token is valid.
+    /// string, to allow you to test your code and connection to the Dropbox API. It has no other effect. If you
+    /// receive an HTTP 200 response with the supplied query, it indicates at least part of the Dropbox API
+    /// infrastructure is working and that the access token is valid.
+    ///
+    /// - scope: account_info.read
     ///
     /// - parameter query: The string that you'd like to be echoed back to you.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
     /// `Void` object on failure.
-    @discardableResult open func user(query: String = "") -> RpcRequest<Check.EchoResultSerializer, VoidSerializer> {
+    @discardableResult public func user(query: String = "") -> RpcRequest<Check.EchoResultSerializer, VoidSerializer> {
         let route = Check.user
         let serverArgs = Check.EchoArg(query: query)
         return client.request(route, serverArgs: serverArgs)
     }
-
 }

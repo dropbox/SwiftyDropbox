@@ -6,46 +6,48 @@
 
 import Foundation
 
-import Alamofire
+public class DropboxBase: DropboxTransportClientOwning {
+    public var client: DropboxTransportClient
 
-open class DropboxBase {
     /// Routes within the account namespace. See AccountRoutes for details.
-    open var account: AccountRoutes!
+    public var account: AccountRoutes!
     /// Routes within the auth namespace. See AuthRoutes for details.
-    open var auth: AuthRoutes!
+    public var auth: AuthRoutes!
     /// Routes within the check namespace. See CheckRoutes for details.
-    open var check: CheckRoutes!
+    public var check: CheckRoutes!
     /// Routes within the contacts namespace. See ContactsRoutes for details.
-    open var contacts: ContactsRoutes!
-    /// Routes within the file_properties namespace. See FilePropertiesRoutes for details.
-    open var file_properties: FilePropertiesRoutes!
-    /// Routes within the file_requests namespace. See FileRequestsRoutes for details.
-    open var file_requests: FileRequestsRoutes!
+    public var contacts: ContactsRoutes!
+    /// Routes within the fileProperties namespace. See FilePropertiesRoutes for details.
+    public var fileProperties: FilePropertiesRoutes!
+    /// Routes within the fileRequests namespace. See FileRequestsRoutes for details.
+    public var fileRequests: FileRequestsRoutes!
     /// Routes within the files namespace. See FilesRoutes for details.
-    open var files: FilesRoutes!
+    public var files: FilesRoutes!
     /// Routes within the openid namespace. See OpenidRoutes for details.
-    open var openid: OpenidRoutes!
+    public var openid: OpenidRoutes!
     /// Routes within the paper namespace. See PaperRoutes for details.
-    open var paper: PaperRoutes!
+    public var paper: PaperRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
-    open var sharing: SharingRoutes!
-    /// Routes within the team_log namespace. See TeamLogRoutes for details.
-    open var team_log: TeamLogRoutes!
+    public var sharing: SharingRoutes!
+    /// Routes within the teamLog namespace. See TeamLogRoutes for details.
+    public var teamLog: TeamLogRoutes!
     /// Routes within the users namespace. See UsersRoutes for details.
-    open var users: UsersRoutes!
+    public var users: UsersRoutes!
 
-    public init(client: DropboxTransportClient) {
+    public required init(client: DropboxTransportClient) {
+        self.client = client
+
         self.account = AccountRoutes(client: client)
         self.auth = AuthRoutes(client: client)
         self.check = CheckRoutes(client: client)
         self.contacts = ContactsRoutes(client: client)
-        self.file_properties = FilePropertiesRoutes(client: client)
-        self.file_requests = FileRequestsRoutes(client: client)
+        self.fileProperties = FilePropertiesRoutes(client: client)
+        self.fileRequests = FileRequestsRoutes(client: client)
         self.files = FilesRoutes(client: client)
         self.openid = OpenidRoutes(client: client)
         self.paper = PaperRoutes(client: client)
         self.sharing = SharingRoutes(client: client)
-        self.team_log = TeamLogRoutes(client: client)
+        self.teamLog = TeamLogRoutes(client: client)
         self.users = UsersRoutes(client: client)
     }
 }

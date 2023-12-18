@@ -1,16 +1,10 @@
 # Dropbox for Swift
 
----
-### Check out the beta version of a significant update to this SDK: SwiftyDropbox 10.0.0-beta.3
-
-### The beta version has several significant improvements, including support for background sessions, as well as compatibility for Objective-C code bases. You can find more information in the beta [release notes](https://github.com/dropbox/SwiftyDropbox/releases/tag/10.0.0-beta.3) and [README file](https://github.com/dropbox/SwiftyDropbox/blob/branch_10.0.0-beta/README.md#dropbox-for-swift).
-
-### Please try it out and [report any issues or feedback](https://github.com/dropbox/SwiftyDropbox/issues); be sure to include the version number of the SDK you're using when doing so. Thanks!
----
+## Version 10.0.0 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-1000) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
 
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
-Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/8.2.0/).
+Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0-beta.3/).
 
 ---
 
@@ -23,8 +17,6 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/8.2.0/
 * [SDK distribution](#sdk-distribution)
   * [Swift Package Manager](#swift-package-manager)
   * [CocoaPods](#cocoapods)
-  * [Carthage](#carthage)
-  * [Manually add subproject](#manually-add-subproject)
 * [Configure your project](#configure-your-project)
   * [Application `.plist` file](#application-plist-file)
   * [Handling the authorization flow](#handling-the-authorization-flow)
@@ -48,6 +40,11 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/8.2.0/
   * [`DropboxClientsManager` class](#dropboxclientsmanager-class)
     * [Single Dropbox user case](#single-dropbox-user-case)
     * [Multiple Dropbox user case](#multiple-dropbox-user-case)
+* [Objective-C](#objective-c)
+  * [Objective-C Compatibility Layer Distribution](#objective-c-compatibility-layer-distribution)
+  * [Using the Objective-C Compatbility Layer](#using-the-objective-c-compatbility-layer)
+  * [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
+* [Changes in version 10.0.0](#changes-in-version-1000)
 * [Examples](#examples)
 * [Documentation](#documentation)
 * [Stone](#stone)
@@ -60,9 +57,9 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/8.2.0/
 ## System requirements
 
 - iOS 11.0+
-- macOS 10.12+
-- Xcode 10.0+ (11.0+ if you use Carthage)
-- Swift 5.1+
+- macOS 10.13+
+- Xcode 13.3+
+- Swift 5.6+
 
 ## Get Started
 
@@ -112,6 +109,7 @@ target '<YOUR_PROJECT_NAME>' do
     pod 'SwiftyDropbox'
 end
 ```
+If your project contains Objective-C code that will need to have access to Dropbox SDK there is a separate pod called `SwiftyDropboxObjC` that contains an Objective-C compatibility layer for the SDK. Add this pod to your `Podfile` (in addition to `SwiftyDropbox` or on its own). For more information refer to the [Objective-C](#objective-c) section of this README.
 
 Then, run the following command to install the dependency:
 
@@ -124,45 +122,6 @@ Once your project is integrated with the Dropbox Swift SDK, you can pull SDK upd
 ```bash
 $ pod update
 ```
-
-**Note**: SwiftyDropbox requires CocoaPods 1.0.0+ when using Alamofire 4.0.0+. Because of this requirement, the CocoaPods App (which uses CocoaPods 1.0.0) cannot be used.
-
----
-
-### Carthage
-
-You can also integrate the Dropbox Swift SDK into your project using [Carthage](https://github.com/Carthage/Carthage), a decentralized dependency manager for Cocoa. Carthage offers more flexibility than CocoaPods, but requires some additional work. Carthage 0.37.0 is required due to XCFramework requirements on Xcode 12. You can install Carthage (with Xcode 11+) via [Homebrew](http://brew.sh/):
-
-```bash
-brew update
-brew install carthage
-```
-
-To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` in your project with the following contents:
-
-```
-# SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 9.2.0
-```
-
-Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
-
-##### iOS
-
-```bash
-carthage update --platform iOS --use-xcframeworks
-```
-
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Frameworks, Libraries, and Embedded Content** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
-
-##### macOS
-```bash
-carthage update --platform Mac --use-xcframeworks
-```
-
-Once you have checked-out out all the necessary code via Carthage, drag the `Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` file into your project as a subproject.
-
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
 
 ---
 
@@ -347,7 +306,7 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
           }
       }
     }
-    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, includeBackgroundClient: false, completion: oauthCompletion)
     return canHandleUrl
 }
 
@@ -374,7 +333,7 @@ func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>)
 
     for context in URLContexts {
         // stop iterating after the first handle-able url
-        if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
+        if DropboxClientsManager.handleRedirectURL(context.url, includeBackgroundClient: false, completion: oauthCompletion) { break }
     }
 }
 ```
@@ -409,7 +368,7 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
                     }
                 }
             }
-            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+            DropboxClientsManager.handleRedirectURL(url, includeBackgroundClient: false, completion: oauthCompletion)
             // this brings your application back the foreground on redirect
             NSApp.activate(ignoringOtherApps: true)
         }
@@ -468,6 +427,14 @@ The response handlers for each request type are similar to one another. The argu
 
 Note: Response handlers are required for all endpoints. Progress handlers, on the other hand, are optional for all endpoints.
 
+#### Swift Concurrency
+
+As of the 10.0.0 release, all of the request types also support Swift Concurrency (`async`/`await`) via the async `response()` function.
+
+```swift
+let response = try await client.files.createFolder(path: "/test/path/in/Dropbox/account").response()
+```
+
 ---
 
 ### Request types
@@ -514,10 +481,8 @@ if someConditionIsSatisfied {
 // Download to URL
 let fileManager = FileManager.default
 let directoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-let destURL = directoryURL.appendingPathComponent("myTestFile")
-let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-    return destURL
-}
+let destination = directoryURL.appendingPathComponent("myTestFile")
+
 client.files.download(path: "/test/path/in/Dropbox/account", overwrite: true, destination: destination)
     .response { response, error in
         if let response = response {
@@ -711,19 +676,19 @@ In this way, datatypes with subtypes are a hybrid of structs and unions. Only a 
 
 #### Configure network client
 
-It is possible to configure the networking client used by the SDK to make API requests. You can supply custom fields like a custom user agent or custom delegates to manage response handler code, or a custom server trust policy. See below:
+It is possible to configure the networking client used by the SDK to make API requests. You can supply custom fields like a custom user agent or custom session configurations, or a custom auth challenge handler. See below:
 
 ##### iOS
 ```Swift
 import SwiftyDropbox
 
-let transportClient = DropboxTransportClient(accessToken: "<MY_ACCESS_TOKEN>",
+let transportClient = DropboxTransportClientImpl(accessToken: "<MY_ACCESS_TOKEN>",
                                              baseHosts: nil,
                                              userAgent: "CustomUserAgent",
                                              selectUser: nil,
-                                             sessionDelegate: mySessionDelegate,
-                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
-                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+                                             sessionConfiguration: mySessionConfiguration,
+                                             longpollSessionConfiguration: myLongpollSessionConfiguration,
+                                             authChallengeHandler: nil)
 
 DropboxClientsManager.setupWithAppKey("<APP_KEY>", transportClient: transportClient)
 ```
@@ -732,13 +697,13 @@ DropboxClientsManager.setupWithAppKey("<APP_KEY>", transportClient: transportCli
 ```Swift
 import SwiftyDropbox
 
-let transportClient = DropboxTransportClient(accessToken: "<MY_ACCESS_TOKEN>",
+let transportClient = DropboxTransportClientImpl(accessToken: "<MY_ACCESS_TOKEN>",
                                              baseHosts: nil,
                                              userAgent: "CustomUserAgent",
                                              selectUser: nil,
-                                             sessionDelegate: mySessionDelegate,
-                                             backgroundSessionDelegate: myBackgroundSessionDelegate,
-                                             serverTrustPolicyManager: myServerTrustPolicyManager)
+                                             sessionConfiguration: mySessionConfiguration,
+                                             longpollSessionConfiguration: myLongpollSessionConfiguration,
+                                             authChallengeHandler: nil)
 
 DropboxClientsManager.setupWithAppKeyDesktop("<APP_KEY>", transportClient: transportClient)
 ```
@@ -759,7 +724,184 @@ client.files.listFolder(path: "").response(queue: DispatchQueue(label: "MyCustom
 }
 ```
 
+#### Mock API responses in tests
+
+When testing code that depends upon the SDK, it can be useful to mock arbitrary API responses from JSON fixtures. We recommend using dependency injection rather than accessing the client via the convenience singletons. Note that the mocks are not public, they are only available in tests when SwiftyDropbox is imported using the `@testable` attribute.
+
+```Swift
+@testable import SwiftyDropbox
+
+let transportClient = MockDropboxTransportClient()
+let dropboxClient = DropboxClient(transportClient: transportClient)
+
+// your feature under test
+let commentClient = CommentClient(apiClient: dropboxClient)
+
+let expectation = expectation(description: "added comment")
+
+// function of your feature that relies upon Dropbox api response
+commentClient.addComment(
+    forIdentifier: identifier,
+    commentId: "pendingCommentId",
+    threadId: nil,
+    message: "hello world",
+    mentions: [],
+    annotation: nil
+) { result in
+    XCTAssertEqual(result.commentId, "thread-1")
+    XCTAssertNil(result.error)
+    addCommentExpectation.fulfill()
+}
+
+let mockInput: MockInput = .success(
+    json: ["id": "thread-1", "status": 1]
+)
+
+let request = try XCTUnwrap(transportClient.getLastRequest())
+try request.handleMockInput(mockInput)
+
+wait(for: [expectation], timeout: 1.0)
+```
+
 ---
+
+### Supporting background networking
+
+Versions 10.0 and higher support iOS background networking from applications and their extensions.
+
+#### Initialization
+
+To create a background client, provide a background session identifier. To use a shared container, specify that as well.
+
+```Swift
+import SwiftyDropbox
+
+DropboxClientsManager.setupWithAppKey(
+    "<APP_KEY>",
+    backgroundSessionIdentifier: "<BACKGROUND_SESSION_IDENTIFIER>"
+)
+```
+
+If you're setting up a background client from an app extension, you'll need to specify a shared container identifier and configure and app group or keychain sharing appropriately.
+```Swift
+DropboxClientsManager.setupWithAppKey(
+    "<APP_KEY>",
+    backgroundSessionIdentifier: "<BACKGROUND_SESSION_IDENTIFIER>"
+    sharedContainerIdentifier: "<SHARED_CONTAINER_IDENTIFIER>"
+)
+```
+ Apps in an app group automatically have keychain sharing. App groups are required for using a shared container, which is necessary if your applications will be downloading files using background sessions in extensions. See:
+- https://developer.apple.com/documentation/xcode/configuring-app-groups
+- https://developer.apple.com/documentation/xcode/configuring-keychain-sharing
+
+#### Making requests
+Make requests like you would with a foreground client.
+
+```Swift
+let client = DropboxClientsManager.authorizedBackgroundClient!
+
+client.files.download(path: path, overwrite: true, destination: destinationUrl) {
+    if let result = response {
+        print(result)
+    }
+}
+```
+
+#### Customizing requests
+Set background session related properties on requests for fine-grained control.
+
+```Swift
+client.files.download(path: path, overwrite: true, destination: destinationUrl)
+    .persistingString(string: "<DATA_AVAILABLE_ACROSS_APP_SESSIONS>")
+    .settingEarliestBeginDate(date: .addingTimeInterval(fiveSeconds))
+    .response { response, error in
+{
+    if let result = response {
+        print(result)
+    }
+})
+```
+
+#### Reconnecting to requests across app sessions
+As background requests potentially span app sessions, the app will recieve `AppDelegate.application(_:handleEventsForBackgroundURLSession:completionHandler:)` when woken to handle events. SwiftyDropbox can reconnect completion handlers to requests. The application must set up the `authorizedBackgroundClient` prior to attempting reconnection.
+
+In the reconnection block you're recieving a heterogenous collection of the routes requested on the background session. Handling the response will likely require context that must be persisted across sessions. You can use `.persistingString(string:)` and `.clientPersistedString` on request to store this context. Depending on your use case you may need to persist additional context in your application.
+
+```Swift
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        DropboxClientsManager.handleEventsForBackgroundURLSession(
+            with: identifier,
+            creationInfos: [],
+            completionHandler: completionHandler,
+            requestsToReconnect: { requestResults in
+                processReconnect(requestResults: RequestResults)
+            }
+        )
+    }
+
+    static func processReconnect(requestResults: ([Result<DropboxBaseRequestBox, ReconnectionError>])) {
+        let successfulReturnedRequests = requestResults.compactMap { result -> DropboxBaseRequestBox? in
+            switch result {
+            case .success(let requestBox):
+                return requestBox
+            case .failure(let error):
+                // handle error
+                return nil
+            }
+        }
+
+        for request in successfulReturnedRequests {
+            switch request {
+            case .download(let downloadRequest):
+                downloadRequest.response { response, error in
+                    // handle response
+                }
+            case .upload(let uploadRequest):
+                uploadRequest.response { response, error in
+                    // handle response
+                }
+            // or .downloadZip, .paperCreate, .getSharedLinkFile etc.
+            }
+        }
+    }
+```
+
+In the event that the requests originated from an App Extension, SwiftyDropbox must recreate the extension background client in order to reconnect the requests.
+
+```Swift
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        let extensionCreationInfo: BackgroundExtensionSessionCreationInfo = .init(defaultInfo: .init(
+            backgroundSessionIdentifier: "<EXTENSION_BACKGROUND_SESSION_IDENTIFIER>",
+            sharedContainerIdentifier: "<EXTENSION_SHARED_CONTAINER_IDENTIFIER>"
+        ))
+
+        DropboxClientsManager.handleEventsForBackgroundURLSession(
+            with: identifier,
+            creationInfos: [extensionCreationInfo],
+            completionHandler: completionHandler,
+            requestsToReconnect: { requestResults in
+                processReconnect(requestResults: RequestResults)
+            }
+        )
+    }
+```
+
+#### Debugging
+Background sessions are difficult to debug. Both simulators and the Xcode debugger will cause the application to behave in meaningfully different ways–verification of correct reconnection behavior should always take place on a physical device without the debugger connected. Logs to console can be viewed via Xcode -> Window -> Devices and Simulators and are a good bet for gaining insights here. Force quitting the application will disqualify it from continuing to do work in the background.
+
+For a good discussion of this, see https://developer.apple.com/forums/thread/14855.
+
+#### Persistence
+SwiftyDropbox tracks state and orchestrates reconnection by writing a JSON string to `URLSessionTask.taskDescription` a property that `URLSession` itself persists across app sessions.
+
+Above, in Customizing Requests, is an example of the ability of a client of SwiftyDropbox to persist its own arbitrary strings alongside SwiftyDropbox's private use of this field. This could be useful for storing the information needed to reconstruct a completion handler for a task after reconnection.
+
+Depending on the needs of the application, this lightweight solution may be insufficient persistent bookkeeping, and the application may build independate private persistence mapping state to an id stored on the request. This could be useful in the event that a failure occurs where URLSession itself has lost track of the transfer and it must be recreated.
+
+See https://developer.apple.com/forums/thread/11554 for further discussion.
+
+---
+
 
 ### `DropboxClientsManager` class
 
@@ -802,6 +944,197 @@ The `DropboxClient` (or `DropboxTeamClient`) is then used to make all of the des
 * if specific access tokens need to be removed, use the `clearStoredAccessToken` method in `DropboxOAuthManager`
 
 ---
+## Objective-C
+
+If you need to interact with the Dropbox SDK in Objective-C code there is an Objective-C compatibility layer for the SDK that can be used.
+
+### Objective-C Compatibility Layer Distribution
+
+#### Swift Package Manager
+
+The Objective-C compatibility layer is in the same package outlined in [SDK distribution](#sdk-distribution). After adding the package you will see a target named `SwiftyDropboxObjC` that can be added in the same way as the Swift SDK and used in its place.
+
+#### Cocoapods
+
+For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (or in addition to) `SwiftyDropbox`.
+
+```ruby
+use_frameworks!
+
+target '<YOUR_PROJECT_NAME>' do
+    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.3'
+end
+```
+
+### Using the Objective-C Compatbility Layer
+
+The Objective-C interface was built to mimic the Swift interface as closely as possible while still maintaining good Objective-C patterns and practices (for example full verbose names instead of the namespacing relied on in Swift). Other than the naming and some other small tweaks to accomodate Objective-C the usage of the SDK should be extremely similar in both languages, thus the instructions above should apply even when in Objective-C.
+
+An example of the differences between Swift and Objective-C:
+
+Swift:
+```Swift
+import SwiftyDropbox
+
+let userSelectArg = Team.UserSelectorArg.email("some@email.com")
+DropboxClientsManager.team.membersGetInfo(members: [userSelectArg]).response { response, error in
+    if let result = response {
+        // Handle result
+    } else {
+        // Handle error
+    }
+}
+```
+
+Objective-C:
+```objc
+@import SwiftyDropboxObjC;
+
+DBXTeamUserSelectorArgEmail *selector = [[DBXTeamUserSelectorArgEmail alloc] init:@"some@email.com"]
+[[DBXDropboxClientsManager.authorizedTeamClient.team membersGetInfoWithMembers:@[selector]] responseWithCompletionHandler:^(NSArray<DBXTeamMembersGetInfoItem *> * _Nullable result, DBXTeamMembersGetInfoError * _Nullable routeError, DBXCallError * _Nullable error) {
+    if (result) {
+        // Handle result
+    } else {
+        // Handle error
+    }
+}];
+```
+
+### Migrating from dropbox-sdk-obj-c
+
+If you previously integrated with [dropbox-sdk-obj-c](https://github.com/dropbox/dropbox-sdk-obj-c) migrating to the Swift SDK + Objective-C layer will require code changes but they should be relatively straight forward in most cases.
+
+In order to maintain as consistent of an interface between Swift and Objective-C as possible in this SDK the interface did have to differ slightly from [dropbox-sdk-obj-c](https://github.com/dropbox/dropbox-sdk-obj-c). The primary differences are as follows:
+
+1.) Type names are derived from SwiftyDropbox types prefixed with DBX. There are generally some differences in naming from dropbox-sdk-obj-c, and with Swift's more granular access control some previously accessbile types are now internal to the SDK only. See [Common type migration reference](#common-type-migration-reference).
+
+2.) Some function names have changed slightly to be more verbose about arguments and/or to better match the Swift interface. In the following example note `createFolderV2` vs `createFolderV2WithPath` and `responseWithCompletionHandler` vs `setResponseBlock`:
+
+dropbox-sdk-obj-c:
+```objc
+[[[DBClientsManager authorizedClient].filesRoutes createFolderV2:@"/some/folder/path"]
+  setResponseBlock:^(DBFILESCreateFolderResult * _Nullable result, DBFILESCreateFolderError * _Nullable routeError, DBRequestError * _Nullable networkError) {
+    // Handle response
+}];
+```
+SwiftyDropboxObjC:
+
+```objc
+[[DBXDropboxClientsManager.authorizedClient.files createFolderV2WithPath:@"some/folder/path"] responseWithCompletionHandler:^(DBXFilesCreateFolderResult * _Nullable result, DBXFilesCreateFolderError * _Nullable routeError, DBXCallError * _Nullable error) {
+    // Handle response
+}];
+```
+
+3.) Capitalization has changed on many classes.
+
+dropbox-sdk-obj-c:
+`DBUSERSBasicAccount`
+
+SwiftyDropboxObjC:
+`DBXUsersBasicAccount`
+
+4.) Representation of enums that are passed to or returned from the server are now explicitly typed in the class name:
+
+dropbox-sdk-obj-c:
+
+```objc
+DBTEAMUserSelectorArg *userSelectArg = [[DBTEAMUserSelectorArg alloc] initWithEmail:@"some@email.com"];
+```
+SwiftyDropboxObjC:
+
+```objc
+DBXTeamUserSelectorArgEmail *userSelectArg = [[DBXTeamUserSelectorArgEmail alloc] init:@"some@email.com"];
+```
+
+5.) When working with tasks you no longer need to manually `start` the tasks. They are automatically started on creation.
+
+6.) SwiftyDropbox relies on generics for typed completion handlers on Requests. This is not bridgeable to Objective-C. Instead, for each route there is an additional Request type with the correctly typed completion handler. E.g., `DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>` is represented in Objective-C as `DBXFilesDownloadDownloadRequestFile`.
+
+### Common type migration reference
+| dropbox-sdk-objc-c                             | SwiftyDropbox                 | SwiftyDropboxObjC                                              |
+|------------------------------------------------|-------------------------------|------------------------------------------------------------|
+| DBAppClient                                    | DropboxAppClient              | DBXDropboxAppBase                                          |
+| DBClientsManager                               | DropboxClientsManager         | DBXDropboxClientsManager                                   |
+| DBTeamClient                                   | DropboxTeamClient             | DBXDropboxTeamClient                                       |
+| DBUserClient                                   | DropboxClient                 | DBXDropboxClient                                           |
+| DBRequestErrors                                | CallError                     | DBXCallError                                               |
+| DBRpcTask                                      | RpcRequest                    | DBX<route-name>RpcRequest                                  |
+| DBUploadTask                                   | UploadRequest                 | DBX<route-name>UploadRequest                               |
+| DBDownloadUrlTask                              | DownloadRequestFile           | DBX<route-name>DownloadRequestFile                         |
+| DBDownloadDataTask                             | DownloadRequestMemory         | DBX<route-name>DownloadRequestMemory                       |
+| DBTransportBaseClient/DBTransportDefaultClient | DropboxTransportClientImpl    | DBXDropboxTransportClient                                  |
+| DBTransportBaseHostnameConfig                  | BaseHosts                     | DBXBaseHosts                                               |
+| DBAccessTokenProvider                          | AccessTokenProvider           | DBXAccessTokenProvider                                     |
+| DBLongLivedAccessTokenProvider                 | LongLivedAccessTokenProvider  | DBXLongLivedAccessTokenProvider                            |
+| DBShortLivedAccessTokenProvider                | ShortLivedAccessTokenProvider | DBXShortLivedAccessTokenProvider                           |
+| DBLoadingStatusDelegate                        | LoadingStatusDelegate         | DBXLoadingStatusDelegate                                   |
+| DBOAuthManager                                 | DropboxOAuthManager           | DBXDropboxOAuthManager                                     |
+| DBAccessToken                                  | DropboxAccessToken            | DBXDropboxAccessToken                                      |
+| DBAccessTokenRefreshing                        | AccessTokenRefreshing         | DBXAccessTokenRefreshing                                   |
+| DBOAuthResult                                  | DropboxOAuthResult            | DBXDropboxOAuthResult                                      |
+| DBOAuthResultCompletion                        | DropboxOAuthCompletion        | (DBXDropboxOAuthResult?) -> Void                           |
+| DBScopeRequest                                 | ScopeRequest                  | DBXScopeRequest                                            |
+| DBSDKKeychain                                  | SecureStorageAccess           | DBXSecureStorageAccess / DBXSecureStorageAccessDefaultImpl |
+| DBDelegate                                     | n/a                           | n/a                                                        |
+| DBGlobalErrorResponseHandler                   | n/a                           | n/a                                                        |
+| DBSDKReachability                              | n/a                           | n/a                                                        |
+| DBSessionData                                  | n/a                           | n/a                                                        |
+| DBTransportDefaultConfig                       | n/a                           | n/a                                                        |
+| DBURLSessionTaskResponseBlockWrapper           | n/a                           | n/a                                                        |
+| DBURLSessionTaskWithTokenRefresh               | n/a                           | n/a                                                        |
+| DBOAuthPKCESession                             | n/a                           | n/a                                                        |
+| DBOAuthTokenRequest                            | n/a                           | n/a                                                        |
+
+---
+
+## Changes in version 10.0.0
+
+Version 10.0.0 of SwiftyDropbox differs significantly from version 9.2.0. It aims to support Objective-C, remove AlamoFire as a dependency, support background networking, replace fatal errors during serialization, add unit tests, and better support testing.
+
+These additional features are the greatest differences, but even simple upgrades that don't utilize these new features should consider the other notable changes.
+
+- The destination to which a file is downloaded must now be specified at the time of the call. It's no longer possible to provide a closure that is evaluated after the request is complete.
+
+- The older API for SSL certificate pinning, provided through AlamoFire, is no longer available. This version exposes the URLSession authentication challenge API. Additionally, the optional SessionDelegate from the previous version of the SDK has been removed without a direct replacement.  If your workflows relied on these specific features in ways that are no longer implementable, please [inform us](https://github.com/dropbox/SwiftyDropbox/issues) so that we can better understand and address any potential issues.
+
+- Serialization inconsistencies that used to cause fatal errors now are represented as errors piped through to the requests' completion handlers. It is up to the calling app to decide how to handle them.
+
+- Carthage is no longer supported, please use Swift Package Manager or Cocoapods.
+
+- SDK classes can no longer be subclassed. If this disrupts your usage, please [let us know](https://github.com/dropbox/SwiftyDropbox/issues).
+
+- Due to the extensive nature of the rewrite and the introduction of new features in the new version of the SDK, when transitioning to the new version of the SDK it is important to perform thorough testing of your codebase. The significant changes and enhancements in the new version of the SDK may introduce subtle behavioral changes or edge cases that were not present in the previous version of the SDK.
+
+### New Features
+
+For notes on Objective-C support see [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
+
+The SDK's background networking support simplifies the reconnection of completion handlers to URLSession tasks. See [`TestSwiftyDropbox/DebugBackgroundSessionViewModel`](https://github.com/dropbox/SwiftyDropbox/tree/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_SwiftUI/iOS) for code that exercises various background networking scenarios. See [`TestSwiftDropbox/ActionRequestHandler`](https://github.com/dropbox/SwiftyDropbox/blob/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_ActionExtension/ActionRequestHandler.swift) for usage from an app extension.
+
+### Testing Support
+
+Initialize a `DropboxClient` with a `MockDropboxTransportClient` to facillitate route response mocking in tests. Supply this client to your code under test, excercise the code, then pipe in responses as illustrated below and assert against your code's behavior.
+
+```
+let transportClient = MockDropboxTransportClient()
+
+let client = DropboxClient(
+    transportClient: transportClient
+)
+
+let feature = SystemUnderTest(client: client)
+
+let json: [String: Any] = ["fileNames": ["first"]]
+
+let request = transportClient.getLastRequest()
+
+request.handleMockInput(.success(json: json))
+
+XCTAssert(<state of feature>, <expected state>)
+
+```
+
+---
 
 ## Examples
 
@@ -842,6 +1175,8 @@ To ensure your changes have not broken any existing functionality, you can run a
 * open Info.plist and configure the "URL types > Item 0 (Editor) > URL Schemes > Item 0" key to db-"App key"
 * open AppDelegate.swift and replace "FULL_DROPBOX_APP_KEY" with the App key as well
 * run the test app on your device and follow the on-screen instructions
+
+To run and develop against the unit tests instead of the integration tests, open the root of the cloned repository in Xcode. Please run the integration tests after development.
 
 ---
 

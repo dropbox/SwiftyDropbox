@@ -7,20 +7,24 @@
 import Foundation
 
 /// Routes for the users namespace
-open class UsersRoutes {
+/// For Objective-C compatible routes see DBUsersRoutes
+public class UsersRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 
     /// Get a list of feature values that may be configured for the current account.
     ///
+    /// - scope: account_info.read
+    ///
     /// - parameter features: A list of features in UserFeature. If the list is empty, this route will return
     /// UserFeaturesGetValuesBatchError.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Users.UserFeaturesGetValuesBatchResult`
+    /// - returns: Through the response callback, the caller will receive a `Users.UserFeaturesGetValuesBatchResult`
     /// object on success or a `Users.UserFeaturesGetValuesBatchError` object on failure.
-    @discardableResult open func featuresGetValues(features: Array<Users.UserFeature>) -> RpcRequest<Users.UserFeaturesGetValuesBatchResultSerializer, Users.UserFeaturesGetValuesBatchErrorSerializer> {
+    @discardableResult public func featuresGetValues(features: [Users.UserFeature])
+        -> RpcRequest<Users.UserFeaturesGetValuesBatchResultSerializer, Users.UserFeaturesGetValuesBatchErrorSerializer> {
         let route = Users.featuresGetValues
         let serverArgs = Users.UserFeaturesGetValuesBatchArg(features: features)
         return client.request(route, serverArgs: serverArgs)
@@ -28,11 +32,13 @@ open class UsersRoutes {
 
     /// Get information about a user's account.
     ///
+    /// - scope: sharing.read
+    ///
     /// - parameter accountId: A user's account identifier.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Users.BasicAccount` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Users.BasicAccount` object on success or a
     /// `Users.GetAccountError` object on failure.
-    @discardableResult open func getAccount(accountId: String) -> RpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
+    @discardableResult public func getAccount(accountId: String) -> RpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer> {
         let route = Users.getAccount
         let serverArgs = Users.GetAccountArg(accountId: accountId)
         return client.request(route, serverArgs: serverArgs)
@@ -40,11 +46,14 @@ open class UsersRoutes {
 
     /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
     ///
+    /// - scope: sharing.read
+    ///
     /// - parameter accountIds: List of user account identifiers.  Should not contain any duplicate account IDs.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
     /// success or a `Users.GetAccountBatchError` object on failure.
-    @discardableResult open func getAccountBatch(accountIds: Array<String>) -> RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
+    @discardableResult public func getAccountBatch(accountIds: [String])
+        -> RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
         let route = Users.getAccountBatch
         let serverArgs = Users.GetAccountBatchArg(accountIds: accountIds)
         return client.request(route, serverArgs: serverArgs)
@@ -52,22 +61,25 @@ open class UsersRoutes {
 
     /// Get information about the current user's account.
     ///
+    /// - scope: account_info.read
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Users.FullAccount` object on success or a
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Users.FullAccount` object on success or a
     /// `Void` object on failure.
-    @discardableResult open func getCurrentAccount() -> RpcRequest<Users.FullAccountSerializer, VoidSerializer> {
+    @discardableResult public func getCurrentAccount() -> RpcRequest<Users.FullAccountSerializer, VoidSerializer> {
         let route = Users.getCurrentAccount
         return client.request(route)
     }
 
     /// Get the space usage information for the current user's account.
     ///
+    /// - scope: account_info.read
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Users.SpaceUsage` object on success or a
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Users.SpaceUsage` object on success or a
     /// `Void` object on failure.
-    @discardableResult open func getSpaceUsage() -> RpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
+    @discardableResult public func getSpaceUsage() -> RpcRequest<Users.SpaceUsageSerializer, VoidSerializer> {
         let route = Users.getSpaceUsage
         return client.request(route)
     }
-
 }

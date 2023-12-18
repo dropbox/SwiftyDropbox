@@ -2,83 +2,23 @@
 /// Copyright (c) 2016 Dropbox, Inc. All rights reserved.
 ///
 
+// swiftformat:disable all
+
 import Foundation
 import SwiftyDropbox
 
-open class DropboxTester {
-    static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write".components(separatedBy: " ")
-    
-    let auth = DropboxClientsManager.authorizedClient!.auth!
-    let users = DropboxClientsManager.authorizedClient!.users!
-    let files = DropboxClientsManager.authorizedClient!.files!
-    let sharing = DropboxClientsManager.authorizedClient!.sharing!
+public protocol DropboxTesting {
+    static var scopes: [String] { get }
+    var files: FilesRoutes { get }
+}
 
-    func testBatchUpload() {
-        TestFormat.printSubTestBegin(NSStringFromSelector(#function))
-        // create working folder
-        let workingDirectoryName = "MyOutputFolder"
-        let workingDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
-        do {
-            try FileManager.default.createDirectory(atPath: workingDirectory.path, withIntermediateDirectories: false, attributes: nil)
-        } catch let error as NSError {
-            print(error.localizedDescription);
-        }
-        
-        var uploadFilesUrlsToCommitInfo: [URL: Files.CommitInfo] = [:]
+open class DropboxTester: DropboxTesting {
+    public static let scopes = "account_info.read files.content.read files.content.write files.metadata.read files.metadata.write sharing.write".components(separatedBy: " ")
 
-        print("\n\nCreating files in: \(workingDirectory.path)\n\n")
-        // create a bunch of fake files
-        for i in 0..<10 {
-            let fileName = "test_file_\(i)"
-            let fileContent = "\(fileName)'s content. Test content here."
-            let fileUrl = workingDirectory.appendingPathComponent(fileName)
-            // set to test large file
-            let testLargeFile: Bool = true
-            // don't create a file for the name test_file_5 so we use a custom large file
-            // there instead
-            if i != 5 || !testLargeFile {
-                do {
-                    try fileContent.write(to: fileUrl, atomically: false, encoding: String.Encoding.utf8)
-                }
-                catch {
-                    print("Error creating file")
-                    print("Terminating...")
-                    exit(0)
-                }
-            } else {
-                if !FileManager.default.fileExists(atPath: fileUrl.path) {
-                    print("\n\nPlease create a large file named \(fileUrl) to test chunked uploading\n\n")
-                    exit(0)
-                }
-            }
-            let commitInfo = Files.CommitInfo(path: "\(TestData.testFolderPath)/\(fileName)")
-            uploadFilesUrlsToCommitInfo[fileUrl] = commitInfo
-        }
-
-        self.files.batchUploadFiles(fileUrlsToCommitInfo: uploadFilesUrlsToCommitInfo, progressBlock: { progress in
-            print("Progress: \(progress)")
-        }, responseBlock: { fileUrlsToBatchResultEntries, finishBatchRequestError, fileUrlsToRequestErrors in
-            if let fileUrlsToBatchResultEntries = fileUrlsToBatchResultEntries {
-                for (clientSideFileUrl, resultEntry) in fileUrlsToBatchResultEntries {
-                    switch resultEntry {
-                    case .success(let metadata):
-                        let dropboxFilePath = metadata.pathDisplay!
-                        print("File successfully uploaded from \(clientSideFileUrl.absoluteString) on local machine to \(dropboxFilePath) in Dropbox.")
-                    case .failure(let error):
-                        // This particular file was not uploaded successfully, although the other
-                        // files may have been uploaded successfully. Perhaps implement some retry
-                        // logic here based on `uploadError`
-                        print("Error: \(error)")
-                    }
-                }
-            } else if let finishBatchRequestError = finishBatchRequestError {
-                print("Either bug in SDK code, or transient error on Dropbox server: \(finishBatchRequestError)")
-            } else if fileUrlsToRequestErrors.count > 0 {
-                print("Other additional errors (e.g. file doesn't exist client-side, etc.).")
-                print("\(fileUrlsToRequestErrors)")
-            }
-        })
-    }
+    public let auth = DropboxClientsManager.authorizedClient!.auth!
+    public let users = DropboxClientsManager.authorizedClient!.users!
+    public let files = DropboxClientsManager.authorizedClient!.files!
+    public let sharing = DropboxClientsManager.authorizedClient!.sharing!
 
     // Test user app with 'Full Dropbox' permission
     func testAllUserEndpoints(asMember: Bool = false, skipRevokeToken: Bool = false, nextTest: (() -> Void)? = nil) {
@@ -89,8 +29,11 @@ open class DropboxTester {
                 TestFormat.printAllTestsEnd()
             }
         }
+        let testCustomActions = {
+            self.testCustomActions(end)
+        }
         let testAuthActions = {
-            self.testAuthActions(end)
+            self.testAuthActions(testCustomActions)
         }
         let testUserActions = {
             self.testUserActions(skipRevokeToken ? end : testAuthActions)
@@ -102,6 +45,23 @@ open class DropboxTester {
             self.testFilesActions(testSharingActions, asMember: asMember)
         }
 
+        start()
+    }
+
+    func testCustomActions(_ nextTest: @escaping (() -> Void)) {
+        let tester = CustomTests(tester: self)
+
+        let end = {
+            TestFormat.printTestEnd()
+            nextTest()
+        }
+        let batchUpload = {
+            tester.batchUpload(end)
+        }
+        let start = {
+            batchUpload()
+        }
+        TestFormat.printTestBegin(#function)
         start()
     }
 
@@ -131,12 +91,13 @@ open class DropboxTester {
         let downloadToFile = {
             tester.downloadToFile(downloadAgain)
         }
-        let saveUrl = {
-            // route currently doesn't work with Team app performing 'As Member'
-            tester.saveUrl(downloadToFile, asMember: asMember)
-        }
+        // Async nature of this call can interfere with subsequent test runs by finishing after cleanup
+//        let saveUrl = {
+//            // route currently doesn't work with Team app performing 'As Member'
+//            tester.saveUrl(downloadToFile, asMember: asMember)
+//        }
         let listRevisions = {
-            tester.listRevisions(saveUrl)
+            tester.listRevisions(downloadToFile)
         }
         let getTemporaryLink = {
             tester.getTemporaryLink(listRevisions)
@@ -280,7 +241,9 @@ open class DropboxTester {
 }
 
 open class DropboxTeamTester {
-    static let scopes = "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read".components(separatedBy: " ")
+    static let scopes =
+        "groups.read groups.write members.delete members.read members.write sessions.list team_data.member team_info.read files.content.write files.content.read sharing.write account_info.read"
+            .components(separatedBy: " ")
     let team = DropboxClientsManager.authorizedTeamClient!.team!
 
     // Test business app with 'Team member file access' permission
@@ -293,7 +256,7 @@ open class DropboxTeamTester {
             }
         }
         let testPerformActionAsMember = {
-            DropboxTester().testAllUserEndpoints(asMember:true, skipRevokeToken: skipRevokeToken, nextTest: end)
+            DropboxTester().testAllUserEndpoints(asMember: true, skipRevokeToken: skipRevokeToken, nextTest: end)
         }
         let start = {
             self.testTeamMemberFileAcessActionsGroup(testPerformActionAsMember)
@@ -359,7 +322,7 @@ open class DropboxTeamTester {
             TestFormat.printTestEnd()
             nextTest()
         }
-// Commenting out to make tests green until we understand the email_address_too_long_to_be_disabled error
+        // Commenting out to make tests green until we understand the email_address_too_long_to_be_disabled error
 //        let membersRemove = {
 //            tester.membersRemove(end)
 //        }
@@ -414,11 +377,112 @@ open class DropboxTeamTester {
     }
 }
 
+/**
+    Custom Routes Tests
+ */
+
+open class CustomTests {
+    let tester: DropboxTester
+
+    public init(tester: DropboxTester) {
+        self.tester = tester
+    }
+
+    func batchUpload(_ nextTest: (() -> Void)? = nil) {
+        TestFormat.printSubTestBegin(NSStringFromSelector(#function))
+        // create working folder
+        let workingDirectoryName = "MyOutputFolder"
+        let workingDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(workingDirectoryName)
+        if !FileManager.default.fileExists(atPath: workingDirectory.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: workingDirectory.path, withIntermediateDirectories: false, attributes: nil)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        }
+
+        var uploadFilesUrlsToCommitInfo: [URL: Files.CommitInfo] = [:]
+
+        print("\n\nCreating files in: \(workingDirectory.path)\n\n")
+        // create a bunch of fake files
+        for i in 0 ..< 10 {
+            let fileName = "test_file_\(i)"
+            let fileContent = "\(fileName)'s content. Test content here."
+            let fileUrl = workingDirectory.appendingPathComponent(fileName)
+            // set to test large file
+            let testLargeFile: Bool = true
+            // don't create a file for the name test_file_5 so we use a custom large file
+            // there instead
+            if i != 5 || !testLargeFile {
+                do {
+                    try fileContent.write(to: fileUrl, atomically: false, encoding: String.Encoding.utf8)
+                } catch {
+                    print("Error creating file")
+                    print("Terminating...")
+                    exit(0)
+                }
+            } else {
+                let count = 15_000_000 // 15mb = large file (chunks are 10mb)
+                var bytes = [Int8](repeating: 0, count: count)
+
+                // Fill bytes with secure random data
+                let status = SecRandomCopyBytes(
+                    kSecRandomDefault,
+                    count,
+                    &bytes
+                )
+
+                if status == errSecSuccess {
+                    let data = Data(bytes: bytes, count: count)
+                    do {
+                        try data.write(to: fileUrl)
+                    } catch {
+                        print("Error writing large file")
+                        print("Terminating...")
+                        exit(0)
+                    }
+                } else {
+                    print("Error creating large file")
+                    print("Terminating...")
+                    exit(0)
+                }
+            }
+            let commitInfo = Files.CommitInfo(path: "\(TestData.testFolderPath)/\(fileName)")
+            uploadFilesUrlsToCommitInfo[fileUrl] = commitInfo
+        }
+
+        tester.files.batchUploadFiles(fileUrlsToCommitInfo: uploadFilesUrlsToCommitInfo, progressBlock: { progress in
+            print("Batch Upload Progress: \(progress)")
+        }, responseBlock: { fileUrlsToBatchResultEntries, finishBatchRequestError, fileUrlsToRequestErrors in
+            if let fileUrlsToBatchResultEntries = fileUrlsToBatchResultEntries {
+                for (clientSideFileUrl, resultEntry) in fileUrlsToBatchResultEntries {
+                    switch resultEntry {
+                    case .success(let metadata):
+                        let dropboxFilePath = metadata.pathDisplay!
+                        print(
+                            "File successfully uploaded from \(clientSideFileUrl.absoluteString) on local machine to \(dropboxFilePath) in Dropbox. Size: \(metadata.size)"
+                        )
+                    case .failure(let error):
+                        // This particular file was not uploaded successfully, although the other
+                        // files may have been uploaded successfully. Perhaps implement some retry
+                        // logic here based on `uploadError`
+                        print("Error: \(error)")
+                    }
+                }
+            } else if let finishBatchRequestError = finishBatchRequestError {
+                print("Either bug in SDK code, or transient error on Dropbox server: \(finishBatchRequestError)")
+            } else if fileUrlsToRequestErrors.count > 0 {
+                print("Other additional errors (e.g. file doesn't exist client-side, etc.).")
+                print("\(fileUrlsToRequestErrors)")
+            }
+            nextTest?()
+        })
+    }
+}
 
 /**
     Dropbox User API Endpoint Tests
  */
-
 
 open class AuthTests {
     let tester: DropboxTester
@@ -442,41 +506,38 @@ open class AuthTests {
 }
 
 open class FilesTests {
-    let tester: DropboxTester
+    let tester: DropboxTesting
 
-    public init(tester: DropboxTester) {
+    public init(tester: DropboxTesting) {
         self.tester = tester
     }
 
-    func deleteV2(_ nextTest: @escaping (() -> Void), retries: Int = 2) {
+    func deleteV2(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.deleteV2(path: TestData.baseFolder).response { response, error in
+        runRpcRoute(createRequest: self.tester.files.deleteV2(path: TestData.baseFolder)) { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
                 nextTest()
             } else if let callError = error {
                 print(callError)
-                if retries > 0, case .rateLimitError(let rateLimitError, _, _, _) = callError {
-                    sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
-                    self.deleteV2(nextTest, retries: retries - 1)
-                } else {
-                    TestFormat.printSubTestEnd(#function)
-                    nextTest()
-                }
+                TestFormat.printSubTestEnd(#function)
+                nextTest()
             }
         }
     }
 
     func createFolderV2(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.createFolderV2(path: TestData.testFolderPath).response { response, error in
+        runRpcRoute(createRequest: self.tester.files.createFolderV2(path: TestData.testFolderPath)) { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
                 nextTest()
             } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
+                print(callError)
+                TestFormat.printSubTestEnd(#function)
+                nextTest()
             }
         }
     }
@@ -531,7 +592,7 @@ open class FilesTests {
             }
         }
 
-        self.tester.files.uploadSessionStart(input: TestData.fileData).response { response, error in
+        tester.files.uploadSessionStart(input: TestData.fileData).response { response, error in
             if let result = response {
                 let sessionId = result.sessionId
                 print(result)
@@ -586,7 +647,7 @@ open class FilesTests {
 
     func getMetadataInvalid(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.getMetadata(path: "/").response { response, error in
+        tester.files.getMetadata(path: "/").response { _, error in
             assert(error != nil, "This call should have errored!")
             TestFormat.printOffset("Error properly detected")
             TestFormat.printSubTestEnd(#function)
@@ -627,15 +688,16 @@ open class FilesTests {
                 print(result)
                 TestFormat.printOffset("Created destination folder")
 
-                self.tester.files.moveV2(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation").response { response, error in
-                    if let result = response {
-                        print(result)
-                        TestFormat.printSubTestEnd(#function)
-                        nextTest()
-                    } else if let callError = error {
-                        TestFormat.abort(String(describing: callError))
+                self.tester.files.moveV2(fromPath: TestData.testFolderPath, toPath: TestData.testFolderPath + "/" + "movedLocation")
+                    .response { response, error in
+                        if let result = response {
+                            print(result)
+                            TestFormat.printSubTestEnd(#function)
+                            nextTest()
+                        } else if let callError = error {
+                            TestFormat.abort(String(describing: callError))
+                        }
                     }
-                }
             } else if let callError = error {
                 TestFormat.abort(String(describing: callError))
             }
@@ -660,22 +722,24 @@ open class FilesTests {
         }
     }
 
-    func downloadToFile(_ nextTest: @escaping (() -> Void)) {
+    func downloadToFile(path: String = TestData.testFilePath, clientPersistedString: String? = nil, _ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
-            if let result = response {
-                print(result)
-                TestFormat.printSubTestEnd(#function)
-                nextTest()
-            } else if let callError = error {
-                TestFormat.abort(String(describing: callError))
+        tester.files.download(path: path, overwrite: true, destination: TestData.destURL)
+            .persistingString(string: clientPersistedString)
+            .response { response, error in
+                if let result = response {
+                    print(result)
+                    TestFormat.printSubTestEnd(#function)
+                    nextTest()
+                } else if let callError = error {
+                    TestFormat.abort(String(describing: callError))
+                }
             }
-        }
     }
 
     func downloadAgain(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destination).response { response, error in
+        tester.files.download(path: TestData.testFilePath, overwrite: true, destination: TestData.destURL).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -688,7 +752,7 @@ open class FilesTests {
 
     func downloadError(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.download(path: TestData.testFilePath + "_does_not_exist", overwrite: false, destination: TestData.destinationException).response { response, error in
+        tester.files.download(path: TestData.testFilePath + "_does_not_exist", overwrite: false, destination: TestData.destURLException).response { _, error in
             assert(error != nil, "This call should have errored!")
             assert(!FileManager.default.fileExists(atPath: TestData.destURLException.path))
             TestFormat.printOffset("Error properly detected")
@@ -698,7 +762,6 @@ open class FilesTests {
     }
 
     func downloadToMemory(_ nextTest: @escaping (() -> Void)) {
-        
         tester.files.download(path: "/test/path/in/Dropbox/account")
             .response { response, error in
                 if let response = response {
@@ -712,8 +775,8 @@ open class FilesTests {
             }
             .progress { progressData in
                 print(progressData)
-        }
-        
+            }
+
         TestFormat.printSubTestBegin(#function)
         tester.files.download(path: TestData.testFilePath).response { response, error in
             if let result = response {
@@ -726,9 +789,9 @@ open class FilesTests {
         }
     }
 
-    func uploadFile(_ nextTest: @escaping (() -> Void)) {
+    func uploadFile(path: String = TestData.testFilePath + "_from_file", input: URL = TestData.destURL, _ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.files.upload(path: TestData.testFilePath + "_from_file", input: TestData.destURL).response { response, error in
+        tester.files.upload(path: path, input: input).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -743,18 +806,6 @@ open class FilesTests {
         if asMember {
             nextTest()
             return
-        }
-
-        let copy = {
-            TestFormat.printOffset("Making change that longpoll will detect (copy file)")
-            let copyOutputPath = TestData.testFilePath + "_duplicate2" + "_" + TestData.testId
-            self.tester.files.copyV2(fromPath: TestData.testFilePath, toPath: copyOutputPath).response { response, error in
-                if let result = response {
-                    print(result)
-                } else if let callError = error {
-                    TestFormat.abort(String(describing: callError))
-                }
-            }
         }
 
         let listFolderContinue: ((String) -> Void) = { cursor in
@@ -775,7 +826,7 @@ open class FilesTests {
             self.tester.files.listFolderLongpoll(cursor: cursor).response { response, error in
                 if let result = response {
                     print(result)
-                    if (result.changes) {
+                    if result.changes {
                         TestFormat.printOffset("Changes found")
                         listFolderContinue(cursor)
                     } else {
@@ -785,7 +836,17 @@ open class FilesTests {
                     TestFormat.abort(String(describing: callError))
                 }
             }
-            copy()
+
+            TestFormat.printOffset("Making change that longpoll will detect (copy file)")
+            let copyOutputPath = TestData.testFilePath + "_duplicate2" + "_" + TestData.testId
+
+            runRpcRoute(createRequest: self.tester.files.copyV2(fromPath: TestData.testFilePath, toPath: copyOutputPath)) { response, error in
+                if let result = response {
+                    print(result)
+                } else {
+                    TestFormat.abort(String(describing: error))
+                }
+            }
         }
 
         TestFormat.printSubTestBegin(#function)
@@ -814,9 +875,9 @@ open class SharingTests {
         self.tester = tester
     }
 
-    func shareFolder(_ nextTest: @escaping (() -> Void), retries: Int = 2) {
+    func shareFolder(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.sharing.shareFolder(path: TestData.testShareFolderPath).response { response, error in
+        runRpcRoute(createRequest: self.tester.sharing.shareFolder(path: TestData.testShareFolderPath)) { response, error in
             if let result = response {
                 switch result {
                 case .asyncJobId(let asyncJobId):
@@ -828,12 +889,7 @@ open class SharingTests {
                     nextTest()
                 }
             } else if let callError = error {
-                if retries > 0, case .rateLimitError(let rateLimitError, _, _, _) = callError {
-                    sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
-                    self.shareFolder(nextTest, retries: retries - 1)
-                } else {
-                    TestFormat.abort(String(describing: callError))
-                }
+                TestFormat.abort(String(describing: callError))
             }
         }
     }
@@ -938,23 +994,22 @@ open class SharingTests {
 
         let memberSelector = Sharing.MemberSelector.email(TestData.accountId3Email)
 
-
         func checkJobStatusWithDelay(_ asyncJobId: String, retryCount: Int) {
-            if retryCount >= 5 {
+            if retryCount >= 10 {
                 TestFormat.abort("Folder member not removed after \(retryCount) retries! Job id: \(asyncJobId)")
             }
 
             TestFormat.printOffset("Folder member not yet removed! Job id: \(asyncJobId)")
             print("Sleeping for 3 seconds, then trying again", terminator: "")
-            for _ in 1...3 {
+            for _ in 1 ... 3 {
                 sleep(1)
 
-                print(".", terminator:"")
+                print(".", terminator: "")
             }
             print()
             TestFormat.printOffset("Retrying!")
 
-            self.tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
+            tester.sharing.checkJobStatus(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -1113,11 +1168,9 @@ open class UserTests {
     }
 }
 
-
 /**
     Dropbox Team API Endpoint Tests
  */
-
 
 open class TeamTests {
     let tester: DropboxTeamTester
@@ -1127,10 +1180,9 @@ open class TeamTests {
         self.tester = tester
     }
 
-
     /**
-        Permission: Team member file access
-    */
+         Permission: Team member file access
+     */
 
     func initMembersGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
@@ -1155,7 +1207,7 @@ open class TeamTests {
 
     func listMemberDevices(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.team.devicesListMemberDevices(teamMemberId: self.teamMemberId!).response { response, error in
+        tester.team.devicesListMemberDevices(teamMemberId: teamMemberId!).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1181,7 +1233,7 @@ open class TeamTests {
 
     func linkedAppsListMemberLinkedApps(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        tester.team.linkedAppsListMemberLinkedApps(teamMemberId: self.teamMemberId!).response { response, error in
+        tester.team.linkedAppsListMemberLinkedApps(teamMemberId: teamMemberId!).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1219,9 +1271,8 @@ open class TeamTests {
     }
 
     /**
-        Permission: Team member management
-    */
-
+         Permission: Team member management
+     */
 
     func groupsCreate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
@@ -1267,7 +1318,7 @@ open class TeamTests {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
 
-        let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
+        let userSelectorArg = Team.UserSelectorArg.teamMemberId(teamMemberId!)
         let accessType = Team.GroupAccessType.member
         let memberAccess = Team.MemberAccess(user: userSelectorArg, accessType: accessType)
         let members = [memberAccess]
@@ -1301,9 +1352,8 @@ open class TeamTests {
     func groupsUpdate(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
         let groupSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
-        let newGroupName = "New Group Name" + TestData.testId
 
-        tester.team.groupsUpdate(group: groupSelector, newGroupName: newGroupName).response { response, error in
+        tester.team.groupsUpdate(group: groupSelector, newGroupName: "New Group Name Swift" + TestData.groupExternalId).response { response, error in
             if let result = response {
                 print(result)
                 TestFormat.printSubTestEnd(#function)
@@ -1324,15 +1374,15 @@ open class TeamTests {
 
             TestFormat.printOffset("Groups delete incomplete! Job id: \(asyncJobId)")
             print("Sleeping for 3 seconds, then trying again", terminator: "")
-            for _ in 1...3 {
+            for _ in 1 ... 3 {
                 sleep(1)
 
-                print(".", terminator:"")
+                print(".", terminator: "")
             }
             print()
             TestFormat.printOffset("Retrying!")
 
-            self.tester.team.groupsJobStatusGet(asyncJobId: asyncJobId).response { response, error in
+            tester.team.groupsJobStatusGet(asyncJobId: asyncJobId).response { response, error in
                 if let result = response {
                     print(result)
                     switch result {
@@ -1350,7 +1400,7 @@ open class TeamTests {
         }
 
         let groupsSelector = Team.GroupSelector.groupExternalId(TestData.groupExternalId)
-        self.tester.team.groupsDelete(groupSelector: groupsSelector).response { response, error in
+        tester.team.groupsDelete(groupSelector: groupsSelector).response { response, error in
             if let result = response {
                 print(result)
                 switch result {
@@ -1371,7 +1421,7 @@ open class TeamTests {
 
     func membersAdd(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        
+
         let jobStatus: ((String) -> Void) = { jobId in
             self.tester.team.membersAddJobStatusGet(asyncJobId: jobId).response { response, error in
                 if let result = response {
@@ -1390,7 +1440,7 @@ open class TeamTests {
                         TestFormat.printOffset("Member added")
                         TestFormat.printSubTestEnd(#function)
                         nextTest()
-                    case.failed(let message):
+                    case .failed(let message):
                         TestFormat.abort(message)
                     }
                 } else if let callError = error {
@@ -1429,7 +1479,7 @@ open class TeamTests {
 
     func membersGetInfo(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let userSelectArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
+        let userSelectArg = Team.UserSelectorArg.teamMemberId(teamMemberId!)
         tester.team.membersGetInfo(members: [userSelectArg]).response { response, error in
             if let result = response {
                 print(result)
@@ -1456,7 +1506,7 @@ open class TeamTests {
 
     func membersSendWelcomeEmail(_ nextTest: @escaping (() -> Void)) {
         TestFormat.printSubTestBegin(#function)
-        let userSelectorArg = Team.UserSelectorArg.teamMemberId(self.teamMemberId!)
+        let userSelectorArg = Team.UserSelectorArg.teamMemberId(teamMemberId!)
         tester.team.membersSendWelcomeEmail(userSelectorArg: userSelectorArg).response { response, error in
             if let _ = response {
                 TestFormat.printOffset("Welcome email sent!")
@@ -1525,7 +1575,7 @@ open class TeamTests {
         } else {
             userSelectorArg = Team.UserSelectorArg.email(TestData.newMemberEmail)
         }
-        
+
         tester.team.membersRemove(user: userSelectorArg).response { response, error in
             if let result = response {
                 print(result)
@@ -1597,7 +1647,7 @@ open class TestFormat {
 
     class func printSmallDivider() {
         var result = ""
-        for _ in 1...smallDividerSize {
+        for _ in 1 ... smallDividerSize {
             result += "-"
         }
         print(result)
@@ -1605,9 +1655,49 @@ open class TestFormat {
 
     class func printLargeDivider() {
         var result = ""
-        for _ in 1...largeDividerSize {
+        for _ in 1 ... largeDividerSize {
             result += "-"
         }
         print(result)
+    }
+}
+
+private func runRpcRoute<RSerial, ESerial>(
+    createRequest: @autoclosure @escaping () -> RpcRequest<RSerial, ESerial>,
+    with resultHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void,
+    retries: Int = 3
+) {
+    createRequest().response { response, error in
+        if let error = error, case .rateLimitError(let rateLimitError, _, _, _) = error, retries > 0 {
+            print(error)
+            sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
+            runRpcRoute(
+                createRequest: createRequest(),
+                with: resultHandler,
+                retries: retries - 1
+            )
+        } else {
+            resultHandler(response, error)
+        }
+    }
+}
+
+private func runUploadRoute<RSerial, ESerial>(
+    createRequest: @escaping () -> UploadRequest<RSerial, ESerial>,
+    with resultHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void,
+    retries: Int = 3
+) {
+    createRequest().response { response, error in
+        if let error = error, case .rateLimitError(let rateLimitError, _, _, _) = error, retries > 0 {
+            print(error)
+            sleep(UInt32(truncatingIfNeeded: rateLimitError.retryAfter))
+            runUploadRoute(
+                createRequest: createRequest,
+                with: resultHandler,
+                retries: retries - 1
+            )
+        } else {
+            resultHandler(response, error)
+        }
     }
 }

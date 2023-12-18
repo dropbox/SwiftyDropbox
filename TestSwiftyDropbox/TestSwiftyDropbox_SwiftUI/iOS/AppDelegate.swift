@@ -17,11 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
             return true
         }
 
-        if (TestData.fullDropboxAppKey.range(of:"<") != nil) {
+        if TestData.fullDropboxAppKey.range(of: "<") != nil {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
-            exit(0);
+            exit(0)
         }
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
             DropboxClientsManager.setupWithAppKey(TestData.fullDropboxAppKey)
         case .fullDropboxScopedForTeamTesting:
@@ -31,11 +31,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ObservableObject {
         return true
     }
 
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
         let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
         sceneConfig.delegateClass = SceneDelegate.self
         return sceneConfig
-      }
+    }
 }
 
 class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
@@ -59,13 +63,11 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
             }
         }
 
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
-            let _ = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+            _ = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
         case .fullDropboxScopedForTeamTesting:
-            let _ = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
+            _ = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         }
-
     }
-
 }

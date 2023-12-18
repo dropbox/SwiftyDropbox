@@ -7,69 +7,90 @@
 import Foundation
 
 /// Datatypes and serializers for the check namespace
-open class Check {
-    /// EchoArg contains the arguments to be sent to the Dropbox servers.
-    open class EchoArg: CustomStringConvertible {
+public class Check {
+    /// Contains the arguments to be sent to the Dropbox servers.
+    public class EchoArg: CustomStringConvertible, JSONRepresentable {
         /// The string that you'd like to be echoed back to you.
         public let query: String
         public init(query: String = "") {
             stringValidator(maxLength: 500)(query)
             self.query = query
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(EchoArgSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try EchoArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EchoArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EchoArg: \(error)"
+            }
         }
     }
-    open class EchoArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: EchoArg) -> JSON {
-            let output = [ 
-            "query": Serialization._StringSerializer.serialize(value.query),
+
+    public class EchoArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: EchoArg) throws -> JSON {
+            let output = [
+                "query": try Serialization._StringSerializer.serialize(value.query),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> EchoArg {
+
+        public func deserialize(_ json: JSON) throws -> EchoArg {
             switch json {
-                case .dictionary(let dict):
-                    let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .str(""))
-                    return EchoArg(query: query)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .str(""))
+                return EchoArg(query: query)
+            default:
+                throw JSONSerializerError.deserializeError(type: EchoArg.self, json: json)
             }
         }
     }
 
     /// EchoResult contains the result returned from the Dropbox servers.
-    open class EchoResult: CustomStringConvertible {
+    public class EchoResult: CustomStringConvertible, JSONRepresentable {
         /// If everything worked correctly, this would be the same as query.
         public let result: String
         public init(result: String = "") {
             stringValidator()(result)
             self.result = result
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(EchoResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try EchoResultSerializer().serialize(self)
         }
-    }
-    open class EchoResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: EchoResult) -> JSON {
-            let output = [ 
-            "result": Serialization._StringSerializer.serialize(value.result),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> EchoResult {
-            switch json {
-                case .dictionary(let dict):
-                    let result = Serialization._StringSerializer.deserialize(dict["result"] ?? .str(""))
-                    return EchoResult(result: result)
-                default:
-                    fatalError("Type error deserializing")
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EchoResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EchoResult: \(error)"
             }
         }
     }
 
+    public class EchoResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: EchoResult) throws -> JSON {
+            let output = [
+                "result": try Serialization._StringSerializer.serialize(value.result),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> EchoResult {
+            switch json {
+            case .dictionary(let dict):
+                let result = try Serialization._StringSerializer.deserialize(dict["result"] ?? .str(""))
+                return EchoResult(result: result)
+            default:
+                throw JSONSerializerError.deserializeError(type: EchoResult.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -81,9 +102,11 @@ open class Check {
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["auth": "app",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.app],
+            host: .api,
+            style: .rpc
+        )
     )
     static let user = Route(
         name: "user",
@@ -93,8 +116,10 @@ open class Check {
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

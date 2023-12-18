@@ -7,9 +7,9 @@
 import Foundation
 
 /// Datatypes and serializers for the paper namespace
-open class Paper {
+public class Paper {
     /// The AddMember struct
-    open class AddMember: CustomStringConvertible {
+    public class AddMember: CustomStringConvertible, JSONRepresentable {
         /// Permission for the user.
         public let permissionLevel: Paper.PaperDocPermissionLevel
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
@@ -18,108 +18,138 @@ open class Paper {
             self.permissionLevel = permissionLevel
             self.member = member
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AddMemberSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try AddMemberSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AddMemberSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AddMember: \(error)"
+            }
         }
     }
-    open class AddMemberSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: AddMember) -> JSON {
-            let output = [ 
-            "member": Sharing.MemberSelectorSerializer().serialize(value.member),
-            "permission_level": Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+
+    public class AddMemberSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AddMember) throws -> JSON {
+            let output = [
+                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
+                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> AddMember {
+
+        public func deserialize(_ json: JSON) throws -> AddMember {
             switch json {
-                case .dictionary(let dict):
-                    let member = Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                    let permissionLevel = Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? Paper.PaperDocPermissionLevelSerializer().serialize(.edit))
-                    return AddMember(member: member, permissionLevel: permissionLevel)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer()
+                    .deserialize(dict["permission_level"] ?? Paper.PaperDocPermissionLevelSerializer().serialize(.edit))
+                return AddMember(member: member, permissionLevel: permissionLevel)
+            default:
+                throw JSONSerializerError.deserializeError(type: AddMember.self, json: json)
             }
         }
     }
 
     /// The RefPaperDoc struct
-    open class RefPaperDoc: CustomStringConvertible {
+    public class RefPaperDoc: CustomStringConvertible, JSONRepresentable {
         /// The Paper doc ID.
         public let docId: String
         public init(docId: String) {
             stringValidator()(docId)
             self.docId = docId
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RefPaperDocSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try RefPaperDocSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RefPaperDocSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for RefPaperDoc: \(error)"
+            }
         }
     }
-    open class RefPaperDocSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: RefPaperDoc) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
+
+    public class RefPaperDocSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RefPaperDoc) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> RefPaperDoc {
+
+        public func deserialize(_ json: JSON) throws -> RefPaperDoc {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    return RefPaperDoc(docId: docId)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                return RefPaperDoc(docId: docId)
+            default:
+                throw JSONSerializerError.deserializeError(type: RefPaperDoc.self, json: json)
             }
         }
     }
 
     /// The AddPaperDocUser struct
-    open class AddPaperDocUser: Paper.RefPaperDoc {
+    public class AddPaperDocUser: Paper.RefPaperDoc {
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
-        public let members: Array<Paper.AddMember>
+        public let members: [Paper.AddMember]
         /// A personal message that will be emailed to each successfully added member.
         public let customMessage: String?
         /// Clients should set this to true if no email message shall be sent to added users.
         public let quiet: Bool
-        public init(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) {
+        public init(docId: String, members: [Paper.AddMember], customMessage: String? = nil, quiet: Bool = false) {
             self.members = members
             nullableValidator(stringValidator())(customMessage)
             self.customMessage = customMessage
             self.quiet = quiet
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AddPaperDocUserSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AddPaperDocUser: \(error)"
+            }
         }
     }
-    open class AddPaperDocUserSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: AddPaperDocUser) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "members": ArraySerializer(Paper.AddMemberSerializer()).serialize(value.members),
-            "custom_message": NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
-            "quiet": Serialization._BoolSerializer.serialize(value.quiet),
+
+    public class AddPaperDocUserSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AddPaperDocUser) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "members": try ArraySerializer(Paper.AddMemberSerializer()).serialize(value.members),
+                "custom_message": try NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
+                "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> AddPaperDocUser {
+
+        public func deserialize(_ json: JSON) throws -> AddPaperDocUser {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let members = ArraySerializer(Paper.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
-                    let customMessage = NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
-                    let quiet = Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
-                    return AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let members = try ArraySerializer(Paper.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
+                let customMessage = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
+                let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
+                return AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
+            default:
+                throw JSONSerializerError.deserializeError(type: AddPaperDocUser.self, json: json)
             }
         }
     }
 
     /// Per-member result for docsUsersAdd.
-    open class AddPaperDocUserMemberResult: CustomStringConvertible {
+    public class AddPaperDocUserMemberResult: CustomStringConvertible, JSONRepresentable {
         /// One of specified input members.
         public let member: Sharing.MemberSelector
         /// The outcome of the action on this member.
@@ -128,33 +158,44 @@ open class Paper {
             self.member = member
             self.result = result
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AddPaperDocUserMemberResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try AddPaperDocUserMemberResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserMemberResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AddPaperDocUserMemberResult: \(error)"
+            }
         }
     }
-    open class AddPaperDocUserMemberResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: AddPaperDocUserMemberResult) -> JSON {
-            let output = [ 
-            "member": Sharing.MemberSelectorSerializer().serialize(value.member),
-            "result": Paper.AddPaperDocUserResultSerializer().serialize(value.result),
+
+    public class AddPaperDocUserMemberResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AddPaperDocUserMemberResult) throws -> JSON {
+            let output = [
+                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
+                "result": try Paper.AddPaperDocUserResultSerializer().serialize(value.result),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> AddPaperDocUserMemberResult {
+
+        public func deserialize(_ json: JSON) throws -> AddPaperDocUserMemberResult {
             switch json {
-                case .dictionary(let dict):
-                    let member = Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                    let result = Paper.AddPaperDocUserResultSerializer().deserialize(dict["result"] ?? .null)
-                    return AddPaperDocUserMemberResult(member: member, result: result)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                let result = try Paper.AddPaperDocUserResultSerializer().deserialize(dict["result"] ?? .null)
+                return AddPaperDocUserMemberResult(member: member, result: result)
+            default:
+                throw JSONSerializerError.deserializeError(type: AddPaperDocUserMemberResult.self, json: json)
             }
         }
     }
 
     /// The AddPaperDocUserResult union
-    public enum AddPaperDocUserResult: CustomStringConvertible {
+    public enum AddPaperDocUserResult: CustomStringConvertible, JSONRepresentable {
         /// User was successfully added to the Paper doc.
         case success
         /// Something unexpected happened when trying to add the user to the Paper doc.
@@ -172,124 +213,145 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(AddPaperDocUserResultSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try AddPaperDocUserResultSerializer().serialize(self)
         }
-    }
-    open class AddPaperDocUserResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: AddPaperDocUserResult) -> JSON {
-            switch value {
-                case .success:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("success")
-                    return .dictionary(d)
-                case .unknownError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("unknown_error")
-                    return .dictionary(d)
-                case .sharingOutsideTeamDisabled:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("sharing_outside_team_disabled")
-                    return .dictionary(d)
-                case .dailyLimitReached:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("daily_limit_reached")
-                    return .dictionary(d)
-                case .userIsOwner:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("user_is_owner")
-                    return .dictionary(d)
-                case .failedUserDataRetrieval:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("failed_user_data_retrieval")
-                    return .dictionary(d)
-                case .permissionAlreadyGranted:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("permission_already_granted")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AddPaperDocUserResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AddPaperDocUserResult: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> AddPaperDocUserResult {
+    }
+
+    public class AddPaperDocUserResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AddPaperDocUserResult) throws -> JSON {
+            switch value {
+            case .success:
+                var d = [String: JSON]()
+                d[".tag"] = .str("success")
+                return .dictionary(d)
+            case .unknownError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unknown_error")
+                return .dictionary(d)
+            case .sharingOutsideTeamDisabled:
+                var d = [String: JSON]()
+                d[".tag"] = .str("sharing_outside_team_disabled")
+                return .dictionary(d)
+            case .dailyLimitReached:
+                var d = [String: JSON]()
+                d[".tag"] = .str("daily_limit_reached")
+                return .dictionary(d)
+            case .userIsOwner:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_is_owner")
+                return .dictionary(d)
+            case .failedUserDataRetrieval:
+                var d = [String: JSON]()
+                d[".tag"] = .str("failed_user_data_retrieval")
+                return .dictionary(d)
+            case .permissionAlreadyGranted:
+                var d = [String: JSON]()
+                d[".tag"] = .str("permission_already_granted")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> AddPaperDocUserResult {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "success":
-                            return AddPaperDocUserResult.success
-                        case "unknown_error":
-                            return AddPaperDocUserResult.unknownError
-                        case "sharing_outside_team_disabled":
-                            return AddPaperDocUserResult.sharingOutsideTeamDisabled
-                        case "daily_limit_reached":
-                            return AddPaperDocUserResult.dailyLimitReached
-                        case "user_is_owner":
-                            return AddPaperDocUserResult.userIsOwner
-                        case "failed_user_data_retrieval":
-                            return AddPaperDocUserResult.failedUserDataRetrieval
-                        case "permission_already_granted":
-                            return AddPaperDocUserResult.permissionAlreadyGranted
-                        case "other":
-                            return AddPaperDocUserResult.other
-                        default:
-                            return AddPaperDocUserResult.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "success":
+                    return AddPaperDocUserResult.success
+                case "unknown_error":
+                    return AddPaperDocUserResult.unknownError
+                case "sharing_outside_team_disabled":
+                    return AddPaperDocUserResult.sharingOutsideTeamDisabled
+                case "daily_limit_reached":
+                    return AddPaperDocUserResult.dailyLimitReached
+                case "user_is_owner":
+                    return AddPaperDocUserResult.userIsOwner
+                case "failed_user_data_retrieval":
+                    return AddPaperDocUserResult.failedUserDataRetrieval
+                case "permission_already_granted":
+                    return AddPaperDocUserResult.permissionAlreadyGranted
+                case "other":
+                    return AddPaperDocUserResult.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return AddPaperDocUserResult.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: AddPaperDocUserResult.self, json: json)
             }
         }
     }
 
     /// The Cursor struct
-    open class Cursor: CustomStringConvertible {
+    public class Cursor: CustomStringConvertible, JSONRepresentable {
         /// The actual cursor value.
         public let value: String
         /// Expiration time of value. Some cursors might have expiration time assigned. This is a UTC value after which
-        /// the cursor is no longer valid and the API starts returning an error. If cursor expires a new one needs to be
-        /// obtained and pagination needs to be restarted. Some cursors might be short-lived some cursors might be
-        /// long-lived. This really depends on the sorting type and order, e.g.: 1. on one hand, listing docs created by
-        /// the user, sorted by the created time ascending will have undefinite expiration because the results cannot
-        /// change while the iteration is happening. This cursor would be suitable for long term polling. 2. on the
-        /// other hand, listing docs sorted by the last modified time will have a very short expiration as docs do get
-        /// modified very often and the modified time can be changed while the iteration is happening thus altering the
-        /// results.
+        /// the cursor is no longer valid and the API starts returning an error. If cursor expires a new one
+        /// needs to be obtained and pagination needs to be restarted. Some cursors might be short-lived some
+        /// cursors might be long-lived. This really depends on the sorting type and order, e.g.: 1. on one
+        /// hand, listing docs created by the user, sorted by the created time ascending will have undefinite
+        /// expiration because the results cannot change while the iteration is happening. This cursor would be
+        /// suitable for long term polling. 2. on the other hand, listing docs sorted by the last modified time
+        /// will have a very short expiration as docs do get modified very often and the modified time can be
+        /// changed while the iteration is happening thus altering the results.
         public let expiration: Date?
         public init(value: String, expiration: Date? = nil) {
             stringValidator()(value)
             self.value = value
             self.expiration = expiration
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(CursorSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try CursorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try CursorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for Cursor: \(error)"
+            }
         }
     }
-    open class CursorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: Cursor) -> JSON {
-            let output = [ 
-            "value": Serialization._StringSerializer.serialize(value.value),
-            "expiration": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expiration),
+
+    public class CursorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: Cursor) throws -> JSON {
+            let output = [
+                "value": try Serialization._StringSerializer.serialize(value.value),
+                "expiration": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expiration),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> Cursor {
+
+        public func deserialize(_ json: JSON) throws -> Cursor {
             switch json {
-                case .dictionary(let dict):
-                    let value = Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
-                    let expiration = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expiration"] ?? .null)
-                    return Cursor(value: value, expiration: expiration)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let value = try Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
+                let expiration = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expiration"] ?? .null)
+                return Cursor(value: value, expiration: expiration)
+            default:
+                throw JSONSerializerError.deserializeError(type: Cursor.self, json: json)
             }
         }
     }
 
     /// The PaperApiBaseError union
-    public enum PaperApiBaseError: CustomStringConvertible {
+    public enum PaperApiBaseError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -297,44 +359,54 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperApiBaseErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperApiBaseErrorSerializer().serialize(self)
         }
-    }
-    open class PaperApiBaseErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperApiBaseError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperApiBaseErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperApiBaseError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperApiBaseError {
+    }
+
+    public class PaperApiBaseErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperApiBaseError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperApiBaseError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return PaperApiBaseError.insufficientPermissions
-                        case "other":
-                            return PaperApiBaseError.other
-                        default:
-                            return PaperApiBaseError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return PaperApiBaseError.insufficientPermissions
+                case "other":
+                    return PaperApiBaseError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return PaperApiBaseError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperApiBaseError.self, json: json)
             }
         }
     }
 
     /// The DocLookupError union
-    public enum DocLookupError: CustomStringConvertible {
+    public enum DocLookupError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -344,50 +416,60 @@ open class Paper {
         /// The required doc was not found.
         case docNotFound
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DocLookupErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try DocLookupErrorSerializer().serialize(self)
         }
-    }
-    open class DocLookupErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DocLookupError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .docNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_not_found")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DocLookupErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DocLookupError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> DocLookupError {
+    }
+
+    public class DocLookupErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DocLookupError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .docNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_not_found")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DocLookupError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return DocLookupError.insufficientPermissions
-                        case "other":
-                            return DocLookupError.other
-                        case "doc_not_found":
-                            return DocLookupError.docNotFound
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return DocLookupError.insufficientPermissions
+                case "other":
+                    return DocLookupError.other
+                case "doc_not_found":
+                    return DocLookupError.docNotFound
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: DocLookupError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DocLookupError.self, json: json)
             }
         }
     }
 
     /// The subscription level of a Paper doc.
-    public enum DocSubscriptionLevel: CustomStringConvertible {
+    public enum DocSubscriptionLevel: CustomStringConvertible, JSONRepresentable {
         /// No change email messages unless you're the creator.
         case default_
         /// Ignored: Not shown in pad lists or activity and no email message is sent.
@@ -397,56 +479,66 @@ open class Paper {
         /// Unsubscribed: Shown in pad lists, but not in activity and no change email messages are sent.
         case noEmail
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(DocSubscriptionLevelSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try DocSubscriptionLevelSerializer().serialize(self)
         }
-    }
-    open class DocSubscriptionLevelSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: DocSubscriptionLevel) -> JSON {
-            switch value {
-                case .default_:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("default")
-                    return .dictionary(d)
-                case .ignore:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("ignore")
-                    return .dictionary(d)
-                case .every:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("every")
-                    return .dictionary(d)
-                case .noEmail:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("no_email")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DocSubscriptionLevelSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DocSubscriptionLevel: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> DocSubscriptionLevel {
+    }
+
+    public class DocSubscriptionLevelSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DocSubscriptionLevel) throws -> JSON {
+            switch value {
+            case .default_:
+                var d = [String: JSON]()
+                d[".tag"] = .str("default")
+                return .dictionary(d)
+            case .ignore:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ignore")
+                return .dictionary(d)
+            case .every:
+                var d = [String: JSON]()
+                d[".tag"] = .str("every")
+                return .dictionary(d)
+            case .noEmail:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_email")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DocSubscriptionLevel {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "default":
-                            return DocSubscriptionLevel.default_
-                        case "ignore":
-                            return DocSubscriptionLevel.ignore
-                        case "every":
-                            return DocSubscriptionLevel.every
-                        case "no_email":
-                            return DocSubscriptionLevel.noEmail
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "default":
+                    return DocSubscriptionLevel.default_
+                case "ignore":
+                    return DocSubscriptionLevel.ignore
+                case "every":
+                    return DocSubscriptionLevel.every
+                case "no_email":
+                    return DocSubscriptionLevel.noEmail
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: DocSubscriptionLevel.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DocSubscriptionLevel.self, json: json)
             }
         }
     }
 
     /// The desired export format of the Paper doc.
-    public enum ExportFormat: CustomStringConvertible {
+    public enum ExportFormat: CustomStringConvertible, JSONRepresentable {
         /// The HTML export format.
         case html
         /// The markdown export format.
@@ -454,50 +546,60 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ExportFormatSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ExportFormatSerializer().serialize(self)
         }
-    }
-    open class ExportFormatSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ExportFormat) -> JSON {
-            switch value {
-                case .html:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("html")
-                    return .dictionary(d)
-                case .markdown:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("markdown")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ExportFormatSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ExportFormat: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ExportFormat {
+    }
+
+    public class ExportFormatSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ExportFormat) throws -> JSON {
+            switch value {
+            case .html:
+                var d = [String: JSON]()
+                d[".tag"] = .str("html")
+                return .dictionary(d)
+            case .markdown:
+                var d = [String: JSON]()
+                d[".tag"] = .str("markdown")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ExportFormat {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "html":
-                            return ExportFormat.html
-                        case "markdown":
-                            return ExportFormat.markdown
-                        case "other":
-                            return ExportFormat.other
-                        default:
-                            return ExportFormat.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "html":
+                    return ExportFormat.html
+                case "markdown":
+                    return ExportFormat.markdown
+                case "other":
+                    return ExportFormat.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ExportFormat.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ExportFormat.self, json: json)
             }
         }
     }
 
     /// Data structure representing a Paper folder.
-    open class Folder: CustomStringConvertible {
+    public class Folder: CustomStringConvertible, JSONRepresentable {
         /// Paper folder ID. This ID uniquely identifies the folder.
         public let id: String
         /// Paper folder name.
@@ -508,76 +610,97 @@ open class Paper {
             stringValidator()(name)
             self.name = name
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FolderSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try FolderSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FolderSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for Folder: \(error)"
+            }
         }
     }
-    open class FolderSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: Folder) -> JSON {
-            let output = [ 
-            "id": Serialization._StringSerializer.serialize(value.id),
-            "name": Serialization._StringSerializer.serialize(value.name),
+
+    public class FolderSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: Folder) throws -> JSON {
+            let output = [
+                "id": try Serialization._StringSerializer.serialize(value.id),
+                "name": try Serialization._StringSerializer.serialize(value.name),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> Folder {
+
+        public func deserialize(_ json: JSON) throws -> Folder {
             switch json {
-                case .dictionary(let dict):
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                    return Folder(id: id, name: name)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                return Folder(id: id, name: name)
+            default:
+                throw JSONSerializerError.deserializeError(type: Folder.self, json: json)
             }
         }
     }
 
     /// The sharing policy of a Paper folder. The sharing policy of subfolders is inherited from the root folder.
-    public enum FolderSharingPolicyType: CustomStringConvertible {
+    public enum FolderSharingPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Everyone in your team and anyone directly invited can access this folder.
         case team
         /// Only people directly invited can access this folder.
         case inviteOnly
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FolderSharingPolicyTypeSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try FolderSharingPolicyTypeSerializer().serialize(self)
         }
-    }
-    open class FolderSharingPolicyTypeSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FolderSharingPolicyType) -> JSON {
-            switch value {
-                case .team:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("team")
-                    return .dictionary(d)
-                case .inviteOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invite_only")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FolderSharingPolicyTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for FolderSharingPolicyType: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> FolderSharingPolicyType {
+    }
+
+    public class FolderSharingPolicyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FolderSharingPolicyType) throws -> JSON {
+            switch value {
+            case .team:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team")
+                return .dictionary(d)
+            case .inviteOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invite_only")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> FolderSharingPolicyType {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "team":
-                            return FolderSharingPolicyType.team
-                        case "invite_only":
-                            return FolderSharingPolicyType.inviteOnly
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "team":
+                    return FolderSharingPolicyType.team
+                case "invite_only":
+                    return FolderSharingPolicyType.inviteOnly
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: FolderSharingPolicyType.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: FolderSharingPolicyType.self, json: json)
             }
         }
     }
 
     /// The subscription level of a Paper folder.
-    public enum FolderSubscriptionLevel: CustomStringConvertible {
+    public enum FolderSubscriptionLevel: CustomStringConvertible, JSONRepresentable {
         /// Not shown in activity, no email messages.
         case none
         /// Shown in activity, no email messages.
@@ -587,91 +710,113 @@ open class Paper {
         /// Shown in activity, weekly email messages.
         case weeklyEmails
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FolderSubscriptionLevelSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try FolderSubscriptionLevelSerializer().serialize(self)
         }
-    }
-    open class FolderSubscriptionLevelSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FolderSubscriptionLevel) -> JSON {
-            switch value {
-                case .none:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("none")
-                    return .dictionary(d)
-                case .activityOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("activity_only")
-                    return .dictionary(d)
-                case .dailyEmails:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("daily_emails")
-                    return .dictionary(d)
-                case .weeklyEmails:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("weekly_emails")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FolderSubscriptionLevelSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for FolderSubscriptionLevel: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> FolderSubscriptionLevel {
+    }
+
+    public class FolderSubscriptionLevelSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FolderSubscriptionLevel) throws -> JSON {
+            switch value {
+            case .none:
+                var d = [String: JSON]()
+                d[".tag"] = .str("none")
+                return .dictionary(d)
+            case .activityOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("activity_only")
+                return .dictionary(d)
+            case .dailyEmails:
+                var d = [String: JSON]()
+                d[".tag"] = .str("daily_emails")
+                return .dictionary(d)
+            case .weeklyEmails:
+                var d = [String: JSON]()
+                d[".tag"] = .str("weekly_emails")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> FolderSubscriptionLevel {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "none":
-                            return FolderSubscriptionLevel.none
-                        case "activity_only":
-                            return FolderSubscriptionLevel.activityOnly
-                        case "daily_emails":
-                            return FolderSubscriptionLevel.dailyEmails
-                        case "weekly_emails":
-                            return FolderSubscriptionLevel.weeklyEmails
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "none":
+                    return FolderSubscriptionLevel.none
+                case "activity_only":
+                    return FolderSubscriptionLevel.activityOnly
+                case "daily_emails":
+                    return FolderSubscriptionLevel.dailyEmails
+                case "weekly_emails":
+                    return FolderSubscriptionLevel.weeklyEmails
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: FolderSubscriptionLevel.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: FolderSubscriptionLevel.self, json: json)
             }
         }
     }
 
     /// Metadata about Paper folders containing the specififed Paper doc.
-    open class FoldersContainingPaperDoc: CustomStringConvertible {
+    public class FoldersContainingPaperDoc: CustomStringConvertible, JSONRepresentable {
         /// The sharing policy of the folder containing the Paper doc.
         public let folderSharingPolicyType: Paper.FolderSharingPolicyType?
         /// The folder path. If present the first folder is the root folder.
-        public let folders: Array<Paper.Folder>?
-        public init(folderSharingPolicyType: Paper.FolderSharingPolicyType? = nil, folders: Array<Paper.Folder>? = nil) {
+        public let folders: [Paper.Folder]?
+        public init(folderSharingPolicyType: Paper.FolderSharingPolicyType? = nil, folders: [Paper.Folder]? = nil) {
             self.folderSharingPolicyType = folderSharingPolicyType
             self.folders = folders
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FoldersContainingPaperDocSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try FoldersContainingPaperDocSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try FoldersContainingPaperDocSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for FoldersContainingPaperDoc: \(error)"
+            }
         }
     }
-    open class FoldersContainingPaperDocSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FoldersContainingPaperDoc) -> JSON {
-            let output = [ 
-            "folder_sharing_policy_type": NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).serialize(value.folderSharingPolicyType),
-            "folders": NullableSerializer(ArraySerializer(Paper.FolderSerializer())).serialize(value.folders),
+
+    public class FoldersContainingPaperDocSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: FoldersContainingPaperDoc) throws -> JSON {
+            let output = [
+                "folder_sharing_policy_type": try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).serialize(value.folderSharingPolicyType),
+                "folders": try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).serialize(value.folders),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> FoldersContainingPaperDoc {
+
+        public func deserialize(_ json: JSON) throws -> FoldersContainingPaperDoc {
             switch json {
-                case .dictionary(let dict):
-                    let folderSharingPolicyType = NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).deserialize(dict["folder_sharing_policy_type"] ?? .null)
-                    let folders = NullableSerializer(ArraySerializer(Paper.FolderSerializer())).deserialize(dict["folders"] ?? .null)
-                    return FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType, folders: folders)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let folderSharingPolicyType = try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer())
+                    .deserialize(dict["folder_sharing_policy_type"] ?? .null)
+                let folders = try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).deserialize(dict["folders"] ?? .null)
+                return FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType, folders: folders)
+            default:
+                throw JSONSerializerError.deserializeError(type: FoldersContainingPaperDoc.self, json: json)
             }
         }
     }
 
     /// The import format of the incoming data.
-    public enum ImportFormat: CustomStringConvertible {
+    public enum ImportFormat: CustomStringConvertible, JSONRepresentable {
         /// The provided data is interpreted as standard HTML.
         case html
         /// The provided data is interpreted as markdown. The first line of the provided document will be used as the
@@ -683,56 +828,66 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ImportFormatSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ImportFormatSerializer().serialize(self)
         }
-    }
-    open class ImportFormatSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ImportFormat) -> JSON {
-            switch value {
-                case .html:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("html")
-                    return .dictionary(d)
-                case .markdown:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("markdown")
-                    return .dictionary(d)
-                case .plainText:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("plain_text")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ImportFormatSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ImportFormat: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ImportFormat {
+    }
+
+    public class ImportFormatSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ImportFormat) throws -> JSON {
+            switch value {
+            case .html:
+                var d = [String: JSON]()
+                d[".tag"] = .str("html")
+                return .dictionary(d)
+            case .markdown:
+                var d = [String: JSON]()
+                d[".tag"] = .str("markdown")
+                return .dictionary(d)
+            case .plainText:
+                var d = [String: JSON]()
+                d[".tag"] = .str("plain_text")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ImportFormat {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "html":
-                            return ImportFormat.html
-                        case "markdown":
-                            return ImportFormat.markdown
-                        case "plain_text":
-                            return ImportFormat.plainText
-                        case "other":
-                            return ImportFormat.other
-                        default:
-                            return ImportFormat.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "html":
+                    return ImportFormat.html
+                case "markdown":
+                    return ImportFormat.markdown
+                case "plain_text":
+                    return ImportFormat.plainText
+                case "other":
+                    return ImportFormat.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ImportFormat.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ImportFormat.self, json: json)
             }
         }
     }
 
     /// The InviteeInfoWithPermissionLevel struct
-    open class InviteeInfoWithPermissionLevel: CustomStringConvertible {
+    public class InviteeInfoWithPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// Email address invited to the Paper doc.
         public let invitee: Sharing.InviteeInfo
         /// Permission level for the invitee.
@@ -741,77 +896,98 @@ open class Paper {
             self.invitee = invitee
             self.permissionLevel = permissionLevel
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(InviteeInfoWithPermissionLevelSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try InviteeInfoWithPermissionLevelSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try InviteeInfoWithPermissionLevelSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for InviteeInfoWithPermissionLevel: \(error)"
+            }
         }
     }
-    open class InviteeInfoWithPermissionLevelSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: InviteeInfoWithPermissionLevel) -> JSON {
-            let output = [ 
-            "invitee": Sharing.InviteeInfoSerializer().serialize(value.invitee),
-            "permission_level": Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+
+    public class InviteeInfoWithPermissionLevelSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: InviteeInfoWithPermissionLevel) throws -> JSON {
+            let output = [
+                "invitee": try Sharing.InviteeInfoSerializer().serialize(value.invitee),
+                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> InviteeInfoWithPermissionLevel {
+
+        public func deserialize(_ json: JSON) throws -> InviteeInfoWithPermissionLevel {
             switch json {
-                case .dictionary(let dict):
-                    let invitee = Sharing.InviteeInfoSerializer().deserialize(dict["invitee"] ?? .null)
-                    let permissionLevel = Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
-                    return InviteeInfoWithPermissionLevel(invitee: invitee, permissionLevel: permissionLevel)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let invitee = try Sharing.InviteeInfoSerializer().deserialize(dict["invitee"] ?? .null)
+                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
+                return InviteeInfoWithPermissionLevel(invitee: invitee, permissionLevel: permissionLevel)
+            default:
+                throw JSONSerializerError.deserializeError(type: InviteeInfoWithPermissionLevel.self, json: json)
             }
         }
     }
 
     /// The ListDocsCursorError union
-    public enum ListDocsCursorError: CustomStringConvertible {
+    public enum ListDocsCursorError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case cursorError(Paper.PaperApiCursorError)
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListDocsCursorErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ListDocsCursorErrorSerializer().serialize(self)
         }
-    }
-    open class ListDocsCursorErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListDocsCursorError) -> JSON {
-            switch value {
-                case .cursorError(let arg):
-                    var d = ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
-                    d[".tag"] = .str("cursor_error")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListDocsCursorErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListDocsCursorError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListDocsCursorError {
+    }
+
+    public class ListDocsCursorErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListDocsCursorError) throws -> JSON {
+            switch value {
+            case .cursorError(let arg):
+                var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("cursor_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListDocsCursorError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "cursor_error":
-                            let v = Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
-                            return ListDocsCursorError.cursorError(v)
-                        case "other":
-                            return ListDocsCursorError.other
-                        default:
-                            return ListDocsCursorError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "cursor_error":
+                    let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
+                    return ListDocsCursorError.cursorError(v)
+                case "other":
+                    return ListDocsCursorError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ListDocsCursorError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListDocsCursorError.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsArgs struct
-    open class ListPaperDocsArgs: CustomStringConvertible {
+    public class ListPaperDocsArgs: CustomStringConvertible, JSONRepresentable {
         /// Allows user to specify how the Paper docs should be filtered.
         public let filterBy: Paper.ListPaperDocsFilterBy
         /// Allows user to specify how the Paper docs should be sorted.
@@ -821,75 +997,105 @@ open class Paper {
         /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
         public let limit: Int32
-        public init(filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed, sortBy: Paper.ListPaperDocsSortBy = .accessed, sortOrder: Paper.ListPaperDocsSortOrder = .ascending, limit: Int32 = 1000) {
+        public init(
+            filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed,
+            sortBy: Paper.ListPaperDocsSortBy = .accessed,
+            sortOrder: Paper.ListPaperDocsSortOrder = .ascending,
+            limit: Int32 = 1_000
+        ) {
             self.filterBy = filterBy
             self.sortBy = sortBy
             self.sortOrder = sortOrder
-            comparableValidator(minValue: 1, maxValue: 1000)(limit)
+            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
             self.limit = limit
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsArgsSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try ListPaperDocsArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsArgs: \(error)"
+            }
         }
     }
-    open class ListPaperDocsArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsArgs) -> JSON {
-            let output = [ 
-            "filter_by": Paper.ListPaperDocsFilterBySerializer().serialize(value.filterBy),
-            "sort_by": Paper.ListPaperDocsSortBySerializer().serialize(value.sortBy),
-            "sort_order": Paper.ListPaperDocsSortOrderSerializer().serialize(value.sortOrder),
-            "limit": Serialization._Int32Serializer.serialize(value.limit),
+
+    public class ListPaperDocsArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsArgs) throws -> JSON {
+            let output = [
+                "filter_by": try Paper.ListPaperDocsFilterBySerializer().serialize(value.filterBy),
+                "sort_by": try Paper.ListPaperDocsSortBySerializer().serialize(value.sortBy),
+                "sort_order": try Paper.ListPaperDocsSortOrderSerializer().serialize(value.sortOrder),
+                "limit": try Serialization._Int32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsArgs {
             switch json {
-                case .dictionary(let dict):
-                    let filterBy = Paper.ListPaperDocsFilterBySerializer().deserialize(dict["filter_by"] ?? Paper.ListPaperDocsFilterBySerializer().serialize(.docsAccessed))
-                    let sortBy = Paper.ListPaperDocsSortBySerializer().deserialize(dict["sort_by"] ?? Paper.ListPaperDocsSortBySerializer().serialize(.accessed))
-                    let sortOrder = Paper.ListPaperDocsSortOrderSerializer().deserialize(dict["sort_order"] ?? Paper.ListPaperDocsSortOrderSerializer().serialize(.ascending))
-                    let limit = Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
-                    return ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let filterBy = try Paper.ListPaperDocsFilterBySerializer()
+                    .deserialize(dict["filter_by"] ?? Paper.ListPaperDocsFilterBySerializer().serialize(.docsAccessed))
+                let sortBy = try Paper.ListPaperDocsSortBySerializer()
+                    .deserialize(dict["sort_by"] ?? Paper.ListPaperDocsSortBySerializer().serialize(.accessed))
+                let sortOrder = try Paper.ListPaperDocsSortOrderSerializer()
+                    .deserialize(dict["sort_order"] ?? Paper.ListPaperDocsSortOrderSerializer().serialize(.ascending))
+                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
+                return ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsArgs.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsContinueArgs struct
-    open class ListPaperDocsContinueArgs: CustomStringConvertible {
+    public class ListPaperDocsContinueArgs: CustomStringConvertible, JSONRepresentable {
         /// The cursor obtained from docsList or docsListContinue. Allows for pagination.
         public let cursor: String
         public init(cursor: String) {
             stringValidator()(cursor)
             self.cursor = cursor
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsContinueArgsSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try ListPaperDocsContinueArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsContinueArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsContinueArgs: \(error)"
+            }
         }
     }
-    open class ListPaperDocsContinueArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsContinueArgs) -> JSON {
-            let output = [ 
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+
+    public class ListPaperDocsContinueArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsContinueArgs) throws -> JSON {
+            let output = [
+                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsContinueArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsContinueArgs {
             switch json {
-                case .dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    return ListPaperDocsContinueArgs(cursor: cursor)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                return ListPaperDocsContinueArgs(cursor: cursor)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsContinueArgs.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsFilterBy union
-    public enum ListPaperDocsFilterBy: CustomStringConvertible {
+    public enum ListPaperDocsFilterBy: CustomStringConvertible, JSONRepresentable {
         /// Fetches all Paper doc IDs that the user has ever accessed.
         case docsAccessed
         /// Fetches only the Paper doc IDs that the user has created.
@@ -897,94 +1103,116 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsFilterBySerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ListPaperDocsFilterBySerializer().serialize(self)
         }
-    }
-    open class ListPaperDocsFilterBySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsFilterBy) -> JSON {
-            switch value {
-                case .docsAccessed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("docs_accessed")
-                    return .dictionary(d)
-                case .docsCreated:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("docs_created")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsFilterBySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsFilterBy: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsFilterBy {
+    }
+
+    public class ListPaperDocsFilterBySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsFilterBy) throws -> JSON {
+            switch value {
+            case .docsAccessed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("docs_accessed")
+                return .dictionary(d)
+            case .docsCreated:
+                var d = [String: JSON]()
+                d[".tag"] = .str("docs_created")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsFilterBy {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "docs_accessed":
-                            return ListPaperDocsFilterBy.docsAccessed
-                        case "docs_created":
-                            return ListPaperDocsFilterBy.docsCreated
-                        case "other":
-                            return ListPaperDocsFilterBy.other
-                        default:
-                            return ListPaperDocsFilterBy.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "docs_accessed":
+                    return ListPaperDocsFilterBy.docsAccessed
+                case "docs_created":
+                    return ListPaperDocsFilterBy.docsCreated
+                case "other":
+                    return ListPaperDocsFilterBy.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ListPaperDocsFilterBy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsFilterBy.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsResponse struct
-    open class ListPaperDocsResponse: CustomStringConvertible {
+    public class ListPaperDocsResponse: CustomStringConvertible, JSONRepresentable {
         /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
         /// The list is sorted in the order specified by the initial call to docsList.
-        public let docIds: Array<String>
+        public let docIds: [String]
         /// Pass the cursor into docsListContinue to paginate through all files. The cursor preserves all properties as
         /// specified in the original call to docsList.
         public let cursor: Paper.Cursor
         /// Will be set to True if a subsequent call with the provided cursor to docsListContinue returns immediately
-        /// with some results. If set to False please allow some delay before making another call to docsListContinue.
+        /// with some results. If set to False please allow some delay before making another call to
+        /// docsListContinue.
         public let hasMore: Bool
-        public init(docIds: Array<String>, cursor: Paper.Cursor, hasMore: Bool) {
+        public init(docIds: [String], cursor: Paper.Cursor, hasMore: Bool) {
             arrayValidator(itemValidator: stringValidator())(docIds)
             self.docIds = docIds
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsResponseSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try ListPaperDocsResponseSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsResponseSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsResponse: \(error)"
+            }
         }
     }
-    open class ListPaperDocsResponseSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsResponse) -> JSON {
-            let output = [ 
-            "doc_ids": ArraySerializer(Serialization._StringSerializer).serialize(value.docIds),
-            "cursor": Paper.CursorSerializer().serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+
+    public class ListPaperDocsResponseSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsResponse) throws -> JSON {
+            let output = [
+                "doc_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.docIds),
+                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsResponse {
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsResponse {
             switch json {
-                case .dictionary(let dict):
-                    let docIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["doc_ids"] ?? .null)
-                    let cursor = Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                    return ListPaperDocsResponse(docIds: docIds, cursor: cursor, hasMore: hasMore)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["doc_ids"] ?? .null)
+                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                return ListPaperDocsResponse(docIds: docIds, cursor: cursor, hasMore: hasMore)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsResponse.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsSortBy union
-    public enum ListPaperDocsSortBy: CustomStringConvertible {
+    public enum ListPaperDocsSortBy: CustomStringConvertible, JSONRepresentable {
         /// Sorts the Paper docs by the time they were last accessed.
         case accessed
         /// Sorts the Paper docs by the time they were last modified.
@@ -994,56 +1222,66 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsSortBySerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ListPaperDocsSortBySerializer().serialize(self)
         }
-    }
-    open class ListPaperDocsSortBySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsSortBy) -> JSON {
-            switch value {
-                case .accessed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("accessed")
-                    return .dictionary(d)
-                case .modified:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("modified")
-                    return .dictionary(d)
-                case .created:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("created")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsSortBySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsSortBy: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsSortBy {
+    }
+
+    public class ListPaperDocsSortBySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsSortBy) throws -> JSON {
+            switch value {
+            case .accessed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("accessed")
+                return .dictionary(d)
+            case .modified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("modified")
+                return .dictionary(d)
+            case .created:
+                var d = [String: JSON]()
+                d[".tag"] = .str("created")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsSortBy {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "accessed":
-                            return ListPaperDocsSortBy.accessed
-                        case "modified":
-                            return ListPaperDocsSortBy.modified
-                        case "created":
-                            return ListPaperDocsSortBy.created
-                        case "other":
-                            return ListPaperDocsSortBy.other
-                        default:
-                            return ListPaperDocsSortBy.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "accessed":
+                    return ListPaperDocsSortBy.accessed
+                case "modified":
+                    return ListPaperDocsSortBy.modified
+                case "created":
+                    return ListPaperDocsSortBy.created
+                case "other":
+                    return ListPaperDocsSortBy.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ListPaperDocsSortBy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsSortBy.self, json: json)
             }
         }
     }
 
     /// The ListPaperDocsSortOrder union
-    public enum ListPaperDocsSortOrder: CustomStringConvertible {
+    public enum ListPaperDocsSortOrder: CustomStringConvertible, JSONRepresentable {
         /// Sorts the search result in ascending order.
         case ascending
         /// Sorts the search result in descending order.
@@ -1051,50 +1289,60 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListPaperDocsSortOrderSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ListPaperDocsSortOrderSerializer().serialize(self)
         }
-    }
-    open class ListPaperDocsSortOrderSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListPaperDocsSortOrder) -> JSON {
-            switch value {
-                case .ascending:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("ascending")
-                    return .dictionary(d)
-                case .descending:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("descending")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListPaperDocsSortOrderSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListPaperDocsSortOrder: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListPaperDocsSortOrder {
+    }
+
+    public class ListPaperDocsSortOrderSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListPaperDocsSortOrder) throws -> JSON {
+            switch value {
+            case .ascending:
+                var d = [String: JSON]()
+                d[".tag"] = .str("ascending")
+                return .dictionary(d)
+            case .descending:
+                var d = [String: JSON]()
+                d[".tag"] = .str("descending")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListPaperDocsSortOrder {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "ascending":
-                            return ListPaperDocsSortOrder.ascending
-                        case "descending":
-                            return ListPaperDocsSortOrder.descending
-                        case "other":
-                            return ListPaperDocsSortOrder.other
-                        default:
-                            return ListPaperDocsSortOrder.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "ascending":
+                    return ListPaperDocsSortOrder.ascending
+                case "descending":
+                    return ListPaperDocsSortOrder.descending
+                case "other":
+                    return ListPaperDocsSortOrder.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return ListPaperDocsSortOrder.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListPaperDocsSortOrder.self, json: json)
             }
         }
     }
 
     /// The ListUsersCursorError union
-    public enum ListUsersCursorError: CustomStringConvertible {
+    public enum ListUsersCursorError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -1106,92 +1354,109 @@ open class Paper {
         /// An unspecified error.
         case cursorError(Paper.PaperApiCursorError)
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersCursorErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try ListUsersCursorErrorSerializer().serialize(self)
         }
-    }
-    open class ListUsersCursorErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersCursorError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .docNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_not_found")
-                    return .dictionary(d)
-                case .cursorError(let arg):
-                    var d = ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
-                    d[".tag"] = .str("cursor_error")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersCursorErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersCursorError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> ListUsersCursorError {
+    }
+
+    public class ListUsersCursorErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersCursorError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .docNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_not_found")
+                return .dictionary(d)
+            case .cursorError(let arg):
+                var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("cursor_error")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ListUsersCursorError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return ListUsersCursorError.insufficientPermissions
-                        case "other":
-                            return ListUsersCursorError.other
-                        case "doc_not_found":
-                            return ListUsersCursorError.docNotFound
-                        case "cursor_error":
-                            let v = Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
-                            return ListUsersCursorError.cursorError(v)
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return ListUsersCursorError.insufficientPermissions
+                case "other":
+                    return ListUsersCursorError.other
+                case "doc_not_found":
+                    return ListUsersCursorError.docNotFound
+                case "cursor_error":
+                    let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
+                    return ListUsersCursorError.cursorError(v)
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: ListUsersCursorError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersCursorError.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnFolderArgs struct
-    open class ListUsersOnFolderArgs: Paper.RefPaperDoc {
+    public class ListUsersOnFolderArgs: Paper.RefPaperDoc {
         /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
         public let limit: Int32
-        public init(docId: String, limit: Int32 = 1000) {
-            comparableValidator(minValue: 1, maxValue: 1000)(limit)
+        public init(docId: String, limit: Int32 = 1_000) {
+            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
             self.limit = limit
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnFolderArgsSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnFolderArgs: \(error)"
+            }
         }
     }
-    open class ListUsersOnFolderArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnFolderArgs) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "limit": Serialization._Int32Serializer.serialize(value.limit),
+
+    public class ListUsersOnFolderArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnFolderArgs) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "limit": try Serialization._Int32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnFolderArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnFolderArgs {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let limit = Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
-                    return ListUsersOnFolderArgs(docId: docId, limit: limit)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
+                return ListUsersOnFolderArgs(docId: docId, limit: limit)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderArgs.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnFolderContinueArgs struct
-    open class ListUsersOnFolderContinueArgs: Paper.RefPaperDoc {
+    public class ListUsersOnFolderContinueArgs: Paper.RefPaperDoc {
         /// The cursor obtained from docsFolderUsersList or docsFolderUsersListContinue. Allows for pagination.
         public let cursor: String
         public init(docId: String, cursor: String) {
@@ -1199,37 +1464,44 @@ open class Paper {
             self.cursor = cursor
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnFolderContinueArgsSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderContinueArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnFolderContinueArgs: \(error)"
+            }
         }
     }
-    open class ListUsersOnFolderContinueArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnFolderContinueArgs) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+
+    public class ListUsersOnFolderContinueArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnFolderContinueArgs) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnFolderContinueArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnFolderContinueArgs {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    return ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                return ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderContinueArgs.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnFolderResponse struct
-    open class ListUsersOnFolderResponse: CustomStringConvertible {
+    public class ListUsersOnFolderResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses that are invited on the Paper folder.
-        public let invitees: Array<Sharing.InviteeInfo>
+        public let invitees: [Sharing.InviteeInfo]
         /// List of users that are invited on the Paper folder.
-        public let users: Array<Sharing.UserInfo>
+        public let users: [Sharing.UserInfo]
         /// Pass the cursor into docsFolderUsersListContinue to paginate through all users. The cursor preserves all
         /// properties as specified in the original call to docsFolderUsersList.
         public let cursor: Paper.Cursor
@@ -1237,83 +1509,102 @@ open class Paper {
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsFolderUsersListContinue.
         public let hasMore: Bool
-        public init(invitees: Array<Sharing.InviteeInfo>, users: Array<Sharing.UserInfo>, cursor: Paper.Cursor, hasMore: Bool) {
+        public init(invitees: [Sharing.InviteeInfo], users: [Sharing.UserInfo], cursor: Paper.Cursor, hasMore: Bool) {
             self.invitees = invitees
             self.users = users
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnFolderResponseSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try ListUsersOnFolderResponseSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderResponseSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnFolderResponse: \(error)"
+            }
         }
     }
-    open class ListUsersOnFolderResponseSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnFolderResponse) -> JSON {
-            let output = [ 
-            "invitees": ArraySerializer(Sharing.InviteeInfoSerializer()).serialize(value.invitees),
-            "users": ArraySerializer(Sharing.UserInfoSerializer()).serialize(value.users),
-            "cursor": Paper.CursorSerializer().serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+
+    public class ListUsersOnFolderResponseSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnFolderResponse) throws -> JSON {
+            let output = [
+                "invitees": try ArraySerializer(Sharing.InviteeInfoSerializer()).serialize(value.invitees),
+                "users": try ArraySerializer(Sharing.UserInfoSerializer()).serialize(value.users),
+                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnFolderResponse {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnFolderResponse {
             switch json {
-                case .dictionary(let dict):
-                    let invitees = ArraySerializer(Sharing.InviteeInfoSerializer()).deserialize(dict["invitees"] ?? .null)
-                    let users = ArraySerializer(Sharing.UserInfoSerializer()).deserialize(dict["users"] ?? .null)
-                    let cursor = Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                    return ListUsersOnFolderResponse(invitees: invitees, users: users, cursor: cursor, hasMore: hasMore)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let invitees = try ArraySerializer(Sharing.InviteeInfoSerializer()).deserialize(dict["invitees"] ?? .null)
+                let users = try ArraySerializer(Sharing.UserInfoSerializer()).deserialize(dict["users"] ?? .null)
+                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                return ListUsersOnFolderResponse(invitees: invitees, users: users, cursor: cursor, hasMore: hasMore)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderResponse.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnPaperDocArgs struct
-    open class ListUsersOnPaperDocArgs: Paper.RefPaperDoc {
+    public class ListUsersOnPaperDocArgs: Paper.RefPaperDoc {
         /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
         public let limit: Int32
         /// Specify this attribute if you want to obtain users that have already accessed the Paper doc.
         public let filterBy: Paper.UserOnPaperDocFilter
-        public init(docId: String, limit: Int32 = 1000, filterBy: Paper.UserOnPaperDocFilter = .shared) {
-            comparableValidator(minValue: 1, maxValue: 1000)(limit)
+        public init(docId: String, limit: Int32 = 1_000, filterBy: Paper.UserOnPaperDocFilter = .shared) {
+            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
             self.limit = limit
             self.filterBy = filterBy
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnPaperDocArgsSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnPaperDocArgs: \(error)"
+            }
         }
     }
-    open class ListUsersOnPaperDocArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnPaperDocArgs) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "limit": Serialization._Int32Serializer.serialize(value.limit),
-            "filter_by": Paper.UserOnPaperDocFilterSerializer().serialize(value.filterBy),
+
+    public class ListUsersOnPaperDocArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnPaperDocArgs) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "limit": try Serialization._Int32Serializer.serialize(value.limit),
+                "filter_by": try Paper.UserOnPaperDocFilterSerializer().serialize(value.filterBy),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnPaperDocArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocArgs {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let limit = Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
-                    let filterBy = Paper.UserOnPaperDocFilterSerializer().deserialize(dict["filter_by"] ?? Paper.UserOnPaperDocFilterSerializer().serialize(.shared))
-                    return ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
+                let filterBy = try Paper.UserOnPaperDocFilterSerializer()
+                    .deserialize(dict["filter_by"] ?? Paper.UserOnPaperDocFilterSerializer().serialize(.shared))
+                return ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocArgs.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnPaperDocContinueArgs struct
-    open class ListUsersOnPaperDocContinueArgs: Paper.RefPaperDoc {
+    public class ListUsersOnPaperDocContinueArgs: Paper.RefPaperDoc {
         /// The cursor obtained from docsUsersList or docsUsersListContinue. Allows for pagination.
         public let cursor: String
         public init(docId: String, cursor: String) {
@@ -1321,37 +1612,44 @@ open class Paper {
             self.cursor = cursor
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnPaperDocContinueArgsSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocContinueArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnPaperDocContinueArgs: \(error)"
+            }
         }
     }
-    open class ListUsersOnPaperDocContinueArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnPaperDocContinueArgs) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "cursor": Serialization._StringSerializer.serialize(value.cursor),
+
+    public class ListUsersOnPaperDocContinueArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnPaperDocContinueArgs) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnPaperDocContinueArgs {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocContinueArgs {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                    return ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                return ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocContinueArgs.self, json: json)
             }
         }
     }
 
     /// The ListUsersOnPaperDocResponse struct
-    open class ListUsersOnPaperDocResponse: CustomStringConvertible {
+    public class ListUsersOnPaperDocResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses with their respective permission levels that are invited on the Paper doc.
-        public let invitees: Array<Paper.InviteeInfoWithPermissionLevel>
+        public let invitees: [Paper.InviteeInfoWithPermissionLevel]
         /// List of users with their respective permission levels that are invited on the Paper folder.
-        public let users: Array<Paper.UserInfoWithPermissionLevel>
+        public let users: [Paper.UserInfoWithPermissionLevel]
         /// The Paper doc owner. This field is populated on every single response.
         public let docOwner: Sharing.UserInfo
         /// Pass the cursor into docsUsersListContinue to paginate through all users. The cursor preserves all
@@ -1361,46 +1659,63 @@ open class Paper {
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsUsersListContinue.
         public let hasMore: Bool
-        public init(invitees: Array<Paper.InviteeInfoWithPermissionLevel>, users: Array<Paper.UserInfoWithPermissionLevel>, docOwner: Sharing.UserInfo, cursor: Paper.Cursor, hasMore: Bool) {
+        public init(
+            invitees: [Paper.InviteeInfoWithPermissionLevel],
+            users: [Paper.UserInfoWithPermissionLevel],
+            docOwner: Sharing.UserInfo,
+            cursor: Paper.Cursor,
+            hasMore: Bool
+        ) {
             self.invitees = invitees
             self.users = users
             self.docOwner = docOwner
             self.cursor = cursor
             self.hasMore = hasMore
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(ListUsersOnPaperDocResponseSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try ListUsersOnPaperDocResponseSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocResponseSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ListUsersOnPaperDocResponse: \(error)"
+            }
         }
     }
-    open class ListUsersOnPaperDocResponseSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: ListUsersOnPaperDocResponse) -> JSON {
-            let output = [ 
-            "invitees": ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).serialize(value.invitees),
-            "users": ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).serialize(value.users),
-            "doc_owner": Sharing.UserInfoSerializer().serialize(value.docOwner),
-            "cursor": Paper.CursorSerializer().serialize(value.cursor),
-            "has_more": Serialization._BoolSerializer.serialize(value.hasMore),
+
+    public class ListUsersOnPaperDocResponseSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ListUsersOnPaperDocResponse) throws -> JSON {
+            let output = [
+                "invitees": try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).serialize(value.invitees),
+                "users": try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).serialize(value.users),
+                "doc_owner": try Sharing.UserInfoSerializer().serialize(value.docOwner),
+                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> ListUsersOnPaperDocResponse {
+
+        public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocResponse {
             switch json {
-                case .dictionary(let dict):
-                    let invitees = ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).deserialize(dict["invitees"] ?? .null)
-                    let users = ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).deserialize(dict["users"] ?? .null)
-                    let docOwner = Sharing.UserInfoSerializer().deserialize(dict["doc_owner"] ?? .null)
-                    let cursor = Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                    return ListUsersOnPaperDocResponse(invitees: invitees, users: users, docOwner: docOwner, cursor: cursor, hasMore: hasMore)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let invitees = try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).deserialize(dict["invitees"] ?? .null)
+                let users = try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).deserialize(dict["users"] ?? .null)
+                let docOwner = try Sharing.UserInfoSerializer().deserialize(dict["doc_owner"] ?? .null)
+                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                return ListUsersOnPaperDocResponse(invitees: invitees, users: users, docOwner: docOwner, cursor: cursor, hasMore: hasMore)
+            default:
+                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocResponse.self, json: json)
             }
         }
     }
 
     /// The PaperApiCursorError union
-    public enum PaperApiCursorError: CustomStringConvertible {
+    public enum PaperApiCursorError: CustomStringConvertible, JSONRepresentable {
         /// The provided cursor is expired.
         case expiredCursor
         /// The provided cursor is invalid.
@@ -1413,62 +1728,72 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperApiCursorErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperApiCursorErrorSerializer().serialize(self)
         }
-    }
-    open class PaperApiCursorErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperApiCursorError) -> JSON {
-            switch value {
-                case .expiredCursor:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("expired_cursor")
-                    return .dictionary(d)
-                case .invalidCursor:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_cursor")
-                    return .dictionary(d)
-                case .wrongUserInCursor:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("wrong_user_in_cursor")
-                    return .dictionary(d)
-                case .reset:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("reset")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperApiCursorErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperApiCursorError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperApiCursorError {
+    }
+
+    public class PaperApiCursorErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperApiCursorError) throws -> JSON {
+            switch value {
+            case .expiredCursor:
+                var d = [String: JSON]()
+                d[".tag"] = .str("expired_cursor")
+                return .dictionary(d)
+            case .invalidCursor:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_cursor")
+                return .dictionary(d)
+            case .wrongUserInCursor:
+                var d = [String: JSON]()
+                d[".tag"] = .str("wrong_user_in_cursor")
+                return .dictionary(d)
+            case .reset:
+                var d = [String: JSON]()
+                d[".tag"] = .str("reset")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperApiCursorError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "expired_cursor":
-                            return PaperApiCursorError.expiredCursor
-                        case "invalid_cursor":
-                            return PaperApiCursorError.invalidCursor
-                        case "wrong_user_in_cursor":
-                            return PaperApiCursorError.wrongUserInCursor
-                        case "reset":
-                            return PaperApiCursorError.reset
-                        case "other":
-                            return PaperApiCursorError.other
-                        default:
-                            return PaperApiCursorError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "expired_cursor":
+                    return PaperApiCursorError.expiredCursor
+                case "invalid_cursor":
+                    return PaperApiCursorError.invalidCursor
+                case "wrong_user_in_cursor":
+                    return PaperApiCursorError.wrongUserInCursor
+                case "reset":
+                    return PaperApiCursorError.reset
+                case "other":
+                    return PaperApiCursorError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return PaperApiCursorError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperApiCursorError.self, json: json)
             }
         }
     }
 
     /// The PaperDocCreateArgs struct
-    open class PaperDocCreateArgs: CustomStringConvertible {
+    public class PaperDocCreateArgs: CustomStringConvertible, JSONRepresentable {
         /// The Paper folder ID where the Paper document should be created. The API user has to have write access to
         /// this folder or error is thrown.
         public let parentFolderId: String?
@@ -1479,33 +1804,44 @@ open class Paper {
             self.parentFolderId = parentFolderId
             self.importFormat = importFormat
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateArgsSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PaperDocCreateArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocCreateArgs: \(error)"
+            }
         }
     }
-    open class PaperDocCreateArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocCreateArgs) -> JSON {
-            let output = [ 
-            "import_format": Paper.ImportFormatSerializer().serialize(value.importFormat),
-            "parent_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+
+    public class PaperDocCreateArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocCreateArgs) throws -> JSON {
+            let output = [
+                "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
+                "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocCreateArgs {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocCreateArgs {
             switch json {
-                case .dictionary(let dict):
-                    let importFormat = Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
-                    let parentFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
-                    return PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                return PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocCreateArgs.self, json: json)
             }
         }
     }
 
     /// The PaperDocCreateError union
-    public enum PaperDocCreateError: CustomStringConvertible {
+    public enum PaperDocCreateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -1522,68 +1858,78 @@ open class Paper {
         /// HTML with data URI.
         case imageSizeExceeded
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperDocCreateErrorSerializer().serialize(self)
         }
-    }
-    open class PaperDocCreateErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocCreateError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .contentMalformed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("content_malformed")
-                    return .dictionary(d)
-                case .folderNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("folder_not_found")
-                    return .dictionary(d)
-                case .docLengthExceeded:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_length_exceeded")
-                    return .dictionary(d)
-                case .imageSizeExceeded:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("image_size_exceeded")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocCreateError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperDocCreateError {
+    }
+
+    public class PaperDocCreateErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocCreateError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .contentMalformed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("content_malformed")
+                return .dictionary(d)
+            case .folderNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("folder_not_found")
+                return .dictionary(d)
+            case .docLengthExceeded:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_length_exceeded")
+                return .dictionary(d)
+            case .imageSizeExceeded:
+                var d = [String: JSON]()
+                d[".tag"] = .str("image_size_exceeded")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperDocCreateError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return PaperDocCreateError.insufficientPermissions
-                        case "other":
-                            return PaperDocCreateError.other
-                        case "content_malformed":
-                            return PaperDocCreateError.contentMalformed
-                        case "folder_not_found":
-                            return PaperDocCreateError.folderNotFound
-                        case "doc_length_exceeded":
-                            return PaperDocCreateError.docLengthExceeded
-                        case "image_size_exceeded":
-                            return PaperDocCreateError.imageSizeExceeded
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return PaperDocCreateError.insufficientPermissions
+                case "other":
+                    return PaperDocCreateError.other
+                case "content_malformed":
+                    return PaperDocCreateError.contentMalformed
+                case "folder_not_found":
+                    return PaperDocCreateError.folderNotFound
+                case "doc_length_exceeded":
+                    return PaperDocCreateError.docLengthExceeded
+                case "image_size_exceeded":
+                    return PaperDocCreateError.imageSizeExceeded
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: PaperDocCreateError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocCreateError.self, json: json)
             }
         }
     }
 
     /// The PaperDocCreateUpdateResult struct
-    open class PaperDocCreateUpdateResult: CustomStringConvertible {
+    public class PaperDocCreateUpdateResult: CustomStringConvertible, JSONRepresentable {
         /// Doc ID of the newly created doc.
         public let docId: String
         /// The Paper doc revision. Simply an ever increasing number.
@@ -1598,68 +1944,86 @@ open class Paper {
             stringValidator()(title)
             self.title = title
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocCreateUpdateResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PaperDocCreateUpdateResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocCreateUpdateResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocCreateUpdateResult: \(error)"
+            }
         }
     }
-    open class PaperDocCreateUpdateResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocCreateUpdateResult) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "revision": Serialization._Int64Serializer.serialize(value.revision),
-            "title": Serialization._StringSerializer.serialize(value.title),
+
+    public class PaperDocCreateUpdateResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocCreateUpdateResult) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "revision": try Serialization._Int64Serializer.serialize(value.revision),
+                "title": try Serialization._StringSerializer.serialize(value.title),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocCreateUpdateResult {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocCreateUpdateResult {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let revision = Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                    let title = Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                    return PaperDocCreateUpdateResult(docId: docId, revision: revision, title: title)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                return PaperDocCreateUpdateResult(docId: docId, revision: revision, title: title)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocCreateUpdateResult.self, json: json)
             }
         }
     }
 
     /// The PaperDocExport struct
-    open class PaperDocExport: Paper.RefPaperDoc {
+    public class PaperDocExport: Paper.RefPaperDoc {
         /// (no description)
         public let exportFormat: Paper.ExportFormat
         public init(docId: String, exportFormat: Paper.ExportFormat) {
             self.exportFormat = exportFormat
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocExportSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocExportSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocExport: \(error)"
+            }
         }
     }
-    open class PaperDocExportSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocExport) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "export_format": Paper.ExportFormatSerializer().serialize(value.exportFormat),
+
+    public class PaperDocExportSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocExport) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "export_format": try Paper.ExportFormatSerializer().serialize(value.exportFormat),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocExport {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocExport {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let exportFormat = Paper.ExportFormatSerializer().deserialize(dict["export_format"] ?? .null)
-                    return PaperDocExport(docId: docId, exportFormat: exportFormat)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let exportFormat = try Paper.ExportFormatSerializer().deserialize(dict["export_format"] ?? .null)
+                return PaperDocExport(docId: docId, exportFormat: exportFormat)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocExport.self, json: json)
             }
         }
     }
 
     /// The PaperDocExportResult struct
-    open class PaperDocExportResult: CustomStringConvertible {
+    public class PaperDocExportResult: CustomStringConvertible, JSONRepresentable {
         /// The Paper doc owner's email address.
         public let owner: String
         /// The Paper doc title.
@@ -1678,37 +2042,48 @@ open class Paper {
             stringValidator()(mimeType)
             self.mimeType = mimeType
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocExportResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PaperDocExportResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocExportResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocExportResult: \(error)"
+            }
         }
     }
-    open class PaperDocExportResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocExportResult) -> JSON {
-            let output = [ 
-            "owner": Serialization._StringSerializer.serialize(value.owner),
-            "title": Serialization._StringSerializer.serialize(value.title),
-            "revision": Serialization._Int64Serializer.serialize(value.revision),
-            "mime_type": Serialization._StringSerializer.serialize(value.mimeType),
+
+    public class PaperDocExportResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocExportResult) throws -> JSON {
+            let output = [
+                "owner": try Serialization._StringSerializer.serialize(value.owner),
+                "title": try Serialization._StringSerializer.serialize(value.title),
+                "revision": try Serialization._Int64Serializer.serialize(value.revision),
+                "mime_type": try Serialization._StringSerializer.serialize(value.mimeType),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocExportResult {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocExportResult {
             switch json {
-                case .dictionary(let dict):
-                    let owner = Serialization._StringSerializer.deserialize(dict["owner"] ?? .null)
-                    let title = Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                    let revision = Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                    let mimeType = Serialization._StringSerializer.deserialize(dict["mime_type"] ?? .null)
-                    return PaperDocExportResult(owner: owner, title: title, revision: revision, mimeType: mimeType)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let owner = try Serialization._StringSerializer.deserialize(dict["owner"] ?? .null)
+                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                let mimeType = try Serialization._StringSerializer.deserialize(dict["mime_type"] ?? .null)
+                return PaperDocExportResult(owner: owner, title: title, revision: revision, mimeType: mimeType)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocExportResult.self, json: json)
             }
         }
     }
 
     /// The PaperDocPermissionLevel union
-    public enum PaperDocPermissionLevel: CustomStringConvertible {
+    public enum PaperDocPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// User will be granted edit permissions.
         case edit
         /// User will be granted view and comment permissions.
@@ -1716,83 +2091,100 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocPermissionLevelSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperDocPermissionLevelSerializer().serialize(self)
         }
-    }
-    open class PaperDocPermissionLevelSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocPermissionLevel) -> JSON {
-            switch value {
-                case .edit:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("edit")
-                    return .dictionary(d)
-                case .viewAndComment:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("view_and_comment")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocPermissionLevelSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocPermissionLevel: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperDocPermissionLevel {
+    }
+
+    public class PaperDocPermissionLevelSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocPermissionLevel) throws -> JSON {
+            switch value {
+            case .edit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("edit")
+                return .dictionary(d)
+            case .viewAndComment:
+                var d = [String: JSON]()
+                d[".tag"] = .str("view_and_comment")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperDocPermissionLevel {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "edit":
-                            return PaperDocPermissionLevel.edit
-                        case "view_and_comment":
-                            return PaperDocPermissionLevel.viewAndComment
-                        case "other":
-                            return PaperDocPermissionLevel.other
-                        default:
-                            return PaperDocPermissionLevel.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "edit":
+                    return PaperDocPermissionLevel.edit
+                case "view_and_comment":
+                    return PaperDocPermissionLevel.viewAndComment
+                case "other":
+                    return PaperDocPermissionLevel.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return PaperDocPermissionLevel.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocPermissionLevel.self, json: json)
             }
         }
     }
 
     /// The PaperDocSharingPolicy struct
-    open class PaperDocSharingPolicy: Paper.RefPaperDoc {
+    public class PaperDocSharingPolicy: Paper.RefPaperDoc {
         /// The default sharing policy to be set for the Paper doc.
         public let sharingPolicy: Paper.SharingPolicy
         public init(docId: String, sharingPolicy: Paper.SharingPolicy) {
             self.sharingPolicy = sharingPolicy
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocSharingPolicySerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocSharingPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocSharingPolicy: \(error)"
+            }
         }
     }
-    open class PaperDocSharingPolicySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocSharingPolicy) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "sharing_policy": Paper.SharingPolicySerializer().serialize(value.sharingPolicy),
+
+    public class PaperDocSharingPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocSharingPolicy) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "sharing_policy": try Paper.SharingPolicySerializer().serialize(value.sharingPolicy),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocSharingPolicy {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocSharingPolicy {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let sharingPolicy = Paper.SharingPolicySerializer().deserialize(dict["sharing_policy"] ?? .null)
-                    return PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let sharingPolicy = try Paper.SharingPolicySerializer().deserialize(dict["sharing_policy"] ?? .null)
+                return PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocSharingPolicy.self, json: json)
             }
         }
     }
 
     /// The PaperDocUpdateArgs struct
-    open class PaperDocUpdateArgs: Paper.RefPaperDoc {
+    public class PaperDocUpdateArgs: Paper.RefPaperDoc {
         /// The policy used for the current update call.
         public let docUpdatePolicy: Paper.PaperDocUpdatePolicy
         /// The latest doc revision. This value must match the head revision or an error code will be returned. This is
@@ -1807,37 +2199,44 @@ open class Paper {
             self.importFormat = importFormat
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdateArgsSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdateArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocUpdateArgs: \(error)"
+            }
         }
     }
-    open class PaperDocUpdateArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocUpdateArgs) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "doc_update_policy": Paper.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
-            "revision": Serialization._Int64Serializer.serialize(value.revision),
-            "import_format": Paper.ImportFormatSerializer().serialize(value.importFormat),
+
+    public class PaperDocUpdateArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocUpdateArgs) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "doc_update_policy": try Paper.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
+                "revision": try Serialization._Int64Serializer.serialize(value.revision),
+                "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperDocUpdateArgs {
+
+        public func deserialize(_ json: JSON) throws -> PaperDocUpdateArgs {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let docUpdatePolicy = Paper.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
-                    let revision = Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                    let importFormat = Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
-                    return PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let docUpdatePolicy = try Paper.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
+                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                return PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocUpdateArgs.self, json: json)
             }
         }
     }
 
     /// The PaperDocUpdateError union
-    public enum PaperDocUpdateError: CustomStringConvertible {
+    public enum PaperDocUpdateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -1860,86 +2259,96 @@ open class Paper {
         /// This operation is not allowed on deleted Paper docs.
         case docDeleted
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdateErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperDocUpdateErrorSerializer().serialize(self)
         }
-    }
-    open class PaperDocUpdateErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocUpdateError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .docNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_not_found")
-                    return .dictionary(d)
-                case .contentMalformed:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("content_malformed")
-                    return .dictionary(d)
-                case .revisionMismatch:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("revision_mismatch")
-                    return .dictionary(d)
-                case .docLengthExceeded:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_length_exceeded")
-                    return .dictionary(d)
-                case .imageSizeExceeded:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("image_size_exceeded")
-                    return .dictionary(d)
-                case .docArchived:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_archived")
-                    return .dictionary(d)
-                case .docDeleted:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("doc_deleted")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdateErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocUpdateError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperDocUpdateError {
+    }
+
+    public class PaperDocUpdateErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocUpdateError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .docNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_not_found")
+                return .dictionary(d)
+            case .contentMalformed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("content_malformed")
+                return .dictionary(d)
+            case .revisionMismatch:
+                var d = [String: JSON]()
+                d[".tag"] = .str("revision_mismatch")
+                return .dictionary(d)
+            case .docLengthExceeded:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_length_exceeded")
+                return .dictionary(d)
+            case .imageSizeExceeded:
+                var d = [String: JSON]()
+                d[".tag"] = .str("image_size_exceeded")
+                return .dictionary(d)
+            case .docArchived:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_archived")
+                return .dictionary(d)
+            case .docDeleted:
+                var d = [String: JSON]()
+                d[".tag"] = .str("doc_deleted")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperDocUpdateError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return PaperDocUpdateError.insufficientPermissions
-                        case "other":
-                            return PaperDocUpdateError.other
-                        case "doc_not_found":
-                            return PaperDocUpdateError.docNotFound
-                        case "content_malformed":
-                            return PaperDocUpdateError.contentMalformed
-                        case "revision_mismatch":
-                            return PaperDocUpdateError.revisionMismatch
-                        case "doc_length_exceeded":
-                            return PaperDocUpdateError.docLengthExceeded
-                        case "image_size_exceeded":
-                            return PaperDocUpdateError.imageSizeExceeded
-                        case "doc_archived":
-                            return PaperDocUpdateError.docArchived
-                        case "doc_deleted":
-                            return PaperDocUpdateError.docDeleted
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return PaperDocUpdateError.insufficientPermissions
+                case "other":
+                    return PaperDocUpdateError.other
+                case "doc_not_found":
+                    return PaperDocUpdateError.docNotFound
+                case "content_malformed":
+                    return PaperDocUpdateError.contentMalformed
+                case "revision_mismatch":
+                    return PaperDocUpdateError.revisionMismatch
+                case "doc_length_exceeded":
+                    return PaperDocUpdateError.docLengthExceeded
+                case "image_size_exceeded":
+                    return PaperDocUpdateError.imageSizeExceeded
+                case "doc_archived":
+                    return PaperDocUpdateError.docArchived
+                case "doc_deleted":
+                    return PaperDocUpdateError.docDeleted
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: PaperDocUpdateError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocUpdateError.self, json: json)
             }
         }
     }
 
     /// The PaperDocUpdatePolicy union
-    public enum PaperDocUpdatePolicy: CustomStringConvertible {
+    public enum PaperDocUpdatePolicy: CustomStringConvertible, JSONRepresentable {
         /// The content will be appended to the doc.
         case append
         /// The content will be prepended to the doc. The doc title will not be affected.
@@ -1949,64 +2358,76 @@ open class Paper {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperDocUpdatePolicySerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperDocUpdatePolicySerializer().serialize(self)
         }
-    }
-    open class PaperDocUpdatePolicySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperDocUpdatePolicy) -> JSON {
-            switch value {
-                case .append:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("append")
-                    return .dictionary(d)
-                case .prepend:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("prepend")
-                    return .dictionary(d)
-                case .overwriteAll:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("overwrite_all")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdatePolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocUpdatePolicy: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperDocUpdatePolicy {
+    }
+
+    public class PaperDocUpdatePolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperDocUpdatePolicy) throws -> JSON {
+            switch value {
+            case .append:
+                var d = [String: JSON]()
+                d[".tag"] = .str("append")
+                return .dictionary(d)
+            case .prepend:
+                var d = [String: JSON]()
+                d[".tag"] = .str("prepend")
+                return .dictionary(d)
+            case .overwriteAll:
+                var d = [String: JSON]()
+                d[".tag"] = .str("overwrite_all")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperDocUpdatePolicy {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "append":
-                            return PaperDocUpdatePolicy.append
-                        case "prepend":
-                            return PaperDocUpdatePolicy.prepend
-                        case "overwrite_all":
-                            return PaperDocUpdatePolicy.overwriteAll
-                        case "other":
-                            return PaperDocUpdatePolicy.other
-                        default:
-                            return PaperDocUpdatePolicy.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "append":
+                    return PaperDocUpdatePolicy.append
+                case "prepend":
+                    return PaperDocUpdatePolicy.prepend
+                case "overwrite_all":
+                    return PaperDocUpdatePolicy.overwriteAll
+                case "other":
+                    return PaperDocUpdatePolicy.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return PaperDocUpdatePolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperDocUpdatePolicy.self, json: json)
             }
         }
     }
 
     /// The PaperFolderCreateArg struct
-    open class PaperFolderCreateArg: CustomStringConvertible {
+    public class PaperFolderCreateArg: CustomStringConvertible, JSONRepresentable {
         /// The name of the new Paper folder.
         public let name: String
         /// The encrypted Paper folder Id where the new Paper folder should be created. The API user has to have write
-        /// access to this folder or error is thrown. If not supplied, the new folder will be created at top level.
+        /// access to this folder or error is thrown. If not supplied, the new folder will be created at top
+        /// level.
         public let parentFolderId: String?
         /// Whether the folder to be created should be a team folder. This value will be ignored if parent_folder_id is
-        /// supplied, as the new folder will inherit the type (private or team folder) from its parent. We will by
-        /// default create a top-level private folder if both parent_folder_id and is_team_folder are not supplied.
+        /// supplied, as the new folder will inherit the type (private or team folder) from its parent. We will
+        /// by default create a top-level private folder if both parent_folder_id and is_team_folder are not
+        /// supplied.
         public let isTeamFolder: Bool?
         public init(name: String, parentFolderId: String? = nil, isTeamFolder: Bool? = nil) {
             stringValidator()(name)
@@ -2015,35 +2436,46 @@ open class Paper {
             self.parentFolderId = parentFolderId
             self.isTeamFolder = isTeamFolder
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateArgSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PaperFolderCreateArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperFolderCreateArg: \(error)"
+            }
         }
     }
-    open class PaperFolderCreateArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperFolderCreateArg) -> JSON {
-            let output = [ 
-            "name": Serialization._StringSerializer.serialize(value.name),
-            "parent_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
-            "is_team_folder": NullableSerializer(Serialization._BoolSerializer).serialize(value.isTeamFolder),
+
+    public class PaperFolderCreateArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperFolderCreateArg) throws -> JSON {
+            let output = [
+                "name": try Serialization._StringSerializer.serialize(value.name),
+                "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+                "is_team_folder": try NullableSerializer(Serialization._BoolSerializer).serialize(value.isTeamFolder),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperFolderCreateArg {
+
+        public func deserialize(_ json: JSON) throws -> PaperFolderCreateArg {
             switch json {
-                case .dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                    let parentFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
-                    let isTeamFolder = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_team_folder"] ?? .null)
-                    return PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                let isTeamFolder = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_team_folder"] ?? .null)
+                return PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperFolderCreateArg.self, json: json)
             }
         }
     }
 
     /// The PaperFolderCreateError union
-    public enum PaperFolderCreateError: CustomStringConvertible {
+    public enum PaperFolderCreateError: CustomStringConvertible, JSONRepresentable {
         /// Your account does not have permissions to perform this action. This may be due to it only having access to
         /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
         /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
@@ -2055,120 +2487,148 @@ open class Paper {
         /// The folder id cannot be decrypted to valid folder id.
         case invalidFolderId
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PaperFolderCreateErrorSerializer().serialize(self)
         }
-    }
-    open class PaperFolderCreateErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperFolderCreateError) -> JSON {
-            switch value {
-                case .insufficientPermissions:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("insufficient_permissions")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-                case .folderNotFound:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("folder_not_found")
-                    return .dictionary(d)
-                case .invalidFolderId:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_folder_id")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperFolderCreateError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PaperFolderCreateError {
+    }
+
+    public class PaperFolderCreateErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperFolderCreateError) throws -> JSON {
+            switch value {
+            case .insufficientPermissions:
+                var d = [String: JSON]()
+                d[".tag"] = .str("insufficient_permissions")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .folderNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("folder_not_found")
+                return .dictionary(d)
+            case .invalidFolderId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_folder_id")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PaperFolderCreateError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "insufficient_permissions":
-                            return PaperFolderCreateError.insufficientPermissions
-                        case "other":
-                            return PaperFolderCreateError.other
-                        case "folder_not_found":
-                            return PaperFolderCreateError.folderNotFound
-                        case "invalid_folder_id":
-                            return PaperFolderCreateError.invalidFolderId
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "insufficient_permissions":
+                    return PaperFolderCreateError.insufficientPermissions
+                case "other":
+                    return PaperFolderCreateError.other
+                case "folder_not_found":
+                    return PaperFolderCreateError.folderNotFound
+                case "invalid_folder_id":
+                    return PaperFolderCreateError.invalidFolderId
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: PaperFolderCreateError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperFolderCreateError.self, json: json)
             }
         }
     }
 
     /// The PaperFolderCreateResult struct
-    open class PaperFolderCreateResult: CustomStringConvertible {
+    public class PaperFolderCreateResult: CustomStringConvertible, JSONRepresentable {
         /// Folder ID of the newly created folder.
         public let folderId: String
         public init(folderId: String) {
             stringValidator()(folderId)
             self.folderId = folderId
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PaperFolderCreateResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PaperFolderCreateResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperFolderCreateResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperFolderCreateResult: \(error)"
+            }
         }
     }
-    open class PaperFolderCreateResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PaperFolderCreateResult) -> JSON {
-            let output = [ 
-            "folder_id": Serialization._StringSerializer.serialize(value.folderId),
+
+    public class PaperFolderCreateResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PaperFolderCreateResult) throws -> JSON {
+            let output = [
+                "folder_id": try Serialization._StringSerializer.serialize(value.folderId),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PaperFolderCreateResult {
+
+        public func deserialize(_ json: JSON) throws -> PaperFolderCreateResult {
             switch json {
-                case .dictionary(let dict):
-                    let folderId = Serialization._StringSerializer.deserialize(dict["folder_id"] ?? .null)
-                    return PaperFolderCreateResult(folderId: folderId)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let folderId = try Serialization._StringSerializer.deserialize(dict["folder_id"] ?? .null)
+                return PaperFolderCreateResult(folderId: folderId)
+            default:
+                throw JSONSerializerError.deserializeError(type: PaperFolderCreateResult.self, json: json)
             }
         }
     }
 
     /// The RemovePaperDocUser struct
-    open class RemovePaperDocUser: Paper.RefPaperDoc {
+    public class RemovePaperDocUser: Paper.RefPaperDoc {
         /// User which should be removed from the Paper doc. Specify only email address or Dropbox account ID.
         public let member: Sharing.MemberSelector
         public init(docId: String, member: Sharing.MemberSelector) {
             self.member = member
             super.init(docId: docId)
         }
-        open override var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(RemovePaperDocUserSerializer().serialize(self)))"
+
+        public override var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try RemovePaperDocUserSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for RemovePaperDocUser: \(error)"
+            }
         }
     }
-    open class RemovePaperDocUserSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: RemovePaperDocUser) -> JSON {
-            let output = [ 
-            "doc_id": Serialization._StringSerializer.serialize(value.docId),
-            "member": Sharing.MemberSelectorSerializer().serialize(value.member),
+
+    public class RemovePaperDocUserSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: RemovePaperDocUser) throws -> JSON {
+            let output = [
+                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> RemovePaperDocUser {
+
+        public func deserialize(_ json: JSON) throws -> RemovePaperDocUser {
             switch json {
-                case .dictionary(let dict):
-                    let docId = Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                    let member = Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                    return RemovePaperDocUser(docId: docId, member: member)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                return RemovePaperDocUser(docId: docId, member: member)
+            default:
+                throw JSONSerializerError.deserializeError(type: RemovePaperDocUser.self, json: json)
             }
         }
     }
 
     /// Sharing policy of Paper doc.
-    open class SharingPolicy: CustomStringConvertible {
+    public class SharingPolicy: CustomStringConvertible, JSONRepresentable {
         /// This value applies to the non-team members.
         public let publicSharingPolicy: Paper.SharingPublicPolicyType?
         /// This value applies to the team members only. The value is null for all personal accounts.
@@ -2177,33 +2637,45 @@ open class Paper {
             self.publicSharingPolicy = publicSharingPolicy
             self.teamSharingPolicy = teamSharingPolicy
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SharingPolicySerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try SharingPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharingPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SharingPolicy: \(error)"
+            }
         }
     }
-    open class SharingPolicySerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SharingPolicy) -> JSON {
-            let output = [ 
-            "public_sharing_policy": NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).serialize(value.publicSharingPolicy),
-            "team_sharing_policy": NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).serialize(value.teamSharingPolicy),
+
+    public class SharingPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SharingPolicy) throws -> JSON {
+            let output = [
+                "public_sharing_policy": try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).serialize(value.publicSharingPolicy),
+                "team_sharing_policy": try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).serialize(value.teamSharingPolicy),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> SharingPolicy {
+
+        public func deserialize(_ json: JSON) throws -> SharingPolicy {
             switch json {
-                case .dictionary(let dict):
-                    let publicSharingPolicy = NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).deserialize(dict["public_sharing_policy"] ?? .null)
-                    let teamSharingPolicy = NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).deserialize(dict["team_sharing_policy"] ?? .null)
-                    return SharingPolicy(publicSharingPolicy: publicSharingPolicy, teamSharingPolicy: teamSharingPolicy)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let publicSharingPolicy = try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer())
+                    .deserialize(dict["public_sharing_policy"] ?? .null)
+                let teamSharingPolicy = try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).deserialize(dict["team_sharing_policy"] ?? .null)
+                return SharingPolicy(publicSharingPolicy: publicSharingPolicy, teamSharingPolicy: teamSharingPolicy)
+            default:
+                throw JSONSerializerError.deserializeError(type: SharingPolicy.self, json: json)
             }
         }
     }
 
     /// The sharing policy type of the Paper doc.
-    public enum SharingTeamPolicyType: CustomStringConvertible {
+    public enum SharingTeamPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Users who have a link to this doc can edit it.
         case peopleWithLinkCanEdit
         /// Users who have a link to this doc can view and comment on it.
@@ -2211,50 +2683,60 @@ open class Paper {
         /// Users must be explicitly invited to this doc.
         case inviteOnly
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SharingTeamPolicyTypeSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try SharingTeamPolicyTypeSerializer().serialize(self)
         }
-    }
-    open class SharingTeamPolicyTypeSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SharingTeamPolicyType) -> JSON {
-            switch value {
-                case .peopleWithLinkCanEdit:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("people_with_link_can_edit")
-                    return .dictionary(d)
-                case .peopleWithLinkCanViewAndComment:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("people_with_link_can_view_and_comment")
-                    return .dictionary(d)
-                case .inviteOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invite_only")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharingTeamPolicyTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SharingTeamPolicyType: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> SharingTeamPolicyType {
+    }
+
+    public class SharingTeamPolicyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SharingTeamPolicyType) throws -> JSON {
+            switch value {
+            case .peopleWithLinkCanEdit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("people_with_link_can_edit")
+                return .dictionary(d)
+            case .peopleWithLinkCanViewAndComment:
+                var d = [String: JSON]()
+                d[".tag"] = .str("people_with_link_can_view_and_comment")
+                return .dictionary(d)
+            case .inviteOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invite_only")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> SharingTeamPolicyType {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "people_with_link_can_edit":
-                            return SharingTeamPolicyType.peopleWithLinkCanEdit
-                        case "people_with_link_can_view_and_comment":
-                            return SharingTeamPolicyType.peopleWithLinkCanViewAndComment
-                        case "invite_only":
-                            return SharingTeamPolicyType.inviteOnly
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "people_with_link_can_edit":
+                    return SharingTeamPolicyType.peopleWithLinkCanEdit
+                case "people_with_link_can_view_and_comment":
+                    return SharingTeamPolicyType.peopleWithLinkCanViewAndComment
+                case "invite_only":
+                    return SharingTeamPolicyType.inviteOnly
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: SharingTeamPolicyType.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: SharingTeamPolicyType.self, json: json)
             }
         }
     }
 
     /// The SharingPublicPolicyType union
-    public enum SharingPublicPolicyType: CustomStringConvertible {
+    public enum SharingPublicPolicyType: CustomStringConvertible, JSONRepresentable {
         /// Users who have a link to this doc can edit it.
         case peopleWithLinkCanEdit
         /// Users who have a link to this doc can view and comment on it.
@@ -2264,56 +2746,66 @@ open class Paper {
         /// Value used to indicate that doc sharing is enabled only within team.
         case disabled
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SharingPublicPolicyTypeSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try SharingPublicPolicyTypeSerializer().serialize(self)
         }
-    }
-    open class SharingPublicPolicyTypeSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SharingPublicPolicyType) -> JSON {
-            switch value {
-                case .peopleWithLinkCanEdit:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("people_with_link_can_edit")
-                    return .dictionary(d)
-                case .peopleWithLinkCanViewAndComment:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("people_with_link_can_view_and_comment")
-                    return .dictionary(d)
-                case .inviteOnly:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invite_only")
-                    return .dictionary(d)
-                case .disabled:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("disabled")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharingPublicPolicyTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SharingPublicPolicyType: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> SharingPublicPolicyType {
+    }
+
+    public class SharingPublicPolicyTypeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SharingPublicPolicyType) throws -> JSON {
+            switch value {
+            case .peopleWithLinkCanEdit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("people_with_link_can_edit")
+                return .dictionary(d)
+            case .peopleWithLinkCanViewAndComment:
+                var d = [String: JSON]()
+                d[".tag"] = .str("people_with_link_can_view_and_comment")
+                return .dictionary(d)
+            case .inviteOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invite_only")
+                return .dictionary(d)
+            case .disabled:
+                var d = [String: JSON]()
+                d[".tag"] = .str("disabled")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> SharingPublicPolicyType {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "people_with_link_can_edit":
-                            return SharingPublicPolicyType.peopleWithLinkCanEdit
-                        case "people_with_link_can_view_and_comment":
-                            return SharingPublicPolicyType.peopleWithLinkCanViewAndComment
-                        case "invite_only":
-                            return SharingPublicPolicyType.inviteOnly
-                        case "disabled":
-                            return SharingPublicPolicyType.disabled
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "people_with_link_can_edit":
+                    return SharingPublicPolicyType.peopleWithLinkCanEdit
+                case "people_with_link_can_view_and_comment":
+                    return SharingPublicPolicyType.peopleWithLinkCanViewAndComment
+                case "invite_only":
+                    return SharingPublicPolicyType.inviteOnly
+                case "disabled":
+                    return SharingPublicPolicyType.disabled
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: SharingPublicPolicyType.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: SharingPublicPolicyType.self, json: json)
             }
         }
     }
 
     /// The UserInfoWithPermissionLevel struct
-    open class UserInfoWithPermissionLevel: CustomStringConvertible {
+    public class UserInfoWithPermissionLevel: CustomStringConvertible, JSONRepresentable {
         /// User shared on the Paper doc.
         public let user: Sharing.UserInfo
         /// Permission level for the user.
@@ -2322,33 +2814,44 @@ open class Paper {
             self.user = user
             self.permissionLevel = permissionLevel
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserInfoWithPermissionLevelSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try UserInfoWithPermissionLevelSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoWithPermissionLevelSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserInfoWithPermissionLevel: \(error)"
+            }
         }
     }
-    open class UserInfoWithPermissionLevelSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserInfoWithPermissionLevel) -> JSON {
-            let output = [ 
-            "user": Sharing.UserInfoSerializer().serialize(value.user),
-            "permission_level": Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+
+    public class UserInfoWithPermissionLevelSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserInfoWithPermissionLevel) throws -> JSON {
+            let output = [
+                "user": try Sharing.UserInfoSerializer().serialize(value.user),
+                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> UserInfoWithPermissionLevel {
+
+        public func deserialize(_ json: JSON) throws -> UserInfoWithPermissionLevel {
             switch json {
-                case .dictionary(let dict):
-                    let user = Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
-                    let permissionLevel = Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
-                    return UserInfoWithPermissionLevel(user: user, permissionLevel: permissionLevel)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let user = try Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
+                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
+                return UserInfoWithPermissionLevel(user: user, permissionLevel: permissionLevel)
+            default:
+                throw JSONSerializerError.deserializeError(type: UserInfoWithPermissionLevel.self, json: json)
             }
         }
     }
 
     /// The UserOnPaperDocFilter union
-    public enum UserOnPaperDocFilter: CustomStringConvertible {
+    public enum UserOnPaperDocFilter: CustomStringConvertible, JSONRepresentable {
         /// all users who have visited the Paper doc.
         case visited
         /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper doc as well as
@@ -2357,48 +2860,57 @@ open class Paper {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try UserOnPaperDocFilterSerializer().serialize(self)
+        }
+
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserOnPaperDocFilterSerializer().serialize(self)))"
-        }
-    }
-    open class UserOnPaperDocFilterSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserOnPaperDocFilter) -> JSON {
-            switch value {
-                case .visited:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("visited")
-                    return .dictionary(d)
-                case .shared:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("shared")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> UserOnPaperDocFilter {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "visited":
-                            return UserOnPaperDocFilter.visited
-                        case "shared":
-                            return UserOnPaperDocFilter.shared
-                        case "other":
-                            return UserOnPaperDocFilter.other
-                        default:
-                            return UserOnPaperDocFilter.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserOnPaperDocFilterSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserOnPaperDocFilter: \(error)"
             }
         }
     }
 
+    public class UserOnPaperDocFilterSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserOnPaperDocFilter) throws -> JSON {
+            switch value {
+            case .visited:
+                var d = [String: JSON]()
+                d[".tag"] = .str("visited")
+                return .dictionary(d)
+            case .shared:
+                var d = [String: JSON]()
+                d[".tag"] = .str("shared")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UserOnPaperDocFilter {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "visited":
+                    return UserOnPaperDocFilter.visited
+                case "shared":
+                    return UserOnPaperDocFilter.shared
+                case "other":
+                    return UserOnPaperDocFilter.other
+                default:
+                    return UserOnPaperDocFilter.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UserOnPaperDocFilter.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -2410,9 +2922,11 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsCreate = Route(
         name: "docs/create",
@@ -2422,9 +2936,11 @@ open class Paper {
         argSerializer: Paper.PaperDocCreateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocCreateErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "upload"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .upload
+        )
     )
     static let docsDownload = Route(
         name: "docs/download",
@@ -2434,9 +2950,11 @@ open class Paper {
         argSerializer: Paper.PaperDocExportSerializer(),
         responseSerializer: Paper.PaperDocExportResultSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "download"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .download
+        )
     )
     static let docsFolderUsersList = Route(
         name: "docs/folder_users/list",
@@ -2446,9 +2964,11 @@ open class Paper {
         argSerializer: Paper.ListUsersOnFolderArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsFolderUsersListContinue = Route(
         name: "docs/folder_users/list/continue",
@@ -2458,9 +2978,11 @@ open class Paper {
         argSerializer: Paper.ListUsersOnFolderContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsGetFolderInfo = Route(
         name: "docs/get_folder_info",
@@ -2470,9 +2992,11 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.FoldersContainingPaperDocSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsList = Route(
         name: "docs/list",
@@ -2482,9 +3006,11 @@ open class Paper {
         argSerializer: Paper.ListPaperDocsArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsListContinue = Route(
         name: "docs/list/continue",
@@ -2494,9 +3020,11 @@ open class Paper {
         argSerializer: Paper.ListPaperDocsContinueArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Paper.ListDocsCursorErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsPermanentlyDelete = Route(
         name: "docs/permanently_delete",
@@ -2506,9 +3034,11 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsSharingPolicyGet = Route(
         name: "docs/sharing_policy/get",
@@ -2518,9 +3048,11 @@ open class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.SharingPolicySerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsSharingPolicySet = Route(
         name: "docs/sharing_policy/set",
@@ -2530,9 +3062,11 @@ open class Paper {
         argSerializer: Paper.PaperDocSharingPolicySerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsUpdate = Route(
         name: "docs/update",
@@ -2542,9 +3076,11 @@ open class Paper {
         argSerializer: Paper.PaperDocUpdateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocUpdateErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "upload"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .upload
+        )
     )
     static let docsUsersAdd = Route(
         name: "docs/users/add",
@@ -2554,9 +3090,11 @@ open class Paper {
         argSerializer: Paper.AddPaperDocUserSerializer(),
         responseSerializer: ArraySerializer(Paper.AddPaperDocUserMemberResultSerializer()),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsUsersList = Route(
         name: "docs/users/list",
@@ -2566,9 +3104,11 @@ open class Paper {
         argSerializer: Paper.ListUsersOnPaperDocArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsUsersListContinue = Route(
         name: "docs/users/list/continue",
@@ -2578,9 +3118,11 @@ open class Paper {
         argSerializer: Paper.ListUsersOnPaperDocContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let docsUsersRemove = Route(
         name: "docs/users/remove",
@@ -2590,9 +3132,11 @@ open class Paper {
         argSerializer: Paper.RemovePaperDocUserSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
     static let foldersCreate = Route(
         name: "folders/create",
@@ -2602,8 +3146,10 @@ open class Paper {
         argSerializer: Paper.PaperFolderCreateArgSerializer(),
         responseSerializer: Paper.PaperFolderCreateResultSerializer(),
         errorSerializer: Paper.PaperFolderCreateErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

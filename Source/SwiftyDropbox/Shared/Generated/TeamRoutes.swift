@@ -7,45 +7,72 @@
 import Foundation
 
 /// Routes for the team namespace
-open class TeamRoutes {
+/// For Objective-C compatible routes see DBTeamRoutes
+public class TeamRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 
     /// List all device sessions of a team's member.
+    ///
+    /// - scope: sessions.list
     ///
     /// - parameter teamMemberId: The team's member id.
     /// - parameter includeWebSessions: Whether to list web sessions of the team's member.
     /// - parameter includeDesktopClients: Whether to list linked desktop devices of the team's member.
     /// - parameter includeMobileClients: Whether to list linked mobile devices of the team's member.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListMemberDevicesResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ListMemberDevicesResult` object on
     /// success or a `Team.ListMemberDevicesError` object on failure.
-    @discardableResult open func devicesListMemberDevices(teamMemberId: String, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) -> RpcRequest<Team.ListMemberDevicesResultSerializer, Team.ListMemberDevicesErrorSerializer> {
+    @discardableResult public func devicesListMemberDevices(
+        teamMemberId: String,
+        includeWebSessions: Bool = true,
+        includeDesktopClients: Bool = true,
+        includeMobileClients: Bool = true
+    ) -> RpcRequest<Team.ListMemberDevicesResultSerializer, Team.ListMemberDevicesErrorSerializer> {
         let route = Team.devicesListMemberDevices
-        let serverArgs = Team.ListMemberDevicesArg(teamMemberId: teamMemberId, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
+        let serverArgs = Team.ListMemberDevicesArg(
+            teamMemberId: teamMemberId,
+            includeWebSessions: includeWebSessions,
+            includeDesktopClients: includeDesktopClients,
+            includeMobileClients: includeMobileClients
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// List all device sessions of a team. Permission : Team member file access.
     ///
+    /// - scope: sessions.list
+    ///
     /// - parameter cursor: At the first call to the devicesListMembersDevices the cursor shouldn't be passed. Then, if
-    /// the result of the call includes a cursor, the following requests should include the received cursors in order to
-    /// receive the next sub list of team devices.
+    /// the result of the call includes a cursor, the following requests should include the received cursors in
+    /// order to receive the next sub list of team devices.
     /// - parameter includeWebSessions: Whether to list web sessions of the team members.
     /// - parameter includeDesktopClients: Whether to list desktop clients of the team members.
     /// - parameter includeMobileClients: Whether to list mobile clients of the team members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListMembersDevicesResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ListMembersDevicesResult` object on
     /// success or a `Team.ListMembersDevicesError` object on failure.
-    @discardableResult open func devicesListMembersDevices(cursor: String? = nil, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) -> RpcRequest<Team.ListMembersDevicesResultSerializer, Team.ListMembersDevicesErrorSerializer> {
+    @discardableResult public func devicesListMembersDevices(
+        cursor: String? = nil,
+        includeWebSessions: Bool = true,
+        includeDesktopClients: Bool = true,
+        includeMobileClients: Bool = true
+    ) -> RpcRequest<Team.ListMembersDevicesResultSerializer, Team.ListMembersDevicesErrorSerializer> {
         let route = Team.devicesListMembersDevices
-        let serverArgs = Team.ListMembersDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
+        let serverArgs = Team.ListMembersDevicesArg(
+            cursor: cursor,
+            includeWebSessions: includeWebSessions,
+            includeDesktopClients: includeDesktopClients,
+            includeMobileClients: includeMobileClients
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// List all device sessions of a team. Permission : Team member file access.
+    ///
+    /// - scope: sessions.list
     ///
     /// - parameter cursor: At the first call to the devicesListTeamDevices the cursor shouldn't be passed. Then, if the
     /// result of the call includes a cursor, the following requests should include the received cursors in order to
@@ -54,22 +81,37 @@ open class TeamRoutes {
     /// - parameter includeDesktopClients: Whether to list desktop clients of the team members.
     /// - parameter includeMobileClients: Whether to list mobile clients of the team members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamDevicesResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ListTeamDevicesResult` object on
     /// success or a `Team.ListTeamDevicesError` object on failure.
-    @available(*, unavailable, message:"devicesListTeamDevices is deprecated. Use devicesListMembersDevices.")
-    @discardableResult open func devicesListTeamDevices(cursor: String? = nil, includeWebSessions: Bool = true, includeDesktopClients: Bool = true, includeMobileClients: Bool = true) -> RpcRequest<Team.ListTeamDevicesResultSerializer, Team.ListTeamDevicesErrorSerializer> {
+    @available(*, unavailable, message: "devicesListTeamDevices is deprecated. Use devicesListMembersDevices.")
+    @discardableResult public func devicesListTeamDevices(
+        cursor: String? = nil,
+        includeWebSessions: Bool = true,
+        includeDesktopClients: Bool = true,
+        includeMobileClients: Bool = true
+    ) -> RpcRequest<Team.ListTeamDevicesResultSerializer, Team.ListTeamDevicesErrorSerializer> {
         let route = Team.devicesListTeamDevices
-        let serverArgs = Team.ListTeamDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
+        let serverArgs = Team.ListTeamDevicesArg(
+            cursor: cursor,
+            includeWebSessions: includeWebSessions,
+            includeDesktopClients: includeDesktopClients,
+            includeMobileClients: includeMobileClients
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Revoke a device session of a team's member.
     ///
+    /// - scope: sessions.modify
+    ///
     /// - parameter revokeDeviceSessionArg: The RevokeDeviceSessionArg union
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeDeviceSessionError` object on failure.
-    @discardableResult open func devicesRevokeDeviceSession(revokeDeviceSessionArg: Team.RevokeDeviceSessionArg) -> RpcRequest<VoidSerializer, Team.RevokeDeviceSessionErrorSerializer> {
+    @discardableResult public func devicesRevokeDeviceSession(
+        revokeDeviceSessionArg: Team
+            .RevokeDeviceSessionArg
+    ) -> RpcRequest<VoidSerializer, Team.RevokeDeviceSessionErrorSerializer> {
         let route = Team.devicesRevokeDeviceSession
         let serverArgs = revokeDeviceSessionArg
         return client.request(route, serverArgs: serverArgs)
@@ -77,10 +119,13 @@ open class TeamRoutes {
 
     /// Revoke a list of device sessions of team members.
     ///
+    /// - scope: sessions.modify
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.RevokeDeviceSessionBatchResult`
-    /// object on success or a `Team.RevokeDeviceSessionBatchError` object on failure.
-    @discardableResult open func devicesRevokeDeviceSessionBatch(revokeDevices: Array<Team.RevokeDeviceSessionArg>) -> RpcRequest<Team.RevokeDeviceSessionBatchResultSerializer, Team.RevokeDeviceSessionBatchErrorSerializer> {
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.RevokeDeviceSessionBatchResult` object
+    /// on success or a `Team.RevokeDeviceSessionBatchError` object on failure.
+    @discardableResult public func devicesRevokeDeviceSessionBatch(revokeDevices: [Team.RevokeDeviceSessionArg])
+        -> RpcRequest<Team.RevokeDeviceSessionBatchResultSerializer, Team.RevokeDeviceSessionBatchErrorSerializer> {
         let route = Team.devicesRevokeDeviceSessionBatch
         let serverArgs = Team.RevokeDeviceSessionBatchArg(revokeDevices: revokeDevices)
         return client.request(route, serverArgs: serverArgs)
@@ -89,12 +134,15 @@ open class TeamRoutes {
     /// Get the values for one or more featues. This route allows you to check your account's capability for what
     /// feature you can access or what value you have for certain features. Permission : Team information.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter features: A list of features in Feature. If the list is empty, this route will return
     /// FeaturesGetValuesBatchError.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.FeaturesGetValuesBatchResult` object
+    /// - returns: Through the response callback, the caller will receive a `Team.FeaturesGetValuesBatchResult` object
     /// on success or a `Team.FeaturesGetValuesBatchError` object on failure.
-    @discardableResult open func featuresGetValues(features: Array<Team.Feature>) -> RpcRequest<Team.FeaturesGetValuesBatchResultSerializer, Team.FeaturesGetValuesBatchErrorSerializer> {
+    @discardableResult public func featuresGetValues(features: [Team.Feature])
+        -> RpcRequest<Team.FeaturesGetValuesBatchResultSerializer, Team.FeaturesGetValuesBatchErrorSerializer> {
         let route = Team.featuresGetValues
         let serverArgs = Team.FeaturesGetValuesBatchArg(features: features)
         return client.request(route, serverArgs: serverArgs)
@@ -102,38 +150,57 @@ open class TeamRoutes {
 
     /// Retrieves information about a team.
     ///
+    /// - scope: team_info.read
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamGetInfoResult` object on success
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamGetInfoResult` object on success
     /// or a `Void` object on failure.
-    @discardableResult open func getInfo() -> RpcRequest<Team.TeamGetInfoResultSerializer, VoidSerializer> {
+    @discardableResult public func getInfo() -> RpcRequest<Team.TeamGetInfoResultSerializer, VoidSerializer> {
         let route = Team.getInfo
         return client.request(route)
     }
 
     /// Creates a new, empty group, with a requested name. Permission : Team member management.
     ///
+    /// - scope: groups.write
+    ///
     /// - parameter groupName: Group name.
     /// - parameter addCreatorAsOwner: Automatically add the creator of the group.
     /// - parameter groupExternalId: The creator of a team can associate an arbitrary external ID to the group.
     /// - parameter groupManagementType: Whether the team can be managed by selected users, or only by team admins.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupCreateError` object on failure.
-    @discardableResult open func groupsCreate(groupName: String, addCreatorAsOwner: Bool = false, groupExternalId: String? = nil, groupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
+    @discardableResult public func groupsCreate(
+        groupName: String,
+        addCreatorAsOwner: Bool = false,
+        groupExternalId: String? = nil,
+        groupManagementType: TeamCommon.GroupManagementType? = nil
+    ) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer> {
         let route = Team.groupsCreate
-        let serverArgs = Team.GroupCreateArg(groupName: groupName, addCreatorAsOwner: addCreatorAsOwner, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
+        let serverArgs = Team.GroupCreateArg(
+            groupName: groupName,
+            addCreatorAsOwner: addCreatorAsOwner,
+            groupExternalId: groupExternalId,
+            groupManagementType: groupManagementType
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Deletes a group. The group is deleted immediately. However the revoking of group-owned resources may take
-    /// additional time. Use the groupsJobStatusGet to determine whether this process has completed. Permission : Team
-    /// member management.
+    /// additional time. Use the groupsJobStatusGet to determine whether this process has completed. Permission :
+    /// Team member management.
+    ///
+    /// - scope: groups.write
     ///
     /// - parameter groupSelector: Argument for selecting a single group, either by group_id or by external group ID.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.GroupDeleteError` object on failure.
-    @discardableResult open func groupsDelete(groupSelector: Team.GroupSelector) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.GroupDeleteErrorSerializer> {
+    @discardableResult public func groupsDelete(
+        groupSelector: Team
+            .GroupSelector
+    ) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.GroupDeleteErrorSerializer> {
         let route = Team.groupsDelete
         let serverArgs = groupSelector
         return client.request(route, serverArgs: serverArgs)
@@ -142,26 +209,33 @@ open class TeamRoutes {
     /// Retrieves information about one or more groups. Note that the optional field  members in GroupFullInfo is not
     /// returned for system-managed groups. Permission : Team Information.
     ///
+    /// - scope: groups.read
+    ///
     /// - parameter groupsSelector: Argument for selecting a list of groups, either by group_ids, or external group IDs.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
     /// success or a `Team.GroupsGetInfoError` object on failure.
-    @discardableResult open func groupsGetInfo(groupsSelector: Team.GroupsSelector) -> RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupsGetInfoErrorSerializer> {
+    @discardableResult public func groupsGetInfo(
+        groupsSelector: Team
+            .GroupsSelector
+    ) -> RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupsGetInfoErrorSerializer> {
         let route = Team.groupsGetInfo
         let serverArgs = groupsSelector
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Once an async_job_id is returned from groupsDelete, groupsMembersAdd , or groupsMembersRemove use this method to
-    /// poll the status of granting/revoking group members' access to group-owned resources. Permission : Team member
-    /// management.
+    /// poll the status of granting/revoking group members' access to group-owned resources. Permission : Team
+    /// member management.
+    ///
+    /// - scope: groups.write
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success
-    /// or a `Team.GroupsPollError` object on failure.
-    @discardableResult open func groupsJobStatusGet(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Team.GroupsPollErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success or
+    /// a `Team.GroupsPollError` object on failure.
+    @discardableResult public func groupsJobStatusGet(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Team.GroupsPollErrorSerializer> {
         let route = Team.groupsJobStatusGet
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -169,11 +243,13 @@ open class TeamRoutes {
 
     /// Lists groups on a team. Permission : Team Information.
     ///
+    /// - scope: groups.read
+    ///
     /// - parameter limit: Number of results to return per call.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success
-    /// or a `Void` object on failure.
-    @discardableResult open func groupsList(limit: UInt32 = 1000) -> RpcRequest<Team.GroupsListResultSerializer, VoidSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success or
+    /// a `Void` object on failure.
+    @discardableResult public func groupsList(limit: UInt32 = 1_000) -> RpcRequest<Team.GroupsListResultSerializer, VoidSerializer> {
         let route = Team.groupsList
         let serverArgs = Team.GroupsListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -182,26 +258,34 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from groupsList, use this to paginate through all groups. Permission : Team
     /// Information.
     ///
+    /// - scope: groups.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of groups.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success
-    /// or a `Team.GroupsListContinueError` object on failure.
-    @discardableResult open func groupsListContinue(cursor: String) -> RpcRequest<Team.GroupsListResultSerializer, Team.GroupsListContinueErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupsListResult` object on success or
+    /// a `Team.GroupsListContinueError` object on failure.
+    @discardableResult public func groupsListContinue(cursor: String) -> RpcRequest<Team.GroupsListResultSerializer, Team.GroupsListContinueErrorSerializer> {
         let route = Team.groupsListContinue
         let serverArgs = Team.GroupsListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Adds members to a group. The members are added immediately. However the granting of group-owned resources may
-    /// take additional time. Use the groupsJobStatusGet to determine whether this process has completed. Permission :
-    /// Team member management.
+    /// take additional time. Use the groupsJobStatusGet to determine whether this process has completed. Permission
+    /// : Team member management.
+    ///
+    /// - scope: groups.write
     ///
     /// - parameter group: Group to which users will be added.
     /// - parameter members: List of users to be added to the group.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersAddError` object on failure.
-    @discardableResult open func groupsMembersAdd(group: Team.GroupSelector, members: Array<Team.MemberAccess>, returnMembers: Bool = true) -> RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersAddErrorSerializer> {
+    @discardableResult public func groupsMembersAdd(
+        group: Team.GroupSelector,
+        members: [Team.MemberAccess],
+        returnMembers: Bool = true
+    ) -> RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersAddErrorSerializer> {
         let route = Team.groupsMembersAdd
         let serverArgs = Team.GroupMembersAddArg(group: group, members: members, returnMembers: returnMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -209,12 +293,17 @@ open class TeamRoutes {
 
     /// Lists members of a group. Permission : Team Information.
     ///
+    /// - scope: groups.read
+    ///
     /// - parameter group: The group whose members are to be listed.
     /// - parameter limit: Number of results to return per call.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsMembersListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupsMembersListResult` object on
     /// success or a `Team.GroupSelectorError` object on failure.
-    @discardableResult open func groupsMembersList(group: Team.GroupSelector, limit: UInt32 = 1000) -> RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupSelectorErrorSerializer> {
+    @discardableResult public func groupsMembersList(
+        group: Team.GroupSelector,
+        limit: UInt32 = 1_000
+    ) -> RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupSelectorErrorSerializer> {
         let route = Team.groupsMembersList
         let serverArgs = Team.GroupsMembersListArg(group: group, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -223,11 +312,14 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from groupsMembersList, use this to paginate through all members of the group.
     /// Permission : Team information.
     ///
+    /// - scope: groups.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of groups.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupsMembersListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupsMembersListResult` object on
     /// success or a `Team.GroupsMembersListContinueError` object on failure.
-    @discardableResult open func groupsMembersListContinue(cursor: String) -> RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupsMembersListContinueErrorSerializer> {
+    @discardableResult public func groupsMembersListContinue(cursor: String)
+        -> RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupsMembersListContinueErrorSerializer> {
         let route = Team.groupsMembersListContinue
         let serverArgs = Team.GroupsMembersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -235,15 +327,21 @@ open class TeamRoutes {
 
     /// Removes members from a group. The members are removed immediately. However the revoking of group-owned resources
     /// may take additional time. Use the groupsJobStatusGet to determine whether this process has completed. This
-    /// method permits removing the only owner of a group, even in cases where this is not possible via the web client.
-    /// Permission : Team member management.
+    /// method permits removing the only owner of a group, even in cases where this is not possible via the web
+    /// client. Permission : Team member management.
+    ///
+    /// - scope: groups.write
     ///
     /// - parameter group: Group from which users will be removed.
     /// - parameter users: List of users to be removed from the group.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersRemoveError` object on failure.
-    @discardableResult open func groupsMembersRemove(group: Team.GroupSelector, users: Array<Team.UserSelectorArg>, returnMembers: Bool = true) -> RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersRemoveErrorSerializer> {
+    @discardableResult public func groupsMembersRemove(
+        group: Team.GroupSelector,
+        users: [Team.UserSelectorArg],
+        returnMembers: Bool = true
+    ) -> RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersRemoveErrorSerializer> {
         let route = Team.groupsMembersRemove
         let serverArgs = Team.GroupMembersRemoveArg(group: group, users: users, returnMembers: returnMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -251,13 +349,20 @@ open class TeamRoutes {
 
     /// Sets a member's access type in a group. Permission : Team member management.
     ///
+    /// - scope: groups.write
+    ///
     /// - parameter accessType: New group access type the user will have.
     /// - parameter returnMembers: Whether to return the list of members in the group.  Note that the default value will
     /// cause all the group members  to be returned in the response. This may take a long time for large groups.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
     /// success or a `Team.GroupMemberSetAccessTypeError` object on failure.
-    @discardableResult open func groupsMembersSetAccessType(group: Team.GroupSelector, user: Team.UserSelectorArg, accessType: Team.GroupAccessType, returnMembers: Bool = true) -> RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupMemberSetAccessTypeErrorSerializer> {
+    @discardableResult public func groupsMembersSetAccessType(
+        group: Team.GroupSelector,
+        user: Team.UserSelectorArg,
+        accessType: Team.GroupAccessType,
+        returnMembers: Bool = true
+    ) -> RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupMemberSetAccessTypeErrorSerializer> {
         let route = Team.groupsMembersSetAccessType
         let serverArgs = Team.GroupMembersSetAccessTypeArg(group: group, user: user, accessType: accessType, returnMembers: returnMembers)
         return client.request(route, serverArgs: serverArgs)
@@ -265,22 +370,38 @@ open class TeamRoutes {
 
     /// Updates a group's name and/or external ID. Permission : Team member management.
     ///
+    /// - scope: groups.write
+    ///
     /// - parameter group: Specify a group.
     /// - parameter newGroupName: Optional argument. Set group name to this if provided.
     /// - parameter newGroupExternalId: Optional argument. New group external ID. If the argument is None, the group's
     /// external_id won't be updated. If the argument is empty string, the group's external id will be cleared.
     /// - parameter newGroupManagementType: Set new group management type, if provided.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupUpdateError` object on failure.
-    @discardableResult open func groupsUpdate(group: Team.GroupSelector, returnMembers: Bool = true, newGroupName: String? = nil, newGroupExternalId: String? = nil, newGroupManagementType: TeamCommon.GroupManagementType? = nil) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
+    @discardableResult public func groupsUpdate(
+        group: Team.GroupSelector,
+        returnMembers: Bool = true,
+        newGroupName: String? = nil,
+        newGroupExternalId: String? = nil,
+        newGroupManagementType: TeamCommon.GroupManagementType? = nil
+    ) -> RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer> {
         let route = Team.groupsUpdate
-        let serverArgs = Team.GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
+        let serverArgs = Team.GroupUpdateArgs(
+            group: group,
+            returnMembers: returnMembers,
+            newGroupName: newGroupName,
+            newGroupExternalId: newGroupExternalId,
+            newGroupManagementType: newGroupManagementType
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Creates new legal hold policy. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
     /// Team member file access.
+    ///
+    /// - scope: team_data.governance.write
     ///
     /// - parameter name: Policy name.
     /// - parameter description_: A description of the legal hold policy.
@@ -288,9 +409,15 @@ open class TeamRoutes {
     /// - parameter startDate: start date of the legal hold policy.
     /// - parameter endDate: end date of the legal hold policy.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsPolicyCreateError` object on failure.
-    @discardableResult open func legalHoldsCreatePolicy(name: String, members: Array<String>, description_: String? = nil, startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyCreateErrorSerializer> {
+    @discardableResult public func legalHoldsCreatePolicy(
+        name: String,
+        members: [String],
+        description_: String? = nil,
+        startDate: Date? = nil,
+        endDate: Date? = nil
+    ) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyCreateErrorSerializer> {
         let route = Team.legalHoldsCreatePolicy
         let serverArgs = Team.LegalHoldsPolicyCreateArg(name: name, members: members, description_: description_, startDate: startDate, endDate: endDate)
         return client.request(route, serverArgs: serverArgs)
@@ -299,11 +426,13 @@ open class TeamRoutes {
     /// Gets a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission : Team
     /// member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter id: The legal hold Id.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsGetPolicyError` object on failure.
-    @discardableResult open func legalHoldsGetPolicy(id: String) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsGetPolicyErrorSerializer> {
+    @discardableResult public func legalHoldsGetPolicy(id: String) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsGetPolicyErrorSerializer> {
         let route = Team.legalHoldsGetPolicy
         let serverArgs = Team.LegalHoldsGetPolicyArg(id: id)
         return client.request(route, serverArgs: serverArgs)
@@ -312,11 +441,14 @@ open class TeamRoutes {
     /// List the file metadata that's under the hold. Note: Legal Holds is a paid add-on. Not all teams have the
     /// feature. Permission : Team member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter id: The legal hold Id.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
     /// object on success or a `Team.LegalHoldsListHeldRevisionsError` object on failure.
-    @discardableResult open func legalHoldsListHeldRevisions(id: String) -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
+    @discardableResult public func legalHoldsListHeldRevisions(id: String)
+        -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
         let route = Team.legalHoldsListHeldRevisions
         let serverArgs = Team.LegalHoldsListHeldRevisionsArg(id: id)
         return client.request(route, serverArgs: serverArgs)
@@ -325,13 +457,18 @@ open class TeamRoutes {
     /// Continue listing the file metadata that's under the hold. Note: Legal Holds is a paid add-on. Not all teams have
     /// the feature. Permission : Team member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter id: The legal hold Id.
     /// - parameter cursor: The cursor idicates where to continue reading file metadata entries for the next API call.
     /// When there are no more entries, the cursor will return none.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListHeldRevisionResult`
     /// object on success or a `Team.LegalHoldsListHeldRevisionsError` object on failure.
-    @discardableResult open func legalHoldsListHeldRevisionsContinue(id: String, cursor: String? = nil) -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
+    @discardableResult public func legalHoldsListHeldRevisionsContinue(
+        id: String,
+        cursor: String? = nil
+    ) -> RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer> {
         let route = Team.legalHoldsListHeldRevisionsContinue
         let serverArgs = Team.LegalHoldsListHeldRevisionsContinueArg(id: id, cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -340,11 +477,14 @@ open class TeamRoutes {
     /// Lists legal holds on a team. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
     /// Team member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter includeReleased: Whether to return holds that were released.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListPoliciesResult` object
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldsListPoliciesResult` object
     /// on success or a `Team.LegalHoldsListPoliciesError` object on failure.
-    @discardableResult open func legalHoldsListPolicies(includeReleased: Bool = false) -> RpcRequest<Team.LegalHoldsListPoliciesResultSerializer, Team.LegalHoldsListPoliciesErrorSerializer> {
+    @discardableResult public func legalHoldsListPolicies(includeReleased: Bool = false)
+        -> RpcRequest<Team.LegalHoldsListPoliciesResultSerializer, Team.LegalHoldsListPoliciesErrorSerializer> {
         let route = Team.legalHoldsListPolicies
         let serverArgs = Team.LegalHoldsListPoliciesArg(includeReleased: includeReleased)
         return client.request(route, serverArgs: serverArgs)
@@ -353,11 +493,13 @@ open class TeamRoutes {
     /// Releases a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission :
     /// Team member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter id: The legal hold Id.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.LegalHoldsPolicyReleaseError` object on failure.
-    @discardableResult open func legalHoldsReleasePolicy(id: String) -> RpcRequest<VoidSerializer, Team.LegalHoldsPolicyReleaseErrorSerializer> {
+    @discardableResult public func legalHoldsReleasePolicy(id: String) -> RpcRequest<VoidSerializer, Team.LegalHoldsPolicyReleaseErrorSerializer> {
         let route = Team.legalHoldsReleasePolicy
         let serverArgs = Team.LegalHoldsPolicyReleaseArg(id: id)
         return client.request(route, serverArgs: serverArgs)
@@ -366,14 +508,21 @@ open class TeamRoutes {
     /// Updates a legal hold. Note: Legal Holds is a paid add-on. Not all teams have the feature. Permission : Team
     /// member file access.
     ///
+    /// - scope: team_data.governance.write
+    ///
     /// - parameter id: The legal hold Id.
     /// - parameter name: Policy new name.
     /// - parameter description_: Policy new description.
     /// - parameter members: List of team member IDs to apply the policy on.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
+    /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsPolicyUpdateError` object on failure.
-    @discardableResult open func legalHoldsUpdatePolicy(id: String, name: String? = nil, description_: String? = nil, members: Array<String>? = nil) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyUpdateErrorSerializer> {
+    @discardableResult public func legalHoldsUpdatePolicy(
+        id: String,
+        name: String? = nil,
+        description_: String? = nil,
+        members: [String]? = nil
+    ) -> RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyUpdateErrorSerializer> {
         let route = Team.legalHoldsUpdatePolicy
         let serverArgs = Team.LegalHoldsPolicyUpdateArg(id: id, name: name, description_: description_, members: members)
         return client.request(route, serverArgs: serverArgs)
@@ -381,11 +530,14 @@ open class TeamRoutes {
 
     /// List all linked applications of the team member. Note, this endpoint does not list any team-linked applications.
     ///
+    /// - scope: sessions.list
+    ///
     /// - parameter teamMemberId: The team member id.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListMemberAppsResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ListMemberAppsResult` object on
     /// success or a `Team.ListMemberAppsError` object on failure.
-    @discardableResult open func linkedAppsListMemberLinkedApps(teamMemberId: String) -> RpcRequest<Team.ListMemberAppsResultSerializer, Team.ListMemberAppsErrorSerializer> {
+    @discardableResult public func linkedAppsListMemberLinkedApps(teamMemberId: String)
+        -> RpcRequest<Team.ListMemberAppsResultSerializer, Team.ListMemberAppsErrorSerializer> {
         let route = Team.linkedAppsListMemberLinkedApps
         let serverArgs = Team.ListMemberAppsArg(teamMemberId: teamMemberId)
         return client.request(route, serverArgs: serverArgs)
@@ -394,13 +546,16 @@ open class TeamRoutes {
     /// List all applications linked to the team members' accounts. Note, this endpoint does not list any team-linked
     /// applications.
     ///
-    /// - parameter cursor: At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed.
-    /// Then, if the result of the call includes a cursor, the following requests should include the received cursors in
-    /// order to receive the next sub list of the team applications.
+    /// - scope: sessions.list
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListMembersAppsResult` object on
+    /// - parameter cursor: At the first call to the linkedAppsListMembersLinkedApps the cursor shouldn't be passed.
+    /// Then, if the result of the call includes a cursor, the following requests should include the received
+    /// cursors in order to receive the next sub list of the team applications.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.ListMembersAppsResult` object on
     /// success or a `Team.ListMembersAppsError` object on failure.
-    @discardableResult open func linkedAppsListMembersLinkedApps(cursor: String? = nil) -> RpcRequest<Team.ListMembersAppsResultSerializer, Team.ListMembersAppsErrorSerializer> {
+    @discardableResult public func linkedAppsListMembersLinkedApps(cursor: String? = nil)
+        -> RpcRequest<Team.ListMembersAppsResultSerializer, Team.ListMembersAppsErrorSerializer> {
         let route = Team.linkedAppsListMembersLinkedApps
         let serverArgs = Team.ListMembersAppsArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -409,14 +564,17 @@ open class TeamRoutes {
     /// List all applications linked to the team members' accounts. Note, this endpoint doesn't list any team-linked
     /// applications.
     ///
-    /// - parameter cursor: At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then,
-    /// if the result of the call includes a cursor, the following requests should include the received cursors in order
-    /// to receive the next sub list of the team applications.
+    /// - scope: sessions.list
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ListTeamAppsResult` object on success
+    /// - parameter cursor: At the first call to the linkedAppsListTeamLinkedApps the cursor shouldn't be passed. Then,
+    /// if the result of the call includes a cursor, the following requests should include the received cursors in
+    /// order to receive the next sub list of the team applications.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.ListTeamAppsResult` object on success
     /// or a `Team.ListTeamAppsError` object on failure.
-    @available(*, unavailable, message:"linkedAppsListTeamLinkedApps is deprecated. Use linkedAppsListMembersLinkedApps.")
-    @discardableResult open func linkedAppsListTeamLinkedApps(cursor: String? = nil) -> RpcRequest<Team.ListTeamAppsResultSerializer, Team.ListTeamAppsErrorSerializer> {
+    @available(*, unavailable, message: "linkedAppsListTeamLinkedApps is deprecated. Use linkedAppsListMembersLinkedApps.")
+    @discardableResult public func linkedAppsListTeamLinkedApps(cursor: String? = nil)
+        -> RpcRequest<Team.ListTeamAppsResultSerializer, Team.ListTeamAppsErrorSerializer> {
         let route = Team.linkedAppsListTeamLinkedApps
         let serverArgs = Team.ListTeamAppsArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -424,14 +582,20 @@ open class TeamRoutes {
 
     /// Revoke a linked application of the team member.
     ///
+    /// - scope: sessions.modify
+    ///
     /// - parameter appId: The application's unique id.
     /// - parameter teamMemberId: The unique id of the member owning the device.
     /// - parameter keepAppFolder: This flag is not longer supported, the application dedicated folder (in case the
     /// application uses  one) will be kept.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeLinkedAppError` object on failure.
-    @discardableResult open func linkedAppsRevokeLinkedApp(appId: String, teamMemberId: String, keepAppFolder: Bool = true) -> RpcRequest<VoidSerializer, Team.RevokeLinkedAppErrorSerializer> {
+    @discardableResult public func linkedAppsRevokeLinkedApp(
+        appId: String,
+        teamMemberId: String,
+        keepAppFolder: Bool = true
+    ) -> RpcRequest<VoidSerializer, Team.RevokeLinkedAppErrorSerializer> {
         let route = Team.linkedAppsRevokeLinkedApp
         let serverArgs = Team.RevokeLinkedApiAppArg(appId: appId, teamMemberId: teamMemberId, keepAppFolder: keepAppFolder)
         return client.request(route, serverArgs: serverArgs)
@@ -439,10 +603,13 @@ open class TeamRoutes {
 
     /// Revoke a list of linked applications of the team members.
     ///
+    /// - scope: sessions.modify
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.RevokeLinkedAppBatchResult` object on
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.RevokeLinkedAppBatchResult` object on
     /// success or a `Team.RevokeLinkedAppBatchError` object on failure.
-    @discardableResult open func linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: Array<Team.RevokeLinkedApiAppArg>) -> RpcRequest<Team.RevokeLinkedAppBatchResultSerializer, Team.RevokeLinkedAppBatchErrorSerializer> {
+    @discardableResult public func linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: [Team.RevokeLinkedApiAppArg])
+        -> RpcRequest<Team.RevokeLinkedAppBatchResultSerializer, Team.RevokeLinkedAppBatchErrorSerializer> {
         let route = Team.linkedAppsRevokeLinkedAppBatch
         let serverArgs = Team.RevokeLinkedApiAppBatchArg(revokeLinkedApp: revokeLinkedApp)
         return client.request(route, serverArgs: serverArgs)
@@ -450,11 +617,14 @@ open class TeamRoutes {
 
     /// Add users to member space limits excluded users list.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter users: List of users to be added/removed.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
     /// success or a `Team.ExcludedUsersUpdateError` object on failure.
-    @discardableResult open func memberSpaceLimitsExcludedUsersAdd(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsExcludedUsersAdd(users: [Team.UserSelectorArg]? = nil)
+        -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
         let route = Team.memberSpaceLimitsExcludedUsersAdd
         let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
         return client.request(route, serverArgs: serverArgs)
@@ -462,11 +632,14 @@ open class TeamRoutes {
 
     /// List member space limits excluded users.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter limit: Number of results to return per call.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
     /// success or a `Team.ExcludedUsersListError` object on failure.
-    @discardableResult open func memberSpaceLimitsExcludedUsersList(limit: UInt32 = 1000) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsExcludedUsersList(limit: UInt32 = 1_000)
+        -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListErrorSerializer> {
         let route = Team.memberSpaceLimitsExcludedUsersList
         let serverArgs = Team.ExcludedUsersListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -474,11 +647,14 @@ open class TeamRoutes {
 
     /// Continue listing member space limits excluded users.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of users.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
     /// success or a `Team.ExcludedUsersListContinueError` object on failure.
-    @discardableResult open func memberSpaceLimitsExcludedUsersListContinue(cursor: String) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListContinueErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsExcludedUsersListContinue(cursor: String)
+        -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListContinueErrorSerializer> {
         let route = Team.memberSpaceLimitsExcludedUsersListContinue
         let serverArgs = Team.ExcludedUsersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -486,85 +662,111 @@ open class TeamRoutes {
 
     /// Remove users from member space limits excluded users list.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter users: List of users to be added/removed.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
     /// success or a `Team.ExcludedUsersUpdateError` object on failure.
-    @discardableResult open func memberSpaceLimitsExcludedUsersRemove(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsExcludedUsersRemove(users: [Team.UserSelectorArg]? = nil)
+        -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
         let route = Team.memberSpaceLimitsExcludedUsersRemove
         let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000 members can be
-    /// specified in a single call.
+    /// Get users custom quota. A maximum of 1000 members can be specified in a single call. Note: to apply a custom
+    /// space limit, a team admin needs to set a member space limit for the team first. (the team admin can check
+    /// the settings here: https://www.dropbox.com/team/admin/settings/space).
+    ///
+    /// - scope: members.read
     ///
     /// - parameter users: List of users.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
     /// success or a `Team.CustomQuotaError` object on failure.
-    @discardableResult open func memberSpaceLimitsGetCustomQuota(users: Array<Team.UserSelectorArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsGetCustomQuota(users: [Team.UserSelectorArg])
+        -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
         let route = Team.memberSpaceLimitsGetCustomQuota
         let serverArgs = Team.CustomQuotaUsersArg(users: users)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
+    /// Remove users custom quota. A maximum of 1000 members can be specified in a single call. Note: to apply a custom
+    /// space limit, a team admin needs to set a member space limit for the team first. (the team admin can check
+    /// the settings here: https://www.dropbox.com/team/admin/settings/space).
+    ///
+    /// - scope: members.write
     ///
     /// - parameter users: List of users.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.RemoveCustomQuotaResult>`
-    /// object on success or a `Team.CustomQuotaError` object on failure.
-    @discardableResult open func memberSpaceLimitsRemoveCustomQuota(users: Array<Team.UserSelectorArg>) -> RpcRequest<ArraySerializer<Team.RemoveCustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.RemoveCustomQuotaResult>` object
+    /// on success or a `Team.CustomQuotaError` object on failure.
+    @discardableResult public func memberSpaceLimitsRemoveCustomQuota(users: [Team.UserSelectorArg])
+        -> RpcRequest<ArraySerializer<Team.RemoveCustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
         let route = Team.memberSpaceLimitsRemoveCustomQuota
         let serverArgs = Team.CustomQuotaUsersArg(users: users)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be specified in a
-    /// single call.
+    /// single call. Note: to apply a custom space limit, a team admin needs to set a member space limit for the
+    /// team first. (the team admin can check the settings here: https://www.dropbox.com/team/admin/settings/space).
+    ///
+    /// - scope: members.read
     ///
     /// - parameter usersAndQuotas: List of users and their custom quotas.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
     /// success or a `Team.SetCustomQuotaError` object on failure.
-    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.SetCustomQuotaErrorSerializer> {
+    @discardableResult public func memberSpaceLimitsSetCustomQuota(usersAndQuotas: [Team.UserCustomQuotaArg])
+        -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.SetCustomQuotaErrorSerializer> {
         let route = Team.memberSpaceLimitsSetCustomQuota
         let serverArgs = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
-    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created with
-    /// the given email address, and that account will be invited to the team. If a personal Dropbox account exists with
-    /// the email address specified in the call, this call will create a placeholder Dropbox account for the user on the
-    /// team and send an email inviting the user to migrate their existing personal account onto the team. Team member
-    /// management apps are required to set an initial given_name and surname for a user to use in the team invitation
-    /// and for 'Perform as team member' actions taken on the user before they become 'active'.
+    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
+    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
+    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
+    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
+    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
+    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
+    ///
+    /// - scope: members.write
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
     /// success or a `Void` object on failure.
-    @discardableResult open func membersAddV2(newMembers: Array<Team.MemberAddV2Arg>, forceAsync: Bool = false) -> RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer> {
+    @discardableResult public func membersAddV2(
+        newMembers: [Team.MemberAddV2Arg],
+        forceAsync: Bool = false
+    ) -> RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer> {
         let route = Team.membersAddV2
         let serverArgs = Team.MembersAddV2Arg(newMembers: newMembers, forceAsync: forceAsync)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
-    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created with
-    /// the given email address, and that account will be invited to the team. If a personal Dropbox account exists with
-    /// the email address specified in the call, this call will create a placeholder Dropbox account for the user on the
-    /// team and send an email inviting the user to migrate their existing personal account onto the team. Team member
-    /// management apps are required to set an initial given_name and surname for a user to use in the team invitation
-    /// and for 'Perform as team member' actions taken on the user before they become 'active'.
+    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
+    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
+    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
+    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
+    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
+    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
+    ///
+    /// - scope: members.write
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success
-    /// or a `Void` object on failure.
-    @discardableResult open func membersAdd(newMembers: Array<Team.MemberAddArg>, forceAsync: Bool = false) -> RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
+    /// a `Void` object on failure.
+    @discardableResult public func membersAdd(
+        newMembers: [Team.MemberAddArg],
+        forceAsync: Bool = false
+    ) -> RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer> {
         let route = Team.membersAdd
         let serverArgs = Team.MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
         return client.request(route, serverArgs: serverArgs)
@@ -573,12 +775,15 @@ open class TeamRoutes {
     /// Once an async_job_id is returned from membersAddV2 , use this to poll the status of the asynchronous request.
     /// Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatusV2Result` object
-    /// on success or a `Async.PollError` object on failure.
-    @discardableResult open func membersAddJobStatusGetV2(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatusV2Result` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult public func membersAddJobStatusGetV2(asyncJobId: String)
+        -> RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer> {
         let route = Team.membersAddJobStatusGetV2
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -587,12 +792,14 @@ open class TeamRoutes {
     /// Once an async_job_id is returned from membersAdd , use this to poll the status of the asynchronous request.
     /// Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @discardableResult open func membersAddJobStatusGet(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusSerializer, Async.PollErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatus` object on success
+    /// or a `Async.PollError` object on failure.
+    @discardableResult public func membersAddJobStatusGet(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Team.membersAddJobStatusGet
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -600,11 +807,16 @@ open class TeamRoutes {
 
     /// Deletes a team member's profile photo. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of the user whose profile photo will be deleted.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
     /// success or a `Team.MembersDeleteProfilePhotoError` object on failure.
-    @discardableResult open func membersDeleteProfilePhotoV2(user: Team.UserSelectorArg) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
+    @discardableResult public func membersDeleteProfilePhotoV2(
+        user: Team
+            .UserSelectorArg
+    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
         let route = Team.membersDeleteProfilePhotoV2
         let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
         return client.request(route, serverArgs: serverArgs)
@@ -612,11 +824,16 @@ open class TeamRoutes {
 
     /// Deletes a team member's profile photo. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of the user whose profile photo will be deleted.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
-    /// a `Team.MembersDeleteProfilePhotoError` object on failure.
-    @discardableResult open func membersDeleteProfilePhoto(user: Team.UserSelectorArg) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
+    /// `Team.MembersDeleteProfilePhotoError` object on failure.
+    @discardableResult public func membersDeleteProfilePhoto(
+        user: Team
+            .UserSelectorArg
+    ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
         let route = Team.membersDeleteProfilePhoto
         let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
         return client.request(route, serverArgs: serverArgs)
@@ -625,10 +842,12 @@ open class TeamRoutes {
     /// Get available TeamMemberRoles for the connected team. To be used with membersSetAdminPermissionsV2. Permission :
     /// Team member management.
     ///
+    /// - scope: members.read
     ///
-    ///  - returns: Through the response callback, the caller will receive a
+    ///
+    /// - returns: Through the response callback, the caller will receive a
     /// `Team.MembersGetAvailableTeamMemberRolesResult` object on success or a `Void` object on failure.
-    @discardableResult open func membersGetAvailableTeamMemberRoles() -> RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer> {
+    @discardableResult public func membersGetAvailableTeamMemberRoles() -> RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer> {
         let route = Team.membersGetAvailableTeamMemberRoles
         return client.request(route)
     }
@@ -636,11 +855,14 @@ open class TeamRoutes {
     /// Returns information about multiple team members. Permission : Team information This endpoint will return
     /// idNotFound in MembersGetInfoItem, for IDs (or emails) that cannot be matched to a valid team member.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter members: List of team members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
-    @discardableResult open func membersGetInfoV2(members: Array<Team.UserSelectorArg>) -> RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer> {
+    @discardableResult public func membersGetInfoV2(members: [Team.UserSelectorArg])
+        -> RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer> {
         let route = Team.membersGetInfoV2
         let serverArgs = Team.MembersGetInfoV2Arg(members: members)
         return client.request(route, serverArgs: serverArgs)
@@ -649,11 +871,14 @@ open class TeamRoutes {
     /// Returns information about multiple team members. Permission : Team information This endpoint will return
     /// idNotFound in MembersGetInfoItem, for IDs (or emails) that cannot be matched to a valid team member.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter members: List of team members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
-    @discardableResult open func membersGetInfo(members: Array<Team.UserSelectorArg>) -> RpcRequest<ArraySerializer<Team.MembersGetInfoItemSerializer>, Team.MembersGetInfoErrorSerializer> {
+    @discardableResult public func membersGetInfo(members: [Team.UserSelectorArg])
+        -> RpcRequest<ArraySerializer<Team.MembersGetInfoItemSerializer>, Team.MembersGetInfoErrorSerializer> {
         let route = Team.membersGetInfo
         let serverArgs = Team.MembersGetInfoArgs(members: members)
         return client.request(route, serverArgs: serverArgs)
@@ -661,12 +886,17 @@ open class TeamRoutes {
 
     /// Lists members of a team. Permission : Team information.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter limit: Number of results to return per call.
     /// - parameter includeRemoved: Whether to return removed members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on
-    /// success or a `Team.MembersListError` object on failure.
-    @discardableResult open func membersListV2(limit: UInt32 = 1000, includeRemoved: Bool = false) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
+    /// or a `Team.MembersListError` object on failure.
+    @discardableResult public func membersListV2(
+        limit: UInt32 = 1_000,
+        includeRemoved: Bool = false
+    ) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer> {
         let route = Team.membersListV2
         let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
         return client.request(route, serverArgs: serverArgs)
@@ -674,12 +904,17 @@ open class TeamRoutes {
 
     /// Lists members of a team. Permission : Team information.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter limit: Number of results to return per call.
     /// - parameter includeRemoved: Whether to return removed members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
     /// or a `Team.MembersListError` object on failure.
-    @discardableResult open func membersList(limit: UInt32 = 1000, includeRemoved: Bool = false) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer> {
+    @discardableResult public func membersList(
+        limit: UInt32 = 1_000,
+        includeRemoved: Bool = false
+    ) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer> {
         let route = Team.membersList
         let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
         return client.request(route, serverArgs: serverArgs)
@@ -688,11 +923,14 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
     /// Team information.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on
-    /// success or a `Team.MembersListContinueError` object on failure.
-    @discardableResult open func membersListContinueV2(cursor: String) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
+    /// or a `Team.MembersListContinueError` object on failure.
+    @discardableResult public func membersListContinueV2(cursor: String)
+        -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer> {
         let route = Team.membersListContinueV2
         let serverArgs = Team.MembersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -701,11 +939,14 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from membersList, use this to paginate through all team members. Permission :
     /// Team information.
     ///
+    /// - scope: members.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of members.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListResult` object on success
     /// or a `Team.MembersListContinueError` object on failure.
-    @discardableResult open func membersListContinue(cursor: String) -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListContinueErrorSerializer> {
+    @discardableResult public func membersListContinue(cursor: String)
+        -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListContinueErrorSerializer> {
         let route = Team.membersListContinue
         let serverArgs = Team.MembersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -715,12 +956,18 @@ open class TeamRoutes {
     /// final result of the job, the client should periodically poll membersMoveFormerMemberFilesJobStatusCheck.
     /// Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter transferDestId: Files from the deleted member account will be transferred to this user.
     /// - parameter transferAdminId: Errors during the transfer process will be sent via email to this user.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.MembersTransferFormerMembersFilesError` object on failure.
-    @discardableResult open func membersMoveFormerMemberFiles(user: Team.UserSelectorArg, transferDestId: Team.UserSelectorArg, transferAdminId: Team.UserSelectorArg) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersTransferFormerMembersFilesErrorSerializer> {
+    @discardableResult public func membersMoveFormerMemberFiles(
+        user: Team.UserSelectorArg,
+        transferDestId: Team.UserSelectorArg,
+        transferAdminId: Team.UserSelectorArg
+    ) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersTransferFormerMembersFilesErrorSerializer> {
         let route = Team.membersMoveFormerMemberFiles
         let serverArgs = Team.MembersDataTransferArg(user: user, transferDestId: transferDestId, transferAdminId: transferAdminId)
         return client.request(route, serverArgs: serverArgs)
@@ -729,12 +976,15 @@ open class TeamRoutes {
     /// Once an async_job_id is returned from membersMoveFormerMemberFiles , use this to poll the status of the
     /// asynchronous request. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success
-    /// or a `Async.PollError` object on failure.
-    @discardableResult open func membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success or
+    /// a `Async.PollError` object on failure.
+    @discardableResult public func membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: String)
+        -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
         let route = Team.membersMoveFormerMemberFilesJobStatusCheck
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -743,24 +993,28 @@ open class TeamRoutes {
     /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
+    /// - scope: members.delete
+    ///
     /// - parameter user: Identity of user to recover.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.MembersRecoverError` object on failure.
-    @discardableResult open func membersRecover(user: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersRecoverErrorSerializer> {
+    @discardableResult public func membersRecover(user: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersRecoverErrorSerializer> {
         let route = Team.membersRecover
         let serverArgs = Team.MembersRecoverArg(user: user)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Removes a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
-    /// external_id must be provided to identify the user account. Accounts can be recovered via membersRecover for a 7
-    /// day period or until the account has been permanently deleted or transferred to another account (whichever comes
-    /// first). Calling membersAdd while a user is still recoverable on your team will return with userAlreadyOnTeam in
-    /// MemberAddResult. Accounts can have their files transferred via the admin console for a limited time, based on
-    /// the version history length associated with the team (180 days for most teams). This endpoint may initiate an
-    /// asynchronous job. To obtain the final result of the job, the client should periodically poll
-    /// membersRemoveJobStatusGet.
+    /// external_id must be provided to identify the user account. Accounts can be recovered via membersRecover for
+    /// a 7 day period or until the account has been permanently deleted or transferred to another account
+    /// (whichever comes first). Calling membersAdd while a user is still recoverable on your team will return with
+    /// userAlreadyOnTeam in MemberAddResult. Accounts can have their files transferred via the admin console for a
+    /// limited time, based on the version history length associated with the team (180 days for most teams). This
+    /// endpoint may initiate an asynchronous job. To obtain the final result of the job, the client should
+    /// periodically poll membersRemoveJobStatusGet.
+    ///
+    /// - scope: members.delete
     ///
     /// - parameter transferDestId: If provided, files from the deleted member account will be transferred to this user.
     /// - parameter transferAdminId: If provided, errors during the transfer process will be sent via email to this
@@ -773,23 +1027,39 @@ open class TeamRoutes {
     /// account. Users will not retain access to folders that do not allow external sharing. In order to keep the
     /// sharing relationships, the arguments wipeData should be set to false and keepAccount should be set to true.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.MembersRemoveError` object on failure.
-    @discardableResult open func membersRemove(user: Team.UserSelectorArg, wipeData: Bool = true, transferDestId: Team.UserSelectorArg? = nil, transferAdminId: Team.UserSelectorArg? = nil, keepAccount: Bool = false, retainTeamShares: Bool = false) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersRemoveErrorSerializer> {
+    @discardableResult public func membersRemove(
+        user: Team.UserSelectorArg,
+        wipeData: Bool = true,
+        transferDestId: Team.UserSelectorArg? = nil,
+        transferAdminId: Team.UserSelectorArg? = nil,
+        keepAccount: Bool = false,
+        retainTeamShares: Bool = false
+    ) -> RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersRemoveErrorSerializer> {
         let route = Team.membersRemove
-        let serverArgs = Team.MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount, retainTeamShares: retainTeamShares)
+        let serverArgs = Team.MembersRemoveArg(
+            user: user,
+            wipeData: wipeData,
+            transferDestId: transferDestId,
+            transferAdminId: transferAdminId,
+            keepAccount: keepAccount,
+            retainTeamShares: retainTeamShares
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Once an async_job_id is returned from membersRemove , use this to poll the status of the asynchronous request.
     /// Permission : Team member management.
     ///
+    /// - scope: members.delete
+    ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success
-    /// or a `Async.PollError` object on failure.
-    @discardableResult open func membersRemoveJobStatusGet(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success or
+    /// a `Async.PollError` object on failure.
+    @discardableResult public func membersRemoveJobStatusGet(asyncJobId: String) -> RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer> {
         let route = Team.membersRemoveJobStatusGet
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -798,11 +1068,14 @@ open class TeamRoutes {
     /// Add secondary emails to users. Permission : Team member management. Emails that are on verified domains will be
     /// verified automatically. For each email address not on a verified domain a verification email will be sent.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter newSecondaryEmails: List of users and secondary emails to add.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.AddSecondaryEmailsResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.AddSecondaryEmailsResult` object on
     /// success or a `Team.AddSecondaryEmailsError` object on failure.
-    @discardableResult open func membersSecondaryEmailsAdd(newSecondaryEmails: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.AddSecondaryEmailsResultSerializer, Team.AddSecondaryEmailsErrorSerializer> {
+    @discardableResult public func membersSecondaryEmailsAdd(newSecondaryEmails: [Team.UserSecondaryEmailsArg])
+        -> RpcRequest<Team.AddSecondaryEmailsResultSerializer, Team.AddSecondaryEmailsErrorSerializer> {
         let route = Team.membersSecondaryEmailsAdd
         let serverArgs = Team.AddSecondaryEmailsArg(newSecondaryEmails: newSecondaryEmails)
         return client.request(route, serverArgs: serverArgs)
@@ -811,11 +1084,14 @@ open class TeamRoutes {
     /// Delete secondary emails from users Permission : Team member management. Users will be notified of deletions of
     /// verified secondary emails at both the secondary email and their primary email.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter emailsToDelete: List of users and their secondary emails to delete.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.DeleteSecondaryEmailsResult` object
-    /// on success or a `Void` object on failure.
-    @discardableResult open func membersSecondaryEmailsDelete(emailsToDelete: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.DeleteSecondaryEmailsResultSerializer, VoidSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.DeleteSecondaryEmailsResult` object on
+    /// success or a `Void` object on failure.
+    @discardableResult public func membersSecondaryEmailsDelete(emailsToDelete: [Team.UserSecondaryEmailsArg])
+        -> RpcRequest<Team.DeleteSecondaryEmailsResultSerializer, VoidSerializer> {
         let route = Team.membersSecondaryEmailsDelete
         let serverArgs = Team.DeleteSecondaryEmailsArg(emailsToDelete: emailsToDelete)
         return client.request(route, serverArgs: serverArgs)
@@ -823,11 +1099,14 @@ open class TeamRoutes {
 
     /// Resend secondary email verification emails. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter emailsToResend: List of users and secondary emails to resend verification emails to.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.ResendVerificationEmailResult` object
+    /// - returns: Through the response callback, the caller will receive a `Team.ResendVerificationEmailResult` object
     /// on success or a `Void` object on failure.
-    @discardableResult open func membersSecondaryEmailsResendVerificationEmails(emailsToResend: Array<Team.UserSecondaryEmailsArg>) -> RpcRequest<Team.ResendVerificationEmailResultSerializer, VoidSerializer> {
+    @discardableResult public func membersSecondaryEmailsResendVerificationEmails(emailsToResend: [Team.UserSecondaryEmailsArg])
+        -> RpcRequest<Team.ResendVerificationEmailResultSerializer, VoidSerializer> {
         let route = Team.membersSecondaryEmailsResendVerificationEmails
         let serverArgs = Team.ResendVerificationEmailArg(emailsToResend: emailsToResend)
         return client.request(route, serverArgs: serverArgs)
@@ -836,12 +1115,17 @@ open class TeamRoutes {
     /// Sends welcome email to pending team member. Permission : Team member management Exactly one of team_member_id,
     /// email, or external_id must be provided to identify the user account. No-op if team member is not pending.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter userSelectorArg: Argument for selecting a single user, either by team_member_id, external_id or
     /// email.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.MembersSendWelcomeError` object on failure.
-    @discardableResult open func membersSendWelcomeEmail(userSelectorArg: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersSendWelcomeErrorSerializer> {
+    @discardableResult public func membersSendWelcomeEmail(
+        userSelectorArg: Team
+            .UserSelectorArg
+    ) -> RpcRequest<VoidSerializer, Team.MembersSendWelcomeErrorSerializer> {
         let route = Team.membersSendWelcomeEmail
         let serverArgs = userSelectorArg
         return client.request(route, serverArgs: serverArgs)
@@ -849,13 +1133,18 @@ open class TeamRoutes {
 
     /// Updates a team member's permissions. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRoles: The new roles for the member. Send empty list to make user member only. For now, only up
     /// to one role is allowed.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
     /// on success or a `Team.MembersSetPermissions2Error` object on failure.
-    @discardableResult open func membersSetAdminPermissionsV2(user: Team.UserSelectorArg, newRoles: Array<String>? = nil) -> RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer> {
+    @discardableResult public func membersSetAdminPermissionsV2(
+        user: Team.UserSelectorArg,
+        newRoles: [String]? = nil
+    ) -> RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer> {
         let route = Team.membersSetAdminPermissionsV2
         let serverArgs = Team.MembersSetPermissions2Arg(user: user, newRoles: newRoles)
         return client.request(route, serverArgs: serverArgs)
@@ -863,12 +1152,17 @@ open class TeamRoutes {
 
     /// Updates a team member's permissions. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRole: The new role of the member.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object
-    /// on success or a `Team.MembersSetPermissionsError` object on failure.
-    @discardableResult open func membersSetAdminPermissions(user: Team.UserSelectorArg, newRole: Team.AdminTier) -> RpcRequest<Team.MembersSetPermissionsResultSerializer, Team.MembersSetPermissionsErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object on
+    /// success or a `Team.MembersSetPermissionsError` object on failure.
+    @discardableResult public func membersSetAdminPermissions(
+        user: Team.UserSelectorArg,
+        newRole: Team.AdminTier
+    ) -> RpcRequest<Team.MembersSetPermissionsResultSerializer, Team.MembersSetPermissionsErrorSerializer> {
         let route = Team.membersSetAdminPermissions
         let serverArgs = Team.MembersSetPermissionsArg(user: user, newRole: newRole)
         return client.request(route, serverArgs: serverArgs)
@@ -876,6 +1170,8 @@ open class TeamRoutes {
 
     /// Updates a team member's profile. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of user whose profile will be set.
     /// - parameter newEmail: New email for member.
     /// - parameter newExternalId: New external ID for member.
@@ -885,16 +1181,34 @@ open class TeamRoutes {
     /// configuration.
     /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
     /// success or a `Team.MembersSetProfileError` object on failure.
-    @discardableResult open func membersSetProfileV2(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer> {
+    @discardableResult public func membersSetProfileV2(
+        user: Team.UserSelectorArg,
+        newEmail: String? = nil,
+        newExternalId: String? = nil,
+        newGivenName: String? = nil,
+        newSurname: String? = nil,
+        newPersistentId: String? = nil,
+        newIsDirectoryRestricted: Bool? = nil
+    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfileV2
-        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
+        let serverArgs = Team.MembersSetProfileArg(
+            user: user,
+            newEmail: newEmail,
+            newExternalId: newExternalId,
+            newGivenName: newGivenName,
+            newSurname: newSurname,
+            newPersistentId: newPersistentId,
+            newIsDirectoryRestricted: newIsDirectoryRestricted
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Updates a team member's profile. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of user whose profile will be set.
     /// - parameter newEmail: New email for member.
     /// - parameter newExternalId: New external ID for member.
@@ -904,22 +1218,43 @@ open class TeamRoutes {
     /// configuration.
     /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
-    /// a `Team.MembersSetProfileError` object on failure.
-    @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
+    /// `Team.MembersSetProfileError` object on failure.
+    @discardableResult public func membersSetProfile(
+        user: Team.UserSelectorArg,
+        newEmail: String? = nil,
+        newExternalId: String? = nil,
+        newGivenName: String? = nil,
+        newSurname: String? = nil,
+        newPersistentId: String? = nil,
+        newIsDirectoryRestricted: Bool? = nil
+    ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfile
-        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
+        let serverArgs = Team.MembersSetProfileArg(
+            user: user,
+            newEmail: newEmail,
+            newExternalId: newExternalId,
+            newGivenName: newGivenName,
+            newSurname: newSurname,
+            newPersistentId: newPersistentId,
+            newIsDirectoryRestricted: newIsDirectoryRestricted
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Updates a team member's profile photo. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of the user whose profile photo will be set.
     /// - parameter photo: Image to set as the member's new profile photo.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
     /// success or a `Team.MembersSetProfilePhotoError` object on failure.
-    @discardableResult open func membersSetProfilePhotoV2(user: Team.UserSelectorArg, photo: Account.PhotoSourceArg) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
+    @discardableResult public func membersSetProfilePhotoV2(
+        user: Team.UserSelectorArg,
+        photo: Account.PhotoSourceArg
+    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
         let route = Team.membersSetProfilePhotoV2
         let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
         return client.request(route, serverArgs: serverArgs)
@@ -927,12 +1262,17 @@ open class TeamRoutes {
 
     /// Updates a team member's profile photo. Permission : Team member management.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of the user whose profile photo will be set.
     /// - parameter photo: Image to set as the member's new profile photo.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
-    /// a `Team.MembersSetProfilePhotoError` object on failure.
-    @discardableResult open func membersSetProfilePhoto(user: Team.UserSelectorArg, photo: Account.PhotoSourceArg) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
+    /// `Team.MembersSetProfilePhotoError` object on failure.
+    @discardableResult public func membersSetProfilePhoto(
+        user: Team.UserSelectorArg,
+        photo: Account.PhotoSourceArg
+    ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
         let route = Team.membersSetProfilePhoto
         let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
         return client.request(route, serverArgs: serverArgs)
@@ -941,11 +1281,16 @@ open class TeamRoutes {
     /// Suspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter wipeData: If provided, controls if the user's data will be deleted on their linked devices.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.MembersSuspendError` object on failure.
-    @discardableResult open func membersSuspend(user: Team.UserSelectorArg, wipeData: Bool = true) -> RpcRequest<VoidSerializer, Team.MembersSuspendErrorSerializer> {
+    @discardableResult public func membersSuspend(
+        user: Team.UserSelectorArg,
+        wipeData: Bool = true
+    ) -> RpcRequest<VoidSerializer, Team.MembersSuspendErrorSerializer> {
         let route = Team.membersSuspend
         let serverArgs = Team.MembersDeactivateArg(user: user, wipeData: wipeData)
         return client.request(route, serverArgs: serverArgs)
@@ -954,26 +1299,31 @@ open class TeamRoutes {
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
+    /// - scope: members.write
+    ///
     /// - parameter user: Identity of user to unsuspend.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.MembersUnsuspendError` object on failure.
-    @discardableResult open func membersUnsuspend(user: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersUnsuspendErrorSerializer> {
+    @discardableResult public func membersUnsuspend(user: Team.UserSelectorArg) -> RpcRequest<VoidSerializer, Team.MembersUnsuspendErrorSerializer> {
         let route = Team.membersUnsuspend
         let serverArgs = Team.MembersUnsuspendArg(user: user)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Returns a list of all team-accessible namespaces. This list includes team folders, shared folders containing
-    /// team members, team members' home namespaces, and team members' app folders. Home namespaces and app folders are
-    /// always owned by this team or members of the team, but shared folders may be owned by other users or other teams.
-    /// Duplicates may occur in the list.
+    /// team members, team members' home namespaces, and team members' app folders. Home namespaces and app folders
+    /// are always owned by this team or members of the team, but shared folders may be owned by other users or
+    /// other teams. Duplicates may occur in the list.
+    ///
+    /// - scope: team_data.member
     ///
     /// - parameter limit: Specifying a value here has no effect.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
     /// success or a `Team.TeamNamespacesListError` object on failure.
-    @discardableResult open func namespacesList(limit: UInt32 = 1000) -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListErrorSerializer> {
+    @discardableResult public func namespacesList(limit: UInt32 = 1_000)
+        -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListErrorSerializer> {
         let route = Team.namespacesList
         let serverArgs = Team.TeamNamespacesListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -982,11 +1332,14 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from namespacesList, use this to paginate through all team-accessible
     /// namespaces. Duplicates may occur in the list.
     ///
+    /// - scope: team_data.member
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of team-accessible namespaces.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
     /// success or a `Team.TeamNamespacesListContinueError` object on failure.
-    @discardableResult open func namespacesListContinue(cursor: String) -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListContinueErrorSerializer> {
+    @discardableResult public func namespacesListContinue(cursor: String)
+        -> RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListContinueErrorSerializer> {
         let route = Team.namespacesListContinue
         let serverArgs = Team.TeamNamespacesListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -994,11 +1347,18 @@ open class TeamRoutes {
 
     /// Permission : Team member file access.
     ///
+    /// - scope: files.team_metadata.write
     ///
-    ///  - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object
-    /// on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @available(*, unavailable, message:"propertiesTemplateAdd is deprecated.")
-    @discardableResult open func propertiesTemplateAdd(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    ///
+    /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
+    /// success or a `FileProperties.ModifyTemplateError` object on failure.
+    @available(*, unavailable, message: "propertiesTemplateAdd is deprecated.")
+    @discardableResult public func propertiesTemplateAdd(
+        name: String,
+        description_: String,
+        fields: [FileProperties.PropertyFieldTemplate]
+    )
+        -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateAdd
         let serverArgs = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields)
         return client.request(route, serverArgs: serverArgs)
@@ -1006,13 +1366,16 @@ open class TeamRoutes {
 
     /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
     ///
+    /// - scope: files.team_metadata.write
+    ///
     /// - parameter templateId: An identifier for template added by route  See templatesAddForUser or
     /// templatesAddForTeam.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object
-    /// on success or a `FileProperties.TemplateError` object on failure.
-    @available(*, unavailable, message:"propertiesTemplateGet is deprecated.")
-    @discardableResult open func propertiesTemplateGet(templateId: String) -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object on
+    /// success or a `FileProperties.TemplateError` object on failure.
+    @available(*, unavailable, message: "propertiesTemplateGet is deprecated.")
+    @discardableResult public func propertiesTemplateGet(templateId: String)
+        -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateGet
         let serverArgs = FileProperties.GetTemplateArg(templateId: templateId)
         return client.request(route, serverArgs: serverArgs)
@@ -1020,16 +1383,20 @@ open class TeamRoutes {
 
     /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
     ///
+    /// - scope: files.team_metadata.write
     ///
-    ///  - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
+    ///
+    /// - returns: Through the response callback, the caller will receive a `FileProperties.ListTemplateResult` object
     /// on success or a `FileProperties.TemplateError` object on failure.
-    @available(*, unavailable, message:"propertiesTemplateList is deprecated.")
-    @discardableResult open func propertiesTemplateList() -> RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
+    @available(*, unavailable, message: "propertiesTemplateList is deprecated.")
+    @discardableResult public func propertiesTemplateList() -> RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = Team.propertiesTemplateList
         return client.request(route)
     }
 
     /// Permission : Team member file access.
+    ///
+    /// - scope: files.team_metadata.write
     ///
     /// - parameter templateId: An identifier for template added by  See templatesAddForUser or templatesAddForTeam.
     /// - parameter name: A display name for the template. template names can be up to 256 bytes.
@@ -1037,10 +1404,15 @@ open class TeamRoutes {
     /// - parameter addFields: Property field templates to be added to the group template. There can be up to 32
     /// properties in a single template.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult`
-    /// object on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @available(*, unavailable, message:"propertiesTemplateUpdate is deprecated.")
-    @discardableResult open func propertiesTemplateUpdate(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult` object
+    /// on success or a `FileProperties.ModifyTemplateError` object on failure.
+    @available(*, unavailable, message: "propertiesTemplateUpdate is deprecated.")
+    @discardableResult public func propertiesTemplateUpdate(
+        templateId: String,
+        name: String? = nil,
+        description_: String? = nil,
+        addFields: [FileProperties.PropertyFieldTemplate]? = nil
+    ) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = Team.propertiesTemplateUpdate
         let serverArgs = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
         return client.request(route, serverArgs: serverArgs)
@@ -1048,14 +1420,19 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's user activity. Deprecated: Will be removed on July 1st 2021.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GetActivityReport` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.GetActivityReport` object on success
     /// or a `Team.DateRangeError` object on failure.
-    @available(*, unavailable, message:"reportsGetActivity is deprecated.")
-    @discardableResult open func reportsGetActivity(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetActivityReportSerializer, Team.DateRangeErrorSerializer> {
+    @available(*, unavailable, message: "reportsGetActivity is deprecated.")
+    @discardableResult public func reportsGetActivity(
+        startDate: Date? = nil,
+        endDate: Date? = nil
+    ) -> RpcRequest<Team.GetActivityReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetActivity
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
         return client.request(route, serverArgs: serverArgs)
@@ -1063,14 +1440,19 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's linked devices. Deprecated: Will be removed on July 1st 2021.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GetDevicesReport` object on success
-    /// or a `Team.DateRangeError` object on failure.
-    @available(*, unavailable, message:"reportsGetDevices is deprecated.")
-    @discardableResult open func reportsGetDevices(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetDevicesReportSerializer, Team.DateRangeErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.GetDevicesReport` object on success or
+    /// a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message: "reportsGetDevices is deprecated.")
+    @discardableResult public func reportsGetDevices(
+        startDate: Date? = nil,
+        endDate: Date? = nil
+    ) -> RpcRequest<Team.GetDevicesReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetDevices
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
         return client.request(route, serverArgs: serverArgs)
@@ -1078,14 +1460,19 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's membership. Deprecated: Will be removed on July 1st 2021.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GetMembershipReport` object on
-    /// success or a `Team.DateRangeError` object on failure.
-    @available(*, unavailable, message:"reportsGetMembership is deprecated.")
-    @discardableResult open func reportsGetMembership(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetMembershipReportSerializer, Team.DateRangeErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.GetMembershipReport` object on success
+    /// or a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message: "reportsGetMembership is deprecated.")
+    @discardableResult public func reportsGetMembership(
+        startDate: Date? = nil,
+        endDate: Date? = nil
+    ) -> RpcRequest<Team.GetMembershipReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetMembership
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
         return client.request(route, serverArgs: serverArgs)
@@ -1093,30 +1480,40 @@ open class TeamRoutes {
 
     /// Retrieves reporting data about a team's storage usage. Deprecated: Will be removed on July 1st 2021.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter startDate: Optional starting date (inclusive). If start_date is None or too long ago, this field
     /// will  be set to 6 months ago.
     /// - parameter endDate: Optional ending date (exclusive).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.GetStorageReport` object on success
-    /// or a `Team.DateRangeError` object on failure.
-    @available(*, unavailable, message:"reportsGetStorage is deprecated.")
-    @discardableResult open func reportsGetStorage(startDate: Date? = nil, endDate: Date? = nil) -> RpcRequest<Team.GetStorageReportSerializer, Team.DateRangeErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.GetStorageReport` object on success or
+    /// a `Team.DateRangeError` object on failure.
+    @available(*, unavailable, message: "reportsGetStorage is deprecated.")
+    @discardableResult public func reportsGetStorage(
+        startDate: Date? = nil,
+        endDate: Date? = nil
+    ) -> RpcRequest<Team.GetStorageReportSerializer, Team.DateRangeErrorSerializer> {
         let route = Team.reportsGetStorage
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in transaction. In
-    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails (RFC-5322/822)
-    /// are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100 entries per call is
-    /// allowed.
+    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
+    /// (RFC-5322/822) are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100
+    /// entries per call is allowed.
+    ///
+    /// - scope: team_info.write
     ///
     /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
     /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object
-    /// on success or a `Team.SharingAllowlistAddError` object on failure.
-    @discardableResult open func sharingAllowlistAdd(domains: Array<String>? = nil, emails: Array<String>? = nil) -> RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object on
+    /// success or a `Team.SharingAllowlistAddError` object on failure.
+    @discardableResult public func sharingAllowlistAdd(
+        domains: [String]? = nil,
+        emails: [String]? = nil
+    ) -> RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer> {
         let route = Team.sharingAllowlistAdd
         let serverArgs = Team.SharingAllowlistAddArgs(domains: domains, emails: emails)
         return client.request(route, serverArgs: serverArgs)
@@ -1126,11 +1523,14 @@ open class TeamRoutes {
     /// there are more than `limit` entries associated with the current team, more can be fetched by passing the
     /// returned `cursor` to sharingAllowlistListContinue.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter limit: The number of entries to fetch at one time.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
+    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
     /// on success or a `Team.SharingAllowlistListError` object on failure.
-    @discardableResult open func sharingAllowlistList(limit: UInt32 = 1000) -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer> {
+    @discardableResult public func sharingAllowlistList(limit: UInt32 = 1_000)
+        -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer> {
         let route = Team.sharingAllowlistList
         let serverArgs = Team.SharingAllowlistListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -1138,12 +1538,15 @@ open class TeamRoutes {
 
     /// Lists entries associated with given team, starting from a the cursor. See sharingAllowlistList.
     ///
+    /// - scope: team_info.read
+    ///
     /// - parameter cursor: The cursor returned from a previous call to sharingAllowlistList or
     /// sharingAllowlistListContinue.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
+    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
     /// on success or a `Team.SharingAllowlistListContinueError` object on failure.
-    @discardableResult open func sharingAllowlistListContinue(cursor: String) -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer> {
+    @discardableResult public func sharingAllowlistListContinue(cursor: String)
+        -> RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer> {
         let route = Team.sharingAllowlistListContinue
         let serverArgs = Team.SharingAllowlistListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -1151,15 +1554,20 @@ open class TeamRoutes {
 
     /// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed in transaction.
     /// In case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per call
-    /// is allowed.
+    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per
+    /// call is allowed.
+    ///
+    /// - scope: team_info.write
     ///
     /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
     /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse`
-    /// object on success or a `Team.SharingAllowlistRemoveError` object on failure.
-    @discardableResult open func sharingAllowlistRemove(domains: Array<String>? = nil, emails: Array<String>? = nil) -> RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer> {
+    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse` object
+    /// on success or a `Team.SharingAllowlistRemoveError` object on failure.
+    @discardableResult public func sharingAllowlistRemove(
+        domains: [String]? = nil,
+        emails: [String]? = nil
+    ) -> RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer> {
         let route = Team.sharingAllowlistRemove
         let serverArgs = Team.SharingAllowlistRemoveArgs(domains: domains, emails: emails)
         return client.request(route, serverArgs: serverArgs)
@@ -1167,11 +1575,14 @@ open class TeamRoutes {
 
     /// Sets an archived team folder's status to active. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter teamFolderId: The ID of the team folder.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderActivateError` object on failure.
-    @discardableResult open func teamFolderActivate(teamFolderId: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderActivateErrorSerializer> {
+    @discardableResult public func teamFolderActivate(teamFolderId: String)
+        -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderActivateErrorSerializer> {
         let route = Team.teamFolderActivate
         let serverArgs = Team.TeamFolderIdArg(teamFolderId: teamFolderId)
         return client.request(route, serverArgs: serverArgs)
@@ -1180,11 +1591,16 @@ open class TeamRoutes {
     /// Sets an active team folder's status to archived and removes all folder and file members. This endpoint cannot be
     /// used for teams that have a shared team space. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter forceAsyncOff: Whether to force the archive to happen synchronously.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderArchiveLaunch` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderArchiveLaunch` object on
     /// success or a `Team.TeamFolderArchiveError` object on failure.
-    @discardableResult open func teamFolderArchive(teamFolderId: String, forceAsyncOff: Bool = false) -> RpcRequest<Team.TeamFolderArchiveLaunchSerializer, Team.TeamFolderArchiveErrorSerializer> {
+    @discardableResult public func teamFolderArchive(
+        teamFolderId: String,
+        forceAsyncOff: Bool = false
+    ) -> RpcRequest<Team.TeamFolderArchiveLaunchSerializer, Team.TeamFolderArchiveErrorSerializer> {
         let route = Team.teamFolderArchive
         let serverArgs = Team.TeamFolderArchiveArg(teamFolderId: teamFolderId, forceAsyncOff: forceAsyncOff)
         return client.request(route, serverArgs: serverArgs)
@@ -1192,12 +1608,15 @@ open class TeamRoutes {
 
     /// Returns the status of an asynchronous job for archiving a team folder. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderArchiveJobStatus` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderArchiveJobStatus` object on
     /// success or a `Async.PollError` object on failure.
-    @discardableResult open func teamFolderArchiveCheck(asyncJobId: String) -> RpcRequest<Team.TeamFolderArchiveJobStatusSerializer, Async.PollErrorSerializer> {
+    @discardableResult public func teamFolderArchiveCheck(asyncJobId: String)
+        -> RpcRequest<Team.TeamFolderArchiveJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Team.teamFolderArchiveCheck
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -1206,13 +1625,18 @@ open class TeamRoutes {
     /// Creates a new, active, team folder with no members. This endpoint can only be used for teams that do not already
     /// have a shared team space. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter name: Name for the new team folder.
     /// - parameter syncSetting: The sync setting to apply to this team folder. Only permitted if the team has team
     /// selective sync enabled.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderCreateError` object on failure.
-    @discardableResult open func teamFolderCreate(name: String, syncSetting: Files.SyncSettingArg? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
+    @discardableResult public func teamFolderCreate(
+        name: String,
+        syncSetting: Files.SyncSettingArg? = nil
+    ) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
         let route = Team.teamFolderCreate
         let serverArgs = Team.TeamFolderCreateArg(name: name, syncSetting: syncSetting)
         return client.request(route, serverArgs: serverArgs)
@@ -1220,11 +1644,14 @@ open class TeamRoutes {
 
     /// Retrieves metadata for team folders. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.read
+    ///
     /// - parameter teamFolderIds: The list of team folder IDs.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Array<Team.TeamFolderGetInfoItem>` object
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.TeamFolderGetInfoItem>` object
     /// on success or a `Void` object on failure.
-    @discardableResult open func teamFolderGetInfo(teamFolderIds: Array<String>) -> RpcRequest<ArraySerializer<Team.TeamFolderGetInfoItemSerializer>, VoidSerializer> {
+    @discardableResult public func teamFolderGetInfo(teamFolderIds: [String])
+        -> RpcRequest<ArraySerializer<Team.TeamFolderGetInfoItemSerializer>, VoidSerializer> {
         let route = Team.teamFolderGetInfo
         let serverArgs = Team.TeamFolderIdListArg(teamFolderIds: teamFolderIds)
         return client.request(route, serverArgs: serverArgs)
@@ -1232,11 +1659,14 @@ open class TeamRoutes {
 
     /// Lists all team folders. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.read
+    ///
     /// - parameter limit: The maximum number of results to return per request.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderListResult` object on
     /// success or a `Team.TeamFolderListError` object on failure.
-    @discardableResult open func teamFolderList(limit: UInt32 = 1000) -> RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListErrorSerializer> {
+    @discardableResult public func teamFolderList(limit: UInt32 = 1_000)
+        -> RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListErrorSerializer> {
         let route = Team.teamFolderList
         let serverArgs = Team.TeamFolderListArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -1245,11 +1675,14 @@ open class TeamRoutes {
     /// Once a cursor has been retrieved from teamFolderList, use this to paginate through all team folders. Permission
     /// : Team member file access.
     ///
+    /// - scope: team_data.content.read
+    ///
     /// - parameter cursor: Indicates from what point to get the next set of team folders.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderListResult` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderListResult` object on
     /// success or a `Team.TeamFolderListContinueError` object on failure.
-    @discardableResult open func teamFolderListContinue(cursor: String) -> RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListContinueErrorSerializer> {
+    @discardableResult public func teamFolderListContinue(cursor: String)
+        -> RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListContinueErrorSerializer> {
         let route = Team.teamFolderListContinue
         let serverArgs = Team.TeamFolderListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -1258,11 +1691,14 @@ open class TeamRoutes {
     /// Permanently deletes an archived team folder. This endpoint cannot be used for teams that have a shared team
     /// space. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter teamFolderId: The ID of the team folder.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.TeamFolderPermanentlyDeleteError` object on failure.
-    @discardableResult open func teamFolderPermanentlyDelete(teamFolderId: String) -> RpcRequest<VoidSerializer, Team.TeamFolderPermanentlyDeleteErrorSerializer> {
+    @discardableResult public func teamFolderPermanentlyDelete(teamFolderId: String)
+        -> RpcRequest<VoidSerializer, Team.TeamFolderPermanentlyDeleteErrorSerializer> {
         let route = Team.teamFolderPermanentlyDelete
         let serverArgs = Team.TeamFolderIdArg(teamFolderId: teamFolderId)
         return client.request(route, serverArgs: serverArgs)
@@ -1270,11 +1706,16 @@ open class TeamRoutes {
 
     /// Changes an active team folder's name. Permission : Team member file access.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter name: New team folder name.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderRenameError` object on failure.
-    @discardableResult open func teamFolderRename(teamFolderId: String, name: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRenameErrorSerializer> {
+    @discardableResult public func teamFolderRename(
+        teamFolderId: String,
+        name: String
+    ) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRenameErrorSerializer> {
         let route = Team.teamFolderRename
         let serverArgs = Team.TeamFolderRenameArg(teamFolderId: teamFolderId, name: name)
         return client.request(route, serverArgs: serverArgs)
@@ -1283,13 +1724,19 @@ open class TeamRoutes {
     /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that the team has
     /// team selective sync enabled.
     ///
+    /// - scope: team_data.content.write
+    ///
     /// - parameter syncSetting: Sync setting to apply to the team folder itself. Only meaningful if the team folder is
     /// not a shared team root.
     /// - parameter contentSyncSettings: Sync settings to apply to contents of this team folder.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderUpdateSyncSettingsError` object on failure.
-    @discardableResult open func teamFolderUpdateSyncSettings(teamFolderId: String, syncSetting: Files.SyncSettingArg? = nil, contentSyncSettings: Array<Files.ContentSyncSettingArg>? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderUpdateSyncSettingsErrorSerializer> {
+    @discardableResult public func teamFolderUpdateSyncSettings(
+        teamFolderId: String,
+        syncSetting: Files.SyncSettingArg? = nil,
+        contentSyncSettings: [Files.ContentSyncSettingArg]? = nil
+    ) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderUpdateSyncSettingsErrorSerializer> {
         let route = Team.teamFolderUpdateSyncSettings
         let serverArgs = Team.TeamFolderUpdateSyncSettingsArg(teamFolderId: teamFolderId, syncSetting: syncSetting, contentSyncSettings: contentSyncSettings)
         return client.request(route, serverArgs: serverArgs)
@@ -1297,12 +1744,14 @@ open class TeamRoutes {
 
     /// Returns the member profile of the admin who generated the team access token used to make the call.
     ///
+    /// - scope: team_info.read
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Team.TokenGetAuthenticatedAdminResult`
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TokenGetAuthenticatedAdminResult`
     /// object on success or a `Team.TokenGetAuthenticatedAdminError` object on failure.
-    @discardableResult open func tokenGetAuthenticatedAdmin() -> RpcRequest<Team.TokenGetAuthenticatedAdminResultSerializer, Team.TokenGetAuthenticatedAdminErrorSerializer> {
+    @discardableResult public func tokenGetAuthenticatedAdmin()
+        -> RpcRequest<Team.TokenGetAuthenticatedAdminResultSerializer, Team.TokenGetAuthenticatedAdminErrorSerializer> {
         let route = Team.tokenGetAuthenticatedAdmin
         return client.request(route)
     }
-
 }

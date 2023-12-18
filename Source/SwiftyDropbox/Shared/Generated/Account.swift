@@ -7,83 +7,104 @@
 import Foundation
 
 /// Datatypes and serializers for the account namespace
-open class Account {
+public class Account {
     /// The PhotoSourceArg union
-    public enum PhotoSourceArg: CustomStringConvertible {
+    public enum PhotoSourceArg: CustomStringConvertible, JSONRepresentable {
         /// Image data in base64-encoded bytes.
         case base64Data(String)
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PhotoSourceArgSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PhotoSourceArgSerializer().serialize(self)
         }
-    }
-    open class PhotoSourceArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PhotoSourceArg) -> JSON {
-            switch value {
-                case .base64Data(let arg):
-                    var d = ["base64_data": Serialization._StringSerializer.serialize(arg)]
-                    d[".tag"] = .str("base64_data")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PhotoSourceArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PhotoSourceArg: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PhotoSourceArg {
+    }
+
+    public class PhotoSourceArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PhotoSourceArg) throws -> JSON {
+            switch value {
+            case .base64Data(let arg):
+                var d = try ["base64_data": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("base64_data")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PhotoSourceArg {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "base64_data":
-                            let v = Serialization._StringSerializer.deserialize(d["base64_data"] ?? .null)
-                            return PhotoSourceArg.base64Data(v)
-                        case "other":
-                            return PhotoSourceArg.other
-                        default:
-                            return PhotoSourceArg.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "base64_data":
+                    let v = try Serialization._StringSerializer.deserialize(d["base64_data"] ?? .null)
+                    return PhotoSourceArg.base64Data(v)
+                case "other":
+                    return PhotoSourceArg.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return PhotoSourceArg.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PhotoSourceArg.self, json: json)
             }
         }
     }
 
     /// The SetProfilePhotoArg struct
-    open class SetProfilePhotoArg: CustomStringConvertible {
+    public class SetProfilePhotoArg: CustomStringConvertible, JSONRepresentable {
         /// Image to set as the user's new profile photo.
         public let photo: Account.PhotoSourceArg
         public init(photo: Account.PhotoSourceArg) {
             self.photo = photo
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SetProfilePhotoArgSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try SetProfilePhotoArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SetProfilePhotoArg: \(error)"
+            }
         }
     }
-    open class SetProfilePhotoArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SetProfilePhotoArg) -> JSON {
-            let output = [ 
-            "photo": Account.PhotoSourceArgSerializer().serialize(value.photo),
+
+    public class SetProfilePhotoArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SetProfilePhotoArg) throws -> JSON {
+            let output = [
+                "photo": try Account.PhotoSourceArgSerializer().serialize(value.photo),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> SetProfilePhotoArg {
+
+        public func deserialize(_ json: JSON) throws -> SetProfilePhotoArg {
             switch json {
-                case .dictionary(let dict):
-                    let photo = Account.PhotoSourceArgSerializer().deserialize(dict["photo"] ?? .null)
-                    return SetProfilePhotoArg(photo: photo)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let photo = try Account.PhotoSourceArgSerializer().deserialize(dict["photo"] ?? .null)
+                return SetProfilePhotoArg(photo: photo)
+            default:
+                throw JSONSerializerError.deserializeError(type: SetProfilePhotoArg.self, json: json)
             }
         }
     }
 
     /// The SetProfilePhotoError union
-    public enum SetProfilePhotoError: CustomStringConvertible {
+    public enum SetProfilePhotoError: CustomStringConvertible, JSONRepresentable {
         /// File cannot be set as profile photo.
         case fileTypeError
         /// File cannot exceed 10 MB.
@@ -97,97 +118,117 @@ open class Account {
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SetProfilePhotoErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try SetProfilePhotoErrorSerializer().serialize(self)
         }
-    }
-    open class SetProfilePhotoErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SetProfilePhotoError) -> JSON {
-            switch value {
-                case .fileTypeError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("file_type_error")
-                    return .dictionary(d)
-                case .fileSizeError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("file_size_error")
-                    return .dictionary(d)
-                case .dimensionError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("dimension_error")
-                    return .dictionary(d)
-                case .thumbnailError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("thumbnail_error")
-                    return .dictionary(d)
-                case .transientError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("transient_error")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SetProfilePhotoError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> SetProfilePhotoError {
+    }
+
+    public class SetProfilePhotoErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SetProfilePhotoError) throws -> JSON {
+            switch value {
+            case .fileTypeError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("file_type_error")
+                return .dictionary(d)
+            case .fileSizeError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("file_size_error")
+                return .dictionary(d)
+            case .dimensionError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("dimension_error")
+                return .dictionary(d)
+            case .thumbnailError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("thumbnail_error")
+                return .dictionary(d)
+            case .transientError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("transient_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> SetProfilePhotoError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "file_type_error":
-                            return SetProfilePhotoError.fileTypeError
-                        case "file_size_error":
-                            return SetProfilePhotoError.fileSizeError
-                        case "dimension_error":
-                            return SetProfilePhotoError.dimensionError
-                        case "thumbnail_error":
-                            return SetProfilePhotoError.thumbnailError
-                        case "transient_error":
-                            return SetProfilePhotoError.transientError
-                        case "other":
-                            return SetProfilePhotoError.other
-                        default:
-                            return SetProfilePhotoError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "file_type_error":
+                    return SetProfilePhotoError.fileTypeError
+                case "file_size_error":
+                    return SetProfilePhotoError.fileSizeError
+                case "dimension_error":
+                    return SetProfilePhotoError.dimensionError
+                case "thumbnail_error":
+                    return SetProfilePhotoError.thumbnailError
+                case "transient_error":
+                    return SetProfilePhotoError.transientError
+                case "other":
+                    return SetProfilePhotoError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return SetProfilePhotoError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: SetProfilePhotoError.self, json: json)
             }
         }
     }
 
     /// The SetProfilePhotoResult struct
-    open class SetProfilePhotoResult: CustomStringConvertible {
+    public class SetProfilePhotoResult: CustomStringConvertible, JSONRepresentable {
         /// URL for the photo representing the user, if one is set.
         public let profilePhotoUrl: String
         public init(profilePhotoUrl: String) {
             stringValidator()(profilePhotoUrl)
             self.profilePhotoUrl = profilePhotoUrl
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SetProfilePhotoResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try SetProfilePhotoResultSerializer().serialize(self)
         }
-    }
-    open class SetProfilePhotoResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SetProfilePhotoResult) -> JSON {
-            let output = [ 
-            "profile_photo_url": Serialization._StringSerializer.serialize(value.profilePhotoUrl),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> SetProfilePhotoResult {
-            switch json {
-                case .dictionary(let dict):
-                    let profilePhotoUrl = Serialization._StringSerializer.deserialize(dict["profile_photo_url"] ?? .null)
-                    return SetProfilePhotoResult(profilePhotoUrl: profilePhotoUrl)
-                default:
-                    fatalError("Type error deserializing")
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SetProfilePhotoResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SetProfilePhotoResult: \(error)"
             }
         }
     }
 
+    public class SetProfilePhotoResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SetProfilePhotoResult) throws -> JSON {
+            let output = [
+                "profile_photo_url": try Serialization._StringSerializer.serialize(value.profilePhotoUrl),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> SetProfilePhotoResult {
+            switch json {
+            case .dictionary(let dict):
+                let profilePhotoUrl = try Serialization._StringSerializer.deserialize(dict["profile_photo_url"] ?? .null)
+                return SetProfilePhotoResult(profilePhotoUrl: profilePhotoUrl)
+            default:
+                throw JSONSerializerError.deserializeError(type: SetProfilePhotoResult.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -199,8 +240,10 @@ open class Account {
         argSerializer: Account.SetProfilePhotoArgSerializer(),
         responseSerializer: Account.SetProfilePhotoResultSerializer(),
         errorSerializer: Account.SetProfilePhotoErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

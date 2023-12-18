@@ -7,120 +7,148 @@
 import Foundation
 
 /// Datatypes and serializers for the openid namespace
-open class Openid {
+public class Openid {
     /// The OpenIdError union
-    public enum OpenIdError: CustomStringConvertible {
+    public enum OpenIdError: CustomStringConvertible, JSONRepresentable {
         /// Missing openid claims for the associated access token.
         case incorrectOpenidScopes
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(OpenIdErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try OpenIdErrorSerializer().serialize(self)
         }
-    }
-    open class OpenIdErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: OpenIdError) -> JSON {
-            switch value {
-                case .incorrectOpenidScopes:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("incorrect_openid_scopes")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try OpenIdErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for OpenIdError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> OpenIdError {
+    }
+
+    public class OpenIdErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: OpenIdError) throws -> JSON {
+            switch value {
+            case .incorrectOpenidScopes:
+                var d = [String: JSON]()
+                d[".tag"] = .str("incorrect_openid_scopes")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> OpenIdError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "incorrect_openid_scopes":
-                            return OpenIdError.incorrectOpenidScopes
-                        case "other":
-                            return OpenIdError.other
-                        default:
-                            return OpenIdError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "incorrect_openid_scopes":
+                    return OpenIdError.incorrectOpenidScopes
+                case "other":
+                    return OpenIdError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return OpenIdError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: OpenIdError.self, json: json)
             }
         }
     }
 
     /// No Parameters
-    open class UserInfoArgs: CustomStringConvertible {
-        public init() {
+    public class UserInfoArgs: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try UserInfoArgsSerializer().serialize(self)
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserInfoArgsSerializer().serialize(self)))"
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserInfoArgs: \(error)"
+            }
         }
     }
-    open class UserInfoArgsSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserInfoArgs) -> JSON {
+
+    public class UserInfoArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserInfoArgs) throws -> JSON {
             let output = [String: JSON]()
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> UserInfoArgs {
+
+        public func deserialize(_ json: JSON) throws -> UserInfoArgs {
             switch json {
-                case .dictionary(_):
-                    return UserInfoArgs()
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary:
+                return UserInfoArgs()
+            default:
+                throw JSONSerializerError.deserializeError(type: UserInfoArgs.self, json: json)
             }
         }
     }
 
     /// The UserInfoError union
-    public enum UserInfoError: CustomStringConvertible {
+    public enum UserInfoError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case openidError(Openid.OpenIdError)
         /// An unspecified error.
         case other
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserInfoErrorSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try UserInfoErrorSerializer().serialize(self)
         }
-    }
-    open class UserInfoErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserInfoError) -> JSON {
-            switch value {
-                case .openidError(let arg):
-                    var d = ["openid_error": Openid.OpenIdErrorSerializer().serialize(arg)]
-                    d[".tag"] = .str("openid_error")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserInfoError: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> UserInfoError {
+    }
+
+    public class UserInfoErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserInfoError) throws -> JSON {
+            switch value {
+            case .openidError(let arg):
+                var d = try ["openid_error": Openid.OpenIdErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("openid_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UserInfoError {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "openid_error":
-                            let v = Openid.OpenIdErrorSerializer().deserialize(d["openid_error"] ?? .null)
-                            return UserInfoError.openidError(v)
-                        case "other":
-                            return UserInfoError.other
-                        default:
-                            return UserInfoError.other
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "openid_error":
+                    let v = try Openid.OpenIdErrorSerializer().deserialize(d["openid_error"] ?? .null)
+                    return UserInfoError.openidError(v)
+                case "other":
+                    return UserInfoError.other
                 default:
-                    fatalError("Failed to deserialize")
+                    return UserInfoError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UserInfoError.self, json: json)
             }
         }
     }
 
     /// The UserInfoResult struct
-    open class UserInfoResult: CustomStringConvertible {
+    public class UserInfoResult: CustomStringConvertible, JSONRepresentable {
         /// Last name of user.
         public let familyName: String?
         /// First name of user.
@@ -147,39 +175,49 @@ open class Openid {
             stringValidator()(sub)
             self.sub = sub
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(UserInfoResultSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try UserInfoResultSerializer().serialize(self)
         }
-    }
-    open class UserInfoResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: UserInfoResult) -> JSON {
-            let output = [ 
-            "family_name": NullableSerializer(Serialization._StringSerializer).serialize(value.familyName),
-            "given_name": NullableSerializer(Serialization._StringSerializer).serialize(value.givenName),
-            "email": NullableSerializer(Serialization._StringSerializer).serialize(value.email),
-            "email_verified": NullableSerializer(Serialization._BoolSerializer).serialize(value.emailVerified),
-            "iss": Serialization._StringSerializer.serialize(value.iss),
-            "sub": Serialization._StringSerializer.serialize(value.sub),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> UserInfoResult {
-            switch json {
-                case .dictionary(let dict):
-                    let familyName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["family_name"] ?? .null)
-                    let givenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["given_name"] ?? .null)
-                    let email = NullableSerializer(Serialization._StringSerializer).deserialize(dict["email"] ?? .null)
-                    let emailVerified = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["email_verified"] ?? .null)
-                    let iss = Serialization._StringSerializer.deserialize(dict["iss"] ?? .str(""))
-                    let sub = Serialization._StringSerializer.deserialize(dict["sub"] ?? .str(""))
-                    return UserInfoResult(familyName: familyName, givenName: givenName, email: email, emailVerified: emailVerified, iss: iss, sub: sub)
-                default:
-                    fatalError("Type error deserializing")
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserInfoResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserInfoResult: \(error)"
             }
         }
     }
 
+    public class UserInfoResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserInfoResult) throws -> JSON {
+            let output = [
+                "family_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.familyName),
+                "given_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.givenName),
+                "email": try NullableSerializer(Serialization._StringSerializer).serialize(value.email),
+                "email_verified": try NullableSerializer(Serialization._BoolSerializer).serialize(value.emailVerified),
+                "iss": try Serialization._StringSerializer.serialize(value.iss),
+                "sub": try Serialization._StringSerializer.serialize(value.sub),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> UserInfoResult {
+            switch json {
+            case .dictionary(let dict):
+                let familyName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["family_name"] ?? .null)
+                let givenName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["given_name"] ?? .null)
+                let email = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["email"] ?? .null)
+                let emailVerified = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["email_verified"] ?? .null)
+                let iss = try Serialization._StringSerializer.deserialize(dict["iss"] ?? .str(""))
+                let sub = try Serialization._StringSerializer.deserialize(dict["sub"] ?? .str(""))
+                return UserInfoResult(familyName: familyName, givenName: givenName, email: email, emailVerified: emailVerified, iss: iss, sub: sub)
+            default:
+                throw JSONSerializerError.deserializeError(type: UserInfoResult.self, json: json)
+            }
+        }
+    }
 
     /// Stone Route Objects
 
@@ -191,8 +229,10 @@ open class Openid {
         argSerializer: Openid.UserInfoArgsSerializer(),
         responseSerializer: Openid.UserInfoResultSerializer(),
         errorSerializer: Openid.UserInfoErrorSerializer(),
-        attrs: ["auth": "user",
-                "host": "api",
-                "style": "rpc"]
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
     )
 }

@@ -7,9 +7,9 @@
 import Foundation
 
 /// Datatypes and serializers for the secondary_emails namespace
-open class SecondaryEmails {
+public class SecondaryEmails {
     /// The SecondaryEmail struct
-    open class SecondaryEmail: CustomStringConvertible {
+    public class SecondaryEmail: CustomStringConvertible, JSONRepresentable {
         /// Secondary email address.
         public let email: String
         /// Whether or not the secondary email address is verified to be owned by a user.
@@ -19,29 +19,39 @@ open class SecondaryEmails {
             self.email = email
             self.isVerified = isVerified
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(SecondaryEmailSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try SecondaryEmailSerializer().serialize(self)
         }
-    }
-    open class SecondaryEmailSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: SecondaryEmail) -> JSON {
-            let output = [ 
-            "email": Serialization._StringSerializer.serialize(value.email),
-            "is_verified": Serialization._BoolSerializer.serialize(value.isVerified),
-            ]
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> SecondaryEmail {
-            switch json {
-                case .dictionary(let dict):
-                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
-                    let isVerified = Serialization._BoolSerializer.deserialize(dict["is_verified"] ?? .null)
-                    return SecondaryEmail(email: email, isVerified: isVerified)
-                default:
-                    fatalError("Type error deserializing")
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SecondaryEmailSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SecondaryEmail: \(error)"
             }
         }
     }
 
+    public class SecondaryEmailSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SecondaryEmail) throws -> JSON {
+            let output = [
+                "email": try Serialization._StringSerializer.serialize(value.email),
+                "is_verified": try Serialization._BoolSerializer.serialize(value.isVerified),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> SecondaryEmail {
+            switch json {
+            case .dictionary(let dict):
+                let email = try Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
+                let isVerified = try Serialization._BoolSerializer.deserialize(dict["is_verified"] ?? .null)
+                return SecondaryEmail(email: email, isVerified: isVerified)
+            default:
+                throw JSONSerializerError.deserializeError(type: SecondaryEmail.self, json: json)
+            }
+        }
+    }
 }

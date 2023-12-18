@@ -7,33 +7,38 @@
 import Foundation
 
 /// Routes for the contacts namespace
-open class ContactsRoutes {
+/// For Objective-C compatible routes see DBContactsRoutes
+public class ContactsRoutes: DropboxTransportClientOwning {
     public let client: DropboxTransportClient
-    init(client: DropboxTransportClient) {
+    required init(client: DropboxTransportClient) {
         self.client = client
     }
 
     /// Removes all manually added contacts. You'll still keep contacts who are on your team or who you imported. New
     /// contacts will be added when you share.
     ///
+    /// - scope: contacts.write
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a `Void` object
     /// on failure.
-    @discardableResult open func deleteManualContacts() -> RpcRequest<VoidSerializer, VoidSerializer> {
+    @discardableResult public func deleteManualContacts() -> RpcRequest<VoidSerializer, VoidSerializer> {
         let route = Contacts.deleteManualContacts
         return client.request(route)
     }
 
     /// Removes manually added contacts from the given list.
     ///
+    /// - scope: contacts.write
+    ///
     /// - parameter emailAddresses: List of manually added contacts to be deleted.
     ///
-    ///  - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Contacts.DeleteManualContactsError` object on failure.
-    @discardableResult open func deleteManualContactsBatch(emailAddresses: Array<String>) -> RpcRequest<VoidSerializer, Contacts.DeleteManualContactsErrorSerializer> {
+    @discardableResult public func deleteManualContactsBatch(emailAddresses: [String])
+        -> RpcRequest<VoidSerializer, Contacts.DeleteManualContactsErrorSerializer> {
         let route = Contacts.deleteManualContactsBatch
         let serverArgs = Contacts.DeleteManualContactsArg(emailAddresses: emailAddresses)
         return client.request(route, serverArgs: serverArgs)
     }
-
 }

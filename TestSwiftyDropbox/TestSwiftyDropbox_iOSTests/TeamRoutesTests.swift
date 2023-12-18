@@ -11,7 +11,6 @@ import XCTest
 @testable import SwiftyDropbox
 
 class TeamRoutesTests: XCTestCase {
-
     private var teamClient: TeamRoutes!
     private var tester: DropboxTeamTester!
 
@@ -53,9 +52,19 @@ class TeamRoutesTests: XCTestCase {
         DropboxOAuthManager.sharedOAuthManager = nil
 
         #if os(OSX)
-        DropboxClientsManager.setupWithTeamAppKeyMultiUserDesktop(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUserDesktop(
+            apiAppKey,
+            transportClient: transportClient,
+            secureStorageAccess: SecureStorageAccessTestImpl(),
+            tokenUid: TestUid
+        )
         #elseif os(iOS)
-        DropboxClientsManager.setupWithTeamAppKeyMultiUser(apiAppKey, transportClient: transportClient, tokenUid: TestUid)
+        DropboxClientsManager.setupWithTeamAppKeyMultiUser(
+            apiAppKey,
+            transportClient: transportClient,
+            secureStorageAccess: SecureStorageAccessTestImpl(),
+            tokenUid: TestUid
+        )
         #endif
 
         teamClient = DropboxClientsManager.authorizedTeamClient?.team
@@ -78,7 +87,7 @@ class TeamRoutesTests: XCTestCase {
             flag.fulfill()
         }
 
-        let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
+        let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
         XCTAssertEqual(result, .completed, "Error: timeout on team management routes tests")
     }
 
@@ -89,7 +98,7 @@ class TeamRoutesTests: XCTestCase {
             flag.fulfill()
         }
 
-        let result = XCTWaiter.wait(for: [flag], timeout: 60*5)
+        let result = XCTWaiter.wait(for: [flag], timeout: 60 * 5)
         XCTAssertEqual(result, .completed, "Error: timeout on team management routes tests")
     }
 }

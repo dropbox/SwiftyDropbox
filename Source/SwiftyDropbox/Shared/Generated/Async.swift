@@ -7,206 +7,257 @@
 import Foundation
 
 /// Datatypes and serializers for the async namespace
-open class Async {
+public class Async {
     /// Result returned by methods that launch an asynchronous job. A method who may either launch an asynchronous job,
-    /// or complete the request synchronously, can use this union by extending it, and adding a 'complete' field with
-    /// the type of the synchronous response. See LaunchEmptyResult for an example.
-    public enum LaunchResultBase: CustomStringConvertible {
+    /// or complete the request synchronously, can use this union by extending it, and adding a 'complete' field
+    /// with the type of the synchronous response. See LaunchEmptyResult for an example.
+    public enum LaunchResultBase: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(LaunchResultBaseSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try LaunchResultBaseSerializer().serialize(self)
         }
-    }
-    open class LaunchResultBaseSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: LaunchResultBase) -> JSON {
-            switch value {
-                case .asyncJobId(let arg):
-                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
-                    d[".tag"] = .str("async_job_id")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try LaunchResultBaseSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for LaunchResultBase: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> LaunchResultBase {
+    }
+
+    public class LaunchResultBaseSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: LaunchResultBase) throws -> JSON {
+            switch value {
+            case .asyncJobId(let arg):
+                var d = try ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("async_job_id")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> LaunchResultBase {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "async_job_id":
-                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
-                            return LaunchResultBase.asyncJobId(v)
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "async_job_id":
+                    let v = try Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                    return LaunchResultBase.asyncJobId(v)
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: LaunchResultBase.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: LaunchResultBase.self, json: json)
             }
         }
     }
 
     /// Result returned by methods that may either launch an asynchronous job or complete synchronously. Upon
     /// synchronous completion of the job, no additional information is returned.
-    public enum LaunchEmptyResult: CustomStringConvertible {
+    public enum LaunchEmptyResult: CustomStringConvertible, JSONRepresentable {
         /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
         /// the status of the asynchronous job.
         case asyncJobId(String)
         /// The job finished synchronously and successfully.
         case complete
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(LaunchEmptyResultSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try LaunchEmptyResultSerializer().serialize(self)
         }
-    }
-    open class LaunchEmptyResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: LaunchEmptyResult) -> JSON {
-            switch value {
-                case .asyncJobId(let arg):
-                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
-                    d[".tag"] = .str("async_job_id")
-                    return .dictionary(d)
-                case .complete:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("complete")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try LaunchEmptyResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for LaunchEmptyResult: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> LaunchEmptyResult {
+    }
+
+    public class LaunchEmptyResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: LaunchEmptyResult) throws -> JSON {
+            switch value {
+            case .asyncJobId(let arg):
+                var d = try ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("async_job_id")
+                return .dictionary(d)
+            case .complete:
+                var d = [String: JSON]()
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> LaunchEmptyResult {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "async_job_id":
-                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
-                            return LaunchEmptyResult.asyncJobId(v)
-                        case "complete":
-                            return LaunchEmptyResult.complete
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "async_job_id":
+                    let v = try Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                    return LaunchEmptyResult.asyncJobId(v)
+                case "complete":
+                    return LaunchEmptyResult.complete
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: LaunchEmptyResult.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: LaunchEmptyResult.self, json: json)
             }
         }
     }
 
     /// Arguments for methods that poll the status of an asynchronous job.
-    open class PollArg: CustomStringConvertible {
+    public class PollArg: CustomStringConvertible, JSONRepresentable {
         /// Id of the asynchronous job. This is the value of a response returned from the method that launched the job.
         public let asyncJobId: String
         public init(asyncJobId: String) {
             stringValidator(minLength: 1)(asyncJobId)
             self.asyncJobId = asyncJobId
         }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PollArgSerializer().serialize(self)))"
+
+        func json() throws -> JSON {
+            try PollArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PollArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PollArg: \(error)"
+            }
         }
     }
-    open class PollArgSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PollArg) -> JSON {
-            let output = [ 
-            "async_job_id": Serialization._StringSerializer.serialize(value.asyncJobId),
+
+    public class PollArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PollArg) throws -> JSON {
+            let output = [
+                "async_job_id": try Serialization._StringSerializer.serialize(value.asyncJobId),
             ]
             return .dictionary(output)
         }
-        open func deserialize(_ json: JSON) -> PollArg {
+
+        public func deserialize(_ json: JSON) throws -> PollArg {
             switch json {
-                case .dictionary(let dict):
-                    let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .null)
-                    return PollArg(asyncJobId: asyncJobId)
-                default:
-                    fatalError("Type error deserializing")
+            case .dictionary(let dict):
+                let asyncJobId = try Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .null)
+                return PollArg(asyncJobId: asyncJobId)
+            default:
+                throw JSONSerializerError.deserializeError(type: PollArg.self, json: json)
             }
         }
     }
 
     /// Result returned by methods that poll for the status of an asynchronous job. Unions that extend this union should
-    /// add a 'complete' field with a type of the information returned upon job completion. See PollEmptyResult for an
-    /// example.
-    public enum PollResultBase: CustomStringConvertible {
+    /// add a 'complete' field with a type of the information returned upon job completion. See PollEmptyResult for
+    /// an example.
+    public enum PollResultBase: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PollResultBaseSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PollResultBaseSerializer().serialize(self)
         }
-    }
-    open class PollResultBaseSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PollResultBase) -> JSON {
-            switch value {
-                case .inProgress:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("in_progress")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PollResultBaseSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PollResultBase: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PollResultBase {
+    }
+
+    public class PollResultBaseSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PollResultBase) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PollResultBase {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "in_progress":
-                            return PollResultBase.inProgress
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return PollResultBase.inProgress
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: PollResultBase.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PollResultBase.self, json: json)
             }
         }
     }
 
     /// Result returned by methods that poll for the status of an asynchronous job. Upon completion of the job, no
     /// additional information is returned.
-    public enum PollEmptyResult: CustomStringConvertible {
+    public enum PollEmptyResult: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress
         /// The asynchronous job has completed successfully.
         case complete
 
-        public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PollEmptyResultSerializer().serialize(self)))"
+        func json() throws -> JSON {
+            try PollEmptyResultSerializer().serialize(self)
         }
-    }
-    open class PollEmptyResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PollEmptyResult) -> JSON {
-            switch value {
-                case .inProgress:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("in_progress")
-                    return .dictionary(d)
-                case .complete:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("complete")
-                    return .dictionary(d)
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PollEmptyResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PollEmptyResult: \(error)"
             }
         }
-        open func deserialize(_ json: JSON) -> PollEmptyResult {
+    }
+
+    public class PollEmptyResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PollEmptyResult) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete:
+                var d = [String: JSON]()
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PollEmptyResult {
             switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "in_progress":
-                            return PollEmptyResult.inProgress
-                        case "complete":
-                            return PollEmptyResult.complete
-                        default:
-                            fatalError("Unknown tag \(tag)")
-                    }
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return PollEmptyResult.inProgress
+                case "complete":
+                    return PollEmptyResult.complete
                 default:
-                    fatalError("Failed to deserialize")
+                    throw JSONSerializerError.unknownTag(type: PollEmptyResult.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PollEmptyResult.self, json: json)
             }
         }
     }
 
     /// Error returned by methods for polling the status of asynchronous job.
-    public enum PollError: CustomStringConvertible {
+    public enum PollError: CustomStringConvertible, JSONRepresentable {
         /// The job ID is invalid.
         case invalidAsyncJobId
         /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
@@ -215,46 +266,55 @@ open class Async {
         /// An unspecified error.
         case other
 
+        func json() throws -> JSON {
+            try PollErrorSerializer().serialize(self)
+        }
+
         public var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(PollErrorSerializer().serialize(self)))"
-        }
-    }
-    open class PollErrorSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: PollError) -> JSON {
-            switch value {
-                case .invalidAsyncJobId:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("invalid_async_job_id")
-                    return .dictionary(d)
-                case .internalError:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("internal_error")
-                    return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
-            }
-        }
-        open func deserialize(_ json: JSON) -> PollError {
-            switch json {
-                case .dictionary(let d):
-                    let tag = Serialization.getTag(d)
-                    switch tag {
-                        case "invalid_async_job_id":
-                            return PollError.invalidAsyncJobId
-                        case "internal_error":
-                            return PollError.internalError
-                        case "other":
-                            return PollError.other
-                        default:
-                            return PollError.other
-                    }
-                default:
-                    fatalError("Failed to deserialize")
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PollErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PollError: \(error)"
             }
         }
     }
 
+    public class PollErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: PollError) throws -> JSON {
+            switch value {
+            case .invalidAsyncJobId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_async_job_id")
+                return .dictionary(d)
+            case .internalError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("internal_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> PollError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "invalid_async_job_id":
+                    return PollError.invalidAsyncJobId
+                case "internal_error":
+                    return PollError.internalError
+                case "other":
+                    return PollError.other
+                default:
+                    return PollError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: PollError.self, json: json)
+            }
+        }
+    }
 }

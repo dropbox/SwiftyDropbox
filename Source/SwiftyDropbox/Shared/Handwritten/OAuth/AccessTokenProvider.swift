@@ -16,6 +16,11 @@ public protocol AccessTokenProvider: Any {
 /// Wrapper for legacy long-lived access token.
 public struct LongLivedAccessTokenProvider: AccessTokenProvider {
     public let accessToken: String
+
+    public init(accessToken: String) {
+        self.accessToken = accessToken
+    }
+
     public func refreshAccessTokenIfNecessary(completion: @escaping DropboxOAuthCompletion) {
         // Complete with empty result, because it doesn't need a refresh.
         completion(nil)
@@ -25,7 +30,11 @@ public struct LongLivedAccessTokenProvider: AccessTokenProvider {
 /// Wrapper for short-lived token.
 public class ShortLivedAccessTokenProvider: AccessTokenProvider {
     public var accessToken: String {
-        queue.sync { token.accessToken }
+        var tokenString: String
+        lock.lock()
+        tokenString = token.accessToken
+        lock.unlock()
+        return tokenString
     }
 
     private let queue = DispatchQueue(
@@ -33,6 +42,7 @@ public class ShortLivedAccessTokenProvider: AccessTokenProvider {
         qos: .userInitiated,
         attributes: .concurrent
     )
+    private let lock: NSLock = .init()
     private let tokenRefresher: AccessTokenRefreshing
     private var token: DropboxAccessToken
     private var completionBlocks = [(DropboxOAuthResult?) -> Void]()
@@ -54,7 +64,7 @@ public class ShortLivedAccessTokenProvider: AccessTokenProvider {
     /// - Parameters:
     ///     - token: The `DropboxAccessToken` object for a short-lived token.
     ///     - tokenRefresher: Helper object that refreshes a token over network.
-    init(token: DropboxAccessToken, tokenRefresher: AccessTokenRefreshing) {
+    public init(token: DropboxAccessToken, tokenRefresher: AccessTokenRefreshing) {
         self.token = token
         self.tokenRefresher = tokenRefresher
     }
@@ -81,7 +91,9 @@ public class ShortLivedAccessTokenProvider: AccessTokenProvider {
     private func handleRefreshResult(_ result: DropboxOAuthResult?) {
         queue.async(flags: .barrier) {
             if case let .success(token) = result {
+                self.lock.lock()
                 self.token = token
+                self.lock.unlock()
             }
             self.completionBlocks.forEach { block in
                 block(result)

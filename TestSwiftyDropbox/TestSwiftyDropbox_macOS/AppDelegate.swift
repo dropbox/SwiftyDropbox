@@ -7,7 +7,7 @@ import SwiftyDropbox
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var viewController: ViewController? = nil;
+    var viewController: ViewController?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         let processInfo = ProcessInfo.processInfo.environment
@@ -18,20 +18,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        if (TestData.fullDropboxAppKey.range(of:"<") != nil) {
+        if TestData.fullDropboxAppKey.range(of: "<") != nil {
             print("\n\n\nMust set test data (in TestData.swift) before launching app.\n\n\nTerminating.....\n\n")
-            exit(0);
+            exit(0)
         }
-        switch(appPermission) {
+        switch appPermission {
         case .fullDropboxScoped:
             DropboxClientsManager.setupWithAppKeyDesktop(TestData.fullDropboxAppKey)
         case .fullDropboxScopedForTeamTesting:
             DropboxClientsManager.setupWithTeamAppKeyDesktop(TestData.fullDropboxAppKey)
         }
-        NSAppleEventManager.shared().setEventHandler(self, andSelector: #selector(handleGetURLEvent), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+        NSAppleEventManager.shared()
+            .setEventHandler(
+                self,
+                andSelector: #selector(handleGetURLEvent),
+                forEventClass: AEEventClass(kInternetEventClass),
+                andEventID: AEEventID(kAEGetURL)
+            )
 
         viewController = NSApplication.shared.windows[0].contentViewController as? ViewController
-        self.checkButtons()
+        checkButtons()
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEventDescriptor?) {
@@ -52,9 +58,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     self.checkButtons()
                 }
 
-                switch(appPermission) {
+                switch appPermission {
                 case .fullDropboxScoped:
-                    DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+                    DropboxClientsManager.handleRedirectURL(url, includeBackgroundClient: false, completion: oauthCompletion)
                 case .fullDropboxScopedForTeamTesting:
                     DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
                 }
@@ -70,4 +76,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         viewController?.checkButtons()
     }
 }
-

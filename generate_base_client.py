@@ -39,10 +39,21 @@ _cmdline_parser.add_argument(
     help='Path to generation output.',
 )
 _cmdline_parser.add_argument(
+    '-objc',
+    action='store_true',
+    help='Generate objective-c routes',
+)
+_cmdline_parser.add_argument(
     '-r',
     '--route-whitelist-filter',
     type=str,
     help='Path to route whitelist filter used by Stone. See stone -r for detailed instructions.',
+)
+_cmdline_parser.add_argument(
+    '-rop',
+    '--relative-objc-path',
+    type=str,
+    help='A custom output path for Objective-C compatible files relative to the standard Swift files',
 )
 
 def main():
@@ -65,20 +76,31 @@ def main():
         stone_path = args.stone
 
     dropbox_default_output_path = 'Source/SwiftyDropbox/Shared/Generated'
+    dropbox_objc_output_path = 'Source/SwiftyDropboxObjC/Shared/Generated'
     dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
+    dropbox_objc_pkg_path = args.output_path if args.output_path else dropbox_objc_output_path
 
     # we run stone generation relative to the stone module,
     # so we make our output path absolute here so it's relative to where we are called
     if not os.path.isabs(dropbox_pkg_path):
         dropbox_pkg_path = os.path.abspath(dropbox_pkg_path)
 
+    if not os.path.isabs(dropbox_objc_pkg_path):
+        dropbox_objc_pkg_path = os.path.abspath(dropbox_objc_pkg_path)
+
     # clear out all old files
-    if os.path.exists(dropbox_pkg_path):
-        shutil.rmtree(dropbox_pkg_path)
-    os.makedirs(dropbox_pkg_path)
+    if args.objc:
+        if os.path.exists(dropbox_objc_pkg_path):
+            shutil.rmtree(dropbox_objc_pkg_path)
+        os.makedirs(dropbox_objc_pkg_path)
+    else:
+        if os.path.exists(dropbox_pkg_path):
+            shutil.rmtree(dropbox_pkg_path)
+        os.makedirs(dropbox_pkg_path)
 
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
+        print('Dropbox objc package path: %s' % dropbox_objc_pkg_path)
         print('Generating Swift types')
 
     stone_cmd_prefix = [
@@ -93,6 +115,10 @@ def main():
         stone_cmd_prefix += ['-r', args.route_whitelist_filter]
 
     types_cmd = stone_cmd_prefix + ['swift_types', dropbox_pkg_path] + specs
+    if args.objc:
+        types_cmd = types_cmd + ['--', '-objc']
+        if args.relative_objc_path is not None:
+            types_cmd = types_cmd + ['-rop', args.relative_objc_path]
 
     o = subprocess.check_output(
         (types_cmd),
@@ -106,25 +132,46 @@ def main():
     if verbose:
         print('Generating Swift user and team clients')
 
+    route_attrs = ['-a', 'scope']
+    swift_client = ['swift_client', dropbox_pkg_path]
+
+    base_args = ['-b', 'team', '--', '-w', 'user', '-m', 'Base', '-c', 'DropboxBase',
+            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]
+    team_args = ['-w', 'team', '--', '-w', 'team', '-m', 'BaseTeam', '-c', 'DropboxTeamBase',
+            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]
+    app_args = ['--', '-w', 'app', '-m', 'BaseApp', '-c', 'DropboxAppBase',
+            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]
+
+    if args.objc:
+        base_args.append('-objc')
+        team_args.append('-objc')
+        app_args.append('-objc')
+
+        if args.relative_objc_path is not None:
+            base_args = base_args + ['-rop', args.relative_objc_path]
+            team_args = team_args + ['-rop', args.relative_objc_path]
+            app_args = app_args + ['-rop', args.relative_objc_path]
+
     o = subprocess.check_output(
-        (stone_cmd_prefix + ['swift_client', dropbox_pkg_path] +
-            specs + ['-b', 'team', '--', '-m', 'Base', '-c', 'DropboxBase',
-            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
+        (stone_cmd_prefix + route_attrs + swift_client + specs + base_args),
         cwd=stone_path)
     if o:
         print('Output:', o)
     o = subprocess.check_output(
-        (stone_cmd_prefix + ['swift_client', dropbox_pkg_path] +
-            specs + ['-w', 'team', '--', '-m', 'BaseTeam', '-c', 'DropboxTeamBase',
-            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
+        (stone_cmd_prefix + route_attrs + swift_client + specs + team_args),
+        cwd=stone_path)
+    if o:
+        print('Output:', o)
+
+    o = subprocess.check_output(
+        (stone_cmd_prefix + route_attrs + swift_client + specs + app_args),
         cwd=stone_path)
     if o:
         print('Output:', o)
 
 def _get_client_args():
     input_doc = "The file to upload, as an {} object."
-    dest_doc = ('A closure used to compute the destination, '
-        + 'given the temporary file location and the response.')
+    dest_doc = ('The location to write the download to.')
 
     overwrite_doc = ('A boolean to set behavior in the event of a naming conflict. `True` will '
         + 'overwrite conflicting file at destination. `False` will take no action (but '
@@ -138,7 +185,7 @@ def _get_client_args():
         ],
         'download': [
             ('download_file', [('overwrite', 'overwrite', 'Bool = false', overwrite_doc),
-                ('destination', 'destination', '@escaping (URL, HTTPURLResponse) -> URL', dest_doc)]),
+                ('destination', 'destination', 'URL', dest_doc)]),
             ('download_memory', []),
         ],
     }
