@@ -1,6 +1,6 @@
 # Dropbox for Swift
 
-## Version 10.0.0 beta differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-1000) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
+## Version 10.0.0 differs greatly from previous versions of the SDK. See [Changes in version 10.0.0](#changes-in-version-1000) and, if needed, [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c).
 
 The Official Dropbox Swift SDK for integrating with Dropbox [API v2](https://www.dropbox.com/developers/documentation/http/documentation) on iOS or macOS.
 
@@ -962,7 +962,7 @@ For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (o
 use_frameworks!
 
 target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropboxObjC', '~> 10.0.0-beta.3'
+    pod 'SwiftyDropboxObjC', '~> 10.0.0'
 end
 ```
 
@@ -1109,7 +1109,7 @@ These additional features are the greatest differences, but even simple upgrades
 
 For notes on Objective-C support see [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
 
-The SDK's background networking support simplifies the reconnection of completion handlers to URLSession tasks. See [`TestSwiftyDropbox/DebugBackgroundSessionViewModel`](https://github.com/dropbox/SwiftyDropbox/tree/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_SwiftUI/iOS) for code that exercises various background networking scenarios. See [`TestSwiftDropbox/ActionRequestHandler`](https://github.com/dropbox/SwiftyDropbox/blob/branch_10.0.0-beta/TestSwiftyDropbox/TestSwiftyDropbox_ActionExtension/ActionRequestHandler.swift) for usage from an app extension.
+The SDK's background networking support simplifies the reconnection of completion handlers to URLSession tasks. See [`TestSwiftyDropbox/DebugBackgroundSessionViewModel`](https://github.com/dropbox/SwiftyDropbox/tree/master/TestSwiftyDropbox/TestSwiftyDropbox_SwiftUI/iOS) for code that exercises various background networking scenarios. See [`TestSwiftDropbox/ActionRequestHandler`](https://github.com/dropbox/SwiftyDropbox/blob/master/TestSwiftyDropbox/TestSwiftyDropbox_ActionExtension/ActionRequestHandler.swift) for usage from an app extension.
 
 ### Testing Support
 
