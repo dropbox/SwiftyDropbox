@@ -23,5 +23,4 @@ public class DropboxAppClient: DropboxAppBase {
     required convenience init(client: DropboxTransportClient) {
         self.init(transportClient: client)
     }
-
 }
