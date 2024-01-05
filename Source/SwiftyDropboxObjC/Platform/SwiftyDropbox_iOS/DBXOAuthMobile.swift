@@ -17,7 +17,7 @@ extension DBXDropboxClientsManager {
     ///
     /// - Parameters:
     ///     - sharedApplication: The shared UIApplication instance in your app.
-    ///     - controller: A UIViewController to present the auth flow from. Reference is weakly held.
+    ///     - controller: A UIViewController to present the auth flow from. This should be the top-most view controller. Reference is weakly held.
     ///     - openURL: Handler to open a URL.
     @objc
     @available(
@@ -43,7 +43,7 @@ extension DBXDropboxClientsManager {
     ///
     /// - Parameters:
     ///     - sharedApplication: The shared UIApplication instance in your app.
-    ///     - controller: A UIViewController to present the auth flow from. Reference is weakly held.
+    ///     - controller: A UIViewController to present the auth flow from. This should be the top-most view controller. Reference is weakly held.
     ///     - loadingStatusDelegate: An optional delegate to handle loading experience during auth flow.
     ///       e.g. Show a loading spinner and block user interaction while loading/waiting.
     ///       If a delegate is not provided, the SDK will show a default loading spinner when necessary.
