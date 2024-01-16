@@ -24,7 +24,9 @@ protocol PersistedRequestInfoBaseInfo {
     var clientProvidedInfo: String? { get set }
 }
 
-private let Separator = "#?///?#"
+fileprivate struct ReconnectionConstants {
+    static let separator = "#?///?#"
+}
 
 protocol ReconnectionHelpersShared {
     static func persistedRequestInfo(from apiRequest: ApiRequest) throws -> ReconnectionHelpers.PersistedRequestInfo
@@ -57,7 +59,7 @@ extension ReconnectionHelpersShared {
     }
 
     static func originalSdkVersion(fromJsonString jsonString: String) throws -> String {
-        let components = jsonString.components(separatedBy: Separator)
+        let components = jsonString.components(separatedBy: ReconnectionConstants.separator)
         guard components.count == 2 else {
             throw ReconnectionErrorKind.badPersistedStringFormat
         }
@@ -128,11 +130,11 @@ extension ReconnectionHelpers {
             let jsonString = String(data: jsonData, encoding: .utf8)
 
             // We encode the SDK Version outside of the JSON so we can condition JSON decoding on a version match
-            return DropboxClientsManager.sdkVersion + Separator + (try jsonString.orThrow())
+            return DropboxClientsManager.sdkVersion + ReconnectionConstants.separator + (try jsonString.orThrow())
         }
 
         static func from(jsonString: String) throws -> Self {
-            let components = jsonString.components(separatedBy: Separator)
+            let components = jsonString.components(separatedBy: ReconnectionConstants.separator)
             guard components.count == 2 else {
                 throw ReconnectionErrorKind.badPersistedStringFormat
             }
