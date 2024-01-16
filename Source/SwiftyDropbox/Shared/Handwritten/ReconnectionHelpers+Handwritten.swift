@@ -24,9 +24,87 @@ protocol PersistedRequestInfoBaseInfo {
     var clientProvidedInfo: String? { get set }
 }
 
-extension ReconnectionHelpers {
-    private static let Separator = "#?///?#"
+fileprivate struct ReconnectionConstants {
+    static let separator = "#?///?#"
+}
 
+protocol ReconnectionHelpersShared {
+    static func persistedRequestInfo(from apiRequest: ApiRequest) throws -> ReconnectionHelpers.PersistedRequestInfo
+    static func originalSdkVersion(fromJsonString jsonString: String) throws -> String
+    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
+        apiRequest: ApiRequest,
+        info: ReconnectionHelpers.PersistedRequestInfo,
+        route: Route<ASerial, RSerial, ESerial>,
+        client: DropboxTransportClientInternal
+    ) -> UploadRequest<RSerial, ESerial>
+
+    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
+        apiRequest: ApiRequest,
+        info: ReconnectionHelpers.PersistedRequestInfo,
+        route: Route<ASerial, RSerial, ESerial>,
+        client: DropboxTransportClientInternal
+    ) -> DownloadRequestFile<RSerial, ESerial>
+}
+
+extension ReconnectionHelpersShared {
+    static func persistedRequestInfo(from apiRequest: ApiRequest) throws -> ReconnectionHelpers.PersistedRequestInfo {
+        guard let taskDescription = apiRequest.taskDescription else {
+            throw ReconnectionErrorKind.noPersistedInfo
+        }
+        guard try originalSdkVersion(fromJsonString: taskDescription) == DropboxClientsManager.sdkVersion else {
+            throw ReconnectionErrorKind.versionMismatch
+        }
+
+        return try ReconnectionHelpers.PersistedRequestInfo.from(jsonString: taskDescription)
+    }
+
+    static func originalSdkVersion(fromJsonString jsonString: String) throws -> String {
+        let components = jsonString.components(separatedBy: ReconnectionConstants.separator)
+        guard components.count == 2 else {
+            throw ReconnectionErrorKind.badPersistedStringFormat
+        }
+        return components[0]
+    }
+
+    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
+        apiRequest: ApiRequest,
+        info: ReconnectionHelpers.PersistedRequestInfo,
+        route: Route<ASerial, RSerial, ESerial>,
+        client: DropboxTransportClientInternal
+    ) -> UploadRequest<RSerial, ESerial> {
+        if case .upload = info {
+            return client.reconnectRequest(
+                route,
+                apiRequest: apiRequest
+            )
+        } else {
+            fatalError("codegen error, background request not an upload or download file request")
+        }
+    }
+
+    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
+        apiRequest: ApiRequest,
+        info: ReconnectionHelpers.PersistedRequestInfo,
+        route: Route<ASerial, RSerial, ESerial>,
+        client: DropboxTransportClientInternal
+    ) -> DownloadRequestFile<RSerial, ESerial> {
+        if case .downloadFile(let info) = info {
+            return client.reconnectRequest(
+                route,
+                apiRequest: apiRequest,
+                overwrite: info.overwrite,
+                destination: info.destination
+            )
+        } else {
+            fatalError("codegen error, background request not an upload or download file request")
+        }
+    }
+}
+
+extension ReconnectionHelpers: ReconnectionHelpersShared {}
+extension AppAuthReconnectionHelpers: ReconnectionHelpersShared {}
+
+extension ReconnectionHelpers {
     enum PersistedRequestInfo: Codable, Equatable {
         case upload(StandardInfo)
         case downloadFile(DownloadFileInfo)
@@ -52,11 +130,11 @@ extension ReconnectionHelpers {
             let jsonString = String(data: jsonData, encoding: .utf8)
 
             // We encode the SDK Version outside of the JSON so we can condition JSON decoding on a version match
-            return DropboxClientsManager.sdkVersion + Separator + (try jsonString.orThrow())
+            return DropboxClientsManager.sdkVersion + ReconnectionConstants.separator + (try jsonString.orThrow())
         }
 
         static func from(jsonString: String) throws -> Self {
-            let components = jsonString.components(separatedBy: Separator)
+            let components = jsonString.components(separatedBy: ReconnectionConstants.separator)
             guard components.count == 2 else {
                 throw ReconnectionErrorKind.badPersistedStringFormat
             }
@@ -94,59 +172,6 @@ extension ReconnectionHelpers {
                 self = .downloadFile(downloadInfo)
             }
             return self
-        }
-    }
-
-    static func persistedRequestInfo(from apiRequest: ApiRequest) throws -> PersistedRequestInfo {
-        guard let taskDescription = apiRequest.taskDescription else {
-            throw ReconnectionErrorKind.noPersistedInfo
-        }
-        guard try originalSdkVersion(fromJsonString: taskDescription) == DropboxClientsManager.sdkVersion else {
-            throw ReconnectionErrorKind.versionMismatch
-        }
-
-        return try PersistedRequestInfo.from(jsonString: taskDescription)
-    }
-
-    static func originalSdkVersion(fromJsonString jsonString: String) throws -> String {
-        let components = jsonString.components(separatedBy: Separator)
-        guard components.count == 2 else {
-            throw ReconnectionErrorKind.badPersistedStringFormat
-        }
-        return components[0]
-    }
-
-    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
-        apiRequest: ApiRequest,
-        info: PersistedRequestInfo,
-        route: Route<ASerial, RSerial, ESerial>,
-        client: DropboxTransportClientInternal
-    ) -> UploadRequest<RSerial, ESerial> {
-        if case .upload = info {
-            return client.reconnectRequest(
-                route,
-                apiRequest: apiRequest
-            )
-        } else {
-            fatalError("codegen error, background request not an upload or download file request")
-        }
-    }
-
-    static func rebuildRequest<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer>(
-        apiRequest: ApiRequest,
-        info: PersistedRequestInfo,
-        route: Route<ASerial, RSerial, ESerial>,
-        client: DropboxTransportClientInternal
-    ) -> DownloadRequestFile<RSerial, ESerial> {
-        if case .downloadFile(let info) = info {
-            return client.reconnectRequest(
-                route,
-                apiRequest: apiRequest,
-                overwrite: info.overwrite,
-                destination: info.destination
-            )
-        } else {
-            fatalError("codegen error, background request not an upload or download file request")
         }
     }
 }

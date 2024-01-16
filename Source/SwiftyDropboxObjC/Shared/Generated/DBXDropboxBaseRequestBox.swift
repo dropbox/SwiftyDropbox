@@ -46,8 +46,6 @@ extension DropboxBaseRequestBox {
             return DBXPaperDocsUpdateUploadRequest(swift: swift)
         case .getSharedLinkFile(let swift):
             return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
-        default:
-            fatalError("For Obj-C compatibility, add this route to the Objective-C compatibility module allow-list")
         }
     }
 }

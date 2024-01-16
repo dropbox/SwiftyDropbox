@@ -19,6 +19,12 @@ public class DBXDropboxAppBase: NSObject {
     /// Routes within the check namespace. See DBCheckAppAuthRoutes for details.
     @objc
     public var check: DBXCheckAppAuthRoutes!
+    /// Routes within the files namespace. See DBFilesAppAuthRoutes for details.
+    @objc
+    public var files: DBXFilesAppAuthRoutes!
+    /// Routes within the sharing namespace. See DBSharingAppAuthRoutes for details.
+    @objc
+    public var sharing: DBXSharingAppAuthRoutes!
 
     @objc
     public convenience init(client: DBXDropboxTransportClient) {
@@ -30,5 +36,7 @@ public class DBXDropboxAppBase: NSObject {
 
         self.auth = DBXAuthAppAuthRoutes(swift: swift.auth)
         self.check = DBXCheckAppAuthRoutes(swift: swift.check)
+        self.files = DBXFilesAppAuthRoutes(swift: swift.files)
+        self.sharing = DBXSharingAppAuthRoutes(swift: swift.sharing)
     }
 }

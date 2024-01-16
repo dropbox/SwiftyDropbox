@@ -13,11 +13,17 @@ public class DropboxAppBase: DropboxTransportClientOwning {
     public var auth: AuthAppAuthRoutes!
     /// Routes within the check namespace. See CheckAppAuthRoutes for details.
     public var check: CheckAppAuthRoutes!
+    /// Routes within the files namespace. See FilesAppAuthRoutes for details.
+    public var files: FilesAppAuthRoutes!
+    /// Routes within the sharing namespace. See SharingAppAuthRoutes for details.
+    public var sharing: SharingAppAuthRoutes!
 
     public required init(client: DropboxTransportClient) {
         self.client = client
 
         self.auth = AuthAppAuthRoutes(client: client)
         self.check = CheckAppAuthRoutes(client: client)
+        self.files = FilesAppAuthRoutes(client: client)
+        self.sharing = SharingAppAuthRoutes(client: client)
     }
 }
