@@ -363,7 +363,7 @@ extension NetworkSessionManager: CombinedURLSessionDelegate {
 
 // Allows deferring setting a delegate to after session initialization
 class NetworkSessionPassthroughDelegate: NSObject, CombinedURLSessionDelegate {
-    var delegate: CombinedURLSessionDelegate?
+    weak var delegate: CombinedURLSessionDelegate?
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         delegate?.urlSession?(session, dataTask: dataTask, didReceive: data)
