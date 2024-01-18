@@ -56,7 +56,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/10.0.0
 
 ## System requirements
 
-- iOS 11.0+
+- iOS 12.0+
 - macOS 10.13+
 - Xcode 13.3+
 - Swift 5.6+
