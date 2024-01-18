@@ -642,7 +642,7 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = Dropbox;
 				TargetAttributes = {
 					1A10E2BC29F1FD62001899ED = {
@@ -1538,7 +1538,7 @@
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.getdropbox.TestSwiftyDropbox-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1561,7 +1561,7 @@
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/TestSwiftyDropbox_iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.getdropbox.TestSwiftyDropbox-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
