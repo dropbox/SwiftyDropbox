@@ -24,7 +24,7 @@ protocol PersistedRequestInfoBaseInfo {
     var clientProvidedInfo: String? { get set }
 }
 
-fileprivate struct ReconnectionConstants {
+private struct ReconnectionConstants {
     static let separator = "#?///?#"
 }
 
