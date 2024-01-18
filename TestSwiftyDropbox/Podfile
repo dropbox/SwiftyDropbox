@@ -1,7 +1,7 @@
 use_frameworks!
 
 def shared_iOS_pods
-    platform :ios, '11.0'
+    platform :ios, '12.0'
     pod 'SwiftyDropbox', :path => '../'
     pod 'SwiftyDropboxObjC', :path => '../'
 end
