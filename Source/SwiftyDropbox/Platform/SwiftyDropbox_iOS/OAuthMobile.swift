@@ -670,6 +670,7 @@ public class MobileSafariViewController: SFSafariViewController, SFSafariViewCon
     public func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
         if !didLoadSuccessfully {
             controller.dismiss(animated: true, completion: nil)
+            cancelHandler()
         }
     }
 
