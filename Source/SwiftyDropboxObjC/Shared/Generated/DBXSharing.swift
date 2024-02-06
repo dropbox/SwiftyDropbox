@@ -3501,7 +3501,18 @@ public class DBXSharingGetSharedLinksErrorOther: DBXSharingGetSharedLinksError {
 public class DBXSharingGetSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingLinkMetadata] { swift.links.map { DBXSharingLinkMetadata(swift: $0) } }
+    public var links: [DBXSharingLinkMetadata] {
+        swift.links.map {
+            switch $0 {
+            case let pathLinkMetadata as Sharing.PathLinkMetadata:
+                return DBXSharingPathLinkMetadata(swift: pathLinkMetadata)
+            case let collectionLinkMetadata as Sharing.CollectionLinkMetadata:
+                return DBXSharingCollectionLinkMetadata(swift: collectionLinkMetadata)
+            default:
+                return DBXSharingLinkMetadata(swift: $0)
+            }
+        }
+    }
 
     @objc
     public init(links: [DBXSharingLinkMetadata]) {
@@ -5900,7 +5911,19 @@ public class DBXSharingListSharedLinksErrorOther: DBXSharingListSharedLinksError
 public class DBXSharingListSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingSharedLinkMetadata] { swift.links.map { DBXSharingSharedLinkMetadata(swift: $0) } }
+    public var links: [DBXSharingSharedLinkMetadata] {
+        swift.links.map {
+            switch $0 {
+            case let fileLinkMetadata as Sharing.FileLinkMetadata:
+                return DBXSharingFileLinkMetadata(swift: fileLinkMetadata)
+            case let folderLinkMetadata as Sharing.FolderLinkMetadata:
+                return DBXSharingFolderLinkMetadata(swift: folderLinkMetadata)
+            default:
+                return DBXSharingSharedLinkMetadata(swift: $0)
+            }
+        }
+    }
+
     /// Is true if there are additional shared links that have not been returned yet. Pass the cursor into
     /// listSharedLinks to retrieve them.
     @objc

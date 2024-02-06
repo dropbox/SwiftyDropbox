@@ -2560,7 +2560,18 @@ public class DBXTeamLogApiSessionLogInfo: NSObject {
 public class DBXTeamLogAppBlockedByPermissionsDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo(swift: swift.appInfo) }
+    public var appInfo: DBXTeamLogAppLogInfo {
+        switch swift.appInfo {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
+        }
+    }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2604,7 +2615,18 @@ public class DBXTeamLogAppBlockedByPermissionsType: NSObject {
 public class DBXTeamLogAppLinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo(swift: swift.appInfo) }
+    public var appInfo: DBXTeamLogAppLogInfo {
+        switch swift.appInfo {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
+        }
+    }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2648,7 +2670,18 @@ public class DBXTeamLogAppLinkTeamType: NSObject {
 public class DBXTeamLogAppLinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo(swift: swift.appInfo) }
+    public var appInfo: DBXTeamLogAppLogInfo {
+        switch swift.appInfo {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
+        }
+    }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2783,7 +2816,18 @@ public class DBXTeamLogAppPermissionsChangedType: NSObject {
 public class DBXTeamLogAppUnlinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo(swift: swift.appInfo) }
+    public var appInfo: DBXTeamLogAppLogInfo {
+        switch swift.appInfo {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
+        }
+    }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2827,7 +2871,18 @@ public class DBXTeamLogAppUnlinkTeamType: NSObject {
 public class DBXTeamLogAppUnlinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo(swift: swift.appInfo) }
+    public var appInfo: DBXTeamLogAppLogInfo {
+        switch swift.appInfo {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
+        }
+    }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -5807,7 +5862,20 @@ public class DBXTeamLogDeviceApprovalsRemoveExceptionType: NSObject {
 public class DBXTeamLogDeviceChangeIpDesktopDetails: NSObject {
     /// Device's session logged information.
     @objc
-    public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo { DBXTeamLogDeviceSessionLogInfo(swift: swift.deviceSessionInfo) }
+    public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo {
+        switch swift.deviceSessionInfo {
+        case let desktopDeviceSessionLogInfo as TeamLog.DesktopDeviceSessionLogInfo:
+            return DBXTeamLogDesktopDeviceSessionLogInfo(swift: desktopDeviceSessionLogInfo)
+        case let mobileDeviceSessionLogInfo as TeamLog.MobileDeviceSessionLogInfo:
+            return DBXTeamLogMobileDeviceSessionLogInfo(swift: mobileDeviceSessionLogInfo)
+        case let webDeviceSessionLogInfo as TeamLog.WebDeviceSessionLogInfo:
+            return DBXTeamLogWebDeviceSessionLogInfo(swift: webDeviceSessionLogInfo)
+        case let legacyDeviceSessionLogInfo as TeamLog.LegacyDeviceSessionLogInfo:
+            return DBXTeamLogLegacyDeviceSessionLogInfo(swift: legacyDeviceSessionLogInfo)
+        default:
+            return DBXTeamLogDeviceSessionLogInfo(swift: swift.deviceSessionInfo)
+        }
+    }
 
     @objc
     public init(deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo) {
