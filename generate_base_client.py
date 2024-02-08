@@ -39,7 +39,7 @@ _cmdline_parser.add_argument(
     help='Path to generation output.',
 )
 _cmdline_parser.add_argument(
-    '-objc',
+    '--objc',
     action='store_true',
     help='Generate objective-c routes',
 )
@@ -50,10 +50,10 @@ _cmdline_parser.add_argument(
     help='Path to route whitelist filter used by Stone. See stone -r for detailed instructions.',
 )
 _cmdline_parser.add_argument(
-    '-rop',
-    '--relative-objc-path',
-    type=str,
-    help='A custom output path for Objective-C compatible files relative to the standard Swift files',
+    '-d',
+    '--documentation',
+    action='store_true',
+    help='Sets whether documentation file should be generated.',
 )
 
 def main():
@@ -114,11 +114,15 @@ def main():
     if args.route_whitelist_filter:
         stone_cmd_prefix += ['-r', args.route_whitelist_filter]
 
-    types_cmd = stone_cmd_prefix + ['swift_types', dropbox_pkg_path] + specs
-    if args.objc:
-        types_cmd = types_cmd + ['--', '-objc']
-        if args.relative_objc_path is not None:
-            types_cmd = types_cmd + ['-rop', args.relative_objc_path]
+    output_path = dropbox_objc_pkg_path if args.objc else dropbox_pkg_path
+    types_cmd = list(stone_cmd_prefix + ['swift_types', output_path] + specs)
+
+    if args.objc or args.documentation:
+        types_cmd.append('--')
+        if args.objc:
+            types_cmd.append('--objc')
+        if args.documentation:
+            types_cmd.append('--documentation')
 
     o = subprocess.check_output(
         (types_cmd),
@@ -133,7 +137,7 @@ def main():
         print('Generating Swift user and team clients')
 
     route_attrs = ['-a', 'scope']
-    swift_client = ['swift_client', dropbox_pkg_path]
+    swift_client = ['swift_client', output_path]
 
     base_args = ['-b', 'team', '--', '-w', 'user', '-m', 'Base', '-c', 'DropboxBase',
             '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]
@@ -142,15 +146,11 @@ def main():
     app_args = ['--', '-w', 'app', '-m', 'BaseApp', '-c', 'DropboxAppBase',
             '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]
 
-    if args.objc:
-        base_args.append('-objc')
-        team_args.append('-objc')
-        app_args.append('-objc')
 
-        if args.relative_objc_path is not None:
-            base_args = base_args + ['-rop', args.relative_objc_path]
-            team_args = team_args + ['-rop', args.relative_objc_path]
-            app_args = app_args + ['-rop', args.relative_objc_path]
+    if args.objc:
+        base_args.append('--objc')
+        team_args.append('--objc')
+        app_args.append('--objc')
 
     o = subprocess.check_output(
         (stone_cmd_prefix + route_attrs + swift_client + specs + base_args),

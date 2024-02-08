@@ -101,9 +101,6 @@ extension ReconnectionHelpersShared {
     }
 }
 
-extension ReconnectionHelpers: ReconnectionHelpersShared {}
-extension AppAuthReconnectionHelpers: ReconnectionHelpersShared {}
-
 extension ReconnectionHelpers {
     enum PersistedRequestInfo: Codable, Equatable {
         case upload(StandardInfo)
