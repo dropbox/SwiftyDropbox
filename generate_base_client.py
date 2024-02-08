@@ -118,7 +118,7 @@ def main():
     types_cmd = list(stone_cmd_prefix + ['swift_types', output_path] + specs)
 
     if args.objc or args.documentation:
-        types_cmd.append('--'),
+        types_cmd.append('--')
         if args.objc:
             types_cmd.append('--objc')
         if args.documentation:
