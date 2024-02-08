@@ -4,7 +4,7 @@
 
 import Foundation
 
-enum AppAuthReconnectionHelpers {
+enum AppAuthReconnectionHelpers: ReconnectionHelpersShared {
     static func rebuildRequest(apiRequest: ApiRequest, client: DropboxTransportClientInternal) throws -> DropboxAppBaseRequestBox {
         let info = try persistedRequestInfo(from: apiRequest)
 
