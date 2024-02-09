@@ -194,14 +194,7 @@ public class DBXUsersFullAccount: DBXUsersAccount {
     /// The root info for this account.
     @objc
     public var rootInfo: DBXCommonRootInfo {
-        switch subSwift.rootInfo {
-        case let teamRootInfo as Common.TeamRootInfo:
-            return DBXCommonTeamRootInfo(swift: teamRootInfo)
-        case let userRootInfo as Common.UserRootInfo:
-            return DBXCommonUserRootInfo(swift: userRootInfo)
-        default:
-            return DBXCommonRootInfo(swift: subSwift.rootInfo)
-        }
+        DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo)
     }
 
     @objc

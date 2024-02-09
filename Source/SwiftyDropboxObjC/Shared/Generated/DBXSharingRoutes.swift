@@ -1517,7 +1517,7 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
 
             var objc: DBXSharingSharedLinkMetadata?
             if let swift = result {
-                objc = DBXSharingSharedLinkMetadata(swift: swift)
+                objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -1786,7 +1786,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
             var objc: DBXSharingSharedLinkMetadata?
             var destination: URL?
             if let swift = result {
-                objc = DBXSharingSharedLinkMetadata(swift: swift.0)
+                objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift.0)
                 destination = swift.1
             }
             completionHandler(objc, destination, routeError, callError)
@@ -1861,7 +1861,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
             var objc: DBXSharingSharedLinkMetadata?
             var destination: Data?
             if let swift = result {
-                objc = DBXSharingSharedLinkMetadata(swift: swift.0)
+                objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift.0)
                 destination = swift.1
             }
             completionHandler(objc, destination, routeError, callError)
@@ -1935,7 +1935,7 @@ public class DBXSharingGetSharedLinkMetadataRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXSharingSharedLinkMetadata?
             if let swift = result {
-                objc = DBXSharingSharedLinkMetadata(swift: swift)
+                objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -2851,7 +2851,7 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
 
             var objc: DBXSharingSharedLinkMetadata?
             if let swift = result {
-                objc = DBXSharingSharedLinkMetadata(swift: swift)
+                objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }

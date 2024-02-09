@@ -205,6 +205,17 @@ public class DBXCommonRootInfo: NSObject {
         self.swift = swift
     }
 
+    public static func wrapPreservingSubtypes(swift: Common.RootInfo) -> DBXCommonRootInfo {
+        switch swift {
+        case let teamRootInfo as Common.TeamRootInfo:
+            return DBXCommonTeamRootInfo(swift: teamRootInfo)
+        case let userRootInfo as Common.UserRootInfo:
+            return DBXCommonUserRootInfo(swift: userRootInfo)
+        default:
+            return DBXCommonRootInfo(swift: swift)
+        }
+    }
+
     @objc
     public override var description: String { swift.description }
 }

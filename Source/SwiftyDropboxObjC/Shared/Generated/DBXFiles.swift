@@ -1309,16 +1309,7 @@ public class DBXFilesDeleteBatchResultData: NSObject {
     /// Metadata of the deleted object.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     @objc
@@ -1517,16 +1508,7 @@ public class DBXFilesDeleteResult: DBXFilesFileOpsResult {
     /// Metadata of the deleted object.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch subSwift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: subSwift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
     }
 
     @objc
@@ -1585,6 +1567,19 @@ public class DBXFilesMetadata: NSObject {
 
     public init(swift: Files.Metadata) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: Files.Metadata) -> DBXFilesMetadata {
+        switch swift {
+        case let fileMetadata as Files.FileMetadata:
+            return DBXFilesFileMetadata(swift: fileMetadata)
+        case let folderMetadata as Files.FolderMetadata:
+            return DBXFilesFolderMetadata(swift: folderMetadata)
+        case let deletedMetadata as Files.DeletedMetadata:
+            return DBXFilesDeletedMetadata(swift: deletedMetadata)
+        default:
+            return DBXFilesMetadata(swift: swift)
+        }
     }
 
     @objc
@@ -2853,16 +2848,7 @@ public class DBXFilesGetCopyReferenceResult: NSObject {
     /// Metadata of the file or folder.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     /// A copy reference to the file or folder.
@@ -3869,16 +3855,7 @@ public class DBXFilesListFolderResult: NSObject {
     @objc
     public var entries: [DBXFilesMetadata] {
         swift.entries.map {
-            switch $0 {
-            case let fileMetadata as Files.FileMetadata:
-                return DBXFilesFileMetadata(swift: fileMetadata)
-            case let folderMetadata as Files.FolderMetadata:
-                return DBXFilesFolderMetadata(swift: folderMetadata)
-            case let deletedMetadata as Files.DeletedMetadata:
-                return DBXFilesDeletedMetadata(swift: deletedMetadata)
-            default:
-                return DBXFilesMetadata(swift: $0)
-            }
+            DBXFilesMetadata.wrapPreservingSubtypes(swift: $0)
         }
     }
 
@@ -4368,16 +4345,7 @@ public class DBXFilesLockFileResult: NSObject {
     /// Metadata of the file.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     /// The file lock state after the operation.
@@ -4708,6 +4676,17 @@ public class DBXFilesMediaMetadata: NSObject {
 
     public init(swift: Files.MediaMetadata) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: Files.MediaMetadata) -> DBXFilesMediaMetadata {
+        switch swift {
+        case let photoMetadata as Files.PhotoMetadata:
+            return DBXFilesPhotoMetadata(swift: photoMetadata)
+        case let videoMetadata as Files.VideoMetadata:
+            return DBXFilesVideoMetadata(swift: videoMetadata)
+        default:
+            return DBXFilesMediaMetadata(swift: swift)
+        }
     }
 
     @objc
@@ -6899,16 +6878,7 @@ public class DBXFilesRelocationBatchResultData: NSObject {
     /// Metadata of the relocated object.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     @objc
@@ -7159,16 +7129,7 @@ public class DBXFilesRelocationResult: DBXFilesFileOpsResult {
     /// Metadata of the relocated object.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch subSwift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: subSwift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
     }
 
     @objc
@@ -7583,16 +7544,7 @@ public class DBXFilesSaveCopyReferenceResult: NSObject {
     /// The metadata of the saved file or folder in the user's Dropbox.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     @objc
@@ -8028,16 +7980,7 @@ public class DBXFilesSearchMatch: NSObject {
     /// The metadata for the matched file or folder.
     @objc
     public var metadata: DBXFilesMetadata {
-        switch swift.metadata {
-        case let fileMetadata as Files.FileMetadata:
-            return DBXFilesFileMetadata(swift: fileMetadata)
-        case let folderMetadata as Files.FolderMetadata:
-            return DBXFilesFolderMetadata(swift: folderMetadata)
-        case let deletedMetadata as Files.DeletedMetadata:
-            return DBXFilesDeletedMetadata(swift: deletedMetadata)
-        default:
-            return DBXFilesMetadata(swift: swift.metadata)
-        }
+        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
     @objc

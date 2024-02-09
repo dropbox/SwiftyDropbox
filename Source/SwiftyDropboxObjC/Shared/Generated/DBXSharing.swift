@@ -1432,6 +1432,17 @@ public class DBXSharingLinkMetadata: NSObject {
         self.swift = swift
     }
 
+    public static func wrapPreservingSubtypes(swift: Sharing.LinkMetadata) -> DBXSharingLinkMetadata {
+        switch swift {
+        case let pathLinkMetadata as Sharing.PathLinkMetadata:
+            return DBXSharingPathLinkMetadata(swift: pathLinkMetadata)
+        case let collectionLinkMetadata as Sharing.CollectionLinkMetadata:
+            return DBXSharingCollectionLinkMetadata(swift: collectionLinkMetadata)
+        default:
+            return DBXSharingLinkMetadata(swift: swift)
+        }
+    }
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2172,6 +2183,17 @@ public class DBXSharingSharedLinkMetadata: NSObject {
 
     public init(swift: Sharing.SharedLinkMetadata) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: Sharing.SharedLinkMetadata) -> DBXSharingSharedLinkMetadata {
+        switch swift {
+        case let fileLinkMetadata as Sharing.FileLinkMetadata:
+            return DBXSharingFileLinkMetadata(swift: fileLinkMetadata)
+        case let folderLinkMetadata as Sharing.FolderLinkMetadata:
+            return DBXSharingFolderLinkMetadata(swift: folderLinkMetadata)
+        default:
+            return DBXSharingSharedLinkMetadata(swift: swift)
+        }
     }
 
     @objc
@@ -3503,14 +3525,7 @@ public class DBXSharingGetSharedLinksResult: NSObject {
     @objc
     public var links: [DBXSharingLinkMetadata] {
         swift.links.map {
-            switch $0 {
-            case let pathLinkMetadata as Sharing.PathLinkMetadata:
-                return DBXSharingPathLinkMetadata(swift: pathLinkMetadata)
-            case let collectionLinkMetadata as Sharing.CollectionLinkMetadata:
-                return DBXSharingCollectionLinkMetadata(swift: collectionLinkMetadata)
-            default:
-                return DBXSharingLinkMetadata(swift: $0)
-            }
+            DBXSharingLinkMetadata.wrapPreservingSubtypes(swift: $0)
         }
     }
 
@@ -5913,14 +5928,7 @@ public class DBXSharingListSharedLinksResult: NSObject {
     @objc
     public var links: [DBXSharingSharedLinkMetadata] {
         swift.links.map {
-            switch $0 {
-            case let fileLinkMetadata as Sharing.FileLinkMetadata:
-                return DBXSharingFileLinkMetadata(swift: fileLinkMetadata)
-            case let folderLinkMetadata as Sharing.FolderLinkMetadata:
-                return DBXSharingFolderLinkMetadata(swift: folderLinkMetadata)
-            default:
-                return DBXSharingSharedLinkMetadata(swift: $0)
-            }
+            DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: $0)
         }
     }
 
