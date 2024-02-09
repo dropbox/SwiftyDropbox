@@ -2412,7 +2412,7 @@ public class DBXFilesAlphaGetMetadataRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXFilesMetadata?
             if let swift = result {
-                objc = DBXFilesMetadata(swift: swift)
+                objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -2619,7 +2619,7 @@ public class DBXFilesCopyRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXFilesMetadata?
             if let swift = result {
-                objc = DBXFilesMetadata(swift: swift)
+                objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -3390,7 +3390,7 @@ public class DBXFilesDeleteRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXFilesMetadata?
             if let swift = result {
-                objc = DBXFilesMetadata(swift: swift)
+                objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -4097,7 +4097,7 @@ public class DBXFilesGetMetadataRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXFilesMetadata?
             if let swift = result {
-                objc = DBXFilesMetadata(swift: swift)
+                objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -5273,7 +5273,7 @@ public class DBXFilesMoveRpcRequest: NSObject, DBXRequest {
 
             var objc: DBXFilesMetadata?
             if let swift = result {
-                objc = DBXFilesMetadata(swift: swift)
+                objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }

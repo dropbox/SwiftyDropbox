@@ -2561,16 +2561,7 @@ public class DBXTeamLogAppBlockedByPermissionsDetails: NSObject {
     /// Relevant application details.
     @objc
     public var appInfo: DBXTeamLogAppLogInfo {
-        switch swift.appInfo {
-        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
-            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
-        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
-            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
-        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
-            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
-        default:
-            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
-        }
+        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
     }
 
     @objc
@@ -2616,16 +2607,7 @@ public class DBXTeamLogAppLinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
     public var appInfo: DBXTeamLogAppLogInfo {
-        switch swift.appInfo {
-        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
-            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
-        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
-            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
-        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
-            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
-        default:
-            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
-        }
+        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
     }
 
     @objc
@@ -2671,16 +2653,7 @@ public class DBXTeamLogAppLinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
     public var appInfo: DBXTeamLogAppLogInfo {
-        switch swift.appInfo {
-        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
-            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
-        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
-            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
-        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
-            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
-        default:
-            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
-        }
+        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
     }
 
     @objc
@@ -2739,6 +2712,19 @@ public class DBXTeamLogAppLogInfo: NSObject {
 
     public init(swift: TeamLog.AppLogInfo) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: TeamLog.AppLogInfo) -> DBXTeamLogAppLogInfo {
+        switch swift {
+        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
+            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
+        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
+            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
+        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
+            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
+        default:
+            return DBXTeamLogAppLogInfo(swift: swift)
+        }
     }
 
     @objc
@@ -2817,16 +2803,7 @@ public class DBXTeamLogAppUnlinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
     public var appInfo: DBXTeamLogAppLogInfo {
-        switch swift.appInfo {
-        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
-            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
-        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
-            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
-        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
-            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
-        default:
-            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
-        }
+        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
     }
 
     @objc
@@ -2872,16 +2849,7 @@ public class DBXTeamLogAppUnlinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
     public var appInfo: DBXTeamLogAppLogInfo {
-        switch swift.appInfo {
-        case let userOrTeamLinkedAppLogInfo as TeamLog.UserOrTeamLinkedAppLogInfo:
-            return DBXTeamLogUserOrTeamLinkedAppLogInfo(swift: userOrTeamLinkedAppLogInfo)
-        case let userLinkedAppLogInfo as TeamLog.UserLinkedAppLogInfo:
-            return DBXTeamLogUserLinkedAppLogInfo(swift: userLinkedAppLogInfo)
-        case let teamLinkedAppLogInfo as TeamLog.TeamLinkedAppLogInfo:
-            return DBXTeamLogTeamLinkedAppLogInfo(swift: teamLinkedAppLogInfo)
-        default:
-            return DBXTeamLogAppLogInfo(swift: swift.appInfo)
-        }
+        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
     }
 
     @objc
@@ -5407,6 +5375,21 @@ public class DBXTeamLogDeviceSessionLogInfo: NSObject {
         self.swift = swift
     }
 
+    public static func wrapPreservingSubtypes(swift: TeamLog.DeviceSessionLogInfo) -> DBXTeamLogDeviceSessionLogInfo {
+        switch swift {
+        case let desktopDeviceSessionLogInfo as TeamLog.DesktopDeviceSessionLogInfo:
+            return DBXTeamLogDesktopDeviceSessionLogInfo(swift: desktopDeviceSessionLogInfo)
+        case let mobileDeviceSessionLogInfo as TeamLog.MobileDeviceSessionLogInfo:
+            return DBXTeamLogMobileDeviceSessionLogInfo(swift: mobileDeviceSessionLogInfo)
+        case let webDeviceSessionLogInfo as TeamLog.WebDeviceSessionLogInfo:
+            return DBXTeamLogWebDeviceSessionLogInfo(swift: webDeviceSessionLogInfo)
+        case let legacyDeviceSessionLogInfo as TeamLog.LegacyDeviceSessionLogInfo:
+            return DBXTeamLogLegacyDeviceSessionLogInfo(swift: legacyDeviceSessionLogInfo)
+        default:
+            return DBXTeamLogDeviceSessionLogInfo(swift: swift)
+        }
+    }
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5490,6 +5473,19 @@ public class DBXTeamLogSessionLogInfo: NSObject {
 
     public init(swift: TeamLog.SessionLogInfo) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: TeamLog.SessionLogInfo) -> DBXTeamLogSessionLogInfo {
+        switch swift {
+        case let webSessionLogInfo as TeamLog.WebSessionLogInfo:
+            return DBXTeamLogWebSessionLogInfo(swift: webSessionLogInfo)
+        case let desktopSessionLogInfo as TeamLog.DesktopSessionLogInfo:
+            return DBXTeamLogDesktopSessionLogInfo(swift: desktopSessionLogInfo)
+        case let mobileSessionLogInfo as TeamLog.MobileSessionLogInfo:
+            return DBXTeamLogMobileSessionLogInfo(swift: mobileSessionLogInfo)
+        default:
+            return DBXTeamLogSessionLogInfo(swift: swift)
+        }
     }
 
     @objc
@@ -5863,18 +5859,7 @@ public class DBXTeamLogDeviceChangeIpDesktopDetails: NSObject {
     /// Device's session logged information.
     @objc
     public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo {
-        switch swift.deviceSessionInfo {
-        case let desktopDeviceSessionLogInfo as TeamLog.DesktopDeviceSessionLogInfo:
-            return DBXTeamLogDesktopDeviceSessionLogInfo(swift: desktopDeviceSessionLogInfo)
-        case let mobileDeviceSessionLogInfo as TeamLog.MobileDeviceSessionLogInfo:
-            return DBXTeamLogMobileDeviceSessionLogInfo(swift: mobileDeviceSessionLogInfo)
-        case let webDeviceSessionLogInfo as TeamLog.WebDeviceSessionLogInfo:
-            return DBXTeamLogWebDeviceSessionLogInfo(swift: webDeviceSessionLogInfo)
-        case let legacyDeviceSessionLogInfo as TeamLog.LegacyDeviceSessionLogInfo:
-            return DBXTeamLogLegacyDeviceSessionLogInfo(swift: legacyDeviceSessionLogInfo)
-        default:
-            return DBXTeamLogDeviceSessionLogInfo(swift: swift.deviceSessionInfo)
-        }
+        DBXTeamLogDeviceSessionLogInfo.wrapPreservingSubtypes(swift: swift.deviceSessionInfo)
     }
 
     @objc
@@ -49159,6 +49144,19 @@ public class DBXTeamLogUserLogInfo: NSObject {
 
     public init(swift: TeamLog.UserLogInfo) {
         self.swift = swift
+    }
+
+    public static func wrapPreservingSubtypes(swift: TeamLog.UserLogInfo) -> DBXTeamLogUserLogInfo {
+        switch swift {
+        case let teamMemberLogInfo as TeamLog.TeamMemberLogInfo:
+            return DBXTeamLogTeamMemberLogInfo(swift: teamMemberLogInfo)
+        case let trustedNonTeamMemberLogInfo as TeamLog.TrustedNonTeamMemberLogInfo:
+            return DBXTeamLogTrustedNonTeamMemberLogInfo(swift: trustedNonTeamMemberLogInfo)
+        case let nonTeamMemberLogInfo as TeamLog.NonTeamMemberLogInfo:
+            return DBXTeamLogNonTeamMemberLogInfo(swift: nonTeamMemberLogInfo)
+        default:
+            return DBXTeamLogUserLogInfo(swift: swift)
+        }
     }
 
     @objc
