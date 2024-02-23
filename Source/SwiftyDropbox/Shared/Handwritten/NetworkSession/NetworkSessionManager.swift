@@ -14,7 +14,7 @@ class NetworkSessionManager: NSObject {
     let requestMap: RequestMap
     var didFinishBackgroundEvents: (() -> Void)?
 
-    let apiRequestCreation: ApiRequestCreation
+    var apiRequestCreation: ApiRequestCreation?
     var apiRequestReconnectionCreation: ((NetworkTask) -> ApiRequest)?
 
     private let authChallengeHandler: AuthChallenge.Handler?
@@ -40,14 +40,12 @@ class NetworkSessionManager: NSObject {
 
     init(
         sessionCreation: (CombinedURLSessionDelegate, OperationQueue) -> NetworkSession,
-        apiRequestCreation: @escaping ApiRequestCreation,
         apiRequestReconnectionCreation: ((NetworkTask) -> ApiRequest)?,
         requestMap: RequestMap = RequestMapImpl(),
         authChallengeHandler: AuthChallenge.Handler?
     ) {
         self.session = sessionCreation(passthroughDelegate, delegateQueue)
         self.requestMap = requestMap
-        self.apiRequestCreation = apiRequestCreation
         self.apiRequestReconnectionCreation = apiRequestReconnectionCreation
         self.authChallengeHandler = authChallengeHandler
 
@@ -170,7 +168,10 @@ extension NetworkSessionManager {
                 }
             }
 
-            let apiRequest = apiRequestCreation(taskCreation, onTaskCreation)
+            guard let apiRequest = apiRequestCreation?(taskCreation, onTaskCreation) else {
+                fatalError("ApiRequestCreation missing: You must set the `apiRequestCreation` block on a NetworkSessionManager before attempting to make requests")
+            }
+
             return apiRequest
         }
     }
