@@ -185,15 +185,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
     ) {
         self.filesAccess = filesAccess
 
-        let apiRequestCreation: ApiRequestCreation = { taskCreation, onTaskCreation in
-            RequestWithTokenRefresh(
-                requestCreation: taskCreation,
-                onTaskCreation: onTaskCreation,
-                authStrategy: authStrategy,
-                filesAccess: filesAccess
-            )
-        }
-
         let apiRequestReconnectionCreation: ((NetworkTask) -> ApiRequest)? = { task in
             RequestWithTokenRefresh(backgroundRequest: task, filesAccess: filesAccess)
         }
@@ -202,7 +193,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             sessionCreation: { delegate, queue in
                 sessionCreation(sessionConfiguration, delegate, queue)
             },
-            apiRequestCreation: apiRequestCreation,
             apiRequestReconnectionCreation: apiRequestReconnectionCreation,
             authChallengeHandler: authChallengeHandler
         )
@@ -211,7 +201,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             sessionCreation: { delegate, queue in
                 sessionCreation(longpollSessionConfiguration, delegate, queue)
             },
-            apiRequestCreation: apiRequestCreation,
             apiRequestReconnectionCreation: nil,
             authChallengeHandler: authChallengeHandler
         )
@@ -232,6 +221,26 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         }
 
         self.headersForRouteHost = headersForRouteHost
+
+
+        // below this self is initialized
+
+        let apiRequestCreation: ApiRequestCreation = { [weak self] taskCreation, onTaskCreation in
+            guard let self = self else {
+                return NoopApiRequest()
+            }
+
+            return RequestWithTokenRefresh(
+                requestCreation: taskCreation,
+                onTaskCreation: onTaskCreation,
+                authStrategy: self.authStrategy, // reference the authStrategy stored on self so updates to it are propagated.
+                filesAccess: filesAccess
+            )
+        }
+
+
+        manager.apiRequestCreation = apiRequestCreation
+        longpollManager.apiRequestCreation = apiRequestCreation
     }
 
     public func shutdown() {

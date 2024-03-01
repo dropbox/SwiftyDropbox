@@ -43,12 +43,12 @@ final class TestNetworkSessionManager: XCTestCase {
             sessionCreation: { _, _ in
                 self.mockNetworkSession
             },
-            apiRequestCreation: apiRequestCreation,
             apiRequestReconnectionCreation: apiRequestReconnectionCreation,
             authChallengeHandler: { _ in
                 self.certEvaluationResult
             }
         )
+        sut.apiRequestCreation = apiRequestCreation
     }
 
     func testCreatingEachTaskTypeRegistersToRequestMap() throws {

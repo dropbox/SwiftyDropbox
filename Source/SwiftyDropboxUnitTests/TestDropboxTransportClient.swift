@@ -70,6 +70,44 @@ final class TestDropboxTransportClient: XCTestCase {
         XCTAssertEqual(headers["User-Agent"], "userAgent")
     }
 
+    func testUpdatingTransportClientAuthProviderUpdatesRequestAuthProvider() throws {
+        let e = expectation(description: "Token provider is checked for refresh")
+
+        // Create a transport client with an access token
+        sut = DropboxTransportClientImpl(
+            authStrategy: .accessToken(LongLivedAccessTokenProvider(accessToken: "accessToken")),
+            userAgent: nil,
+            firstPartyUserAgent: "userAgent",
+            selectUser: nil,
+            sessionCreation: { _, _, _ in
+                mockNetworkSession
+            },
+            authChallengeHandler: nil
+        )
+
+        let mockAccessToken = MockAccessToken(expectation: e)
+
+        // Update the transport client access token to the mocked one
+        sut.accessTokenProvider = mockAccessToken
+
+        let concreteDropboxTransportClient = try XCTUnwrap(sut as? DropboxTransportClientImpl)
+        let apiRequestCreation = try XCTUnwrap(concreteDropboxTransportClient.manager.apiRequestCreation)
+
+        createApiRequest(apiRequestCreation: apiRequestCreation)
+
+        wait(for: [e], timeout: 1)
+
+        // Verify that the mock access token was in fact used
+        XCTAssert(mockAccessToken.refreshAccessTokenCalled)
+    }
+
+    private func createApiRequest(apiRequestCreation: @escaping ApiRequestCreation) {
+        let urlRequest = URLRequest(url: .init(string: "www.example.com")!)
+        let networkTaskCreation: NetworkTaskCreation = { MockNetworkTaskDelegate(request: urlRequest) }
+        let onCreation: OnTaskCreation = { _ in }
+        _ = apiRequestCreation(networkTaskCreation, onCreation)
+    }
+
     private func createRequestAndReturnURLRequest<A, B, C>(for route: Route<A, B, C>) throws -> URLRequest {
         let request = sut.request(route)
 
@@ -93,5 +131,20 @@ final class TestDropboxTransportClient: XCTestCase {
 
         let maybeUrlRequest = apiRequest.networkTask?.originalRequest
         return try XCTUnwrap(maybeUrlRequest)
+    }
+}
+
+class MockAccessToken: AccessTokenProvider {
+    var accessToken: String = ""
+    var expectation: XCTestExpectation
+    var refreshAccessTokenCalled = false
+
+    init(expectation: XCTestExpectation) {
+        self.expectation = expectation
+    }
+
+    func refreshAccessTokenIfNecessary(completion: @escaping SwiftyDropbox.DropboxOAuthCompletion) {
+        refreshAccessTokenCalled = true
+        expectation.fulfill()
     }
 }
