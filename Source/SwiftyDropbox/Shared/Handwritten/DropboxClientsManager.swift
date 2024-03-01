@@ -326,6 +326,8 @@ public class DropboxClientsManager {
     public static func handleRedirectURL(
         _ url: URL,
         includeBackgroundClient: Bool,
+        transportClient: DropboxTransportClient? = nil,
+        backgroundSessionTransportClient: DropboxTransportClient? = nil,
         sessionConfiguration: NetworkSessionConfiguration? = nil,
         backgroundSessionConfiguration: NetworkSessionConfiguration? = nil,
         completion: @escaping DropboxOAuthCompletion
@@ -335,12 +337,12 @@ public class DropboxClientsManager {
             if let result = result {
                 switch result {
                 case .success(let accessToken):
-                    setupAuthorizedClient(accessToken, transportClient: nil, sessionConfiguration: sessionConfiguration)
+                    setupAuthorizedClient(accessToken, transportClient: transportClient, sessionConfiguration: sessionConfiguration)
 
                     if includeBackgroundClient {
                         setupAuthorizedBackgroundClient(
                             accessToken,
-                            transportClient: nil,
+                            transportClient: backgroundSessionTransportClient,
                             sessionConfiguration: backgroundSessionConfiguration,
                             requestsToReconnect: { _ in } // No need for reconnect as no loads are in progress pre-auth
                         )
@@ -363,6 +365,7 @@ public class DropboxClientsManager {
     @discardableResult
     public static func handleRedirectURLTeam(
         _ url: URL,
+        transportClient: DropboxTransportClient? = nil,
         sessionConfiguration: NetworkSessionConfiguration? = nil,
         completion: @escaping DropboxOAuthCompletion
     ) -> Bool {
@@ -371,7 +374,7 @@ public class DropboxClientsManager {
             if let result = result {
                 switch result {
                 case .success(let accessToken):
-                    setupAuthorizedTeamClient(accessToken, transportClient: nil, sessionConfiguration: sessionConfiguration)
+                    setupAuthorizedTeamClient(accessToken, transportClient: transportClient, sessionConfiguration: sessionConfiguration)
                 case .cancel, .error:
                     break
                 }

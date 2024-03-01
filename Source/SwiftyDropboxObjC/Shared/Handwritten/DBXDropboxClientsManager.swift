@@ -109,12 +109,46 @@ public class DBXDropboxClientsManager: NSObject {
     /// - parameters:
     ///     - url: The URL to attempt to handle.
     ///     - includeBackgroundClient: additionally auth background client.
+    ///     - transportClient: A custom transport client to use for network requests.
+    ///     - backgroundSessionTransportClient: A custom transport client to use for background network requests.
+    ///     - sessionConfiguration: A custom session configuration to use for network requests.
+    ///     - backgroundSessionConfiguration: A custom session configuration to use for background network requests.
     ///     - completion: The callback closure to receive auth result.
     /// - returns: Whether the redirect URL can be handled.
     @objc
     @discardableResult
-    public static func handleRedirectURLTeam(_ url: URL, includeBackgroundClient: Bool, completion: @escaping (DBXDropboxOAuthResult?) -> Void) -> Bool {
-        DropboxClientsManager.handleRedirectURLTeam(url, completion: bridgeDropboxOAuthCompletion(completion))
+    public static func handleRedirectURL(
+        _ url: URL,
+        includeBackgroundClient: Bool,
+        transportClient: DBXDropboxTransportClient?,
+        backgroundSessionTransportClient: DBXDropboxTransportClient?,
+        sessionConfiguration: DBXNetworkSessionConfiguration?,
+        backgroundSessionConfiguration: DBXNetworkSessionConfiguration?,
+        completion: @escaping (DBXDropboxOAuthResult?) -> Void) -> Bool
+    {
+        DropboxClientsManager.handleRedirectURL(
+            url,
+            includeBackgroundClient: includeBackgroundClient,
+            transportClient: transportClient?.swift,
+            backgroundSessionTransportClient: backgroundSessionTransportClient?.swift,
+            sessionConfiguration: sessionConfiguration?.swift,
+            backgroundSessionConfiguration: backgroundSessionConfiguration?.swift,
+            completion:  bridgeDropboxOAuthCompletion(completion)
+        )
+    }
+
+    /// Handle a redirect and automatically initialize the client and save the token.
+    ///
+    /// - parameters:
+    ///     - url: The URL to attempt to handle.
+    ///     - transportClient: A custom transport client to use for network requests.
+    ///     - sessionConfiguration: A custom session configuration to use for network requests.
+    ///     - completion: The callback closure to receive auth result.
+    /// - returns: Whether the redirect URL can be handled.
+    @objc
+    @discardableResult
+    public static func handleRedirectURLTeam(_ url: URL, transportClient: DBXDropboxTransportClient?, sessionConfiguration: DBXNetworkSessionConfiguration?, completion: @escaping (DBXDropboxOAuthResult?) -> Void) -> Bool {
+        DropboxClientsManager.handleRedirectURLTeam(url, transportClient: transportClient?.swift, sessionConfiguration: sessionConfiguration?.swift, completion: bridgeDropboxOAuthCompletion(completion))
     }
 
     /// Prepare the appropriate single user DropboxClient to handle incoming background session events and make ongoing tasks available for reconnection
