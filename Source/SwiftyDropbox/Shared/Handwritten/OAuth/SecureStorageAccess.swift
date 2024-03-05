@@ -125,22 +125,25 @@ public class SecureStorageAccessDefaultImpl: SecureStorageAccess {
     }
 
     static func appBundleId() -> String {
-        let bundlePath = appBundlePath(from: Bundle.main.bundleURL.path)
+        let bundlePath = appBundleAbsolutePath(from: Bundle.main.bundleURL.path)
         let bundle = Bundle(path: bundlePath)
-        return bundle?.bundleIdentifier ?? ""
+        guard let bundleId = bundle?.bundleIdentifier else {
+            fatalError("Unable to create bundle")
+        }
+        return bundleId
     }
 
     /// kSecAttrService cannot differ between binaries using keychain sharing.
     /// This finds the true owning bundle in the event that we're running in an app extension.
-    static func appBundlePath(from bundlePath: String) -> String {
+    static func appBundleAbsolutePath(from bundlePath: String) -> String {
         var components = bundlePath.split(separator: "/")
 
         if let index = components.lastIndex(where: { $0.hasSuffix(".app") }) {
             let componentCountAfterDotApp = (components.count - 1) - index
             components.removeLast(componentCountAfterDotApp)
-            return components.joined(separator: "/")
+            return "/" + components.joined(separator: "/")
         } else {
-            return ""
+            fatalError("Unable to find app bundle path")
         }
     }
 }
