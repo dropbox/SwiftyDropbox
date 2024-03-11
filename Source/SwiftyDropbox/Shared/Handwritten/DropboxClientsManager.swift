@@ -365,6 +365,35 @@ public class DropboxClientsManager {
     ///
     /// - parameters:
     ///     - url: The URL to attempt to handle.
+    ///     - backgroundSessionIdentifier: The URLSession identifier to use for the background client
+    ///     - sharedContainerIdentifier: The URLSessionConfiguration shared container identifier to use for the background client
+    ///     - completion: The callback closure to receive auth result.
+    /// - returns: Whether the redirect URL can be handled.
+    ///
+    @discardableResult
+    public static func handleRedirectURL(
+        _ url: URL,
+        backgroundSessionIdentifier: String,
+        sharedContainerIdentifier: String? = nil,
+        completion: @escaping DropboxOAuthCompletion
+    ) -> Bool {
+        let backgroundNetworkSessionConfiguration = NetworkSessionConfiguration.background(
+            withIdentifier: backgroundSessionIdentifier,
+            sharedContainerIdentifier: sharedContainerIdentifier
+        )
+        return handleRedirectURL(
+            url,
+            includeBackgroundClient: true,
+            backgroundSessionConfiguration: backgroundNetworkSessionConfiguration,
+            completion: completion
+        )
+    }
+
+
+    /// Handle a redirect and automatically initialize the client and save the token.
+    ///
+    /// - parameters:
+    ///     - url: The URL to attempt to handle.
     ///     - completion: The callback closure to receive auth result.
     /// - returns: Whether the redirect URL can be handled.
     ///
