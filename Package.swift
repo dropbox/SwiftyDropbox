@@ -18,12 +18,14 @@ let package = Package(
     targets: [
         .target(
             name: "SwiftyDropbox",
-            path: "Source/SwiftyDropbox"
+            path: "Source/SwiftyDropbox",
+            resources: [.process("PrivacyInfo.xcprivacy")]
         ),
         .target(
             name: "SwiftyDropboxObjC",
             dependencies: ["SwiftyDropbox"],
-            path: "Source/SwiftyDropboxObjC"
+            path: "Source/SwiftyDropboxObjC",
+            resources: [.process("PrivacyInfo.xcprivacy")]
         ),
         .testTarget(
             name: "SwiftyDropboxUnitTests",
