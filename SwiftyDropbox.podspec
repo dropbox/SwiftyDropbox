@@ -11,6 +11,10 @@ Pod::Spec.new do |s|
   s.osx.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_macOS/**/*.{swift,h,m}'
   s.ios.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_iOS/**/*.{swift,h,m}'
 
+  s.resource_bundles = {
+    'SwiftyDropboxPrivacyInfo' => ['Source/SwiftyDropbox/PrivacyInfo.xcprivacy'],
+  }
+
   s.requires_arc = true
   s.swift_version = '5.6'
 
