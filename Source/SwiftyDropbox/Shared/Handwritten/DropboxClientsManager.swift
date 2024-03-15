@@ -141,7 +141,7 @@ public class DropboxClientsManager {
         }
     }
 
-    public static func reauthorizeClient(_ tokenUid: String, sessionConfiguration: NetworkSessionConfiguration? = nil, transportClient: DropboxTransportClient? = nil) {
+    public static func reauthorizeClient(_ tokenUid: String, transportClient: DropboxTransportClient? = nil, sessionConfiguration: NetworkSessionConfiguration? = nil) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
@@ -152,8 +152,8 @@ public class DropboxClientsManager {
 
     public static func reauthorizeBackgroundClient(
         _ tokenUid: String,
-        sessionConfiguration: NetworkSessionConfiguration? = nil,
         transportClient: DropboxTransportClient? = nil,
+        sessionConfiguration: NetworkSessionConfiguration? = nil,
         requestsToReconnect: @escaping RequestsToReconnect
     ) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
@@ -164,7 +164,7 @@ public class DropboxClientsManager {
         checkAccessibilityMigrationOneTime(oauthManager: DropboxOAuthManager.sharedOAuthManager)
     }
 
-    public static func reauthorizeTeamClient(_ tokenUid: String, sessionConfiguration: NetworkSessionConfiguration? = nil, transportClient: DropboxTransportClient? = nil) {
+    public static func reauthorizeTeamClient(_ tokenUid: String, transportClient: DropboxTransportClient? = nil, sessionConfiguration: NetworkSessionConfiguration? = nil) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
