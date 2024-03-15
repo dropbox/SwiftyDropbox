@@ -141,7 +141,11 @@ public class DropboxClientsManager {
         }
     }
 
-    public static func reauthorizeClient(_ tokenUid: String, transportClient: DropboxTransportClient? = nil, sessionConfiguration: NetworkSessionConfiguration? = nil) {
+    public static func reauthorizeClient(
+        _ tokenUid: String,
+        transportClient: DropboxTransportClient? = nil,
+        sessionConfiguration: NetworkSessionConfiguration? = nil
+    ) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
@@ -159,12 +163,21 @@ public class DropboxClientsManager {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
-            setupAuthorizedBackgroundClient(token, transportClient: transportClient, sessionConfiguration: sessionConfiguration, requestsToReconnect: requestsToReconnect)
+            setupAuthorizedBackgroundClient(
+                token,
+                transportClient: transportClient,
+                sessionConfiguration: sessionConfiguration,
+                requestsToReconnect: requestsToReconnect
+            )
         }
         checkAccessibilityMigrationOneTime(oauthManager: DropboxOAuthManager.sharedOAuthManager)
     }
 
-    public static func reauthorizeTeamClient(_ tokenUid: String, transportClient: DropboxTransportClient? = nil, sessionConfiguration: NetworkSessionConfiguration? = nil) {
+    public static func reauthorizeTeamClient(
+        _ tokenUid: String,
+        transportClient: DropboxTransportClient? = nil,
+        sessionConfiguration: NetworkSessionConfiguration? = nil
+    ) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` before calling this method")
 
         if let token = DropboxOAuthManager.sharedOAuthManager.getAccessToken(tokenUid) {
@@ -388,7 +401,6 @@ public class DropboxClientsManager {
             completion: completion
         )
     }
-
 
     /// Handle a redirect and automatically initialize the client and save the token.
     ///

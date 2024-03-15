@@ -222,7 +222,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
 
         self.headersForRouteHost = headersForRouteHost
 
-
         // below this self is initialized
 
         let apiRequestCreation: ApiRequestCreation = { [weak self] taskCreation, onTaskCreation in
@@ -237,7 +236,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
                 filesAccess: filesAccess
             )
         }
-
 
         manager.apiRequestCreation = apiRequestCreation
         longpollManager.apiRequestCreation = apiRequestCreation

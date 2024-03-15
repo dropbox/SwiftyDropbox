@@ -124,8 +124,8 @@ public class DBXDropboxClientsManager: NSObject {
         backgroundSessionTransportClient: DBXDropboxTransportClient?,
         sessionConfiguration: DBXNetworkSessionConfiguration?,
         backgroundSessionConfiguration: DBXNetworkSessionConfiguration?,
-        completion: @escaping (DBXDropboxOAuthResult?) -> Void) -> Bool
-    {
+        completion: @escaping (DBXDropboxOAuthResult?) -> Void
+    ) -> Bool {
         DropboxClientsManager.handleRedirectURL(
             url,
             includeBackgroundClient: includeBackgroundClient,
@@ -133,7 +133,7 @@ public class DBXDropboxClientsManager: NSObject {
             backgroundSessionTransportClient: backgroundSessionTransportClient?.swift,
             sessionConfiguration: sessionConfiguration?.swift,
             backgroundSessionConfiguration: backgroundSessionConfiguration?.swift,
-            completion:  bridgeDropboxOAuthCompletion(completion)
+            completion: bridgeDropboxOAuthCompletion(completion)
         )
     }
 
@@ -147,8 +147,18 @@ public class DBXDropboxClientsManager: NSObject {
     /// - returns: Whether the redirect URL can be handled.
     @objc
     @discardableResult
-    public static func handleRedirectURLTeam(_ url: URL, transportClient: DBXDropboxTransportClient?, sessionConfiguration: DBXNetworkSessionConfiguration?, completion: @escaping (DBXDropboxOAuthResult?) -> Void) -> Bool {
-        DropboxClientsManager.handleRedirectURLTeam(url, transportClient: transportClient?.swift, sessionConfiguration: sessionConfiguration?.swift, completion: bridgeDropboxOAuthCompletion(completion))
+    public static func handleRedirectURLTeam(
+        _ url: URL,
+        transportClient: DBXDropboxTransportClient?,
+        sessionConfiguration: DBXNetworkSessionConfiguration?,
+        completion: @escaping (DBXDropboxOAuthResult?) -> Void
+    ) -> Bool {
+        DropboxClientsManager.handleRedirectURLTeam(
+            url,
+            transportClient: transportClient?.swift,
+            sessionConfiguration: sessionConfiguration?.swift,
+            completion: bridgeDropboxOAuthCompletion(completion)
+        )
     }
 
     /// Prepare the appropriate single user DropboxClient to handle incoming background session events and make ongoing tasks available for reconnection

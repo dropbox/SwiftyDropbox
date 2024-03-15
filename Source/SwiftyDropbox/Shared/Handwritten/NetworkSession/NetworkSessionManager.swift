@@ -169,7 +169,9 @@ extension NetworkSessionManager {
             }
 
             guard let apiRequest = apiRequestCreation?(taskCreation, onTaskCreation) else {
-                fatalError("ApiRequestCreation missing: You must set the `apiRequestCreation` block on a NetworkSessionManager before attempting to make requests")
+                fatalError(
+                    "ApiRequestCreation missing: You must set the `apiRequestCreation` block on a NetworkSessionManager before attempting to make requests"
+                )
             }
 
             return apiRequest
