@@ -944,7 +944,7 @@ For cocoapods, in your Podfile, simply specify `SwiftyDropboxObjC` instead of (o
 use_frameworks!
 
 target '<YOUR_PROJECT_NAME>' do
-    pod 'SwiftyDropboxObjC', '~> 10.0.5'
+    pod 'SwiftyDropboxObjC', '~> 10.0.6'
 end
 ```
 
