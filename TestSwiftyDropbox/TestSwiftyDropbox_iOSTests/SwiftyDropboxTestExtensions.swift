@@ -30,23 +30,23 @@ public class DBXSecureStorageAccessTestImpl: DBXSecureStorageAccessImpl {
 }
 
 public class SecureStorageAccessTestImpl: SecureStorageAccess {
-    private var accessTokenData: Data?
+    private static var accessTokenData: Data?
 
     public init() {}
 
     public func checkAccessibilityMigrationOneTime() {}
 
     public func setAccessTokenData(for userId: String, data: Data) -> Bool {
-        accessTokenData = data
+        Self.accessTokenData = data
         return true
     }
 
     public func getAllUserIds() -> [String] {
-        []
+        [TestAuthTokenGenerator.testUid]
     }
 
     public func getDropboxAccessToken(for key: String) -> DropboxAccessToken? {
-        guard let accessTokenData = accessTokenData else {
+        guard let accessTokenData = Self.accessTokenData else {
             return nil
         }
 
