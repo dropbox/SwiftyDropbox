@@ -56,14 +56,14 @@ class TeamRoutesTests: XCTestCase {
             apiAppKey,
             transportClient: transportClient,
             secureStorageAccess: SecureStorageAccessTestImpl(),
-            tokenUid: TestUid
+            tokenUid: TestAuthTokenGenerator.testUid
         )
         #elseif os(iOS)
         DropboxClientsManager.setupWithTeamAppKeyMultiUser(
             apiAppKey,
             transportClient: transportClient,
             secureStorageAccess: SecureStorageAccessTestImpl(),
-            tokenUid: TestUid
+            tokenUid: TestAuthTokenGenerator.testUid
         )
         #endif
 
