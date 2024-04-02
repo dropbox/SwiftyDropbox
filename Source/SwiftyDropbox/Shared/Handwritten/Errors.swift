@@ -147,7 +147,9 @@ public enum CallError<EType>: Error, CustomStringConvertible {
 }
 
 private func requestId(from response: HTTPURLResponse?) -> String? {
-    response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
+    let requestId = response?.allHeaderFields["X-Dropbox-Request-Id"] as? String
+    print("Request Id: \(requestId ?? "none")")
+    return requestId
 }
 
 private func message(from data: Data?) -> String {
