@@ -21,12 +21,13 @@ else
 
             echo "Generating documents..."
             cd ..
-                jazzy --readme $sdk_repo_location/README.md --config $sdk_repo_location/.jazzy.json --github_url https://github.com/dropbox/SwiftyDropbox --module-version $sdk_version --module SwiftyDropbox -o $docs_location
+                jazzy --readme $sdk_repo_location/README.md --config $sdk_repo_location/.jazzy.json --github_url https://github.com/dropbox/SwiftyDropbox --module-version $sdk_version --podspec SwiftyDropbox.podspec -o $docs_location
             cd -
 
             cd $docs_repo_location/api-docs
-            rm latest
-            ln -s $sdk_version latest
+            rm -rf latest
+            mkdir latest
+            cp -R $sdk_version/* latest/
             cd -
 
             echo "Finished generating docs to: $docs_repo_location/api-docs."
