@@ -8,7 +8,7 @@ import Foundation
 ///
 /// Use the `DropboxOAuthManager` to authenticate users through OAuth2, save access tokens, and retrieve access tokens.
 ///
-/// @note OAuth flow webviews localize to enviroment locale.
+/// @note OAuth flow webviews localize to environment locale.
 ///
 public class DropboxOAuthManager: AccessTokenRefreshing {
     public let locale: Locale?
