@@ -31,8 +31,7 @@ final class TestDropboxTransportClient: XCTestCase {
     func testBaseAppHeadersAddedToRequest() throws {
         sut = DropboxTransportClientImpl(
             authStrategy: .appKeyAndSecret("appKey", "appSecret"),
-            userAgent: nil,
-            firstPartyUserAgent: "userAgent",
+            userAgent: "userAgent",
             selectUser: nil,
             sessionCreation: { _, _, _ in
                 mockNetworkSession
@@ -46,14 +45,13 @@ final class TestDropboxTransportClient: XCTestCase {
 
         XCTAssertEqual(headers["Content-Type"], "application/json")
         XCTAssertEqual(headers["Authorization"], "Basic YXBwS2V5OmFwcFNlY3JldA==")
-        XCTAssertEqual(headers["User-Agent"], "userAgent")
+        XCTAssertEqual(headers["User-Agent"]?.contains("userAgent"), true)
     }
 
     func testBaseUserTeamHeadersAddedToRequest() throws {
         sut = DropboxTransportClientImpl(
             authStrategy: .accessToken(LongLivedAccessTokenProvider(accessToken: "accessToken")),
-            userAgent: nil,
-            firstPartyUserAgent: "userAgent",
+            userAgent: "userAgent",
             selectUser: nil,
             sessionCreation: { _, _, _ in
                 mockNetworkSession
@@ -67,7 +65,7 @@ final class TestDropboxTransportClient: XCTestCase {
 
         XCTAssertEqual(headers["Content-Type"], "application/json")
         XCTAssertEqual(headers["Authorization"], "Bearer accessToken")
-        XCTAssertEqual(headers["User-Agent"], "userAgent")
+        XCTAssertEqual(headers["User-Agent"]?.contains("userAgent"), true)
     }
 
     func testUpdatingTransportClientAuthProviderUpdatesRequestAuthProvider() throws {
@@ -76,8 +74,7 @@ final class TestDropboxTransportClient: XCTestCase {
         // Create a transport client with an access token
         sut = DropboxTransportClientImpl(
             authStrategy: .accessToken(LongLivedAccessTokenProvider(accessToken: "accessToken")),
-            userAgent: nil,
-            firstPartyUserAgent: "userAgent",
+            userAgent: "userAgent",
             selectUser: nil,
             sessionCreation: { _, _, _ in
                 mockNetworkSession
