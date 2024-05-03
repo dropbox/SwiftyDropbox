@@ -28,6 +28,8 @@ enum MockingUtilities {
 }
 
 class MockDropboxTransportClient: DropboxTransportClient {
+    public static var serializeOnBackgroundThread: Bool = false
+
     var identifier: String?
     let filesAccess: FilesAccess = FilesAccessImpl()
 

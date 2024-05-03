@@ -13,6 +13,8 @@ enum ApiClientConstants {
 }
 
 public class DropboxTransportClientImpl: DropboxTransportClientInternal {
+    public static var serializeOnBackgroundThread: Bool = false
+
     public var identifier: String? {
         manager.identifier
     }

@@ -30,7 +30,7 @@ class NoopApiRequest: ApiRequest {
         self
     }
 
-    func setCompletionHandler(queue: DispatchQueue?, completionHandler: RequestCompletionHandler) -> Self {
+    func setCompletionHandlerProvider(queue: DispatchQueue?, completionHandlerProvider: RequestCompletionHandlerProvider) -> Self {
         self
     }
 

@@ -15,6 +15,7 @@ class TestRequestWithTokenRefresh: XCTestCase {
         mockAccessTokenProvider = MockAccessTokenProvider()
         mockFileManager = MockFileManager()
         mockFilesAccess = FilesAccessImpl(fileManager: mockFileManager)
+        DropboxTransportClientImpl.serializeOnBackgroundThread = false
     }
 
     // MARK: Handing oauth outcomes
@@ -42,14 +43,16 @@ class TestRequestWithTokenRefresh: XCTestCase {
         mockAccessTokenProvider.result = .error(.accessDenied, "error")
         sut = makeRequestWithTokenRefresh(request: urlTask)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ result in
+            completionHandlerProvider: .dataCompletionHandlerProvider({ result in
                 XCTAssertEqual(
                     result.innerError as? ClientError,
                     ClientError.oauthError(OAuth2Error.accessDenied)
                 )
-                e.fulfill()
+                return {
+                    e.fulfill()
+                }
             })
         )
 
@@ -95,14 +98,16 @@ class TestRequestWithTokenRefresh: XCTestCase {
         // When
         sut = makeRequestWithTokenRefresh(expectationFulfilledOnTaskCreation: taskCreatedExpectation, request: urlTask)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ result in
+            completionHandlerProvider: .dataCompletionHandlerProvider({ result in
                 XCTAssertEqual(
                     String(data: result.successData ?? .init(), encoding: .utf8),
                     String(data: testData, encoding: .utf8)
                 )
-                completionCalledExpectaion.fulfill()
+                return {
+                    completionCalledExpectaion.fulfill()
+                }
             })
         )
 
@@ -168,11 +173,13 @@ class TestRequestWithTokenRefresh: XCTestCase {
         // When
         sut = makeRequestWithTokenRefresh()
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ _ in
-                XCTAssert(Thread.isMainThread)
-                e.fulfill()
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    XCTAssert(Thread.isMainThread)
+                    e.fulfill()
+                }
             })
         )
         sut.handleCompletion(error: nil)
@@ -188,11 +195,64 @@ class TestRequestWithTokenRefresh: XCTestCase {
         // When
         sut = makeRequestWithTokenRefresh()
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: DispatchQueue.global(qos: .default),
-            completionHandler: .dataCompletionHandler({ _ in
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    XCTAssertFalse(Thread.isMainThread)
+                    e.fulfill()
+                }
+            })
+        )
+        sut.handleCompletion(error: nil)
+
+        // Then
+        wait(for: [e], timeout: 1)
+    }
+
+    func testThatSerializationThreadCanBeSetToBackgroundThread() throws {
+        // Given
+        let e = expectation(description: "completion called")
+        DropboxTransportClientImpl.serializeOnBackgroundThread = true
+
+        // When
+        sut = makeRequestWithTokenRefresh()
+
+        _ = sut.setCompletionHandlerProvider(
+            queue: nil,
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                // deserialization context
                 XCTAssertFalse(Thread.isMainThread)
-                e.fulfill()
+                return {
+                    // completion context
+                    XCTAssertTrue(Thread.isMainThread)
+                    e.fulfill()
+                }
+            })
+        )
+        sut.handleCompletion(error: nil)
+
+        // Then
+        wait(for: [e], timeout: 1)
+    }
+
+    func testThatSerializationThreadDefaultsToCompletionThread() throws {
+        // Given
+        let e = expectation(description: "completion called")
+
+        // When
+        sut = makeRequestWithTokenRefresh()
+
+        _ = sut.setCompletionHandlerProvider(
+            queue: nil,
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                // deserialization context
+                XCTAssertTrue(Thread.isMainThread)
+                return {
+                    // completion context
+                    XCTAssertTrue(Thread.isMainThread)
+                    e.fulfill()
+                }
             })
         )
         sut.handleCompletion(error: nil)
@@ -209,13 +269,15 @@ class TestRequestWithTokenRefresh: XCTestCase {
         mockAccessTokenProvider.result = .error(.accessDenied, "error")
         sut = makeRequestWithTokenRefresh()
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ _ in
-                // This cancel call toggles the sut's internal lock
-                self.sut.cancel()
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    // This cancel call toggles the sut's internal lock
+                    self.sut.cancel()
 
-                e.fulfill()
+                    e.fulfill()
+                }
             })
         )
 
@@ -230,13 +292,15 @@ class TestRequestWithTokenRefresh: XCTestCase {
         // When
         sut = makeRequestWithTokenRefresh()
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ _ in
-                // This cancel call toggles the sut's internal lock
-                self.sut.cancel()
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    // This cancel call toggles the sut's internal lock
+                    self.sut.cancel()
 
-                e.fulfill()
+                    e.fulfill()
+                }
             })
         )
         sut.handleCompletion(error: nil)
@@ -256,12 +320,14 @@ class TestRequestWithTokenRefresh: XCTestCase {
         urlTask.response = successfulResponse()
         sut.handleCompletion(error: nil)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ _ in
-                // This cancel call toggles the sut's internal lock
-                self.sut.cancel()
-                e.fulfill()
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    // This cancel call toggles the sut's internal lock
+                    self.sut.cancel()
+                    e.fulfill()
+                }
             })
         )
 
@@ -282,10 +348,12 @@ class TestRequestWithTokenRefresh: XCTestCase {
         urlTask.response = successfulResponse()
         sut.handleCompletion(error: nil)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .dataCompletionHandler({ _ in
-                e.fulfill()
+            completionHandlerProvider: .dataCompletionHandlerProvider({ _ in
+                {
+                    e.fulfill()
+                }
             })
         )
 
@@ -309,9 +377,9 @@ class TestRequestWithTokenRefresh: XCTestCase {
         let tempDownloadLocation = try XCTUnwrap(URL(string: UUID().uuidString))
         mockFileManager.addFile(data: myFile, at: tempDownloadLocation)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .downloadFileCompletionHandler({ result in
+            completionHandlerProvider: .downloadFileCompletionHandlerProvider({ result in
                 if case .success((let url, _)) = result {
                     let completionData = self.mockFileManager.contents(at: url)
                     XCTAssertEqual(completionData, myFile)
@@ -319,7 +387,9 @@ class TestRequestWithTokenRefresh: XCTestCase {
                     XCTFail()
                 }
 
-                completionExpectation.fulfill()
+                return {
+                    completionExpectation.fulfill()
+                }
             })
         )
 
@@ -357,15 +427,17 @@ class TestRequestWithTokenRefresh: XCTestCase {
         sut.handleDownloadFinished(location: tempDownloadLocation)
         sut.handleCompletion(error: nil)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .downloadFileCompletionHandler({ result in
+            completionHandlerProvider: .downloadFileCompletionHandlerProvider({ result in
                 if case .failure(let networkTaskFailure) = result {
                     if case .badStatusCode(let completionData, _, _) = networkTaskFailure {
                         XCTAssertEqual(completionData, errorJsonData)
                     }
                 }
-                completionExpectation.fulfill()
+                return {
+                    completionExpectation.fulfill()
+                }
             })
         )
 
@@ -396,9 +468,9 @@ class TestRequestWithTokenRefresh: XCTestCase {
         sut.handleDownloadFinished(location: tempDownloadLocation)
         sut.handleCompletion(error: nil)
 
-        _ = sut.setCompletionHandler(
+        _ = sut.setCompletionHandlerProvider(
             queue: nil,
-            completionHandler: .downloadFileCompletionHandler({ result in
+            completionHandlerProvider: .downloadFileCompletionHandlerProvider({ result in
                 if case .success((let url, _)) = result {
                     let completionData = self.mockFileManager.contents(at: url)
                     XCTAssertEqual(completionData, routeJsonData)
@@ -406,7 +478,9 @@ class TestRequestWithTokenRefresh: XCTestCase {
                     XCTFail()
                 }
 
-                completionExpectation.fulfill()
+                return {
+                    completionExpectation.fulfill()
+                }
             })
         )
 
