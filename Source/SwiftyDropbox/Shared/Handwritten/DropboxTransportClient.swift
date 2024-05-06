@@ -48,14 +48,13 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         appKey: String,
         appSecret: String,
         baseHosts: BaseHosts = .default,
-        firstPartyUserAgent: String?,
+        userAgent: String?,
         authChallengeHandler: @escaping AuthChallenge.Handler
     ) {
         self.init(
             authStrategy: .appKeyAndSecret(appKey, appSecret),
             baseHosts: baseHosts,
-            userAgent: nil,
-            firstPartyUserAgent: firstPartyUserAgent,
+            userAgent: userAgent,
             selectUser: nil,
             sessionCreation: DefaultSessionCreation,
             authChallengeHandler: authChallengeHandler
@@ -81,7 +80,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         accessToken: String,
         baseHosts: BaseHosts = .default,
         userAgent: String? = nil,
-        firstPartyUserAgent: String? = nil,
         selectUser: String? = nil,
         sessionConfiguration: NetworkSessionConfiguration = .default,
         longpollSessionConfiguration: NetworkSessionConfiguration = .defaultLongpoll,
@@ -94,7 +92,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             accessTokenProvider: LongLivedAccessTokenProvider(accessToken: accessToken),
             baseHosts: baseHosts,
             userAgent: userAgent,
-            firstPartyUserAgent: firstPartyUserAgent,
             selectUser: selectUser,
             sessionConfiguration: sessionConfiguration,
             longpollSessionConfiguration: longpollSessionConfiguration,
@@ -121,7 +118,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         accessTokenProvider: AccessTokenProvider,
         baseHosts: BaseHosts = .default,
         userAgent: String?,
-        firstPartyUserAgent: String? = nil,
         selectUser: String?,
         sessionConfiguration: NetworkSessionConfiguration = .default,
         longpollSessionConfiguration: NetworkSessionConfiguration = .defaultLongpoll,
@@ -134,7 +130,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             authStrategy: .accessToken(accessTokenProvider),
             baseHosts: baseHosts,
             userAgent: userAgent,
-            firstPartyUserAgent: firstPartyUserAgent,
             selectUser: selectUser,
             sessionConfiguration: sessionConfiguration,
             sessionCreation: DefaultSessionCreation,
@@ -159,7 +154,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
                 LongLivedAccessTokenProvider(accessToken: accessToken)
             ),
             userAgent: nil,
-            firstPartyUserAgent: nil,
             selectUser: selectUser,
             sessionCreation: sessionCreation,
             authChallengeHandler: nil,
@@ -172,7 +166,6 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         authStrategy: AuthStrategy,
         baseHosts: BaseHosts = .default,
         userAgent: String?,
-        firstPartyUserAgent: String?,
         selectUser: String?,
         sessionConfiguration: NetworkSessionConfiguration = .default,
         sessionCreation: SessionCreation = DefaultSessionCreation,
@@ -212,9 +205,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
 
         let defaultUserAgent = ApiClientConstants.defaultUserAgent
 
-        if let firstPartyUserAgent = firstPartyUserAgent {
-            self.userAgent = firstPartyUserAgent
-        } else if let userAgent = userAgent {
+        if let userAgent = userAgent {
             self.userAgent = "\(userAgent)/\(defaultUserAgent)"
         } else {
             self.userAgent = defaultUserAgent
