@@ -145,7 +145,7 @@ class RequestWithTokenRefresh: ApiRequest {
         fileprivate var cancelled = false
         fileprivate var isComplete = false
         fileprivate var responseQueue: DispatchQueue?
-        fileprivate var completionHandler: RequestCompletionHandlerProvider?
+        fileprivate var completionHandlerProvider: RequestCompletionHandlerProvider?
         fileprivate var progressHandler: ((Progress) -> Void)?
         fileprivate var cleanupHandler: (() -> Void)?
 
@@ -276,7 +276,7 @@ class RequestWithTokenRefresh: ApiRequest {
             if mutableState.isComplete {
                 call(completionHandler: completionHandlerProvider, error: mutableState.request?.clientError, mutableState: mutableState)
             } else {
-                mutableState.completionHandler = completionHandlerProvider
+                mutableState.completionHandlerProvider = completionHandlerProvider
             }
         }
         return self
@@ -308,7 +308,7 @@ class RequestWithTokenRefresh: ApiRequest {
             mutableState.cleanupHandler?()
             mutableState.cleanupHandler = nil
             mutableState.progressHandler = nil
-            mutableState.completionHandler = nil
+            mutableState.completionHandlerProvider = nil
         }
 
         if let mutableState = mutableState {
@@ -345,7 +345,7 @@ class RequestWithTokenRefresh: ApiRequest {
 
     private func completeWithError(_ error: ClientError) {
         accessStateWithLock { mutableState in
-            if let completionHandler = mutableState.completionHandler {
+            if let completionHandler = mutableState.completionHandlerProvider {
                 call(completionHandler: completionHandler, error: error, mutableState: mutableState)
             }
         }
@@ -409,7 +409,7 @@ extension RequestWithTokenRefresh {
         accessStateWithLock { mutableState in
             mutableState.isComplete = true
 
-            if let completionHandler = mutableState.completionHandler {
+            if let completionHandler = mutableState.completionHandlerProvider {
                 DropboxClientsManager.logBackgroundSession("handleCompletion called with handler \(mutableState.taskIdentifier)")
                 call(completionHandler: completionHandler, error: error, mutableState: mutableState)
             } else {
@@ -419,8 +419,8 @@ extension RequestWithTokenRefresh {
         }
     }
 
-    private func call(completionHandler: RequestCompletionHandlerProvider, error: ClientError?, mutableState: MutableState) {
-        switch completionHandler {
+    private func call(completionHandler completionHanderProvider: RequestCompletionHandlerProvider, error: ClientError?, mutableState: MutableState) {
+        switch completionHanderProvider {
         case .dataCompletionHandlerProvider(let handlerProvider):
             callDataCompletionHandler(error: error, mutableState: mutableState, handlerProvider: handlerProvider)
         case .downloadFileCompletionHandlerProvider(let handlerProvider):
