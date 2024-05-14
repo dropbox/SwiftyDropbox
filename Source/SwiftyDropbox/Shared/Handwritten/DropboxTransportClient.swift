@@ -13,6 +13,23 @@ enum ApiClientConstants {
 }
 
 public class DropboxTransportClientImpl: DropboxTransportClientInternal {
+    public static var serializeOnBackgroundThread: Bool {
+        set {
+            staticConfigurationLock.lock()
+            _serializeOnBackgroundThread = newValue
+            staticConfigurationLock.unlock()
+        }
+        get {
+            defer {
+                staticConfigurationLock.unlock()
+            }
+            staticConfigurationLock.lock()
+            return _serializeOnBackgroundThread
+        }
+    }
+    private  static var staticConfigurationLock = NSLock()
+    private static var _serializeOnBackgroundThread: Bool = false
+
     public var identifier: String? {
         manager.identifier
     }

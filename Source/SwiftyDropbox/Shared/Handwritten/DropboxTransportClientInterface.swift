@@ -11,6 +11,8 @@ public protocol DropboxTransportClient {
     var accessTokenProvider: AccessTokenProvider? { get set }
     var isBackgroundClient: Bool { get }
 
+    static var serializeOnBackgroundThread: Bool { get set }
+
     var identifier: String? { get }
 
     func request<ASerial, RSerial, ESerial>(
