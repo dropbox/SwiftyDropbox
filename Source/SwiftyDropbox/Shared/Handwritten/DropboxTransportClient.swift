@@ -510,7 +510,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         for route: Route<ASerial, RSerial, ESerial>,
         baseHosts: BaseHosts = .default
     ) -> URL {
-        let urlString = "\(baseHosts.url(for: route.attributes.host))/\(route.namespace)/\(route.name)"
+        let urlString = "\(baseHosts.url(for: route.attributes))/\(route.namespace)/\(route.name)"
         return URL(string: urlString)!
     }
 
@@ -529,6 +529,8 @@ public class BaseHosts: NSObject {
     @objc
     let contentHost: String
     @objc
+    var downloadContentHost: String
+    @objc
     let notifyHost: String
 
     @objc
@@ -539,7 +541,18 @@ public class BaseHosts: NSObject {
     ) {
         self.apiHost = apiHost
         self.contentHost = contentHost
+        self.downloadContentHost = contentHost
         self.notifyHost = notifyHost
+    }
+
+    @objc public convenience init(
+        apiHost: String,
+        contentHost: String,
+        downloadContentHost: String,
+        notifyHost: String
+    ) {
+        self.init(apiHost: apiHost, contentHost: contentHost, notifyHost: notifyHost)
+        self.downloadContentHost = downloadContentHost
     }
 
     public static var `default`: Self {
@@ -552,12 +565,15 @@ public class BaseHosts: NSObject {
 }
 
 extension BaseHosts {
-    func url(for host: RouteHost) -> String {
+    func url(for attr: RouteAttributes) -> String {
         {
-            switch host {
+            switch attr.host {
             case .api:
                 return apiHost
             case .content:
+                if attr.style == .download {
+                    return downloadContentHost
+                }
                 return contentHost
             case .notify:
                 return notifyHost
