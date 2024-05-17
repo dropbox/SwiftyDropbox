@@ -554,7 +554,6 @@ public class BaseHosts: NSObject {
         downloadContentHost: String,
         notifyHost: String
     ) {
-
         self.apiHost = apiHost
         self.contentHost = contentHost
         self.downloadContentHost = downloadContentHost
