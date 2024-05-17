@@ -510,7 +510,7 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         for route: Route<ASerial, RSerial, ESerial>,
         baseHosts: BaseHosts = .default
     ) -> URL {
-        let urlString = "\(baseHosts.url(for: route.attributes.host))/\(route.namespace)/\(route.name)"
+        let urlString = "\(baseHosts.url(for: route.attributes))/\(route.namespace)/\(route.name)"
         return URL(string: urlString)!
     }
 
@@ -529,16 +529,34 @@ public class BaseHosts: NSObject {
     @objc
     let contentHost: String
     @objc
+    let downloadContentHost: String
+    @objc
     let notifyHost: String
+
+    @objc
+    public convenience init(
+        apiHost: String,
+        contentHost: String,
+        notifyHost: String
+    ) {
+        self.init(
+            apiHost: apiHost,
+            contentHost: contentHost,
+            downloadContentHost: contentHost,
+            notifyHost: notifyHost
+        )
+    }
 
     @objc
     public required init(
         apiHost: String,
         contentHost: String,
+        downloadContentHost: String,
         notifyHost: String
     ) {
         self.apiHost = apiHost
         self.contentHost = contentHost
+        self.downloadContentHost = downloadContentHost
         self.notifyHost = notifyHost
     }
 
@@ -546,17 +564,20 @@ public class BaseHosts: NSObject {
         .init(
             apiHost: ApiClientConstants.apiHost,
             contentHost: ApiClientConstants.contentHost,
+            downloadContentHost: ApiClientConstants.contentHost,
             notifyHost: ApiClientConstants.notifyHost
         )
     }
 }
 
 extension BaseHosts {
-    func url(for host: RouteHost) -> String {
+    func url(for attr: RouteAttributes) -> String {
         {
-            switch host {
+            switch attr.host {
             case .api:
                 return apiHost
+            case .content where attr.style == .download:
+                return downloadContentHost
             case .content:
                 return contentHost
             case .notify:
