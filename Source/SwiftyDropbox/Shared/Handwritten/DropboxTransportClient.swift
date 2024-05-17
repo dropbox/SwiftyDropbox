@@ -529,36 +529,37 @@ public class BaseHosts: NSObject {
     @objc
     let contentHost: String
     @objc
-    var downloadContentHost: String
+    let downloadContentHost: String
     @objc
     let notifyHost: String
 
     @objc
-    public required init(
+    public convenience init(
         apiHost: String,
         contentHost: String,
         notifyHost: String
     ) {
-        self.apiHost = apiHost
-        self.contentHost = contentHost
-        self.downloadContentHost = contentHost
-        self.notifyHost = notifyHost
+        self.init(apiHost: apiHost, contentHost: contentHost, downloadContentHost: contentHost, notifyHost: notifyHost)
     }
 
-    @objc public convenience init(
+    @objc public required init(
         apiHost: String,
         contentHost: String,
         downloadContentHost: String,
         notifyHost: String
     ) {
-        self.init(apiHost: apiHost, contentHost: contentHost, notifyHost: notifyHost)
+
+        self.apiHost = apiHost
+        self.contentHost = contentHost
         self.downloadContentHost = downloadContentHost
+        self.notifyHost = notifyHost
     }
 
     public static var `default`: Self {
         .init(
             apiHost: ApiClientConstants.apiHost,
             contentHost: ApiClientConstants.contentHost,
+            downloadContentHost: ApiClientConstants.contentHost,
             notifyHost: ApiClientConstants.notifyHost
         )
     }
