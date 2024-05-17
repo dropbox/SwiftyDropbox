@@ -539,10 +539,16 @@ public class BaseHosts: NSObject {
         contentHost: String,
         notifyHost: String
     ) {
-        self.init(apiHost: apiHost, contentHost: contentHost, downloadContentHost: contentHost, notifyHost: notifyHost)
+        self.init(
+            apiHost: apiHost,
+            contentHost: contentHost,
+            downloadContentHost: contentHost,
+            notifyHost: notifyHost
+        )
     }
 
-    @objc public required init(
+    @objc
+    public required init(
         apiHost: String,
         contentHost: String,
         downloadContentHost: String,
@@ -571,10 +577,9 @@ extension BaseHosts {
             switch attr.host {
             case .api:
                 return apiHost
+            case .content where attr.style == .download:
+                return downloadContentHost
             case .content:
-                if attr.style == .download {
-                    return downloadContentHost
-                }
                 return contentHost
             case .notify:
                 return notifyHost
