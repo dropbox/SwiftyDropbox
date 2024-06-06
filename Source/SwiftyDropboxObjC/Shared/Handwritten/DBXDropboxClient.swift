@@ -135,4 +135,10 @@ public class DBXDropboxClient: DBXDropboxBase {
             completion(objcs)
         }
     }
+
+    /// Cancels all tasks and invalidates all network sessions
+    @objc
+    public func shutdown() {
+        subSwift.shutdown()
+    }
 }
