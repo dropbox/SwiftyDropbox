@@ -9,7 +9,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
         let info = try persistedRequestInfo(from: apiRequest)
 
         switch info.routeName {
-        case "alphaUpload":
+        case "alpha/upload":
             return .alphaUpload(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -27,7 +27,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "downloadZip":
+        case "download_zip":
             return .downloadZip(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -45,7 +45,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "getPreview":
+        case "get_preview":
             return .getPreview(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -54,7 +54,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "getThumbnail":
+        case "get_thumbnail":
             return .getThumbnail(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -63,7 +63,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "getThumbnailV2":
+        case "get_thumbnail_v2":
             return .getThumbnailV2(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -72,7 +72,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "paperCreate":
+        case "paper/create":
             return .paperCreate(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -81,7 +81,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "paperUpdate":
+        case "paper/update":
             return .paperUpdate(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -99,7 +99,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "uploadSessionAppendV2":
+        case "upload_session/append_v2":
             return .uploadSessionAppendV2(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -108,7 +108,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "uploadSessionAppend":
+        case "upload_session/append":
             return .uploadSessionAppend(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -117,7 +117,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "uploadSessionFinish":
+        case "upload_session/finish":
             return .uploadSessionFinish(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -126,7 +126,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "uploadSessionStart":
+        case "upload_session/start":
             return .uploadSessionStart(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -135,7 +135,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "docsCreate":
+        case "docs/create":
             return .docsCreate(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -144,7 +144,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "docsDownload":
+        case "docs/download":
             return .docsDownload(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -153,7 +153,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "docsUpdate":
+        case "docs/update":
             return .docsUpdate(
                 rebuildRequest(
                     apiRequest: apiRequest,
@@ -162,7 +162,7 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "getSharedLinkFile":
+        case "get_shared_link_file":
             return .getSharedLinkFile(
                 rebuildRequest(
                     apiRequest: apiRequest,
