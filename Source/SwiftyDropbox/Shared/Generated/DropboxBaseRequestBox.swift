@@ -7,7 +7,7 @@
 import Foundation
 
 /// Allows for heterogenous collections of typed requests
-public enum DropboxBaseRequestBox {
+public enum DropboxBaseRequestBox: CustomStringConvertible {
     case alphaUpload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
     case download(DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>)
     case downloadZip(DownloadRequestFile<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer>)
@@ -26,4 +26,45 @@ public enum DropboxBaseRequestBox {
     case docsDownload(DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer>)
     case docsUpdate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer>)
     case getSharedLinkFile(DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>)
+
+    public var description: String {
+        switch self {
+        case .alphaUpload:
+            return "alphaUpload"
+        case .download:
+            return "download"
+        case .downloadZip:
+            return "downloadZip"
+        case .export:
+            return "export"
+        case .getPreview:
+            return "getPreview"
+        case .getThumbnail:
+            return "getThumbnail"
+        case .getThumbnailV2:
+            return "getThumbnailV2"
+        case .paperCreate:
+            return "paperCreate"
+        case .paperUpdate:
+            return "paperUpdate"
+        case .upload:
+            return "upload"
+        case .uploadSessionAppendV2:
+            return "uploadSessionAppendV2"
+        case .uploadSessionAppend:
+            return "uploadSessionAppend"
+        case .uploadSessionFinish:
+            return "uploadSessionFinish"
+        case .uploadSessionStart:
+            return "uploadSessionStart"
+        case .docsCreate:
+            return "docsCreate"
+        case .docsDownload:
+            return "docsDownload"
+        case .docsUpdate:
+            return "docsUpdate"
+        case .getSharedLinkFile:
+            return "getSharedLinkFile"
+        }
+    }
 }

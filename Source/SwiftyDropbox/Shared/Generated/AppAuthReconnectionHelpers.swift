@@ -9,7 +9,7 @@ enum AppAuthReconnectionHelpers: ReconnectionHelpersShared {
         let info = try persistedRequestInfo(from: apiRequest)
 
         switch info.routeName {
-        case "getThumbnailV2":
+        case "get_thumbnail_v2":
             return .getThumbnailV2(
                 rebuildRequest(
                     apiRequest: apiRequest,

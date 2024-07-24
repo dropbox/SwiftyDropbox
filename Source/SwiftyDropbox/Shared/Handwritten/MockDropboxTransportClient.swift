@@ -142,7 +142,9 @@ class MockDropboxTransportClient: DropboxTransportClient {
 
     func reconnectRequest<ASerial, RSerial, ESerial>(_ route: Route<ASerial, RSerial, ESerial>, apiRequest: ApiRequest) -> UploadRequest<RSerial, ESerial>
         where ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer {
-        fatalError("unimplemented")
+        UploadRequest(
+            request: apiRequest, responseSerializer: route.responseSerializer, errorSerializer: route.errorSerializer
+        )
     }
 
     func reconnectRequest<ASerial, RSerial, ESerial>(
@@ -151,10 +153,26 @@ class MockDropboxTransportClient: DropboxTransportClient {
         overwrite: Bool,
         destination: URL
     ) -> DownloadRequestFile<RSerial, ESerial> where ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JSONSerializer {
-        fatalError("unimplemented")
+        DownloadRequestFile(
+            request: apiRequest,
+            responseSerializer: route.responseSerializer,
+            errorSerializer: route.errorSerializer,
+            moveToDestination: { _ in fatalError() },
+            errorDataFromLocation: { _ in fatalError() }
+        )
     }
 
     func shutdown() {}
+}
+
+extension MockDropboxTransportClient: DropboxTransportClientInternal {
+    var manager: NetworkSessionManager {
+        fatalError("unimplemented")
+    }
+
+    var longpollManager: NetworkSessionManager {
+        fatalError("unimplemented")
+    }
 }
 
 private class Requests {
