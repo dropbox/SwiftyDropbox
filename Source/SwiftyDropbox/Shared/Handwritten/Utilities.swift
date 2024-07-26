@@ -86,16 +86,6 @@ extension Optional where Wrapped: SomeOptional {
     }
 }
 
-// MARK: Concurrency
-
-public extension os_unfair_lock {
-    mutating func sync<T>(execute: () throws -> T) rethrows -> T {
-        os_unfair_lock_lock(&self)
-        defer { os_unfair_lock_unlock(&self) }
-        return try execute()
-    }
-}
-
 // MARK: Logging
 
 public enum LogLevel {

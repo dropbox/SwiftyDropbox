@@ -70,16 +70,25 @@ protocol RequestControlling {
 class RequestWithTokenRefresh: ApiRequest {
     class StateAccess {
         private var mutableState: MutableState
-        private var lock = os_unfair_lock()
+        private var lock = { // heap allocate the lock for use in Swift
+            let lock = UnsafeMutablePointer<os_unfair_lock>.allocate(capacity: 1)
+            lock.initialize(to: .init())
+            return lock
+        }()
 
         init(mutableState: MutableState) {
             self.mutableState = mutableState
         }
 
+        deinit {
+            lock.deinitialize(count: 1)
+            lock.deallocate()
+        }
+
         fileprivate func accessStateWithLock<T>(block: (MutableState) throws -> T) rethrows -> T {
-            try lock.sync {
-                try block(mutableState)
-            }
+            os_unfair_lock_lock(lock)
+            defer { os_unfair_lock_unlock(lock) }
+            return try block(mutableState)
         }
     }
 
