@@ -598,7 +598,7 @@ extension MockFileManager: FileManagerProtocol {
     }
 }
 
-extension ClientError: RawRepresentable, Equatable {
+extension ClientError: @retroactive RawRepresentable, @retroactive Equatable {
     public typealias RawValue = String
 
     public init?(rawValue: String) {
