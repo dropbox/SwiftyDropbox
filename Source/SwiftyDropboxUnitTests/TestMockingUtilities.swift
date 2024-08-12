@@ -61,15 +61,51 @@ final class TestMockingUtilities: XCTestCase {
 
         let (filesRoutes, mockTransportClient) = MockingUtilities.makeMock(forType: FilesRoutes.self)
         let webService = ExampleWebService(routes: filesRoutes)
+        let expectedError = Files.GetMetadataError.path(.notFound)
 
         webService.getMetadata { _, error in
-            XCTAssertNotNil(error)
+            let error = try! XCTUnwrap(error)
+            if case .routeError = error {
+                // successfully produced a Files.GetMetadataError
+            } else {
+                XCTFail()
+            }
             e.fulfill()
         }
 
-        let error = Files.GetMetadataError.path(.notFound)
         try mockTransportClient.getLastRequest()?.handleMockInput(
-            .routeError(model: error)
+            .routeError(model: expectedError)
+        )
+
+        wait(for: [e], timeout: 1)
+    }
+
+    func testExampleErrorJSON() throws {
+        let e = expectation(description: "webservice closure called")
+
+        let (filesRoutes, mockTransportClient) = MockingUtilities.makeMock(forType: FilesRoutes.self)
+        let webService = ExampleWebService(routes: filesRoutes)
+
+        let expectedErrorJSON: [String: Any] = [
+            "path": [".tag": "not_found"],
+            ".tag":"path"
+        ]
+
+        webService.getMetadata { _, error in
+            let error = try! XCTUnwrap(error)
+            if case .routeError = error {
+                // successfully produced a Files.GetMetadataError
+            } else {
+                XCTFail()
+            }
+            e.fulfill()
+        }
+
+        try mockTransportClient.getLastRequest()?.handleMockInput(
+            .routeError(json: [
+                "error": expectedErrorJSON,
+                "error_summary": "error_summary",
+            ])
         )
 
         wait(for: [e], timeout: 1)

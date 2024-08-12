@@ -598,6 +598,7 @@ extension MockFileManager: FileManagerProtocol {
     }
 }
 
+#if compiler(>=6)
 extension ClientError: @retroactive RawRepresentable, @retroactive Equatable {
     public typealias RawValue = String
 
@@ -622,3 +623,29 @@ extension ClientError: @retroactive RawRepresentable, @retroactive Equatable {
         }
     }
 }
+#else
+extension ClientError: RawRepresentable, Equatable {
+    public typealias RawValue = String
+
+    public init?(rawValue: String) {
+        fatalError("unimplemented")
+    }
+
+    public var rawValue: String {
+        switch self {
+        case .oauthError:
+            return "oauthError"
+        case .urlSessionError:
+            return "urlSessionError"
+        case .fileAccessError:
+            return "fileAccessError"
+        case .requestObjectDeallocated:
+            return "requestObjectDeallocated"
+        case .unexpectedState:
+            return "unexpectedState"
+        case .other:
+            return "unknown"
+        }
+    }
+}
+#endif
