@@ -20,9 +20,15 @@ enum MockingUtilities {
         return (namespaceObject, mockTransportClient)
     }
 
-    static func jsonObject<T: JSONRepresentable>(from result: T) throws -> [String: Any] {
+    static func jsonObject<T: JSONRepresentable>(from result: T, isError: Bool) throws -> [String: Any] {
         let json = try result.json()
-        let jsonObject = try (SerializeUtil.prepareJSONForSerialization(json) as? [String: Any]).orThrow()
+        var jsonObject = try (SerializeUtil.prepareJSONForSerialization(json) as? [String: Any]).orThrow()
+        if isError {
+            jsonObject = [
+                "error": jsonObject,
+                "error_summary": "error_summary",
+            ]
+        }
         return jsonObject
     }
 }

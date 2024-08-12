@@ -82,13 +82,13 @@ extension MockApiRequest {
         case .none:
             mappedInput = .none
         case .success(let model):
-            mappedInput = .success(json: try MockingUtilities.jsonObject(from: model))
+            mappedInput = .success(json: try MockingUtilities.jsonObject(from: model, isError: false))
         case .downloadSuccess(let model, let downloadLocation):
-            mappedInput = .downloadSuccess(json: try MockingUtilities.jsonObject(from: model), downloadLocation: downloadLocation)
+            mappedInput = .downloadSuccess(json: try MockingUtilities.jsonObject(from: model, isError: false), downloadLocation: downloadLocation)
         case .requestError(let model, let code):
-            mappedInput = .requestError(json: try MockingUtilities.jsonObject(from: model), code: code)
+            mappedInput = .requestError(json: try MockingUtilities.jsonObject(from: model, isError: true), code: code)
         case .routeError(let model):
-            mappedInput = .success(json: try MockingUtilities.jsonObject(from: model))
+            mappedInput = .routeError(json: try MockingUtilities.jsonObject(from: model, isError: true))
         }
 
         try _handleMockInput(mappedInput)
