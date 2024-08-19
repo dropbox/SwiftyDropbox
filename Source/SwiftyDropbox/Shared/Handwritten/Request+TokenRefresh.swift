@@ -437,7 +437,11 @@ extension RequestWithTokenRefresh {
         }
     }
 
-    private func callDataCompletionHandler(error: ClientError?, mutableState: MutableState, handlerProvider: @escaping ((NetworkDataTaskResult) -> WrappedCompletionHandler)) {
+    private func callDataCompletionHandler(
+        error: ClientError?,
+        mutableState: MutableState,
+        handlerProvider: @escaping ((NetworkDataTaskResult) -> WrappedCompletionHandler)
+    ) {
         // copy for use out of lock
         let data = mutableState.data
         let response = mutableState.response
@@ -471,7 +475,11 @@ extension RequestWithTokenRefresh {
         }
     }
 
-    private func callDownloadCompletionHandler(error: ClientError?, mutableState: MutableState, handlerProvider: @escaping ((NetworkDownloadTaskResult) -> WrappedCompletionHandler)) {
+    private func callDownloadCompletionHandler(
+        error: ClientError?,
+        mutableState: MutableState,
+        handlerProvider: @escaping ((NetworkDownloadTaskResult) -> WrappedCompletionHandler)
+    ) {
         // copy for use out of lock
         let temporaryDownloadURL = mutableState.temporaryDownloadURL
         let response = mutableState.response

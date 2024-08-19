@@ -88,7 +88,7 @@ final class TestMockingUtilities: XCTestCase {
 
         let expectedErrorJSON: [String: Any] = [
             "path": [".tag": "not_found"],
-            ".tag":"path"
+            ".tag": "path",
         ]
 
         webService.getMetadata { _, error in

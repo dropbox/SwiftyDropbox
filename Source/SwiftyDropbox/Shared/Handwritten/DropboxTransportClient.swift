@@ -27,7 +27,8 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             return _serializeOnBackgroundThread
         }
     }
-    private  static var staticConfigurationLock = NSLock()
+
+    private static var staticConfigurationLock = NSLock()
     private static var _serializeOnBackgroundThread: Bool = false
 
     public var identifier: String? {
