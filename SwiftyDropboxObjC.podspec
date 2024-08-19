@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropboxObjC'
-  s.version      = '10.0.7'
+  s.version      = '10.1.0'
   s.summary      = 'Objective-C Wrapper for Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
@@ -24,5 +24,5 @@ Pod::Spec.new do |s|
   s.osx.frameworks = 'AppKit', 'WebKit', 'SystemConfiguration', 'Foundation'
   s.ios.frameworks = 'UIKit', 'WebKit', 'SystemConfiguration', 'Foundation'
 
-  s.dependency 'SwiftyDropbox', '~> 10.0.7'
+  s.dependency 'SwiftyDropbox', '~> 10.1.0'
 end
