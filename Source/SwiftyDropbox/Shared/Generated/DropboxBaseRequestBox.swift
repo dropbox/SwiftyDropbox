@@ -8,63 +8,63 @@ import Foundation
 
 /// Allows for heterogenous collections of typed requests
 public enum DropboxBaseRequestBox: CustomStringConvertible {
-    case alphaUpload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
-    case download(DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>)
-    case downloadZip(DownloadRequestFile<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer>)
-    case export(DownloadRequestFile<Files.ExportResultSerializer, Files.ExportErrorSerializer>)
-    case getPreview(DownloadRequestFile<Files.FileMetadataSerializer, Files.PreviewErrorSerializer>)
-    case getThumbnail(DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer>)
-    case getThumbnailV2(DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer>)
-    case paperCreate(UploadRequest<Files.PaperCreateResultSerializer, Files.PaperCreateErrorSerializer>)
-    case paperUpdate(UploadRequest<Files.PaperUpdateResultSerializer, Files.PaperUpdateErrorSerializer>)
-    case upload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
-    case uploadSessionAppendV2(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
-    case uploadSessionAppend(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
-    case uploadSessionFinish(UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer>)
-    case uploadSessionStart(UploadRequest<Files.UploadSessionStartResultSerializer, Files.UploadSessionStartErrorSerializer>)
-    case docsCreate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer>)
-    case docsDownload(DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer>)
-    case docsUpdate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer>)
-    case getSharedLinkFile(DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>)
+    case filesalphaUpload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
+    case filesdownload(DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>)
+    case filesdownloadZip(DownloadRequestFile<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer>)
+    case filesexport(DownloadRequestFile<Files.ExportResultSerializer, Files.ExportErrorSerializer>)
+    case filesgetPreview(DownloadRequestFile<Files.FileMetadataSerializer, Files.PreviewErrorSerializer>)
+    case filesgetThumbnail(DownloadRequestFile<Files.FileMetadataSerializer, Files.ThumbnailErrorSerializer>)
+    case filesgetThumbnailV2(DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer>)
+    case filespaperCreate(UploadRequest<Files.PaperCreateResultSerializer, Files.PaperCreateErrorSerializer>)
+    case filespaperUpdate(UploadRequest<Files.PaperUpdateResultSerializer, Files.PaperUpdateErrorSerializer>)
+    case filesupload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
+    case filesuploadSessionAppendV2(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
+    case filesuploadSessionAppend(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
+    case filesuploadSessionFinish(UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer>)
+    case filesuploadSessionStart(UploadRequest<Files.UploadSessionStartResultSerializer, Files.UploadSessionStartErrorSerializer>)
+    case paperdocsCreate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer>)
+    case paperdocsDownload(DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer>)
+    case paperdocsUpdate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer>)
+    case sharinggetSharedLinkFile(DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>)
 
     public var description: String {
         switch self {
-        case .alphaUpload:
-            return "alphaUpload"
-        case .download:
-            return "download"
-        case .downloadZip:
-            return "downloadZip"
-        case .export:
-            return "export"
-        case .getPreview:
-            return "getPreview"
-        case .getThumbnail:
-            return "getThumbnail"
-        case .getThumbnailV2:
-            return "getThumbnailV2"
-        case .paperCreate:
-            return "paperCreate"
-        case .paperUpdate:
-            return "paperUpdate"
-        case .upload:
-            return "upload"
-        case .uploadSessionAppendV2:
-            return "uploadSessionAppendV2"
-        case .uploadSessionAppend:
-            return "uploadSessionAppend"
-        case .uploadSessionFinish:
-            return "uploadSessionFinish"
-        case .uploadSessionStart:
-            return "uploadSessionStart"
-        case .docsCreate:
-            return "docsCreate"
-        case .docsDownload:
-            return "docsDownload"
-        case .docsUpdate:
-            return "docsUpdate"
-        case .getSharedLinkFile:
-            return "getSharedLinkFile"
+        case .filesalphaUpload:
+            return "filesalphaUpload"
+        case .filesdownload:
+            return "filesdownload"
+        case .filesdownloadZip:
+            return "filesdownloadZip"
+        case .filesexport:
+            return "filesexport"
+        case .filesgetPreview:
+            return "filesgetPreview"
+        case .filesgetThumbnail:
+            return "filesgetThumbnail"
+        case .filesgetThumbnailV2:
+            return "filesgetThumbnailV2"
+        case .filespaperCreate:
+            return "filespaperCreate"
+        case .filespaperUpdate:
+            return "filespaperUpdate"
+        case .filesupload:
+            return "filesupload"
+        case .filesuploadSessionAppendV2:
+            return "filesuploadSessionAppendV2"
+        case .filesuploadSessionAppend:
+            return "filesuploadSessionAppend"
+        case .filesuploadSessionFinish:
+            return "filesuploadSessionFinish"
+        case .filesuploadSessionStart:
+            return "filesuploadSessionStart"
+        case .paperdocsCreate:
+            return "paperdocsCreate"
+        case .paperdocsDownload:
+            return "paperdocsDownload"
+        case .paperdocsUpdate:
+            return "paperdocsUpdate"
+        case .sharinggetSharedLinkFile:
+            return "sharinggetSharedLinkFile"
         }
     }
 }

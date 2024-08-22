@@ -8,12 +8,12 @@ import Foundation
 
 /// Allows for heterogenous collections of typed requests
 public enum DropboxAppBaseRequestBox: CustomStringConvertible {
-    case getThumbnailV2(DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer>)
+    case filesgetThumbnailV2(DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer>)
 
     public var description: String {
         switch self {
-        case .getThumbnailV2:
-            return "getThumbnailV2"
+        case .filesgetThumbnailV2:
+            return "filesgetThumbnailV2"
         }
     }
 }

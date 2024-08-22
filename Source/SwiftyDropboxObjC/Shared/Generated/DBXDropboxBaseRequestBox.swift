@@ -10,41 +10,41 @@ import SwiftyDropbox
 extension DropboxBaseRequestBox {
     var objc: DBXRequest {
         switch self {
-        case .alphaUpload(let swift):
+        case .filesalphaUpload(let swift):
             return DBXFilesAlphaUploadUploadRequest(swift: swift)
-        case .download(let swift):
+        case .filesdownload(let swift):
             return DBXFilesDownloadDownloadRequestFile(swift: swift)
-        case .downloadZip(let swift):
+        case .filesdownloadZip(let swift):
             return DBXFilesDownloadZipDownloadRequestFile(swift: swift)
-        case .export(let swift):
+        case .filesexport(let swift):
             return DBXFilesExportDownloadRequestFile(swift: swift)
-        case .getPreview(let swift):
+        case .filesgetPreview(let swift):
             return DBXFilesGetPreviewDownloadRequestFile(swift: swift)
-        case .getThumbnail(let swift):
+        case .filesgetThumbnail(let swift):
             return DBXFilesGetThumbnailDownloadRequestFile(swift: swift)
-        case .getThumbnailV2(let swift):
+        case .filesgetThumbnailV2(let swift):
             return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
-        case .paperCreate(let swift):
+        case .filespaperCreate(let swift):
             return DBXFilesPaperCreateUploadRequest(swift: swift)
-        case .paperUpdate(let swift):
+        case .filespaperUpdate(let swift):
             return DBXFilesPaperUpdateUploadRequest(swift: swift)
-        case .upload(let swift):
+        case .filesupload(let swift):
             return DBXFilesUploadUploadRequest(swift: swift)
-        case .uploadSessionAppendV2(let swift):
+        case .filesuploadSessionAppendV2(let swift):
             return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
-        case .uploadSessionAppend(let swift):
+        case .filesuploadSessionAppend(let swift):
             return DBXFilesUploadSessionAppendUploadRequest(swift: swift)
-        case .uploadSessionFinish(let swift):
+        case .filesuploadSessionFinish(let swift):
             return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
-        case .uploadSessionStart(let swift):
+        case .filesuploadSessionStart(let swift):
             return DBXFilesUploadSessionStartUploadRequest(swift: swift)
-        case .docsCreate(let swift):
+        case .paperdocsCreate(let swift):
             return DBXPaperDocsCreateUploadRequest(swift: swift)
-        case .docsDownload(let swift):
+        case .paperdocsDownload(let swift):
             return DBXPaperDocsDownloadDownloadRequestFile(swift: swift)
-        case .docsUpdate(let swift):
+        case .paperdocsUpdate(let swift):
             return DBXPaperDocsUpdateUploadRequest(swift: swift)
-        case .getSharedLinkFile(let swift):
+        case .sharinggetSharedLinkFile(let swift):
             return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
         default:
             fatalError("For Obj-C compatibility, add this route to the Objective-C compatibility module allow-list")

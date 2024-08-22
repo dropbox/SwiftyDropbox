@@ -10,7 +10,7 @@ import SwiftyDropbox
 extension DropboxAppBaseRequestBox {
     var objc: DBXRequest {
         switch self {
-        case .getThumbnailV2(let swift):
+        case .filesgetThumbnailV2(let swift):
             return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
         default:
             fatalError("For Obj-C compatibility, add this route to the Objective-C compatibility module allow-list")
