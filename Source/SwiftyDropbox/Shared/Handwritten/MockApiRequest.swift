@@ -61,7 +61,7 @@ class MockApiRequest: ApiRequest {
     func setProgressHandler(_ handler: @escaping (Progress) -> Void) -> Self { self }
 
     func setCompletionHandlerProvider(queue: DispatchQueue?, completionHandlerProvider: RequestCompletionHandlerProvider) -> Self {
-        self.completionHandler = completionHandlerProvider
+        completionHandler = completionHandlerProvider
         return self
     }
 

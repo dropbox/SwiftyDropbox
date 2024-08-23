@@ -141,13 +141,17 @@ extension ReconnectionHelpers {
             return try JSONDecoder().decode(Self.self, from: jsonData)
         }
 
-        var routeName: String {
+        var baseInfo: PersistedRequestInfoBaseInfo {
             switch self {
             case .upload(let info):
-                return info.routeName
+                return info
             case .downloadFile(let downloadInfo):
-                return downloadInfo.routeName
+                return downloadInfo
             }
+        }
+
+        var namespaceRouteName: String {
+            "\(baseInfo.routeNamespace)/\(baseInfo.routeName)"
         }
 
         var clientProvidedInfo: String? {
