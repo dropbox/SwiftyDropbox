@@ -9,44 +9,60 @@ import SwiftyDropbox
 
 extension DropboxBaseRequestBox {
     var objc: DBXRequest {
-        switch self {
-        case .alphaUpload(let swift):
+        if case .files_alphaUpload(let swift) = self {
             return DBXFilesAlphaUploadUploadRequest(swift: swift)
-        case .download(let swift):
+        }
+        if case .files_download(let swift) = self {
             return DBXFilesDownloadDownloadRequestFile(swift: swift)
-        case .downloadZip(let swift):
+        }
+        if case .files_downloadZip(let swift) = self {
             return DBXFilesDownloadZipDownloadRequestFile(swift: swift)
-        case .export(let swift):
+        }
+        if case .files_export(let swift) = self {
             return DBXFilesExportDownloadRequestFile(swift: swift)
-        case .getPreview(let swift):
+        }
+        if case .files_getPreview(let swift) = self {
             return DBXFilesGetPreviewDownloadRequestFile(swift: swift)
-        case .getThumbnail(let swift):
+        }
+        if case .files_getThumbnail(let swift) = self {
             return DBXFilesGetThumbnailDownloadRequestFile(swift: swift)
-        case .getThumbnailV2(let swift):
+        }
+        if case .files_getThumbnailV2(let swift) = self {
             return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
-        case .paperCreate(let swift):
+        }
+        if case .files_paperCreate(let swift) = self {
             return DBXFilesPaperCreateUploadRequest(swift: swift)
-        case .paperUpdate(let swift):
+        }
+        if case .files_paperUpdate(let swift) = self {
             return DBXFilesPaperUpdateUploadRequest(swift: swift)
-        case .upload(let swift):
+        }
+        if case .files_upload(let swift) = self {
             return DBXFilesUploadUploadRequest(swift: swift)
-        case .uploadSessionAppendV2(let swift):
+        }
+        if case .files_uploadSessionAppendV2(let swift) = self {
             return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
-        case .uploadSessionAppend(let swift):
+        }
+        if case .files_uploadSessionAppend(let swift) = self {
             return DBXFilesUploadSessionAppendUploadRequest(swift: swift)
-        case .uploadSessionFinish(let swift):
+        }
+        if case .files_uploadSessionFinish(let swift) = self {
             return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
-        case .uploadSessionStart(let swift):
+        }
+        if case .files_uploadSessionStart(let swift) = self {
             return DBXFilesUploadSessionStartUploadRequest(swift: swift)
-        case .docsCreate(let swift):
+        }
+        if case .paper_docsCreate(let swift) = self {
             return DBXPaperDocsCreateUploadRequest(swift: swift)
-        case .docsDownload(let swift):
+        }
+        if case .paper_docsDownload(let swift) = self {
             return DBXPaperDocsDownloadDownloadRequestFile(swift: swift)
-        case .docsUpdate(let swift):
+        }
+        if case .paper_docsUpdate(let swift) = self {
             return DBXPaperDocsUpdateUploadRequest(swift: swift)
-        case .getSharedLinkFile(let swift):
+        }
+        if case .sharing_getSharedLinkFile(let swift) = self {
             return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
-        default:
+        } else {
             fatalError("For Obj-C compatibility, add this route to the Objective-C compatibility module allow-list")
         }
     }

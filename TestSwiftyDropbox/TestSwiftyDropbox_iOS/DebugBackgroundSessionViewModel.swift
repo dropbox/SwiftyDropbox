@@ -108,7 +108,7 @@ class DebugBackgroundSessionViewModel: ObservableObject {
 
         for request in successfulReturnedRequests {
             switch request {
-            case .download(let downloadRequest):
+            case .files_download(let downloadRequest):
                 downloadRequest.response { response, error in
                     if let result = response {
                         let writtenContent = String(data: FileManager.default.contents(atPath: result.1.path()) ?? .init(), encoding: .utf8)
@@ -117,7 +117,7 @@ class DebugBackgroundSessionViewModel: ObservableObject {
                         DropboxClientsManager.logBackgroundSession("attemptReconnect download errored: \(callError)")
                     }
                 }
-            case .upload(let uploadRequest):
+            case .files_upload(let uploadRequest):
                 uploadRequest.response { response, error in
                     if let result = response {
                         DropboxClientsManager.logBackgroundSession("attemptReconnect upload complete with size: \(result.size)")
