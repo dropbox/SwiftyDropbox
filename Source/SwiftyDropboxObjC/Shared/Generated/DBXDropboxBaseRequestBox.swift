@@ -39,11 +39,11 @@ extension DropboxBaseRequestBox {
         if case .files_upload(let swift) = self {
             return DBXFilesUploadUploadRequest(swift: swift)
         }
-        if case .files_uploadSessionAppendV2(let swift) = self {
-            return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
-        }
         if case .files_uploadSessionAppend(let swift) = self {
             return DBXFilesUploadSessionAppendUploadRequest(swift: swift)
+        }
+        if case .files_uploadSessionAppendV2(let swift) = self {
+            return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
         }
         if case .files_uploadSessionFinish(let swift) = self {
             return DBXFilesUploadSessionFinishUploadRequest(swift: swift)

@@ -118,6 +118,20 @@ public class DBXFileRequestsRoutes: NSObject {
     ///
     /// - scope: file_requests.read
     ///
+    ///
+    /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsResult` object
+    /// on success or a `FileRequests.ListFileRequestsError` object on failure.
+    @objc
+    @discardableResult public func list_() -> DBXFileRequestsList_RpcRequest {
+        let swift = swift.list_()
+        return DBXFileRequestsList_RpcRequest(swift: swift)
+    }
+
+    /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
+    /// return file requests with destinations in the app folder.
+    ///
+    /// - scope: file_requests.read
+    ///
     /// - parameter limit: The maximum number of file requests that should be returned per request.
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
@@ -139,20 +153,6 @@ public class DBXFileRequestsRoutes: NSObject {
     @discardableResult public func listV2() -> DBXFileRequestsList_RpcRequestV2 {
         let swift = swift.listV2()
         return DBXFileRequestsList_RpcRequestV2(swift: swift)
-    }
-
-    /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
-    /// return file requests with destinations in the app folder.
-    ///
-    /// - scope: file_requests.read
-    ///
-    ///
-    /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsResult` object
-    /// on success or a `FileRequests.ListFileRequestsError` object on failure.
-    @objc
-    @discardableResult public func list_() -> DBXFileRequestsList_RpcRequest {
-        let swift = swift.list_()
-        return DBXFileRequestsList_RpcRequest(swift: swift)
     }
 
     /// Once a cursor has been retrieved from listV2, use this to paginate through all file requests. The cursor must
@@ -549,73 +549,6 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer>
-
-    init(swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFileRequestsListFileRequestsError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFileRequestsListFileRequestsV2Result?
-            if let swift = result {
-                objc = DBXFileRequestsListFileRequestsV2Result(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.ListFileRequestsResultSerializer, FileRequests.ListFileRequestsErrorSerializer>
 
@@ -650,6 +583,73 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
             var objc: DBXFileRequestsListFileRequestsResult?
             if let swift = result {
                 objc = DBXFileRequestsListFileRequestsResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer>
+
+    init(swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXFileRequestsListFileRequestsError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFileRequestsListFileRequestsV2Result?
+            if let swift = result {
+                objc = DBXFileRequestsListFileRequestsV2Result(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }

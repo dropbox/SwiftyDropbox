@@ -101,6 +101,19 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     ///
     /// - scope: file_requests.read
     ///
+    ///
+    /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsResult` object
+    /// on success or a `FileRequests.ListFileRequestsError` object on failure.
+    @discardableResult public func list_() -> RpcRequest<FileRequests.ListFileRequestsResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
+        let route = FileRequests.list_
+        return client.request(route)
+    }
+
+    /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
+    /// return file requests with destinations in the app folder.
+    ///
+    /// - scope: file_requests.read
+    ///
     /// - parameter limit: The maximum number of file requests that should be returned per request.
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
@@ -110,19 +123,6 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
         let route = FileRequests.listV2
         let serverArgs = FileRequests.ListFileRequestsArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Returns a list of file requests owned by this user. For apps with the app folder permission, this will only
-    /// return file requests with destinations in the app folder.
-    ///
-    /// - scope: file_requests.read
-    ///
-    ///
-    /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsResult` object
-    /// on success or a `FileRequests.ListFileRequestsError` object on failure.
-    @discardableResult public func list_() -> RpcRequest<FileRequests.ListFileRequestsResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
-        let route = FileRequests.list_
-        return client.request(route)
     }
 
     /// Once a cursor has been retrieved from listV2, use this to paginate through all file requests. The cursor must

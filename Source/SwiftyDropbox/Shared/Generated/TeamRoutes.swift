@@ -738,14 +738,14 @@ public class TeamRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
-    /// success or a `Void` object on failure.
-    @discardableResult public func membersAddV2(
-        newMembers: [Team.MemberAddV2Arg],
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
+    /// a `Void` object on failure.
+    @discardableResult public func membersAdd(
+        newMembers: [Team.MemberAddArg],
         forceAsync: Bool = false
-    ) -> RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer> {
-        let route = Team.membersAddV2
-        let serverArgs = Team.MembersAddV2Arg(newMembers: newMembers, forceAsync: forceAsync)
+    ) -> RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer> {
+        let route = Team.membersAdd
+        let serverArgs = Team.MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -761,14 +761,30 @@ public class TeamRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
-    /// a `Void` object on failure.
-    @discardableResult public func membersAdd(
-        newMembers: [Team.MemberAddArg],
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
+    /// success or a `Void` object on failure.
+    @discardableResult public func membersAddV2(
+        newMembers: [Team.MemberAddV2Arg],
         forceAsync: Bool = false
-    ) -> RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer> {
-        let route = Team.membersAdd
-        let serverArgs = Team.MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
+    ) -> RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer> {
+        let route = Team.membersAddV2
+        let serverArgs = Team.MembersAddV2Arg(newMembers: newMembers, forceAsync: forceAsync)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once an async_job_id is returned from membersAdd , use this to poll the status of the asynchronous request.
+    /// Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatus` object on success
+    /// or a `Async.PollError` object on failure.
+    @discardableResult public func membersAddJobStatusGet(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Team.membersAddJobStatusGet
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -789,19 +805,20 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Once an async_job_id is returned from membersAdd , use this to poll the status of the asynchronous request.
-    /// Permission : Team member management.
+    /// Deletes a team member's profile photo. Permission : Team member management.
     ///
     /// - scope: members.write
     ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
+    /// - parameter user: Identity of the user whose profile photo will be deleted.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatus` object on success
-    /// or a `Async.PollError` object on failure.
-    @discardableResult public func membersAddJobStatusGet(asyncJobId: String) -> RpcRequest<Team.MembersAddJobStatusSerializer, Async.PollErrorSerializer> {
-        let route = Team.membersAddJobStatusGet
-        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
+    /// `Team.MembersDeleteProfilePhotoError` object on failure.
+    @discardableResult public func membersDeleteProfilePhoto(
+        user: Team
+            .UserSelectorArg
+    ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
+        let route = Team.membersDeleteProfilePhoto
+        let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -818,23 +835,6 @@ public class TeamRoutes: DropboxTransportClientOwning {
             .UserSelectorArg
     ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
         let route = Team.membersDeleteProfilePhotoV2
-        let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Deletes a team member's profile photo. Permission : Team member management.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter user: Identity of the user whose profile photo will be deleted.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
-    /// `Team.MembersDeleteProfilePhotoError` object on failure.
-    @discardableResult public func membersDeleteProfilePhoto(
-        user: Team
-            .UserSelectorArg
-    ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer> {
-        let route = Team.membersDeleteProfilePhoto
         let serverArgs = Team.MembersDeleteProfilePhotoArg(user: user)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -859,12 +859,12 @@ public class TeamRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter members: List of team members.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
-    @discardableResult public func membersGetInfoV2(members: [Team.UserSelectorArg])
-        -> RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer> {
-        let route = Team.membersGetInfoV2
-        let serverArgs = Team.MembersGetInfoV2Arg(members: members)
+    @discardableResult public func membersGetInfo(members: [Team.UserSelectorArg])
+        -> RpcRequest<ArraySerializer<Team.MembersGetInfoItemSerializer>, Team.MembersGetInfoErrorSerializer> {
+        let route = Team.membersGetInfo
+        let serverArgs = Team.MembersGetInfoArgs(members: members)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -875,30 +875,12 @@ public class TeamRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter members: List of team members.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
-    @discardableResult public func membersGetInfo(members: [Team.UserSelectorArg])
-        -> RpcRequest<ArraySerializer<Team.MembersGetInfoItemSerializer>, Team.MembersGetInfoErrorSerializer> {
-        let route = Team.membersGetInfo
-        let serverArgs = Team.MembersGetInfoArgs(members: members)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Lists members of a team. Permission : Team information.
-    ///
-    /// - scope: members.read
-    ///
-    /// - parameter limit: Number of results to return per call.
-    /// - parameter includeRemoved: Whether to return removed members.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
-    /// or a `Team.MembersListError` object on failure.
-    @discardableResult public func membersListV2(
-        limit: UInt32 = 1_000,
-        includeRemoved: Bool = false
-    ) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer> {
-        let route = Team.membersListV2
-        let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
+    @discardableResult public func membersGetInfoV2(members: [Team.UserSelectorArg])
+        -> RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer> {
+        let route = Team.membersGetInfoV2
+        let serverArgs = Team.MembersGetInfoV2Arg(members: members)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -920,19 +902,21 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
-    /// Team information.
+    /// Lists members of a team. Permission : Team information.
     ///
     /// - scope: members.read
     ///
-    /// - parameter cursor: Indicates from what point to get the next set of members.
+    /// - parameter limit: Number of results to return per call.
+    /// - parameter includeRemoved: Whether to return removed members.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
-    /// or a `Team.MembersListContinueError` object on failure.
-    @discardableResult public func membersListContinueV2(cursor: String)
-        -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer> {
-        let route = Team.membersListContinueV2
-        let serverArgs = Team.MembersListContinueArg(cursor: cursor)
+    /// or a `Team.MembersListError` object on failure.
+    @discardableResult public func membersListV2(
+        limit: UInt32 = 1_000,
+        includeRemoved: Bool = false
+    ) -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer> {
+        let route = Team.membersListV2
+        let serverArgs = Team.MembersListArg(limit: limit, includeRemoved: includeRemoved)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -948,6 +932,22 @@ public class TeamRoutes: DropboxTransportClientOwning {
     @discardableResult public func membersListContinue(cursor: String)
         -> RpcRequest<Team.MembersListResultSerializer, Team.MembersListContinueErrorSerializer> {
         let route = Team.membersListContinue
+        let serverArgs = Team.MembersListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
+    /// Team information.
+    ///
+    /// - scope: members.read
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of members.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
+    /// or a `Team.MembersListContinueError` object on failure.
+    @discardableResult public func membersListContinueV2(cursor: String)
+        -> RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer> {
+        let route = Team.membersListContinueV2
         let serverArgs = Team.MembersListContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -1136,25 +1136,6 @@ public class TeamRoutes: DropboxTransportClientOwning {
     /// - scope: members.write
     ///
     /// - parameter user: Identity of user whose role will be set.
-    /// - parameter newRoles: The new roles for the member. Send empty list to make user member only. For now, only up
-    /// to one role is allowed.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
-    /// on success or a `Team.MembersSetPermissions2Error` object on failure.
-    @discardableResult public func membersSetAdminPermissionsV2(
-        user: Team.UserSelectorArg,
-        newRoles: [String]? = nil
-    ) -> RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer> {
-        let route = Team.membersSetAdminPermissionsV2
-        let serverArgs = Team.MembersSetPermissions2Arg(user: user, newRoles: newRoles)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Updates a team member's permissions. Permission : Team member management.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRole: The new role of the member.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object on
@@ -1168,40 +1149,22 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Updates a team member's profile. Permission : Team member management.
+    /// Updates a team member's permissions. Permission : Team member management.
     ///
     /// - scope: members.write
     ///
-    /// - parameter user: Identity of user whose profile will be set.
-    /// - parameter newEmail: New email for member.
-    /// - parameter newExternalId: New external ID for member.
-    /// - parameter newGivenName: New given name for member.
-    /// - parameter newSurname: New surname for member.
-    /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
-    /// configuration.
-    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
+    /// - parameter user: Identity of user whose role will be set.
+    /// - parameter newRoles: The new roles for the member. Send empty list to make user member only. For now, only up
+    /// to one role is allowed.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersSetProfileError` object on failure.
-    @discardableResult public func membersSetProfileV2(
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
+    /// on success or a `Team.MembersSetPermissions2Error` object on failure.
+    @discardableResult public func membersSetAdminPermissionsV2(
         user: Team.UserSelectorArg,
-        newEmail: String? = nil,
-        newExternalId: String? = nil,
-        newGivenName: String? = nil,
-        newSurname: String? = nil,
-        newPersistentId: String? = nil,
-        newIsDirectoryRestricted: Bool? = nil
-    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer> {
-        let route = Team.membersSetProfileV2
-        let serverArgs = Team.MembersSetProfileArg(
-            user: user,
-            newEmail: newEmail,
-            newExternalId: newExternalId,
-            newGivenName: newGivenName,
-            newSurname: newSurname,
-            newPersistentId: newPersistentId,
-            newIsDirectoryRestricted: newIsDirectoryRestricted
-        )
+        newRoles: [String]? = nil
+    ) -> RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer> {
+        let route = Team.membersSetAdminPermissionsV2
+        let serverArgs = Team.MembersSetPermissions2Arg(user: user, newRoles: newRoles)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -1242,21 +1205,40 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Updates a team member's profile photo. Permission : Team member management.
+    /// Updates a team member's profile. Permission : Team member management.
     ///
     /// - scope: members.write
     ///
-    /// - parameter user: Identity of the user whose profile photo will be set.
-    /// - parameter photo: Image to set as the member's new profile photo.
+    /// - parameter user: Identity of user whose profile will be set.
+    /// - parameter newEmail: New email for member.
+    /// - parameter newExternalId: New external ID for member.
+    /// - parameter newGivenName: New given name for member.
+    /// - parameter newSurname: New surname for member.
+    /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
+    /// configuration.
+    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersSetProfilePhotoError` object on failure.
-    @discardableResult public func membersSetProfilePhotoV2(
+    /// success or a `Team.MembersSetProfileError` object on failure.
+    @discardableResult public func membersSetProfileV2(
         user: Team.UserSelectorArg,
-        photo: Account.PhotoSourceArg
-    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
-        let route = Team.membersSetProfilePhotoV2
-        let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
+        newEmail: String? = nil,
+        newExternalId: String? = nil,
+        newGivenName: String? = nil,
+        newSurname: String? = nil,
+        newPersistentId: String? = nil,
+        newIsDirectoryRestricted: Bool? = nil
+    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer> {
+        let route = Team.membersSetProfileV2
+        let serverArgs = Team.MembersSetProfileArg(
+            user: user,
+            newEmail: newEmail,
+            newExternalId: newExternalId,
+            newGivenName: newGivenName,
+            newSurname: newSurname,
+            newPersistentId: newPersistentId,
+            newIsDirectoryRestricted: newIsDirectoryRestricted
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -1274,6 +1256,24 @@ public class TeamRoutes: DropboxTransportClientOwning {
         photo: Account.PhotoSourceArg
     ) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
         let route = Team.membersSetProfilePhoto
+        let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates a team member's profile photo. Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be set.
+    /// - parameter photo: Image to set as the member's new profile photo.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersSetProfilePhotoError` object on failure.
+    @discardableResult public func membersSetProfilePhotoV2(
+        user: Team.UserSelectorArg,
+        photo: Account.PhotoSourceArg
+    ) -> RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer> {
+        let route = Team.membersSetProfilePhotoV2
         let serverArgs = Team.MembersSetProfilePhotoArg(user: user, photo: photo)
         return client.request(route, serverArgs: serverArgs)
     }

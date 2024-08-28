@@ -2519,73 +2519,6 @@ public class DBXFilesAlphaUploadUploadRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesCopyRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>
-
-    init(swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilesRelocationError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesRelocationResult?
-            if let swift = result {
-                objc = DBXFilesRelocationResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFilesCopyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer>
 
@@ -2653,16 +2586,16 @@ public class DBXFilesCopyRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesCopyBatchRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>
+public class DBXFilesCopyRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>
 
-    init(swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>) {
+    init(swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -2670,14 +2603,25 @@ public class DBXFilesCopyBatchRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchV2Launch?
-            if let swift = result {
-                objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
+            var routeError: DBXFilesRelocationError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
             }
-            completionHandler(objc, error?.objc)
+
+            var objc: DBXFilesRelocationResult?
+            if let swift = result {
+                objc = DBXFilesRelocationResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
         }
         return self
     }
@@ -2765,16 +2709,16 @@ public class DBXFilesCopyBatchRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesCopyBatchCheckRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>
+public class DBXFilesCopyBatchRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>
 
-    init(swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>) {
+    init(swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -2782,25 +2726,14 @@ public class DBXFilesCopyBatchCheckRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXAsyncPollError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesRelocationBatchV2JobStatus?
+            var objc: DBXFilesRelocationBatchV2Launch?
             if let swift = result {
-                objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
+                objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
             }
-            completionHandler(objc, routeError, callError)
+            completionHandler(objc, error?.objc)
         }
         return self
     }
@@ -2866,6 +2799,73 @@ public class DBXFilesCopyBatchCheckRpcRequest: NSObject, DBXRequest {
             var objc: DBXFilesRelocationBatchJobStatus?
             if let swift = result {
                 objc = DBXFilesRelocationBatchJobStatus.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXFilesCopyBatchCheckRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFilesRelocationBatchV2JobStatus?
+            if let swift = result {
+                objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -3033,73 +3033,6 @@ public class DBXFilesCopyReferenceSaveRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesCreateFolderRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer>
-
-    init(swift: RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesCreateFolderResult?, DBXFilesCreateFolderError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesCreateFolderResult?, DBXFilesCreateFolderError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilesCreateFolderError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilesCreateFolderError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesCreateFolderResult?
-            if let swift = result {
-                objc = DBXFilesCreateFolderResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFilesCreateFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer>
 
@@ -3134,6 +3067,73 @@ public class DBXFilesCreateFolderRpcRequest: NSObject, DBXRequest {
             var objc: DBXFilesFolderMetadata?
             if let swift = result {
                 objc = DBXFilesFolderMetadata(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXFilesCreateFolderRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer>
+
+    init(swift: RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFilesCreateFolderResult?, DBXFilesCreateFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFilesCreateFolderResult?, DBXFilesCreateFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXFilesCreateFolderError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFilesCreateFolderError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFilesCreateFolderResult?
+            if let swift = result {
+                objc = DBXFilesCreateFolderResult(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -3290,73 +3290,6 @@ public class DBXFilesCreateFolderBatchCheckRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesDeleteRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer>
-
-    init(swift: RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesDeleteResult?, DBXFilesDeleteError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesDeleteResult?, DBXFilesDeleteError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilesDeleteError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilesDeleteError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesDeleteResult?
-            if let swift = result {
-                objc = DBXFilesDeleteResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFilesDeleteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer>
 
@@ -3391,6 +3324,73 @@ public class DBXFilesDeleteRpcRequest: NSObject, DBXRequest {
             var objc: DBXFilesMetadata?
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXFilesDeleteRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer>
+
+    init(swift: RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFilesDeleteResult?, DBXFilesDeleteError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFilesDeleteResult?, DBXFilesDeleteError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXFilesDeleteError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFilesDeleteError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFilesDeleteResult?
+            if let swift = result {
+                objc = DBXFilesDeleteResult(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -5173,73 +5173,6 @@ public class DBXFilesLockFileBatchRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesMoveRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>
-
-    init(swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilesRelocationError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesRelocationResult?
-            if let swift = result {
-                objc = DBXFilesRelocationResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFilesMoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Files.MetadataSerializer, Files.RelocationErrorSerializer>
 
@@ -5307,16 +5240,16 @@ public class DBXFilesMoveRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesMoveBatchRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>
+public class DBXFilesMoveRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>
 
-    init(swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>) {
+    init(swift: RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -5324,14 +5257,25 @@ public class DBXFilesMoveBatchRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationResult?, DBXFilesRelocationError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchV2Launch?
-            if let swift = result {
-                objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
+            var routeError: DBXFilesRelocationError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
             }
-            completionHandler(objc, error?.objc)
+
+            var objc: DBXFilesRelocationResult?
+            if let swift = result {
+                objc = DBXFilesRelocationResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
         }
         return self
     }
@@ -5419,16 +5363,16 @@ public class DBXFilesMoveBatchRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesMoveBatchCheckRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>
+public class DBXFilesMoveBatchRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>
 
-    init(swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>) {
+    init(swift: RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -5436,25 +5380,14 @@ public class DBXFilesMoveBatchCheckRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXAsyncPollError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilesRelocationBatchV2JobStatus?
+            var objc: DBXFilesRelocationBatchV2Launch?
             if let swift = result {
-                objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
+                objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
             }
-            completionHandler(objc, routeError, callError)
+            completionHandler(objc, error?.objc)
         }
         return self
     }
@@ -5520,6 +5453,73 @@ public class DBXFilesMoveBatchCheckRpcRequest: NSObject, DBXRequest {
             var objc: DBXFilesRelocationBatchJobStatus?
             if let swift = result {
                 objc = DBXFilesRelocationBatchJobStatus.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXFilesMoveBatchCheckRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFilesRelocationBatchV2JobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFilesRelocationBatchV2JobStatus?
+            if let swift = result {
+                objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -6883,7 +6883,7 @@ public class DBXFilesUploadUploadRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesUploadSessionAppendUploadRequestV2: NSObject, DBXRequest {
+public class DBXFilesUploadSessionAppendUploadRequest: NSObject, DBXRequest {
     var swift: UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>
 
     init(swift: UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>) {
@@ -6952,7 +6952,7 @@ public class DBXFilesUploadSessionAppendUploadRequestV2: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesUploadSessionAppendUploadRequest: NSObject, DBXRequest {
+public class DBXFilesUploadSessionAppendUploadRequestV2: NSObject, DBXRequest {
     var swift: UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>
 
     init(swift: UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>) {

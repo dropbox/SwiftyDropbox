@@ -18,8 +18,8 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
     case files_paperCreate(UploadRequest<Files.PaperCreateResultSerializer, Files.PaperCreateErrorSerializer>)
     case files_paperUpdate(UploadRequest<Files.PaperUpdateResultSerializer, Files.PaperUpdateErrorSerializer>)
     case files_upload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
-    case files_uploadSessionAppendV2(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
     case files_uploadSessionAppend(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
+    case files_uploadSessionAppendV2(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
     case files_uploadSessionFinish(UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer>)
     case files_uploadSessionStart(UploadRequest<Files.UploadSessionStartResultSerializer, Files.UploadSessionStartErrorSerializer>)
     case paper_docsCreate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer>)
@@ -49,10 +49,10 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
             return "files/paper/update"
         case .files_upload:
             return "files/upload"
-        case .files_uploadSessionAppendV2:
-            return "files/upload_session/append_v2"
         case .files_uploadSessionAppend:
             return "files/upload_session/append"
+        case .files_uploadSessionAppendV2:
+            return "files/upload_session/append_v2"
         case .files_uploadSessionFinish:
             return "files/upload_session/finish"
         case .files_uploadSessionStart:

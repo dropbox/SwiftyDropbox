@@ -173,37 +173,6 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
-    /// or a `Files.RelocationError` object on failure.
-    @discardableResult public func copyV2(
-        fromPath: String,
-        toPath: String,
-        allowSharedFolder: Bool = false,
-        autorename: Bool = false,
-        allowOwnershipTransfer: Bool = false
-    ) -> RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer> {
-        let route = Files.copyV2
-        let serverArgs = Files.RelocationArg(
-            fromPath: fromPath,
-            toPath: toPath,
-            allowSharedFolder: allowSharedFolder,
-            autorename: autorename,
-            allowOwnershipTransfer: allowOwnershipTransfer
-        )
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
-    /// contents will be copied.
-    ///
-    /// - scope: files.content.write
-    ///
-    /// - parameter allowSharedFolder: This flag has no effect.
-    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
-    /// conflict.
-    /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
-    /// the content being moved. This does not apply to copies.
-    ///
     /// - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.RelocationError` object on failure.
     @available(*, unavailable, message: "copy is deprecated. Use copyV2.")
@@ -225,25 +194,34 @@ public class FilesRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route will replace
-    /// copyBatch. The main difference is this route will return status for each entry, while copyBatch raises
-    /// failure if any entry fails. This route will either finish synchronously, or return a job ID and do the async
-    /// copy job in background. Please use copyBatchCheckV2 to check the job status.
+    /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
+    /// contents will be copied.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
-    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
-    /// to avoid the conflict.
+    /// - parameter allowSharedFolder: This flag has no effect.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
+    /// conflict.
+    /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
+    /// the content being moved. This does not apply to copies.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
-    /// success or a `Void` object on failure.
-    @discardableResult public func copyBatchV2(
-        entries: [Files.RelocationPath],
-        autorename: Bool = false
-    ) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
-        let route = Files.copyBatchV2
-        let serverArgs = Files.RelocationBatchArgBase(entries: entries, autorename: autorename)
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
+    /// or a `Files.RelocationError` object on failure.
+    @discardableResult public func copyV2(
+        fromPath: String,
+        toPath: String,
+        allowSharedFolder: Bool = false,
+        autorename: Bool = false,
+        allowOwnershipTransfer: Bool = false
+    ) -> RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer> {
+        let route = Files.copyV2
+        let serverArgs = Files.RelocationArg(
+            fromPath: fromPath,
+            toPath: toPath,
+            allowSharedFolder: allowSharedFolder,
+            autorename: autorename,
+            allowOwnershipTransfer: allowOwnershipTransfer
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -275,18 +253,25 @@ public class FilesRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns the status of an asynchronous job for copyBatchV2. It returns list of results for each entry.
+    /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route will replace
+    /// copyBatch. The main difference is this route will return status for each entry, while copyBatch raises
+    /// failure if any entry fails. This route will either finish synchronously, or return a job ID and do the async
+    /// copy job in background. Please use copyBatchCheckV2 to check the job status.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
+    /// - parameter entries: List of entries to be moved or copied. Each entry is RelocationPath.
+    /// - parameter autorename: If there's a conflict with any file, have the Dropbox server try to autorename that file
+    /// to avoid the conflict.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @discardableResult public func copyBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
-        let route = Files.copyBatchCheckV2
-        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult public func copyBatchV2(
+        entries: [Files.RelocationPath],
+        autorename: Bool = false
+    ) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
+        let route = Files.copyBatchV2
+        let serverArgs = Files.RelocationBatchArgBase(entries: entries, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -302,6 +287,21 @@ public class FilesRoutes: DropboxTransportClientOwning {
     @available(*, unavailable, message: "copyBatchCheck is deprecated. Use copyBatchCheckV2.")
     @discardableResult public func copyBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.copyBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for copyBatchV2. It returns list of results for each entry.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult public func copyBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.copyBatchCheckV2
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -347,13 +347,14 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
     /// conflict.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.CreateFolderResult` object on success
-    /// or a `Files.CreateFolderError` object on failure.
-    @discardableResult public func createFolderV2(
+    /// - returns: Through the response callback, the caller will receive a `Files.FolderMetadata` object on success or
+    /// a `Files.CreateFolderError` object on failure.
+    @available(*, unavailable, message: "createFolder is deprecated. Use createFolderV2.")
+    @discardableResult public func createFolder(
         path: String,
         autorename: Bool = false
-    ) -> RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer> {
-        let route = Files.createFolderV2
+    ) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
+        let route = Files.createFolder
         let serverArgs = Files.CreateFolderArg(path: path, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -366,14 +367,13 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
     /// conflict.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.FolderMetadata` object on success or
-    /// a `Files.CreateFolderError` object on failure.
-    @available(*, unavailable, message: "createFolder is deprecated. Use createFolderV2.")
-    @discardableResult public func createFolder(
+    /// - returns: Through the response callback, the caller will receive a `Files.CreateFolderResult` object on success
+    /// or a `Files.CreateFolderError` object on failure.
+    @discardableResult public func createFolderV2(
         path: String,
         autorename: Bool = false
-    ) -> RpcRequest<Files.FolderMetadataSerializer, Files.CreateFolderErrorSerializer> {
-        let route = Files.createFolder
+    ) -> RpcRequest<Files.CreateFolderResultSerializer, Files.CreateFolderErrorSerializer> {
+        let route = Files.createFolderV2
         let serverArgs = Files.CreateFolderArg(path: path, autorename: autorename)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -431,10 +431,11 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
     /// not support deleting a folder.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.DeleteResult` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
     /// `Files.DeleteError` object on failure.
-    @discardableResult public func deleteV2(path: String, parentRev: String? = nil) -> RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer> {
-        let route = Files.deleteV2
+    @available(*, unavailable, message: "delete is deprecated. Use deleteV2.")
+    @discardableResult public func delete(path: String, parentRev: String? = nil) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
+        let route = Files.delete
         let serverArgs = Files.DeleteArg(path: path, parentRev: parentRev)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -450,11 +451,10 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter parentRev: Perform delete if given "rev" matches the existing file's latest "rev". This field does
     /// not support deleting a folder.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.Metadata` object on success or a
+    /// - returns: Through the response callback, the caller will receive a `Files.DeleteResult` object on success or a
     /// `Files.DeleteError` object on failure.
-    @available(*, unavailable, message: "delete is deprecated. Use deleteV2.")
-    @discardableResult public func delete(path: String, parentRev: String? = nil) -> RpcRequest<Files.MetadataSerializer, Files.DeleteErrorSerializer> {
-        let route = Files.delete
+    @discardableResult public func deleteV2(path: String, parentRev: String? = nil) -> RpcRequest<Files.DeleteResultSerializer, Files.DeleteErrorSerializer> {
+        let route = Files.deleteV2
         let serverArgs = Files.DeleteArg(path: path, parentRev: parentRev)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -1108,37 +1108,6 @@ public class FilesRoutes: DropboxTransportClientOwning {
     }
 
     /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
-    /// contents will be moved. Note that we do not currently support case-only renaming.
-    ///
-    /// - scope: files.content.write
-    ///
-    /// - parameter allowSharedFolder: This flag has no effect.
-    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
-    /// conflict.
-    /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
-    /// the content being moved. This does not apply to copies.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
-    /// or a `Files.RelocationError` object on failure.
-    @discardableResult public func moveV2(
-        fromPath: String,
-        toPath: String,
-        allowSharedFolder: Bool = false,
-        autorename: Bool = false,
-        allowOwnershipTransfer: Bool = false
-    ) -> RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer> {
-        let route = Files.moveV2
-        let serverArgs = Files.RelocationArg(
-            fromPath: fromPath,
-            toPath: toPath,
-            allowSharedFolder: allowSharedFolder,
-            autorename: autorename,
-            allowOwnershipTransfer: allowOwnershipTransfer
-        )
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
     /// contents will be moved.
     ///
     /// - scope: files.content.write
@@ -1170,26 +1139,34 @@ public class FilesRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Move multiple files or folders to different locations at once in the user's Dropbox. Note that we do not
-    /// currently support case-only renaming. This route will replace moveBatch. The main difference is this route
-    /// will return status for each entry, while moveBatch raises failure if any entry fails. This route will either
-    /// finish synchronously, or return a job ID and do the async move job in background. Please use
-    /// moveBatchCheckV2 to check the job status.
+    /// Move a file or folder to a different location in the user's Dropbox. If the source path is a folder all its
+    /// contents will be moved. Note that we do not currently support case-only renaming.
     ///
     /// - scope: files.content.write
     ///
+    /// - parameter allowSharedFolder: This flag has no effect.
+    /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
+    /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
     /// the content being moved. This does not apply to copies.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
-    /// success or a `Void` object on failure.
-    @discardableResult public func moveBatchV2(
-        entries: [Files.RelocationPath],
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
+    /// or a `Files.RelocationError` object on failure.
+    @discardableResult public func moveV2(
+        fromPath: String,
+        toPath: String,
+        allowSharedFolder: Bool = false,
         autorename: Bool = false,
         allowOwnershipTransfer: Bool = false
-    ) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
-        let route = Files.moveBatchV2
-        let serverArgs = Files.MoveBatchArg(entries: entries, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
+    ) -> RpcRequest<Files.RelocationResultSerializer, Files.RelocationErrorSerializer> {
+        let route = Files.moveV2
+        let serverArgs = Files.RelocationArg(
+            fromPath: fromPath,
+            toPath: toPath,
+            allowSharedFolder: allowSharedFolder,
+            autorename: autorename,
+            allowOwnershipTransfer: allowOwnershipTransfer
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -1221,18 +1198,26 @@ public class FilesRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns the status of an asynchronous job for moveBatchV2. It returns list of results for each entry.
+    /// Move multiple files or folders to different locations at once in the user's Dropbox. Note that we do not
+    /// currently support case-only renaming. This route will replace moveBatch. The main difference is this route
+    /// will return status for each entry, while moveBatch raises failure if any entry fails. This route will either
+    /// finish synchronously, or return a job ID and do the async move job in background. Please use
+    /// moveBatchCheckV2 to check the job status.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
+    /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
+    /// the content being moved. This does not apply to copies.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @discardableResult public func moveBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
-        let route = Files.moveBatchCheckV2
-        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
+    /// success or a `Void` object on failure.
+    @discardableResult public func moveBatchV2(
+        entries: [Files.RelocationPath],
+        autorename: Bool = false,
+        allowOwnershipTransfer: Bool = false
+    ) -> RpcRequest<Files.RelocationBatchV2LaunchSerializer, VoidSerializer> {
+        let route = Files.moveBatchV2
+        let serverArgs = Files.MoveBatchArg(entries: entries, autorename: autorename, allowOwnershipTransfer: allowOwnershipTransfer)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -1248,6 +1233,21 @@ public class FilesRoutes: DropboxTransportClientOwning {
     @available(*, unavailable, message: "moveBatchCheck is deprecated. Use moveBatchCheckV2.")
     @discardableResult public func moveBatchCheck(asyncJobId: String) -> RpcRequest<Files.RelocationBatchJobStatusSerializer, Async.PollErrorSerializer> {
         let route = Files.moveBatchCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status of an asynchronous job for moveBatchV2. It returns list of results for each entry.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2JobStatus` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult public func moveBatchCheckV2(asyncJobId: String) -> RpcRequest<Files.RelocationBatchV2JobStatusSerializer, Async.PollErrorSerializer> {
+        let route = Files.moveBatchCheckV2
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
@@ -1821,168 +1821,168 @@ public class FilesRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
-    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
+    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
+    /// For more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter cursor: Contains the upload session ID and the offset.
-    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
-    /// uploadSessionAppendV2 anymore with the current session.
-    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
-    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
+    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
+    /// lost or duplicated in the event of a network error.
     /// - parameter input: The file to upload, as an Data object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @discardableResult public func uploadSessionAppendV2(
-        cursor: Files.UploadSessionCursor,
-        close: Bool = false,
-        contentHash: String? = nil,
+    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
+    @discardableResult public func uploadSessionAppend(
+        sessionId: String,
+        offset: UInt64,
         input: Data
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppendV2
-        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
+        let route = Files.uploadSessionAppend
+        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
+    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
+    /// For more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter cursor: Contains the upload session ID and the offset.
-    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
-    /// uploadSessionAppendV2 anymore with the current session.
-    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
-    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
+    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
+    /// lost or duplicated in the event of a network error.
     /// - parameter input: The file to upload, as an URL object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @discardableResult public func uploadSessionAppendV2(
-        cursor: Files.UploadSessionCursor,
-        close: Bool = false,
-        contentHash: String? = nil,
+    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
+    @discardableResult public func uploadSessionAppend(
+        sessionId: String,
+        offset: UInt64,
         input: URL
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppendV2
-        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
+        let route = Files.uploadSessionAppend
+        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
+    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
+    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
+    /// For more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter cursor: Contains the upload session ID and the offset.
-    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
-    /// uploadSessionAppendV2 anymore with the current session.
-    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
-    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
+    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
+    /// lost or duplicated in the event of a network error.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @discardableResult public func uploadSessionAppendV2(
-        cursor: Files.UploadSessionCursor,
-        close: Bool = false,
-        contentHash: String? = nil,
+    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
+    @discardableResult public func uploadSessionAppend(
+        sessionId: String,
+        offset: UInt64,
         input: InputStream
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppendV2
-        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
+        let route = Files.uploadSessionAppend
+        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
-    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
-    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
-    /// For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
+    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
+    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
-    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
-    /// lost or duplicated in the event of a network error.
+    /// - parameter cursor: Contains the upload session ID and the offset.
+    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
+    /// uploadSessionAppendV2 anymore with the current session.
+    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
+    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
-    @discardableResult public func uploadSessionAppend(
-        sessionId: String,
-        offset: UInt64,
+    @discardableResult public func uploadSessionAppendV2(
+        cursor: Files.UploadSessionCursor,
+        close: Bool = false,
+        contentHash: String? = nil,
         input: Data
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppend
-        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
+        let route = Files.uploadSessionAppendV2
+        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
-    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
-    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
-    /// For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
+    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
+    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
-    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
-    /// lost or duplicated in the event of a network error.
+    /// - parameter cursor: Contains the upload session ID and the offset.
+    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
+    /// uploadSessionAppendV2 anymore with the current session.
+    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
+    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
-    @discardableResult public func uploadSessionAppend(
-        sessionId: String,
-        offset: UInt64,
+    @discardableResult public func uploadSessionAppendV2(
+        cursor: Files.UploadSessionCursor,
+        close: Bool = false,
+        contentHash: String? = nil,
         input: URL
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppend
-        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
+        let route = Files.uploadSessionAppendV2
+        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
     }
 
-    /// Append more data to an upload session. A single request should not upload more than 150 MB. The maximum size of
-    /// a file one can upload to an upload session is 350 GB. Calls to this endpoint will count as data transport
-    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
-    /// For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
+    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
+    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
+    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter sessionId: The upload session ID (returned by uploadSessionStart).
-    /// - parameter offset: Offset in bytes at which data should be appended. We use this to make sure upload data isn't
-    /// lost or duplicated in the event of a network error.
+    /// - parameter cursor: Contains the upload session ID and the offset.
+    /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
+    /// uploadSessionAppendV2 anymore with the current session.
+    /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
+    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
-    @available(*, unavailable, message: "uploadSessionAppend is deprecated. Use uploadSessionAppendV2.")
-    @discardableResult public func uploadSessionAppend(
-        sessionId: String,
-        offset: UInt64,
+    @discardableResult public func uploadSessionAppendV2(
+        cursor: Files.UploadSessionCursor,
+        close: Bool = false,
+        contentHash: String? = nil,
         input: InputStream
     ) -> UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer> {
-        let route = Files.uploadSessionAppend
-        let serverArgs = Files.UploadSessionCursor(sessionId: sessionId, offset: offset)
+        let route = Files.uploadSessionAppendV2
+        let serverArgs = Files.UploadSessionAppendArg(cursor: cursor, close: close, contentHash: contentHash)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
     }
 
