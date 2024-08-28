@@ -102,21 +102,21 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
-        case "files/upload_session/append_v2":
-            return .files_uploadSessionAppendV2(
-                rebuildRequest(
-                    apiRequest: apiRequest,
-                    info: info,
-                    route: Files.uploadSessionAppendV2,
-                    client: client
-                )
-            )
         case "files/upload_session/append":
             return .files_uploadSessionAppend(
                 rebuildRequest(
                     apiRequest: apiRequest,
                     info: info,
                     route: Files.uploadSessionAppend,
+                    client: client
+                )
+            )
+        case "files/upload_session/append_v2":
+            return .files_uploadSessionAppendV2(
+                rebuildRequest(
+                    apiRequest: apiRequest,
+                    info: info,
+                    route: Files.uploadSessionAppendV2,
                     client: client
                 )
             )

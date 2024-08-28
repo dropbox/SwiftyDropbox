@@ -900,44 +900,6 @@ public class DBXTeamRoutes: NSObject {
     ///
     /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
-    /// success or a `Void` object on failure.
-    @objc
-    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg], forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequestV2 {
-        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
-        return DBXTeamMembersAddRpcRequestV2(swift: swift)
-    }
-
-    /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
-    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
-    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
-    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
-    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
-    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
-    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
-    ///
-    /// - scope: members.write
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
-    /// success or a `Void` object on failure.
-    @objc
-    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg]) -> DBXTeamMembersAddRpcRequestV2 {
-        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift))
-        return DBXTeamMembersAddRpcRequestV2(swift: swift)
-    }
-
-    /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
-    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
-    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
-    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
-    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
-    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
-    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter newMembers: Details of new members to be added to the team.
-    ///
     /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
     /// a `Void` object on failure.
     @objc
@@ -964,20 +926,42 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersAddRpcRequest(swift: swift)
     }
 
-    /// Once an async_job_id is returned from membersAddV2 , use this to poll the status of the asynchronous request.
-    /// Permission : Team member management.
+    /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
+    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
+    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
+    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
+    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
+    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
+    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
     ///
     /// - scope: members.write
     ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
+    /// - parameter newMembers: Details of new members to be added to the team.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatusV2Result` object on
-    /// success or a `Async.PollError` object on failure.
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
+    /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func membersAddJobStatusGetV2(asyncJobId: String) -> DBXTeamMembersAddJobStatusGetRpcRequestV2 {
-        let swift = swift.membersAddJobStatusGetV2(asyncJobId: asyncJobId)
-        return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
+    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg], forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequestV2 {
+        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
+        return DBXTeamMembersAddRpcRequestV2(swift: swift)
+    }
+
+    /// Adds members to a team. Permission : Team member management A maximum of 20 members can be specified in a single
+    /// call. If no Dropbox account exists with the email address specified, a new Dropbox account will be created
+    /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
+    /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
+    /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
+    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
+    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
+    ///
+    /// - scope: members.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
+    /// success or a `Void` object on failure.
+    @objc
+    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg]) -> DBXTeamMembersAddRpcRequestV2 {
+        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift))
+        return DBXTeamMembersAddRpcRequestV2(swift: swift)
     }
 
     /// Once an async_job_id is returned from membersAdd , use this to poll the status of the asynchronous request.
@@ -996,18 +980,20 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersAddJobStatusGetRpcRequest(swift: swift)
     }
 
-    /// Deletes a team member's profile photo. Permission : Team member management.
+    /// Once an async_job_id is returned from membersAddV2 , use this to poll the status of the asynchronous request.
+    /// Permission : Team member management.
     ///
     /// - scope: members.write
     ///
-    /// - parameter user: Identity of the user whose profile photo will be deleted.
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersDeleteProfilePhotoError` object on failure.
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersAddJobStatusV2Result` object on
+    /// success or a `Async.PollError` object on failure.
     @objc
-    @discardableResult public func membersDeleteProfilePhotoV2(user: DBXTeamUserSelectorArg) -> DBXTeamMembersDeleteProfilePhotoRpcRequestV2 {
-        let swift = swift.membersDeleteProfilePhotoV2(user: user.swift)
-        return DBXTeamMembersDeleteProfilePhotoRpcRequestV2(swift: swift)
+    @discardableResult public func membersAddJobStatusGetV2(asyncJobId: String) -> DBXTeamMembersAddJobStatusGetRpcRequestV2 {
+        let swift = swift.membersAddJobStatusGetV2(asyncJobId: asyncJobId)
+        return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
     }
 
     /// Deletes a team member's profile photo. Permission : Team member management.
@@ -1022,6 +1008,20 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func membersDeleteProfilePhoto(user: DBXTeamUserSelectorArg) -> DBXTeamMembersDeleteProfilePhotoRpcRequest {
         let swift = swift.membersDeleteProfilePhoto(user: user.swift)
         return DBXTeamMembersDeleteProfilePhotoRpcRequest(swift: swift)
+    }
+
+    /// Deletes a team member's profile photo. Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be deleted.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersDeleteProfilePhotoError` object on failure.
+    @objc
+    @discardableResult public func membersDeleteProfilePhotoV2(user: DBXTeamUserSelectorArg) -> DBXTeamMembersDeleteProfilePhotoRpcRequestV2 {
+        let swift = swift.membersDeleteProfilePhotoV2(user: user.swift)
+        return DBXTeamMembersDeleteProfilePhotoRpcRequestV2(swift: swift)
     }
 
     /// Get available TeamMemberRoles for the connected team. To be used with membersSetAdminPermissionsV2. Permission :
@@ -1045,12 +1045,12 @@ public class DBXTeamRoutes: NSObject {
     ///
     /// - parameter members: List of team members.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
+    /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
     @objc
-    @discardableResult public func membersGetInfoV2(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequestV2 {
-        let swift = swift.membersGetInfoV2(members: members.map(\.swift))
-        return DBXTeamMembersGetInfoRpcRequestV2(swift: swift)
+    @discardableResult public func membersGetInfo(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequest {
+        let swift = swift.membersGetInfo(members: members.map(\.swift))
+        return DBXTeamMembersGetInfoRpcRequest(swift: swift)
     }
 
     /// Returns information about multiple team members. Permission : Team information This endpoint will return
@@ -1060,39 +1060,12 @@ public class DBXTeamRoutes: NSObject {
     ///
     /// - parameter members: List of team members.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
     @objc
-    @discardableResult public func membersGetInfo(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequest {
-        let swift = swift.membersGetInfo(members: members.map(\.swift))
-        return DBXTeamMembersGetInfoRpcRequest(swift: swift)
-    }
-
-    /// Lists members of a team. Permission : Team information.
-    ///
-    /// - scope: members.read
-    ///
-    /// - parameter limit: Number of results to return per call.
-    /// - parameter includeRemoved: Whether to return removed members.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
-    /// or a `Team.MembersListError` object on failure.
-    @objc
-    @discardableResult public func membersListV2(limit: NSNumber, includeRemoved: NSNumber) -> DBXTeamMembersListRpcRequestV2 {
-        let swift = swift.membersListV2(limit: limit.uint32Value, includeRemoved: includeRemoved.boolValue)
-        return DBXTeamMembersListRpcRequestV2(swift: swift)
-    }
-
-    /// Lists members of a team. Permission : Team information.
-    ///
-    /// - scope: members.read
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
-    /// or a `Team.MembersListError` object on failure.
-    @objc
-    @discardableResult public func membersListV2() -> DBXTeamMembersListRpcRequestV2 {
-        let swift = swift.membersListV2()
-        return DBXTeamMembersListRpcRequestV2(swift: swift)
+    @discardableResult public func membersGetInfoV2(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequestV2 {
+        let swift = swift.membersGetInfoV2(members: members.map(\.swift))
+        return DBXTeamMembersGetInfoRpcRequestV2(swift: swift)
     }
 
     /// Lists members of a team. Permission : Team information.
@@ -1122,19 +1095,31 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersListRpcRequest(swift: swift)
     }
 
-    /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
-    /// Team information.
+    /// Lists members of a team. Permission : Team information.
     ///
     /// - scope: members.read
     ///
-    /// - parameter cursor: Indicates from what point to get the next set of members.
+    /// - parameter limit: Number of results to return per call.
+    /// - parameter includeRemoved: Whether to return removed members.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
-    /// or a `Team.MembersListContinueError` object on failure.
+    /// or a `Team.MembersListError` object on failure.
     @objc
-    @discardableResult public func membersListContinueV2(cursor: String) -> DBXTeamMembersListContinueRpcRequestV2 {
-        let swift = swift.membersListContinueV2(cursor: cursor)
-        return DBXTeamMembersListContinueRpcRequestV2(swift: swift)
+    @discardableResult public func membersListV2(limit: NSNumber, includeRemoved: NSNumber) -> DBXTeamMembersListRpcRequestV2 {
+        let swift = swift.membersListV2(limit: limit.uint32Value, includeRemoved: includeRemoved.boolValue)
+        return DBXTeamMembersListRpcRequestV2(swift: swift)
+    }
+
+    /// Lists members of a team. Permission : Team information.
+    ///
+    /// - scope: members.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
+    /// or a `Team.MembersListError` object on failure.
+    @objc
+    @discardableResult public func membersListV2() -> DBXTeamMembersListRpcRequestV2 {
+        let swift = swift.membersListV2()
+        return DBXTeamMembersListRpcRequestV2(swift: swift)
     }
 
     /// Once a cursor has been retrieved from membersList, use this to paginate through all team members. Permission :
@@ -1150,6 +1135,21 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func membersListContinue(cursor: String) -> DBXTeamMembersListContinueRpcRequest {
         let swift = swift.membersListContinue(cursor: cursor)
         return DBXTeamMembersListContinueRpcRequest(swift: swift)
+    }
+
+    /// Once a cursor has been retrieved from membersListV2, use this to paginate through all team members. Permission :
+    /// Team information.
+    ///
+    /// - scope: members.read
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of members.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersListV2Result` object on success
+    /// or a `Team.MembersListContinueError` object on failure.
+    @objc
+    @discardableResult public func membersListContinueV2(cursor: String) -> DBXTeamMembersListContinueRpcRequestV2 {
+        let swift = swift.membersListContinueV2(cursor: cursor)
+        return DBXTeamMembersListContinueRpcRequestV2(swift: swift)
     }
 
     /// Moves removed member's files to a different member. This endpoint initiates an asynchronous job. To obtain the
@@ -1352,6 +1352,24 @@ public class DBXTeamRoutes: NSObject {
     /// - scope: members.write
     ///
     /// - parameter user: Identity of user whose role will be set.
+    /// - parameter newRole: The new role of the member.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object on
+    /// success or a `Team.MembersSetPermissionsError` object on failure.
+    @objc
+    @discardableResult public func membersSetAdminPermissions(
+        user: DBXTeamUserSelectorArg,
+        newRole: DBXTeamAdminTier
+    ) -> DBXTeamMembersSetAdminPermissionsRpcRequest {
+        let swift = swift.membersSetAdminPermissions(user: user.swift, newRole: newRole.swift)
+        return DBXTeamMembersSetAdminPermissionsRpcRequest(swift: swift)
+    }
+
+    /// Updates a team member's permissions. Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter user: Identity of user whose role will be set.
     /// - parameter newRoles: The new roles for the member. Send empty list to make user member only. For now, only up
     /// to one role is allowed.
     ///
@@ -1376,73 +1394,6 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func membersSetAdminPermissionsV2(user: DBXTeamUserSelectorArg) -> DBXTeamMembersSetAdminPermissionsRpcRequestV2 {
         let swift = swift.membersSetAdminPermissionsV2(user: user.swift)
         return DBXTeamMembersSetAdminPermissionsRpcRequestV2(swift: swift)
-    }
-
-    /// Updates a team member's permissions. Permission : Team member management.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter user: Identity of user whose role will be set.
-    /// - parameter newRole: The new role of the member.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object on
-    /// success or a `Team.MembersSetPermissionsError` object on failure.
-    @objc
-    @discardableResult public func membersSetAdminPermissions(
-        user: DBXTeamUserSelectorArg,
-        newRole: DBXTeamAdminTier
-    ) -> DBXTeamMembersSetAdminPermissionsRpcRequest {
-        let swift = swift.membersSetAdminPermissions(user: user.swift, newRole: newRole.swift)
-        return DBXTeamMembersSetAdminPermissionsRpcRequest(swift: swift)
-    }
-
-    /// Updates a team member's profile. Permission : Team member management.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter user: Identity of user whose profile will be set.
-    /// - parameter newEmail: New email for member.
-    /// - parameter newExternalId: New external ID for member.
-    /// - parameter newGivenName: New given name for member.
-    /// - parameter newSurname: New surname for member.
-    /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
-    /// configuration.
-    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersSetProfileError` object on failure.
-    @objc
-    @discardableResult public func membersSetProfileV2(
-        user: DBXTeamUserSelectorArg,
-        newEmail: String?,
-        newExternalId: String?,
-        newGivenName: String?,
-        newSurname: String?,
-        newPersistentId: String?,
-        newIsDirectoryRestricted: NSNumber?
-    ) -> DBXTeamMembersSetProfileRpcRequestV2 {
-        let swift = swift.membersSetProfileV2(
-            user: user.swift,
-            newEmail: newEmail,
-            newExternalId: newExternalId,
-            newGivenName: newGivenName,
-            newSurname: newSurname,
-            newPersistentId: newPersistentId,
-            newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue
-        )
-        return DBXTeamMembersSetProfileRpcRequestV2(swift: swift)
-    }
-
-    /// Updates a team member's profile. Permission : Team member management.
-    ///
-    /// - scope: members.write
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersSetProfileError` object on failure.
-    @objc
-    @discardableResult public func membersSetProfileV2(user: DBXTeamUserSelectorArg) -> DBXTeamMembersSetProfileRpcRequestV2 {
-        let swift = swift.membersSetProfileV2(user: user.swift)
-        return DBXTeamMembersSetProfileRpcRequestV2(swift: swift)
     }
 
     /// Updates a team member's profile. Permission : Team member management.
@@ -1494,22 +1445,53 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersSetProfileRpcRequest(swift: swift)
     }
 
-    /// Updates a team member's profile photo. Permission : Team member management.
+    /// Updates a team member's profile. Permission : Team member management.
     ///
     /// - scope: members.write
     ///
-    /// - parameter user: Identity of the user whose profile photo will be set.
-    /// - parameter photo: Image to set as the member's new profile photo.
+    /// - parameter user: Identity of user whose profile will be set.
+    /// - parameter newEmail: New email for member.
+    /// - parameter newExternalId: New external ID for member.
+    /// - parameter newGivenName: New given name for member.
+    /// - parameter newSurname: New surname for member.
+    /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
+    /// configuration.
+    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
-    /// success or a `Team.MembersSetProfilePhotoError` object on failure.
+    /// success or a `Team.MembersSetProfileError` object on failure.
     @objc
-    @discardableResult public func membersSetProfilePhotoV2(
+    @discardableResult public func membersSetProfileV2(
         user: DBXTeamUserSelectorArg,
-        photo: DBXAccountPhotoSourceArg
-    ) -> DBXTeamMembersSetProfilePhotoRpcRequestV2 {
-        let swift = swift.membersSetProfilePhotoV2(user: user.swift, photo: photo.swift)
-        return DBXTeamMembersSetProfilePhotoRpcRequestV2(swift: swift)
+        newEmail: String?,
+        newExternalId: String?,
+        newGivenName: String?,
+        newSurname: String?,
+        newPersistentId: String?,
+        newIsDirectoryRestricted: NSNumber?
+    ) -> DBXTeamMembersSetProfileRpcRequestV2 {
+        let swift = swift.membersSetProfileV2(
+            user: user.swift,
+            newEmail: newEmail,
+            newExternalId: newExternalId,
+            newGivenName: newGivenName,
+            newSurname: newSurname,
+            newPersistentId: newPersistentId,
+            newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue
+        )
+        return DBXTeamMembersSetProfileRpcRequestV2(swift: swift)
+    }
+
+    /// Updates a team member's profile. Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersSetProfileError` object on failure.
+    @objc
+    @discardableResult public func membersSetProfileV2(user: DBXTeamUserSelectorArg) -> DBXTeamMembersSetProfileRpcRequestV2 {
+        let swift = swift.membersSetProfileV2(user: user.swift)
+        return DBXTeamMembersSetProfileRpcRequestV2(swift: swift)
     }
 
     /// Updates a team member's profile photo. Permission : Team member management.
@@ -1528,6 +1510,24 @@ public class DBXTeamRoutes: NSObject {
     ) -> DBXTeamMembersSetProfilePhotoRpcRequest {
         let swift = swift.membersSetProfilePhoto(user: user.swift, photo: photo.swift)
         return DBXTeamMembersSetProfilePhotoRpcRequest(swift: swift)
+    }
+
+    /// Updates a team member's profile photo. Permission : Team member management.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter user: Identity of the user whose profile photo will be set.
+    /// - parameter photo: Image to set as the member's new profile photo.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
+    /// success or a `Team.MembersSetProfilePhotoError` object on failure.
+    @objc
+    @discardableResult public func membersSetProfilePhotoV2(
+        user: DBXTeamUserSelectorArg,
+        photo: DBXAccountPhotoSourceArg
+    ) -> DBXTeamMembersSetProfilePhotoRpcRequestV2 {
+        let swift = swift.membersSetProfilePhotoV2(user: user.swift, photo: photo.swift)
+        return DBXTeamMembersSetProfilePhotoRpcRequestV2(swift: swift)
     }
 
     /// Suspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
@@ -4467,62 +4467,6 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
 }
 
 @objc
-public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer>
-
-    init(swift: RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var objc: DBXTeamMembersAddLaunchV2Result?
-            if let swift = result {
-                objc = DBXTeamMembersAddLaunchV2Result.factory(swift: swift)
-            }
-            completionHandler(objc, error?.objc)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer>
 
@@ -4579,16 +4523,16 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer>
+public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer>
 
-    init(swift: RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4596,25 +4540,14 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXAsyncPollError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamMembersAddJobStatusV2Result?
+            var objc: DBXTeamMembersAddLaunchV2Result?
             if let swift = result {
-                objc = DBXTeamMembersAddJobStatusV2Result.factory(swift: swift)
+                objc = DBXTeamMembersAddLaunchV2Result.factory(swift: swift)
             }
-            completionHandler(objc, routeError, callError)
+            completionHandler(objc, error?.objc)
         }
         return self
     }
@@ -4713,16 +4646,16 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>
+public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer>
 
-    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4730,23 +4663,23 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersDeleteProfilePhotoError?
+            var routeError: DBXAsyncPollError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersDeleteProfilePhotoError(swift: box.unboxed)
+                routeError = DBXAsyncPollError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfoV2Result?
+            var objc: DBXTeamMembersAddJobStatusV2Result?
             if let swift = result {
-                objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
+                objc = DBXTeamMembersAddJobStatusV2Result.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -4847,16 +4780,16 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer>
+public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>
 
-    init(swift: RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer>) {
+    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4864,14 +4797,25 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamMembersGetAvailableTeamMemberRolesResult?
-            if let swift = result {
-                objc = DBXTeamMembersGetAvailableTeamMemberRolesResult(swift: swift)
+            var routeError: DBXTeamMembersDeleteProfilePhotoError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersDeleteProfilePhotoError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
             }
-            completionHandler(objc, error?.objc)
+
+            var objc: DBXTeamTeamMemberInfoV2Result?
+            if let swift = result {
+                objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
         }
         return self
     }
@@ -4903,16 +4847,16 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
 }
 
 @objc
-public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer>
+public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer>
 
-    init(swift: RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4920,25 +4864,14 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersGetInfoError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersGetInfoError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamMembersGetInfoV2Result?
+            var objc: DBXTeamMembersGetAvailableTeamMemberRolesResult?
             if let swift = result {
-                objc = DBXTeamMembersGetInfoV2Result(swift: swift)
+                objc = DBXTeamMembersGetAvailableTeamMemberRolesResult(swift: swift)
             }
-            completionHandler(objc, routeError, callError)
+            completionHandler(objc, error?.objc)
         }
         return self
     }
@@ -5037,16 +4970,16 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer>
+public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer>
 
-    init(swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -5054,23 +4987,23 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersListError?
+            var routeError: DBXTeamMembersGetInfoError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListError(swift: box.unboxed)
+                routeError = DBXTeamMembersGetInfoError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersListV2Result?
+            var objc: DBXTeamMembersGetInfoV2Result?
             if let swift = result {
-                objc = DBXTeamMembersListV2Result(swift: swift)
+                objc = DBXTeamMembersGetInfoV2Result(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -5171,16 +5104,16 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer>
+public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer>
 
-    init(swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -5188,14 +5121,14 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersListContinueError?
+            var routeError: DBXTeamMembersListError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListContinueError(swift: box.unboxed)
+                routeError = DBXTeamMembersListError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5272,6 +5205,73 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
             var objc: DBXTeamMembersListResult?
             if let swift = result {
                 objc = DBXTeamMembersListResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer>
+
+    init(swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersListContinueError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersListContinueError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamMembersListV2Result?
+            if let swift = result {
+                objc = DBXTeamMembersListV2Result(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -5878,73 +5878,6 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer>
-
-    init(swift: RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersSetPermissions2Error?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetPermissions2Error(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamMembersSetPermissions2Result?
-            if let swift = result {
-                objc = DBXTeamMembersSetPermissions2Result(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersSetPermissionsResultSerializer, Team.MembersSetPermissionsErrorSerializer>
 
@@ -6012,16 +5945,16 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer>
+public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer>
 
-    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -6029,23 +5962,23 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersSetProfileError?
+            var routeError: DBXTeamMembersSetPermissions2Error?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfileError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetPermissions2Error(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfoV2Result?
+            var objc: DBXTeamMembersSetPermissions2Result?
             if let swift = result {
-                objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
+                objc = DBXTeamMembersSetPermissions2Result(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -6146,16 +6079,16 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer>
+public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer>
 
-    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer>) {
+    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfileErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -6163,14 +6096,14 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamMembersSetProfilePhotoError?
+            var routeError: DBXTeamMembersSetProfileError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfilePhotoError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetProfileError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6247,6 +6180,73 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
             var objc: DBXTeamTeamMemberInfo?
             if let swift = result {
                 objc = DBXTeamTeamMemberInfo(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer>
+
+    init(swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersSetProfilePhotoError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersSetProfilePhotoError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamTeamMemberInfoV2Result?
+            if let swift = result {
+                objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }

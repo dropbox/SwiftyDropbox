@@ -12012,20 +12012,6 @@ public class Files {
             style: .upload
         )
     )
-    static let copyV2 = Route(
-        name: "copy_v2",
-        version: 2,
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.RelocationResultSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let copy = Route(
         name: "copy",
         version: 1,
@@ -12040,14 +12026,14 @@ public class Files {
             style: .rpc
         )
     )
-    static let copyBatchV2 = Route(
-        name: "copy_batch_v2",
+    static let copyV2 = Route(
+        name: "copy_v2",
         version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.RelocationBatchArgBaseSerializer(),
-        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.RelocationResultSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
             host: .api,
@@ -12068,14 +12054,14 @@ public class Files {
             style: .rpc
         )
     )
-    static let copyBatchCheckV2 = Route(
-        name: "copy_batch/check_v2",
+    static let copyBatchV2 = Route(
+        name: "copy_batch_v2",
         version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Async.PollArgSerializer(),
-        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
-        errorSerializer: Async.PollErrorSerializer(),
+        argSerializer: Files.RelocationBatchArgBaseSerializer(),
+        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
         attributes: RouteAttributes(
             auth: [.user],
             host: .api,
@@ -12089,6 +12075,20 @@ public class Files {
         deprecated: true,
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let copyBatchCheckV2 = Route(
+        name: "copy_batch/check_v2",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
@@ -12124,20 +12124,6 @@ public class Files {
             style: .rpc
         )
     )
-    static let createFolderV2 = Route(
-        name: "create_folder_v2",
-        version: 2,
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.CreateFolderArgSerializer(),
-        responseSerializer: Files.CreateFolderResultSerializer(),
-        errorSerializer: Files.CreateFolderErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let createFolder = Route(
         name: "create_folder",
         version: 1,
@@ -12145,6 +12131,20 @@ public class Files {
         deprecated: true,
         argSerializer: Files.CreateFolderArgSerializer(),
         responseSerializer: Files.FolderMetadataSerializer(),
+        errorSerializer: Files.CreateFolderErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let createFolderV2 = Route(
+        name: "create_folder_v2",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.CreateFolderArgSerializer(),
+        responseSerializer: Files.CreateFolderResultSerializer(),
         errorSerializer: Files.CreateFolderErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
@@ -12180,20 +12180,6 @@ public class Files {
             style: .rpc
         )
     )
-    static let deleteV2 = Route(
-        name: "delete_v2",
-        version: 2,
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.DeleteArgSerializer(),
-        responseSerializer: Files.DeleteResultSerializer(),
-        errorSerializer: Files.DeleteErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let delete = Route(
         name: "delete",
         version: 1,
@@ -12201,6 +12187,20 @@ public class Files {
         deprecated: true,
         argSerializer: Files.DeleteArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
+        errorSerializer: Files.DeleteErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let deleteV2 = Route(
+        name: "delete_v2",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.DeleteArgSerializer(),
+        responseSerializer: Files.DeleteResultSerializer(),
         errorSerializer: Files.DeleteErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
@@ -12474,20 +12474,6 @@ public class Files {
             style: .rpc
         )
     )
-    static let moveV2 = Route(
-        name: "move_v2",
-        version: 2,
-        namespace: "files",
-        deprecated: false,
-        argSerializer: Files.RelocationArgSerializer(),
-        responseSerializer: Files.RelocationResultSerializer(),
-        errorSerializer: Files.RelocationErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let move = Route(
         name: "move",
         version: 1,
@@ -12502,14 +12488,14 @@ public class Files {
             style: .rpc
         )
     )
-    static let moveBatchV2 = Route(
-        name: "move_batch_v2",
+    static let moveV2 = Route(
+        name: "move_v2",
         version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Files.MoveBatchArgSerializer(),
-        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        argSerializer: Files.RelocationArgSerializer(),
+        responseSerializer: Files.RelocationResultSerializer(),
+        errorSerializer: Files.RelocationErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
             host: .api,
@@ -12530,14 +12516,14 @@ public class Files {
             style: .rpc
         )
     )
-    static let moveBatchCheckV2 = Route(
-        name: "move_batch/check_v2",
+    static let moveBatchV2 = Route(
+        name: "move_batch_v2",
         version: 2,
         namespace: "files",
         deprecated: false,
-        argSerializer: Async.PollArgSerializer(),
-        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
-        errorSerializer: Async.PollErrorSerializer(),
+        argSerializer: Files.MoveBatchArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2LaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
         attributes: RouteAttributes(
             auth: [.user],
             host: .api,
@@ -12551,6 +12537,20 @@ public class Files {
         deprecated: true,
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Files.RelocationBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let moveBatchCheckV2 = Route(
+        name: "move_batch/check_v2",
+        version: 2,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.RelocationBatchV2JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
@@ -12838,12 +12838,12 @@ public class Files {
             style: .upload
         )
     )
-    static let uploadSessionAppendV2 = Route(
-        name: "upload_session/append_v2",
-        version: 2,
+    static let uploadSessionAppend = Route(
+        name: "upload_session/append",
+        version: 1,
         namespace: "files",
-        deprecated: false,
-        argSerializer: Files.UploadSessionAppendArgSerializer(),
+        deprecated: true,
+        argSerializer: Files.UploadSessionCursorSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.UploadSessionAppendErrorSerializer(),
         attributes: RouteAttributes(
@@ -12852,12 +12852,12 @@ public class Files {
             style: .upload
         )
     )
-    static let uploadSessionAppend = Route(
-        name: "upload_session/append",
-        version: 1,
+    static let uploadSessionAppendV2 = Route(
+        name: "upload_session/append_v2",
+        version: 2,
         namespace: "files",
-        deprecated: true,
-        argSerializer: Files.UploadSessionCursorSerializer(),
+        deprecated: false,
+        argSerializer: Files.UploadSessionAppendArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.UploadSessionAppendErrorSerializer(),
         attributes: RouteAttributes(

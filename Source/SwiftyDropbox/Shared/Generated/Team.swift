@@ -16880,20 +16880,6 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersAddV2 = Route(
-        name: "members/add_v2",
-        version: 2,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.MembersAddV2ArgSerializer(),
-        responseSerializer: Team.MembersAddLaunchV2ResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let membersAdd = Route(
         name: "members/add",
         version: 1,
@@ -16908,14 +16894,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersAddJobStatusGetV2 = Route(
-        name: "members/add/job_status/get_v2",
+    static let membersAddV2 = Route(
+        name: "members/add_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Async.PollArgSerializer(),
-        responseSerializer: Team.MembersAddJobStatusV2ResultSerializer(),
-        errorSerializer: Async.PollErrorSerializer(),
+        argSerializer: Team.MembersAddV2ArgSerializer(),
+        responseSerializer: Team.MembersAddLaunchV2ResultSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -16936,14 +16922,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersDeleteProfilePhotoV2 = Route(
-        name: "members/delete_profile_photo_v2",
+    static let membersAddJobStatusGetV2 = Route(
+        name: "members/add/job_status/get_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
-        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
-        errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Team.MembersAddJobStatusV2ResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -16957,6 +16943,20 @@ public class Team {
         deprecated: false,
         argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
         responseSerializer: Team.TeamMemberInfoSerializer(),
+        errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersDeleteProfilePhotoV2 = Route(
+        name: "members/delete_profile_photo_v2",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersDeleteProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
         errorSerializer: Team.MembersDeleteProfilePhotoErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
@@ -16978,20 +16978,6 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersGetInfoV2 = Route(
-        name: "members/get_info_v2",
-        version: 2,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.MembersGetInfoV2ArgSerializer(),
-        responseSerializer: Team.MembersGetInfoV2ResultSerializer(),
-        errorSerializer: Team.MembersGetInfoErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let membersGetInfo = Route(
         name: "members/get_info",
         version: 1,
@@ -17006,14 +16992,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersListV2 = Route(
-        name: "members/list_v2",
+    static let membersGetInfoV2 = Route(
+        name: "members/get_info_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.MembersListArgSerializer(),
-        responseSerializer: Team.MembersListV2ResultSerializer(),
-        errorSerializer: Team.MembersListErrorSerializer(),
+        argSerializer: Team.MembersGetInfoV2ArgSerializer(),
+        responseSerializer: Team.MembersGetInfoV2ResultSerializer(),
+        errorSerializer: Team.MembersGetInfoErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -17034,14 +17020,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersListContinueV2 = Route(
-        name: "members/list/continue_v2",
+    static let membersListV2 = Route(
+        name: "members/list_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.MembersListContinueArgSerializer(),
+        argSerializer: Team.MembersListArgSerializer(),
         responseSerializer: Team.MembersListV2ResultSerializer(),
-        errorSerializer: Team.MembersListContinueErrorSerializer(),
+        errorSerializer: Team.MembersListErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -17055,6 +17041,20 @@ public class Team {
         deprecated: false,
         argSerializer: Team.MembersListContinueArgSerializer(),
         responseSerializer: Team.MembersListResultSerializer(),
+        errorSerializer: Team.MembersListContinueErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersListContinueV2 = Route(
+        name: "members/list/continue_v2",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersListContinueArgSerializer(),
+        responseSerializer: Team.MembersListV2ResultSerializer(),
         errorSerializer: Team.MembersListContinueErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
@@ -17188,20 +17188,6 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersSetAdminPermissionsV2 = Route(
-        name: "members/set_admin_permissions_v2",
-        version: 2,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.MembersSetPermissions2ArgSerializer(),
-        responseSerializer: Team.MembersSetPermissions2ResultSerializer(),
-        errorSerializer: Team.MembersSetPermissions2ErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let membersSetAdminPermissions = Route(
         name: "members/set_admin_permissions",
         version: 1,
@@ -17216,14 +17202,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersSetProfileV2 = Route(
-        name: "members/set_profile_v2",
+    static let membersSetAdminPermissionsV2 = Route(
+        name: "members/set_admin_permissions_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.MembersSetProfileArgSerializer(),
-        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
-        errorSerializer: Team.MembersSetProfileErrorSerializer(),
+        argSerializer: Team.MembersSetPermissions2ArgSerializer(),
+        responseSerializer: Team.MembersSetPermissions2ResultSerializer(),
+        errorSerializer: Team.MembersSetPermissions2ErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -17244,14 +17230,14 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersSetProfilePhotoV2 = Route(
-        name: "members/set_profile_photo_v2",
+    static let membersSetProfileV2 = Route(
+        name: "members/set_profile_v2",
         version: 2,
         namespace: "team",
         deprecated: false,
-        argSerializer: Team.MembersSetProfilePhotoArgSerializer(),
+        argSerializer: Team.MembersSetProfileArgSerializer(),
         responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
-        errorSerializer: Team.MembersSetProfilePhotoErrorSerializer(),
+        errorSerializer: Team.MembersSetProfileErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
@@ -17265,6 +17251,20 @@ public class Team {
         deprecated: false,
         argSerializer: Team.MembersSetProfilePhotoArgSerializer(),
         responseSerializer: Team.TeamMemberInfoSerializer(),
+        errorSerializer: Team.MembersSetProfilePhotoErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersSetProfilePhotoV2 = Route(
+        name: "members/set_profile_photo_v2",
+        version: 2,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSetProfilePhotoArgSerializer(),
+        responseSerializer: Team.TeamMemberInfoV2ResultSerializer(),
         errorSerializer: Team.MembersSetProfilePhotoErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],

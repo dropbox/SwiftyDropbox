@@ -1784,20 +1784,6 @@ public class FileRequests {
             style: .rpc
         )
     )
-    static let listV2 = Route(
-        name: "list_v2",
-        version: 2,
-        namespace: "file_requests",
-        deprecated: false,
-        argSerializer: FileRequests.ListFileRequestsArgSerializer(),
-        responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
-        errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let list_ = Route(
         name: "list",
         version: 1,
@@ -1805,6 +1791,20 @@ public class FileRequests {
         deprecated: false,
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileRequests.ListFileRequestsResultSerializer(),
+        errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let listV2 = Route(
+        name: "list_v2",
+        version: 2,
+        namespace: "file_requests",
+        deprecated: false,
+        argSerializer: FileRequests.ListFileRequestsArgSerializer(),
+        responseSerializer: FileRequests.ListFileRequestsV2ResultSerializer(),
         errorSerializer: FileRequests.ListFileRequestsErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
