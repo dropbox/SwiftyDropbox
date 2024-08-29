@@ -1110,7 +1110,7 @@ public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingAddFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingAddFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1177,7 +1177,7 @@ public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingAddFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingAddFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1240,7 +1240,7 @@ public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1307,7 +1307,7 @@ public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1374,7 +1374,7 @@ public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1441,7 +1441,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingCreateSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingCreateSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1508,7 +1508,7 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingCreateSharedLinkWithSettingsError(swift: box.unboxed)
+                routeError = DBXSharingCreateSharedLinkWithSettingsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1575,7 +1575,7 @@ public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetFileMetadataError(swift: box.unboxed)
+                routeError = DBXSharingGetFileMetadataError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1642,7 +1642,7 @@ public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1709,7 +1709,7 @@ public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedFolderAccessError(swift: box.unboxed)
+                routeError = DBXSharingSharedFolderAccessError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1776,7 +1776,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinkFileError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinkFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1851,7 +1851,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinkFileError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinkFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1926,7 +1926,7 @@ public class DBXSharingGetSharedLinkMetadataRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1993,7 +1993,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinksError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinksError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2060,7 +2060,7 @@ public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFileMembersError(swift: box.unboxed)
+                routeError = DBXSharingListFileMembersError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2127,7 +2127,7 @@ public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2194,7 +2194,7 @@ public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFileMembersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFileMembersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2261,7 +2261,7 @@ public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedFolderAccessError(swift: box.unboxed)
+                routeError = DBXSharingSharedFolderAccessError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2328,7 +2328,7 @@ public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFolderMembersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFolderMembersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2451,7 +2451,7 @@ public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFoldersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFoldersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2574,7 +2574,7 @@ public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFoldersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFoldersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2641,7 +2641,7 @@ public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2708,7 +2708,7 @@ public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFilesContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFilesContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2775,7 +2775,7 @@ public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListSharedLinksError(swift: box.unboxed)
+                routeError = DBXSharingListSharedLinksError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2842,7 +2842,7 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingModifySharedLinkSettingsError(swift: box.unboxed)
+                routeError = DBXSharingModifySharedLinkSettingsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2909,7 +2909,7 @@ public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingMountFolderError(swift: box.unboxed)
+                routeError = DBXSharingMountFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2976,7 +2976,7 @@ public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest 
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRelinquishFileMembershipError(swift: box.unboxed)
+                routeError = DBXSharingRelinquishFileMembershipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3039,7 +3039,7 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRelinquishFolderMembershipError(swift: box.unboxed)
+                routeError = DBXSharingRelinquishFolderMembershipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3106,7 +3106,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3173,7 +3173,7 @@ public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3240,7 +3240,7 @@ public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3307,7 +3307,7 @@ public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRevokeSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingRevokeSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3370,7 +3370,7 @@ public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSetAccessInheritanceError(swift: box.unboxed)
+                routeError = DBXSharingSetAccessInheritanceError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3437,7 +3437,7 @@ public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingShareFolderError(swift: box.unboxed)
+                routeError = DBXSharingShareFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3504,7 +3504,7 @@ public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingTransferFolderError(swift: box.unboxed)
+                routeError = DBXSharingTransferFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3567,7 +3567,7 @@ public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnmountFolderError(swift: box.unboxed)
+                routeError = DBXSharingUnmountFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3630,7 +3630,7 @@ public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnshareFileError(swift: box.unboxed)
+                routeError = DBXSharingUnshareFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3693,7 +3693,7 @@ public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnshareFolderError(swift: box.unboxed)
+                routeError = DBXSharingUnshareFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3760,7 +3760,7 @@ public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingFileMemberActionError(swift: box.unboxed)
+                routeError = DBXSharingFileMemberActionError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3827,7 +3827,7 @@ public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUpdateFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingUpdateFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3894,7 +3894,7 @@ public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUpdateFolderPolicyError(swift: box.unboxed)
+                routeError = DBXSharingUpdateFolderPolicyError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

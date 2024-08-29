@@ -26,7 +26,7 @@ public class DBXFilePropertiesAddPropertiesArg: NSObject {
         self.swift = FileProperties.AddPropertiesArg(path: path, propertyGroups: propertyGroups.map(\.swift))
     }
 
-    let swift: FileProperties.AddPropertiesArg
+    public let swift: FileProperties.AddPropertiesArg
 
     public init(swift: FileProperties.AddPropertiesArg) {
         self.swift = swift
@@ -39,9 +39,9 @@ public class DBXFilePropertiesAddPropertiesArg: NSObject {
 /// Objective-C compatible TemplateError union
 @objc
 public class DBXFilePropertiesTemplateError: NSObject {
-    let swift: FileProperties.TemplateError
+    public let swift: FileProperties.TemplateError
 
-    public init(swift: FileProperties.TemplateError) {
+    fileprivate init(swift: FileProperties.TemplateError) {
         self.swift = swift
     }
 
@@ -113,9 +113,9 @@ public class DBXFilePropertiesTemplateErrorOther: DBXFilePropertiesTemplateError
 /// Objective-C compatible PropertiesError union
 @objc
 public class DBXFilePropertiesPropertiesError: NSObject {
-    let swift: FileProperties.PropertiesError
+    public let swift: FileProperties.PropertiesError
 
-    public init(swift: FileProperties.PropertiesError) {
+    fileprivate init(swift: FileProperties.PropertiesError) {
         self.swift = swift
     }
 
@@ -129,7 +129,7 @@ public class DBXFilePropertiesPropertiesError: NSObject {
         case .other:
             return DBXFilePropertiesPropertiesErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilePropertiesLookupError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookupError.factory(swift: swiftArg)
             return DBXFilePropertiesPropertiesErrorPath(arg)
         case .unsupportedFolder:
             return DBXFilePropertiesPropertiesErrorUnsupportedFolder()
@@ -226,9 +226,9 @@ public class DBXFilePropertiesPropertiesErrorUnsupportedFolder: DBXFilePropertie
 /// Objective-C compatible InvalidPropertyGroupError union
 @objc
 public class DBXFilePropertiesInvalidPropertyGroupError: NSObject {
-    let swift: FileProperties.InvalidPropertyGroupError
+    public let swift: FileProperties.InvalidPropertyGroupError
 
-    public init(swift: FileProperties.InvalidPropertyGroupError) {
+    fileprivate init(swift: FileProperties.InvalidPropertyGroupError) {
         self.swift = swift
     }
 
@@ -242,7 +242,7 @@ public class DBXFilePropertiesInvalidPropertyGroupError: NSObject {
         case .other:
             return DBXFilePropertiesInvalidPropertyGroupErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilePropertiesLookupError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookupError.factory(swift: swiftArg)
             return DBXFilePropertiesInvalidPropertyGroupErrorPath(arg)
         case .unsupportedFolder:
             return DBXFilePropertiesInvalidPropertyGroupErrorUnsupportedFolder()
@@ -390,9 +390,9 @@ public class DBXFilePropertiesInvalidPropertyGroupErrorDuplicatePropertyGroups: 
 /// Objective-C compatible AddPropertiesError union
 @objc
 public class DBXFilePropertiesAddPropertiesError: NSObject {
-    let swift: FileProperties.AddPropertiesError
+    public let swift: FileProperties.AddPropertiesError
 
-    public init(swift: FileProperties.AddPropertiesError) {
+    fileprivate init(swift: FileProperties.AddPropertiesError) {
         self.swift = swift
     }
 
@@ -406,7 +406,7 @@ public class DBXFilePropertiesAddPropertiesError: NSObject {
         case .other:
             return DBXFilePropertiesAddPropertiesErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilePropertiesLookupError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookupError.factory(swift: swiftArg)
             return DBXFilePropertiesAddPropertiesErrorPath(arg)
         case .unsupportedFolder:
             return DBXFilePropertiesAddPropertiesErrorUnsupportedFolder()
@@ -587,7 +587,7 @@ public class DBXFilePropertiesPropertyGroupTemplate: NSObject {
         self.swift = FileProperties.PropertyGroupTemplate(name: name, description_: description_, fields: fields.map(\.swift))
     }
 
-    let swift: FileProperties.PropertyGroupTemplate
+    public let swift: FileProperties.PropertyGroupTemplate
 
     public init(swift: FileProperties.PropertyGroupTemplate) {
         self.swift = swift
@@ -600,7 +600,14 @@ public class DBXFilePropertiesPropertyGroupTemplate: NSObject {
 /// Objective-C compatible AddTemplateArg struct
 @objc
 public class DBXFilePropertiesAddTemplateArg: DBXFilePropertiesPropertyGroupTemplate {
-    let subSwift: FileProperties.AddTemplateArg
+    @objc
+    public override init(name: String, description_: String, fields: [DBXFilePropertiesPropertyFieldTemplate]) {
+        let swift = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields.map(\.swift))
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: FileProperties.AddTemplateArg
 
     public init(swift: FileProperties.AddTemplateArg) {
         self.subSwift = swift
@@ -623,7 +630,7 @@ public class DBXFilePropertiesAddTemplateResult: NSObject {
         self.swift = FileProperties.AddTemplateResult(templateId: templateId)
     }
 
-    let swift: FileProperties.AddTemplateResult
+    public let swift: FileProperties.AddTemplateResult
 
     public init(swift: FileProperties.AddTemplateResult) {
         self.swift = swift
@@ -645,7 +652,7 @@ public class DBXFilePropertiesGetTemplateArg: NSObject {
         self.swift = FileProperties.GetTemplateArg(templateId: templateId)
     }
 
-    let swift: FileProperties.GetTemplateArg
+    public let swift: FileProperties.GetTemplateArg
 
     public init(swift: FileProperties.GetTemplateArg) {
         self.swift = swift
@@ -658,7 +665,14 @@ public class DBXFilePropertiesGetTemplateArg: NSObject {
 /// Objective-C compatible GetTemplateResult struct
 @objc
 public class DBXFilePropertiesGetTemplateResult: DBXFilePropertiesPropertyGroupTemplate {
-    let subSwift: FileProperties.GetTemplateResult
+    @objc
+    public override init(name: String, description_: String, fields: [DBXFilePropertiesPropertyFieldTemplate]) {
+        let swift = FileProperties.GetTemplateResult(name: name, description_: description_, fields: fields.map(\.swift))
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: FileProperties.GetTemplateResult
 
     public init(swift: FileProperties.GetTemplateResult) {
         self.subSwift = swift
@@ -681,7 +695,7 @@ public class DBXFilePropertiesListTemplateResult: NSObject {
         self.swift = FileProperties.ListTemplateResult(templateIds: templateIds)
     }
 
-    let swift: FileProperties.ListTemplateResult
+    public let swift: FileProperties.ListTemplateResult
 
     public init(swift: FileProperties.ListTemplateResult) {
         self.swift = swift
@@ -694,9 +708,9 @@ public class DBXFilePropertiesListTemplateResult: NSObject {
 /// Logical operator to join search queries together.
 @objc
 public class DBXFilePropertiesLogicalOperator: NSObject {
-    let swift: FileProperties.LogicalOperator
+    public let swift: FileProperties.LogicalOperator
 
-    public init(swift: FileProperties.LogicalOperator) {
+    fileprivate init(swift: FileProperties.LogicalOperator) {
         self.swift = swift
     }
 
@@ -746,9 +760,9 @@ public class DBXFilePropertiesLogicalOperatorOther: DBXFilePropertiesLogicalOper
 /// Objective-C compatible LookUpPropertiesError union
 @objc
 public class DBXFilePropertiesLookUpPropertiesError: NSObject {
-    let swift: FileProperties.LookUpPropertiesError
+    public let swift: FileProperties.LookUpPropertiesError
 
-    public init(swift: FileProperties.LookUpPropertiesError) {
+    fileprivate init(swift: FileProperties.LookUpPropertiesError) {
         self.swift = swift
     }
 
@@ -798,9 +812,9 @@ public class DBXFilePropertiesLookUpPropertiesErrorOther: DBXFilePropertiesLookU
 /// Objective-C compatible LookupError union
 @objc
 public class DBXFilePropertiesLookupError: NSObject {
-    let swift: FileProperties.LookupError
+    public let swift: FileProperties.LookupError
 
-    public init(swift: FileProperties.LookupError) {
+    fileprivate init(swift: FileProperties.LookupError) {
         self.swift = swift
     }
 
@@ -924,9 +938,9 @@ public class DBXFilePropertiesLookupErrorOther: DBXFilePropertiesLookupError {
 /// Objective-C compatible ModifyTemplateError union
 @objc
 public class DBXFilePropertiesModifyTemplateError: NSObject {
-    let swift: FileProperties.ModifyTemplateError
+    public let swift: FileProperties.ModifyTemplateError
 
-    public init(swift: FileProperties.ModifyTemplateError) {
+    fileprivate init(swift: FileProperties.ModifyTemplateError) {
         self.swift = swift
     }
 
@@ -1079,7 +1093,7 @@ public class DBXFilePropertiesOverwritePropertyGroupArg: NSObject {
         self.swift = FileProperties.OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups.map(\.swift))
     }
 
-    let swift: FileProperties.OverwritePropertyGroupArg
+    public let swift: FileProperties.OverwritePropertyGroupArg
 
     public init(swift: FileProperties.OverwritePropertyGroupArg) {
         self.swift = swift
@@ -1097,14 +1111,14 @@ public class DBXFilePropertiesPropertiesSearchArg: NSObject {
     public var queries: [DBXFilePropertiesPropertiesSearchQuery] { swift.queries.map { DBXFilePropertiesPropertiesSearchQuery(swift: $0) } }
     /// Filter results to contain only properties associated with these template IDs.
     @objc
-    public var templateFilter: DBXFilePropertiesTemplateFilter { DBXFilePropertiesTemplateFilter(swift: swift.templateFilter) }
+    public var templateFilter: DBXFilePropertiesTemplateFilter { DBXFilePropertiesTemplateFilter.factory(swift: swift.templateFilter) }
 
     @objc
     public init(queries: [DBXFilePropertiesPropertiesSearchQuery], templateFilter: DBXFilePropertiesTemplateFilter) {
         self.swift = FileProperties.PropertiesSearchArg(queries: queries.map(\.swift), templateFilter: templateFilter.swift)
     }
 
-    let swift: FileProperties.PropertiesSearchArg
+    public let swift: FileProperties.PropertiesSearchArg
 
     public init(swift: FileProperties.PropertiesSearchArg) {
         self.swift = swift
@@ -1126,7 +1140,7 @@ public class DBXFilePropertiesPropertiesSearchContinueArg: NSObject {
         self.swift = FileProperties.PropertiesSearchContinueArg(cursor: cursor)
     }
 
-    let swift: FileProperties.PropertiesSearchContinueArg
+    public let swift: FileProperties.PropertiesSearchContinueArg
 
     public init(swift: FileProperties.PropertiesSearchContinueArg) {
         self.swift = swift
@@ -1139,9 +1153,9 @@ public class DBXFilePropertiesPropertiesSearchContinueArg: NSObject {
 /// Objective-C compatible PropertiesSearchContinueError union
 @objc
 public class DBXFilePropertiesPropertiesSearchContinueError: NSObject {
-    let swift: FileProperties.PropertiesSearchContinueError
+    public let swift: FileProperties.PropertiesSearchContinueError
 
-    public init(swift: FileProperties.PropertiesSearchContinueError) {
+    fileprivate init(swift: FileProperties.PropertiesSearchContinueError) {
         self.swift = swift
     }
 
@@ -1191,16 +1205,16 @@ public class DBXFilePropertiesPropertiesSearchContinueErrorOther: DBXFilePropert
 /// Objective-C compatible PropertiesSearchError union
 @objc
 public class DBXFilePropertiesPropertiesSearchError: NSObject {
-    let swift: FileProperties.PropertiesSearchError
+    public let swift: FileProperties.PropertiesSearchError
 
-    public init(swift: FileProperties.PropertiesSearchError) {
+    fileprivate init(swift: FileProperties.PropertiesSearchError) {
         self.swift = swift
     }
 
     public static func factory(swift: FileProperties.PropertiesSearchError) -> DBXFilePropertiesPropertiesSearchError {
         switch swift {
         case .propertyGroupLookup(let swiftArg):
-            let arg = DBXFilePropertiesLookUpPropertiesError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookUpPropertiesError.factory(swift: swiftArg)
             return DBXFilePropertiesPropertiesSearchErrorPropertyGroupLookup(arg)
         case .other:
             return DBXFilePropertiesPropertiesSearchErrorOther()
@@ -1266,7 +1280,7 @@ public class DBXFilePropertiesPropertiesSearchMatch: NSObject {
         self.swift = FileProperties.PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted.boolValue, propertyGroups: propertyGroups.map(\.swift))
     }
 
-    let swift: FileProperties.PropertiesSearchMatch
+    public let swift: FileProperties.PropertiesSearchMatch
 
     public init(swift: FileProperties.PropertiesSearchMatch) {
         self.swift = swift
@@ -1279,9 +1293,9 @@ public class DBXFilePropertiesPropertiesSearchMatch: NSObject {
 /// Objective-C compatible PropertiesSearchMode union
 @objc
 public class DBXFilePropertiesPropertiesSearchMode: NSObject {
-    let swift: FileProperties.PropertiesSearchMode
+    public let swift: FileProperties.PropertiesSearchMode
 
-    public init(swift: FileProperties.PropertiesSearchMode) {
+    fileprivate init(swift: FileProperties.PropertiesSearchMode) {
         self.swift = swift
     }
 
@@ -1341,17 +1355,17 @@ public class DBXFilePropertiesPropertiesSearchQuery: NSObject {
     public var query: String { swift.query }
     /// The mode with which to perform the search.
     @objc
-    public var mode: DBXFilePropertiesPropertiesSearchMode { DBXFilePropertiesPropertiesSearchMode(swift: swift.mode) }
+    public var mode: DBXFilePropertiesPropertiesSearchMode { DBXFilePropertiesPropertiesSearchMode.factory(swift: swift.mode) }
     /// The logical operator with which to append the query.
     @objc
-    public var logicalOperator: DBXFilePropertiesLogicalOperator { DBXFilePropertiesLogicalOperator(swift: swift.logicalOperator) }
+    public var logicalOperator: DBXFilePropertiesLogicalOperator { DBXFilePropertiesLogicalOperator.factory(swift: swift.logicalOperator) }
 
     @objc
     public init(query: String, mode: DBXFilePropertiesPropertiesSearchMode, logicalOperator: DBXFilePropertiesLogicalOperator) {
         self.swift = FileProperties.PropertiesSearchQuery(query: query, mode: mode.swift, logicalOperator: logicalOperator.swift)
     }
 
-    let swift: FileProperties.PropertiesSearchQuery
+    public let swift: FileProperties.PropertiesSearchQuery
 
     public init(swift: FileProperties.PropertiesSearchQuery) {
         self.swift = swift
@@ -1377,7 +1391,7 @@ public class DBXFilePropertiesPropertiesSearchResult: NSObject {
         self.swift = FileProperties.PropertiesSearchResult(matches: matches.map(\.swift), cursor: cursor)
     }
 
-    let swift: FileProperties.PropertiesSearchResult
+    public let swift: FileProperties.PropertiesSearchResult
 
     public init(swift: FileProperties.PropertiesSearchResult) {
         self.swift = swift
@@ -1403,7 +1417,7 @@ public class DBXFilePropertiesPropertyField: NSObject {
         self.swift = FileProperties.PropertyField(name: name, value: value)
     }
 
-    let swift: FileProperties.PropertyField
+    public let swift: FileProperties.PropertyField
 
     public init(swift: FileProperties.PropertyField) {
         self.swift = swift
@@ -1425,14 +1439,14 @@ public class DBXFilePropertiesPropertyFieldTemplate: NSObject {
     /// Data type of the value of this property field. This type will be enforced upon property creation and
     /// modifications.
     @objc
-    public var type: DBXFilePropertiesPropertyType { DBXFilePropertiesPropertyType(swift: swift.type) }
+    public var type: DBXFilePropertiesPropertyType { DBXFilePropertiesPropertyType.factory(swift: swift.type) }
 
     @objc
     public init(name: String, description_: String, type: DBXFilePropertiesPropertyType) {
         self.swift = FileProperties.PropertyFieldTemplate(name: name, description_: description_, type: type.swift)
     }
 
-    let swift: FileProperties.PropertyFieldTemplate
+    public let swift: FileProperties.PropertyFieldTemplate
 
     public init(swift: FileProperties.PropertyFieldTemplate) {
         self.swift = swift
@@ -1459,7 +1473,7 @@ public class DBXFilePropertiesPropertyGroup: NSObject {
         self.swift = FileProperties.PropertyGroup(templateId: templateId, fields: fields.map(\.swift))
     }
 
-    let swift: FileProperties.PropertyGroup
+    public let swift: FileProperties.PropertyGroup
 
     public init(swift: FileProperties.PropertyGroup) {
         self.swift = swift
@@ -1488,7 +1502,7 @@ public class DBXFilePropertiesPropertyGroupUpdate: NSObject {
         self.swift = FileProperties.PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields?.map(\.swift), removeFields: removeFields)
     }
 
-    let swift: FileProperties.PropertyGroupUpdate
+    public let swift: FileProperties.PropertyGroupUpdate
 
     public init(swift: FileProperties.PropertyGroupUpdate) {
         self.swift = swift
@@ -1501,9 +1515,9 @@ public class DBXFilePropertiesPropertyGroupUpdate: NSObject {
 /// Data type of the given property field added.
 @objc
 public class DBXFilePropertiesPropertyType: NSObject {
-    let swift: FileProperties.PropertyType
+    public let swift: FileProperties.PropertyType
 
-    public init(swift: FileProperties.PropertyType) {
+    fileprivate init(swift: FileProperties.PropertyType) {
         self.swift = swift
     }
 
@@ -1565,7 +1579,7 @@ public class DBXFilePropertiesRemovePropertiesArg: NSObject {
         self.swift = FileProperties.RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
     }
 
-    let swift: FileProperties.RemovePropertiesArg
+    public let swift: FileProperties.RemovePropertiesArg
 
     public init(swift: FileProperties.RemovePropertiesArg) {
         self.swift = swift
@@ -1578,9 +1592,9 @@ public class DBXFilePropertiesRemovePropertiesArg: NSObject {
 /// Objective-C compatible RemovePropertiesError union
 @objc
 public class DBXFilePropertiesRemovePropertiesError: NSObject {
-    let swift: FileProperties.RemovePropertiesError
+    public let swift: FileProperties.RemovePropertiesError
 
-    public init(swift: FileProperties.RemovePropertiesError) {
+    fileprivate init(swift: FileProperties.RemovePropertiesError) {
         self.swift = swift
     }
 
@@ -1594,12 +1608,12 @@ public class DBXFilePropertiesRemovePropertiesError: NSObject {
         case .other:
             return DBXFilePropertiesRemovePropertiesErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilePropertiesLookupError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookupError.factory(swift: swiftArg)
             return DBXFilePropertiesRemovePropertiesErrorPath(arg)
         case .unsupportedFolder:
             return DBXFilePropertiesRemovePropertiesErrorUnsupportedFolder()
         case .propertyGroupLookup(let swiftArg):
-            let arg = DBXFilePropertiesLookUpPropertiesError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookUpPropertiesError.factory(swift: swiftArg)
             return DBXFilePropertiesRemovePropertiesErrorPropertyGroupLookup(arg)
         }
     }
@@ -1722,7 +1736,7 @@ public class DBXFilePropertiesRemoveTemplateArg: NSObject {
         self.swift = FileProperties.RemoveTemplateArg(templateId: templateId)
     }
 
-    let swift: FileProperties.RemoveTemplateArg
+    public let swift: FileProperties.RemoveTemplateArg
 
     public init(swift: FileProperties.RemoveTemplateArg) {
         self.swift = swift
@@ -1735,9 +1749,9 @@ public class DBXFilePropertiesRemoveTemplateArg: NSObject {
 /// Objective-C compatible TemplateFilterBase union
 @objc
 public class DBXFilePropertiesTemplateFilterBase: NSObject {
-    let swift: FileProperties.TemplateFilterBase
+    public let swift: FileProperties.TemplateFilterBase
 
-    public init(swift: FileProperties.TemplateFilterBase) {
+    fileprivate init(swift: FileProperties.TemplateFilterBase) {
         self.swift = swift
     }
 
@@ -1792,9 +1806,9 @@ public class DBXFilePropertiesTemplateFilterBaseOther: DBXFilePropertiesTemplate
 /// Objective-C compatible TemplateFilter union
 @objc
 public class DBXFilePropertiesTemplateFilter: NSObject {
-    let swift: FileProperties.TemplateFilter
+    public let swift: FileProperties.TemplateFilter
 
-    public init(swift: FileProperties.TemplateFilter) {
+    fileprivate init(swift: FileProperties.TemplateFilter) {
         self.swift = swift
     }
 
@@ -1866,9 +1880,9 @@ public class DBXFilePropertiesTemplateFilterFilterNone: DBXFilePropertiesTemplat
 /// Objective-C compatible TemplateOwnerType union
 @objc
 public class DBXFilePropertiesTemplateOwnerType: NSObject {
-    let swift: FileProperties.TemplateOwnerType
+    public let swift: FileProperties.TemplateOwnerType
 
-    public init(swift: FileProperties.TemplateOwnerType) {
+    fileprivate init(swift: FileProperties.TemplateOwnerType) {
         self.swift = swift
     }
 
@@ -1949,7 +1963,7 @@ public class DBXFilePropertiesUpdatePropertiesArg: NSObject {
         self.swift = FileProperties.UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups.map(\.swift))
     }
 
-    let swift: FileProperties.UpdatePropertiesArg
+    public let swift: FileProperties.UpdatePropertiesArg
 
     public init(swift: FileProperties.UpdatePropertiesArg) {
         self.swift = swift
@@ -1962,9 +1976,9 @@ public class DBXFilePropertiesUpdatePropertiesArg: NSObject {
 /// Objective-C compatible UpdatePropertiesError union
 @objc
 public class DBXFilePropertiesUpdatePropertiesError: NSObject {
-    let swift: FileProperties.UpdatePropertiesError
+    public let swift: FileProperties.UpdatePropertiesError
 
-    public init(swift: FileProperties.UpdatePropertiesError) {
+    fileprivate init(swift: FileProperties.UpdatePropertiesError) {
         self.swift = swift
     }
 
@@ -1978,7 +1992,7 @@ public class DBXFilePropertiesUpdatePropertiesError: NSObject {
         case .other:
             return DBXFilePropertiesUpdatePropertiesErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilePropertiesLookupError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookupError.factory(swift: swiftArg)
             return DBXFilePropertiesUpdatePropertiesErrorPath(arg)
         case .unsupportedFolder:
             return DBXFilePropertiesUpdatePropertiesErrorUnsupportedFolder()
@@ -1989,7 +2003,7 @@ public class DBXFilePropertiesUpdatePropertiesError: NSObject {
         case .duplicatePropertyGroups:
             return DBXFilePropertiesUpdatePropertiesErrorDuplicatePropertyGroups()
         case .propertyGroupLookup(let swiftArg):
-            let arg = DBXFilePropertiesLookUpPropertiesError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookUpPropertiesError.factory(swift: swiftArg)
             return DBXFilePropertiesUpdatePropertiesErrorPropertyGroupLookup(arg)
         }
     }
@@ -2167,7 +2181,7 @@ public class DBXFilePropertiesUpdateTemplateArg: NSObject {
         self.swift = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields?.map(\.swift))
     }
 
-    let swift: FileProperties.UpdateTemplateArg
+    public let swift: FileProperties.UpdateTemplateArg
 
     public init(swift: FileProperties.UpdateTemplateArg) {
         self.swift = swift
@@ -2189,7 +2203,7 @@ public class DBXFilePropertiesUpdateTemplateResult: NSObject {
         self.swift = FileProperties.UpdateTemplateResult(templateId: templateId)
     }
 
-    let swift: FileProperties.UpdateTemplateResult
+    public let swift: FileProperties.UpdateTemplateResult
 
     public init(swift: FileProperties.UpdateTemplateResult) {
         self.swift = swift

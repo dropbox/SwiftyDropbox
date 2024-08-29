@@ -59,7 +59,7 @@ public class DBXAccountSetProfilePhotoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAccountSetProfilePhotoError(swift: box.unboxed)
+                routeError = DBXAccountSetProfilePhotoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

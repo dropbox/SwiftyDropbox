@@ -125,7 +125,7 @@ public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXContactsDeleteManualContactsError(swift: box.unboxed)
+                routeError = DBXContactsDeleteManualContactsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

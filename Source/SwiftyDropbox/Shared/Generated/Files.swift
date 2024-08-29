@@ -907,6 +907,8 @@ public class Files {
 
     /// The FileOpsResult struct
     public class FileOpsResult: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileOpsResultSerializer().serialize(self)
         }

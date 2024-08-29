@@ -114,7 +114,7 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersUserFeaturesGetValuesBatchError(swift: box.unboxed)
+                routeError = DBXUsersUserFeaturesGetValuesBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -181,7 +181,7 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersGetAccountError(swift: box.unboxed)
+                routeError = DBXUsersGetAccountError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -248,7 +248,7 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersGetAccountBatchError(swift: box.unboxed)
+                routeError = DBXUsersGetAccountBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

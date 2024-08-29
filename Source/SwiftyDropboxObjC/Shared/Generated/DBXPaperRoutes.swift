@@ -45,7 +45,7 @@ public class DBXPaperDocsArchiveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -108,7 +108,7 @@ public class DBXPaperDocsCreateUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperPaperDocCreateError(swift: box.unboxed)
+                routeError = DBXPaperPaperDocCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -181,7 +181,7 @@ public class DBXPaperDocsDownloadDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -256,7 +256,7 @@ public class DBXPaperDocsDownloadDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -331,7 +331,7 @@ public class DBXPaperDocsFolderUsersListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -398,7 +398,7 @@ public class DBXPaperDocsFolderUsersListContinueRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperListUsersCursorError(swift: box.unboxed)
+                routeError = DBXPaperListUsersCursorError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -465,7 +465,7 @@ public class DBXPaperDocsGetFolderInfoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -588,7 +588,7 @@ public class DBXPaperDocsListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperListDocsCursorError(swift: box.unboxed)
+                routeError = DBXPaperListDocsCursorError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -655,7 +655,7 @@ public class DBXPaperDocsPermanentlyDeleteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -718,7 +718,7 @@ public class DBXPaperDocsSharingPolicyGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -785,7 +785,7 @@ public class DBXPaperDocsSharingPolicySetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -848,7 +848,7 @@ public class DBXPaperDocsUpdateUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperPaperDocUpdateError(swift: box.unboxed)
+                routeError = DBXPaperPaperDocUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -921,7 +921,7 @@ public class DBXPaperDocsUsersAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -988,7 +988,7 @@ public class DBXPaperDocsUsersListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1055,7 +1055,7 @@ public class DBXPaperDocsUsersListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperListUsersCursorError(swift: box.unboxed)
+                routeError = DBXPaperListUsersCursorError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1122,7 +1122,7 @@ public class DBXPaperDocsUsersRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                routeError = DBXPaperDocLookupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1185,7 +1185,7 @@ public class DBXPaperFoldersCreateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXPaperPaperFolderCreateError(swift: box.unboxed)
+                routeError = DBXPaperPaperFolderCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

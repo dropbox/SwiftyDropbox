@@ -22,7 +22,7 @@ public class DBXCheckEchoArg: NSObject {
         self.swift = Check.EchoArg(query: query)
     }
 
-    let swift: Check.EchoArg
+    public let swift: Check.EchoArg
 
     public init(swift: Check.EchoArg) {
         self.swift = swift
@@ -44,7 +44,7 @@ public class DBXCheckEchoResult: NSObject {
         self.swift = Check.EchoResult(result: result)
     }
 
-    let swift: Check.EchoResult
+    public let swift: Check.EchoResult
 
     public init(swift: Check.EchoResult) {
         self.swift = swift

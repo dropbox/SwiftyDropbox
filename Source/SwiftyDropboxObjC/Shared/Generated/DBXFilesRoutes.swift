@@ -2403,7 +2403,7 @@ public class DBXFilesAlphaGetMetadataRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesAlphaGetMetadataError(swift: box.unboxed)
+                routeError = DBXFilesAlphaGetMetadataError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2470,7 +2470,7 @@ public class DBXFilesAlphaUploadUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadError(swift: box.unboxed)
+                routeError = DBXFilesUploadError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2543,7 +2543,7 @@ public class DBXFilesCopyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                routeError = DBXFilesRelocationError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2610,7 +2610,7 @@ public class DBXFilesCopyRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                routeError = DBXFilesRelocationError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2789,7 +2789,7 @@ public class DBXFilesCopyBatchCheckRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2856,7 +2856,7 @@ public class DBXFilesCopyBatchCheckRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2923,7 +2923,7 @@ public class DBXFilesCopyReferenceGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesGetCopyReferenceError(swift: box.unboxed)
+                routeError = DBXFilesGetCopyReferenceError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2990,7 +2990,7 @@ public class DBXFilesCopyReferenceSaveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesSaveCopyReferenceError(swift: box.unboxed)
+                routeError = DBXFilesSaveCopyReferenceError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3057,7 +3057,7 @@ public class DBXFilesCreateFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesCreateFolderError(swift: box.unboxed)
+                routeError = DBXFilesCreateFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3124,7 +3124,7 @@ public class DBXFilesCreateFolderRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesCreateFolderError(swift: box.unboxed)
+                routeError = DBXFilesCreateFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3247,7 +3247,7 @@ public class DBXFilesCreateFolderBatchCheckRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3314,7 +3314,7 @@ public class DBXFilesDeleteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDeleteError(swift: box.unboxed)
+                routeError = DBXFilesDeleteError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3381,7 +3381,7 @@ public class DBXFilesDeleteRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDeleteError(swift: box.unboxed)
+                routeError = DBXFilesDeleteError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3504,7 +3504,7 @@ public class DBXFilesDeleteBatchCheckRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3571,7 +3571,7 @@ public class DBXFilesDownloadDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDownloadError(swift: box.unboxed)
+                routeError = DBXFilesDownloadError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3646,7 +3646,7 @@ public class DBXFilesDownloadDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDownloadError(swift: box.unboxed)
+                routeError = DBXFilesDownloadError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3721,7 +3721,7 @@ public class DBXFilesDownloadZipDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDownloadZipError(swift: box.unboxed)
+                routeError = DBXFilesDownloadZipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3796,7 +3796,7 @@ public class DBXFilesDownloadZipDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDownloadZipError(swift: box.unboxed)
+                routeError = DBXFilesDownloadZipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3871,7 +3871,7 @@ public class DBXFilesExportDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesExportError(swift: box.unboxed)
+                routeError = DBXFilesExportError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3946,7 +3946,7 @@ public class DBXFilesExportDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesExportError(swift: box.unboxed)
+                routeError = DBXFilesExportError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4021,7 +4021,7 @@ public class DBXFilesGetFileLockBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesLockFileError(swift: box.unboxed)
+                routeError = DBXFilesLockFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4088,7 +4088,7 @@ public class DBXFilesGetMetadataRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesGetMetadataError(swift: box.unboxed)
+                routeError = DBXFilesGetMetadataError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4155,7 +4155,7 @@ public class DBXFilesGetPreviewDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesPreviewError(swift: box.unboxed)
+                routeError = DBXFilesPreviewError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4230,7 +4230,7 @@ public class DBXFilesGetPreviewDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesPreviewError(swift: box.unboxed)
+                routeError = DBXFilesPreviewError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4305,7 +4305,7 @@ public class DBXFilesGetTemporaryLinkRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesGetTemporaryLinkError(swift: box.unboxed)
+                routeError = DBXFilesGetTemporaryLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4428,7 +4428,7 @@ public class DBXFilesGetThumbnailDownloadRequestFile: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesThumbnailError(swift: box.unboxed)
+                routeError = DBXFilesThumbnailError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4503,7 +4503,7 @@ public class DBXFilesGetThumbnailDownloadRequestMemory: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesThumbnailError(swift: box.unboxed)
+                routeError = DBXFilesThumbnailError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4578,7 +4578,7 @@ public class DBXFilesGetThumbnailDownloadRequestFileV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesThumbnailV2Error(swift: box.unboxed)
+                routeError = DBXFilesThumbnailV2Error.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4653,7 +4653,7 @@ public class DBXFilesGetThumbnailDownloadRequestMemoryV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesThumbnailV2Error(swift: box.unboxed)
+                routeError = DBXFilesThumbnailV2Error.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4728,7 +4728,7 @@ public class DBXFilesGetThumbnailBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesGetThumbnailBatchError(swift: box.unboxed)
+                routeError = DBXFilesGetThumbnailBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4795,7 +4795,7 @@ public class DBXFilesListFolderRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesListFolderError(swift: box.unboxed)
+                routeError = DBXFilesListFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4862,7 +4862,7 @@ public class DBXFilesListFolderContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesListFolderContinueError(swift: box.unboxed)
+                routeError = DBXFilesListFolderContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4929,7 +4929,7 @@ public class DBXFilesListFolderGetLatestCursorRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesListFolderError(swift: box.unboxed)
+                routeError = DBXFilesListFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4996,7 +4996,7 @@ public class DBXFilesListFolderLongpollRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesListFolderLongpollError(swift: box.unboxed)
+                routeError = DBXFilesListFolderLongpollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5063,7 +5063,7 @@ public class DBXFilesListRevisionsRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesListRevisionsError(swift: box.unboxed)
+                routeError = DBXFilesListRevisionsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5130,7 +5130,7 @@ public class DBXFilesLockFileBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesLockFileError(swift: box.unboxed)
+                routeError = DBXFilesLockFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5197,7 +5197,7 @@ public class DBXFilesMoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                routeError = DBXFilesRelocationError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5264,7 +5264,7 @@ public class DBXFilesMoveRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRelocationError(swift: box.unboxed)
+                routeError = DBXFilesRelocationError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5443,7 +5443,7 @@ public class DBXFilesMoveBatchCheckRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5510,7 +5510,7 @@ public class DBXFilesMoveBatchCheckRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5577,7 +5577,7 @@ public class DBXFilesPaperCreateUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesPaperCreateError(swift: box.unboxed)
+                routeError = DBXFilesPaperCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5650,7 +5650,7 @@ public class DBXFilesPaperUpdateUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesPaperUpdateError(swift: box.unboxed)
+                routeError = DBXFilesPaperUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5723,7 +5723,7 @@ public class DBXFilesPermanentlyDeleteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesDeleteError(swift: box.unboxed)
+                routeError = DBXFilesDeleteError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5786,7 +5786,7 @@ public class DBXFilesPropertiesAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesAddPropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesAddPropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5849,7 +5849,7 @@ public class DBXFilesPropertiesOverwriteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesInvalidPropertyGroupError(swift: box.unboxed)
+                routeError = DBXFilePropertiesInvalidPropertyGroupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5912,7 +5912,7 @@ public class DBXFilesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesRemovePropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesRemovePropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5975,7 +5975,7 @@ public class DBXFilesPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6042,7 +6042,7 @@ public class DBXFilesPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6109,7 +6109,7 @@ public class DBXFilesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesUpdatePropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesUpdatePropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6172,7 +6172,7 @@ public class DBXFilesRestoreRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRestoreError(swift: box.unboxed)
+                routeError = DBXFilesRestoreError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6239,7 +6239,7 @@ public class DBXFilesSaveUrlRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesSaveUrlError(swift: box.unboxed)
+                routeError = DBXFilesSaveUrlError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6306,7 +6306,7 @@ public class DBXFilesSaveUrlCheckJobStatusRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6373,7 +6373,7 @@ public class DBXFilesSearchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesSearchError(swift: box.unboxed)
+                routeError = DBXFilesSearchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6440,7 +6440,7 @@ public class DBXFilesSearchRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesSearchError(swift: box.unboxed)
+                routeError = DBXFilesSearchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6507,7 +6507,7 @@ public class DBXFilesSearchContinueRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesSearchError(swift: box.unboxed)
+                routeError = DBXFilesSearchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6574,7 +6574,7 @@ public class DBXFilesTagsAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesAddTagError(swift: box.unboxed)
+                routeError = DBXFilesAddTagError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6637,7 +6637,7 @@ public class DBXFilesTagsGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesBaseTagError(swift: box.unboxed)
+                routeError = DBXFilesBaseTagError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6704,7 +6704,7 @@ public class DBXFilesTagsRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesRemoveTagError(swift: box.unboxed)
+                routeError = DBXFilesRemoveTagError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6767,7 +6767,7 @@ public class DBXFilesUnlockFileBatchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesLockFileError(swift: box.unboxed)
+                routeError = DBXFilesLockFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6834,7 +6834,7 @@ public class DBXFilesUploadUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadError(swift: box.unboxed)
+                routeError = DBXFilesUploadError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6907,7 +6907,7 @@ public class DBXFilesUploadSessionAppendUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadSessionAppendError(swift: box.unboxed)
+                routeError = DBXFilesUploadSessionAppendError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6976,7 +6976,7 @@ public class DBXFilesUploadSessionAppendUploadRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadSessionAppendError(swift: box.unboxed)
+                routeError = DBXFilesUploadSessionAppendError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7045,7 +7045,7 @@ public class DBXFilesUploadSessionFinishUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadSessionFinishError(swift: box.unboxed)
+                routeError = DBXFilesUploadSessionFinishError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7230,7 +7230,7 @@ public class DBXFilesUploadSessionFinishBatchCheckRpcRequest: NSObject, DBXReque
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7297,7 +7297,7 @@ public class DBXFilesUploadSessionStartUploadRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilesUploadSessionStartError(swift: box.unboxed)
+                routeError = DBXFilesUploadSessionStartError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

@@ -12768,6 +12768,8 @@ public class Team {
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
     public class SharingAllowlistAddResponse: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharingAllowlistAddResponseSerializer().serialize(self)
         }
@@ -12937,6 +12939,8 @@ public class Team {
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
     public class SharingAllowlistListError: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharingAllowlistListErrorSerializer().serialize(self)
         }
@@ -13163,6 +13167,8 @@ public class Team {
 
     /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
     public class SharingAllowlistRemoveResponse: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharingAllowlistRemoveResponseSerializer().serialize(self)
         }

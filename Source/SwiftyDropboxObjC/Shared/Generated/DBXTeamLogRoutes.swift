@@ -113,7 +113,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLogGetTeamEventsError(swift: box.unboxed)
+                routeError = DBXTeamLogGetTeamEventsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -180,7 +180,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLogGetTeamEventsContinueError(swift: box.unboxed)
+                routeError = DBXTeamLogGetTeamEventsContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

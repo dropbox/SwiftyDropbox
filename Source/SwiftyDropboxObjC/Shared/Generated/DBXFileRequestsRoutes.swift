@@ -236,7 +236,7 @@ public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsCountFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsCountFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -303,7 +303,7 @@ public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsCreateFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsCreateFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -370,7 +370,7 @@ public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsDeleteFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsDeleteFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -439,7 +439,7 @@ public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsDeleteAllClosedFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsDeleteAllClosedFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -506,7 +506,7 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsGetFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsGetFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -573,7 +573,7 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -640,7 +640,7 @@ public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -707,7 +707,7 @@ public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsContinueError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -774,7 +774,7 @@ public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsUpdateFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsUpdateFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

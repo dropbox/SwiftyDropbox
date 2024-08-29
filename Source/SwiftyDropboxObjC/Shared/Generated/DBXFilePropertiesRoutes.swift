@@ -363,7 +363,7 @@ public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesAddPropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesAddPropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -426,7 +426,7 @@ public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesInvalidPropertyGroupError(swift: box.unboxed)
+                routeError = DBXFilePropertiesInvalidPropertyGroupError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -489,7 +489,7 @@ public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesRemovePropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesRemovePropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -552,7 +552,7 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesPropertiesSearchError(swift: box.unboxed)
+                routeError = DBXFilePropertiesPropertiesSearchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -619,7 +619,7 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesPropertiesSearchContinueError(swift: box.unboxed)
+                routeError = DBXFilePropertiesPropertiesSearchContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -686,7 +686,7 @@ public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesUpdatePropertiesError(swift: box.unboxed)
+                routeError = DBXFilePropertiesUpdatePropertiesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -749,7 +749,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -816,7 +816,7 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -883,7 +883,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -950,7 +950,7 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1017,7 +1017,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1084,7 +1084,7 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1151,7 +1151,7 @@ public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXReq
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1214,7 +1214,7 @@ public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXReq
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1277,7 +1277,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1344,7 +1344,7 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

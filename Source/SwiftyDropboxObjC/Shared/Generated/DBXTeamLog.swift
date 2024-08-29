@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Indicates the method in which the action was performed.
 @objc
 public class DBXTeamLogAccessMethodLogInfo: NSObject {
-    let swift: TeamLog.AccessMethodLogInfo
+    public let swift: TeamLog.AccessMethodLogInfo
 
-    public init(swift: TeamLog.AccessMethodLogInfo) {
+    fileprivate init(swift: TeamLog.AccessMethodLogInfo) {
         self.swift = swift
     }
 
@@ -180,9 +180,9 @@ public class DBXTeamLogAccessMethodLogInfoOther: DBXTeamLogAccessMethodLogInfo {
 /// Objective-C compatible AccountCaptureAvailability union
 @objc
 public class DBXTeamLogAccountCaptureAvailability: NSObject {
-    let swift: TeamLog.AccountCaptureAvailability
+    public let swift: TeamLog.AccountCaptureAvailability
 
-    public init(swift: TeamLog.AccountCaptureAvailability) {
+    fileprivate init(swift: TeamLog.AccountCaptureAvailability) {
         self.swift = swift
     }
 
@@ -251,11 +251,11 @@ public class DBXTeamLogAccountCaptureAvailabilityOther: DBXTeamLogAccountCapture
 public class DBXTeamLogAccountCaptureChangeAvailabilityDetails: NSObject {
     /// New account capture availabilty value.
     @objc
-    public var newValue: DBXTeamLogAccountCaptureAvailability { DBXTeamLogAccountCaptureAvailability(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAccountCaptureAvailability { DBXTeamLogAccountCaptureAvailability.factory(swift: swift.newValue) }
     /// Previous account capture availabilty value. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogAccountCaptureAvailability? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogAccountCaptureAvailability(swift: swift)
+        return DBXTeamLogAccountCaptureAvailability.factory(swift: swift)
     }
 
     @objc
@@ -263,7 +263,7 @@ public class DBXTeamLogAccountCaptureChangeAvailabilityDetails: NSObject {
         self.swift = TeamLog.AccountCaptureChangeAvailabilityDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.AccountCaptureChangeAvailabilityDetails
+    public let swift: TeamLog.AccountCaptureChangeAvailabilityDetails
 
     public init(swift: TeamLog.AccountCaptureChangeAvailabilityDetails) {
         self.swift = swift
@@ -285,7 +285,7 @@ public class DBXTeamLogAccountCaptureChangeAvailabilityType: NSObject {
         self.swift = TeamLog.AccountCaptureChangeAvailabilityType(description_: description_)
     }
 
-    let swift: TeamLog.AccountCaptureChangeAvailabilityType
+    public let swift: TeamLog.AccountCaptureChangeAvailabilityType
 
     public init(swift: TeamLog.AccountCaptureChangeAvailabilityType) {
         self.swift = swift
@@ -300,11 +300,11 @@ public class DBXTeamLogAccountCaptureChangeAvailabilityType: NSObject {
 public class DBXTeamLogAccountCaptureChangePolicyDetails: NSObject {
     /// New account capture policy.
     @objc
-    public var newValue: DBXTeamLogAccountCapturePolicy { DBXTeamLogAccountCapturePolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAccountCapturePolicy { DBXTeamLogAccountCapturePolicy.factory(swift: swift.newValue) }
     /// Previous account capture policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogAccountCapturePolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogAccountCapturePolicy(swift: swift)
+        return DBXTeamLogAccountCapturePolicy.factory(swift: swift)
     }
 
     @objc
@@ -312,7 +312,7 @@ public class DBXTeamLogAccountCaptureChangePolicyDetails: NSObject {
         self.swift = TeamLog.AccountCaptureChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.AccountCaptureChangePolicyDetails
+    public let swift: TeamLog.AccountCaptureChangePolicyDetails
 
     public init(swift: TeamLog.AccountCaptureChangePolicyDetails) {
         self.swift = swift
@@ -334,7 +334,7 @@ public class DBXTeamLogAccountCaptureChangePolicyType: NSObject {
         self.swift = TeamLog.AccountCaptureChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.AccountCaptureChangePolicyType
+    public let swift: TeamLog.AccountCaptureChangePolicyType
 
     public init(swift: TeamLog.AccountCaptureChangePolicyType) {
         self.swift = swift
@@ -356,7 +356,7 @@ public class DBXTeamLogAccountCaptureMigrateAccountDetails: NSObject {
         self.swift = TeamLog.AccountCaptureMigrateAccountDetails(domainName: domainName)
     }
 
-    let swift: TeamLog.AccountCaptureMigrateAccountDetails
+    public let swift: TeamLog.AccountCaptureMigrateAccountDetails
 
     public init(swift: TeamLog.AccountCaptureMigrateAccountDetails) {
         self.swift = swift
@@ -378,7 +378,7 @@ public class DBXTeamLogAccountCaptureMigrateAccountType: NSObject {
         self.swift = TeamLog.AccountCaptureMigrateAccountType(description_: description_)
     }
 
-    let swift: TeamLog.AccountCaptureMigrateAccountType
+    public let swift: TeamLog.AccountCaptureMigrateAccountType
 
     public init(swift: TeamLog.AccountCaptureMigrateAccountType) {
         self.swift = swift
@@ -397,7 +397,7 @@ public class DBXTeamLogAccountCaptureNotificationEmailsSentDetails: NSObject {
     /// Account-capture email notification type.
     @objc
     public var notificationType: DBXTeamLogAccountCaptureNotificationType? { guard let swift = swift.notificationType else { return nil }
-        return DBXTeamLogAccountCaptureNotificationType(swift: swift)
+        return DBXTeamLogAccountCaptureNotificationType.factory(swift: swift)
     }
 
     @objc
@@ -405,7 +405,7 @@ public class DBXTeamLogAccountCaptureNotificationEmailsSentDetails: NSObject {
         self.swift = TeamLog.AccountCaptureNotificationEmailsSentDetails(domainName: domainName, notificationType: notificationType?.swift)
     }
 
-    let swift: TeamLog.AccountCaptureNotificationEmailsSentDetails
+    public let swift: TeamLog.AccountCaptureNotificationEmailsSentDetails
 
     public init(swift: TeamLog.AccountCaptureNotificationEmailsSentDetails) {
         self.swift = swift
@@ -427,7 +427,7 @@ public class DBXTeamLogAccountCaptureNotificationEmailsSentType: NSObject {
         self.swift = TeamLog.AccountCaptureNotificationEmailsSentType(description_: description_)
     }
 
-    let swift: TeamLog.AccountCaptureNotificationEmailsSentType
+    public let swift: TeamLog.AccountCaptureNotificationEmailsSentType
 
     public init(swift: TeamLog.AccountCaptureNotificationEmailsSentType) {
         self.swift = swift
@@ -440,9 +440,9 @@ public class DBXTeamLogAccountCaptureNotificationEmailsSentType: NSObject {
 /// Objective-C compatible AccountCaptureNotificationType union
 @objc
 public class DBXTeamLogAccountCaptureNotificationType: NSObject {
-    let swift: TeamLog.AccountCaptureNotificationType
+    public let swift: TeamLog.AccountCaptureNotificationType
 
-    public init(swift: TeamLog.AccountCaptureNotificationType) {
+    fileprivate init(swift: TeamLog.AccountCaptureNotificationType) {
         self.swift = swift
     }
 
@@ -509,9 +509,9 @@ public class DBXTeamLogAccountCaptureNotificationTypeOther: DBXTeamLogAccountCap
 /// Objective-C compatible AccountCapturePolicy union
 @objc
 public class DBXTeamLogAccountCapturePolicy: NSObject {
-    let swift: TeamLog.AccountCapturePolicy
+    public let swift: TeamLog.AccountCapturePolicy
 
-    public init(swift: TeamLog.AccountCapturePolicy) {
+    fileprivate init(swift: TeamLog.AccountCapturePolicy) {
         self.swift = swift
     }
 
@@ -621,7 +621,7 @@ public class DBXTeamLogAccountCaptureRelinquishAccountDetails: NSObject {
         self.swift = TeamLog.AccountCaptureRelinquishAccountDetails(domainName: domainName)
     }
 
-    let swift: TeamLog.AccountCaptureRelinquishAccountDetails
+    public let swift: TeamLog.AccountCaptureRelinquishAccountDetails
 
     public init(swift: TeamLog.AccountCaptureRelinquishAccountDetails) {
         self.swift = swift
@@ -643,7 +643,7 @@ public class DBXTeamLogAccountCaptureRelinquishAccountType: NSObject {
         self.swift = TeamLog.AccountCaptureRelinquishAccountType(description_: description_)
     }
 
-    let swift: TeamLog.AccountCaptureRelinquishAccountType
+    public let swift: TeamLog.AccountCaptureRelinquishAccountType
 
     public init(swift: TeamLog.AccountCaptureRelinquishAccountType) {
         self.swift = swift
@@ -658,17 +658,17 @@ public class DBXTeamLogAccountCaptureRelinquishAccountType: NSObject {
 public class DBXTeamLogAccountLockOrUnlockedDetails: NSObject {
     /// The previous account status.
     @objc
-    public var previousValue: DBXTeamLogAccountState { DBXTeamLogAccountState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogAccountState { DBXTeamLogAccountState.factory(swift: swift.previousValue) }
     /// The new account status.
     @objc
-    public var newValue: DBXTeamLogAccountState { DBXTeamLogAccountState(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAccountState { DBXTeamLogAccountState.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogAccountState, newValue: DBXTeamLogAccountState) {
         self.swift = TeamLog.AccountLockOrUnlockedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.AccountLockOrUnlockedDetails
+    public let swift: TeamLog.AccountLockOrUnlockedDetails
 
     public init(swift: TeamLog.AccountLockOrUnlockedDetails) {
         self.swift = swift
@@ -690,7 +690,7 @@ public class DBXTeamLogAccountLockOrUnlockedType: NSObject {
         self.swift = TeamLog.AccountLockOrUnlockedType(description_: description_)
     }
 
-    let swift: TeamLog.AccountLockOrUnlockedType
+    public let swift: TeamLog.AccountLockOrUnlockedType
 
     public init(swift: TeamLog.AccountLockOrUnlockedType) {
         self.swift = swift
@@ -703,9 +703,9 @@ public class DBXTeamLogAccountLockOrUnlockedType: NSObject {
 /// Objective-C compatible AccountState union
 @objc
 public class DBXTeamLogAccountState: NSObject {
-    let swift: TeamLog.AccountState
+    public let swift: TeamLog.AccountState
 
-    public init(swift: TeamLog.AccountState) {
+    fileprivate init(swift: TeamLog.AccountState) {
         self.swift = swift
     }
 
@@ -772,16 +772,16 @@ public class DBXTeamLogAccountStateOther: DBXTeamLogAccountState {
 /// Additional information indicating the action taken that caused status change.
 @objc
 public class DBXTeamLogActionDetails: NSObject {
-    let swift: TeamLog.ActionDetails
+    public let swift: TeamLog.ActionDetails
 
-    public init(swift: TeamLog.ActionDetails) {
+    fileprivate init(swift: TeamLog.ActionDetails) {
         self.swift = swift
     }
 
     public static func factory(swift: TeamLog.ActionDetails) -> DBXTeamLogActionDetails {
         switch swift {
         case .removeAction(let swiftArg):
-            let arg = DBXTeamLogMemberRemoveActionType(swift: swiftArg)
+            let arg = DBXTeamLogMemberRemoveActionType.factory(swift: swiftArg)
             return DBXTeamLogActionDetailsRemoveAction(arg)
         case .teamInviteDetails(let swiftArg):
             let arg = DBXTeamLogTeamInviteDetails(swift: swiftArg)
@@ -873,9 +873,9 @@ public class DBXTeamLogActionDetailsOther: DBXTeamLogActionDetails {
 /// The entity who performed the action.
 @objc
 public class DBXTeamLogActorLogInfo: NSObject {
-    let swift: TeamLog.ActorLogInfo
+    public let swift: TeamLog.ActorLogInfo
 
-    public init(swift: TeamLog.ActorLogInfo) {
+    fileprivate init(swift: TeamLog.ActorLogInfo) {
         self.swift = swift
     }
 
@@ -1030,9 +1030,9 @@ public class DBXTeamLogActorLogInfoOther: DBXTeamLogActorLogInfo {
 /// Alert category
 @objc
 public class DBXTeamLogAdminAlertCategoryEnum: NSObject {
-    let swift: TeamLog.AdminAlertCategoryEnum
+    public let swift: TeamLog.AdminAlertCategoryEnum
 
-    public init(swift: TeamLog.AdminAlertCategoryEnum) {
+    fileprivate init(swift: TeamLog.AdminAlertCategoryEnum) {
         self.swift = swift
     }
 
@@ -1184,9 +1184,9 @@ public class DBXTeamLogAdminAlertCategoryEnumOther: DBXTeamLogAdminAlertCategory
 /// Alert state
 @objc
 public class DBXTeamLogAdminAlertGeneralStateEnum: NSObject {
-    let swift: TeamLog.AdminAlertGeneralStateEnum
+    public let swift: TeamLog.AdminAlertGeneralStateEnum
 
-    public init(swift: TeamLog.AdminAlertGeneralStateEnum) {
+    fileprivate init(swift: TeamLog.AdminAlertGeneralStateEnum) {
         self.swift = swift
     }
 
@@ -1304,9 +1304,9 @@ public class DBXTeamLogAdminAlertGeneralStateEnumOther: DBXTeamLogAdminAlertGene
 /// Alert severity
 @objc
 public class DBXTeamLogAdminAlertSeverityEnum: NSObject {
-    let swift: TeamLog.AdminAlertSeverityEnum
+    public let swift: TeamLog.AdminAlertSeverityEnum
 
-    public init(swift: TeamLog.AdminAlertSeverityEnum) {
+    fileprivate init(swift: TeamLog.AdminAlertSeverityEnum) {
         self.swift = swift
     }
 
@@ -1427,13 +1427,13 @@ public class DBXTeamLogAdminAlertingAlertConfiguration: NSObject {
     /// Alert state.
     @objc
     public var alertState: DBXTeamLogAdminAlertingAlertStatePolicy? { guard let swift = swift.alertState else { return nil }
-        return DBXTeamLogAdminAlertingAlertStatePolicy(swift: swift)
+        return DBXTeamLogAdminAlertingAlertStatePolicy.factory(swift: swift)
     }
 
     /// Sensitivity level.
     @objc
     public var sensitivityLevel: DBXTeamLogAdminAlertingAlertSensitivity? { guard let swift = swift.sensitivityLevel else { return nil }
-        return DBXTeamLogAdminAlertingAlertSensitivity(swift: swift)
+        return DBXTeamLogAdminAlertingAlertSensitivity.factory(swift: swift)
     }
 
     /// Recipient settings.
@@ -1466,7 +1466,7 @@ public class DBXTeamLogAdminAlertingAlertConfiguration: NSObject {
         )
     }
 
-    let swift: TeamLog.AdminAlertingAlertConfiguration
+    public let swift: TeamLog.AdminAlertingAlertConfiguration
 
     public init(swift: TeamLog.AdminAlertingAlertConfiguration) {
         self.swift = swift
@@ -1479,9 +1479,9 @@ public class DBXTeamLogAdminAlertingAlertConfiguration: NSObject {
 /// Alert sensitivity
 @objc
 public class DBXTeamLogAdminAlertingAlertSensitivity: NSObject {
-    let swift: TeamLog.AdminAlertingAlertSensitivity
+    public let swift: TeamLog.AdminAlertingAlertSensitivity
 
-    public init(swift: TeamLog.AdminAlertingAlertSensitivity) {
+    fileprivate init(swift: TeamLog.AdminAlertingAlertSensitivity) {
         self.swift = swift
     }
 
@@ -1621,19 +1621,19 @@ public class DBXTeamLogAdminAlertingAlertStateChangedDetails: NSObject {
     public var alertName: String { swift.alertName }
     /// Alert severity.
     @objc
-    public var alertSeverity: DBXTeamLogAdminAlertSeverityEnum { DBXTeamLogAdminAlertSeverityEnum(swift: swift.alertSeverity) }
+    public var alertSeverity: DBXTeamLogAdminAlertSeverityEnum { DBXTeamLogAdminAlertSeverityEnum.factory(swift: swift.alertSeverity) }
     /// Alert category.
     @objc
-    public var alertCategory: DBXTeamLogAdminAlertCategoryEnum { DBXTeamLogAdminAlertCategoryEnum(swift: swift.alertCategory) }
+    public var alertCategory: DBXTeamLogAdminAlertCategoryEnum { DBXTeamLogAdminAlertCategoryEnum.factory(swift: swift.alertCategory) }
     /// Alert ID.
     @objc
     public var alertInstanceId: String { swift.alertInstanceId }
     /// Alert state before the change.
     @objc
-    public var previousValue: DBXTeamLogAdminAlertGeneralStateEnum { DBXTeamLogAdminAlertGeneralStateEnum(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogAdminAlertGeneralStateEnum { DBXTeamLogAdminAlertGeneralStateEnum.factory(swift: swift.previousValue) }
     /// Alert state after the change.
     @objc
-    public var newValue: DBXTeamLogAdminAlertGeneralStateEnum { DBXTeamLogAdminAlertGeneralStateEnum(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAdminAlertGeneralStateEnum { DBXTeamLogAdminAlertGeneralStateEnum.factory(swift: swift.newValue) }
 
     @objc
     public init(
@@ -1654,7 +1654,7 @@ public class DBXTeamLogAdminAlertingAlertStateChangedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.AdminAlertingAlertStateChangedDetails
+    public let swift: TeamLog.AdminAlertingAlertStateChangedDetails
 
     public init(swift: TeamLog.AdminAlertingAlertStateChangedDetails) {
         self.swift = swift
@@ -1676,7 +1676,7 @@ public class DBXTeamLogAdminAlertingAlertStateChangedType: NSObject {
         self.swift = TeamLog.AdminAlertingAlertStateChangedType(description_: description_)
     }
 
-    let swift: TeamLog.AdminAlertingAlertStateChangedType
+    public let swift: TeamLog.AdminAlertingAlertStateChangedType
 
     public init(swift: TeamLog.AdminAlertingAlertStateChangedType) {
         self.swift = swift
@@ -1689,9 +1689,9 @@ public class DBXTeamLogAdminAlertingAlertStateChangedType: NSObject {
 /// Policy for controlling whether an alert can be triggered or not
 @objc
 public class DBXTeamLogAdminAlertingAlertStatePolicy: NSObject {
-    let swift: TeamLog.AdminAlertingAlertStatePolicy
+    public let swift: TeamLog.AdminAlertingAlertStatePolicy
 
-    public init(swift: TeamLog.AdminAlertingAlertStatePolicy) {
+    fileprivate init(swift: TeamLog.AdminAlertingAlertStatePolicy) {
         self.swift = swift
     }
 
@@ -1777,7 +1777,7 @@ public class DBXTeamLogAdminAlertingChangedAlertConfigDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.AdminAlertingChangedAlertConfigDetails
+    public let swift: TeamLog.AdminAlertingChangedAlertConfigDetails
 
     public init(swift: TeamLog.AdminAlertingChangedAlertConfigDetails) {
         self.swift = swift
@@ -1799,7 +1799,7 @@ public class DBXTeamLogAdminAlertingChangedAlertConfigType: NSObject {
         self.swift = TeamLog.AdminAlertingChangedAlertConfigType(description_: description_)
     }
 
-    let swift: TeamLog.AdminAlertingChangedAlertConfigType
+    public let swift: TeamLog.AdminAlertingChangedAlertConfigType
 
     public init(swift: TeamLog.AdminAlertingChangedAlertConfigType) {
         self.swift = swift
@@ -1817,10 +1817,10 @@ public class DBXTeamLogAdminAlertingTriggeredAlertDetails: NSObject {
     public var alertName: String { swift.alertName }
     /// Alert severity.
     @objc
-    public var alertSeverity: DBXTeamLogAdminAlertSeverityEnum { DBXTeamLogAdminAlertSeverityEnum(swift: swift.alertSeverity) }
+    public var alertSeverity: DBXTeamLogAdminAlertSeverityEnum { DBXTeamLogAdminAlertSeverityEnum.factory(swift: swift.alertSeverity) }
     /// Alert category.
     @objc
-    public var alertCategory: DBXTeamLogAdminAlertCategoryEnum { DBXTeamLogAdminAlertCategoryEnum(swift: swift.alertCategory) }
+    public var alertCategory: DBXTeamLogAdminAlertCategoryEnum { DBXTeamLogAdminAlertCategoryEnum.factory(swift: swift.alertCategory) }
     /// Alert ID.
     @objc
     public var alertInstanceId: String { swift.alertInstanceId }
@@ -1835,7 +1835,7 @@ public class DBXTeamLogAdminAlertingTriggeredAlertDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.AdminAlertingTriggeredAlertDetails
+    public let swift: TeamLog.AdminAlertingTriggeredAlertDetails
 
     public init(swift: TeamLog.AdminAlertingTriggeredAlertDetails) {
         self.swift = swift
@@ -1857,7 +1857,7 @@ public class DBXTeamLogAdminAlertingTriggeredAlertType: NSObject {
         self.swift = TeamLog.AdminAlertingTriggeredAlertType(description_: description_)
     }
 
-    let swift: TeamLog.AdminAlertingTriggeredAlertType
+    public let swift: TeamLog.AdminAlertingTriggeredAlertType
 
     public init(swift: TeamLog.AdminAlertingTriggeredAlertType) {
         self.swift = swift
@@ -1870,9 +1870,9 @@ public class DBXTeamLogAdminAlertingTriggeredAlertType: NSObject {
 /// Objective-C compatible AdminConsoleAppPermission union
 @objc
 public class DBXTeamLogAdminConsoleAppPermission: NSObject {
-    let swift: TeamLog.AdminConsoleAppPermission
+    public let swift: TeamLog.AdminConsoleAppPermission
 
-    public init(swift: TeamLog.AdminConsoleAppPermission) {
+    fileprivate init(swift: TeamLog.AdminConsoleAppPermission) {
         self.swift = swift
     }
 
@@ -1939,9 +1939,9 @@ public class DBXTeamLogAdminConsoleAppPermissionOther: DBXTeamLogAdminConsoleApp
 /// Objective-C compatible AdminConsoleAppPolicy union
 @objc
 public class DBXTeamLogAdminConsoleAppPolicy: NSObject {
-    let swift: TeamLog.AdminConsoleAppPolicy
+    public let swift: TeamLog.AdminConsoleAppPolicy
 
-    public init(swift: TeamLog.AdminConsoleAppPolicy) {
+    fileprivate init(swift: TeamLog.AdminConsoleAppPolicy) {
         self.swift = swift
     }
 
@@ -2027,17 +2027,17 @@ public class DBXTeamLogAdminConsoleAppPolicyOther: DBXTeamLogAdminConsoleAppPoli
 public class DBXTeamLogAdminEmailRemindersChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogAdminEmailRemindersPolicy { DBXTeamLogAdminEmailRemindersPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAdminEmailRemindersPolicy { DBXTeamLogAdminEmailRemindersPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogAdminEmailRemindersPolicy { DBXTeamLogAdminEmailRemindersPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogAdminEmailRemindersPolicy { DBXTeamLogAdminEmailRemindersPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogAdminEmailRemindersPolicy, previousValue: DBXTeamLogAdminEmailRemindersPolicy) {
         self.swift = TeamLog.AdminEmailRemindersChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.AdminEmailRemindersChangedDetails
+    public let swift: TeamLog.AdminEmailRemindersChangedDetails
 
     public init(swift: TeamLog.AdminEmailRemindersChangedDetails) {
         self.swift = swift
@@ -2059,7 +2059,7 @@ public class DBXTeamLogAdminEmailRemindersChangedType: NSObject {
         self.swift = TeamLog.AdminEmailRemindersChangedType(description_: description_)
     }
 
-    let swift: TeamLog.AdminEmailRemindersChangedType
+    public let swift: TeamLog.AdminEmailRemindersChangedType
 
     public init(swift: TeamLog.AdminEmailRemindersChangedType) {
         self.swift = swift
@@ -2072,9 +2072,9 @@ public class DBXTeamLogAdminEmailRemindersChangedType: NSObject {
 /// Policy for deciding whether team admins receive reminder emails for requests to join the team
 @objc
 public class DBXTeamLogAdminEmailRemindersPolicy: NSObject {
-    let swift: TeamLog.AdminEmailRemindersPolicy
+    public let swift: TeamLog.AdminEmailRemindersPolicy
 
-    public init(swift: TeamLog.AdminEmailRemindersPolicy) {
+    fileprivate init(swift: TeamLog.AdminEmailRemindersPolicy) {
         self.swift = swift
     }
 
@@ -2158,9 +2158,9 @@ public class DBXTeamLogAdminEmailRemindersPolicyOther: DBXTeamLogAdminEmailRemin
 /// Objective-C compatible AdminRole union
 @objc
 public class DBXTeamLogAdminRole: NSObject {
-    let swift: TeamLog.AdminRole
+    public let swift: TeamLog.AdminRole
 
-    public init(swift: TeamLog.AdminRole) {
+    fileprivate init(swift: TeamLog.AdminRole) {
         self.swift = swift
     }
 
@@ -2363,9 +2363,9 @@ public class DBXTeamLogAdminRoleOther: DBXTeamLogAdminRole {
 /// Alert recipients setting type
 @objc
 public class DBXTeamLogAlertRecipientsSettingType: NSObject {
-    let swift: TeamLog.AlertRecipientsSettingType
+    public let swift: TeamLog.AlertRecipientsSettingType
 
-    public init(swift: TeamLog.AlertRecipientsSettingType) {
+    fileprivate init(swift: TeamLog.AlertRecipientsSettingType) {
         self.swift = swift
     }
 
@@ -2466,7 +2466,12 @@ public class DBXTeamLogAlertRecipientsSettingTypeOther: DBXTeamLogAlertRecipient
 /// Disabled downloads.
 @objc
 public class DBXTeamLogAllowDownloadDisabledDetails: NSObject {
-    let swift: TeamLog.AllowDownloadDisabledDetails
+    public override init() {
+        self.swift = TeamLog.AllowDownloadDisabledDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.AllowDownloadDisabledDetails
 
     public init(swift: TeamLog.AllowDownloadDisabledDetails) {
         self.swift = swift
@@ -2488,7 +2493,7 @@ public class DBXTeamLogAllowDownloadDisabledType: NSObject {
         self.swift = TeamLog.AllowDownloadDisabledType(description_: description_)
     }
 
-    let swift: TeamLog.AllowDownloadDisabledType
+    public let swift: TeamLog.AllowDownloadDisabledType
 
     public init(swift: TeamLog.AllowDownloadDisabledType) {
         self.swift = swift
@@ -2501,7 +2506,12 @@ public class DBXTeamLogAllowDownloadDisabledType: NSObject {
 /// Enabled downloads.
 @objc
 public class DBXTeamLogAllowDownloadEnabledDetails: NSObject {
-    let swift: TeamLog.AllowDownloadEnabledDetails
+    public override init() {
+        self.swift = TeamLog.AllowDownloadEnabledDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.AllowDownloadEnabledDetails
 
     public init(swift: TeamLog.AllowDownloadEnabledDetails) {
         self.swift = swift
@@ -2523,7 +2533,7 @@ public class DBXTeamLogAllowDownloadEnabledType: NSObject {
         self.swift = TeamLog.AllowDownloadEnabledType(description_: description_)
     }
 
-    let swift: TeamLog.AllowDownloadEnabledType
+    public let swift: TeamLog.AllowDownloadEnabledType
 
     public init(swift: TeamLog.AllowDownloadEnabledType) {
         self.swift = swift
@@ -2545,7 +2555,7 @@ public class DBXTeamLogApiSessionLogInfo: NSObject {
         self.swift = TeamLog.ApiSessionLogInfo(requestId: requestId)
     }
 
-    let swift: TeamLog.ApiSessionLogInfo
+    public let swift: TeamLog.ApiSessionLogInfo
 
     public init(swift: TeamLog.ApiSessionLogInfo) {
         self.swift = swift
@@ -2569,7 +2579,7 @@ public class DBXTeamLogAppBlockedByPermissionsDetails: NSObject {
         self.swift = TeamLog.AppBlockedByPermissionsDetails(appInfo: appInfo.swift)
     }
 
-    let swift: TeamLog.AppBlockedByPermissionsDetails
+    public let swift: TeamLog.AppBlockedByPermissionsDetails
 
     public init(swift: TeamLog.AppBlockedByPermissionsDetails) {
         self.swift = swift
@@ -2591,7 +2601,7 @@ public class DBXTeamLogAppBlockedByPermissionsType: NSObject {
         self.swift = TeamLog.AppBlockedByPermissionsType(description_: description_)
     }
 
-    let swift: TeamLog.AppBlockedByPermissionsType
+    public let swift: TeamLog.AppBlockedByPermissionsType
 
     public init(swift: TeamLog.AppBlockedByPermissionsType) {
         self.swift = swift
@@ -2615,7 +2625,7 @@ public class DBXTeamLogAppLinkTeamDetails: NSObject {
         self.swift = TeamLog.AppLinkTeamDetails(appInfo: appInfo.swift)
     }
 
-    let swift: TeamLog.AppLinkTeamDetails
+    public let swift: TeamLog.AppLinkTeamDetails
 
     public init(swift: TeamLog.AppLinkTeamDetails) {
         self.swift = swift
@@ -2637,7 +2647,7 @@ public class DBXTeamLogAppLinkTeamType: NSObject {
         self.swift = TeamLog.AppLinkTeamType(description_: description_)
     }
 
-    let swift: TeamLog.AppLinkTeamType
+    public let swift: TeamLog.AppLinkTeamType
 
     public init(swift: TeamLog.AppLinkTeamType) {
         self.swift = swift
@@ -2661,7 +2671,7 @@ public class DBXTeamLogAppLinkUserDetails: NSObject {
         self.swift = TeamLog.AppLinkUserDetails(appInfo: appInfo.swift)
     }
 
-    let swift: TeamLog.AppLinkUserDetails
+    public let swift: TeamLog.AppLinkUserDetails
 
     public init(swift: TeamLog.AppLinkUserDetails) {
         self.swift = swift
@@ -2683,7 +2693,7 @@ public class DBXTeamLogAppLinkUserType: NSObject {
         self.swift = TeamLog.AppLinkUserType(description_: description_)
     }
 
-    let swift: TeamLog.AppLinkUserType
+    public let swift: TeamLog.AppLinkUserType
 
     public init(swift: TeamLog.AppLinkUserType) {
         self.swift = swift
@@ -2708,7 +2718,7 @@ public class DBXTeamLogAppLogInfo: NSObject {
         self.swift = TeamLog.AppLogInfo(appId: appId, displayName: displayName)
     }
 
-    let swift: TeamLog.AppLogInfo
+    public let swift: TeamLog.AppLogInfo
 
     public init(swift: TeamLog.AppLogInfo) {
         self.swift = swift
@@ -2740,15 +2750,15 @@ public class DBXTeamLogAppPermissionsChangedDetails: NSObject {
     /// Permission that was changed.
     @objc
     public var permission: DBXTeamLogAdminConsoleAppPermission? { guard let swift = swift.permission else { return nil }
-        return DBXTeamLogAdminConsoleAppPermission(swift: swift)
+        return DBXTeamLogAdminConsoleAppPermission.factory(swift: swift)
     }
 
     /// Previous policy.
     @objc
-    public var previousValue: DBXTeamLogAdminConsoleAppPolicy { DBXTeamLogAdminConsoleAppPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogAdminConsoleAppPolicy { DBXTeamLogAdminConsoleAppPolicy.factory(swift: swift.previousValue) }
     /// New policy.
     @objc
-    public var newValue: DBXTeamLogAdminConsoleAppPolicy { DBXTeamLogAdminConsoleAppPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogAdminConsoleAppPolicy { DBXTeamLogAdminConsoleAppPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(
@@ -2765,7 +2775,7 @@ public class DBXTeamLogAppPermissionsChangedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.AppPermissionsChangedDetails
+    public let swift: TeamLog.AppPermissionsChangedDetails
 
     public init(swift: TeamLog.AppPermissionsChangedDetails) {
         self.swift = swift
@@ -2787,7 +2797,7 @@ public class DBXTeamLogAppPermissionsChangedType: NSObject {
         self.swift = TeamLog.AppPermissionsChangedType(description_: description_)
     }
 
-    let swift: TeamLog.AppPermissionsChangedType
+    public let swift: TeamLog.AppPermissionsChangedType
 
     public init(swift: TeamLog.AppPermissionsChangedType) {
         self.swift = swift
@@ -2811,7 +2821,7 @@ public class DBXTeamLogAppUnlinkTeamDetails: NSObject {
         self.swift = TeamLog.AppUnlinkTeamDetails(appInfo: appInfo.swift)
     }
 
-    let swift: TeamLog.AppUnlinkTeamDetails
+    public let swift: TeamLog.AppUnlinkTeamDetails
 
     public init(swift: TeamLog.AppUnlinkTeamDetails) {
         self.swift = swift
@@ -2833,7 +2843,7 @@ public class DBXTeamLogAppUnlinkTeamType: NSObject {
         self.swift = TeamLog.AppUnlinkTeamType(description_: description_)
     }
 
-    let swift: TeamLog.AppUnlinkTeamType
+    public let swift: TeamLog.AppUnlinkTeamType
 
     public init(swift: TeamLog.AppUnlinkTeamType) {
         self.swift = swift
@@ -2857,7 +2867,7 @@ public class DBXTeamLogAppUnlinkUserDetails: NSObject {
         self.swift = TeamLog.AppUnlinkUserDetails(appInfo: appInfo.swift)
     }
 
-    let swift: TeamLog.AppUnlinkUserDetails
+    public let swift: TeamLog.AppUnlinkUserDetails
 
     public init(swift: TeamLog.AppUnlinkUserDetails) {
         self.swift = swift
@@ -2879,7 +2889,7 @@ public class DBXTeamLogAppUnlinkUserType: NSObject {
         self.swift = TeamLog.AppUnlinkUserType(description_: description_)
     }
 
-    let swift: TeamLog.AppUnlinkUserType
+    public let swift: TeamLog.AppUnlinkUserType
 
     public init(swift: TeamLog.AppUnlinkUserType) {
         self.swift = swift
@@ -2892,7 +2902,12 @@ public class DBXTeamLogAppUnlinkUserType: NSObject {
 /// Applied naming convention.
 @objc
 public class DBXTeamLogApplyNamingConventionDetails: NSObject {
-    let swift: TeamLog.ApplyNamingConventionDetails
+    public override init() {
+        self.swift = TeamLog.ApplyNamingConventionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ApplyNamingConventionDetails
 
     public init(swift: TeamLog.ApplyNamingConventionDetails) {
         self.swift = swift
@@ -2914,7 +2929,7 @@ public class DBXTeamLogApplyNamingConventionType: NSObject {
         self.swift = TeamLog.ApplyNamingConventionType(description_: description_)
     }
 
-    let swift: TeamLog.ApplyNamingConventionType
+    public let swift: TeamLog.ApplyNamingConventionType
 
     public init(swift: TeamLog.ApplyNamingConventionType) {
         self.swift = swift
@@ -2927,9 +2942,9 @@ public class DBXTeamLogApplyNamingConventionType: NSObject {
 /// Asset details.
 @objc
 public class DBXTeamLogAssetLogInfo: NSObject {
-    let swift: TeamLog.AssetLogInfo
+    public let swift: TeamLog.AssetLogInfo
 
-    public init(swift: TeamLog.AssetLogInfo) {
+    fileprivate init(swift: TeamLog.AssetLogInfo) {
         self.swift = swift
     }
 
@@ -3072,7 +3087,12 @@ public class DBXTeamLogAssetLogInfoOther: DBXTeamLogAssetLogInfo {
 /// Invited members to activate Backup.
 @objc
 public class DBXTeamLogBackupAdminInvitationSentDetails: NSObject {
-    let swift: TeamLog.BackupAdminInvitationSentDetails
+    public override init() {
+        self.swift = TeamLog.BackupAdminInvitationSentDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.BackupAdminInvitationSentDetails
 
     public init(swift: TeamLog.BackupAdminInvitationSentDetails) {
         self.swift = swift
@@ -3094,7 +3114,7 @@ public class DBXTeamLogBackupAdminInvitationSentType: NSObject {
         self.swift = TeamLog.BackupAdminInvitationSentType(description_: description_)
     }
 
-    let swift: TeamLog.BackupAdminInvitationSentType
+    public let swift: TeamLog.BackupAdminInvitationSentType
 
     public init(swift: TeamLog.BackupAdminInvitationSentType) {
         self.swift = swift
@@ -3107,7 +3127,12 @@ public class DBXTeamLogBackupAdminInvitationSentType: NSObject {
 /// Opened Backup invite.
 @objc
 public class DBXTeamLogBackupInvitationOpenedDetails: NSObject {
-    let swift: TeamLog.BackupInvitationOpenedDetails
+    public override init() {
+        self.swift = TeamLog.BackupInvitationOpenedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.BackupInvitationOpenedDetails
 
     public init(swift: TeamLog.BackupInvitationOpenedDetails) {
         self.swift = swift
@@ -3129,7 +3154,7 @@ public class DBXTeamLogBackupInvitationOpenedType: NSObject {
         self.swift = TeamLog.BackupInvitationOpenedType(description_: description_)
     }
 
-    let swift: TeamLog.BackupInvitationOpenedType
+    public let swift: TeamLog.BackupInvitationOpenedType
 
     public init(swift: TeamLog.BackupInvitationOpenedType) {
         self.swift = swift
@@ -3142,9 +3167,9 @@ public class DBXTeamLogBackupInvitationOpenedType: NSObject {
 /// Backup status
 @objc
 public class DBXTeamLogBackupStatus: NSObject {
-    let swift: TeamLog.BackupStatus
+    public let swift: TeamLog.BackupStatus
 
-    public init(swift: TeamLog.BackupStatus) {
+    fileprivate init(swift: TeamLog.BackupStatus) {
         self.swift = swift
     }
 
@@ -3226,7 +3251,7 @@ public class DBXTeamLogBinderAddPageDetails: NSObject {
         self.swift = TeamLog.BinderAddPageDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderAddPageDetails
+    public let swift: TeamLog.BinderAddPageDetails
 
     public init(swift: TeamLog.BinderAddPageDetails) {
         self.swift = swift
@@ -3248,7 +3273,7 @@ public class DBXTeamLogBinderAddPageType: NSObject {
         self.swift = TeamLog.BinderAddPageType(description_: description_)
     }
 
-    let swift: TeamLog.BinderAddPageType
+    public let swift: TeamLog.BinderAddPageType
 
     public init(swift: TeamLog.BinderAddPageType) {
         self.swift = swift
@@ -3276,7 +3301,7 @@ public class DBXTeamLogBinderAddSectionDetails: NSObject {
         self.swift = TeamLog.BinderAddSectionDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderAddSectionDetails
+    public let swift: TeamLog.BinderAddSectionDetails
 
     public init(swift: TeamLog.BinderAddSectionDetails) {
         self.swift = swift
@@ -3298,7 +3323,7 @@ public class DBXTeamLogBinderAddSectionType: NSObject {
         self.swift = TeamLog.BinderAddSectionType(description_: description_)
     }
 
-    let swift: TeamLog.BinderAddSectionType
+    public let swift: TeamLog.BinderAddSectionType
 
     public init(swift: TeamLog.BinderAddSectionType) {
         self.swift = swift
@@ -3326,7 +3351,7 @@ public class DBXTeamLogBinderRemovePageDetails: NSObject {
         self.swift = TeamLog.BinderRemovePageDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderRemovePageDetails
+    public let swift: TeamLog.BinderRemovePageDetails
 
     public init(swift: TeamLog.BinderRemovePageDetails) {
         self.swift = swift
@@ -3348,7 +3373,7 @@ public class DBXTeamLogBinderRemovePageType: NSObject {
         self.swift = TeamLog.BinderRemovePageType(description_: description_)
     }
 
-    let swift: TeamLog.BinderRemovePageType
+    public let swift: TeamLog.BinderRemovePageType
 
     public init(swift: TeamLog.BinderRemovePageType) {
         self.swift = swift
@@ -3376,7 +3401,7 @@ public class DBXTeamLogBinderRemoveSectionDetails: NSObject {
         self.swift = TeamLog.BinderRemoveSectionDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderRemoveSectionDetails
+    public let swift: TeamLog.BinderRemoveSectionDetails
 
     public init(swift: TeamLog.BinderRemoveSectionDetails) {
         self.swift = swift
@@ -3398,7 +3423,7 @@ public class DBXTeamLogBinderRemoveSectionType: NSObject {
         self.swift = TeamLog.BinderRemoveSectionType(description_: description_)
     }
 
-    let swift: TeamLog.BinderRemoveSectionType
+    public let swift: TeamLog.BinderRemoveSectionType
 
     public init(swift: TeamLog.BinderRemoveSectionType) {
         self.swift = swift
@@ -3434,7 +3459,7 @@ public class DBXTeamLogBinderRenamePageDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.BinderRenamePageDetails
+    public let swift: TeamLog.BinderRenamePageDetails
 
     public init(swift: TeamLog.BinderRenamePageDetails) {
         self.swift = swift
@@ -3456,7 +3481,7 @@ public class DBXTeamLogBinderRenamePageType: NSObject {
         self.swift = TeamLog.BinderRenamePageType(description_: description_)
     }
 
-    let swift: TeamLog.BinderRenamePageType
+    public let swift: TeamLog.BinderRenamePageType
 
     public init(swift: TeamLog.BinderRenamePageType) {
         self.swift = swift
@@ -3492,7 +3517,7 @@ public class DBXTeamLogBinderRenameSectionDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.BinderRenameSectionDetails
+    public let swift: TeamLog.BinderRenameSectionDetails
 
     public init(swift: TeamLog.BinderRenameSectionDetails) {
         self.swift = swift
@@ -3514,7 +3539,7 @@ public class DBXTeamLogBinderRenameSectionType: NSObject {
         self.swift = TeamLog.BinderRenameSectionType(description_: description_)
     }
 
-    let swift: TeamLog.BinderRenameSectionType
+    public let swift: TeamLog.BinderRenameSectionType
 
     public init(swift: TeamLog.BinderRenameSectionType) {
         self.swift = swift
@@ -3542,7 +3567,7 @@ public class DBXTeamLogBinderReorderPageDetails: NSObject {
         self.swift = TeamLog.BinderReorderPageDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderReorderPageDetails
+    public let swift: TeamLog.BinderReorderPageDetails
 
     public init(swift: TeamLog.BinderReorderPageDetails) {
         self.swift = swift
@@ -3564,7 +3589,7 @@ public class DBXTeamLogBinderReorderPageType: NSObject {
         self.swift = TeamLog.BinderReorderPageType(description_: description_)
     }
 
-    let swift: TeamLog.BinderReorderPageType
+    public let swift: TeamLog.BinderReorderPageType
 
     public init(swift: TeamLog.BinderReorderPageType) {
         self.swift = swift
@@ -3592,7 +3617,7 @@ public class DBXTeamLogBinderReorderSectionDetails: NSObject {
         self.swift = TeamLog.BinderReorderSectionDetails(eventUuid: eventUuid, docTitle: docTitle, binderItemName: binderItemName)
     }
 
-    let swift: TeamLog.BinderReorderSectionDetails
+    public let swift: TeamLog.BinderReorderSectionDetails
 
     public init(swift: TeamLog.BinderReorderSectionDetails) {
         self.swift = swift
@@ -3614,7 +3639,7 @@ public class DBXTeamLogBinderReorderSectionType: NSObject {
         self.swift = TeamLog.BinderReorderSectionType(description_: description_)
     }
 
-    let swift: TeamLog.BinderReorderSectionType
+    public let swift: TeamLog.BinderReorderSectionType
 
     public init(swift: TeamLog.BinderReorderSectionType) {
         self.swift = swift
@@ -3627,9 +3652,9 @@ public class DBXTeamLogBinderReorderSectionType: NSObject {
 /// Policy for controlling if team members can activate camera uploads
 @objc
 public class DBXTeamLogCameraUploadsPolicy: NSObject {
-    let swift: TeamLog.CameraUploadsPolicy
+    public let swift: TeamLog.CameraUploadsPolicy
 
-    public init(swift: TeamLog.CameraUploadsPolicy) {
+    fileprivate init(swift: TeamLog.CameraUploadsPolicy) {
         self.swift = swift
     }
 
@@ -3698,17 +3723,17 @@ public class DBXTeamLogCameraUploadsPolicyOther: DBXTeamLogCameraUploadsPolicy {
 public class DBXTeamLogCameraUploadsPolicyChangedDetails: NSObject {
     /// New camera uploads setting.
     @objc
-    public var newValue: DBXTeamLogCameraUploadsPolicy { DBXTeamLogCameraUploadsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogCameraUploadsPolicy { DBXTeamLogCameraUploadsPolicy.factory(swift: swift.newValue) }
     /// Previous camera uploads setting.
     @objc
-    public var previousValue: DBXTeamLogCameraUploadsPolicy { DBXTeamLogCameraUploadsPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogCameraUploadsPolicy { DBXTeamLogCameraUploadsPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogCameraUploadsPolicy, previousValue: DBXTeamLogCameraUploadsPolicy) {
         self.swift = TeamLog.CameraUploadsPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.CameraUploadsPolicyChangedDetails
+    public let swift: TeamLog.CameraUploadsPolicyChangedDetails
 
     public init(swift: TeamLog.CameraUploadsPolicyChangedDetails) {
         self.swift = swift
@@ -3730,7 +3755,7 @@ public class DBXTeamLogCameraUploadsPolicyChangedType: NSObject {
         self.swift = TeamLog.CameraUploadsPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.CameraUploadsPolicyChangedType
+    public let swift: TeamLog.CameraUploadsPolicyChangedType
 
     public init(swift: TeamLog.CameraUploadsPolicyChangedType) {
         self.swift = swift
@@ -3743,9 +3768,9 @@ public class DBXTeamLogCameraUploadsPolicyChangedType: NSObject {
 /// Policy for deciding whether team users can transcription in Capture
 @objc
 public class DBXTeamLogCaptureTranscriptPolicy: NSObject {
-    let swift: TeamLog.CaptureTranscriptPolicy
+    public let swift: TeamLog.CaptureTranscriptPolicy
 
-    public init(swift: TeamLog.CaptureTranscriptPolicy) {
+    fileprivate init(swift: TeamLog.CaptureTranscriptPolicy) {
         self.swift = swift
     }
 
@@ -3831,17 +3856,17 @@ public class DBXTeamLogCaptureTranscriptPolicyOther: DBXTeamLogCaptureTranscript
 public class DBXTeamLogCaptureTranscriptPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogCaptureTranscriptPolicy { DBXTeamLogCaptureTranscriptPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogCaptureTranscriptPolicy { DBXTeamLogCaptureTranscriptPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogCaptureTranscriptPolicy { DBXTeamLogCaptureTranscriptPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogCaptureTranscriptPolicy { DBXTeamLogCaptureTranscriptPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogCaptureTranscriptPolicy, previousValue: DBXTeamLogCaptureTranscriptPolicy) {
         self.swift = TeamLog.CaptureTranscriptPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.CaptureTranscriptPolicyChangedDetails
+    public let swift: TeamLog.CaptureTranscriptPolicyChangedDetails
 
     public init(swift: TeamLog.CaptureTranscriptPolicyChangedDetails) {
         self.swift = swift
@@ -3863,7 +3888,7 @@ public class DBXTeamLogCaptureTranscriptPolicyChangedType: NSObject {
         self.swift = TeamLog.CaptureTranscriptPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.CaptureTranscriptPolicyChangedType
+    public let swift: TeamLog.CaptureTranscriptPolicyChangedType
 
     public init(swift: TeamLog.CaptureTranscriptPolicyChangedType) {
         self.swift = swift
@@ -3919,7 +3944,7 @@ public class DBXTeamLogCertificate: NSObject {
         )
     }
 
-    let swift: TeamLog.Certificate
+    public let swift: TeamLog.Certificate
 
     public init(swift: TeamLog.Certificate) {
         self.swift = swift
@@ -3933,9 +3958,9 @@ public class DBXTeamLogCertificate: NSObject {
 /// link is updated
 @objc
 public class DBXTeamLogChangeLinkExpirationPolicy: NSObject {
-    let swift: TeamLog.ChangeLinkExpirationPolicy
+    public let swift: TeamLog.ChangeLinkExpirationPolicy
 
-    public init(swift: TeamLog.ChangeLinkExpirationPolicy) {
+    fileprivate init(swift: TeamLog.ChangeLinkExpirationPolicy) {
         self.swift = swift
     }
 
@@ -4004,10 +4029,10 @@ public class DBXTeamLogChangeLinkExpirationPolicyOther: DBXTeamLogChangeLinkExpi
 public class DBXTeamLogChangedEnterpriseAdminRoleDetails: NSObject {
     /// The member&#x2019s previous enterprise admin role.
     @objc
-    public var previousValue: DBXTeamLogFedAdminRole { DBXTeamLogFedAdminRole(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogFedAdminRole { DBXTeamLogFedAdminRole.factory(swift: swift.previousValue) }
     /// The member&#x2019s new enterprise admin role.
     @objc
-    public var newValue: DBXTeamLogFedAdminRole { DBXTeamLogFedAdminRole(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFedAdminRole { DBXTeamLogFedAdminRole.factory(swift: swift.newValue) }
     /// The name of the member&#x2019s team.
     @objc
     public var teamName: String { swift.teamName }
@@ -4017,7 +4042,7 @@ public class DBXTeamLogChangedEnterpriseAdminRoleDetails: NSObject {
         self.swift = TeamLog.ChangedEnterpriseAdminRoleDetails(previousValue: previousValue.swift, newValue: newValue.swift, teamName: teamName)
     }
 
-    let swift: TeamLog.ChangedEnterpriseAdminRoleDetails
+    public let swift: TeamLog.ChangedEnterpriseAdminRoleDetails
 
     public init(swift: TeamLog.ChangedEnterpriseAdminRoleDetails) {
         self.swift = swift
@@ -4039,7 +4064,7 @@ public class DBXTeamLogChangedEnterpriseAdminRoleType: NSObject {
         self.swift = TeamLog.ChangedEnterpriseAdminRoleType(description_: description_)
     }
 
-    let swift: TeamLog.ChangedEnterpriseAdminRoleType
+    public let swift: TeamLog.ChangedEnterpriseAdminRoleType
 
     public init(swift: TeamLog.ChangedEnterpriseAdminRoleType) {
         self.swift = swift
@@ -4054,16 +4079,19 @@ public class DBXTeamLogChangedEnterpriseAdminRoleType: NSObject {
 public class DBXTeamLogChangedEnterpriseConnectedTeamStatusDetails: NSObject {
     /// The preformed change in the team&#x2019s connection status.
     @objc
-    public var action: DBXTeamLogFedHandshakeAction { DBXTeamLogFedHandshakeAction(swift: swift.action) }
+    public var action: DBXTeamLogFedHandshakeAction { DBXTeamLogFedHandshakeAction.factory(swift: swift.action) }
     /// Additional information about the organization or team.
     @objc
-    public var additionalInfo: DBXTeamLogFederationStatusChangeAdditionalInfo { DBXTeamLogFederationStatusChangeAdditionalInfo(swift: swift.additionalInfo) }
+    public var additionalInfo: DBXTeamLogFederationStatusChangeAdditionalInfo {
+        DBXTeamLogFederationStatusChangeAdditionalInfo.factory(swift: swift.additionalInfo)
+    }
+
     /// Previous request state.
     @objc
-    public var previousValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState.factory(swift: swift.previousValue) }
     /// New request state.
     @objc
-    public var newValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState.factory(swift: swift.newValue) }
 
     @objc
     public init(
@@ -4080,7 +4108,7 @@ public class DBXTeamLogChangedEnterpriseConnectedTeamStatusDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.ChangedEnterpriseConnectedTeamStatusDetails
+    public let swift: TeamLog.ChangedEnterpriseConnectedTeamStatusDetails
 
     public init(swift: TeamLog.ChangedEnterpriseConnectedTeamStatusDetails) {
         self.swift = swift
@@ -4102,7 +4130,7 @@ public class DBXTeamLogChangedEnterpriseConnectedTeamStatusType: NSObject {
         self.swift = TeamLog.ChangedEnterpriseConnectedTeamStatusType(description_: description_)
     }
 
-    let swift: TeamLog.ChangedEnterpriseConnectedTeamStatusType
+    public let swift: TeamLog.ChangedEnterpriseConnectedTeamStatusType
 
     public init(swift: TeamLog.ChangedEnterpriseConnectedTeamStatusType) {
         self.swift = swift
@@ -4117,13 +4145,13 @@ public class DBXTeamLogChangedEnterpriseConnectedTeamStatusType: NSObject {
 public class DBXTeamLogClassificationChangePolicyDetails: NSObject {
     /// Previous classification policy.
     @objc
-    public var previousValue: DBXTeamLogClassificationPolicyEnumWrapper { DBXTeamLogClassificationPolicyEnumWrapper(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogClassificationPolicyEnumWrapper { DBXTeamLogClassificationPolicyEnumWrapper.factory(swift: swift.previousValue) }
     /// New classification policy.
     @objc
-    public var newValue: DBXTeamLogClassificationPolicyEnumWrapper { DBXTeamLogClassificationPolicyEnumWrapper(swift: swift.newValue) }
+    public var newValue: DBXTeamLogClassificationPolicyEnumWrapper { DBXTeamLogClassificationPolicyEnumWrapper.factory(swift: swift.newValue) }
     /// Policy type.
     @objc
-    public var classificationType: DBXTeamLogClassificationType { DBXTeamLogClassificationType(swift: swift.classificationType) }
+    public var classificationType: DBXTeamLogClassificationType { DBXTeamLogClassificationType.factory(swift: swift.classificationType) }
 
     @objc
     public init(
@@ -4138,7 +4166,7 @@ public class DBXTeamLogClassificationChangePolicyDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.ClassificationChangePolicyDetails
+    public let swift: TeamLog.ClassificationChangePolicyDetails
 
     public init(swift: TeamLog.ClassificationChangePolicyDetails) {
         self.swift = swift
@@ -4160,7 +4188,7 @@ public class DBXTeamLogClassificationChangePolicyType: NSObject {
         self.swift = TeamLog.ClassificationChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ClassificationChangePolicyType
+    public let swift: TeamLog.ClassificationChangePolicyType
 
     public init(swift: TeamLog.ClassificationChangePolicyType) {
         self.swift = swift
@@ -4173,7 +4201,12 @@ public class DBXTeamLogClassificationChangePolicyType: NSObject {
 /// Created Classification report.
 @objc
 public class DBXTeamLogClassificationCreateReportDetails: NSObject {
-    let swift: TeamLog.ClassificationCreateReportDetails
+    public override init() {
+        self.swift = TeamLog.ClassificationCreateReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ClassificationCreateReportDetails
 
     public init(swift: TeamLog.ClassificationCreateReportDetails) {
         self.swift = swift
@@ -4188,14 +4221,14 @@ public class DBXTeamLogClassificationCreateReportDetails: NSObject {
 public class DBXTeamLogClassificationCreateReportFailDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.ClassificationCreateReportFailDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.ClassificationCreateReportFailDetails
+    public let swift: TeamLog.ClassificationCreateReportFailDetails
 
     public init(swift: TeamLog.ClassificationCreateReportFailDetails) {
         self.swift = swift
@@ -4217,7 +4250,7 @@ public class DBXTeamLogClassificationCreateReportFailType: NSObject {
         self.swift = TeamLog.ClassificationCreateReportFailType(description_: description_)
     }
 
-    let swift: TeamLog.ClassificationCreateReportFailType
+    public let swift: TeamLog.ClassificationCreateReportFailType
 
     public init(swift: TeamLog.ClassificationCreateReportFailType) {
         self.swift = swift
@@ -4239,7 +4272,7 @@ public class DBXTeamLogClassificationCreateReportType: NSObject {
         self.swift = TeamLog.ClassificationCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.ClassificationCreateReportType
+    public let swift: TeamLog.ClassificationCreateReportType
 
     public init(swift: TeamLog.ClassificationCreateReportType) {
         self.swift = swift
@@ -4252,9 +4285,9 @@ public class DBXTeamLogClassificationCreateReportType: NSObject {
 /// Policy for controlling team access to the classification feature
 @objc
 public class DBXTeamLogClassificationPolicyEnumWrapper: NSObject {
-    let swift: TeamLog.ClassificationPolicyEnumWrapper
+    public let swift: TeamLog.ClassificationPolicyEnumWrapper
 
-    public init(swift: TeamLog.ClassificationPolicyEnumWrapper) {
+    fileprivate init(swift: TeamLog.ClassificationPolicyEnumWrapper) {
         self.swift = swift
     }
 
@@ -4355,9 +4388,9 @@ public class DBXTeamLogClassificationPolicyEnumWrapperOther: DBXTeamLogClassific
 /// The type of classification (currently only personal information)
 @objc
 public class DBXTeamLogClassificationType: NSObject {
-    let swift: TeamLog.ClassificationType
+    public let swift: TeamLog.ClassificationType
 
-    public init(swift: TeamLog.ClassificationType) {
+    fileprivate init(swift: TeamLog.ClassificationType) {
         self.swift = swift
     }
 
@@ -4433,7 +4466,7 @@ public class DBXTeamLogCollectionShareDetails: NSObject {
         self.swift = TeamLog.CollectionShareDetails(albumName: albumName)
     }
 
-    let swift: TeamLog.CollectionShareDetails
+    public let swift: TeamLog.CollectionShareDetails
 
     public init(swift: TeamLog.CollectionShareDetails) {
         self.swift = swift
@@ -4455,7 +4488,7 @@ public class DBXTeamLogCollectionShareType: NSObject {
         self.swift = TeamLog.CollectionShareType(description_: description_)
     }
 
-    let swift: TeamLog.CollectionShareType
+    public let swift: TeamLog.CollectionShareType
 
     public init(swift: TeamLog.CollectionShareType) {
         self.swift = swift
@@ -4468,9 +4501,9 @@ public class DBXTeamLogCollectionShareType: NSObject {
 /// Policy for controlling team access to computer backup feature
 @objc
 public class DBXTeamLogComputerBackupPolicy: NSObject {
-    let swift: TeamLog.ComputerBackupPolicy
+    public let swift: TeamLog.ComputerBackupPolicy
 
-    public init(swift: TeamLog.ComputerBackupPolicy) {
+    fileprivate init(swift: TeamLog.ComputerBackupPolicy) {
         self.swift = swift
     }
 
@@ -4556,17 +4589,17 @@ public class DBXTeamLogComputerBackupPolicyOther: DBXTeamLogComputerBackupPolicy
 public class DBXTeamLogComputerBackupPolicyChangedDetails: NSObject {
     /// New computer backup policy.
     @objc
-    public var newValue: DBXTeamLogComputerBackupPolicy { DBXTeamLogComputerBackupPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogComputerBackupPolicy { DBXTeamLogComputerBackupPolicy.factory(swift: swift.newValue) }
     /// Previous computer backup policy.
     @objc
-    public var previousValue: DBXTeamLogComputerBackupPolicy { DBXTeamLogComputerBackupPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogComputerBackupPolicy { DBXTeamLogComputerBackupPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogComputerBackupPolicy, previousValue: DBXTeamLogComputerBackupPolicy) {
         self.swift = TeamLog.ComputerBackupPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ComputerBackupPolicyChangedDetails
+    public let swift: TeamLog.ComputerBackupPolicyChangedDetails
 
     public init(swift: TeamLog.ComputerBackupPolicyChangedDetails) {
         self.swift = swift
@@ -4588,7 +4621,7 @@ public class DBXTeamLogComputerBackupPolicyChangedType: NSObject {
         self.swift = TeamLog.ComputerBackupPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.ComputerBackupPolicyChangedType
+    public let swift: TeamLog.ComputerBackupPolicyChangedType
 
     public init(swift: TeamLog.ComputerBackupPolicyChangedType) {
         self.swift = swift
@@ -4610,7 +4643,7 @@ public class DBXTeamLogConnectedTeamName: NSObject {
         self.swift = TeamLog.ConnectedTeamName(team: team)
     }
 
-    let swift: TeamLog.ConnectedTeamName
+    public let swift: TeamLog.ConnectedTeamName
 
     public init(swift: TeamLog.ConnectedTeamName) {
         self.swift = swift
@@ -4635,7 +4668,7 @@ public class DBXTeamLogContentAdministrationPolicyChangedDetails: NSObject {
         self.swift = TeamLog.ContentAdministrationPolicyChangedDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.ContentAdministrationPolicyChangedDetails
+    public let swift: TeamLog.ContentAdministrationPolicyChangedDetails
 
     public init(swift: TeamLog.ContentAdministrationPolicyChangedDetails) {
         self.swift = swift
@@ -4657,7 +4690,7 @@ public class DBXTeamLogContentAdministrationPolicyChangedType: NSObject {
         self.swift = TeamLog.ContentAdministrationPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.ContentAdministrationPolicyChangedType
+    public let swift: TeamLog.ContentAdministrationPolicyChangedType
 
     public init(swift: TeamLog.ContentAdministrationPolicyChangedType) {
         self.swift = swift
@@ -4670,9 +4703,9 @@ public class DBXTeamLogContentAdministrationPolicyChangedType: NSObject {
 /// Policy for pemanent content deletion
 @objc
 public class DBXTeamLogContentPermanentDeletePolicy: NSObject {
-    let swift: TeamLog.ContentPermanentDeletePolicy
+    public let swift: TeamLog.ContentPermanentDeletePolicy
 
-    public init(swift: TeamLog.ContentPermanentDeletePolicy) {
+    fileprivate init(swift: TeamLog.ContentPermanentDeletePolicy) {
         self.swift = swift
     }
 
@@ -4739,9 +4772,9 @@ public class DBXTeamLogContentPermanentDeletePolicyOther: DBXTeamLogContentPerma
 /// The primary entity on which the action was done.
 @objc
 public class DBXTeamLogContextLogInfo: NSObject {
-    let swift: TeamLog.ContextLogInfo
+    public let swift: TeamLog.ContextLogInfo
 
-    public init(swift: TeamLog.ContextLogInfo) {
+    fileprivate init(swift: TeamLog.ContextLogInfo) {
         self.swift = swift
     }
 
@@ -4896,7 +4929,12 @@ public class DBXTeamLogContextLogInfoOther: DBXTeamLogContextLogInfo {
 /// Created folders.
 @objc
 public class DBXTeamLogCreateFolderDetails: NSObject {
-    let swift: TeamLog.CreateFolderDetails
+    public override init() {
+        self.swift = TeamLog.CreateFolderDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.CreateFolderDetails
 
     public init(swift: TeamLog.CreateFolderDetails) {
         self.swift = swift
@@ -4918,7 +4956,7 @@ public class DBXTeamLogCreateFolderType: NSObject {
         self.swift = TeamLog.CreateFolderType(description_: description_)
     }
 
-    let swift: TeamLog.CreateFolderType
+    public let swift: TeamLog.CreateFolderType
 
     public init(swift: TeamLog.CreateFolderType) {
         self.swift = swift
@@ -4943,7 +4981,7 @@ public class DBXTeamLogCreateTeamInviteLinkDetails: NSObject {
         self.swift = TeamLog.CreateTeamInviteLinkDetails(linkUrl: linkUrl, expiryDate: expiryDate)
     }
 
-    let swift: TeamLog.CreateTeamInviteLinkDetails
+    public let swift: TeamLog.CreateTeamInviteLinkDetails
 
     public init(swift: TeamLog.CreateTeamInviteLinkDetails) {
         self.swift = swift
@@ -4965,7 +5003,7 @@ public class DBXTeamLogCreateTeamInviteLinkType: NSObject {
         self.swift = TeamLog.CreateTeamInviteLinkType(description_: description_)
     }
 
-    let swift: TeamLog.CreateTeamInviteLinkType
+    public let swift: TeamLog.CreateTeamInviteLinkType
 
     public init(swift: TeamLog.CreateTeamInviteLinkType) {
         self.swift = swift
@@ -4980,17 +5018,17 @@ public class DBXTeamLogCreateTeamInviteLinkType: NSObject {
 public class DBXTeamLogDataPlacementRestrictionChangePolicyDetails: NSObject {
     /// Previous placement restriction.
     @objc
-    public var previousValue: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction.factory(swift: swift.previousValue) }
     /// New placement restriction.
     @objc
-    public var newValue: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogPlacementRestriction, newValue: DBXTeamLogPlacementRestriction) {
         self.swift = TeamLog.DataPlacementRestrictionChangePolicyDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.DataPlacementRestrictionChangePolicyDetails
+    public let swift: TeamLog.DataPlacementRestrictionChangePolicyDetails
 
     public init(swift: TeamLog.DataPlacementRestrictionChangePolicyDetails) {
         self.swift = swift
@@ -5012,7 +5050,7 @@ public class DBXTeamLogDataPlacementRestrictionChangePolicyType: NSObject {
         self.swift = TeamLog.DataPlacementRestrictionChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.DataPlacementRestrictionChangePolicyType
+    public let swift: TeamLog.DataPlacementRestrictionChangePolicyType
 
     public init(swift: TeamLog.DataPlacementRestrictionChangePolicyType) {
         self.swift = swift
@@ -5027,14 +5065,14 @@ public class DBXTeamLogDataPlacementRestrictionChangePolicyType: NSObject {
 public class DBXTeamLogDataPlacementRestrictionSatisfyPolicyDetails: NSObject {
     /// Placement restriction.
     @objc
-    public var placementRestriction: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction(swift: swift.placementRestriction) }
+    public var placementRestriction: DBXTeamLogPlacementRestriction { DBXTeamLogPlacementRestriction.factory(swift: swift.placementRestriction) }
 
     @objc
     public init(placementRestriction: DBXTeamLogPlacementRestriction) {
         self.swift = TeamLog.DataPlacementRestrictionSatisfyPolicyDetails(placementRestriction: placementRestriction.swift)
     }
 
-    let swift: TeamLog.DataPlacementRestrictionSatisfyPolicyDetails
+    public let swift: TeamLog.DataPlacementRestrictionSatisfyPolicyDetails
 
     public init(swift: TeamLog.DataPlacementRestrictionSatisfyPolicyDetails) {
         self.swift = swift
@@ -5056,7 +5094,7 @@ public class DBXTeamLogDataPlacementRestrictionSatisfyPolicyType: NSObject {
         self.swift = TeamLog.DataPlacementRestrictionSatisfyPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.DataPlacementRestrictionSatisfyPolicyType
+    public let swift: TeamLog.DataPlacementRestrictionSatisfyPolicyType
 
     public init(swift: TeamLog.DataPlacementRestrictionSatisfyPolicyType) {
         self.swift = swift
@@ -5069,7 +5107,12 @@ public class DBXTeamLogDataPlacementRestrictionSatisfyPolicyType: NSObject {
 /// Requested data residency migration for team data.
 @objc
 public class DBXTeamLogDataResidencyMigrationRequestSuccessfulDetails: NSObject {
-    let swift: TeamLog.DataResidencyMigrationRequestSuccessfulDetails
+    public override init() {
+        self.swift = TeamLog.DataResidencyMigrationRequestSuccessfulDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DataResidencyMigrationRequestSuccessfulDetails
 
     public init(swift: TeamLog.DataResidencyMigrationRequestSuccessfulDetails) {
         self.swift = swift
@@ -5091,7 +5134,7 @@ public class DBXTeamLogDataResidencyMigrationRequestSuccessfulType: NSObject {
         self.swift = TeamLog.DataResidencyMigrationRequestSuccessfulType(description_: description_)
     }
 
-    let swift: TeamLog.DataResidencyMigrationRequestSuccessfulType
+    public let swift: TeamLog.DataResidencyMigrationRequestSuccessfulType
 
     public init(swift: TeamLog.DataResidencyMigrationRequestSuccessfulType) {
         self.swift = swift
@@ -5104,7 +5147,12 @@ public class DBXTeamLogDataResidencyMigrationRequestSuccessfulType: NSObject {
 /// Request for data residency migration for team data has failed.
 @objc
 public class DBXTeamLogDataResidencyMigrationRequestUnsuccessfulDetails: NSObject {
-    let swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulDetails
+    public override init() {
+        self.swift = TeamLog.DataResidencyMigrationRequestUnsuccessfulDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulDetails
 
     public init(swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulDetails) {
         self.swift = swift
@@ -5126,7 +5174,7 @@ public class DBXTeamLogDataResidencyMigrationRequestUnsuccessfulType: NSObject {
         self.swift = TeamLog.DataResidencyMigrationRequestUnsuccessfulType(description_: description_)
     }
 
-    let swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulType
+    public let swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulType
 
     public init(swift: TeamLog.DataResidencyMigrationRequestUnsuccessfulType) {
         self.swift = swift
@@ -5139,9 +5187,9 @@ public class DBXTeamLogDataResidencyMigrationRequestUnsuccessfulType: NSObject {
 /// Policy for the default number of days until an externally shared link expires
 @objc
 public class DBXTeamLogDefaultLinkExpirationDaysPolicy: NSObject {
-    let swift: TeamLog.DefaultLinkExpirationDaysPolicy
+    public let swift: TeamLog.DefaultLinkExpirationDaysPolicy
 
-    public init(swift: TeamLog.DefaultLinkExpirationDaysPolicy) {
+    fileprivate init(swift: TeamLog.DefaultLinkExpirationDaysPolicy) {
         self.swift = swift
     }
 
@@ -5319,7 +5367,7 @@ public class DBXTeamLogDeleteTeamInviteLinkDetails: NSObject {
         self.swift = TeamLog.DeleteTeamInviteLinkDetails(linkUrl: linkUrl)
     }
 
-    let swift: TeamLog.DeleteTeamInviteLinkDetails
+    public let swift: TeamLog.DeleteTeamInviteLinkDetails
 
     public init(swift: TeamLog.DeleteTeamInviteLinkDetails) {
         self.swift = swift
@@ -5341,7 +5389,7 @@ public class DBXTeamLogDeleteTeamInviteLinkType: NSObject {
         self.swift = TeamLog.DeleteTeamInviteLinkType(description_: description_)
     }
 
-    let swift: TeamLog.DeleteTeamInviteLinkType
+    public let swift: TeamLog.DeleteTeamInviteLinkType
 
     public init(swift: TeamLog.DeleteTeamInviteLinkType) {
         self.swift = swift
@@ -5369,7 +5417,7 @@ public class DBXTeamLogDeviceSessionLogInfo: NSObject {
         self.swift = TeamLog.DeviceSessionLogInfo(ipAddress: ipAddress, created: created, updated: updated)
     }
 
-    let swift: TeamLog.DeviceSessionLogInfo
+    public let swift: TeamLog.DeviceSessionLogInfo
 
     public init(swift: TeamLog.DeviceSessionLogInfo) {
         self.swift = swift
@@ -5408,7 +5456,7 @@ public class DBXTeamLogDesktopDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogIn
     public var hostName: String { subSwift.hostName }
     /// The Dropbox desktop client type.
     @objc
-    public var clientType: DBXTeamDesktopPlatform { DBXTeamDesktopPlatform(swift: subSwift.clientType) }
+    public var clientType: DBXTeamDesktopPlatform { DBXTeamDesktopPlatform.factory(swift: subSwift.clientType) }
     /// The Dropbox client version.
     @objc
     public var clientVersion: String? { subSwift.clientVersion }
@@ -5446,7 +5494,7 @@ public class DBXTeamLogDesktopDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogIn
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.DesktopDeviceSessionLogInfo
+    public let subSwift: TeamLog.DesktopDeviceSessionLogInfo
 
     public init(swift: TeamLog.DesktopDeviceSessionLogInfo) {
         self.subSwift = swift
@@ -5469,7 +5517,7 @@ public class DBXTeamLogSessionLogInfo: NSObject {
         self.swift = TeamLog.SessionLogInfo(sessionId: sessionId)
     }
 
-    let swift: TeamLog.SessionLogInfo
+    public let swift: TeamLog.SessionLogInfo
 
     public init(swift: TeamLog.SessionLogInfo) {
         self.swift = swift
@@ -5495,7 +5543,14 @@ public class DBXTeamLogSessionLogInfo: NSObject {
 /// Desktop session.
 @objc
 public class DBXTeamLogDesktopSessionLogInfo: DBXTeamLogSessionLogInfo {
-    let subSwift: TeamLog.DesktopSessionLogInfo
+    @objc
+    public override init(sessionId: String?) {
+        let swift = TeamLog.DesktopSessionLogInfo(sessionId: sessionId)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.DesktopSessionLogInfo
 
     public init(swift: TeamLog.DesktopSessionLogInfo) {
         self.subSwift = swift
@@ -5509,7 +5564,12 @@ public class DBXTeamLogDesktopSessionLogInfo: DBXTeamLogSessionLogInfo {
 /// Added members to device approvals exception list.
 @objc
 public class DBXTeamLogDeviceApprovalsAddExceptionDetails: NSObject {
-    let swift: TeamLog.DeviceApprovalsAddExceptionDetails
+    public override init() {
+        self.swift = TeamLog.DeviceApprovalsAddExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DeviceApprovalsAddExceptionDetails
 
     public init(swift: TeamLog.DeviceApprovalsAddExceptionDetails) {
         self.swift = swift
@@ -5531,7 +5591,7 @@ public class DBXTeamLogDeviceApprovalsAddExceptionType: NSObject {
         self.swift = TeamLog.DeviceApprovalsAddExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsAddExceptionType
+    public let swift: TeamLog.DeviceApprovalsAddExceptionType
 
     public init(swift: TeamLog.DeviceApprovalsAddExceptionType) {
         self.swift = swift
@@ -5547,13 +5607,13 @@ public class DBXTeamLogDeviceApprovalsChangeDesktopPolicyDetails: NSObject {
     /// New desktop device approvals policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamLogDeviceApprovalsPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogDeviceApprovalsPolicy(swift: swift)
+        return DBXTeamLogDeviceApprovalsPolicy.factory(swift: swift)
     }
 
     /// Previous desktop device approvals policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogDeviceApprovalsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogDeviceApprovalsPolicy(swift: swift)
+        return DBXTeamLogDeviceApprovalsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -5561,7 +5621,7 @@ public class DBXTeamLogDeviceApprovalsChangeDesktopPolicyDetails: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeDesktopPolicyDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeDesktopPolicyDetails
+    public let swift: TeamLog.DeviceApprovalsChangeDesktopPolicyDetails
 
     public init(swift: TeamLog.DeviceApprovalsChangeDesktopPolicyDetails) {
         self.swift = swift
@@ -5583,7 +5643,7 @@ public class DBXTeamLogDeviceApprovalsChangeDesktopPolicyType: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeDesktopPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeDesktopPolicyType
+    public let swift: TeamLog.DeviceApprovalsChangeDesktopPolicyType
 
     public init(swift: TeamLog.DeviceApprovalsChangeDesktopPolicyType) {
         self.swift = swift
@@ -5599,13 +5659,13 @@ public class DBXTeamLogDeviceApprovalsChangeMobilePolicyDetails: NSObject {
     /// New mobile device approvals policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamLogDeviceApprovalsPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogDeviceApprovalsPolicy(swift: swift)
+        return DBXTeamLogDeviceApprovalsPolicy.factory(swift: swift)
     }
 
     /// Previous mobile device approvals policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogDeviceApprovalsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogDeviceApprovalsPolicy(swift: swift)
+        return DBXTeamLogDeviceApprovalsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -5613,7 +5673,7 @@ public class DBXTeamLogDeviceApprovalsChangeMobilePolicyDetails: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeMobilePolicyDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeMobilePolicyDetails
+    public let swift: TeamLog.DeviceApprovalsChangeMobilePolicyDetails
 
     public init(swift: TeamLog.DeviceApprovalsChangeMobilePolicyDetails) {
         self.swift = swift
@@ -5635,7 +5695,7 @@ public class DBXTeamLogDeviceApprovalsChangeMobilePolicyType: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeMobilePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeMobilePolicyType
+    public let swift: TeamLog.DeviceApprovalsChangeMobilePolicyType
 
     public init(swift: TeamLog.DeviceApprovalsChangeMobilePolicyType) {
         self.swift = swift
@@ -5651,13 +5711,13 @@ public class DBXTeamLogDeviceApprovalsChangeOverageActionDetails: NSObject {
     /// New over the limits policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamPoliciesRolloutMethod? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamPoliciesRolloutMethod(swift: swift)
+        return DBXTeamPoliciesRolloutMethod.factory(swift: swift)
     }
 
     /// Previous over the limit policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesRolloutMethod? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesRolloutMethod(swift: swift)
+        return DBXTeamPoliciesRolloutMethod.factory(swift: swift)
     }
 
     @objc
@@ -5665,7 +5725,7 @@ public class DBXTeamLogDeviceApprovalsChangeOverageActionDetails: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeOverageActionDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeOverageActionDetails
+    public let swift: TeamLog.DeviceApprovalsChangeOverageActionDetails
 
     public init(swift: TeamLog.DeviceApprovalsChangeOverageActionDetails) {
         self.swift = swift
@@ -5687,7 +5747,7 @@ public class DBXTeamLogDeviceApprovalsChangeOverageActionType: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeOverageActionType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeOverageActionType
+    public let swift: TeamLog.DeviceApprovalsChangeOverageActionType
 
     public init(swift: TeamLog.DeviceApprovalsChangeOverageActionType) {
         self.swift = swift
@@ -5703,13 +5763,13 @@ public class DBXTeamLogDeviceApprovalsChangeUnlinkActionDetails: NSObject {
     /// New device unlink policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamLogDeviceUnlinkPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogDeviceUnlinkPolicy(swift: swift)
+        return DBXTeamLogDeviceUnlinkPolicy.factory(swift: swift)
     }
 
     /// Previous device unlink policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogDeviceUnlinkPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogDeviceUnlinkPolicy(swift: swift)
+        return DBXTeamLogDeviceUnlinkPolicy.factory(swift: swift)
     }
 
     @objc
@@ -5717,7 +5777,7 @@ public class DBXTeamLogDeviceApprovalsChangeUnlinkActionDetails: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeUnlinkActionDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeUnlinkActionDetails
+    public let swift: TeamLog.DeviceApprovalsChangeUnlinkActionDetails
 
     public init(swift: TeamLog.DeviceApprovalsChangeUnlinkActionDetails) {
         self.swift = swift
@@ -5739,7 +5799,7 @@ public class DBXTeamLogDeviceApprovalsChangeUnlinkActionType: NSObject {
         self.swift = TeamLog.DeviceApprovalsChangeUnlinkActionType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsChangeUnlinkActionType
+    public let swift: TeamLog.DeviceApprovalsChangeUnlinkActionType
 
     public init(swift: TeamLog.DeviceApprovalsChangeUnlinkActionType) {
         self.swift = swift
@@ -5752,9 +5812,9 @@ public class DBXTeamLogDeviceApprovalsChangeUnlinkActionType: NSObject {
 /// Objective-C compatible DeviceApprovalsPolicy union
 @objc
 public class DBXTeamLogDeviceApprovalsPolicy: NSObject {
-    let swift: TeamLog.DeviceApprovalsPolicy
+    public let swift: TeamLog.DeviceApprovalsPolicy
 
-    public init(swift: TeamLog.DeviceApprovalsPolicy) {
+    fileprivate init(swift: TeamLog.DeviceApprovalsPolicy) {
         self.swift = swift
     }
 
@@ -5821,7 +5881,12 @@ public class DBXTeamLogDeviceApprovalsPolicyOther: DBXTeamLogDeviceApprovalsPoli
 /// Removed members from device approvals exception list.
 @objc
 public class DBXTeamLogDeviceApprovalsRemoveExceptionDetails: NSObject {
-    let swift: TeamLog.DeviceApprovalsRemoveExceptionDetails
+    public override init() {
+        self.swift = TeamLog.DeviceApprovalsRemoveExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DeviceApprovalsRemoveExceptionDetails
 
     public init(swift: TeamLog.DeviceApprovalsRemoveExceptionDetails) {
         self.swift = swift
@@ -5843,7 +5908,7 @@ public class DBXTeamLogDeviceApprovalsRemoveExceptionType: NSObject {
         self.swift = TeamLog.DeviceApprovalsRemoveExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceApprovalsRemoveExceptionType
+    public let swift: TeamLog.DeviceApprovalsRemoveExceptionType
 
     public init(swift: TeamLog.DeviceApprovalsRemoveExceptionType) {
         self.swift = swift
@@ -5867,7 +5932,7 @@ public class DBXTeamLogDeviceChangeIpDesktopDetails: NSObject {
         self.swift = TeamLog.DeviceChangeIpDesktopDetails(deviceSessionInfo: deviceSessionInfo.swift)
     }
 
-    let swift: TeamLog.DeviceChangeIpDesktopDetails
+    public let swift: TeamLog.DeviceChangeIpDesktopDetails
 
     public init(swift: TeamLog.DeviceChangeIpDesktopDetails) {
         self.swift = swift
@@ -5889,7 +5954,7 @@ public class DBXTeamLogDeviceChangeIpDesktopType: NSObject {
         self.swift = TeamLog.DeviceChangeIpDesktopType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceChangeIpDesktopType
+    public let swift: TeamLog.DeviceChangeIpDesktopType
 
     public init(swift: TeamLog.DeviceChangeIpDesktopType) {
         self.swift = swift
@@ -5913,7 +5978,7 @@ public class DBXTeamLogDeviceChangeIpMobileDetails: NSObject {
         self.swift = TeamLog.DeviceChangeIpMobileDetails(deviceSessionInfo: deviceSessionInfo?.swift)
     }
 
-    let swift: TeamLog.DeviceChangeIpMobileDetails
+    public let swift: TeamLog.DeviceChangeIpMobileDetails
 
     public init(swift: TeamLog.DeviceChangeIpMobileDetails) {
         self.swift = swift
@@ -5935,7 +6000,7 @@ public class DBXTeamLogDeviceChangeIpMobileType: NSObject {
         self.swift = TeamLog.DeviceChangeIpMobileType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceChangeIpMobileType
+    public let swift: TeamLog.DeviceChangeIpMobileType
 
     public init(swift: TeamLog.DeviceChangeIpMobileType) {
         self.swift = swift
@@ -5957,7 +6022,7 @@ public class DBXTeamLogDeviceChangeIpWebDetails: NSObject {
         self.swift = TeamLog.DeviceChangeIpWebDetails(userAgent: userAgent)
     }
 
-    let swift: TeamLog.DeviceChangeIpWebDetails
+    public let swift: TeamLog.DeviceChangeIpWebDetails
 
     public init(swift: TeamLog.DeviceChangeIpWebDetails) {
         self.swift = swift
@@ -5979,7 +6044,7 @@ public class DBXTeamLogDeviceChangeIpWebType: NSObject {
         self.swift = TeamLog.DeviceChangeIpWebType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceChangeIpWebType
+    public let swift: TeamLog.DeviceChangeIpWebType
 
     public init(swift: TeamLog.DeviceChangeIpWebType) {
         self.swift = swift
@@ -6010,7 +6075,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkFailDetails: NSObject {
         self.swift = TeamLog.DeviceDeleteOnUnlinkFailDetails(numFailures: numFailures.int64Value, sessionInfo: sessionInfo?.swift, displayName: displayName)
     }
 
-    let swift: TeamLog.DeviceDeleteOnUnlinkFailDetails
+    public let swift: TeamLog.DeviceDeleteOnUnlinkFailDetails
 
     public init(swift: TeamLog.DeviceDeleteOnUnlinkFailDetails) {
         self.swift = swift
@@ -6032,7 +6097,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkFailType: NSObject {
         self.swift = TeamLog.DeviceDeleteOnUnlinkFailType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceDeleteOnUnlinkFailType
+    public let swift: TeamLog.DeviceDeleteOnUnlinkFailType
 
     public init(swift: TeamLog.DeviceDeleteOnUnlinkFailType) {
         self.swift = swift
@@ -6060,7 +6125,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkSuccessDetails: NSObject {
         self.swift = TeamLog.DeviceDeleteOnUnlinkSuccessDetails(sessionInfo: sessionInfo?.swift, displayName: displayName)
     }
 
-    let swift: TeamLog.DeviceDeleteOnUnlinkSuccessDetails
+    public let swift: TeamLog.DeviceDeleteOnUnlinkSuccessDetails
 
     public init(swift: TeamLog.DeviceDeleteOnUnlinkSuccessDetails) {
         self.swift = swift
@@ -6082,7 +6147,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkSuccessType: NSObject {
         self.swift = TeamLog.DeviceDeleteOnUnlinkSuccessType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceDeleteOnUnlinkSuccessType
+    public let swift: TeamLog.DeviceDeleteOnUnlinkSuccessType
 
     public init(swift: TeamLog.DeviceDeleteOnUnlinkSuccessType) {
         self.swift = swift
@@ -6100,14 +6165,14 @@ public class DBXTeamLogDeviceLinkFailDetails: NSObject {
     public var ipAddress: String? { swift.ipAddress }
     /// A description of the device used while user approval blocked.
     @objc
-    public var deviceType: DBXTeamLogDeviceType { DBXTeamLogDeviceType(swift: swift.deviceType) }
+    public var deviceType: DBXTeamLogDeviceType { DBXTeamLogDeviceType.factory(swift: swift.deviceType) }
 
     @objc
     public init(deviceType: DBXTeamLogDeviceType, ipAddress: String?) {
         self.swift = TeamLog.DeviceLinkFailDetails(deviceType: deviceType.swift, ipAddress: ipAddress)
     }
 
-    let swift: TeamLog.DeviceLinkFailDetails
+    public let swift: TeamLog.DeviceLinkFailDetails
 
     public init(swift: TeamLog.DeviceLinkFailDetails) {
         self.swift = swift
@@ -6129,7 +6194,7 @@ public class DBXTeamLogDeviceLinkFailType: NSObject {
         self.swift = TeamLog.DeviceLinkFailType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceLinkFailType
+    public let swift: TeamLog.DeviceLinkFailType
 
     public init(swift: TeamLog.DeviceLinkFailType) {
         self.swift = swift
@@ -6153,7 +6218,7 @@ public class DBXTeamLogDeviceLinkSuccessDetails: NSObject {
         self.swift = TeamLog.DeviceLinkSuccessDetails(deviceSessionInfo: deviceSessionInfo?.swift)
     }
 
-    let swift: TeamLog.DeviceLinkSuccessDetails
+    public let swift: TeamLog.DeviceLinkSuccessDetails
 
     public init(swift: TeamLog.DeviceLinkSuccessDetails) {
         self.swift = swift
@@ -6175,7 +6240,7 @@ public class DBXTeamLogDeviceLinkSuccessType: NSObject {
         self.swift = TeamLog.DeviceLinkSuccessType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceLinkSuccessType
+    public let swift: TeamLog.DeviceLinkSuccessType
 
     public init(swift: TeamLog.DeviceLinkSuccessType) {
         self.swift = swift
@@ -6188,7 +6253,12 @@ public class DBXTeamLogDeviceLinkSuccessType: NSObject {
 /// Disabled device management.
 @objc
 public class DBXTeamLogDeviceManagementDisabledDetails: NSObject {
-    let swift: TeamLog.DeviceManagementDisabledDetails
+    public override init() {
+        self.swift = TeamLog.DeviceManagementDisabledDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DeviceManagementDisabledDetails
 
     public init(swift: TeamLog.DeviceManagementDisabledDetails) {
         self.swift = swift
@@ -6210,7 +6280,7 @@ public class DBXTeamLogDeviceManagementDisabledType: NSObject {
         self.swift = TeamLog.DeviceManagementDisabledType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceManagementDisabledType
+    public let swift: TeamLog.DeviceManagementDisabledType
 
     public init(swift: TeamLog.DeviceManagementDisabledType) {
         self.swift = swift
@@ -6223,7 +6293,12 @@ public class DBXTeamLogDeviceManagementDisabledType: NSObject {
 /// Enabled device management.
 @objc
 public class DBXTeamLogDeviceManagementEnabledDetails: NSObject {
-    let swift: TeamLog.DeviceManagementEnabledDetails
+    public override init() {
+        self.swift = TeamLog.DeviceManagementEnabledDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DeviceManagementEnabledDetails
 
     public init(swift: TeamLog.DeviceManagementEnabledDetails) {
         self.swift = swift
@@ -6245,7 +6320,7 @@ public class DBXTeamLogDeviceManagementEnabledType: NSObject {
         self.swift = TeamLog.DeviceManagementEnabledType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceManagementEnabledType
+    public let swift: TeamLog.DeviceManagementEnabledType
 
     public init(swift: TeamLog.DeviceManagementEnabledType) {
         self.swift = swift
@@ -6263,10 +6338,10 @@ public class DBXTeamLogDeviceSyncBackupStatusChangedDetails: NSObject {
     public var desktopDeviceSessionInfo: DBXTeamLogDesktopDeviceSessionLogInfo { DBXTeamLogDesktopDeviceSessionLogInfo(swift: swift.desktopDeviceSessionInfo) }
     /// Previous status of computer backup on the device.
     @objc
-    public var previousValue: DBXTeamLogBackupStatus { DBXTeamLogBackupStatus(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogBackupStatus { DBXTeamLogBackupStatus.factory(swift: swift.previousValue) }
     /// Next status of computer backup on the device.
     @objc
-    public var newValue: DBXTeamLogBackupStatus { DBXTeamLogBackupStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamLogBackupStatus { DBXTeamLogBackupStatus.factory(swift: swift.newValue) }
 
     @objc
     public init(desktopDeviceSessionInfo: DBXTeamLogDesktopDeviceSessionLogInfo, previousValue: DBXTeamLogBackupStatus, newValue: DBXTeamLogBackupStatus) {
@@ -6277,7 +6352,7 @@ public class DBXTeamLogDeviceSyncBackupStatusChangedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.DeviceSyncBackupStatusChangedDetails
+    public let swift: TeamLog.DeviceSyncBackupStatusChangedDetails
 
     public init(swift: TeamLog.DeviceSyncBackupStatusChangedDetails) {
         self.swift = swift
@@ -6299,7 +6374,7 @@ public class DBXTeamLogDeviceSyncBackupStatusChangedType: NSObject {
         self.swift = TeamLog.DeviceSyncBackupStatusChangedType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceSyncBackupStatusChangedType
+    public let swift: TeamLog.DeviceSyncBackupStatusChangedType
 
     public init(swift: TeamLog.DeviceSyncBackupStatusChangedType) {
         self.swift = swift
@@ -6312,9 +6387,9 @@ public class DBXTeamLogDeviceSyncBackupStatusChangedType: NSObject {
 /// Objective-C compatible DeviceType union
 @objc
 public class DBXTeamLogDeviceType: NSObject {
-    let swift: TeamLog.DeviceType
+    public let swift: TeamLog.DeviceType
 
-    public init(swift: TeamLog.DeviceType) {
+    fileprivate init(swift: TeamLog.DeviceType) {
         self.swift = swift
     }
 
@@ -6399,7 +6474,7 @@ public class DBXTeamLogDeviceUnlinkDetails: NSObject {
         self.swift = TeamLog.DeviceUnlinkDetails(deleteData: deleteData.boolValue, sessionInfo: sessionInfo?.swift, displayName: displayName)
     }
 
-    let swift: TeamLog.DeviceUnlinkDetails
+    public let swift: TeamLog.DeviceUnlinkDetails
 
     public init(swift: TeamLog.DeviceUnlinkDetails) {
         self.swift = swift
@@ -6412,9 +6487,9 @@ public class DBXTeamLogDeviceUnlinkDetails: NSObject {
 /// Objective-C compatible DeviceUnlinkPolicy union
 @objc
 public class DBXTeamLogDeviceUnlinkPolicy: NSObject {
-    let swift: TeamLog.DeviceUnlinkPolicy
+    public let swift: TeamLog.DeviceUnlinkPolicy
 
-    public init(swift: TeamLog.DeviceUnlinkPolicy) {
+    fileprivate init(swift: TeamLog.DeviceUnlinkPolicy) {
         self.swift = swift
     }
 
@@ -6490,7 +6565,7 @@ public class DBXTeamLogDeviceUnlinkType: NSObject {
         self.swift = TeamLog.DeviceUnlinkType(description_: description_)
     }
 
-    let swift: TeamLog.DeviceUnlinkType
+    public let swift: TeamLog.DeviceUnlinkType
 
     public init(swift: TeamLog.DeviceUnlinkType) {
         self.swift = swift
@@ -6503,7 +6578,12 @@ public class DBXTeamLogDeviceUnlinkType: NSObject {
 /// Added members to directory restrictions list.
 @objc
 public class DBXTeamLogDirectoryRestrictionsAddMembersDetails: NSObject {
-    let swift: TeamLog.DirectoryRestrictionsAddMembersDetails
+    public override init() {
+        self.swift = TeamLog.DirectoryRestrictionsAddMembersDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DirectoryRestrictionsAddMembersDetails
 
     public init(swift: TeamLog.DirectoryRestrictionsAddMembersDetails) {
         self.swift = swift
@@ -6525,7 +6605,7 @@ public class DBXTeamLogDirectoryRestrictionsAddMembersType: NSObject {
         self.swift = TeamLog.DirectoryRestrictionsAddMembersType(description_: description_)
     }
 
-    let swift: TeamLog.DirectoryRestrictionsAddMembersType
+    public let swift: TeamLog.DirectoryRestrictionsAddMembersType
 
     public init(swift: TeamLog.DirectoryRestrictionsAddMembersType) {
         self.swift = swift
@@ -6538,7 +6618,12 @@ public class DBXTeamLogDirectoryRestrictionsAddMembersType: NSObject {
 /// Removed members from directory restrictions list.
 @objc
 public class DBXTeamLogDirectoryRestrictionsRemoveMembersDetails: NSObject {
-    let swift: TeamLog.DirectoryRestrictionsRemoveMembersDetails
+    public override init() {
+        self.swift = TeamLog.DirectoryRestrictionsRemoveMembersDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DirectoryRestrictionsRemoveMembersDetails
 
     public init(swift: TeamLog.DirectoryRestrictionsRemoveMembersDetails) {
         self.swift = swift
@@ -6560,7 +6645,7 @@ public class DBXTeamLogDirectoryRestrictionsRemoveMembersType: NSObject {
         self.swift = TeamLog.DirectoryRestrictionsRemoveMembersType(description_: description_)
     }
 
-    let swift: TeamLog.DirectoryRestrictionsRemoveMembersType
+    public let swift: TeamLog.DirectoryRestrictionsRemoveMembersType
 
     public init(swift: TeamLog.DirectoryRestrictionsRemoveMembersType) {
         self.swift = swift
@@ -6573,7 +6658,12 @@ public class DBXTeamLogDirectoryRestrictionsRemoveMembersType: NSObject {
 /// Disabled domain invites.
 @objc
 public class DBXTeamLogDisabledDomainInvitesDetails: NSObject {
-    let swift: TeamLog.DisabledDomainInvitesDetails
+    public override init() {
+        self.swift = TeamLog.DisabledDomainInvitesDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DisabledDomainInvitesDetails
 
     public init(swift: TeamLog.DisabledDomainInvitesDetails) {
         self.swift = swift
@@ -6595,7 +6685,7 @@ public class DBXTeamLogDisabledDomainInvitesType: NSObject {
         self.swift = TeamLog.DisabledDomainInvitesType(description_: description_)
     }
 
-    let swift: TeamLog.DisabledDomainInvitesType
+    public let swift: TeamLog.DisabledDomainInvitesType
 
     public init(swift: TeamLog.DisabledDomainInvitesType) {
         self.swift = swift
@@ -6608,9 +6698,9 @@ public class DBXTeamLogDisabledDomainInvitesType: NSObject {
 /// Objective-C compatible DispositionActionType union
 @objc
 public class DBXTeamLogDispositionActionType: NSObject {
-    let swift: TeamLog.DispositionActionType
+    public let swift: TeamLog.DispositionActionType
 
-    public init(swift: TeamLog.DispositionActionType) {
+    fileprivate init(swift: TeamLog.DispositionActionType) {
         self.swift = swift
     }
 
@@ -6677,7 +6767,12 @@ public class DBXTeamLogDispositionActionTypeOther: DBXTeamLogDispositionActionTy
 /// Approved user's request to join team.
 @objc
 public class DBXTeamLogDomainInvitesApproveRequestToJoinTeamDetails: NSObject {
-    let swift: TeamLog.DomainInvitesApproveRequestToJoinTeamDetails
+    public override init() {
+        self.swift = TeamLog.DomainInvitesApproveRequestToJoinTeamDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DomainInvitesApproveRequestToJoinTeamDetails
 
     public init(swift: TeamLog.DomainInvitesApproveRequestToJoinTeamDetails) {
         self.swift = swift
@@ -6699,7 +6794,7 @@ public class DBXTeamLogDomainInvitesApproveRequestToJoinTeamType: NSObject {
         self.swift = TeamLog.DomainInvitesApproveRequestToJoinTeamType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesApproveRequestToJoinTeamType
+    public let swift: TeamLog.DomainInvitesApproveRequestToJoinTeamType
 
     public init(swift: TeamLog.DomainInvitesApproveRequestToJoinTeamType) {
         self.swift = swift
@@ -6712,7 +6807,12 @@ public class DBXTeamLogDomainInvitesApproveRequestToJoinTeamType: NSObject {
 /// Declined user's request to join team.
 @objc
 public class DBXTeamLogDomainInvitesDeclineRequestToJoinTeamDetails: NSObject {
-    let swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamDetails
+    public override init() {
+        self.swift = TeamLog.DomainInvitesDeclineRequestToJoinTeamDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamDetails
 
     public init(swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamDetails) {
         self.swift = swift
@@ -6734,7 +6834,7 @@ public class DBXTeamLogDomainInvitesDeclineRequestToJoinTeamType: NSObject {
         self.swift = TeamLog.DomainInvitesDeclineRequestToJoinTeamType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamType
+    public let swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamType
 
     public init(swift: TeamLog.DomainInvitesDeclineRequestToJoinTeamType) {
         self.swift = swift
@@ -6759,7 +6859,7 @@ public class DBXTeamLogDomainInvitesEmailExistingUsersDetails: NSObject {
         self.swift = TeamLog.DomainInvitesEmailExistingUsersDetails(domainName: domainName, numRecipients: numRecipients.uint64Value)
     }
 
-    let swift: TeamLog.DomainInvitesEmailExistingUsersDetails
+    public let swift: TeamLog.DomainInvitesEmailExistingUsersDetails
 
     public init(swift: TeamLog.DomainInvitesEmailExistingUsersDetails) {
         self.swift = swift
@@ -6781,7 +6881,7 @@ public class DBXTeamLogDomainInvitesEmailExistingUsersType: NSObject {
         self.swift = TeamLog.DomainInvitesEmailExistingUsersType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesEmailExistingUsersType
+    public let swift: TeamLog.DomainInvitesEmailExistingUsersType
 
     public init(swift: TeamLog.DomainInvitesEmailExistingUsersType) {
         self.swift = swift
@@ -6794,7 +6894,12 @@ public class DBXTeamLogDomainInvitesEmailExistingUsersType: NSObject {
 /// Requested to join team.
 @objc
 public class DBXTeamLogDomainInvitesRequestToJoinTeamDetails: NSObject {
-    let swift: TeamLog.DomainInvitesRequestToJoinTeamDetails
+    public override init() {
+        self.swift = TeamLog.DomainInvitesRequestToJoinTeamDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DomainInvitesRequestToJoinTeamDetails
 
     public init(swift: TeamLog.DomainInvitesRequestToJoinTeamDetails) {
         self.swift = swift
@@ -6816,7 +6921,7 @@ public class DBXTeamLogDomainInvitesRequestToJoinTeamType: NSObject {
         self.swift = TeamLog.DomainInvitesRequestToJoinTeamType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesRequestToJoinTeamType
+    public let swift: TeamLog.DomainInvitesRequestToJoinTeamType
 
     public init(swift: TeamLog.DomainInvitesRequestToJoinTeamType) {
         self.swift = swift
@@ -6829,7 +6934,12 @@ public class DBXTeamLogDomainInvitesRequestToJoinTeamType: NSObject {
 /// Disabled "Automatically invite new users".
 @objc
 public class DBXTeamLogDomainInvitesSetInviteNewUserPrefToNoDetails: NSObject {
-    let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoDetails
+    public override init() {
+        self.swift = TeamLog.DomainInvitesSetInviteNewUserPrefToNoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoDetails
 
     public init(swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoDetails) {
         self.swift = swift
@@ -6851,7 +6961,7 @@ public class DBXTeamLogDomainInvitesSetInviteNewUserPrefToNoType: NSObject {
         self.swift = TeamLog.DomainInvitesSetInviteNewUserPrefToNoType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoType
+    public let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoType
 
     public init(swift: TeamLog.DomainInvitesSetInviteNewUserPrefToNoType) {
         self.swift = swift
@@ -6864,7 +6974,12 @@ public class DBXTeamLogDomainInvitesSetInviteNewUserPrefToNoType: NSObject {
 /// Enabled "Automatically invite new users".
 @objc
 public class DBXTeamLogDomainInvitesSetInviteNewUserPrefToYesDetails: NSObject {
-    let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesDetails
+    public override init() {
+        self.swift = TeamLog.DomainInvitesSetInviteNewUserPrefToYesDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesDetails
 
     public init(swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesDetails) {
         self.swift = swift
@@ -6886,7 +7001,7 @@ public class DBXTeamLogDomainInvitesSetInviteNewUserPrefToYesType: NSObject {
         self.swift = TeamLog.DomainInvitesSetInviteNewUserPrefToYesType(description_: description_)
     }
 
-    let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesType
+    public let swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesType
 
     public init(swift: TeamLog.DomainInvitesSetInviteNewUserPrefToYesType) {
         self.swift = swift
@@ -6911,7 +7026,7 @@ public class DBXTeamLogDomainVerificationAddDomainFailDetails: NSObject {
         self.swift = TeamLog.DomainVerificationAddDomainFailDetails(domainName: domainName, verificationMethod: verificationMethod)
     }
 
-    let swift: TeamLog.DomainVerificationAddDomainFailDetails
+    public let swift: TeamLog.DomainVerificationAddDomainFailDetails
 
     public init(swift: TeamLog.DomainVerificationAddDomainFailDetails) {
         self.swift = swift
@@ -6933,7 +7048,7 @@ public class DBXTeamLogDomainVerificationAddDomainFailType: NSObject {
         self.swift = TeamLog.DomainVerificationAddDomainFailType(description_: description_)
     }
 
-    let swift: TeamLog.DomainVerificationAddDomainFailType
+    public let swift: TeamLog.DomainVerificationAddDomainFailType
 
     public init(swift: TeamLog.DomainVerificationAddDomainFailType) {
         self.swift = swift
@@ -6958,7 +7073,7 @@ public class DBXTeamLogDomainVerificationAddDomainSuccessDetails: NSObject {
         self.swift = TeamLog.DomainVerificationAddDomainSuccessDetails(domainNames: domainNames, verificationMethod: verificationMethod)
     }
 
-    let swift: TeamLog.DomainVerificationAddDomainSuccessDetails
+    public let swift: TeamLog.DomainVerificationAddDomainSuccessDetails
 
     public init(swift: TeamLog.DomainVerificationAddDomainSuccessDetails) {
         self.swift = swift
@@ -6980,7 +7095,7 @@ public class DBXTeamLogDomainVerificationAddDomainSuccessType: NSObject {
         self.swift = TeamLog.DomainVerificationAddDomainSuccessType(description_: description_)
     }
 
-    let swift: TeamLog.DomainVerificationAddDomainSuccessType
+    public let swift: TeamLog.DomainVerificationAddDomainSuccessType
 
     public init(swift: TeamLog.DomainVerificationAddDomainSuccessType) {
         self.swift = swift
@@ -7002,7 +7117,7 @@ public class DBXTeamLogDomainVerificationRemoveDomainDetails: NSObject {
         self.swift = TeamLog.DomainVerificationRemoveDomainDetails(domainNames: domainNames)
     }
 
-    let swift: TeamLog.DomainVerificationRemoveDomainDetails
+    public let swift: TeamLog.DomainVerificationRemoveDomainDetails
 
     public init(swift: TeamLog.DomainVerificationRemoveDomainDetails) {
         self.swift = swift
@@ -7024,7 +7139,7 @@ public class DBXTeamLogDomainVerificationRemoveDomainType: NSObject {
         self.swift = TeamLog.DomainVerificationRemoveDomainType(description_: description_)
     }
 
-    let swift: TeamLog.DomainVerificationRemoveDomainType
+    public let swift: TeamLog.DomainVerificationRemoveDomainType
 
     public init(swift: TeamLog.DomainVerificationRemoveDomainType) {
         self.swift = swift
@@ -7037,9 +7152,9 @@ public class DBXTeamLogDomainVerificationRemoveDomainType: NSObject {
 /// Shared content downloads policy
 @objc
 public class DBXTeamLogDownloadPolicyType: NSObject {
-    let swift: TeamLog.DownloadPolicyType
+    public let swift: TeamLog.DownloadPolicyType
 
-    public init(swift: TeamLog.DownloadPolicyType) {
+    fileprivate init(swift: TeamLog.DownloadPolicyType) {
         self.swift = swift
     }
 
@@ -7115,7 +7230,7 @@ public class DBXTeamLogDropboxPasswordsExportedDetails: NSObject {
         self.swift = TeamLog.DropboxPasswordsExportedDetails(platform: platform)
     }
 
-    let swift: TeamLog.DropboxPasswordsExportedDetails
+    public let swift: TeamLog.DropboxPasswordsExportedDetails
 
     public init(swift: TeamLog.DropboxPasswordsExportedDetails) {
         self.swift = swift
@@ -7137,7 +7252,7 @@ public class DBXTeamLogDropboxPasswordsExportedType: NSObject {
         self.swift = TeamLog.DropboxPasswordsExportedType(description_: description_)
     }
 
-    let swift: TeamLog.DropboxPasswordsExportedType
+    public let swift: TeamLog.DropboxPasswordsExportedType
 
     public init(swift: TeamLog.DropboxPasswordsExportedType) {
         self.swift = swift
@@ -7162,7 +7277,7 @@ public class DBXTeamLogDropboxPasswordsNewDeviceEnrolledDetails: NSObject {
         self.swift = TeamLog.DropboxPasswordsNewDeviceEnrolledDetails(isFirstDevice: isFirstDevice.boolValue, platform: platform)
     }
 
-    let swift: TeamLog.DropboxPasswordsNewDeviceEnrolledDetails
+    public let swift: TeamLog.DropboxPasswordsNewDeviceEnrolledDetails
 
     public init(swift: TeamLog.DropboxPasswordsNewDeviceEnrolledDetails) {
         self.swift = swift
@@ -7184,7 +7299,7 @@ public class DBXTeamLogDropboxPasswordsNewDeviceEnrolledType: NSObject {
         self.swift = TeamLog.DropboxPasswordsNewDeviceEnrolledType(description_: description_)
     }
 
-    let swift: TeamLog.DropboxPasswordsNewDeviceEnrolledType
+    public let swift: TeamLog.DropboxPasswordsNewDeviceEnrolledType
 
     public init(swift: TeamLog.DropboxPasswordsNewDeviceEnrolledType) {
         self.swift = swift
@@ -7197,9 +7312,9 @@ public class DBXTeamLogDropboxPasswordsNewDeviceEnrolledType: NSObject {
 /// Policy for deciding whether team users can use Dropbox Passwords
 @objc
 public class DBXTeamLogDropboxPasswordsPolicy: NSObject {
-    let swift: TeamLog.DropboxPasswordsPolicy
+    public let swift: TeamLog.DropboxPasswordsPolicy
 
-    public init(swift: TeamLog.DropboxPasswordsPolicy) {
+    fileprivate init(swift: TeamLog.DropboxPasswordsPolicy) {
         self.swift = swift
     }
 
@@ -7285,17 +7400,17 @@ public class DBXTeamLogDropboxPasswordsPolicyOther: DBXTeamLogDropboxPasswordsPo
 public class DBXTeamLogDropboxPasswordsPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogDropboxPasswordsPolicy { DBXTeamLogDropboxPasswordsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogDropboxPasswordsPolicy { DBXTeamLogDropboxPasswordsPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogDropboxPasswordsPolicy { DBXTeamLogDropboxPasswordsPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogDropboxPasswordsPolicy { DBXTeamLogDropboxPasswordsPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogDropboxPasswordsPolicy, previousValue: DBXTeamLogDropboxPasswordsPolicy) {
         self.swift = TeamLog.DropboxPasswordsPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.DropboxPasswordsPolicyChangedDetails
+    public let swift: TeamLog.DropboxPasswordsPolicyChangedDetails
 
     public init(swift: TeamLog.DropboxPasswordsPolicyChangedDetails) {
         self.swift = swift
@@ -7317,7 +7432,7 @@ public class DBXTeamLogDropboxPasswordsPolicyChangedType: NSObject {
         self.swift = TeamLog.DropboxPasswordsPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.DropboxPasswordsPolicyChangedType
+    public let swift: TeamLog.DropboxPasswordsPolicyChangedType
 
     public init(swift: TeamLog.DropboxPasswordsPolicyChangedType) {
         self.swift = swift
@@ -7332,7 +7447,7 @@ public class DBXTeamLogDropboxPasswordsPolicyChangedType: NSObject {
 public class DBXTeamLogDurationLogInfo: NSObject {
     /// Time unit.
     @objc
-    public var unit: DBXTeamLogTimeUnit { DBXTeamLogTimeUnit(swift: swift.unit) }
+    public var unit: DBXTeamLogTimeUnit { DBXTeamLogTimeUnit.factory(swift: swift.unit) }
     /// Amount of time.
     @objc
     public var amount: NSNumber { swift.amount as NSNumber }
@@ -7342,7 +7457,7 @@ public class DBXTeamLogDurationLogInfo: NSObject {
         self.swift = TeamLog.DurationLogInfo(unit: unit.swift, amount: amount.uint64Value)
     }
 
-    let swift: TeamLog.DurationLogInfo
+    public let swift: TeamLog.DurationLogInfo
 
     public init(swift: TeamLog.DurationLogInfo) {
         self.swift = swift
@@ -7355,9 +7470,9 @@ public class DBXTeamLogDurationLogInfo: NSObject {
 /// Policy for deciding whether a team can use Email to Dropbox feature
 @objc
 public class DBXTeamLogEmailIngestPolicy: NSObject {
-    let swift: TeamLog.EmailIngestPolicy
+    public let swift: TeamLog.EmailIngestPolicy
 
-    public init(swift: TeamLog.EmailIngestPolicy) {
+    fileprivate init(swift: TeamLog.EmailIngestPolicy) {
         self.swift = swift
     }
 
@@ -7426,17 +7541,17 @@ public class DBXTeamLogEmailIngestPolicyOther: DBXTeamLogEmailIngestPolicy {
 public class DBXTeamLogEmailIngestPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogEmailIngestPolicy { DBXTeamLogEmailIngestPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogEmailIngestPolicy { DBXTeamLogEmailIngestPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogEmailIngestPolicy { DBXTeamLogEmailIngestPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogEmailIngestPolicy { DBXTeamLogEmailIngestPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogEmailIngestPolicy, previousValue: DBXTeamLogEmailIngestPolicy) {
         self.swift = TeamLog.EmailIngestPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.EmailIngestPolicyChangedDetails
+    public let swift: TeamLog.EmailIngestPolicyChangedDetails
 
     public init(swift: TeamLog.EmailIngestPolicyChangedDetails) {
         self.swift = swift
@@ -7458,7 +7573,7 @@ public class DBXTeamLogEmailIngestPolicyChangedType: NSObject {
         self.swift = TeamLog.EmailIngestPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.EmailIngestPolicyChangedType
+    public let swift: TeamLog.EmailIngestPolicyChangedType
 
     public init(swift: TeamLog.EmailIngestPolicyChangedType) {
         self.swift = swift
@@ -7498,7 +7613,7 @@ public class DBXTeamLogEmailIngestReceiveFileDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.EmailIngestReceiveFileDetails
+    public let swift: TeamLog.EmailIngestReceiveFileDetails
 
     public init(swift: TeamLog.EmailIngestReceiveFileDetails) {
         self.swift = swift
@@ -7520,7 +7635,7 @@ public class DBXTeamLogEmailIngestReceiveFileType: NSObject {
         self.swift = TeamLog.EmailIngestReceiveFileType(description_: description_)
     }
 
-    let swift: TeamLog.EmailIngestReceiveFileType
+    public let swift: TeamLog.EmailIngestReceiveFileType
 
     public init(swift: TeamLog.EmailIngestReceiveFileType) {
         self.swift = swift
@@ -7533,7 +7648,12 @@ public class DBXTeamLogEmailIngestReceiveFileType: NSObject {
 /// Added members to EMM exception list.
 @objc
 public class DBXTeamLogEmmAddExceptionDetails: NSObject {
-    let swift: TeamLog.EmmAddExceptionDetails
+    public override init() {
+        self.swift = TeamLog.EmmAddExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EmmAddExceptionDetails
 
     public init(swift: TeamLog.EmmAddExceptionDetails) {
         self.swift = swift
@@ -7555,7 +7675,7 @@ public class DBXTeamLogEmmAddExceptionType: NSObject {
         self.swift = TeamLog.EmmAddExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.EmmAddExceptionType
+    public let swift: TeamLog.EmmAddExceptionType
 
     public init(swift: TeamLog.EmmAddExceptionType) {
         self.swift = swift
@@ -7570,11 +7690,11 @@ public class DBXTeamLogEmmAddExceptionType: NSObject {
 public class DBXTeamLogEmmChangePolicyDetails: NSObject {
     /// New enterprise mobility management policy.
     @objc
-    public var newValue: DBXTeamPoliciesEmmState { DBXTeamPoliciesEmmState(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesEmmState { DBXTeamPoliciesEmmState.factory(swift: swift.newValue) }
     /// Previous enterprise mobility management policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesEmmState? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesEmmState(swift: swift)
+        return DBXTeamPoliciesEmmState.factory(swift: swift)
     }
 
     @objc
@@ -7582,7 +7702,7 @@ public class DBXTeamLogEmmChangePolicyDetails: NSObject {
         self.swift = TeamLog.EmmChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.EmmChangePolicyDetails
+    public let swift: TeamLog.EmmChangePolicyDetails
 
     public init(swift: TeamLog.EmmChangePolicyDetails) {
         self.swift = swift
@@ -7604,7 +7724,7 @@ public class DBXTeamLogEmmChangePolicyType: NSObject {
         self.swift = TeamLog.EmmChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.EmmChangePolicyType
+    public let swift: TeamLog.EmmChangePolicyType
 
     public init(swift: TeamLog.EmmChangePolicyType) {
         self.swift = swift
@@ -7617,7 +7737,12 @@ public class DBXTeamLogEmmChangePolicyType: NSObject {
 /// Created EMM-excluded users report.
 @objc
 public class DBXTeamLogEmmCreateExceptionsReportDetails: NSObject {
-    let swift: TeamLog.EmmCreateExceptionsReportDetails
+    public override init() {
+        self.swift = TeamLog.EmmCreateExceptionsReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EmmCreateExceptionsReportDetails
 
     public init(swift: TeamLog.EmmCreateExceptionsReportDetails) {
         self.swift = swift
@@ -7639,7 +7764,7 @@ public class DBXTeamLogEmmCreateExceptionsReportType: NSObject {
         self.swift = TeamLog.EmmCreateExceptionsReportType(description_: description_)
     }
 
-    let swift: TeamLog.EmmCreateExceptionsReportType
+    public let swift: TeamLog.EmmCreateExceptionsReportType
 
     public init(swift: TeamLog.EmmCreateExceptionsReportType) {
         self.swift = swift
@@ -7652,7 +7777,12 @@ public class DBXTeamLogEmmCreateExceptionsReportType: NSObject {
 /// Created EMM mobile app usage report.
 @objc
 public class DBXTeamLogEmmCreateUsageReportDetails: NSObject {
-    let swift: TeamLog.EmmCreateUsageReportDetails
+    public override init() {
+        self.swift = TeamLog.EmmCreateUsageReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EmmCreateUsageReportDetails
 
     public init(swift: TeamLog.EmmCreateUsageReportDetails) {
         self.swift = swift
@@ -7674,7 +7804,7 @@ public class DBXTeamLogEmmCreateUsageReportType: NSObject {
         self.swift = TeamLog.EmmCreateUsageReportType(description_: description_)
     }
 
-    let swift: TeamLog.EmmCreateUsageReportType
+    public let swift: TeamLog.EmmCreateUsageReportType
 
     public init(swift: TeamLog.EmmCreateUsageReportType) {
         self.swift = swift
@@ -7696,7 +7826,7 @@ public class DBXTeamLogEmmErrorDetails: NSObject {
         self.swift = TeamLog.EmmErrorDetails(errorDetails: errorDetails.swift)
     }
 
-    let swift: TeamLog.EmmErrorDetails
+    public let swift: TeamLog.EmmErrorDetails
 
     public init(swift: TeamLog.EmmErrorDetails) {
         self.swift = swift
@@ -7718,7 +7848,7 @@ public class DBXTeamLogEmmErrorType: NSObject {
         self.swift = TeamLog.EmmErrorType(description_: description_)
     }
 
-    let swift: TeamLog.EmmErrorType
+    public let swift: TeamLog.EmmErrorType
 
     public init(swift: TeamLog.EmmErrorType) {
         self.swift = swift
@@ -7731,7 +7861,12 @@ public class DBXTeamLogEmmErrorType: NSObject {
 /// Refreshed auth token used for setting up EMM.
 @objc
 public class DBXTeamLogEmmRefreshAuthTokenDetails: NSObject {
-    let swift: TeamLog.EmmRefreshAuthTokenDetails
+    public override init() {
+        self.swift = TeamLog.EmmRefreshAuthTokenDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EmmRefreshAuthTokenDetails
 
     public init(swift: TeamLog.EmmRefreshAuthTokenDetails) {
         self.swift = swift
@@ -7753,7 +7888,7 @@ public class DBXTeamLogEmmRefreshAuthTokenType: NSObject {
         self.swift = TeamLog.EmmRefreshAuthTokenType(description_: description_)
     }
 
-    let swift: TeamLog.EmmRefreshAuthTokenType
+    public let swift: TeamLog.EmmRefreshAuthTokenType
 
     public init(swift: TeamLog.EmmRefreshAuthTokenType) {
         self.swift = swift
@@ -7766,7 +7901,12 @@ public class DBXTeamLogEmmRefreshAuthTokenType: NSObject {
 /// Removed members from EMM exception list.
 @objc
 public class DBXTeamLogEmmRemoveExceptionDetails: NSObject {
-    let swift: TeamLog.EmmRemoveExceptionDetails
+    public override init() {
+        self.swift = TeamLog.EmmRemoveExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EmmRemoveExceptionDetails
 
     public init(swift: TeamLog.EmmRemoveExceptionDetails) {
         self.swift = swift
@@ -7788,7 +7928,7 @@ public class DBXTeamLogEmmRemoveExceptionType: NSObject {
         self.swift = TeamLog.EmmRemoveExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.EmmRemoveExceptionType
+    public let swift: TeamLog.EmmRemoveExceptionType
 
     public init(swift: TeamLog.EmmRemoveExceptionType) {
         self.swift = swift
@@ -7801,7 +7941,12 @@ public class DBXTeamLogEmmRemoveExceptionType: NSObject {
 /// Enabled domain invites.
 @objc
 public class DBXTeamLogEnabledDomainInvitesDetails: NSObject {
-    let swift: TeamLog.EnabledDomainInvitesDetails
+    public override init() {
+        self.swift = TeamLog.EnabledDomainInvitesDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EnabledDomainInvitesDetails
 
     public init(swift: TeamLog.EnabledDomainInvitesDetails) {
         self.swift = swift
@@ -7823,7 +7968,7 @@ public class DBXTeamLogEnabledDomainInvitesType: NSObject {
         self.swift = TeamLog.EnabledDomainInvitesType(description_: description_)
     }
 
-    let swift: TeamLog.EnabledDomainInvitesType
+    public let swift: TeamLog.EnabledDomainInvitesType
 
     public init(swift: TeamLog.EnabledDomainInvitesType) {
         self.swift = swift
@@ -7838,14 +7983,14 @@ public class DBXTeamLogEnabledDomainInvitesType: NSObject {
 public class DBXTeamLogEndedEnterpriseAdminSessionDeprecatedDetails: NSObject {
     /// More information about the organization or team.
     @objc
-    public var federationExtraDetails: DBXTeamLogFedExtraDetails { DBXTeamLogFedExtraDetails(swift: swift.federationExtraDetails) }
+    public var federationExtraDetails: DBXTeamLogFedExtraDetails { DBXTeamLogFedExtraDetails.factory(swift: swift.federationExtraDetails) }
 
     @objc
     public init(federationExtraDetails: DBXTeamLogFedExtraDetails) {
         self.swift = TeamLog.EndedEnterpriseAdminSessionDeprecatedDetails(federationExtraDetails: federationExtraDetails.swift)
     }
 
-    let swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedDetails
+    public let swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedDetails
 
     public init(swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedDetails) {
         self.swift = swift
@@ -7867,7 +8012,7 @@ public class DBXTeamLogEndedEnterpriseAdminSessionDeprecatedType: NSObject {
         self.swift = TeamLog.EndedEnterpriseAdminSessionDeprecatedType(description_: description_)
     }
 
-    let swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedType
+    public let swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedType
 
     public init(swift: TeamLog.EndedEnterpriseAdminSessionDeprecatedType) {
         self.swift = swift
@@ -7880,7 +8025,12 @@ public class DBXTeamLogEndedEnterpriseAdminSessionDeprecatedType: NSObject {
 /// Ended enterprise admin session.
 @objc
 public class DBXTeamLogEndedEnterpriseAdminSessionDetails: NSObject {
-    let swift: TeamLog.EndedEnterpriseAdminSessionDetails
+    public override init() {
+        self.swift = TeamLog.EndedEnterpriseAdminSessionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.EndedEnterpriseAdminSessionDetails
 
     public init(swift: TeamLog.EndedEnterpriseAdminSessionDetails) {
         self.swift = swift
@@ -7902,7 +8052,7 @@ public class DBXTeamLogEndedEnterpriseAdminSessionType: NSObject {
         self.swift = TeamLog.EndedEnterpriseAdminSessionType(description_: description_)
     }
 
-    let swift: TeamLog.EndedEnterpriseAdminSessionType
+    public let swift: TeamLog.EndedEnterpriseAdminSessionType
 
     public init(swift: TeamLog.EndedEnterpriseAdminSessionType) {
         self.swift = swift
@@ -7915,9 +8065,9 @@ public class DBXTeamLogEndedEnterpriseAdminSessionType: NSObject {
 /// Policy for deciding whether password must be enforced when an externally shared link is updated
 @objc
 public class DBXTeamLogEnforceLinkPasswordPolicy: NSObject {
-    let swift: TeamLog.EnforceLinkPasswordPolicy
+    public let swift: TeamLog.EnforceLinkPasswordPolicy
 
-    public init(swift: TeamLog.EnforceLinkPasswordPolicy) {
+    fileprivate init(swift: TeamLog.EnforceLinkPasswordPolicy) {
         self.swift = swift
     }
 
@@ -8007,7 +8157,7 @@ public class DBXTeamLogEnterpriseSettingsLockingDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.EnterpriseSettingsLockingDetails
+    public let swift: TeamLog.EnterpriseSettingsLockingDetails
 
     public init(swift: TeamLog.EnterpriseSettingsLockingDetails) {
         self.swift = swift
@@ -8029,7 +8179,7 @@ public class DBXTeamLogEnterpriseSettingsLockingType: NSObject {
         self.swift = TeamLog.EnterpriseSettingsLockingType(description_: description_)
     }
 
-    let swift: TeamLog.EnterpriseSettingsLockingType
+    public let swift: TeamLog.EnterpriseSettingsLockingType
 
     public init(swift: TeamLog.EnterpriseSettingsLockingType) {
         self.swift = swift
@@ -8042,9 +8192,9 @@ public class DBXTeamLogEnterpriseSettingsLockingType: NSObject {
 /// Category of events in event audit log.
 @objc
 public class DBXTeamLogEventCategory: NSObject {
-    let swift: TeamLog.EventCategory
+    public let swift: TeamLog.EventCategory
 
-    public init(swift: TeamLog.EventCategory) {
+    fileprivate init(swift: TeamLog.EventCategory) {
         self.swift = swift
     }
 
@@ -8470,9 +8620,9 @@ public class DBXTeamLogEventCategoryOther: DBXTeamLogEventCategory {
 /// Additional fields depending on the event type.
 @objc
 public class DBXTeamLogEventDetails: NSObject {
-    let swift: TeamLog.EventDetails
+    public let swift: TeamLog.EventDetails
 
-    public init(swift: TeamLog.EventDetails) {
+    fileprivate init(swift: TeamLog.EventDetails) {
         self.swift = swift
     }
 
@@ -19593,9 +19743,9 @@ public class DBXTeamLogEventDetailsOther: DBXTeamLogEventDetails {
 /// The type of the event with description.
 @objc
 public class DBXTeamLogEventType: NSObject {
-    let swift: TeamLog.EventType
+    public let swift: TeamLog.EventType
 
-    public init(swift: TeamLog.EventType) {
+    fileprivate init(swift: TeamLog.EventType) {
         self.swift = swift
     }
 
@@ -30703,9 +30853,9 @@ public class DBXTeamLogEventTypeOther: DBXTeamLogEventType {
 /// The type of the event.
 @objc
 public class DBXTeamLogEventTypeArg: NSObject {
-    let swift: TeamLog.EventTypeArg
+    public let swift: TeamLog.EventTypeArg
 
-    public init(swift: TeamLog.EventTypeArg) {
+    fileprivate init(swift: TeamLog.EventTypeArg) {
         self.swift = swift
     }
 
@@ -39298,7 +39448,12 @@ public class DBXTeamLogEventTypeArgOther: DBXTeamLogEventTypeArg {
 /// Created member data report.
 @objc
 public class DBXTeamLogExportMembersReportDetails: NSObject {
-    let swift: TeamLog.ExportMembersReportDetails
+    public override init() {
+        self.swift = TeamLog.ExportMembersReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ExportMembersReportDetails
 
     public init(swift: TeamLog.ExportMembersReportDetails) {
         self.swift = swift
@@ -39313,14 +39468,14 @@ public class DBXTeamLogExportMembersReportDetails: NSObject {
 public class DBXTeamLogExportMembersReportFailDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.ExportMembersReportFailDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.ExportMembersReportFailDetails
+    public let swift: TeamLog.ExportMembersReportFailDetails
 
     public init(swift: TeamLog.ExportMembersReportFailDetails) {
         self.swift = swift
@@ -39342,7 +39497,7 @@ public class DBXTeamLogExportMembersReportFailType: NSObject {
         self.swift = TeamLog.ExportMembersReportFailType(description_: description_)
     }
 
-    let swift: TeamLog.ExportMembersReportFailType
+    public let swift: TeamLog.ExportMembersReportFailType
 
     public init(swift: TeamLog.ExportMembersReportFailType) {
         self.swift = swift
@@ -39364,7 +39519,7 @@ public class DBXTeamLogExportMembersReportType: NSObject {
         self.swift = TeamLog.ExportMembersReportType(description_: description_)
     }
 
-    let swift: TeamLog.ExportMembersReportType
+    public let swift: TeamLog.ExportMembersReportType
 
     public init(swift: TeamLog.ExportMembersReportType) {
         self.swift = swift
@@ -39379,11 +39534,11 @@ public class DBXTeamLogExportMembersReportType: NSObject {
 public class DBXTeamLogExtendedVersionHistoryChangePolicyDetails: NSObject {
     /// New extended version history policy.
     @objc
-    public var newValue: DBXTeamLogExtendedVersionHistoryPolicy { DBXTeamLogExtendedVersionHistoryPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogExtendedVersionHistoryPolicy { DBXTeamLogExtendedVersionHistoryPolicy.factory(swift: swift.newValue) }
     /// Previous extended version history policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogExtendedVersionHistoryPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogExtendedVersionHistoryPolicy(swift: swift)
+        return DBXTeamLogExtendedVersionHistoryPolicy.factory(swift: swift)
     }
 
     @objc
@@ -39391,7 +39546,7 @@ public class DBXTeamLogExtendedVersionHistoryChangePolicyDetails: NSObject {
         self.swift = TeamLog.ExtendedVersionHistoryChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.ExtendedVersionHistoryChangePolicyDetails
+    public let swift: TeamLog.ExtendedVersionHistoryChangePolicyDetails
 
     public init(swift: TeamLog.ExtendedVersionHistoryChangePolicyDetails) {
         self.swift = swift
@@ -39413,7 +39568,7 @@ public class DBXTeamLogExtendedVersionHistoryChangePolicyType: NSObject {
         self.swift = TeamLog.ExtendedVersionHistoryChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ExtendedVersionHistoryChangePolicyType
+    public let swift: TeamLog.ExtendedVersionHistoryChangePolicyType
 
     public init(swift: TeamLog.ExtendedVersionHistoryChangePolicyType) {
         self.swift = swift
@@ -39426,9 +39581,9 @@ public class DBXTeamLogExtendedVersionHistoryChangePolicyType: NSObject {
 /// Objective-C compatible ExtendedVersionHistoryPolicy union
 @objc
 public class DBXTeamLogExtendedVersionHistoryPolicy: NSObject {
-    let swift: TeamLog.ExtendedVersionHistoryPolicy
+    public let swift: TeamLog.ExtendedVersionHistoryPolicy
 
-    public init(swift: TeamLog.ExtendedVersionHistoryPolicy) {
+    fileprivate init(swift: TeamLog.ExtendedVersionHistoryPolicy) {
         self.swift = swift
     }
 
@@ -39529,9 +39684,9 @@ public class DBXTeamLogExtendedVersionHistoryPolicyOther: DBXTeamLogExtendedVers
 /// External Drive Backup eligibility status
 @objc
 public class DBXTeamLogExternalDriveBackupEligibilityStatus: NSObject {
-    let swift: TeamLog.ExternalDriveBackupEligibilityStatus
+    public let swift: TeamLog.ExternalDriveBackupEligibilityStatus
 
-    public init(swift: TeamLog.ExternalDriveBackupEligibilityStatus) {
+    fileprivate init(swift: TeamLog.ExternalDriveBackupEligibilityStatus) {
         self.swift = swift
     }
 
@@ -39603,7 +39758,7 @@ public class DBXTeamLogExternalDriveBackupEligibilityStatusCheckedDetails: NSObj
     public var desktopDeviceSessionInfo: DBXTeamLogDesktopDeviceSessionLogInfo { DBXTeamLogDesktopDeviceSessionLogInfo(swift: swift.desktopDeviceSessionInfo) }
     /// Current eligibility status of external drive backup.
     @objc
-    public var status: DBXTeamLogExternalDriveBackupEligibilityStatus { DBXTeamLogExternalDriveBackupEligibilityStatus(swift: swift.status) }
+    public var status: DBXTeamLogExternalDriveBackupEligibilityStatus { DBXTeamLogExternalDriveBackupEligibilityStatus.factory(swift: swift.status) }
     /// Total number of valid external drive backup for all the team members.
     @objc
     public var numberOfExternalDriveBackup: NSNumber { swift.numberOfExternalDriveBackup as NSNumber }
@@ -39621,7 +39776,7 @@ public class DBXTeamLogExternalDriveBackupEligibilityStatusCheckedDetails: NSObj
         )
     }
 
-    let swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedDetails
+    public let swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedDetails
 
     public init(swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedDetails) {
         self.swift = swift
@@ -39643,7 +39798,7 @@ public class DBXTeamLogExternalDriveBackupEligibilityStatusCheckedType: NSObject
         self.swift = TeamLog.ExternalDriveBackupEligibilityStatusCheckedType(description_: description_)
     }
 
-    let swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedType
+    public let swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedType
 
     public init(swift: TeamLog.ExternalDriveBackupEligibilityStatusCheckedType) {
         self.swift = swift
@@ -39656,9 +39811,9 @@ public class DBXTeamLogExternalDriveBackupEligibilityStatusCheckedType: NSObject
 /// Policy for controlling team access to external drive backup feature
 @objc
 public class DBXTeamLogExternalDriveBackupPolicy: NSObject {
-    let swift: TeamLog.ExternalDriveBackupPolicy
+    public let swift: TeamLog.ExternalDriveBackupPolicy
 
-    public init(swift: TeamLog.ExternalDriveBackupPolicy) {
+    fileprivate init(swift: TeamLog.ExternalDriveBackupPolicy) {
         self.swift = swift
     }
 
@@ -39744,17 +39899,17 @@ public class DBXTeamLogExternalDriveBackupPolicyOther: DBXTeamLogExternalDriveBa
 public class DBXTeamLogExternalDriveBackupPolicyChangedDetails: NSObject {
     /// New external drive backup policy.
     @objc
-    public var newValue: DBXTeamLogExternalDriveBackupPolicy { DBXTeamLogExternalDriveBackupPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogExternalDriveBackupPolicy { DBXTeamLogExternalDriveBackupPolicy.factory(swift: swift.newValue) }
     /// Previous external drive backup policy.
     @objc
-    public var previousValue: DBXTeamLogExternalDriveBackupPolicy { DBXTeamLogExternalDriveBackupPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogExternalDriveBackupPolicy { DBXTeamLogExternalDriveBackupPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogExternalDriveBackupPolicy, previousValue: DBXTeamLogExternalDriveBackupPolicy) {
         self.swift = TeamLog.ExternalDriveBackupPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ExternalDriveBackupPolicyChangedDetails
+    public let swift: TeamLog.ExternalDriveBackupPolicyChangedDetails
 
     public init(swift: TeamLog.ExternalDriveBackupPolicyChangedDetails) {
         self.swift = swift
@@ -39776,7 +39931,7 @@ public class DBXTeamLogExternalDriveBackupPolicyChangedType: NSObject {
         self.swift = TeamLog.ExternalDriveBackupPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.ExternalDriveBackupPolicyChangedType
+    public let swift: TeamLog.ExternalDriveBackupPolicyChangedType
 
     public init(swift: TeamLog.ExternalDriveBackupPolicyChangedType) {
         self.swift = swift
@@ -39789,9 +39944,9 @@ public class DBXTeamLogExternalDriveBackupPolicyChangedType: NSObject {
 /// External Drive Backup status
 @objc
 public class DBXTeamLogExternalDriveBackupStatus: NSObject {
-    let swift: TeamLog.ExternalDriveBackupStatus
+    public let swift: TeamLog.ExternalDriveBackupStatus
 
-    public init(swift: TeamLog.ExternalDriveBackupStatus) {
+    fileprivate init(swift: TeamLog.ExternalDriveBackupStatus) {
         self.swift = swift
     }
 
@@ -39931,10 +40086,10 @@ public class DBXTeamLogExternalDriveBackupStatusChangedDetails: NSObject {
     public var desktopDeviceSessionInfo: DBXTeamLogDesktopDeviceSessionLogInfo { DBXTeamLogDesktopDeviceSessionLogInfo(swift: swift.desktopDeviceSessionInfo) }
     /// Previous status of this external drive backup.
     @objc
-    public var previousValue: DBXTeamLogExternalDriveBackupStatus { DBXTeamLogExternalDriveBackupStatus(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogExternalDriveBackupStatus { DBXTeamLogExternalDriveBackupStatus.factory(swift: swift.previousValue) }
     /// Next status of this external drive backup.
     @objc
-    public var newValue: DBXTeamLogExternalDriveBackupStatus { DBXTeamLogExternalDriveBackupStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamLogExternalDriveBackupStatus { DBXTeamLogExternalDriveBackupStatus.factory(swift: swift.newValue) }
 
     @objc
     public init(
@@ -39949,7 +40104,7 @@ public class DBXTeamLogExternalDriveBackupStatusChangedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.ExternalDriveBackupStatusChangedDetails
+    public let swift: TeamLog.ExternalDriveBackupStatusChangedDetails
 
     public init(swift: TeamLog.ExternalDriveBackupStatusChangedDetails) {
         self.swift = swift
@@ -39971,7 +40126,7 @@ public class DBXTeamLogExternalDriveBackupStatusChangedType: NSObject {
         self.swift = TeamLog.ExternalDriveBackupStatusChangedType(description_: description_)
     }
 
-    let swift: TeamLog.ExternalDriveBackupStatusChangedType
+    public let swift: TeamLog.ExternalDriveBackupStatusChangedType
 
     public init(swift: TeamLog.ExternalDriveBackupStatusChangedType) {
         self.swift = swift
@@ -39984,7 +40139,12 @@ public class DBXTeamLogExternalDriveBackupStatusChangedType: NSObject {
 /// Created External sharing report.
 @objc
 public class DBXTeamLogExternalSharingCreateReportDetails: NSObject {
-    let swift: TeamLog.ExternalSharingCreateReportDetails
+    public override init() {
+        self.swift = TeamLog.ExternalSharingCreateReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ExternalSharingCreateReportDetails
 
     public init(swift: TeamLog.ExternalSharingCreateReportDetails) {
         self.swift = swift
@@ -40006,7 +40166,7 @@ public class DBXTeamLogExternalSharingCreateReportType: NSObject {
         self.swift = TeamLog.ExternalSharingCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.ExternalSharingCreateReportType
+    public let swift: TeamLog.ExternalSharingCreateReportType
 
     public init(swift: TeamLog.ExternalSharingCreateReportType) {
         self.swift = swift
@@ -40021,14 +40181,14 @@ public class DBXTeamLogExternalSharingCreateReportType: NSObject {
 public class DBXTeamLogExternalSharingReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.ExternalSharingReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.ExternalSharingReportFailedDetails
+    public let swift: TeamLog.ExternalSharingReportFailedDetails
 
     public init(swift: TeamLog.ExternalSharingReportFailedDetails) {
         self.swift = swift
@@ -40050,7 +40210,7 @@ public class DBXTeamLogExternalSharingReportFailedType: NSObject {
         self.swift = TeamLog.ExternalSharingReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.ExternalSharingReportFailedType
+    public let swift: TeamLog.ExternalSharingReportFailedType
 
     public init(swift: TeamLog.ExternalSharingReportFailedType) {
         self.swift = swift
@@ -40068,14 +40228,14 @@ public class DBXTeamLogExternalUserLogInfo: NSObject {
     public var userIdentifier: String { swift.userIdentifier }
     /// Identifier type.
     @objc
-    public var identifierType: DBXTeamLogIdentifierType { DBXTeamLogIdentifierType(swift: swift.identifierType) }
+    public var identifierType: DBXTeamLogIdentifierType { DBXTeamLogIdentifierType.factory(swift: swift.identifierType) }
 
     @objc
     public init(userIdentifier: String, identifierType: DBXTeamLogIdentifierType) {
         self.swift = TeamLog.ExternalUserLogInfo(userIdentifier: userIdentifier, identifierType: identifierType.swift)
     }
 
-    let swift: TeamLog.ExternalUserLogInfo
+    public let swift: TeamLog.ExternalUserLogInfo
 
     public init(swift: TeamLog.ExternalUserLogInfo) {
         self.swift = swift
@@ -40100,7 +40260,7 @@ public class DBXTeamLogFailureDetailsLogInfo: NSObject {
         self.swift = TeamLog.FailureDetailsLogInfo(userFriendlyMessage: userFriendlyMessage, technicalErrorMessage: technicalErrorMessage)
     }
 
-    let swift: TeamLog.FailureDetailsLogInfo
+    public let swift: TeamLog.FailureDetailsLogInfo
 
     public init(swift: TeamLog.FailureDetailsLogInfo) {
         self.swift = swift
@@ -40113,9 +40273,9 @@ public class DBXTeamLogFailureDetailsLogInfo: NSObject {
 /// Objective-C compatible FedAdminRole union
 @objc
 public class DBXTeamLogFedAdminRole: NSObject {
-    let swift: TeamLog.FedAdminRole
+    public let swift: TeamLog.FedAdminRole
 
-    public init(swift: TeamLog.FedAdminRole) {
+    fileprivate init(swift: TeamLog.FedAdminRole) {
         self.swift = swift
     }
 
@@ -40182,9 +40342,9 @@ public class DBXTeamLogFedAdminRoleOther: DBXTeamLogFedAdminRole {
 /// More details about the organization or team.
 @objc
 public class DBXTeamLogFedExtraDetails: NSObject {
-    let swift: TeamLog.FedExtraDetails
+    public let swift: TeamLog.FedExtraDetails
 
-    public init(swift: TeamLog.FedExtraDetails) {
+    fileprivate init(swift: TeamLog.FedExtraDetails) {
         self.swift = swift
     }
 
@@ -40261,9 +40421,9 @@ public class DBXTeamLogFedExtraDetailsOther: DBXTeamLogFedExtraDetails {
 /// Objective-C compatible FedHandshakeAction union
 @objc
 public class DBXTeamLogFedHandshakeAction: NSObject {
-    let swift: TeamLog.FedHandshakeAction
+    public let swift: TeamLog.FedHandshakeAction
 
-    public init(swift: TeamLog.FedHandshakeAction) {
+    fileprivate init(swift: TeamLog.FedHandshakeAction) {
         self.swift = swift
     }
 
@@ -40398,9 +40558,9 @@ public class DBXTeamLogFedHandshakeActionOther: DBXTeamLogFedHandshakeAction {
 /// Additional information about the organization or connected team
 @objc
 public class DBXTeamLogFederationStatusChangeAdditionalInfo: NSObject {
-    let swift: TeamLog.FederationStatusChangeAdditionalInfo
+    public let swift: TeamLog.FederationStatusChangeAdditionalInfo
 
-    public init(swift: TeamLog.FederationStatusChangeAdditionalInfo) {
+    fileprivate init(swift: TeamLog.FederationStatusChangeAdditionalInfo) {
         self.swift = swift
     }
 
@@ -40508,7 +40668,7 @@ public class DBXTeamLogFileAddCommentDetails: NSObject {
         self.swift = TeamLog.FileAddCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileAddCommentDetails
+    public let swift: TeamLog.FileAddCommentDetails
 
     public init(swift: TeamLog.FileAddCommentDetails) {
         self.swift = swift
@@ -40530,7 +40690,7 @@ public class DBXTeamLogFileAddCommentType: NSObject {
         self.swift = TeamLog.FileAddCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileAddCommentType
+    public let swift: TeamLog.FileAddCommentType
 
     public init(swift: TeamLog.FileAddCommentType) {
         self.swift = swift
@@ -40543,7 +40703,12 @@ public class DBXTeamLogFileAddCommentType: NSObject {
 /// Added files and/or folders.
 @objc
 public class DBXTeamLogFileAddDetails: NSObject {
-    let swift: TeamLog.FileAddDetails
+    public override init() {
+        self.swift = TeamLog.FileAddDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileAddDetails
 
     public init(swift: TeamLog.FileAddDetails) {
         self.swift = swift
@@ -40556,7 +40721,12 @@ public class DBXTeamLogFileAddDetails: NSObject {
 /// Added files and/or folders from automation.
 @objc
 public class DBXTeamLogFileAddFromAutomationDetails: NSObject {
-    let swift: TeamLog.FileAddFromAutomationDetails
+    public override init() {
+        self.swift = TeamLog.FileAddFromAutomationDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileAddFromAutomationDetails
 
     public init(swift: TeamLog.FileAddFromAutomationDetails) {
         self.swift = swift
@@ -40578,7 +40748,7 @@ public class DBXTeamLogFileAddFromAutomationType: NSObject {
         self.swift = TeamLog.FileAddFromAutomationType(description_: description_)
     }
 
-    let swift: TeamLog.FileAddFromAutomationType
+    public let swift: TeamLog.FileAddFromAutomationType
 
     public init(swift: TeamLog.FileAddFromAutomationType) {
         self.swift = swift
@@ -40600,7 +40770,7 @@ public class DBXTeamLogFileAddType: NSObject {
         self.swift = TeamLog.FileAddType(description_: description_)
     }
 
-    let swift: TeamLog.FileAddType
+    public let swift: TeamLog.FileAddType
 
     public init(swift: TeamLog.FileAddType) {
         self.swift = swift
@@ -40615,11 +40785,11 @@ public class DBXTeamLogFileAddType: NSObject {
 public class DBXTeamLogFileChangeCommentSubscriptionDetails: NSObject {
     /// New file comment subscription.
     @objc
-    public var newValue: DBXTeamLogFileCommentNotificationPolicy { DBXTeamLogFileCommentNotificationPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFileCommentNotificationPolicy { DBXTeamLogFileCommentNotificationPolicy.factory(swift: swift.newValue) }
     /// Previous file comment subscription. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogFileCommentNotificationPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogFileCommentNotificationPolicy(swift: swift)
+        return DBXTeamLogFileCommentNotificationPolicy.factory(swift: swift)
     }
 
     @objc
@@ -40627,7 +40797,7 @@ public class DBXTeamLogFileChangeCommentSubscriptionDetails: NSObject {
         self.swift = TeamLog.FileChangeCommentSubscriptionDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.FileChangeCommentSubscriptionDetails
+    public let swift: TeamLog.FileChangeCommentSubscriptionDetails
 
     public init(swift: TeamLog.FileChangeCommentSubscriptionDetails) {
         self.swift = swift
@@ -40649,7 +40819,7 @@ public class DBXTeamLogFileChangeCommentSubscriptionType: NSObject {
         self.swift = TeamLog.FileChangeCommentSubscriptionType(description_: description_)
     }
 
-    let swift: TeamLog.FileChangeCommentSubscriptionType
+    public let swift: TeamLog.FileChangeCommentSubscriptionType
 
     public init(swift: TeamLog.FileChangeCommentSubscriptionType) {
         self.swift = swift
@@ -40662,9 +40832,9 @@ public class DBXTeamLogFileChangeCommentSubscriptionType: NSObject {
 /// Enable or disable file comments notifications
 @objc
 public class DBXTeamLogFileCommentNotificationPolicy: NSObject {
-    let swift: TeamLog.FileCommentNotificationPolicy
+    public let swift: TeamLog.FileCommentNotificationPolicy
 
-    public init(swift: TeamLog.FileCommentNotificationPolicy) {
+    fileprivate init(swift: TeamLog.FileCommentNotificationPolicy) {
         self.swift = swift
     }
 
@@ -40733,11 +40903,11 @@ public class DBXTeamLogFileCommentNotificationPolicyOther: DBXTeamLogFileComment
 public class DBXTeamLogFileCommentsChangePolicyDetails: NSObject {
     /// New commenting on team files policy.
     @objc
-    public var newValue: DBXTeamLogFileCommentsPolicy { DBXTeamLogFileCommentsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFileCommentsPolicy { DBXTeamLogFileCommentsPolicy.factory(swift: swift.newValue) }
     /// Previous commenting on team files policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogFileCommentsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogFileCommentsPolicy(swift: swift)
+        return DBXTeamLogFileCommentsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -40745,7 +40915,7 @@ public class DBXTeamLogFileCommentsChangePolicyDetails: NSObject {
         self.swift = TeamLog.FileCommentsChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.FileCommentsChangePolicyDetails
+    public let swift: TeamLog.FileCommentsChangePolicyDetails
 
     public init(swift: TeamLog.FileCommentsChangePolicyDetails) {
         self.swift = swift
@@ -40767,7 +40937,7 @@ public class DBXTeamLogFileCommentsChangePolicyType: NSObject {
         self.swift = TeamLog.FileCommentsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.FileCommentsChangePolicyType
+    public let swift: TeamLog.FileCommentsChangePolicyType
 
     public init(swift: TeamLog.FileCommentsChangePolicyType) {
         self.swift = swift
@@ -40780,9 +40950,9 @@ public class DBXTeamLogFileCommentsChangePolicyType: NSObject {
 /// File comments policy
 @objc
 public class DBXTeamLogFileCommentsPolicy: NSObject {
-    let swift: TeamLog.FileCommentsPolicy
+    public let swift: TeamLog.FileCommentsPolicy
 
-    public init(swift: TeamLog.FileCommentsPolicy) {
+    fileprivate init(swift: TeamLog.FileCommentsPolicy) {
         self.swift = swift
     }
 
@@ -40860,7 +41030,7 @@ public class DBXTeamLogFileCopyDetails: NSObject {
         self.swift = TeamLog.FileCopyDetails(relocateActionDetails: relocateActionDetails.map(\.swift))
     }
 
-    let swift: TeamLog.FileCopyDetails
+    public let swift: TeamLog.FileCopyDetails
 
     public init(swift: TeamLog.FileCopyDetails) {
         self.swift = swift
@@ -40882,7 +41052,7 @@ public class DBXTeamLogFileCopyType: NSObject {
         self.swift = TeamLog.FileCopyType(description_: description_)
     }
 
-    let swift: TeamLog.FileCopyType
+    public let swift: TeamLog.FileCopyType
 
     public init(swift: TeamLog.FileCopyType) {
         self.swift = swift
@@ -40904,7 +41074,7 @@ public class DBXTeamLogFileDeleteCommentDetails: NSObject {
         self.swift = TeamLog.FileDeleteCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileDeleteCommentDetails
+    public let swift: TeamLog.FileDeleteCommentDetails
 
     public init(swift: TeamLog.FileDeleteCommentDetails) {
         self.swift = swift
@@ -40926,7 +41096,7 @@ public class DBXTeamLogFileDeleteCommentType: NSObject {
         self.swift = TeamLog.FileDeleteCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileDeleteCommentType
+    public let swift: TeamLog.FileDeleteCommentType
 
     public init(swift: TeamLog.FileDeleteCommentType) {
         self.swift = swift
@@ -40939,7 +41109,12 @@ public class DBXTeamLogFileDeleteCommentType: NSObject {
 /// Deleted files and/or folders.
 @objc
 public class DBXTeamLogFileDeleteDetails: NSObject {
-    let swift: TeamLog.FileDeleteDetails
+    public override init() {
+        self.swift = TeamLog.FileDeleteDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileDeleteDetails
 
     public init(swift: TeamLog.FileDeleteDetails) {
         self.swift = swift
@@ -40961,7 +41136,7 @@ public class DBXTeamLogFileDeleteType: NSObject {
         self.swift = TeamLog.FileDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.FileDeleteType
+    public let swift: TeamLog.FileDeleteType
 
     public init(swift: TeamLog.FileDeleteType) {
         self.swift = swift
@@ -40974,7 +41149,12 @@ public class DBXTeamLogFileDeleteType: NSObject {
 /// Downloaded files and/or folders.
 @objc
 public class DBXTeamLogFileDownloadDetails: NSObject {
-    let swift: TeamLog.FileDownloadDetails
+    public override init() {
+        self.swift = TeamLog.FileDownloadDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileDownloadDetails
 
     public init(swift: TeamLog.FileDownloadDetails) {
         self.swift = swift
@@ -40996,7 +41176,7 @@ public class DBXTeamLogFileDownloadType: NSObject {
         self.swift = TeamLog.FileDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.FileDownloadType
+    public let swift: TeamLog.FileDownloadType
 
     public init(swift: TeamLog.FileDownloadType) {
         self.swift = swift
@@ -41021,7 +41201,7 @@ public class DBXTeamLogFileEditCommentDetails: NSObject {
         self.swift = TeamLog.FileEditCommentDetails(previousCommentText: previousCommentText, commentText: commentText)
     }
 
-    let swift: TeamLog.FileEditCommentDetails
+    public let swift: TeamLog.FileEditCommentDetails
 
     public init(swift: TeamLog.FileEditCommentDetails) {
         self.swift = swift
@@ -41043,7 +41223,7 @@ public class DBXTeamLogFileEditCommentType: NSObject {
         self.swift = TeamLog.FileEditCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileEditCommentType
+    public let swift: TeamLog.FileEditCommentType
 
     public init(swift: TeamLog.FileEditCommentType) {
         self.swift = swift
@@ -41056,7 +41236,12 @@ public class DBXTeamLogFileEditCommentType: NSObject {
 /// Edited files.
 @objc
 public class DBXTeamLogFileEditDetails: NSObject {
-    let swift: TeamLog.FileEditDetails
+    public override init() {
+        self.swift = TeamLog.FileEditDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileEditDetails
 
     public init(swift: TeamLog.FileEditDetails) {
         self.swift = swift
@@ -41078,7 +41263,7 @@ public class DBXTeamLogFileEditType: NSObject {
         self.swift = TeamLog.FileEditType(description_: description_)
     }
 
-    let swift: TeamLog.FileEditType
+    public let swift: TeamLog.FileEditType
 
     public init(swift: TeamLog.FileEditType) {
         self.swift = swift
@@ -41091,7 +41276,12 @@ public class DBXTeamLogFileEditType: NSObject {
 /// Created copy reference to file/folder.
 @objc
 public class DBXTeamLogFileGetCopyReferenceDetails: NSObject {
-    let swift: TeamLog.FileGetCopyReferenceDetails
+    public override init() {
+        self.swift = TeamLog.FileGetCopyReferenceDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileGetCopyReferenceDetails
 
     public init(swift: TeamLog.FileGetCopyReferenceDetails) {
         self.swift = swift
@@ -41113,7 +41303,7 @@ public class DBXTeamLogFileGetCopyReferenceType: NSObject {
         self.swift = TeamLog.FileGetCopyReferenceType(description_: description_)
     }
 
-    let swift: TeamLog.FileGetCopyReferenceType
+    public let swift: TeamLog.FileGetCopyReferenceType
 
     public init(swift: TeamLog.FileGetCopyReferenceType) {
         self.swift = swift
@@ -41135,7 +41325,7 @@ public class DBXTeamLogFileLikeCommentDetails: NSObject {
         self.swift = TeamLog.FileLikeCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileLikeCommentDetails
+    public let swift: TeamLog.FileLikeCommentDetails
 
     public init(swift: TeamLog.FileLikeCommentDetails) {
         self.swift = swift
@@ -41157,7 +41347,7 @@ public class DBXTeamLogFileLikeCommentType: NSObject {
         self.swift = TeamLog.FileLikeCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileLikeCommentType
+    public let swift: TeamLog.FileLikeCommentType
 
     public init(swift: TeamLog.FileLikeCommentType) {
         self.swift = swift
@@ -41172,17 +41362,17 @@ public class DBXTeamLogFileLikeCommentType: NSObject {
 public class DBXTeamLogFileLockingLockStatusChangedDetails: NSObject {
     /// Previous lock status of the file.
     @objc
-    public var previousValue: DBXTeamLogLockStatus { DBXTeamLogLockStatus(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogLockStatus { DBXTeamLogLockStatus.factory(swift: swift.previousValue) }
     /// New lock status of the file.
     @objc
-    public var newValue: DBXTeamLogLockStatus { DBXTeamLogLockStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamLogLockStatus { DBXTeamLogLockStatus.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogLockStatus, newValue: DBXTeamLogLockStatus) {
         self.swift = TeamLog.FileLockingLockStatusChangedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.FileLockingLockStatusChangedDetails
+    public let swift: TeamLog.FileLockingLockStatusChangedDetails
 
     public init(swift: TeamLog.FileLockingLockStatusChangedDetails) {
         self.swift = swift
@@ -41204,7 +41394,7 @@ public class DBXTeamLogFileLockingLockStatusChangedType: NSObject {
         self.swift = TeamLog.FileLockingLockStatusChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FileLockingLockStatusChangedType
+    public let swift: TeamLog.FileLockingLockStatusChangedType
 
     public init(swift: TeamLog.FileLockingLockStatusChangedType) {
         self.swift = swift
@@ -41219,17 +41409,17 @@ public class DBXTeamLogFileLockingLockStatusChangedType: NSObject {
 public class DBXTeamLogFileLockingPolicyChangedDetails: NSObject {
     /// New file locking policy.
     @objc
-    public var newValue: DBXTeamPoliciesFileLockingPolicyState { DBXTeamPoliciesFileLockingPolicyState(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesFileLockingPolicyState { DBXTeamPoliciesFileLockingPolicyState.factory(swift: swift.newValue) }
     /// Previous file locking policy.
     @objc
-    public var previousValue: DBXTeamPoliciesFileLockingPolicyState { DBXTeamPoliciesFileLockingPolicyState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamPoliciesFileLockingPolicyState { DBXTeamPoliciesFileLockingPolicyState.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamPoliciesFileLockingPolicyState, previousValue: DBXTeamPoliciesFileLockingPolicyState) {
         self.swift = TeamLog.FileLockingPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.FileLockingPolicyChangedDetails
+    public let swift: TeamLog.FileLockingPolicyChangedDetails
 
     public init(swift: TeamLog.FileLockingPolicyChangedDetails) {
         self.swift = swift
@@ -41251,7 +41441,7 @@ public class DBXTeamLogFileLockingPolicyChangedType: NSObject {
         self.swift = TeamLog.FileLockingPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FileLockingPolicyChangedType
+    public let swift: TeamLog.FileLockingPolicyChangedType
 
     public init(swift: TeamLog.FileLockingPolicyChangedType) {
         self.swift = swift
@@ -41282,7 +41472,7 @@ public class DBXTeamLogFileOrFolderLogInfo: NSObject {
         self.swift = TeamLog.FileOrFolderLogInfo(path: path.swift, displayName: displayName, fileId: fileId, fileSize: fileSize?.uint64Value)
     }
 
-    let swift: TeamLog.FileOrFolderLogInfo
+    public let swift: TeamLog.FileOrFolderLogInfo
 
     public init(swift: TeamLog.FileOrFolderLogInfo) {
         self.swift = swift
@@ -41295,7 +41485,14 @@ public class DBXTeamLogFileOrFolderLogInfo: NSObject {
 /// File's logged information.
 @objc
 public class DBXTeamLogFileLogInfo: DBXTeamLogFileOrFolderLogInfo {
-    let subSwift: TeamLog.FileLogInfo
+    @objc
+    public override init(path: DBXTeamLogPathLogInfo, displayName: String?, fileId: String?, fileSize: NSNumber?) {
+        let swift = TeamLog.FileLogInfo(path: path.swift, displayName: displayName, fileId: fileId, fileSize: fileSize?.uint64Value)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.FileLogInfo
 
     public init(swift: TeamLog.FileLogInfo) {
         self.subSwift = swift
@@ -41320,7 +41517,7 @@ public class DBXTeamLogFileMoveDetails: NSObject {
         self.swift = TeamLog.FileMoveDetails(relocateActionDetails: relocateActionDetails.map(\.swift))
     }
 
-    let swift: TeamLog.FileMoveDetails
+    public let swift: TeamLog.FileMoveDetails
 
     public init(swift: TeamLog.FileMoveDetails) {
         self.swift = swift
@@ -41342,7 +41539,7 @@ public class DBXTeamLogFileMoveType: NSObject {
         self.swift = TeamLog.FileMoveType(description_: description_)
     }
 
-    let swift: TeamLog.FileMoveType
+    public let swift: TeamLog.FileMoveType
 
     public init(swift: TeamLog.FileMoveType) {
         self.swift = swift
@@ -41355,7 +41552,12 @@ public class DBXTeamLogFileMoveType: NSObject {
 /// Permanently deleted files and/or folders.
 @objc
 public class DBXTeamLogFilePermanentlyDeleteDetails: NSObject {
-    let swift: TeamLog.FilePermanentlyDeleteDetails
+    public override init() {
+        self.swift = TeamLog.FilePermanentlyDeleteDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FilePermanentlyDeleteDetails
 
     public init(swift: TeamLog.FilePermanentlyDeleteDetails) {
         self.swift = swift
@@ -41377,7 +41579,7 @@ public class DBXTeamLogFilePermanentlyDeleteType: NSObject {
         self.swift = TeamLog.FilePermanentlyDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.FilePermanentlyDeleteType
+    public let swift: TeamLog.FilePermanentlyDeleteType
 
     public init(swift: TeamLog.FilePermanentlyDeleteType) {
         self.swift = swift
@@ -41390,7 +41592,12 @@ public class DBXTeamLogFilePermanentlyDeleteType: NSObject {
 /// Previewed files and/or folders.
 @objc
 public class DBXTeamLogFilePreviewDetails: NSObject {
-    let swift: TeamLog.FilePreviewDetails
+    public override init() {
+        self.swift = TeamLog.FilePreviewDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FilePreviewDetails
 
     public init(swift: TeamLog.FilePreviewDetails) {
         self.swift = swift
@@ -41412,7 +41619,7 @@ public class DBXTeamLogFilePreviewType: NSObject {
         self.swift = TeamLog.FilePreviewType(description_: description_)
     }
 
-    let swift: TeamLog.FilePreviewType
+    public let swift: TeamLog.FilePreviewType
 
     public init(swift: TeamLog.FilePreviewType) {
         self.swift = swift
@@ -41427,17 +41634,19 @@ public class DBXTeamLogFilePreviewType: NSObject {
 public class DBXTeamLogFileProviderMigrationPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamPoliciesFileProviderMigrationPolicyState { DBXTeamPoliciesFileProviderMigrationPolicyState(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesFileProviderMigrationPolicyState { DBXTeamPoliciesFileProviderMigrationPolicyState.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamPoliciesFileProviderMigrationPolicyState { DBXTeamPoliciesFileProviderMigrationPolicyState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamPoliciesFileProviderMigrationPolicyState {
+        DBXTeamPoliciesFileProviderMigrationPolicyState.factory(swift: swift.previousValue)
+    }
 
     @objc
     public init(newValue: DBXTeamPoliciesFileProviderMigrationPolicyState, previousValue: DBXTeamPoliciesFileProviderMigrationPolicyState) {
         self.swift = TeamLog.FileProviderMigrationPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.FileProviderMigrationPolicyChangedDetails
+    public let swift: TeamLog.FileProviderMigrationPolicyChangedDetails
 
     public init(swift: TeamLog.FileProviderMigrationPolicyChangedDetails) {
         self.swift = swift
@@ -41459,7 +41668,7 @@ public class DBXTeamLogFileProviderMigrationPolicyChangedType: NSObject {
         self.swift = TeamLog.FileProviderMigrationPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FileProviderMigrationPolicyChangedType
+    public let swift: TeamLog.FileProviderMigrationPolicyChangedType
 
     public init(swift: TeamLog.FileProviderMigrationPolicyChangedType) {
         self.swift = swift
@@ -41483,7 +41692,7 @@ public class DBXTeamLogFileRenameDetails: NSObject {
         self.swift = TeamLog.FileRenameDetails(relocateActionDetails: relocateActionDetails.map(\.swift))
     }
 
-    let swift: TeamLog.FileRenameDetails
+    public let swift: TeamLog.FileRenameDetails
 
     public init(swift: TeamLog.FileRenameDetails) {
         self.swift = swift
@@ -41505,7 +41714,7 @@ public class DBXTeamLogFileRenameType: NSObject {
         self.swift = TeamLog.FileRenameType(description_: description_)
     }
 
-    let swift: TeamLog.FileRenameType
+    public let swift: TeamLog.FileRenameType
 
     public init(swift: TeamLog.FileRenameType) {
         self.swift = swift
@@ -41536,7 +41745,7 @@ public class DBXTeamLogFileRequestChangeDetails: NSObject {
         self.swift = TeamLog.FileRequestChangeDetails(newDetails: newDetails.swift, fileRequestId: fileRequestId, previousDetails: previousDetails?.swift)
     }
 
-    let swift: TeamLog.FileRequestChangeDetails
+    public let swift: TeamLog.FileRequestChangeDetails
 
     public init(swift: TeamLog.FileRequestChangeDetails) {
         self.swift = swift
@@ -41558,7 +41767,7 @@ public class DBXTeamLogFileRequestChangeType: NSObject {
         self.swift = TeamLog.FileRequestChangeType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestChangeType
+    public let swift: TeamLog.FileRequestChangeType
 
     public init(swift: TeamLog.FileRequestChangeType) {
         self.swift = swift
@@ -41585,7 +41794,7 @@ public class DBXTeamLogFileRequestCloseDetails: NSObject {
         self.swift = TeamLog.FileRequestCloseDetails(fileRequestId: fileRequestId, previousDetails: previousDetails?.swift)
     }
 
-    let swift: TeamLog.FileRequestCloseDetails
+    public let swift: TeamLog.FileRequestCloseDetails
 
     public init(swift: TeamLog.FileRequestCloseDetails) {
         self.swift = swift
@@ -41607,7 +41816,7 @@ public class DBXTeamLogFileRequestCloseType: NSObject {
         self.swift = TeamLog.FileRequestCloseType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestCloseType
+    public let swift: TeamLog.FileRequestCloseType
 
     public init(swift: TeamLog.FileRequestCloseType) {
         self.swift = swift
@@ -41634,7 +41843,7 @@ public class DBXTeamLogFileRequestCreateDetails: NSObject {
         self.swift = TeamLog.FileRequestCreateDetails(fileRequestId: fileRequestId, requestDetails: requestDetails?.swift)
     }
 
-    let swift: TeamLog.FileRequestCreateDetails
+    public let swift: TeamLog.FileRequestCreateDetails
 
     public init(swift: TeamLog.FileRequestCreateDetails) {
         self.swift = swift
@@ -41656,7 +41865,7 @@ public class DBXTeamLogFileRequestCreateType: NSObject {
         self.swift = TeamLog.FileRequestCreateType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestCreateType
+    public let swift: TeamLog.FileRequestCreateType
 
     public init(swift: TeamLog.FileRequestCreateType) {
         self.swift = swift
@@ -41681,7 +41890,7 @@ public class DBXTeamLogFileRequestDeadline: NSObject {
         self.swift = TeamLog.FileRequestDeadline(deadline: deadline, allowLateUploads: allowLateUploads)
     }
 
-    let swift: TeamLog.FileRequestDeadline
+    public let swift: TeamLog.FileRequestDeadline
 
     public init(swift: TeamLog.FileRequestDeadline) {
         self.swift = swift
@@ -41708,7 +41917,7 @@ public class DBXTeamLogFileRequestDeleteDetails: NSObject {
         self.swift = TeamLog.FileRequestDeleteDetails(fileRequestId: fileRequestId, previousDetails: previousDetails?.swift)
     }
 
-    let swift: TeamLog.FileRequestDeleteDetails
+    public let swift: TeamLog.FileRequestDeleteDetails
 
     public init(swift: TeamLog.FileRequestDeleteDetails) {
         self.swift = swift
@@ -41730,7 +41939,7 @@ public class DBXTeamLogFileRequestDeleteType: NSObject {
         self.swift = TeamLog.FileRequestDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestDeleteType
+    public let swift: TeamLog.FileRequestDeleteType
 
     public init(swift: TeamLog.FileRequestDeleteType) {
         self.swift = swift
@@ -41757,7 +41966,7 @@ public class DBXTeamLogFileRequestDetails: NSObject {
         self.swift = TeamLog.FileRequestDetails(assetIndex: assetIndex.uint64Value, deadline: deadline?.swift)
     }
 
-    let swift: TeamLog.FileRequestDetails
+    public let swift: TeamLog.FileRequestDetails
 
     public init(swift: TeamLog.FileRequestDetails) {
         self.swift = swift
@@ -41806,7 +42015,7 @@ public class DBXTeamLogFileRequestReceiveFileDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.FileRequestReceiveFileDetails
+    public let swift: TeamLog.FileRequestReceiveFileDetails
 
     public init(swift: TeamLog.FileRequestReceiveFileDetails) {
         self.swift = swift
@@ -41828,7 +42037,7 @@ public class DBXTeamLogFileRequestReceiveFileType: NSObject {
         self.swift = TeamLog.FileRequestReceiveFileType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestReceiveFileType
+    public let swift: TeamLog.FileRequestReceiveFileType
 
     public init(swift: TeamLog.FileRequestReceiveFileType) {
         self.swift = swift
@@ -41843,11 +42052,11 @@ public class DBXTeamLogFileRequestReceiveFileType: NSObject {
 public class DBXTeamLogFileRequestsChangePolicyDetails: NSObject {
     /// New file requests policy.
     @objc
-    public var newValue: DBXTeamLogFileRequestsPolicy { DBXTeamLogFileRequestsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFileRequestsPolicy { DBXTeamLogFileRequestsPolicy.factory(swift: swift.newValue) }
     /// Previous file requests policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogFileRequestsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogFileRequestsPolicy(swift: swift)
+        return DBXTeamLogFileRequestsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -41855,7 +42064,7 @@ public class DBXTeamLogFileRequestsChangePolicyDetails: NSObject {
         self.swift = TeamLog.FileRequestsChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.FileRequestsChangePolicyDetails
+    public let swift: TeamLog.FileRequestsChangePolicyDetails
 
     public init(swift: TeamLog.FileRequestsChangePolicyDetails) {
         self.swift = swift
@@ -41877,7 +42086,7 @@ public class DBXTeamLogFileRequestsChangePolicyType: NSObject {
         self.swift = TeamLog.FileRequestsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestsChangePolicyType
+    public let swift: TeamLog.FileRequestsChangePolicyType
 
     public init(swift: TeamLog.FileRequestsChangePolicyType) {
         self.swift = swift
@@ -41890,7 +42099,12 @@ public class DBXTeamLogFileRequestsChangePolicyType: NSObject {
 /// Enabled file request emails for everyone.
 @objc
 public class DBXTeamLogFileRequestsEmailsEnabledDetails: NSObject {
-    let swift: TeamLog.FileRequestsEmailsEnabledDetails
+    public override init() {
+        self.swift = TeamLog.FileRequestsEmailsEnabledDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileRequestsEmailsEnabledDetails
 
     public init(swift: TeamLog.FileRequestsEmailsEnabledDetails) {
         self.swift = swift
@@ -41912,7 +42126,7 @@ public class DBXTeamLogFileRequestsEmailsEnabledType: NSObject {
         self.swift = TeamLog.FileRequestsEmailsEnabledType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestsEmailsEnabledType
+    public let swift: TeamLog.FileRequestsEmailsEnabledType
 
     public init(swift: TeamLog.FileRequestsEmailsEnabledType) {
         self.swift = swift
@@ -41925,7 +42139,12 @@ public class DBXTeamLogFileRequestsEmailsEnabledType: NSObject {
 /// Enabled file request emails for team.
 @objc
 public class DBXTeamLogFileRequestsEmailsRestrictedToTeamOnlyDetails: NSObject {
-    let swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyDetails
+    public override init() {
+        self.swift = TeamLog.FileRequestsEmailsRestrictedToTeamOnlyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyDetails
 
     public init(swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyDetails) {
         self.swift = swift
@@ -41947,7 +42166,7 @@ public class DBXTeamLogFileRequestsEmailsRestrictedToTeamOnlyType: NSObject {
         self.swift = TeamLog.FileRequestsEmailsRestrictedToTeamOnlyType(description_: description_)
     }
 
-    let swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyType
+    public let swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyType
 
     public init(swift: TeamLog.FileRequestsEmailsRestrictedToTeamOnlyType) {
         self.swift = swift
@@ -41960,9 +42179,9 @@ public class DBXTeamLogFileRequestsEmailsRestrictedToTeamOnlyType: NSObject {
 /// File requests policy
 @objc
 public class DBXTeamLogFileRequestsPolicy: NSObject {
-    let swift: TeamLog.FileRequestsPolicy
+    public let swift: TeamLog.FileRequestsPolicy
 
-    public init(swift: TeamLog.FileRequestsPolicy) {
+    fileprivate init(swift: TeamLog.FileRequestsPolicy) {
         self.swift = swift
     }
 
@@ -42038,7 +42257,7 @@ public class DBXTeamLogFileResolveCommentDetails: NSObject {
         self.swift = TeamLog.FileResolveCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileResolveCommentDetails
+    public let swift: TeamLog.FileResolveCommentDetails
 
     public init(swift: TeamLog.FileResolveCommentDetails) {
         self.swift = swift
@@ -42060,7 +42279,7 @@ public class DBXTeamLogFileResolveCommentType: NSObject {
         self.swift = TeamLog.FileResolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileResolveCommentType
+    public let swift: TeamLog.FileResolveCommentType
 
     public init(swift: TeamLog.FileResolveCommentType) {
         self.swift = swift
@@ -42073,7 +42292,12 @@ public class DBXTeamLogFileResolveCommentType: NSObject {
 /// Restored deleted files and/or folders.
 @objc
 public class DBXTeamLogFileRestoreDetails: NSObject {
-    let swift: TeamLog.FileRestoreDetails
+    public override init() {
+        self.swift = TeamLog.FileRestoreDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileRestoreDetails
 
     public init(swift: TeamLog.FileRestoreDetails) {
         self.swift = swift
@@ -42095,7 +42319,7 @@ public class DBXTeamLogFileRestoreType: NSObject {
         self.swift = TeamLog.FileRestoreType(description_: description_)
     }
 
-    let swift: TeamLog.FileRestoreType
+    public let swift: TeamLog.FileRestoreType
 
     public init(swift: TeamLog.FileRestoreType) {
         self.swift = swift
@@ -42108,7 +42332,12 @@ public class DBXTeamLogFileRestoreType: NSObject {
 /// Reverted files to previous version.
 @objc
 public class DBXTeamLogFileRevertDetails: NSObject {
-    let swift: TeamLog.FileRevertDetails
+    public override init() {
+        self.swift = TeamLog.FileRevertDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileRevertDetails
 
     public init(swift: TeamLog.FileRevertDetails) {
         self.swift = swift
@@ -42130,7 +42359,7 @@ public class DBXTeamLogFileRevertType: NSObject {
         self.swift = TeamLog.FileRevertType(description_: description_)
     }
 
-    let swift: TeamLog.FileRevertType
+    public let swift: TeamLog.FileRevertType
 
     public init(swift: TeamLog.FileRevertType) {
         self.swift = swift
@@ -42143,7 +42372,12 @@ public class DBXTeamLogFileRevertType: NSObject {
 /// Rolled back file actions.
 @objc
 public class DBXTeamLogFileRollbackChangesDetails: NSObject {
-    let swift: TeamLog.FileRollbackChangesDetails
+    public override init() {
+        self.swift = TeamLog.FileRollbackChangesDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.FileRollbackChangesDetails
 
     public init(swift: TeamLog.FileRollbackChangesDetails) {
         self.swift = swift
@@ -42165,7 +42399,7 @@ public class DBXTeamLogFileRollbackChangesType: NSObject {
         self.swift = TeamLog.FileRollbackChangesType(description_: description_)
     }
 
-    let swift: TeamLog.FileRollbackChangesType
+    public let swift: TeamLog.FileRollbackChangesType
 
     public init(swift: TeamLog.FileRollbackChangesType) {
         self.swift = swift
@@ -42189,7 +42423,7 @@ public class DBXTeamLogFileSaveCopyReferenceDetails: NSObject {
         self.swift = TeamLog.FileSaveCopyReferenceDetails(relocateActionDetails: relocateActionDetails.map(\.swift))
     }
 
-    let swift: TeamLog.FileSaveCopyReferenceDetails
+    public let swift: TeamLog.FileSaveCopyReferenceDetails
 
     public init(swift: TeamLog.FileSaveCopyReferenceDetails) {
         self.swift = swift
@@ -42211,7 +42445,7 @@ public class DBXTeamLogFileSaveCopyReferenceType: NSObject {
         self.swift = TeamLog.FileSaveCopyReferenceType(description_: description_)
     }
 
-    let swift: TeamLog.FileSaveCopyReferenceType
+    public let swift: TeamLog.FileSaveCopyReferenceType
 
     public init(swift: TeamLog.FileSaveCopyReferenceType) {
         self.swift = swift
@@ -42233,7 +42467,7 @@ public class DBXTeamLogFileTransfersFileAddDetails: NSObject {
         self.swift = TeamLog.FileTransfersFileAddDetails(fileTransferId: fileTransferId)
     }
 
-    let swift: TeamLog.FileTransfersFileAddDetails
+    public let swift: TeamLog.FileTransfersFileAddDetails
 
     public init(swift: TeamLog.FileTransfersFileAddDetails) {
         self.swift = swift
@@ -42255,7 +42489,7 @@ public class DBXTeamLogFileTransfersFileAddType: NSObject {
         self.swift = TeamLog.FileTransfersFileAddType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersFileAddType
+    public let swift: TeamLog.FileTransfersFileAddType
 
     public init(swift: TeamLog.FileTransfersFileAddType) {
         self.swift = swift
@@ -42268,9 +42502,9 @@ public class DBXTeamLogFileTransfersFileAddType: NSObject {
 /// File transfers policy
 @objc
 public class DBXTeamLogFileTransfersPolicy: NSObject {
-    let swift: TeamLog.FileTransfersPolicy
+    public let swift: TeamLog.FileTransfersPolicy
 
-    public init(swift: TeamLog.FileTransfersPolicy) {
+    fileprivate init(swift: TeamLog.FileTransfersPolicy) {
         self.swift = swift
     }
 
@@ -42339,17 +42573,17 @@ public class DBXTeamLogFileTransfersPolicyOther: DBXTeamLogFileTransfersPolicy {
 public class DBXTeamLogFileTransfersPolicyChangedDetails: NSObject {
     /// New file transfers policy.
     @objc
-    public var newValue: DBXTeamLogFileTransfersPolicy { DBXTeamLogFileTransfersPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFileTransfersPolicy { DBXTeamLogFileTransfersPolicy.factory(swift: swift.newValue) }
     /// Previous file transfers policy.
     @objc
-    public var previousValue: DBXTeamLogFileTransfersPolicy { DBXTeamLogFileTransfersPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogFileTransfersPolicy { DBXTeamLogFileTransfersPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogFileTransfersPolicy, previousValue: DBXTeamLogFileTransfersPolicy) {
         self.swift = TeamLog.FileTransfersPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.FileTransfersPolicyChangedDetails
+    public let swift: TeamLog.FileTransfersPolicyChangedDetails
 
     public init(swift: TeamLog.FileTransfersPolicyChangedDetails) {
         self.swift = swift
@@ -42371,7 +42605,7 @@ public class DBXTeamLogFileTransfersPolicyChangedType: NSObject {
         self.swift = TeamLog.FileTransfersPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersPolicyChangedType
+    public let swift: TeamLog.FileTransfersPolicyChangedType
 
     public init(swift: TeamLog.FileTransfersPolicyChangedType) {
         self.swift = swift
@@ -42393,7 +42627,7 @@ public class DBXTeamLogFileTransfersTransferDeleteDetails: NSObject {
         self.swift = TeamLog.FileTransfersTransferDeleteDetails(fileTransferId: fileTransferId)
     }
 
-    let swift: TeamLog.FileTransfersTransferDeleteDetails
+    public let swift: TeamLog.FileTransfersTransferDeleteDetails
 
     public init(swift: TeamLog.FileTransfersTransferDeleteDetails) {
         self.swift = swift
@@ -42415,7 +42649,7 @@ public class DBXTeamLogFileTransfersTransferDeleteType: NSObject {
         self.swift = TeamLog.FileTransfersTransferDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersTransferDeleteType
+    public let swift: TeamLog.FileTransfersTransferDeleteType
 
     public init(swift: TeamLog.FileTransfersTransferDeleteType) {
         self.swift = swift
@@ -42437,7 +42671,7 @@ public class DBXTeamLogFileTransfersTransferDownloadDetails: NSObject {
         self.swift = TeamLog.FileTransfersTransferDownloadDetails(fileTransferId: fileTransferId)
     }
 
-    let swift: TeamLog.FileTransfersTransferDownloadDetails
+    public let swift: TeamLog.FileTransfersTransferDownloadDetails
 
     public init(swift: TeamLog.FileTransfersTransferDownloadDetails) {
         self.swift = swift
@@ -42459,7 +42693,7 @@ public class DBXTeamLogFileTransfersTransferDownloadType: NSObject {
         self.swift = TeamLog.FileTransfersTransferDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersTransferDownloadType
+    public let swift: TeamLog.FileTransfersTransferDownloadType
 
     public init(swift: TeamLog.FileTransfersTransferDownloadType) {
         self.swift = swift
@@ -42481,7 +42715,7 @@ public class DBXTeamLogFileTransfersTransferSendDetails: NSObject {
         self.swift = TeamLog.FileTransfersTransferSendDetails(fileTransferId: fileTransferId)
     }
 
-    let swift: TeamLog.FileTransfersTransferSendDetails
+    public let swift: TeamLog.FileTransfersTransferSendDetails
 
     public init(swift: TeamLog.FileTransfersTransferSendDetails) {
         self.swift = swift
@@ -42503,7 +42737,7 @@ public class DBXTeamLogFileTransfersTransferSendType: NSObject {
         self.swift = TeamLog.FileTransfersTransferSendType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersTransferSendType
+    public let swift: TeamLog.FileTransfersTransferSendType
 
     public init(swift: TeamLog.FileTransfersTransferSendType) {
         self.swift = swift
@@ -42525,7 +42759,7 @@ public class DBXTeamLogFileTransfersTransferViewDetails: NSObject {
         self.swift = TeamLog.FileTransfersTransferViewDetails(fileTransferId: fileTransferId)
     }
 
-    let swift: TeamLog.FileTransfersTransferViewDetails
+    public let swift: TeamLog.FileTransfersTransferViewDetails
 
     public init(swift: TeamLog.FileTransfersTransferViewDetails) {
         self.swift = swift
@@ -42547,7 +42781,7 @@ public class DBXTeamLogFileTransfersTransferViewType: NSObject {
         self.swift = TeamLog.FileTransfersTransferViewType(description_: description_)
     }
 
-    let swift: TeamLog.FileTransfersTransferViewType
+    public let swift: TeamLog.FileTransfersTransferViewType
 
     public init(swift: TeamLog.FileTransfersTransferViewType) {
         self.swift = swift
@@ -42569,7 +42803,7 @@ public class DBXTeamLogFileUnlikeCommentDetails: NSObject {
         self.swift = TeamLog.FileUnlikeCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileUnlikeCommentDetails
+    public let swift: TeamLog.FileUnlikeCommentDetails
 
     public init(swift: TeamLog.FileUnlikeCommentDetails) {
         self.swift = swift
@@ -42591,7 +42825,7 @@ public class DBXTeamLogFileUnlikeCommentType: NSObject {
         self.swift = TeamLog.FileUnlikeCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileUnlikeCommentType
+    public let swift: TeamLog.FileUnlikeCommentType
 
     public init(swift: TeamLog.FileUnlikeCommentType) {
         self.swift = swift
@@ -42613,7 +42847,7 @@ public class DBXTeamLogFileUnresolveCommentDetails: NSObject {
         self.swift = TeamLog.FileUnresolveCommentDetails(commentText: commentText)
     }
 
-    let swift: TeamLog.FileUnresolveCommentDetails
+    public let swift: TeamLog.FileUnresolveCommentDetails
 
     public init(swift: TeamLog.FileUnresolveCommentDetails) {
         self.swift = swift
@@ -42635,7 +42869,7 @@ public class DBXTeamLogFileUnresolveCommentType: NSObject {
         self.swift = TeamLog.FileUnresolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.FileUnresolveCommentType
+    public let swift: TeamLog.FileUnresolveCommentType
 
     public init(swift: TeamLog.FileUnresolveCommentType) {
         self.swift = swift
@@ -42648,9 +42882,9 @@ public class DBXTeamLogFileUnresolveCommentType: NSObject {
 /// Policy for deciding whether applying link restrictions on all team owned folders
 @objc
 public class DBXTeamLogFolderLinkRestrictionPolicy: NSObject {
-    let swift: TeamLog.FolderLinkRestrictionPolicy
+    public let swift: TeamLog.FolderLinkRestrictionPolicy
 
-    public init(swift: TeamLog.FolderLinkRestrictionPolicy) {
+    fileprivate init(swift: TeamLog.FolderLinkRestrictionPolicy) {
         self.swift = swift
     }
 
@@ -42719,17 +42953,17 @@ public class DBXTeamLogFolderLinkRestrictionPolicyOther: DBXTeamLogFolderLinkRes
 public class DBXTeamLogFolderLinkRestrictionPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogFolderLinkRestrictionPolicy { DBXTeamLogFolderLinkRestrictionPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogFolderLinkRestrictionPolicy { DBXTeamLogFolderLinkRestrictionPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogFolderLinkRestrictionPolicy { DBXTeamLogFolderLinkRestrictionPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogFolderLinkRestrictionPolicy { DBXTeamLogFolderLinkRestrictionPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogFolderLinkRestrictionPolicy, previousValue: DBXTeamLogFolderLinkRestrictionPolicy) {
         self.swift = TeamLog.FolderLinkRestrictionPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.FolderLinkRestrictionPolicyChangedDetails
+    public let swift: TeamLog.FolderLinkRestrictionPolicyChangedDetails
 
     public init(swift: TeamLog.FolderLinkRestrictionPolicyChangedDetails) {
         self.swift = swift
@@ -42751,7 +42985,7 @@ public class DBXTeamLogFolderLinkRestrictionPolicyChangedType: NSObject {
         self.swift = TeamLog.FolderLinkRestrictionPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FolderLinkRestrictionPolicyChangedType
+    public let swift: TeamLog.FolderLinkRestrictionPolicyChangedType
 
     public init(swift: TeamLog.FolderLinkRestrictionPolicyChangedType) {
         self.swift = swift
@@ -42781,7 +43015,7 @@ public class DBXTeamLogFolderLogInfo: DBXTeamLogFileOrFolderLogInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.FolderLogInfo
+    public let subSwift: TeamLog.FolderLogInfo
 
     public init(swift: TeamLog.FolderLogInfo) {
         self.subSwift = swift
@@ -42804,7 +43038,7 @@ public class DBXTeamLogFolderOverviewDescriptionChangedDetails: NSObject {
         self.swift = TeamLog.FolderOverviewDescriptionChangedDetails(folderOverviewLocationAsset: folderOverviewLocationAsset.uint64Value)
     }
 
-    let swift: TeamLog.FolderOverviewDescriptionChangedDetails
+    public let swift: TeamLog.FolderOverviewDescriptionChangedDetails
 
     public init(swift: TeamLog.FolderOverviewDescriptionChangedDetails) {
         self.swift = swift
@@ -42826,7 +43060,7 @@ public class DBXTeamLogFolderOverviewDescriptionChangedType: NSObject {
         self.swift = TeamLog.FolderOverviewDescriptionChangedType(description_: description_)
     }
 
-    let swift: TeamLog.FolderOverviewDescriptionChangedType
+    public let swift: TeamLog.FolderOverviewDescriptionChangedType
 
     public init(swift: TeamLog.FolderOverviewDescriptionChangedType) {
         self.swift = swift
@@ -42854,7 +43088,7 @@ public class DBXTeamLogFolderOverviewItemPinnedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.FolderOverviewItemPinnedDetails
+    public let swift: TeamLog.FolderOverviewItemPinnedDetails
 
     public init(swift: TeamLog.FolderOverviewItemPinnedDetails) {
         self.swift = swift
@@ -42876,7 +43110,7 @@ public class DBXTeamLogFolderOverviewItemPinnedType: NSObject {
         self.swift = TeamLog.FolderOverviewItemPinnedType(description_: description_)
     }
 
-    let swift: TeamLog.FolderOverviewItemPinnedType
+    public let swift: TeamLog.FolderOverviewItemPinnedType
 
     public init(swift: TeamLog.FolderOverviewItemPinnedType) {
         self.swift = swift
@@ -42904,7 +43138,7 @@ public class DBXTeamLogFolderOverviewItemUnpinnedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.FolderOverviewItemUnpinnedDetails
+    public let swift: TeamLog.FolderOverviewItemUnpinnedDetails
 
     public init(swift: TeamLog.FolderOverviewItemUnpinnedDetails) {
         self.swift = swift
@@ -42926,7 +43160,7 @@ public class DBXTeamLogFolderOverviewItemUnpinnedType: NSObject {
         self.swift = TeamLog.FolderOverviewItemUnpinnedType(description_: description_)
     }
 
-    let swift: TeamLog.FolderOverviewItemUnpinnedType
+    public let swift: TeamLog.FolderOverviewItemUnpinnedType
 
     public init(swift: TeamLog.FolderOverviewItemUnpinnedType) {
         self.swift = swift
@@ -42957,7 +43191,7 @@ public class DBXTeamLogGeoLocationLogInfo: NSObject {
         self.swift = TeamLog.GeoLocationLogInfo(ipAddress: ipAddress, city: city, region: region, country: country)
     }
 
-    let swift: TeamLog.GeoLocationLogInfo
+    public let swift: TeamLog.GeoLocationLogInfo
 
     public init(swift: TeamLog.GeoLocationLogInfo) {
         self.swift = swift
@@ -42989,14 +43223,14 @@ public class DBXTeamLogGetTeamEventsArg: NSObject {
     /// event_type.
     @objc
     public var category: DBXTeamLogEventCategory? { guard let swift = swift.category else { return nil }
-        return DBXTeamLogEventCategory(swift: swift)
+        return DBXTeamLogEventCategory.factory(swift: swift)
     }
 
     /// Filter the returned events to a single event type. Note that event_type shouldn't be provided together with
     /// category.
     @objc
     public var eventType: DBXTeamLogEventTypeArg? { guard let swift = swift.eventType else { return nil }
-        return DBXTeamLogEventTypeArg(swift: swift)
+        return DBXTeamLogEventTypeArg.factory(swift: swift)
     }
 
     @objc
@@ -43010,7 +43244,7 @@ public class DBXTeamLogGetTeamEventsArg: NSObject {
         )
     }
 
-    let swift: TeamLog.GetTeamEventsArg
+    public let swift: TeamLog.GetTeamEventsArg
 
     public init(swift: TeamLog.GetTeamEventsArg) {
         self.swift = swift
@@ -43032,7 +43266,7 @@ public class DBXTeamLogGetTeamEventsContinueArg: NSObject {
         self.swift = TeamLog.GetTeamEventsContinueArg(cursor: cursor)
     }
 
-    let swift: TeamLog.GetTeamEventsContinueArg
+    public let swift: TeamLog.GetTeamEventsContinueArg
 
     public init(swift: TeamLog.GetTeamEventsContinueArg) {
         self.swift = swift
@@ -43045,9 +43279,9 @@ public class DBXTeamLogGetTeamEventsContinueArg: NSObject {
 /// Errors that can be raised when calling getEventsContinue.
 @objc
 public class DBXTeamLogGetTeamEventsContinueError: NSObject {
-    let swift: TeamLog.GetTeamEventsContinueError
+    public let swift: TeamLog.GetTeamEventsContinueError
 
-    public init(swift: TeamLog.GetTeamEventsContinueError) {
+    fileprivate init(swift: TeamLog.GetTeamEventsContinueError) {
         self.swift = swift
     }
 
@@ -43122,9 +43356,9 @@ public class DBXTeamLogGetTeamEventsContinueErrorOther: DBXTeamLogGetTeamEventsC
 /// Errors that can be raised when calling getEvents.
 @objc
 public class DBXTeamLogGetTeamEventsError: NSObject {
-    let swift: TeamLog.GetTeamEventsError
+    public let swift: TeamLog.GetTeamEventsError
 
-    public init(swift: TeamLog.GetTeamEventsError) {
+    fileprivate init(swift: TeamLog.GetTeamEventsError) {
         self.swift = swift
     }
 
@@ -43228,7 +43462,7 @@ public class DBXTeamLogGetTeamEventsResult: NSObject {
         self.swift = TeamLog.GetTeamEventsResult(events: events.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
     }
 
-    let swift: TeamLog.GetTeamEventsResult
+    public let swift: TeamLog.GetTeamEventsResult
 
     public init(swift: TeamLog.GetTeamEventsResult) {
         self.swift = swift
@@ -43243,11 +43477,11 @@ public class DBXTeamLogGetTeamEventsResult: NSObject {
 public class DBXTeamLogGoogleSsoChangePolicyDetails: NSObject {
     /// New Google single sign-on policy.
     @objc
-    public var newValue: DBXTeamLogGoogleSsoPolicy { DBXTeamLogGoogleSsoPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogGoogleSsoPolicy { DBXTeamLogGoogleSsoPolicy.factory(swift: swift.newValue) }
     /// Previous Google single sign-on policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogGoogleSsoPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogGoogleSsoPolicy(swift: swift)
+        return DBXTeamLogGoogleSsoPolicy.factory(swift: swift)
     }
 
     @objc
@@ -43255,7 +43489,7 @@ public class DBXTeamLogGoogleSsoChangePolicyDetails: NSObject {
         self.swift = TeamLog.GoogleSsoChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.GoogleSsoChangePolicyDetails
+    public let swift: TeamLog.GoogleSsoChangePolicyDetails
 
     public init(swift: TeamLog.GoogleSsoChangePolicyDetails) {
         self.swift = swift
@@ -43277,7 +43511,7 @@ public class DBXTeamLogGoogleSsoChangePolicyType: NSObject {
         self.swift = TeamLog.GoogleSsoChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.GoogleSsoChangePolicyType
+    public let swift: TeamLog.GoogleSsoChangePolicyType
 
     public init(swift: TeamLog.GoogleSsoChangePolicyType) {
         self.swift = swift
@@ -43290,9 +43524,9 @@ public class DBXTeamLogGoogleSsoChangePolicyType: NSObject {
 /// Google SSO policy
 @objc
 public class DBXTeamLogGoogleSsoPolicy: NSObject {
-    let swift: TeamLog.GoogleSsoPolicy
+    public let swift: TeamLog.GoogleSsoPolicy
 
-    public init(swift: TeamLog.GoogleSsoPolicy) {
+    fileprivate init(swift: TeamLog.GoogleSsoPolicy) {
         self.swift = swift
     }
 
@@ -43368,7 +43602,7 @@ public class DBXTeamLogGovernancePolicyAddFolderFailedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Folder.
@@ -43389,7 +43623,7 @@ public class DBXTeamLogGovernancePolicyAddFolderFailedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyAddFolderFailedDetails
+    public let swift: TeamLog.GovernancePolicyAddFolderFailedDetails
 
     public init(swift: TeamLog.GovernancePolicyAddFolderFailedDetails) {
         self.swift = swift
@@ -43411,7 +43645,7 @@ public class DBXTeamLogGovernancePolicyAddFolderFailedType: NSObject {
         self.swift = TeamLog.GovernancePolicyAddFolderFailedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyAddFolderFailedType
+    public let swift: TeamLog.GovernancePolicyAddFolderFailedType
 
     public init(swift: TeamLog.GovernancePolicyAddFolderFailedType) {
         self.swift = swift
@@ -43433,7 +43667,7 @@ public class DBXTeamLogGovernancePolicyAddFoldersDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Folders.
@@ -43450,7 +43684,7 @@ public class DBXTeamLogGovernancePolicyAddFoldersDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyAddFoldersDetails
+    public let swift: TeamLog.GovernancePolicyAddFoldersDetails
 
     public init(swift: TeamLog.GovernancePolicyAddFoldersDetails) {
         self.swift = swift
@@ -43472,7 +43706,7 @@ public class DBXTeamLogGovernancePolicyAddFoldersType: NSObject {
         self.swift = TeamLog.GovernancePolicyAddFoldersType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyAddFoldersType
+    public let swift: TeamLog.GovernancePolicyAddFoldersType
 
     public init(swift: TeamLog.GovernancePolicyAddFoldersType) {
         self.swift = swift
@@ -43494,12 +43728,12 @@ public class DBXTeamLogGovernancePolicyContentDisposedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Disposition type.
     @objc
-    public var dispositionType: DBXTeamLogDispositionActionType { DBXTeamLogDispositionActionType(swift: swift.dispositionType) }
+    public var dispositionType: DBXTeamLogDispositionActionType { DBXTeamLogDispositionActionType.factory(swift: swift.dispositionType) }
 
     @objc
     public init(governancePolicyId: String, name: String, dispositionType: DBXTeamLogDispositionActionType, policyType: DBXTeamLogPolicyType?) {
@@ -43511,7 +43745,7 @@ public class DBXTeamLogGovernancePolicyContentDisposedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyContentDisposedDetails
+    public let swift: TeamLog.GovernancePolicyContentDisposedDetails
 
     public init(swift: TeamLog.GovernancePolicyContentDisposedDetails) {
         self.swift = swift
@@ -43533,7 +43767,7 @@ public class DBXTeamLogGovernancePolicyContentDisposedType: NSObject {
         self.swift = TeamLog.GovernancePolicyContentDisposedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyContentDisposedType
+    public let swift: TeamLog.GovernancePolicyContentDisposedType
 
     public init(swift: TeamLog.GovernancePolicyContentDisposedType) {
         self.swift = swift
@@ -43555,7 +43789,7 @@ public class DBXTeamLogGovernancePolicyCreateDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Duration in days.
@@ -43576,7 +43810,7 @@ public class DBXTeamLogGovernancePolicyCreateDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyCreateDetails
+    public let swift: TeamLog.GovernancePolicyCreateDetails
 
     public init(swift: TeamLog.GovernancePolicyCreateDetails) {
         self.swift = swift
@@ -43598,7 +43832,7 @@ public class DBXTeamLogGovernancePolicyCreateType: NSObject {
         self.swift = TeamLog.GovernancePolicyCreateType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyCreateType
+    public let swift: TeamLog.GovernancePolicyCreateType
 
     public init(swift: TeamLog.GovernancePolicyCreateType) {
         self.swift = swift
@@ -43620,7 +43854,7 @@ public class DBXTeamLogGovernancePolicyDeleteDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     @objc
@@ -43628,7 +43862,7 @@ public class DBXTeamLogGovernancePolicyDeleteDetails: NSObject {
         self.swift = TeamLog.GovernancePolicyDeleteDetails(governancePolicyId: governancePolicyId, name: name, policyType: policyType?.swift)
     }
 
-    let swift: TeamLog.GovernancePolicyDeleteDetails
+    public let swift: TeamLog.GovernancePolicyDeleteDetails
 
     public init(swift: TeamLog.GovernancePolicyDeleteDetails) {
         self.swift = swift
@@ -43650,7 +43884,7 @@ public class DBXTeamLogGovernancePolicyDeleteType: NSObject {
         self.swift = TeamLog.GovernancePolicyDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyDeleteType
+    public let swift: TeamLog.GovernancePolicyDeleteType
 
     public init(swift: TeamLog.GovernancePolicyDeleteType) {
         self.swift = swift
@@ -43672,7 +43906,7 @@ public class DBXTeamLogGovernancePolicyEditDetailsDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Attribute.
@@ -43697,7 +43931,7 @@ public class DBXTeamLogGovernancePolicyEditDetailsDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyEditDetailsDetails
+    public let swift: TeamLog.GovernancePolicyEditDetailsDetails
 
     public init(swift: TeamLog.GovernancePolicyEditDetailsDetails) {
         self.swift = swift
@@ -43719,7 +43953,7 @@ public class DBXTeamLogGovernancePolicyEditDetailsType: NSObject {
         self.swift = TeamLog.GovernancePolicyEditDetailsType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyEditDetailsType
+    public let swift: TeamLog.GovernancePolicyEditDetailsType
 
     public init(swift: TeamLog.GovernancePolicyEditDetailsType) {
         self.swift = swift
@@ -43741,7 +43975,7 @@ public class DBXTeamLogGovernancePolicyEditDurationDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// From.
@@ -43768,7 +44002,7 @@ public class DBXTeamLogGovernancePolicyEditDurationDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyEditDurationDetails
+    public let swift: TeamLog.GovernancePolicyEditDurationDetails
 
     public init(swift: TeamLog.GovernancePolicyEditDurationDetails) {
         self.swift = swift
@@ -43790,7 +44024,7 @@ public class DBXTeamLogGovernancePolicyEditDurationType: NSObject {
         self.swift = TeamLog.GovernancePolicyEditDurationType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyEditDurationType
+    public let swift: TeamLog.GovernancePolicyEditDurationType
 
     public init(swift: TeamLog.GovernancePolicyEditDurationType) {
         self.swift = swift
@@ -43812,7 +44046,7 @@ public class DBXTeamLogGovernancePolicyExportCreatedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Export name.
@@ -43829,7 +44063,7 @@ public class DBXTeamLogGovernancePolicyExportCreatedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyExportCreatedDetails
+    public let swift: TeamLog.GovernancePolicyExportCreatedDetails
 
     public init(swift: TeamLog.GovernancePolicyExportCreatedDetails) {
         self.swift = swift
@@ -43851,7 +44085,7 @@ public class DBXTeamLogGovernancePolicyExportCreatedType: NSObject {
         self.swift = TeamLog.GovernancePolicyExportCreatedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyExportCreatedType
+    public let swift: TeamLog.GovernancePolicyExportCreatedType
 
     public init(swift: TeamLog.GovernancePolicyExportCreatedType) {
         self.swift = swift
@@ -43873,7 +44107,7 @@ public class DBXTeamLogGovernancePolicyExportRemovedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Export name.
@@ -43890,7 +44124,7 @@ public class DBXTeamLogGovernancePolicyExportRemovedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyExportRemovedDetails
+    public let swift: TeamLog.GovernancePolicyExportRemovedDetails
 
     public init(swift: TeamLog.GovernancePolicyExportRemovedDetails) {
         self.swift = swift
@@ -43912,7 +44146,7 @@ public class DBXTeamLogGovernancePolicyExportRemovedType: NSObject {
         self.swift = TeamLog.GovernancePolicyExportRemovedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyExportRemovedType
+    public let swift: TeamLog.GovernancePolicyExportRemovedType
 
     public init(swift: TeamLog.GovernancePolicyExportRemovedType) {
         self.swift = swift
@@ -43934,7 +44168,7 @@ public class DBXTeamLogGovernancePolicyRemoveFoldersDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Folders.
@@ -43955,7 +44189,7 @@ public class DBXTeamLogGovernancePolicyRemoveFoldersDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyRemoveFoldersDetails
+    public let swift: TeamLog.GovernancePolicyRemoveFoldersDetails
 
     public init(swift: TeamLog.GovernancePolicyRemoveFoldersDetails) {
         self.swift = swift
@@ -43977,7 +44211,7 @@ public class DBXTeamLogGovernancePolicyRemoveFoldersType: NSObject {
         self.swift = TeamLog.GovernancePolicyRemoveFoldersType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyRemoveFoldersType
+    public let swift: TeamLog.GovernancePolicyRemoveFoldersType
 
     public init(swift: TeamLog.GovernancePolicyRemoveFoldersType) {
         self.swift = swift
@@ -43999,7 +44233,7 @@ public class DBXTeamLogGovernancePolicyReportCreatedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     @objc
@@ -44007,7 +44241,7 @@ public class DBXTeamLogGovernancePolicyReportCreatedDetails: NSObject {
         self.swift = TeamLog.GovernancePolicyReportCreatedDetails(governancePolicyId: governancePolicyId, name: name, policyType: policyType?.swift)
     }
 
-    let swift: TeamLog.GovernancePolicyReportCreatedDetails
+    public let swift: TeamLog.GovernancePolicyReportCreatedDetails
 
     public init(swift: TeamLog.GovernancePolicyReportCreatedDetails) {
         self.swift = swift
@@ -44029,7 +44263,7 @@ public class DBXTeamLogGovernancePolicyReportCreatedType: NSObject {
         self.swift = TeamLog.GovernancePolicyReportCreatedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyReportCreatedType
+    public let swift: TeamLog.GovernancePolicyReportCreatedType
 
     public init(swift: TeamLog.GovernancePolicyReportCreatedType) {
         self.swift = swift
@@ -44051,7 +44285,7 @@ public class DBXTeamLogGovernancePolicyZipPartDownloadedDetails: NSObject {
     /// Policy type.
     @objc
     public var policyType: DBXTeamLogPolicyType? { guard let swift = swift.policyType else { return nil }
-        return DBXTeamLogPolicyType(swift: swift)
+        return DBXTeamLogPolicyType.factory(swift: swift)
     }
 
     /// Export name.
@@ -44072,7 +44306,7 @@ public class DBXTeamLogGovernancePolicyZipPartDownloadedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GovernancePolicyZipPartDownloadedDetails
+    public let swift: TeamLog.GovernancePolicyZipPartDownloadedDetails
 
     public init(swift: TeamLog.GovernancePolicyZipPartDownloadedDetails) {
         self.swift = swift
@@ -44094,7 +44328,7 @@ public class DBXTeamLogGovernancePolicyZipPartDownloadedType: NSObject {
         self.swift = TeamLog.GovernancePolicyZipPartDownloadedType(description_: description_)
     }
 
-    let swift: TeamLog.GovernancePolicyZipPartDownloadedType
+    public let swift: TeamLog.GovernancePolicyZipPartDownloadedType
 
     public init(swift: TeamLog.GovernancePolicyZipPartDownloadedType) {
         self.swift = swift
@@ -44116,7 +44350,7 @@ public class DBXTeamLogGroupAddExternalIdDetails: NSObject {
         self.swift = TeamLog.GroupAddExternalIdDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.GroupAddExternalIdDetails
+    public let swift: TeamLog.GroupAddExternalIdDetails
 
     public init(swift: TeamLog.GroupAddExternalIdDetails) {
         self.swift = swift
@@ -44138,7 +44372,7 @@ public class DBXTeamLogGroupAddExternalIdType: NSObject {
         self.swift = TeamLog.GroupAddExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.GroupAddExternalIdType
+    public let swift: TeamLog.GroupAddExternalIdType
 
     public init(swift: TeamLog.GroupAddExternalIdType) {
         self.swift = swift
@@ -44160,7 +44394,7 @@ public class DBXTeamLogGroupAddMemberDetails: NSObject {
         self.swift = TeamLog.GroupAddMemberDetails(isGroupOwner: isGroupOwner.boolValue)
     }
 
-    let swift: TeamLog.GroupAddMemberDetails
+    public let swift: TeamLog.GroupAddMemberDetails
 
     public init(swift: TeamLog.GroupAddMemberDetails) {
         self.swift = swift
@@ -44182,7 +44416,7 @@ public class DBXTeamLogGroupAddMemberType: NSObject {
         self.swift = TeamLog.GroupAddMemberType(description_: description_)
     }
 
-    let swift: TeamLog.GroupAddMemberType
+    public let swift: TeamLog.GroupAddMemberType
 
     public init(swift: TeamLog.GroupAddMemberType) {
         self.swift = swift
@@ -44207,7 +44441,7 @@ public class DBXTeamLogGroupChangeExternalIdDetails: NSObject {
         self.swift = TeamLog.GroupChangeExternalIdDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.GroupChangeExternalIdDetails
+    public let swift: TeamLog.GroupChangeExternalIdDetails
 
     public init(swift: TeamLog.GroupChangeExternalIdDetails) {
         self.swift = swift
@@ -44229,7 +44463,7 @@ public class DBXTeamLogGroupChangeExternalIdType: NSObject {
         self.swift = TeamLog.GroupChangeExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.GroupChangeExternalIdType
+    public let swift: TeamLog.GroupChangeExternalIdType
 
     public init(swift: TeamLog.GroupChangeExternalIdType) {
         self.swift = swift
@@ -44244,11 +44478,11 @@ public class DBXTeamLogGroupChangeExternalIdType: NSObject {
 public class DBXTeamLogGroupChangeManagementTypeDetails: NSObject {
     /// New group management type.
     @objc
-    public var newValue: DBXTeamCommonGroupManagementType { DBXTeamCommonGroupManagementType(swift: swift.newValue) }
+    public var newValue: DBXTeamCommonGroupManagementType { DBXTeamCommonGroupManagementType.factory(swift: swift.newValue) }
     /// Previous group management type. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamCommonGroupManagementType? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamCommonGroupManagementType(swift: swift)
+        return DBXTeamCommonGroupManagementType.factory(swift: swift)
     }
 
     @objc
@@ -44256,7 +44490,7 @@ public class DBXTeamLogGroupChangeManagementTypeDetails: NSObject {
         self.swift = TeamLog.GroupChangeManagementTypeDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.GroupChangeManagementTypeDetails
+    public let swift: TeamLog.GroupChangeManagementTypeDetails
 
     public init(swift: TeamLog.GroupChangeManagementTypeDetails) {
         self.swift = swift
@@ -44278,7 +44512,7 @@ public class DBXTeamLogGroupChangeManagementTypeType: NSObject {
         self.swift = TeamLog.GroupChangeManagementTypeType(description_: description_)
     }
 
-    let swift: TeamLog.GroupChangeManagementTypeType
+    public let swift: TeamLog.GroupChangeManagementTypeType
 
     public init(swift: TeamLog.GroupChangeManagementTypeType) {
         self.swift = swift
@@ -44300,7 +44534,7 @@ public class DBXTeamLogGroupChangeMemberRoleDetails: NSObject {
         self.swift = TeamLog.GroupChangeMemberRoleDetails(isGroupOwner: isGroupOwner.boolValue)
     }
 
-    let swift: TeamLog.GroupChangeMemberRoleDetails
+    public let swift: TeamLog.GroupChangeMemberRoleDetails
 
     public init(swift: TeamLog.GroupChangeMemberRoleDetails) {
         self.swift = swift
@@ -44322,7 +44556,7 @@ public class DBXTeamLogGroupChangeMemberRoleType: NSObject {
         self.swift = TeamLog.GroupChangeMemberRoleType(description_: description_)
     }
 
-    let swift: TeamLog.GroupChangeMemberRoleType
+    public let swift: TeamLog.GroupChangeMemberRoleType
 
     public init(swift: TeamLog.GroupChangeMemberRoleType) {
         self.swift = swift
@@ -44341,7 +44575,7 @@ public class DBXTeamLogGroupCreateDetails: NSObject {
     /// Group join policy.
     @objc
     public var joinPolicy: DBXTeamLogGroupJoinPolicy? { guard let swift = swift.joinPolicy else { return nil }
-        return DBXTeamLogGroupJoinPolicy(swift: swift)
+        return DBXTeamLogGroupJoinPolicy.factory(swift: swift)
     }
 
     @objc
@@ -44349,7 +44583,7 @@ public class DBXTeamLogGroupCreateDetails: NSObject {
         self.swift = TeamLog.GroupCreateDetails(isCompanyManaged: isCompanyManaged?.boolValue, joinPolicy: joinPolicy?.swift)
     }
 
-    let swift: TeamLog.GroupCreateDetails
+    public let swift: TeamLog.GroupCreateDetails
 
     public init(swift: TeamLog.GroupCreateDetails) {
         self.swift = swift
@@ -44371,7 +44605,7 @@ public class DBXTeamLogGroupCreateType: NSObject {
         self.swift = TeamLog.GroupCreateType(description_: description_)
     }
 
-    let swift: TeamLog.GroupCreateType
+    public let swift: TeamLog.GroupCreateType
 
     public init(swift: TeamLog.GroupCreateType) {
         self.swift = swift
@@ -44393,7 +44627,7 @@ public class DBXTeamLogGroupDeleteDetails: NSObject {
         self.swift = TeamLog.GroupDeleteDetails(isCompanyManaged: isCompanyManaged?.boolValue)
     }
 
-    let swift: TeamLog.GroupDeleteDetails
+    public let swift: TeamLog.GroupDeleteDetails
 
     public init(swift: TeamLog.GroupDeleteDetails) {
         self.swift = swift
@@ -44415,7 +44649,7 @@ public class DBXTeamLogGroupDeleteType: NSObject {
         self.swift = TeamLog.GroupDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.GroupDeleteType
+    public let swift: TeamLog.GroupDeleteType
 
     public init(swift: TeamLog.GroupDeleteType) {
         self.swift = swift
@@ -44428,7 +44662,12 @@ public class DBXTeamLogGroupDeleteType: NSObject {
 /// Updated group.
 @objc
 public class DBXTeamLogGroupDescriptionUpdatedDetails: NSObject {
-    let swift: TeamLog.GroupDescriptionUpdatedDetails
+    public override init() {
+        self.swift = TeamLog.GroupDescriptionUpdatedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.GroupDescriptionUpdatedDetails
 
     public init(swift: TeamLog.GroupDescriptionUpdatedDetails) {
         self.swift = swift
@@ -44450,7 +44689,7 @@ public class DBXTeamLogGroupDescriptionUpdatedType: NSObject {
         self.swift = TeamLog.GroupDescriptionUpdatedType(description_: description_)
     }
 
-    let swift: TeamLog.GroupDescriptionUpdatedType
+    public let swift: TeamLog.GroupDescriptionUpdatedType
 
     public init(swift: TeamLog.GroupDescriptionUpdatedType) {
         self.swift = swift
@@ -44463,9 +44702,9 @@ public class DBXTeamLogGroupDescriptionUpdatedType: NSObject {
 /// Objective-C compatible GroupJoinPolicy union
 @objc
 public class DBXTeamLogGroupJoinPolicy: NSObject {
-    let swift: TeamLog.GroupJoinPolicy
+    public let swift: TeamLog.GroupJoinPolicy
 
-    public init(swift: TeamLog.GroupJoinPolicy) {
+    fileprivate init(swift: TeamLog.GroupJoinPolicy) {
         self.swift = swift
     }
 
@@ -44538,7 +44777,7 @@ public class DBXTeamLogGroupJoinPolicyUpdatedDetails: NSObject {
     /// Group join policy.
     @objc
     public var joinPolicy: DBXTeamLogGroupJoinPolicy? { guard let swift = swift.joinPolicy else { return nil }
-        return DBXTeamLogGroupJoinPolicy(swift: swift)
+        return DBXTeamLogGroupJoinPolicy.factory(swift: swift)
     }
 
     @objc
@@ -44546,7 +44785,7 @@ public class DBXTeamLogGroupJoinPolicyUpdatedDetails: NSObject {
         self.swift = TeamLog.GroupJoinPolicyUpdatedDetails(isCompanyManaged: isCompanyManaged?.boolValue, joinPolicy: joinPolicy?.swift)
     }
 
-    let swift: TeamLog.GroupJoinPolicyUpdatedDetails
+    public let swift: TeamLog.GroupJoinPolicyUpdatedDetails
 
     public init(swift: TeamLog.GroupJoinPolicyUpdatedDetails) {
         self.swift = swift
@@ -44568,7 +44807,7 @@ public class DBXTeamLogGroupJoinPolicyUpdatedType: NSObject {
         self.swift = TeamLog.GroupJoinPolicyUpdatedType(description_: description_)
     }
 
-    let swift: TeamLog.GroupJoinPolicyUpdatedType
+    public let swift: TeamLog.GroupJoinPolicyUpdatedType
 
     public init(swift: TeamLog.GroupJoinPolicyUpdatedType) {
         self.swift = swift
@@ -44596,7 +44835,7 @@ public class DBXTeamLogGroupLogInfo: NSObject {
         self.swift = TeamLog.GroupLogInfo(displayName: displayName, groupId: groupId, externalId: externalId)
     }
 
-    let swift: TeamLog.GroupLogInfo
+    public let swift: TeamLog.GroupLogInfo
 
     public init(swift: TeamLog.GroupLogInfo) {
         self.swift = swift
@@ -44609,7 +44848,12 @@ public class DBXTeamLogGroupLogInfo: NSObject {
 /// Moved group.
 @objc
 public class DBXTeamLogGroupMovedDetails: NSObject {
-    let swift: TeamLog.GroupMovedDetails
+    public override init() {
+        self.swift = TeamLog.GroupMovedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.GroupMovedDetails
 
     public init(swift: TeamLog.GroupMovedDetails) {
         self.swift = swift
@@ -44631,7 +44875,7 @@ public class DBXTeamLogGroupMovedType: NSObject {
         self.swift = TeamLog.GroupMovedType(description_: description_)
     }
 
-    let swift: TeamLog.GroupMovedType
+    public let swift: TeamLog.GroupMovedType
 
     public init(swift: TeamLog.GroupMovedType) {
         self.swift = swift
@@ -44653,7 +44897,7 @@ public class DBXTeamLogGroupRemoveExternalIdDetails: NSObject {
         self.swift = TeamLog.GroupRemoveExternalIdDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.GroupRemoveExternalIdDetails
+    public let swift: TeamLog.GroupRemoveExternalIdDetails
 
     public init(swift: TeamLog.GroupRemoveExternalIdDetails) {
         self.swift = swift
@@ -44675,7 +44919,7 @@ public class DBXTeamLogGroupRemoveExternalIdType: NSObject {
         self.swift = TeamLog.GroupRemoveExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.GroupRemoveExternalIdType
+    public let swift: TeamLog.GroupRemoveExternalIdType
 
     public init(swift: TeamLog.GroupRemoveExternalIdType) {
         self.swift = swift
@@ -44688,7 +44932,12 @@ public class DBXTeamLogGroupRemoveExternalIdType: NSObject {
 /// Removed team members from group.
 @objc
 public class DBXTeamLogGroupRemoveMemberDetails: NSObject {
-    let swift: TeamLog.GroupRemoveMemberDetails
+    public override init() {
+        self.swift = TeamLog.GroupRemoveMemberDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.GroupRemoveMemberDetails
 
     public init(swift: TeamLog.GroupRemoveMemberDetails) {
         self.swift = swift
@@ -44710,7 +44959,7 @@ public class DBXTeamLogGroupRemoveMemberType: NSObject {
         self.swift = TeamLog.GroupRemoveMemberType(description_: description_)
     }
 
-    let swift: TeamLog.GroupRemoveMemberType
+    public let swift: TeamLog.GroupRemoveMemberType
 
     public init(swift: TeamLog.GroupRemoveMemberType) {
         self.swift = swift
@@ -44735,7 +44984,7 @@ public class DBXTeamLogGroupRenameDetails: NSObject {
         self.swift = TeamLog.GroupRenameDetails(previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.GroupRenameDetails
+    public let swift: TeamLog.GroupRenameDetails
 
     public init(swift: TeamLog.GroupRenameDetails) {
         self.swift = swift
@@ -44757,7 +45006,7 @@ public class DBXTeamLogGroupRenameType: NSObject {
         self.swift = TeamLog.GroupRenameType(description_: description_)
     }
 
-    let swift: TeamLog.GroupRenameType
+    public let swift: TeamLog.GroupRenameType
 
     public init(swift: TeamLog.GroupRenameType) {
         self.swift = swift
@@ -44772,11 +45021,11 @@ public class DBXTeamLogGroupRenameType: NSObject {
 public class DBXTeamLogGroupUserManagementChangePolicyDetails: NSObject {
     /// New group users management policy.
     @objc
-    public var newValue: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation.factory(swift: swift.newValue) }
     /// Previous group users management policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesGroupCreation? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesGroupCreation(swift: swift)
+        return DBXTeamPoliciesGroupCreation.factory(swift: swift)
     }
 
     @objc
@@ -44784,7 +45033,7 @@ public class DBXTeamLogGroupUserManagementChangePolicyDetails: NSObject {
         self.swift = TeamLog.GroupUserManagementChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.GroupUserManagementChangePolicyDetails
+    public let swift: TeamLog.GroupUserManagementChangePolicyDetails
 
     public init(swift: TeamLog.GroupUserManagementChangePolicyDetails) {
         self.swift = swift
@@ -44806,7 +45055,7 @@ public class DBXTeamLogGroupUserManagementChangePolicyType: NSObject {
         self.swift = TeamLog.GroupUserManagementChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.GroupUserManagementChangePolicyType
+    public let swift: TeamLog.GroupUserManagementChangePolicyType
 
     public init(swift: TeamLog.GroupUserManagementChangePolicyType) {
         self.swift = swift
@@ -44830,13 +45079,13 @@ public class DBXTeamLogGuestAdminChangeStatusDetails: NSObject {
     public var hostTeamName: String? { swift.hostTeamName }
     /// Previous request state.
     @objc
-    public var previousValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState.factory(swift: swift.previousValue) }
     /// New request state.
     @objc
-    public var newValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTrustedTeamsRequestState { DBXTeamLogTrustedTeamsRequestState.factory(swift: swift.newValue) }
     /// Action details.
     @objc
-    public var actionDetails: DBXTeamLogTrustedTeamsRequestAction { DBXTeamLogTrustedTeamsRequestAction(swift: swift.actionDetails) }
+    public var actionDetails: DBXTeamLogTrustedTeamsRequestAction { DBXTeamLogTrustedTeamsRequestAction.factory(swift: swift.actionDetails) }
 
     @objc
     public init(
@@ -44857,7 +45106,7 @@ public class DBXTeamLogGuestAdminChangeStatusDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.GuestAdminChangeStatusDetails
+    public let swift: TeamLog.GuestAdminChangeStatusDetails
 
     public init(swift: TeamLog.GuestAdminChangeStatusDetails) {
         self.swift = swift
@@ -44879,7 +45128,7 @@ public class DBXTeamLogGuestAdminChangeStatusType: NSObject {
         self.swift = TeamLog.GuestAdminChangeStatusType(description_: description_)
     }
 
-    let swift: TeamLog.GuestAdminChangeStatusType
+    public let swift: TeamLog.GuestAdminChangeStatusType
 
     public init(swift: TeamLog.GuestAdminChangeStatusType) {
         self.swift = swift
@@ -44904,7 +45153,7 @@ public class DBXTeamLogGuestAdminSignedInViaTrustedTeamsDetails: NSObject {
         self.swift = TeamLog.GuestAdminSignedInViaTrustedTeamsDetails(teamName: teamName, trustedTeamName: trustedTeamName)
     }
 
-    let swift: TeamLog.GuestAdminSignedInViaTrustedTeamsDetails
+    public let swift: TeamLog.GuestAdminSignedInViaTrustedTeamsDetails
 
     public init(swift: TeamLog.GuestAdminSignedInViaTrustedTeamsDetails) {
         self.swift = swift
@@ -44926,7 +45175,7 @@ public class DBXTeamLogGuestAdminSignedInViaTrustedTeamsType: NSObject {
         self.swift = TeamLog.GuestAdminSignedInViaTrustedTeamsType(description_: description_)
     }
 
-    let swift: TeamLog.GuestAdminSignedInViaTrustedTeamsType
+    public let swift: TeamLog.GuestAdminSignedInViaTrustedTeamsType
 
     public init(swift: TeamLog.GuestAdminSignedInViaTrustedTeamsType) {
         self.swift = swift
@@ -44951,7 +45200,7 @@ public class DBXTeamLogGuestAdminSignedOutViaTrustedTeamsDetails: NSObject {
         self.swift = TeamLog.GuestAdminSignedOutViaTrustedTeamsDetails(teamName: teamName, trustedTeamName: trustedTeamName)
     }
 
-    let swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsDetails
+    public let swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsDetails
 
     public init(swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsDetails) {
         self.swift = swift
@@ -44973,7 +45222,7 @@ public class DBXTeamLogGuestAdminSignedOutViaTrustedTeamsType: NSObject {
         self.swift = TeamLog.GuestAdminSignedOutViaTrustedTeamsType(description_: description_)
     }
 
-    let swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsType
+    public let swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsType
 
     public init(swift: TeamLog.GuestAdminSignedOutViaTrustedTeamsType) {
         self.swift = swift
@@ -44986,9 +45235,9 @@ public class DBXTeamLogGuestAdminSignedOutViaTrustedTeamsType: NSObject {
 /// Objective-C compatible IdentifierType union
 @objc
 public class DBXTeamLogIdentifierType: NSObject {
-    let swift: TeamLog.IdentifierType
+    public let swift: TeamLog.IdentifierType
 
-    public init(swift: TeamLog.IdentifierType) {
+    fileprivate init(swift: TeamLog.IdentifierType) {
         self.swift = swift
     }
 
@@ -45064,7 +45313,7 @@ public class DBXTeamLogIntegrationConnectedDetails: NSObject {
         self.swift = TeamLog.IntegrationConnectedDetails(integrationName: integrationName)
     }
 
-    let swift: TeamLog.IntegrationConnectedDetails
+    public let swift: TeamLog.IntegrationConnectedDetails
 
     public init(swift: TeamLog.IntegrationConnectedDetails) {
         self.swift = swift
@@ -45086,7 +45335,7 @@ public class DBXTeamLogIntegrationConnectedType: NSObject {
         self.swift = TeamLog.IntegrationConnectedType(description_: description_)
     }
 
-    let swift: TeamLog.IntegrationConnectedType
+    public let swift: TeamLog.IntegrationConnectedType
 
     public init(swift: TeamLog.IntegrationConnectedType) {
         self.swift = swift
@@ -45108,7 +45357,7 @@ public class DBXTeamLogIntegrationDisconnectedDetails: NSObject {
         self.swift = TeamLog.IntegrationDisconnectedDetails(integrationName: integrationName)
     }
 
-    let swift: TeamLog.IntegrationDisconnectedDetails
+    public let swift: TeamLog.IntegrationDisconnectedDetails
 
     public init(swift: TeamLog.IntegrationDisconnectedDetails) {
         self.swift = swift
@@ -45130,7 +45379,7 @@ public class DBXTeamLogIntegrationDisconnectedType: NSObject {
         self.swift = TeamLog.IntegrationDisconnectedType(description_: description_)
     }
 
-    let swift: TeamLog.IntegrationDisconnectedType
+    public let swift: TeamLog.IntegrationDisconnectedType
 
     public init(swift: TeamLog.IntegrationDisconnectedType) {
         self.swift = swift
@@ -45143,9 +45392,9 @@ public class DBXTeamLogIntegrationDisconnectedType: NSObject {
 /// Policy for controlling whether a service integration is enabled for the team.
 @objc
 public class DBXTeamLogIntegrationPolicy: NSObject {
-    let swift: TeamLog.IntegrationPolicy
+    public let swift: TeamLog.IntegrationPolicy
 
-    public init(swift: TeamLog.IntegrationPolicy) {
+    fileprivate init(swift: TeamLog.IntegrationPolicy) {
         self.swift = swift
     }
 
@@ -45217,17 +45466,17 @@ public class DBXTeamLogIntegrationPolicyChangedDetails: NSObject {
     public var integrationName: String { swift.integrationName }
     /// New integration policy.
     @objc
-    public var newValue: DBXTeamLogIntegrationPolicy { DBXTeamLogIntegrationPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogIntegrationPolicy { DBXTeamLogIntegrationPolicy.factory(swift: swift.newValue) }
     /// Previous integration policy.
     @objc
-    public var previousValue: DBXTeamLogIntegrationPolicy { DBXTeamLogIntegrationPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogIntegrationPolicy { DBXTeamLogIntegrationPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(integrationName: String, newValue: DBXTeamLogIntegrationPolicy, previousValue: DBXTeamLogIntegrationPolicy) {
         self.swift = TeamLog.IntegrationPolicyChangedDetails(integrationName: integrationName, newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.IntegrationPolicyChangedDetails
+    public let swift: TeamLog.IntegrationPolicyChangedDetails
 
     public init(swift: TeamLog.IntegrationPolicyChangedDetails) {
         self.swift = swift
@@ -45249,7 +45498,7 @@ public class DBXTeamLogIntegrationPolicyChangedType: NSObject {
         self.swift = TeamLog.IntegrationPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.IntegrationPolicyChangedType
+    public let swift: TeamLog.IntegrationPolicyChangedType
 
     public init(swift: TeamLog.IntegrationPolicyChangedType) {
         self.swift = swift
@@ -45262,9 +45511,9 @@ public class DBXTeamLogIntegrationPolicyChangedType: NSObject {
 /// Policy for deciding whether team admins receive email when an invitation to join the team is accepted
 @objc
 public class DBXTeamLogInviteAcceptanceEmailPolicy: NSObject {
-    let swift: TeamLog.InviteAcceptanceEmailPolicy
+    public let swift: TeamLog.InviteAcceptanceEmailPolicy
 
-    public init(swift: TeamLog.InviteAcceptanceEmailPolicy) {
+    fileprivate init(swift: TeamLog.InviteAcceptanceEmailPolicy) {
         self.swift = swift
     }
 
@@ -45333,17 +45582,17 @@ public class DBXTeamLogInviteAcceptanceEmailPolicyOther: DBXTeamLogInviteAccepta
 public class DBXTeamLogInviteAcceptanceEmailPolicyChangedDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogInviteAcceptanceEmailPolicy { DBXTeamLogInviteAcceptanceEmailPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogInviteAcceptanceEmailPolicy { DBXTeamLogInviteAcceptanceEmailPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
-    public var previousValue: DBXTeamLogInviteAcceptanceEmailPolicy { DBXTeamLogInviteAcceptanceEmailPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogInviteAcceptanceEmailPolicy { DBXTeamLogInviteAcceptanceEmailPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogInviteAcceptanceEmailPolicy, previousValue: DBXTeamLogInviteAcceptanceEmailPolicy) {
         self.swift = TeamLog.InviteAcceptanceEmailPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.InviteAcceptanceEmailPolicyChangedDetails
+    public let swift: TeamLog.InviteAcceptanceEmailPolicyChangedDetails
 
     public init(swift: TeamLog.InviteAcceptanceEmailPolicyChangedDetails) {
         self.swift = swift
@@ -45365,7 +45614,7 @@ public class DBXTeamLogInviteAcceptanceEmailPolicyChangedType: NSObject {
         self.swift = TeamLog.InviteAcceptanceEmailPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.InviteAcceptanceEmailPolicyChangedType
+    public let swift: TeamLog.InviteAcceptanceEmailPolicyChangedType
 
     public init(swift: TeamLog.InviteAcceptanceEmailPolicyChangedType) {
         self.swift = swift
@@ -45378,9 +45627,9 @@ public class DBXTeamLogInviteAcceptanceEmailPolicyChangedType: NSObject {
 /// Objective-C compatible InviteMethod union
 @objc
 public class DBXTeamLogInviteMethod: NSObject {
-    let swift: TeamLog.InviteMethod
+    public let swift: TeamLog.InviteMethod
 
-    public init(swift: TeamLog.InviteMethod) {
+    fileprivate init(swift: TeamLog.InviteMethod) {
         self.swift = swift
     }
 
@@ -45486,7 +45735,7 @@ public class DBXTeamLogJoinTeamDetails: NSObject {
     public var linkedApps: [DBXTeamLogUserLinkedAppLogInfo] { swift.linkedApps.map { DBXTeamLogUserLinkedAppLogInfo(swift: $0) } }
     /// Linked devices. (Deprecated) Please use has_linked_devices boolean field instead.
     @objc
-    public var linkedDevices: [DBXTeamLogLinkedDeviceLogInfo] { swift.linkedDevices.map { DBXTeamLogLinkedDeviceLogInfo(swift: $0) } }
+    public var linkedDevices: [DBXTeamLogLinkedDeviceLogInfo] { swift.linkedDevices.map { DBXTeamLogLinkedDeviceLogInfo.factory(swift: $0) } }
     /// Linked shared folders. (Deprecated) Please use has_linked_shared_folders boolean field instead.
     @objc
     public var linkedSharedFolders: [DBXTeamLogFolderLogInfo] { swift.linkedSharedFolders.map { DBXTeamLogFolderLogInfo(swift: $0) } }
@@ -45534,7 +45783,7 @@ public class DBXTeamLogJoinTeamDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.JoinTeamDetails
+    public let swift: TeamLog.JoinTeamDetails
 
     public init(swift: TeamLog.JoinTeamDetails) {
         self.swift = swift
@@ -45547,9 +45796,9 @@ public class DBXTeamLogJoinTeamDetails: NSObject {
 /// Label type
 @objc
 public class DBXTeamLogLabelType: NSObject {
-    let swift: TeamLog.LabelType
+    public let swift: TeamLog.LabelType
 
-    public init(swift: TeamLog.LabelType) {
+    fileprivate init(swift: TeamLog.LabelType) {
         self.swift = swift
     }
 
@@ -45698,7 +45947,7 @@ public class DBXTeamLogLegacyDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInf
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.LegacyDeviceSessionLogInfo
+    public let subSwift: TeamLog.LegacyDeviceSessionLogInfo
 
     public init(swift: TeamLog.LegacyDeviceSessionLogInfo) {
         self.subSwift = swift
@@ -45730,7 +45979,7 @@ public class DBXTeamLogLegalHoldsActivateAHoldDetails: NSObject {
         self.swift = TeamLog.LegalHoldsActivateAHoldDetails(legalHoldId: legalHoldId, name: name, startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.LegalHoldsActivateAHoldDetails
+    public let swift: TeamLog.LegalHoldsActivateAHoldDetails
 
     public init(swift: TeamLog.LegalHoldsActivateAHoldDetails) {
         self.swift = swift
@@ -45752,7 +46001,7 @@ public class DBXTeamLogLegalHoldsActivateAHoldType: NSObject {
         self.swift = TeamLog.LegalHoldsActivateAHoldType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsActivateAHoldType
+    public let swift: TeamLog.LegalHoldsActivateAHoldType
 
     public init(swift: TeamLog.LegalHoldsActivateAHoldType) {
         self.swift = swift
@@ -45777,7 +46026,7 @@ public class DBXTeamLogLegalHoldsAddMembersDetails: NSObject {
         self.swift = TeamLog.LegalHoldsAddMembersDetails(legalHoldId: legalHoldId, name: name)
     }
 
-    let swift: TeamLog.LegalHoldsAddMembersDetails
+    public let swift: TeamLog.LegalHoldsAddMembersDetails
 
     public init(swift: TeamLog.LegalHoldsAddMembersDetails) {
         self.swift = swift
@@ -45799,7 +46048,7 @@ public class DBXTeamLogLegalHoldsAddMembersType: NSObject {
         self.swift = TeamLog.LegalHoldsAddMembersType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsAddMembersType
+    public let swift: TeamLog.LegalHoldsAddMembersType
 
     public init(swift: TeamLog.LegalHoldsAddMembersType) {
         self.swift = swift
@@ -45830,7 +46079,7 @@ public class DBXTeamLogLegalHoldsChangeHoldDetailsDetails: NSObject {
         self.swift = TeamLog.LegalHoldsChangeHoldDetailsDetails(legalHoldId: legalHoldId, name: name, previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.LegalHoldsChangeHoldDetailsDetails
+    public let swift: TeamLog.LegalHoldsChangeHoldDetailsDetails
 
     public init(swift: TeamLog.LegalHoldsChangeHoldDetailsDetails) {
         self.swift = swift
@@ -45852,7 +46101,7 @@ public class DBXTeamLogLegalHoldsChangeHoldDetailsType: NSObject {
         self.swift = TeamLog.LegalHoldsChangeHoldDetailsType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsChangeHoldDetailsType
+    public let swift: TeamLog.LegalHoldsChangeHoldDetailsType
 
     public init(swift: TeamLog.LegalHoldsChangeHoldDetailsType) {
         self.swift = swift
@@ -45880,7 +46129,7 @@ public class DBXTeamLogLegalHoldsChangeHoldNameDetails: NSObject {
         self.swift = TeamLog.LegalHoldsChangeHoldNameDetails(legalHoldId: legalHoldId, previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.LegalHoldsChangeHoldNameDetails
+    public let swift: TeamLog.LegalHoldsChangeHoldNameDetails
 
     public init(swift: TeamLog.LegalHoldsChangeHoldNameDetails) {
         self.swift = swift
@@ -45902,7 +46151,7 @@ public class DBXTeamLogLegalHoldsChangeHoldNameType: NSObject {
         self.swift = TeamLog.LegalHoldsChangeHoldNameType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsChangeHoldNameType
+    public let swift: TeamLog.LegalHoldsChangeHoldNameType
 
     public init(swift: TeamLog.LegalHoldsChangeHoldNameType) {
         self.swift = swift
@@ -45930,7 +46179,7 @@ public class DBXTeamLogLegalHoldsExportAHoldDetails: NSObject {
         self.swift = TeamLog.LegalHoldsExportAHoldDetails(legalHoldId: legalHoldId, name: name, exportName: exportName)
     }
 
-    let swift: TeamLog.LegalHoldsExportAHoldDetails
+    public let swift: TeamLog.LegalHoldsExportAHoldDetails
 
     public init(swift: TeamLog.LegalHoldsExportAHoldDetails) {
         self.swift = swift
@@ -45952,7 +46201,7 @@ public class DBXTeamLogLegalHoldsExportAHoldType: NSObject {
         self.swift = TeamLog.LegalHoldsExportAHoldType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsExportAHoldType
+    public let swift: TeamLog.LegalHoldsExportAHoldType
 
     public init(swift: TeamLog.LegalHoldsExportAHoldType) {
         self.swift = swift
@@ -45980,7 +46229,7 @@ public class DBXTeamLogLegalHoldsExportCancelledDetails: NSObject {
         self.swift = TeamLog.LegalHoldsExportCancelledDetails(legalHoldId: legalHoldId, name: name, exportName: exportName)
     }
 
-    let swift: TeamLog.LegalHoldsExportCancelledDetails
+    public let swift: TeamLog.LegalHoldsExportCancelledDetails
 
     public init(swift: TeamLog.LegalHoldsExportCancelledDetails) {
         self.swift = swift
@@ -46002,7 +46251,7 @@ public class DBXTeamLogLegalHoldsExportCancelledType: NSObject {
         self.swift = TeamLog.LegalHoldsExportCancelledType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsExportCancelledType
+    public let swift: TeamLog.LegalHoldsExportCancelledType
 
     public init(swift: TeamLog.LegalHoldsExportCancelledType) {
         self.swift = swift
@@ -46036,7 +46285,7 @@ public class DBXTeamLogLegalHoldsExportDownloadedDetails: NSObject {
         self.swift = TeamLog.LegalHoldsExportDownloadedDetails(legalHoldId: legalHoldId, name: name, exportName: exportName, part: part, fileName: fileName)
     }
 
-    let swift: TeamLog.LegalHoldsExportDownloadedDetails
+    public let swift: TeamLog.LegalHoldsExportDownloadedDetails
 
     public init(swift: TeamLog.LegalHoldsExportDownloadedDetails) {
         self.swift = swift
@@ -46058,7 +46307,7 @@ public class DBXTeamLogLegalHoldsExportDownloadedType: NSObject {
         self.swift = TeamLog.LegalHoldsExportDownloadedType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsExportDownloadedType
+    public let swift: TeamLog.LegalHoldsExportDownloadedType
 
     public init(swift: TeamLog.LegalHoldsExportDownloadedType) {
         self.swift = swift
@@ -46086,7 +46335,7 @@ public class DBXTeamLogLegalHoldsExportRemovedDetails: NSObject {
         self.swift = TeamLog.LegalHoldsExportRemovedDetails(legalHoldId: legalHoldId, name: name, exportName: exportName)
     }
 
-    let swift: TeamLog.LegalHoldsExportRemovedDetails
+    public let swift: TeamLog.LegalHoldsExportRemovedDetails
 
     public init(swift: TeamLog.LegalHoldsExportRemovedDetails) {
         self.swift = swift
@@ -46108,7 +46357,7 @@ public class DBXTeamLogLegalHoldsExportRemovedType: NSObject {
         self.swift = TeamLog.LegalHoldsExportRemovedType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsExportRemovedType
+    public let swift: TeamLog.LegalHoldsExportRemovedType
 
     public init(swift: TeamLog.LegalHoldsExportRemovedType) {
         self.swift = swift
@@ -46133,7 +46382,7 @@ public class DBXTeamLogLegalHoldsReleaseAHoldDetails: NSObject {
         self.swift = TeamLog.LegalHoldsReleaseAHoldDetails(legalHoldId: legalHoldId, name: name)
     }
 
-    let swift: TeamLog.LegalHoldsReleaseAHoldDetails
+    public let swift: TeamLog.LegalHoldsReleaseAHoldDetails
 
     public init(swift: TeamLog.LegalHoldsReleaseAHoldDetails) {
         self.swift = swift
@@ -46155,7 +46404,7 @@ public class DBXTeamLogLegalHoldsReleaseAHoldType: NSObject {
         self.swift = TeamLog.LegalHoldsReleaseAHoldType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsReleaseAHoldType
+    public let swift: TeamLog.LegalHoldsReleaseAHoldType
 
     public init(swift: TeamLog.LegalHoldsReleaseAHoldType) {
         self.swift = swift
@@ -46180,7 +46429,7 @@ public class DBXTeamLogLegalHoldsRemoveMembersDetails: NSObject {
         self.swift = TeamLog.LegalHoldsRemoveMembersDetails(legalHoldId: legalHoldId, name: name)
     }
 
-    let swift: TeamLog.LegalHoldsRemoveMembersDetails
+    public let swift: TeamLog.LegalHoldsRemoveMembersDetails
 
     public init(swift: TeamLog.LegalHoldsRemoveMembersDetails) {
         self.swift = swift
@@ -46202,7 +46451,7 @@ public class DBXTeamLogLegalHoldsRemoveMembersType: NSObject {
         self.swift = TeamLog.LegalHoldsRemoveMembersType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsRemoveMembersType
+    public let swift: TeamLog.LegalHoldsRemoveMembersType
 
     public init(swift: TeamLog.LegalHoldsRemoveMembersType) {
         self.swift = swift
@@ -46227,7 +46476,7 @@ public class DBXTeamLogLegalHoldsReportAHoldDetails: NSObject {
         self.swift = TeamLog.LegalHoldsReportAHoldDetails(legalHoldId: legalHoldId, name: name)
     }
 
-    let swift: TeamLog.LegalHoldsReportAHoldDetails
+    public let swift: TeamLog.LegalHoldsReportAHoldDetails
 
     public init(swift: TeamLog.LegalHoldsReportAHoldDetails) {
         self.swift = swift
@@ -46249,7 +46498,7 @@ public class DBXTeamLogLegalHoldsReportAHoldType: NSObject {
         self.swift = TeamLog.LegalHoldsReportAHoldType(description_: description_)
     }
 
-    let swift: TeamLog.LegalHoldsReportAHoldType
+    public let swift: TeamLog.LegalHoldsReportAHoldType
 
     public init(swift: TeamLog.LegalHoldsReportAHoldType) {
         self.swift = swift
@@ -46262,9 +46511,9 @@ public class DBXTeamLogLegalHoldsReportAHoldType: NSObject {
 /// The device sessions that user is linked to.
 @objc
 public class DBXTeamLogLinkedDeviceLogInfo: NSObject {
-    let swift: TeamLog.LinkedDeviceLogInfo
+    public let swift: TeamLog.LinkedDeviceLogInfo
 
-    public init(swift: TeamLog.LinkedDeviceLogInfo) {
+    fileprivate init(swift: TeamLog.LinkedDeviceLogInfo) {
         self.swift = swift
     }
 
@@ -46385,9 +46634,9 @@ public class DBXTeamLogLinkedDeviceLogInfoOther: DBXTeamLogLinkedDeviceLogInfo {
 /// File lock status
 @objc
 public class DBXTeamLogLockStatus: NSObject {
-    let swift: TeamLog.LockStatus
+    public let swift: TeamLog.LockStatus
 
-    public init(swift: TeamLog.LockStatus) {
+    fileprivate init(swift: TeamLog.LockStatus) {
         self.swift = swift
     }
 
@@ -46459,7 +46708,7 @@ public class DBXTeamLogLoginFailDetails: NSObject {
     public var isEmmManaged: NSNumber? { swift.isEmmManaged as NSNumber? }
     /// Login method.
     @objc
-    public var loginMethod: DBXTeamLogLoginMethod { DBXTeamLogLoginMethod(swift: swift.loginMethod) }
+    public var loginMethod: DBXTeamLogLoginMethod { DBXTeamLogLoginMethod.factory(swift: swift.loginMethod) }
     /// Error details.
     @objc
     public var errorDetails: DBXTeamLogFailureDetailsLogInfo { DBXTeamLogFailureDetailsLogInfo(swift: swift.errorDetails) }
@@ -46469,7 +46718,7 @@ public class DBXTeamLogLoginFailDetails: NSObject {
         self.swift = TeamLog.LoginFailDetails(loginMethod: loginMethod.swift, errorDetails: errorDetails.swift, isEmmManaged: isEmmManaged?.boolValue)
     }
 
-    let swift: TeamLog.LoginFailDetails
+    public let swift: TeamLog.LoginFailDetails
 
     public init(swift: TeamLog.LoginFailDetails) {
         self.swift = swift
@@ -46491,7 +46740,7 @@ public class DBXTeamLogLoginFailType: NSObject {
         self.swift = TeamLog.LoginFailType(description_: description_)
     }
 
-    let swift: TeamLog.LoginFailType
+    public let swift: TeamLog.LoginFailType
 
     public init(swift: TeamLog.LoginFailType) {
         self.swift = swift
@@ -46504,9 +46753,9 @@ public class DBXTeamLogLoginFailType: NSObject {
 /// Objective-C compatible LoginMethod union
 @objc
 public class DBXTeamLogLoginMethod: NSObject {
-    let swift: TeamLog.LoginMethod
+    public let swift: TeamLog.LoginMethod
 
-    public init(swift: TeamLog.LoginMethod) {
+    fileprivate init(swift: TeamLog.LoginMethod) {
         self.swift = swift
     }
 
@@ -46697,14 +46946,14 @@ public class DBXTeamLogLoginSuccessDetails: NSObject {
     public var isEmmManaged: NSNumber? { swift.isEmmManaged as NSNumber? }
     /// Login method.
     @objc
-    public var loginMethod: DBXTeamLogLoginMethod { DBXTeamLogLoginMethod(swift: swift.loginMethod) }
+    public var loginMethod: DBXTeamLogLoginMethod { DBXTeamLogLoginMethod.factory(swift: swift.loginMethod) }
 
     @objc
     public init(loginMethod: DBXTeamLogLoginMethod, isEmmManaged: NSNumber?) {
         self.swift = TeamLog.LoginSuccessDetails(loginMethod: loginMethod.swift, isEmmManaged: isEmmManaged?.boolValue)
     }
 
-    let swift: TeamLog.LoginSuccessDetails
+    public let swift: TeamLog.LoginSuccessDetails
 
     public init(swift: TeamLog.LoginSuccessDetails) {
         self.swift = swift
@@ -46726,7 +46975,7 @@ public class DBXTeamLogLoginSuccessType: NSObject {
         self.swift = TeamLog.LoginSuccessType(description_: description_)
     }
 
-    let swift: TeamLog.LoginSuccessType
+    public let swift: TeamLog.LoginSuccessType
 
     public init(swift: TeamLog.LoginSuccessType) {
         self.swift = swift
@@ -46748,7 +46997,7 @@ public class DBXTeamLogLogoutDetails: NSObject {
         self.swift = TeamLog.LogoutDetails(loginId: loginId)
     }
 
-    let swift: TeamLog.LogoutDetails
+    public let swift: TeamLog.LogoutDetails
 
     public init(swift: TeamLog.LogoutDetails) {
         self.swift = swift
@@ -46770,7 +47019,7 @@ public class DBXTeamLogLogoutType: NSObject {
         self.swift = TeamLog.LogoutType(description_: description_)
     }
 
-    let swift: TeamLog.LogoutType
+    public let swift: TeamLog.LogoutType
 
     public init(swift: TeamLog.LogoutType) {
         self.swift = swift
@@ -46792,7 +47041,7 @@ public class DBXTeamLogMemberAddExternalIdDetails: NSObject {
         self.swift = TeamLog.MemberAddExternalIdDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.MemberAddExternalIdDetails
+    public let swift: TeamLog.MemberAddExternalIdDetails
 
     public init(swift: TeamLog.MemberAddExternalIdDetails) {
         self.swift = swift
@@ -46814,7 +47063,7 @@ public class DBXTeamLogMemberAddExternalIdType: NSObject {
         self.swift = TeamLog.MemberAddExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.MemberAddExternalIdType
+    public let swift: TeamLog.MemberAddExternalIdType
 
     public init(swift: TeamLog.MemberAddExternalIdType) {
         self.swift = swift
@@ -46836,7 +47085,7 @@ public class DBXTeamLogMemberAddNameDetails: NSObject {
         self.swift = TeamLog.MemberAddNameDetails(newValue: newValue.swift)
     }
 
-    let swift: TeamLog.MemberAddNameDetails
+    public let swift: TeamLog.MemberAddNameDetails
 
     public init(swift: TeamLog.MemberAddNameDetails) {
         self.swift = swift
@@ -46858,7 +47107,7 @@ public class DBXTeamLogMemberAddNameType: NSObject {
         self.swift = TeamLog.MemberAddNameType(description_: description_)
     }
 
-    let swift: TeamLog.MemberAddNameType
+    public let swift: TeamLog.MemberAddNameType
 
     public init(swift: TeamLog.MemberAddNameType) {
         self.swift = swift
@@ -46875,14 +47124,14 @@ public class DBXTeamLogMemberChangeAdminRoleDetails: NSObject {
     /// admin rights to with admin rights.
     @objc
     public var newValue: DBXTeamLogAdminRole? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogAdminRole(swift: swift)
+        return DBXTeamLogAdminRole.factory(swift: swift)
     }
 
     /// Previous admin role. This field is relevant when the admin role is changed or when the admin role is
     /// removed.
     @objc
     public var previousValue: DBXTeamLogAdminRole? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogAdminRole(swift: swift)
+        return DBXTeamLogAdminRole.factory(swift: swift)
     }
 
     @objc
@@ -46890,7 +47139,7 @@ public class DBXTeamLogMemberChangeAdminRoleDetails: NSObject {
         self.swift = TeamLog.MemberChangeAdminRoleDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.MemberChangeAdminRoleDetails
+    public let swift: TeamLog.MemberChangeAdminRoleDetails
 
     public init(swift: TeamLog.MemberChangeAdminRoleDetails) {
         self.swift = swift
@@ -46912,7 +47161,7 @@ public class DBXTeamLogMemberChangeAdminRoleType: NSObject {
         self.swift = TeamLog.MemberChangeAdminRoleType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeAdminRoleType
+    public let swift: TeamLog.MemberChangeAdminRoleType
 
     public init(swift: TeamLog.MemberChangeAdminRoleType) {
         self.swift = swift
@@ -46937,7 +47186,7 @@ public class DBXTeamLogMemberChangeEmailDetails: NSObject {
         self.swift = TeamLog.MemberChangeEmailDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.MemberChangeEmailDetails
+    public let swift: TeamLog.MemberChangeEmailDetails
 
     public init(swift: TeamLog.MemberChangeEmailDetails) {
         self.swift = swift
@@ -46959,7 +47208,7 @@ public class DBXTeamLogMemberChangeEmailType: NSObject {
         self.swift = TeamLog.MemberChangeEmailType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeEmailType
+    public let swift: TeamLog.MemberChangeEmailType
 
     public init(swift: TeamLog.MemberChangeEmailType) {
         self.swift = swift
@@ -46984,7 +47233,7 @@ public class DBXTeamLogMemberChangeExternalIdDetails: NSObject {
         self.swift = TeamLog.MemberChangeExternalIdDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.MemberChangeExternalIdDetails
+    public let swift: TeamLog.MemberChangeExternalIdDetails
 
     public init(swift: TeamLog.MemberChangeExternalIdDetails) {
         self.swift = swift
@@ -47006,7 +47255,7 @@ public class DBXTeamLogMemberChangeExternalIdType: NSObject {
         self.swift = TeamLog.MemberChangeExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeExternalIdType
+    public let swift: TeamLog.MemberChangeExternalIdType
 
     public init(swift: TeamLog.MemberChangeExternalIdType) {
         self.swift = swift
@@ -47021,17 +47270,17 @@ public class DBXTeamLogMemberChangeExternalIdType: NSObject {
 public class DBXTeamLogMemberChangeMembershipTypeDetails: NSObject {
     /// Previous membership type.
     @objc
-    public var prevValue: DBXTeamLogTeamMembershipType { DBXTeamLogTeamMembershipType(swift: swift.prevValue) }
+    public var prevValue: DBXTeamLogTeamMembershipType { DBXTeamLogTeamMembershipType.factory(swift: swift.prevValue) }
     /// New membership type.
     @objc
-    public var newValue: DBXTeamLogTeamMembershipType { DBXTeamLogTeamMembershipType(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTeamMembershipType { DBXTeamLogTeamMembershipType.factory(swift: swift.newValue) }
 
     @objc
     public init(prevValue: DBXTeamLogTeamMembershipType, newValue: DBXTeamLogTeamMembershipType) {
         self.swift = TeamLog.MemberChangeMembershipTypeDetails(prevValue: prevValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.MemberChangeMembershipTypeDetails
+    public let swift: TeamLog.MemberChangeMembershipTypeDetails
 
     public init(swift: TeamLog.MemberChangeMembershipTypeDetails) {
         self.swift = swift
@@ -47053,7 +47302,7 @@ public class DBXTeamLogMemberChangeMembershipTypeType: NSObject {
         self.swift = TeamLog.MemberChangeMembershipTypeType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeMembershipTypeType
+    public let swift: TeamLog.MemberChangeMembershipTypeType
 
     public init(swift: TeamLog.MemberChangeMembershipTypeType) {
         self.swift = swift
@@ -47080,7 +47329,7 @@ public class DBXTeamLogMemberChangeNameDetails: NSObject {
         self.swift = TeamLog.MemberChangeNameDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.MemberChangeNameDetails
+    public let swift: TeamLog.MemberChangeNameDetails
 
     public init(swift: TeamLog.MemberChangeNameDetails) {
         self.swift = swift
@@ -47102,7 +47351,7 @@ public class DBXTeamLogMemberChangeNameType: NSObject {
         self.swift = TeamLog.MemberChangeNameType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeNameType
+    public let swift: TeamLog.MemberChangeNameType
 
     public init(swift: TeamLog.MemberChangeNameType) {
         self.swift = swift
@@ -47117,18 +47366,18 @@ public class DBXTeamLogMemberChangeNameType: NSObject {
 public class DBXTeamLogMemberChangeResellerRoleDetails: NSObject {
     /// New reseller role. This field is relevant when the reseller role is changed.
     @objc
-    public var newValue: DBXTeamLogResellerRole { DBXTeamLogResellerRole(swift: swift.newValue) }
+    public var newValue: DBXTeamLogResellerRole { DBXTeamLogResellerRole.factory(swift: swift.newValue) }
     /// Previous reseller role. This field is relevant when the reseller role is changed or when the reseller role
     /// is removed.
     @objc
-    public var previousValue: DBXTeamLogResellerRole { DBXTeamLogResellerRole(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogResellerRole { DBXTeamLogResellerRole.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogResellerRole, previousValue: DBXTeamLogResellerRole) {
         self.swift = TeamLog.MemberChangeResellerRoleDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.MemberChangeResellerRoleDetails
+    public let swift: TeamLog.MemberChangeResellerRoleDetails
 
     public init(swift: TeamLog.MemberChangeResellerRoleDetails) {
         self.swift = swift
@@ -47150,7 +47399,7 @@ public class DBXTeamLogMemberChangeResellerRoleType: NSObject {
         self.swift = TeamLog.MemberChangeResellerRoleType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeResellerRoleType
+    public let swift: TeamLog.MemberChangeResellerRoleType
 
     public init(swift: TeamLog.MemberChangeResellerRoleType) {
         self.swift = swift
@@ -47166,16 +47415,16 @@ public class DBXTeamLogMemberChangeStatusDetails: NSObject {
     /// Previous member status. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogMemberStatus? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogMemberStatus(swift: swift)
+        return DBXTeamLogMemberStatus.factory(swift: swift)
     }
 
     /// New member status.
     @objc
-    public var newValue: DBXTeamLogMemberStatus { DBXTeamLogMemberStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamLogMemberStatus { DBXTeamLogMemberStatus.factory(swift: swift.newValue) }
     /// Additional information indicating the action taken that caused status change.
     @objc
     public var action: DBXTeamLogActionDetails? { guard let swift = swift.action else { return nil }
-        return DBXTeamLogActionDetails(swift: swift)
+        return DBXTeamLogActionDetails.factory(swift: swift)
     }
 
     /// The user's new team name. This field is relevant when the user is transferred off the team.
@@ -47202,7 +47451,7 @@ public class DBXTeamLogMemberChangeStatusDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.MemberChangeStatusDetails
+    public let swift: TeamLog.MemberChangeStatusDetails
 
     public init(swift: TeamLog.MemberChangeStatusDetails) {
         self.swift = swift
@@ -47224,7 +47473,7 @@ public class DBXTeamLogMemberChangeStatusType: NSObject {
         self.swift = TeamLog.MemberChangeStatusType(description_: description_)
     }
 
-    let swift: TeamLog.MemberChangeStatusType
+    public let swift: TeamLog.MemberChangeStatusType
 
     public init(swift: TeamLog.MemberChangeStatusType) {
         self.swift = swift
@@ -47237,7 +47486,12 @@ public class DBXTeamLogMemberChangeStatusType: NSObject {
 /// Cleared manually added contacts.
 @objc
 public class DBXTeamLogMemberDeleteManualContactsDetails: NSObject {
-    let swift: TeamLog.MemberDeleteManualContactsDetails
+    public override init() {
+        self.swift = TeamLog.MemberDeleteManualContactsDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberDeleteManualContactsDetails
 
     public init(swift: TeamLog.MemberDeleteManualContactsDetails) {
         self.swift = swift
@@ -47259,7 +47513,7 @@ public class DBXTeamLogMemberDeleteManualContactsType: NSObject {
         self.swift = TeamLog.MemberDeleteManualContactsType(description_: description_)
     }
 
-    let swift: TeamLog.MemberDeleteManualContactsType
+    public let swift: TeamLog.MemberDeleteManualContactsType
 
     public init(swift: TeamLog.MemberDeleteManualContactsType) {
         self.swift = swift
@@ -47272,7 +47526,12 @@ public class DBXTeamLogMemberDeleteManualContactsType: NSObject {
 /// Deleted team member profile photo.
 @objc
 public class DBXTeamLogMemberDeleteProfilePhotoDetails: NSObject {
-    let swift: TeamLog.MemberDeleteProfilePhotoDetails
+    public override init() {
+        self.swift = TeamLog.MemberDeleteProfilePhotoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberDeleteProfilePhotoDetails
 
     public init(swift: TeamLog.MemberDeleteProfilePhotoDetails) {
         self.swift = swift
@@ -47294,7 +47553,7 @@ public class DBXTeamLogMemberDeleteProfilePhotoType: NSObject {
         self.swift = TeamLog.MemberDeleteProfilePhotoType(description_: description_)
     }
 
-    let swift: TeamLog.MemberDeleteProfilePhotoType
+    public let swift: TeamLog.MemberDeleteProfilePhotoType
 
     public init(swift: TeamLog.MemberDeleteProfilePhotoType) {
         self.swift = swift
@@ -47307,7 +47566,12 @@ public class DBXTeamLogMemberDeleteProfilePhotoType: NSObject {
 /// Permanently deleted contents of deleted team member account.
 @objc
 public class DBXTeamLogMemberPermanentlyDeleteAccountContentsDetails: NSObject {
-    let swift: TeamLog.MemberPermanentlyDeleteAccountContentsDetails
+    public override init() {
+        self.swift = TeamLog.MemberPermanentlyDeleteAccountContentsDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberPermanentlyDeleteAccountContentsDetails
 
     public init(swift: TeamLog.MemberPermanentlyDeleteAccountContentsDetails) {
         self.swift = swift
@@ -47329,7 +47593,7 @@ public class DBXTeamLogMemberPermanentlyDeleteAccountContentsType: NSObject {
         self.swift = TeamLog.MemberPermanentlyDeleteAccountContentsType(description_: description_)
     }
 
-    let swift: TeamLog.MemberPermanentlyDeleteAccountContentsType
+    public let swift: TeamLog.MemberPermanentlyDeleteAccountContentsType
 
     public init(swift: TeamLog.MemberPermanentlyDeleteAccountContentsType) {
         self.swift = swift
@@ -47342,9 +47606,9 @@ public class DBXTeamLogMemberPermanentlyDeleteAccountContentsType: NSObject {
 /// Objective-C compatible MemberRemoveActionType union
 @objc
 public class DBXTeamLogMemberRemoveActionType: NSObject {
-    let swift: TeamLog.MemberRemoveActionType
+    public let swift: TeamLog.MemberRemoveActionType
 
-    public init(swift: TeamLog.MemberRemoveActionType) {
+    fileprivate init(swift: TeamLog.MemberRemoveActionType) {
         self.swift = swift
     }
 
@@ -47454,7 +47718,7 @@ public class DBXTeamLogMemberRemoveExternalIdDetails: NSObject {
         self.swift = TeamLog.MemberRemoveExternalIdDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.MemberRemoveExternalIdDetails
+    public let swift: TeamLog.MemberRemoveExternalIdDetails
 
     public init(swift: TeamLog.MemberRemoveExternalIdDetails) {
         self.swift = swift
@@ -47476,7 +47740,7 @@ public class DBXTeamLogMemberRemoveExternalIdType: NSObject {
         self.swift = TeamLog.MemberRemoveExternalIdType(description_: description_)
     }
 
-    let swift: TeamLog.MemberRemoveExternalIdType
+    public let swift: TeamLog.MemberRemoveExternalIdType
 
     public init(swift: TeamLog.MemberRemoveExternalIdType) {
         self.swift = swift
@@ -47491,11 +47755,11 @@ public class DBXTeamLogMemberRemoveExternalIdType: NSObject {
 public class DBXTeamLogMemberRequestsChangePolicyDetails: NSObject {
     /// New member change requests policy.
     @objc
-    public var newValue: DBXTeamLogMemberRequestsPolicy { DBXTeamLogMemberRequestsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogMemberRequestsPolicy { DBXTeamLogMemberRequestsPolicy.factory(swift: swift.newValue) }
     /// Previous member change requests policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogMemberRequestsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogMemberRequestsPolicy(swift: swift)
+        return DBXTeamLogMemberRequestsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -47503,7 +47767,7 @@ public class DBXTeamLogMemberRequestsChangePolicyDetails: NSObject {
         self.swift = TeamLog.MemberRequestsChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.MemberRequestsChangePolicyDetails
+    public let swift: TeamLog.MemberRequestsChangePolicyDetails
 
     public init(swift: TeamLog.MemberRequestsChangePolicyDetails) {
         self.swift = swift
@@ -47525,7 +47789,7 @@ public class DBXTeamLogMemberRequestsChangePolicyType: NSObject {
         self.swift = TeamLog.MemberRequestsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.MemberRequestsChangePolicyType
+    public let swift: TeamLog.MemberRequestsChangePolicyType
 
     public init(swift: TeamLog.MemberRequestsChangePolicyType) {
         self.swift = swift
@@ -47538,9 +47802,9 @@ public class DBXTeamLogMemberRequestsChangePolicyType: NSObject {
 /// Objective-C compatible MemberRequestsPolicy union
 @objc
 public class DBXTeamLogMemberRequestsPolicy: NSObject {
-    let swift: TeamLog.MemberRequestsPolicy
+    public let swift: TeamLog.MemberRequestsPolicy
 
-    public init(swift: TeamLog.MemberRequestsPolicy) {
+    fileprivate init(swift: TeamLog.MemberRequestsPolicy) {
         self.swift = swift
     }
 
@@ -47624,9 +47888,9 @@ public class DBXTeamLogMemberRequestsPolicyOther: DBXTeamLogMemberRequestsPolicy
 /// Policy for controlling whether team members can send team invites
 @objc
 public class DBXTeamLogMemberSendInvitePolicy: NSObject {
-    let swift: TeamLog.MemberSendInvitePolicy
+    public let swift: TeamLog.MemberSendInvitePolicy
 
-    public init(swift: TeamLog.MemberSendInvitePolicy) {
+    fileprivate init(swift: TeamLog.MemberSendInvitePolicy) {
         self.swift = swift
     }
 
@@ -47712,17 +47976,17 @@ public class DBXTeamLogMemberSendInvitePolicyOther: DBXTeamLogMemberSendInvitePo
 public class DBXTeamLogMemberSendInvitePolicyChangedDetails: NSObject {
     /// New team member send invite policy.
     @objc
-    public var newValue: DBXTeamLogMemberSendInvitePolicy { DBXTeamLogMemberSendInvitePolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogMemberSendInvitePolicy { DBXTeamLogMemberSendInvitePolicy.factory(swift: swift.newValue) }
     /// Previous team member send invite policy.
     @objc
-    public var previousValue: DBXTeamLogMemberSendInvitePolicy { DBXTeamLogMemberSendInvitePolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogMemberSendInvitePolicy { DBXTeamLogMemberSendInvitePolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogMemberSendInvitePolicy, previousValue: DBXTeamLogMemberSendInvitePolicy) {
         self.swift = TeamLog.MemberSendInvitePolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.MemberSendInvitePolicyChangedDetails
+    public let swift: TeamLog.MemberSendInvitePolicyChangedDetails
 
     public init(swift: TeamLog.MemberSendInvitePolicyChangedDetails) {
         self.swift = swift
@@ -47744,7 +48008,7 @@ public class DBXTeamLogMemberSendInvitePolicyChangedType: NSObject {
         self.swift = TeamLog.MemberSendInvitePolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSendInvitePolicyChangedType
+    public let swift: TeamLog.MemberSendInvitePolicyChangedType
 
     public init(swift: TeamLog.MemberSendInvitePolicyChangedType) {
         self.swift = swift
@@ -47757,7 +48021,12 @@ public class DBXTeamLogMemberSendInvitePolicyChangedType: NSObject {
 /// Set team member profile photo.
 @objc
 public class DBXTeamLogMemberSetProfilePhotoDetails: NSObject {
-    let swift: TeamLog.MemberSetProfilePhotoDetails
+    public override init() {
+        self.swift = TeamLog.MemberSetProfilePhotoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberSetProfilePhotoDetails
 
     public init(swift: TeamLog.MemberSetProfilePhotoDetails) {
         self.swift = swift
@@ -47779,7 +48048,7 @@ public class DBXTeamLogMemberSetProfilePhotoType: NSObject {
         self.swift = TeamLog.MemberSetProfilePhotoType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSetProfilePhotoType
+    public let swift: TeamLog.MemberSetProfilePhotoType
 
     public init(swift: TeamLog.MemberSetProfilePhotoType) {
         self.swift = swift
@@ -47801,7 +48070,7 @@ public class DBXTeamLogMemberSpaceLimitsAddCustomQuotaDetails: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsAddCustomQuotaDetails(newValue: newValue.uint64Value)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsAddCustomQuotaDetails
+    public let swift: TeamLog.MemberSpaceLimitsAddCustomQuotaDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsAddCustomQuotaDetails) {
         self.swift = swift
@@ -47823,7 +48092,7 @@ public class DBXTeamLogMemberSpaceLimitsAddCustomQuotaType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsAddCustomQuotaType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsAddCustomQuotaType
+    public let swift: TeamLog.MemberSpaceLimitsAddCustomQuotaType
 
     public init(swift: TeamLog.MemberSpaceLimitsAddCustomQuotaType) {
         self.swift = swift
@@ -47836,7 +48105,12 @@ public class DBXTeamLogMemberSpaceLimitsAddCustomQuotaType: NSObject {
 /// Added members to member space limit exception list.
 @objc
 public class DBXTeamLogMemberSpaceLimitsAddExceptionDetails: NSObject {
-    let swift: TeamLog.MemberSpaceLimitsAddExceptionDetails
+    public override init() {
+        self.swift = TeamLog.MemberSpaceLimitsAddExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberSpaceLimitsAddExceptionDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsAddExceptionDetails) {
         self.swift = swift
@@ -47858,7 +48132,7 @@ public class DBXTeamLogMemberSpaceLimitsAddExceptionType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsAddExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsAddExceptionType
+    public let swift: TeamLog.MemberSpaceLimitsAddExceptionType
 
     public init(swift: TeamLog.MemberSpaceLimitsAddExceptionType) {
         self.swift = swift
@@ -47873,17 +48147,17 @@ public class DBXTeamLogMemberSpaceLimitsAddExceptionType: NSObject {
 public class DBXTeamLogMemberSpaceLimitsChangeCapsTypePolicyDetails: NSObject {
     /// Previous space limit type.
     @objc
-    public var previousValue: DBXTeamLogSpaceCapsType { DBXTeamLogSpaceCapsType(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSpaceCapsType { DBXTeamLogSpaceCapsType.factory(swift: swift.previousValue) }
     /// New space limit type.
     @objc
-    public var newValue: DBXTeamLogSpaceCapsType { DBXTeamLogSpaceCapsType(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSpaceCapsType { DBXTeamLogSpaceCapsType.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogSpaceCapsType, newValue: DBXTeamLogSpaceCapsType) {
         self.swift = TeamLog.MemberSpaceLimitsChangeCapsTypePolicyDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyDetails
+    public let swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyDetails) {
         self.swift = swift
@@ -47905,7 +48179,7 @@ public class DBXTeamLogMemberSpaceLimitsChangeCapsTypePolicyType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangeCapsTypePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyType
+    public let swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyType
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeCapsTypePolicyType) {
         self.swift = swift
@@ -47930,7 +48204,7 @@ public class DBXTeamLogMemberSpaceLimitsChangeCustomQuotaDetails: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangeCustomQuotaDetails(previousValue: previousValue.uint64Value, newValue: newValue.uint64Value)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaDetails
+    public let swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaDetails) {
         self.swift = swift
@@ -47952,7 +48226,7 @@ public class DBXTeamLogMemberSpaceLimitsChangeCustomQuotaType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangeCustomQuotaType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaType
+    public let swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaType
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeCustomQuotaType) {
         self.swift = swift
@@ -47977,7 +48251,7 @@ public class DBXTeamLogMemberSpaceLimitsChangePolicyDetails: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangePolicyDetails(previousValue: previousValue?.uint64Value, newValue: newValue?.uint64Value)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangePolicyDetails
+    public let swift: TeamLog.MemberSpaceLimitsChangePolicyDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsChangePolicyDetails) {
         self.swift = swift
@@ -47999,7 +48273,7 @@ public class DBXTeamLogMemberSpaceLimitsChangePolicyType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangePolicyType
+    public let swift: TeamLog.MemberSpaceLimitsChangePolicyType
 
     public init(swift: TeamLog.MemberSpaceLimitsChangePolicyType) {
         self.swift = swift
@@ -48014,17 +48288,17 @@ public class DBXTeamLogMemberSpaceLimitsChangePolicyType: NSObject {
 public class DBXTeamLogMemberSpaceLimitsChangeStatusDetails: NSObject {
     /// Previous storage quota status.
     @objc
-    public var previousValue: DBXTeamLogSpaceLimitsStatus { DBXTeamLogSpaceLimitsStatus(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSpaceLimitsStatus { DBXTeamLogSpaceLimitsStatus.factory(swift: swift.previousValue) }
     /// New storage quota status.
     @objc
-    public var newValue: DBXTeamLogSpaceLimitsStatus { DBXTeamLogSpaceLimitsStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSpaceLimitsStatus { DBXTeamLogSpaceLimitsStatus.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogSpaceLimitsStatus, newValue: DBXTeamLogSpaceLimitsStatus) {
         self.swift = TeamLog.MemberSpaceLimitsChangeStatusDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeStatusDetails
+    public let swift: TeamLog.MemberSpaceLimitsChangeStatusDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeStatusDetails) {
         self.swift = swift
@@ -48046,7 +48320,7 @@ public class DBXTeamLogMemberSpaceLimitsChangeStatusType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsChangeStatusType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsChangeStatusType
+    public let swift: TeamLog.MemberSpaceLimitsChangeStatusType
 
     public init(swift: TeamLog.MemberSpaceLimitsChangeStatusType) {
         self.swift = swift
@@ -48059,7 +48333,12 @@ public class DBXTeamLogMemberSpaceLimitsChangeStatusType: NSObject {
 /// Removed custom member space limit.
 @objc
 public class DBXTeamLogMemberSpaceLimitsRemoveCustomQuotaDetails: NSObject {
-    let swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaDetails
+    public override init() {
+        self.swift = TeamLog.MemberSpaceLimitsRemoveCustomQuotaDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaDetails) {
         self.swift = swift
@@ -48081,7 +48360,7 @@ public class DBXTeamLogMemberSpaceLimitsRemoveCustomQuotaType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsRemoveCustomQuotaType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaType
+    public let swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaType
 
     public init(swift: TeamLog.MemberSpaceLimitsRemoveCustomQuotaType) {
         self.swift = swift
@@ -48094,7 +48373,12 @@ public class DBXTeamLogMemberSpaceLimitsRemoveCustomQuotaType: NSObject {
 /// Removed members from member space limit exception list.
 @objc
 public class DBXTeamLogMemberSpaceLimitsRemoveExceptionDetails: NSObject {
-    let swift: TeamLog.MemberSpaceLimitsRemoveExceptionDetails
+    public override init() {
+        self.swift = TeamLog.MemberSpaceLimitsRemoveExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberSpaceLimitsRemoveExceptionDetails
 
     public init(swift: TeamLog.MemberSpaceLimitsRemoveExceptionDetails) {
         self.swift = swift
@@ -48116,7 +48400,7 @@ public class DBXTeamLogMemberSpaceLimitsRemoveExceptionType: NSObject {
         self.swift = TeamLog.MemberSpaceLimitsRemoveExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSpaceLimitsRemoveExceptionType
+    public let swift: TeamLog.MemberSpaceLimitsRemoveExceptionType
 
     public init(swift: TeamLog.MemberSpaceLimitsRemoveExceptionType) {
         self.swift = swift
@@ -48129,9 +48413,9 @@ public class DBXTeamLogMemberSpaceLimitsRemoveExceptionType: NSObject {
 /// Objective-C compatible MemberStatus union
 @objc
 public class DBXTeamLogMemberStatus: NSObject {
-    let swift: TeamLog.MemberStatus
+    public let swift: TeamLog.MemberStatus
 
-    public init(swift: TeamLog.MemberStatus) {
+    fileprivate init(swift: TeamLog.MemberStatus) {
         self.swift = swift
     }
 
@@ -48275,7 +48559,7 @@ public class DBXTeamLogMemberSuggestDetails: NSObject {
         self.swift = TeamLog.MemberSuggestDetails(suggestedMembers: suggestedMembers)
     }
 
-    let swift: TeamLog.MemberSuggestDetails
+    public let swift: TeamLog.MemberSuggestDetails
 
     public init(swift: TeamLog.MemberSuggestDetails) {
         self.swift = swift
@@ -48297,7 +48581,7 @@ public class DBXTeamLogMemberSuggestType: NSObject {
         self.swift = TeamLog.MemberSuggestType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSuggestType
+    public let swift: TeamLog.MemberSuggestType
 
     public init(swift: TeamLog.MemberSuggestType) {
         self.swift = swift
@@ -48312,11 +48596,11 @@ public class DBXTeamLogMemberSuggestType: NSObject {
 public class DBXTeamLogMemberSuggestionsChangePolicyDetails: NSObject {
     /// New team member suggestions policy.
     @objc
-    public var newValue: DBXTeamLogMemberSuggestionsPolicy { DBXTeamLogMemberSuggestionsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogMemberSuggestionsPolicy { DBXTeamLogMemberSuggestionsPolicy.factory(swift: swift.newValue) }
     /// Previous team member suggestions policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogMemberSuggestionsPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogMemberSuggestionsPolicy(swift: swift)
+        return DBXTeamLogMemberSuggestionsPolicy.factory(swift: swift)
     }
 
     @objc
@@ -48324,7 +48608,7 @@ public class DBXTeamLogMemberSuggestionsChangePolicyDetails: NSObject {
         self.swift = TeamLog.MemberSuggestionsChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.MemberSuggestionsChangePolicyDetails
+    public let swift: TeamLog.MemberSuggestionsChangePolicyDetails
 
     public init(swift: TeamLog.MemberSuggestionsChangePolicyDetails) {
         self.swift = swift
@@ -48346,7 +48630,7 @@ public class DBXTeamLogMemberSuggestionsChangePolicyType: NSObject {
         self.swift = TeamLog.MemberSuggestionsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.MemberSuggestionsChangePolicyType
+    public let swift: TeamLog.MemberSuggestionsChangePolicyType
 
     public init(swift: TeamLog.MemberSuggestionsChangePolicyType) {
         self.swift = swift
@@ -48359,9 +48643,9 @@ public class DBXTeamLogMemberSuggestionsChangePolicyType: NSObject {
 /// Member suggestions policy
 @objc
 public class DBXTeamLogMemberSuggestionsPolicy: NSObject {
-    let swift: TeamLog.MemberSuggestionsPolicy
+    public let swift: TeamLog.MemberSuggestionsPolicy
 
-    public init(swift: TeamLog.MemberSuggestionsPolicy) {
+    fileprivate init(swift: TeamLog.MemberSuggestionsPolicy) {
         self.swift = swift
     }
 
@@ -48428,7 +48712,12 @@ public class DBXTeamLogMemberSuggestionsPolicyOther: DBXTeamLogMemberSuggestions
 /// Transferred contents of deleted member account to another member.
 @objc
 public class DBXTeamLogMemberTransferAccountContentsDetails: NSObject {
-    let swift: TeamLog.MemberTransferAccountContentsDetails
+    public override init() {
+        self.swift = TeamLog.MemberTransferAccountContentsDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.MemberTransferAccountContentsDetails
 
     public init(swift: TeamLog.MemberTransferAccountContentsDetails) {
         self.swift = swift
@@ -48450,7 +48739,7 @@ public class DBXTeamLogMemberTransferAccountContentsType: NSObject {
         self.swift = TeamLog.MemberTransferAccountContentsType(description_: description_)
     }
 
-    let swift: TeamLog.MemberTransferAccountContentsType
+    public let swift: TeamLog.MemberTransferAccountContentsType
 
     public init(swift: TeamLog.MemberTransferAccountContentsType) {
         self.swift = swift
@@ -48475,7 +48764,7 @@ public class DBXTeamLogMemberTransferredInternalFields: NSObject {
         self.swift = TeamLog.MemberTransferredInternalFields(sourceTeamId: sourceTeamId, targetTeamId: targetTeamId)
     }
 
-    let swift: TeamLog.MemberTransferredInternalFields
+    public let swift: TeamLog.MemberTransferredInternalFields
 
     public init(swift: TeamLog.MemberTransferredInternalFields) {
         self.swift = swift
@@ -48490,11 +48779,11 @@ public class DBXTeamLogMemberTransferredInternalFields: NSObject {
 public class DBXTeamLogMicrosoftOfficeAddinChangePolicyDetails: NSObject {
     /// New Microsoft Office addin policy.
     @objc
-    public var newValue: DBXTeamLogMicrosoftOfficeAddinPolicy { DBXTeamLogMicrosoftOfficeAddinPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogMicrosoftOfficeAddinPolicy { DBXTeamLogMicrosoftOfficeAddinPolicy.factory(swift: swift.newValue) }
     /// Previous Microsoft Office addin policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogMicrosoftOfficeAddinPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogMicrosoftOfficeAddinPolicy(swift: swift)
+        return DBXTeamLogMicrosoftOfficeAddinPolicy.factory(swift: swift)
     }
 
     @objc
@@ -48502,7 +48791,7 @@ public class DBXTeamLogMicrosoftOfficeAddinChangePolicyDetails: NSObject {
         self.swift = TeamLog.MicrosoftOfficeAddinChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.MicrosoftOfficeAddinChangePolicyDetails
+    public let swift: TeamLog.MicrosoftOfficeAddinChangePolicyDetails
 
     public init(swift: TeamLog.MicrosoftOfficeAddinChangePolicyDetails) {
         self.swift = swift
@@ -48524,7 +48813,7 @@ public class DBXTeamLogMicrosoftOfficeAddinChangePolicyType: NSObject {
         self.swift = TeamLog.MicrosoftOfficeAddinChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.MicrosoftOfficeAddinChangePolicyType
+    public let swift: TeamLog.MicrosoftOfficeAddinChangePolicyType
 
     public init(swift: TeamLog.MicrosoftOfficeAddinChangePolicyType) {
         self.swift = swift
@@ -48537,9 +48826,9 @@ public class DBXTeamLogMicrosoftOfficeAddinChangePolicyType: NSObject {
 /// Microsoft Office addin policy
 @objc
 public class DBXTeamLogMicrosoftOfficeAddinPolicy: NSObject {
-    let swift: TeamLog.MicrosoftOfficeAddinPolicy
+    public let swift: TeamLog.MicrosoftOfficeAddinPolicy
 
-    public init(swift: TeamLog.MicrosoftOfficeAddinPolicy) {
+    fileprivate init(swift: TeamLog.MicrosoftOfficeAddinPolicy) {
         self.swift = swift
     }
 
@@ -48616,7 +48905,7 @@ public class DBXTeamLogMissingDetails: NSObject {
         self.swift = TeamLog.MissingDetails(sourceEventFields: sourceEventFields)
     }
 
-    let swift: TeamLog.MissingDetails
+    public let swift: TeamLog.MissingDetails
 
     public init(swift: TeamLog.MissingDetails) {
         self.swift = swift
@@ -48640,7 +48929,7 @@ public class DBXTeamLogMobileDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInf
     public var deviceName: String { subSwift.deviceName }
     /// The mobile application type.
     @objc
-    public var clientType: DBXTeamMobileClientPlatform { DBXTeamMobileClientPlatform(swift: subSwift.clientType) }
+    public var clientType: DBXTeamMobileClientPlatform { DBXTeamMobileClientPlatform.factory(swift: subSwift.clientType) }
     /// The Dropbox client version.
     @objc
     public var clientVersion: String? { subSwift.clientVersion }
@@ -48678,7 +48967,7 @@ public class DBXTeamLogMobileDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInf
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.MobileDeviceSessionLogInfo
+    public let subSwift: TeamLog.MobileDeviceSessionLogInfo
 
     public init(swift: TeamLog.MobileDeviceSessionLogInfo) {
         self.subSwift = swift
@@ -48692,7 +48981,14 @@ public class DBXTeamLogMobileDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInf
 /// Mobile session.
 @objc
 public class DBXTeamLogMobileSessionLogInfo: DBXTeamLogSessionLogInfo {
-    let subSwift: TeamLog.MobileSessionLogInfo
+    @objc
+    public override init(sessionId: String?) {
+        let swift = TeamLog.MobileSessionLogInfo(sessionId: sessionId)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.MobileSessionLogInfo
 
     public init(swift: TeamLog.MobileSessionLogInfo) {
         self.subSwift = swift
@@ -48721,7 +49017,7 @@ public class DBXTeamLogNamespaceRelativePathLogInfo: NSObject {
         self.swift = TeamLog.NamespaceRelativePathLogInfo(nsId: nsId, relativePath: relativePath, isSharedNamespace: isSharedNamespace?.boolValue)
     }
 
-    let swift: TeamLog.NamespaceRelativePathLogInfo
+    public let swift: TeamLog.NamespaceRelativePathLogInfo
 
     public init(swift: TeamLog.NamespaceRelativePathLogInfo) {
         self.swift = swift
@@ -48736,11 +49032,11 @@ public class DBXTeamLogNamespaceRelativePathLogInfo: NSObject {
 public class DBXTeamLogNetworkControlChangePolicyDetails: NSObject {
     /// New network control policy.
     @objc
-    public var newValue: DBXTeamLogNetworkControlPolicy { DBXTeamLogNetworkControlPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogNetworkControlPolicy { DBXTeamLogNetworkControlPolicy.factory(swift: swift.newValue) }
     /// Previous network control policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogNetworkControlPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogNetworkControlPolicy(swift: swift)
+        return DBXTeamLogNetworkControlPolicy.factory(swift: swift)
     }
 
     @objc
@@ -48748,7 +49044,7 @@ public class DBXTeamLogNetworkControlChangePolicyDetails: NSObject {
         self.swift = TeamLog.NetworkControlChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.NetworkControlChangePolicyDetails
+    public let swift: TeamLog.NetworkControlChangePolicyDetails
 
     public init(swift: TeamLog.NetworkControlChangePolicyDetails) {
         self.swift = swift
@@ -48770,7 +49066,7 @@ public class DBXTeamLogNetworkControlChangePolicyType: NSObject {
         self.swift = TeamLog.NetworkControlChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.NetworkControlChangePolicyType
+    public let swift: TeamLog.NetworkControlChangePolicyType
 
     public init(swift: TeamLog.NetworkControlChangePolicyType) {
         self.swift = swift
@@ -48783,9 +49079,9 @@ public class DBXTeamLogNetworkControlChangePolicyType: NSObject {
 /// Network control policy
 @objc
 public class DBXTeamLogNetworkControlPolicy: NSObject {
-    let swift: TeamLog.NetworkControlPolicy
+    public let swift: TeamLog.NetworkControlPolicy
 
-    public init(swift: TeamLog.NetworkControlPolicy) {
+    fileprivate init(swift: TeamLog.NetworkControlPolicy) {
         self.swift = swift
     }
 
@@ -48864,7 +49160,7 @@ public class DBXTeamLogNoExpirationLinkGenCreateReportDetails: NSObject {
         self.swift = TeamLog.NoExpirationLinkGenCreateReportDetails(startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.NoExpirationLinkGenCreateReportDetails
+    public let swift: TeamLog.NoExpirationLinkGenCreateReportDetails
 
     public init(swift: TeamLog.NoExpirationLinkGenCreateReportDetails) {
         self.swift = swift
@@ -48886,7 +49182,7 @@ public class DBXTeamLogNoExpirationLinkGenCreateReportType: NSObject {
         self.swift = TeamLog.NoExpirationLinkGenCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.NoExpirationLinkGenCreateReportType
+    public let swift: TeamLog.NoExpirationLinkGenCreateReportType
 
     public init(swift: TeamLog.NoExpirationLinkGenCreateReportType) {
         self.swift = swift
@@ -48901,14 +49197,14 @@ public class DBXTeamLogNoExpirationLinkGenCreateReportType: NSObject {
 public class DBXTeamLogNoExpirationLinkGenReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.NoExpirationLinkGenReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.NoExpirationLinkGenReportFailedDetails
+    public let swift: TeamLog.NoExpirationLinkGenReportFailedDetails
 
     public init(swift: TeamLog.NoExpirationLinkGenReportFailedDetails) {
         self.swift = swift
@@ -48930,7 +49226,7 @@ public class DBXTeamLogNoExpirationLinkGenReportFailedType: NSObject {
         self.swift = TeamLog.NoExpirationLinkGenReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.NoExpirationLinkGenReportFailedType
+    public let swift: TeamLog.NoExpirationLinkGenReportFailedType
 
     public init(swift: TeamLog.NoExpirationLinkGenReportFailedType) {
         self.swift = swift
@@ -48955,7 +49251,7 @@ public class DBXTeamLogNoPasswordLinkGenCreateReportDetails: NSObject {
         self.swift = TeamLog.NoPasswordLinkGenCreateReportDetails(startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.NoPasswordLinkGenCreateReportDetails
+    public let swift: TeamLog.NoPasswordLinkGenCreateReportDetails
 
     public init(swift: TeamLog.NoPasswordLinkGenCreateReportDetails) {
         self.swift = swift
@@ -48977,7 +49273,7 @@ public class DBXTeamLogNoPasswordLinkGenCreateReportType: NSObject {
         self.swift = TeamLog.NoPasswordLinkGenCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.NoPasswordLinkGenCreateReportType
+    public let swift: TeamLog.NoPasswordLinkGenCreateReportType
 
     public init(swift: TeamLog.NoPasswordLinkGenCreateReportType) {
         self.swift = swift
@@ -48992,14 +49288,14 @@ public class DBXTeamLogNoPasswordLinkGenCreateReportType: NSObject {
 public class DBXTeamLogNoPasswordLinkGenReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.NoPasswordLinkGenReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.NoPasswordLinkGenReportFailedDetails
+    public let swift: TeamLog.NoPasswordLinkGenReportFailedDetails
 
     public init(swift: TeamLog.NoPasswordLinkGenReportFailedDetails) {
         self.swift = swift
@@ -49021,7 +49317,7 @@ public class DBXTeamLogNoPasswordLinkGenReportFailedType: NSObject {
         self.swift = TeamLog.NoPasswordLinkGenReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.NoPasswordLinkGenReportFailedType
+    public let swift: TeamLog.NoPasswordLinkGenReportFailedType
 
     public init(swift: TeamLog.NoPasswordLinkGenReportFailedType) {
         self.swift = swift
@@ -49046,7 +49342,7 @@ public class DBXTeamLogNoPasswordLinkViewCreateReportDetails: NSObject {
         self.swift = TeamLog.NoPasswordLinkViewCreateReportDetails(startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.NoPasswordLinkViewCreateReportDetails
+    public let swift: TeamLog.NoPasswordLinkViewCreateReportDetails
 
     public init(swift: TeamLog.NoPasswordLinkViewCreateReportDetails) {
         self.swift = swift
@@ -49068,7 +49364,7 @@ public class DBXTeamLogNoPasswordLinkViewCreateReportType: NSObject {
         self.swift = TeamLog.NoPasswordLinkViewCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.NoPasswordLinkViewCreateReportType
+    public let swift: TeamLog.NoPasswordLinkViewCreateReportType
 
     public init(swift: TeamLog.NoPasswordLinkViewCreateReportType) {
         self.swift = swift
@@ -49083,14 +49379,14 @@ public class DBXTeamLogNoPasswordLinkViewCreateReportType: NSObject {
 public class DBXTeamLogNoPasswordLinkViewReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.NoPasswordLinkViewReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.NoPasswordLinkViewReportFailedDetails
+    public let swift: TeamLog.NoPasswordLinkViewReportFailedDetails
 
     public init(swift: TeamLog.NoPasswordLinkViewReportFailedDetails) {
         self.swift = swift
@@ -49112,7 +49408,7 @@ public class DBXTeamLogNoPasswordLinkViewReportFailedType: NSObject {
         self.swift = TeamLog.NoPasswordLinkViewReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.NoPasswordLinkViewReportFailedType
+    public let swift: TeamLog.NoPasswordLinkViewReportFailedType
 
     public init(swift: TeamLog.NoPasswordLinkViewReportFailedType) {
         self.swift = swift
@@ -49140,7 +49436,7 @@ public class DBXTeamLogUserLogInfo: NSObject {
         self.swift = TeamLog.UserLogInfo(accountId: accountId, displayName: displayName, email: email)
     }
 
-    let swift: TeamLog.UserLogInfo
+    public let swift: TeamLog.UserLogInfo
 
     public init(swift: TeamLog.UserLogInfo) {
         self.swift = swift
@@ -49166,7 +49462,14 @@ public class DBXTeamLogUserLogInfo: NSObject {
 /// Non team member's logged information.
 @objc
 public class DBXTeamLogNonTeamMemberLogInfo: DBXTeamLogUserLogInfo {
-    let subSwift: TeamLog.NonTeamMemberLogInfo
+    @objc
+    public override init(accountId: String?, displayName: String?, email: String?) {
+        let swift = TeamLog.NonTeamMemberLogInfo(accountId: accountId, displayName: displayName, email: email)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.NonTeamMemberLogInfo
 
     public init(swift: TeamLog.NonTeamMemberLogInfo) {
         self.subSwift = swift
@@ -49189,7 +49492,7 @@ public class DBXTeamLogNonTrustedTeamDetails: NSObject {
         self.swift = TeamLog.NonTrustedTeamDetails(team: team)
     }
 
-    let swift: TeamLog.NonTrustedTeamDetails
+    public let swift: TeamLog.NonTrustedTeamDetails
 
     public init(swift: TeamLog.NonTrustedTeamDetails) {
         self.swift = swift
@@ -49202,7 +49505,12 @@ public class DBXTeamLogNonTrustedTeamDetails: NSObject {
 /// Changed Paper doc to invite-only.
 @objc
 public class DBXTeamLogNoteAclInviteOnlyDetails: NSObject {
-    let swift: TeamLog.NoteAclInviteOnlyDetails
+    public override init() {
+        self.swift = TeamLog.NoteAclInviteOnlyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.NoteAclInviteOnlyDetails
 
     public init(swift: TeamLog.NoteAclInviteOnlyDetails) {
         self.swift = swift
@@ -49224,7 +49532,7 @@ public class DBXTeamLogNoteAclInviteOnlyType: NSObject {
         self.swift = TeamLog.NoteAclInviteOnlyType(description_: description_)
     }
 
-    let swift: TeamLog.NoteAclInviteOnlyType
+    public let swift: TeamLog.NoteAclInviteOnlyType
 
     public init(swift: TeamLog.NoteAclInviteOnlyType) {
         self.swift = swift
@@ -49237,7 +49545,12 @@ public class DBXTeamLogNoteAclInviteOnlyType: NSObject {
 /// Changed Paper doc to link-accessible.
 @objc
 public class DBXTeamLogNoteAclLinkDetails: NSObject {
-    let swift: TeamLog.NoteAclLinkDetails
+    public override init() {
+        self.swift = TeamLog.NoteAclLinkDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.NoteAclLinkDetails
 
     public init(swift: TeamLog.NoteAclLinkDetails) {
         self.swift = swift
@@ -49259,7 +49572,7 @@ public class DBXTeamLogNoteAclLinkType: NSObject {
         self.swift = TeamLog.NoteAclLinkType(description_: description_)
     }
 
-    let swift: TeamLog.NoteAclLinkType
+    public let swift: TeamLog.NoteAclLinkType
 
     public init(swift: TeamLog.NoteAclLinkType) {
         self.swift = swift
@@ -49272,7 +49585,12 @@ public class DBXTeamLogNoteAclLinkType: NSObject {
 /// Changed Paper doc to link-accessible for team.
 @objc
 public class DBXTeamLogNoteAclTeamLinkDetails: NSObject {
-    let swift: TeamLog.NoteAclTeamLinkDetails
+    public override init() {
+        self.swift = TeamLog.NoteAclTeamLinkDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.NoteAclTeamLinkDetails
 
     public init(swift: TeamLog.NoteAclTeamLinkDetails) {
         self.swift = swift
@@ -49294,7 +49612,7 @@ public class DBXTeamLogNoteAclTeamLinkType: NSObject {
         self.swift = TeamLog.NoteAclTeamLinkType(description_: description_)
     }
 
-    let swift: TeamLog.NoteAclTeamLinkType
+    public let swift: TeamLog.NoteAclTeamLinkType
 
     public init(swift: TeamLog.NoteAclTeamLinkType) {
         self.swift = swift
@@ -49307,7 +49625,12 @@ public class DBXTeamLogNoteAclTeamLinkType: NSObject {
 /// Shared received Paper doc.
 @objc
 public class DBXTeamLogNoteShareReceiveDetails: NSObject {
-    let swift: TeamLog.NoteShareReceiveDetails
+    public override init() {
+        self.swift = TeamLog.NoteShareReceiveDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.NoteShareReceiveDetails
 
     public init(swift: TeamLog.NoteShareReceiveDetails) {
         self.swift = swift
@@ -49329,7 +49652,7 @@ public class DBXTeamLogNoteShareReceiveType: NSObject {
         self.swift = TeamLog.NoteShareReceiveType(description_: description_)
     }
 
-    let swift: TeamLog.NoteShareReceiveType
+    public let swift: TeamLog.NoteShareReceiveType
 
     public init(swift: TeamLog.NoteShareReceiveType) {
         self.swift = swift
@@ -49342,7 +49665,12 @@ public class DBXTeamLogNoteShareReceiveType: NSObject {
 /// Shared Paper doc.
 @objc
 public class DBXTeamLogNoteSharedDetails: NSObject {
-    let swift: TeamLog.NoteSharedDetails
+    public override init() {
+        self.swift = TeamLog.NoteSharedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.NoteSharedDetails
 
     public init(swift: TeamLog.NoteSharedDetails) {
         self.swift = swift
@@ -49364,7 +49692,7 @@ public class DBXTeamLogNoteSharedType: NSObject {
         self.swift = TeamLog.NoteSharedType(description_: description_)
     }
 
-    let swift: TeamLog.NoteSharedType
+    public let swift: TeamLog.NoteSharedType
 
     public init(swift: TeamLog.NoteSharedType) {
         self.swift = swift
@@ -49379,14 +49707,14 @@ public class DBXTeamLogNoteSharedType: NSObject {
 public class DBXTeamLogObjectLabelAddedDetails: NSObject {
     /// Labels mark a file or folder.
     @objc
-    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType(swift: swift.labelType) }
+    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType.factory(swift: swift.labelType) }
 
     @objc
     public init(labelType: DBXTeamLogLabelType) {
         self.swift = TeamLog.ObjectLabelAddedDetails(labelType: labelType.swift)
     }
 
-    let swift: TeamLog.ObjectLabelAddedDetails
+    public let swift: TeamLog.ObjectLabelAddedDetails
 
     public init(swift: TeamLog.ObjectLabelAddedDetails) {
         self.swift = swift
@@ -49408,7 +49736,7 @@ public class DBXTeamLogObjectLabelAddedType: NSObject {
         self.swift = TeamLog.ObjectLabelAddedType(description_: description_)
     }
 
-    let swift: TeamLog.ObjectLabelAddedType
+    public let swift: TeamLog.ObjectLabelAddedType
 
     public init(swift: TeamLog.ObjectLabelAddedType) {
         self.swift = swift
@@ -49423,14 +49751,14 @@ public class DBXTeamLogObjectLabelAddedType: NSObject {
 public class DBXTeamLogObjectLabelRemovedDetails: NSObject {
     /// Labels mark a file or folder.
     @objc
-    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType(swift: swift.labelType) }
+    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType.factory(swift: swift.labelType) }
 
     @objc
     public init(labelType: DBXTeamLogLabelType) {
         self.swift = TeamLog.ObjectLabelRemovedDetails(labelType: labelType.swift)
     }
 
-    let swift: TeamLog.ObjectLabelRemovedDetails
+    public let swift: TeamLog.ObjectLabelRemovedDetails
 
     public init(swift: TeamLog.ObjectLabelRemovedDetails) {
         self.swift = swift
@@ -49452,7 +49780,7 @@ public class DBXTeamLogObjectLabelRemovedType: NSObject {
         self.swift = TeamLog.ObjectLabelRemovedType(description_: description_)
     }
 
-    let swift: TeamLog.ObjectLabelRemovedType
+    public let swift: TeamLog.ObjectLabelRemovedType
 
     public init(swift: TeamLog.ObjectLabelRemovedType) {
         self.swift = swift
@@ -49467,14 +49795,14 @@ public class DBXTeamLogObjectLabelRemovedType: NSObject {
 public class DBXTeamLogObjectLabelUpdatedValueDetails: NSObject {
     /// Labels mark a file or folder.
     @objc
-    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType(swift: swift.labelType) }
+    public var labelType: DBXTeamLogLabelType { DBXTeamLogLabelType.factory(swift: swift.labelType) }
 
     @objc
     public init(labelType: DBXTeamLogLabelType) {
         self.swift = TeamLog.ObjectLabelUpdatedValueDetails(labelType: labelType.swift)
     }
 
-    let swift: TeamLog.ObjectLabelUpdatedValueDetails
+    public let swift: TeamLog.ObjectLabelUpdatedValueDetails
 
     public init(swift: TeamLog.ObjectLabelUpdatedValueDetails) {
         self.swift = swift
@@ -49496,7 +49824,7 @@ public class DBXTeamLogObjectLabelUpdatedValueType: NSObject {
         self.swift = TeamLog.ObjectLabelUpdatedValueType(description_: description_)
     }
 
-    let swift: TeamLog.ObjectLabelUpdatedValueType
+    public let swift: TeamLog.ObjectLabelUpdatedValueType
 
     public init(swift: TeamLog.ObjectLabelUpdatedValueType) {
         self.swift = swift
@@ -49509,7 +49837,12 @@ public class DBXTeamLogObjectLabelUpdatedValueType: NSObject {
 /// Opened shared Paper doc.
 @objc
 public class DBXTeamLogOpenNoteSharedDetails: NSObject {
-    let swift: TeamLog.OpenNoteSharedDetails
+    public override init() {
+        self.swift = TeamLog.OpenNoteSharedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.OpenNoteSharedDetails
 
     public init(swift: TeamLog.OpenNoteSharedDetails) {
         self.swift = swift
@@ -49531,7 +49864,7 @@ public class DBXTeamLogOpenNoteSharedType: NSObject {
         self.swift = TeamLog.OpenNoteSharedType(description_: description_)
     }
 
-    let swift: TeamLog.OpenNoteSharedType
+    public let swift: TeamLog.OpenNoteSharedType
 
     public init(swift: TeamLog.OpenNoteSharedType) {
         self.swift = swift
@@ -49553,7 +49886,7 @@ public class DBXTeamLogOrganizationDetails: NSObject {
         self.swift = TeamLog.OrganizationDetails(organization: organization)
     }
 
-    let swift: TeamLog.OrganizationDetails
+    public let swift: TeamLog.OrganizationDetails
 
     public init(swift: TeamLog.OrganizationDetails) {
         self.swift = swift
@@ -49575,7 +49908,7 @@ public class DBXTeamLogOrganizationName: NSObject {
         self.swift = TeamLog.OrganizationName(organization: organization)
     }
 
-    let swift: TeamLog.OrganizationName
+    public let swift: TeamLog.OrganizationName
 
     public init(swift: TeamLog.OrganizationName) {
         self.swift = swift
@@ -49588,7 +49921,12 @@ public class DBXTeamLogOrganizationName: NSObject {
 /// Organized a folder with multi-file organize.
 @objc
 public class DBXTeamLogOrganizeFolderWithTidyDetails: NSObject {
-    let swift: TeamLog.OrganizeFolderWithTidyDetails
+    public override init() {
+        self.swift = TeamLog.OrganizeFolderWithTidyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.OrganizeFolderWithTidyDetails
 
     public init(swift: TeamLog.OrganizeFolderWithTidyDetails) {
         self.swift = swift
@@ -49610,7 +49948,7 @@ public class DBXTeamLogOrganizeFolderWithTidyType: NSObject {
         self.swift = TeamLog.OrganizeFolderWithTidyType(description_: description_)
     }
 
-    let swift: TeamLog.OrganizeFolderWithTidyType
+    public let swift: TeamLog.OrganizeFolderWithTidyType
 
     public init(swift: TeamLog.OrganizeFolderWithTidyType) {
         self.swift = swift
@@ -49631,14 +49969,14 @@ public class DBXTeamLogOriginLogInfo: NSObject {
 
     /// The method that was used to perform the action.
     @objc
-    public var accessMethod: DBXTeamLogAccessMethodLogInfo { DBXTeamLogAccessMethodLogInfo(swift: swift.accessMethod) }
+    public var accessMethod: DBXTeamLogAccessMethodLogInfo { DBXTeamLogAccessMethodLogInfo.factory(swift: swift.accessMethod) }
 
     @objc
     public init(accessMethod: DBXTeamLogAccessMethodLogInfo, geoLocation: DBXTeamLogGeoLocationLogInfo?) {
         self.swift = TeamLog.OriginLogInfo(accessMethod: accessMethod.swift, geoLocation: geoLocation?.swift)
     }
 
-    let swift: TeamLog.OriginLogInfo
+    public let swift: TeamLog.OriginLogInfo
 
     public init(swift: TeamLog.OriginLogInfo) {
         self.swift = swift
@@ -49663,7 +50001,7 @@ public class DBXTeamLogOutdatedLinkViewCreateReportDetails: NSObject {
         self.swift = TeamLog.OutdatedLinkViewCreateReportDetails(startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.OutdatedLinkViewCreateReportDetails
+    public let swift: TeamLog.OutdatedLinkViewCreateReportDetails
 
     public init(swift: TeamLog.OutdatedLinkViewCreateReportDetails) {
         self.swift = swift
@@ -49685,7 +50023,7 @@ public class DBXTeamLogOutdatedLinkViewCreateReportType: NSObject {
         self.swift = TeamLog.OutdatedLinkViewCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.OutdatedLinkViewCreateReportType
+    public let swift: TeamLog.OutdatedLinkViewCreateReportType
 
     public init(swift: TeamLog.OutdatedLinkViewCreateReportType) {
         self.swift = swift
@@ -49700,14 +50038,14 @@ public class DBXTeamLogOutdatedLinkViewCreateReportType: NSObject {
 public class DBXTeamLogOutdatedLinkViewReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.OutdatedLinkViewReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.OutdatedLinkViewReportFailedDetails
+    public let swift: TeamLog.OutdatedLinkViewReportFailedDetails
 
     public init(swift: TeamLog.OutdatedLinkViewReportFailedDetails) {
         self.swift = swift
@@ -49729,7 +50067,7 @@ public class DBXTeamLogOutdatedLinkViewReportFailedType: NSObject {
         self.swift = TeamLog.OutdatedLinkViewReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.OutdatedLinkViewReportFailedType
+    public let swift: TeamLog.OutdatedLinkViewReportFailedType
 
     public init(swift: TeamLog.OutdatedLinkViewReportFailedType) {
         self.swift = swift
@@ -49742,9 +50080,9 @@ public class DBXTeamLogOutdatedLinkViewReportFailedType: NSObject {
 /// Objective-C compatible PaperAccessType union
 @objc
 public class DBXTeamLogPaperAccessType: NSObject {
-    let swift: TeamLog.PaperAccessType
+    public let swift: TeamLog.PaperAccessType
 
-    public init(swift: TeamLog.PaperAccessType) {
+    fileprivate init(swift: TeamLog.PaperAccessType) {
         self.swift = swift
     }
 
@@ -49828,7 +50166,12 @@ public class DBXTeamLogPaperAccessTypeOther: DBXTeamLogPaperAccessType {
 /// Exported all team Paper docs.
 @objc
 public class DBXTeamLogPaperAdminExportStartDetails: NSObject {
-    let swift: TeamLog.PaperAdminExportStartDetails
+    public override init() {
+        self.swift = TeamLog.PaperAdminExportStartDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PaperAdminExportStartDetails
 
     public init(swift: TeamLog.PaperAdminExportStartDetails) {
         self.swift = swift
@@ -49850,7 +50193,7 @@ public class DBXTeamLogPaperAdminExportStartType: NSObject {
         self.swift = TeamLog.PaperAdminExportStartType(description_: description_)
     }
 
-    let swift: TeamLog.PaperAdminExportStartType
+    public let swift: TeamLog.PaperAdminExportStartType
 
     public init(swift: TeamLog.PaperAdminExportStartType) {
         self.swift = swift
@@ -49865,11 +50208,11 @@ public class DBXTeamLogPaperAdminExportStartType: NSObject {
 public class DBXTeamLogPaperChangeDeploymentPolicyDetails: NSObject {
     /// New Dropbox Paper deployment policy.
     @objc
-    public var newValue: DBXTeamPoliciesPaperDeploymentPolicy { DBXTeamPoliciesPaperDeploymentPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesPaperDeploymentPolicy { DBXTeamPoliciesPaperDeploymentPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Paper deployment policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesPaperDeploymentPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesPaperDeploymentPolicy(swift: swift)
+        return DBXTeamPoliciesPaperDeploymentPolicy.factory(swift: swift)
     }
 
     @objc
@@ -49877,7 +50220,7 @@ public class DBXTeamLogPaperChangeDeploymentPolicyDetails: NSObject {
         self.swift = TeamLog.PaperChangeDeploymentPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.PaperChangeDeploymentPolicyDetails
+    public let swift: TeamLog.PaperChangeDeploymentPolicyDetails
 
     public init(swift: TeamLog.PaperChangeDeploymentPolicyDetails) {
         self.swift = swift
@@ -49899,7 +50242,7 @@ public class DBXTeamLogPaperChangeDeploymentPolicyType: NSObject {
         self.swift = TeamLog.PaperChangeDeploymentPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PaperChangeDeploymentPolicyType
+    public let swift: TeamLog.PaperChangeDeploymentPolicyType
 
     public init(swift: TeamLog.PaperChangeDeploymentPolicyType) {
         self.swift = swift
@@ -49914,14 +50257,14 @@ public class DBXTeamLogPaperChangeDeploymentPolicyType: NSObject {
 public class DBXTeamLogPaperChangeMemberLinkPolicyDetails: NSObject {
     /// New paper external link accessibility policy.
     @objc
-    public var newValue: DBXTeamLogPaperMemberPolicy { DBXTeamLogPaperMemberPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPaperMemberPolicy { DBXTeamLogPaperMemberPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(newValue: DBXTeamLogPaperMemberPolicy) {
         self.swift = TeamLog.PaperChangeMemberLinkPolicyDetails(newValue: newValue.swift)
     }
 
-    let swift: TeamLog.PaperChangeMemberLinkPolicyDetails
+    public let swift: TeamLog.PaperChangeMemberLinkPolicyDetails
 
     public init(swift: TeamLog.PaperChangeMemberLinkPolicyDetails) {
         self.swift = swift
@@ -49943,7 +50286,7 @@ public class DBXTeamLogPaperChangeMemberLinkPolicyType: NSObject {
         self.swift = TeamLog.PaperChangeMemberLinkPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PaperChangeMemberLinkPolicyType
+    public let swift: TeamLog.PaperChangeMemberLinkPolicyType
 
     public init(swift: TeamLog.PaperChangeMemberLinkPolicyType) {
         self.swift = swift
@@ -49959,11 +50302,11 @@ public class DBXTeamLogPaperChangeMemberLinkPolicyType: NSObject {
 public class DBXTeamLogPaperChangeMemberPolicyDetails: NSObject {
     /// New paper external accessibility policy.
     @objc
-    public var newValue: DBXTeamLogPaperMemberPolicy { DBXTeamLogPaperMemberPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPaperMemberPolicy { DBXTeamLogPaperMemberPolicy.factory(swift: swift.newValue) }
     /// Previous paper external accessibility policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogPaperMemberPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogPaperMemberPolicy(swift: swift)
+        return DBXTeamLogPaperMemberPolicy.factory(swift: swift)
     }
 
     @objc
@@ -49971,7 +50314,7 @@ public class DBXTeamLogPaperChangeMemberPolicyDetails: NSObject {
         self.swift = TeamLog.PaperChangeMemberPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.PaperChangeMemberPolicyDetails
+    public let swift: TeamLog.PaperChangeMemberPolicyDetails
 
     public init(swift: TeamLog.PaperChangeMemberPolicyDetails) {
         self.swift = swift
@@ -49993,7 +50336,7 @@ public class DBXTeamLogPaperChangeMemberPolicyType: NSObject {
         self.swift = TeamLog.PaperChangeMemberPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PaperChangeMemberPolicyType
+    public let swift: TeamLog.PaperChangeMemberPolicyType
 
     public init(swift: TeamLog.PaperChangeMemberPolicyType) {
         self.swift = swift
@@ -50008,11 +50351,11 @@ public class DBXTeamLogPaperChangeMemberPolicyType: NSObject {
 public class DBXTeamLogPaperChangePolicyDetails: NSObject {
     /// New Dropbox Paper policy.
     @objc
-    public var newValue: DBXTeamPoliciesPaperEnabledPolicy { DBXTeamPoliciesPaperEnabledPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesPaperEnabledPolicy { DBXTeamPoliciesPaperEnabledPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Paper policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesPaperEnabledPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesPaperEnabledPolicy(swift: swift)
+        return DBXTeamPoliciesPaperEnabledPolicy.factory(swift: swift)
     }
 
     @objc
@@ -50020,7 +50363,7 @@ public class DBXTeamLogPaperChangePolicyDetails: NSObject {
         self.swift = TeamLog.PaperChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.PaperChangePolicyDetails
+    public let swift: TeamLog.PaperChangePolicyDetails
 
     public init(swift: TeamLog.PaperChangePolicyDetails) {
         self.swift = swift
@@ -50042,7 +50385,7 @@ public class DBXTeamLogPaperChangePolicyType: NSObject {
         self.swift = TeamLog.PaperChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PaperChangePolicyType
+    public let swift: TeamLog.PaperChangePolicyType
 
     public init(swift: TeamLog.PaperChangePolicyType) {
         self.swift = swift
@@ -50064,7 +50407,7 @@ public class DBXTeamLogPaperContentAddMemberDetails: NSObject {
         self.swift = TeamLog.PaperContentAddMemberDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentAddMemberDetails
+    public let swift: TeamLog.PaperContentAddMemberDetails
 
     public init(swift: TeamLog.PaperContentAddMemberDetails) {
         self.swift = swift
@@ -50086,7 +50429,7 @@ public class DBXTeamLogPaperContentAddMemberType: NSObject {
         self.swift = TeamLog.PaperContentAddMemberType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentAddMemberType
+    public let swift: TeamLog.PaperContentAddMemberType
 
     public init(swift: TeamLog.PaperContentAddMemberType) {
         self.swift = swift
@@ -50118,7 +50461,7 @@ public class DBXTeamLogPaperContentAddToFolderDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperContentAddToFolderDetails
+    public let swift: TeamLog.PaperContentAddToFolderDetails
 
     public init(swift: TeamLog.PaperContentAddToFolderDetails) {
         self.swift = swift
@@ -50140,7 +50483,7 @@ public class DBXTeamLogPaperContentAddToFolderType: NSObject {
         self.swift = TeamLog.PaperContentAddToFolderType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentAddToFolderType
+    public let swift: TeamLog.PaperContentAddToFolderType
 
     public init(swift: TeamLog.PaperContentAddToFolderType) {
         self.swift = swift
@@ -50162,7 +50505,7 @@ public class DBXTeamLogPaperContentArchiveDetails: NSObject {
         self.swift = TeamLog.PaperContentArchiveDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentArchiveDetails
+    public let swift: TeamLog.PaperContentArchiveDetails
 
     public init(swift: TeamLog.PaperContentArchiveDetails) {
         self.swift = swift
@@ -50184,7 +50527,7 @@ public class DBXTeamLogPaperContentArchiveType: NSObject {
         self.swift = TeamLog.PaperContentArchiveType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentArchiveType
+    public let swift: TeamLog.PaperContentArchiveType
 
     public init(swift: TeamLog.PaperContentArchiveType) {
         self.swift = swift
@@ -50206,7 +50549,7 @@ public class DBXTeamLogPaperContentCreateDetails: NSObject {
         self.swift = TeamLog.PaperContentCreateDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentCreateDetails
+    public let swift: TeamLog.PaperContentCreateDetails
 
     public init(swift: TeamLog.PaperContentCreateDetails) {
         self.swift = swift
@@ -50228,7 +50571,7 @@ public class DBXTeamLogPaperContentCreateType: NSObject {
         self.swift = TeamLog.PaperContentCreateType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentCreateType
+    public let swift: TeamLog.PaperContentCreateType
 
     public init(swift: TeamLog.PaperContentCreateType) {
         self.swift = swift
@@ -50250,7 +50593,7 @@ public class DBXTeamLogPaperContentPermanentlyDeleteDetails: NSObject {
         self.swift = TeamLog.PaperContentPermanentlyDeleteDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentPermanentlyDeleteDetails
+    public let swift: TeamLog.PaperContentPermanentlyDeleteDetails
 
     public init(swift: TeamLog.PaperContentPermanentlyDeleteDetails) {
         self.swift = swift
@@ -50272,7 +50615,7 @@ public class DBXTeamLogPaperContentPermanentlyDeleteType: NSObject {
         self.swift = TeamLog.PaperContentPermanentlyDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentPermanentlyDeleteType
+    public let swift: TeamLog.PaperContentPermanentlyDeleteType
 
     public init(swift: TeamLog.PaperContentPermanentlyDeleteType) {
         self.swift = swift
@@ -50304,7 +50647,7 @@ public class DBXTeamLogPaperContentRemoveFromFolderDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperContentRemoveFromFolderDetails
+    public let swift: TeamLog.PaperContentRemoveFromFolderDetails
 
     public init(swift: TeamLog.PaperContentRemoveFromFolderDetails) {
         self.swift = swift
@@ -50326,7 +50669,7 @@ public class DBXTeamLogPaperContentRemoveFromFolderType: NSObject {
         self.swift = TeamLog.PaperContentRemoveFromFolderType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentRemoveFromFolderType
+    public let swift: TeamLog.PaperContentRemoveFromFolderType
 
     public init(swift: TeamLog.PaperContentRemoveFromFolderType) {
         self.swift = swift
@@ -50348,7 +50691,7 @@ public class DBXTeamLogPaperContentRemoveMemberDetails: NSObject {
         self.swift = TeamLog.PaperContentRemoveMemberDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentRemoveMemberDetails
+    public let swift: TeamLog.PaperContentRemoveMemberDetails
 
     public init(swift: TeamLog.PaperContentRemoveMemberDetails) {
         self.swift = swift
@@ -50370,7 +50713,7 @@ public class DBXTeamLogPaperContentRemoveMemberType: NSObject {
         self.swift = TeamLog.PaperContentRemoveMemberType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentRemoveMemberType
+    public let swift: TeamLog.PaperContentRemoveMemberType
 
     public init(swift: TeamLog.PaperContentRemoveMemberType) {
         self.swift = swift
@@ -50392,7 +50735,7 @@ public class DBXTeamLogPaperContentRenameDetails: NSObject {
         self.swift = TeamLog.PaperContentRenameDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentRenameDetails
+    public let swift: TeamLog.PaperContentRenameDetails
 
     public init(swift: TeamLog.PaperContentRenameDetails) {
         self.swift = swift
@@ -50414,7 +50757,7 @@ public class DBXTeamLogPaperContentRenameType: NSObject {
         self.swift = TeamLog.PaperContentRenameType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentRenameType
+    public let swift: TeamLog.PaperContentRenameType
 
     public init(swift: TeamLog.PaperContentRenameType) {
         self.swift = swift
@@ -50436,7 +50779,7 @@ public class DBXTeamLogPaperContentRestoreDetails: NSObject {
         self.swift = TeamLog.PaperContentRestoreDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperContentRestoreDetails
+    public let swift: TeamLog.PaperContentRestoreDetails
 
     public init(swift: TeamLog.PaperContentRestoreDetails) {
         self.swift = swift
@@ -50458,7 +50801,7 @@ public class DBXTeamLogPaperContentRestoreType: NSObject {
         self.swift = TeamLog.PaperContentRestoreType(description_: description_)
     }
 
-    let swift: TeamLog.PaperContentRestoreType
+    public let swift: TeamLog.PaperContentRestoreType
 
     public init(swift: TeamLog.PaperContentRestoreType) {
         self.swift = swift
@@ -50471,9 +50814,9 @@ public class DBXTeamLogPaperContentRestoreType: NSObject {
 /// Policy to set default access for newly created Paper folders.
 @objc
 public class DBXTeamLogPaperDefaultFolderPolicy: NSObject {
-    let swift: TeamLog.PaperDefaultFolderPolicy
+    public let swift: TeamLog.PaperDefaultFolderPolicy
 
-    public init(swift: TeamLog.PaperDefaultFolderPolicy) {
+    fileprivate init(swift: TeamLog.PaperDefaultFolderPolicy) {
         self.swift = swift
     }
 
@@ -50542,17 +50885,17 @@ public class DBXTeamLogPaperDefaultFolderPolicyOther: DBXTeamLogPaperDefaultFold
 public class DBXTeamLogPaperDefaultFolderPolicyChangedDetails: NSObject {
     /// New Paper Default Folder Policy.
     @objc
-    public var newValue: DBXTeamLogPaperDefaultFolderPolicy { DBXTeamLogPaperDefaultFolderPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPaperDefaultFolderPolicy { DBXTeamLogPaperDefaultFolderPolicy.factory(swift: swift.newValue) }
     /// Previous Paper Default Folder Policy.
     @objc
-    public var previousValue: DBXTeamLogPaperDefaultFolderPolicy { DBXTeamLogPaperDefaultFolderPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogPaperDefaultFolderPolicy { DBXTeamLogPaperDefaultFolderPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogPaperDefaultFolderPolicy, previousValue: DBXTeamLogPaperDefaultFolderPolicy) {
         self.swift = TeamLog.PaperDefaultFolderPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.PaperDefaultFolderPolicyChangedDetails
+    public let swift: TeamLog.PaperDefaultFolderPolicyChangedDetails
 
     public init(swift: TeamLog.PaperDefaultFolderPolicyChangedDetails) {
         self.swift = swift
@@ -50574,7 +50917,7 @@ public class DBXTeamLogPaperDefaultFolderPolicyChangedType: NSObject {
         self.swift = TeamLog.PaperDefaultFolderPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDefaultFolderPolicyChangedType
+    public let swift: TeamLog.PaperDefaultFolderPolicyChangedType
 
     public init(swift: TeamLog.PaperDefaultFolderPolicyChangedType) {
         self.swift = swift
@@ -50587,9 +50930,9 @@ public class DBXTeamLogPaperDefaultFolderPolicyChangedType: NSObject {
 /// Policy for controlling if team members can use Paper Desktop
 @objc
 public class DBXTeamLogPaperDesktopPolicy: NSObject {
-    let swift: TeamLog.PaperDesktopPolicy
+    public let swift: TeamLog.PaperDesktopPolicy
 
-    public init(swift: TeamLog.PaperDesktopPolicy) {
+    fileprivate init(swift: TeamLog.PaperDesktopPolicy) {
         self.swift = swift
     }
 
@@ -50658,17 +51001,17 @@ public class DBXTeamLogPaperDesktopPolicyOther: DBXTeamLogPaperDesktopPolicy {
 public class DBXTeamLogPaperDesktopPolicyChangedDetails: NSObject {
     /// New Paper Desktop policy.
     @objc
-    public var newValue: DBXTeamLogPaperDesktopPolicy { DBXTeamLogPaperDesktopPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPaperDesktopPolicy { DBXTeamLogPaperDesktopPolicy.factory(swift: swift.newValue) }
     /// Previous Paper Desktop policy.
     @objc
-    public var previousValue: DBXTeamLogPaperDesktopPolicy { DBXTeamLogPaperDesktopPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogPaperDesktopPolicy { DBXTeamLogPaperDesktopPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogPaperDesktopPolicy, previousValue: DBXTeamLogPaperDesktopPolicy) {
         self.swift = TeamLog.PaperDesktopPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.PaperDesktopPolicyChangedDetails
+    public let swift: TeamLog.PaperDesktopPolicyChangedDetails
 
     public init(swift: TeamLog.PaperDesktopPolicyChangedDetails) {
         self.swift = swift
@@ -50690,7 +51033,7 @@ public class DBXTeamLogPaperDesktopPolicyChangedType: NSObject {
         self.swift = TeamLog.PaperDesktopPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDesktopPolicyChangedType
+    public let swift: TeamLog.PaperDesktopPolicyChangedType
 
     public init(swift: TeamLog.PaperDesktopPolicyChangedType) {
         self.swift = swift
@@ -50715,7 +51058,7 @@ public class DBXTeamLogPaperDocAddCommentDetails: NSObject {
         self.swift = TeamLog.PaperDocAddCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.PaperDocAddCommentDetails
+    public let swift: TeamLog.PaperDocAddCommentDetails
 
     public init(swift: TeamLog.PaperDocAddCommentDetails) {
         self.swift = swift
@@ -50737,7 +51080,7 @@ public class DBXTeamLogPaperDocAddCommentType: NSObject {
         self.swift = TeamLog.PaperDocAddCommentType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocAddCommentType
+    public let swift: TeamLog.PaperDocAddCommentType
 
     public init(swift: TeamLog.PaperDocAddCommentType) {
         self.swift = swift
@@ -50755,14 +51098,14 @@ public class DBXTeamLogPaperDocChangeMemberRoleDetails: NSObject {
     public var eventUuid: String { swift.eventUuid }
     /// Paper doc access type.
     @objc
-    public var accessType: DBXTeamLogPaperAccessType { DBXTeamLogPaperAccessType(swift: swift.accessType) }
+    public var accessType: DBXTeamLogPaperAccessType { DBXTeamLogPaperAccessType.factory(swift: swift.accessType) }
 
     @objc
     public init(eventUuid: String, accessType: DBXTeamLogPaperAccessType) {
         self.swift = TeamLog.PaperDocChangeMemberRoleDetails(eventUuid: eventUuid, accessType: accessType.swift)
     }
 
-    let swift: TeamLog.PaperDocChangeMemberRoleDetails
+    public let swift: TeamLog.PaperDocChangeMemberRoleDetails
 
     public init(swift: TeamLog.PaperDocChangeMemberRoleDetails) {
         self.swift = swift
@@ -50784,7 +51127,7 @@ public class DBXTeamLogPaperDocChangeMemberRoleType: NSObject {
         self.swift = TeamLog.PaperDocChangeMemberRoleType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocChangeMemberRoleType
+    public let swift: TeamLog.PaperDocChangeMemberRoleType
 
     public init(swift: TeamLog.PaperDocChangeMemberRoleType) {
         self.swift = swift
@@ -50816,7 +51159,7 @@ public class DBXTeamLogPaperDocChangeSharingPolicyDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperDocChangeSharingPolicyDetails
+    public let swift: TeamLog.PaperDocChangeSharingPolicyDetails
 
     public init(swift: TeamLog.PaperDocChangeSharingPolicyDetails) {
         self.swift = swift
@@ -50838,7 +51181,7 @@ public class DBXTeamLogPaperDocChangeSharingPolicyType: NSObject {
         self.swift = TeamLog.PaperDocChangeSharingPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocChangeSharingPolicyType
+    public let swift: TeamLog.PaperDocChangeSharingPolicyType
 
     public init(swift: TeamLog.PaperDocChangeSharingPolicyType) {
         self.swift = swift
@@ -50870,7 +51213,7 @@ public class DBXTeamLogPaperDocChangeSubscriptionDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperDocChangeSubscriptionDetails
+    public let swift: TeamLog.PaperDocChangeSubscriptionDetails
 
     public init(swift: TeamLog.PaperDocChangeSubscriptionDetails) {
         self.swift = swift
@@ -50892,7 +51235,7 @@ public class DBXTeamLogPaperDocChangeSubscriptionType: NSObject {
         self.swift = TeamLog.PaperDocChangeSubscriptionType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocChangeSubscriptionType
+    public let swift: TeamLog.PaperDocChangeSubscriptionType
 
     public init(swift: TeamLog.PaperDocChangeSubscriptionType) {
         self.swift = swift
@@ -50917,7 +51260,7 @@ public class DBXTeamLogPaperDocDeleteCommentDetails: NSObject {
         self.swift = TeamLog.PaperDocDeleteCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.PaperDocDeleteCommentDetails
+    public let swift: TeamLog.PaperDocDeleteCommentDetails
 
     public init(swift: TeamLog.PaperDocDeleteCommentDetails) {
         self.swift = swift
@@ -50939,7 +51282,7 @@ public class DBXTeamLogPaperDocDeleteCommentType: NSObject {
         self.swift = TeamLog.PaperDocDeleteCommentType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocDeleteCommentType
+    public let swift: TeamLog.PaperDocDeleteCommentType
 
     public init(swift: TeamLog.PaperDocDeleteCommentType) {
         self.swift = swift
@@ -50961,7 +51304,7 @@ public class DBXTeamLogPaperDocDeletedDetails: NSObject {
         self.swift = TeamLog.PaperDocDeletedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocDeletedDetails
+    public let swift: TeamLog.PaperDocDeletedDetails
 
     public init(swift: TeamLog.PaperDocDeletedDetails) {
         self.swift = swift
@@ -50983,7 +51326,7 @@ public class DBXTeamLogPaperDocDeletedType: NSObject {
         self.swift = TeamLog.PaperDocDeletedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocDeletedType
+    public let swift: TeamLog.PaperDocDeletedType
 
     public init(swift: TeamLog.PaperDocDeletedType) {
         self.swift = swift
@@ -51001,14 +51344,14 @@ public class DBXTeamLogPaperDocDownloadDetails: NSObject {
     public var eventUuid: String { swift.eventUuid }
     /// Export file format.
     @objc
-    public var exportFileFormat: DBXTeamLogPaperDownloadFormat { DBXTeamLogPaperDownloadFormat(swift: swift.exportFileFormat) }
+    public var exportFileFormat: DBXTeamLogPaperDownloadFormat { DBXTeamLogPaperDownloadFormat.factory(swift: swift.exportFileFormat) }
 
     @objc
     public init(eventUuid: String, exportFileFormat: DBXTeamLogPaperDownloadFormat) {
         self.swift = TeamLog.PaperDocDownloadDetails(eventUuid: eventUuid, exportFileFormat: exportFileFormat.swift)
     }
 
-    let swift: TeamLog.PaperDocDownloadDetails
+    public let swift: TeamLog.PaperDocDownloadDetails
 
     public init(swift: TeamLog.PaperDocDownloadDetails) {
         self.swift = swift
@@ -51030,7 +51373,7 @@ public class DBXTeamLogPaperDocDownloadType: NSObject {
         self.swift = TeamLog.PaperDocDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocDownloadType
+    public let swift: TeamLog.PaperDocDownloadType
 
     public init(swift: TeamLog.PaperDocDownloadType) {
         self.swift = swift
@@ -51055,7 +51398,7 @@ public class DBXTeamLogPaperDocEditCommentDetails: NSObject {
         self.swift = TeamLog.PaperDocEditCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.PaperDocEditCommentDetails
+    public let swift: TeamLog.PaperDocEditCommentDetails
 
     public init(swift: TeamLog.PaperDocEditCommentDetails) {
         self.swift = swift
@@ -51077,7 +51420,7 @@ public class DBXTeamLogPaperDocEditCommentType: NSObject {
         self.swift = TeamLog.PaperDocEditCommentType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocEditCommentType
+    public let swift: TeamLog.PaperDocEditCommentType
 
     public init(swift: TeamLog.PaperDocEditCommentType) {
         self.swift = swift
@@ -51099,7 +51442,7 @@ public class DBXTeamLogPaperDocEditDetails: NSObject {
         self.swift = TeamLog.PaperDocEditDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocEditDetails
+    public let swift: TeamLog.PaperDocEditDetails
 
     public init(swift: TeamLog.PaperDocEditDetails) {
         self.swift = swift
@@ -51121,7 +51464,7 @@ public class DBXTeamLogPaperDocEditType: NSObject {
         self.swift = TeamLog.PaperDocEditType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocEditType
+    public let swift: TeamLog.PaperDocEditType
 
     public init(swift: TeamLog.PaperDocEditType) {
         self.swift = swift
@@ -51143,7 +51486,7 @@ public class DBXTeamLogPaperDocFollowedDetails: NSObject {
         self.swift = TeamLog.PaperDocFollowedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocFollowedDetails
+    public let swift: TeamLog.PaperDocFollowedDetails
 
     public init(swift: TeamLog.PaperDocFollowedDetails) {
         self.swift = swift
@@ -51165,7 +51508,7 @@ public class DBXTeamLogPaperDocFollowedType: NSObject {
         self.swift = TeamLog.PaperDocFollowedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocFollowedType
+    public let swift: TeamLog.PaperDocFollowedType
 
     public init(swift: TeamLog.PaperDocFollowedType) {
         self.swift = swift
@@ -51187,7 +51530,7 @@ public class DBXTeamLogPaperDocMentionDetails: NSObject {
         self.swift = TeamLog.PaperDocMentionDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocMentionDetails
+    public let swift: TeamLog.PaperDocMentionDetails
 
     public init(swift: TeamLog.PaperDocMentionDetails) {
         self.swift = swift
@@ -51209,7 +51552,7 @@ public class DBXTeamLogPaperDocMentionType: NSObject {
         self.swift = TeamLog.PaperDocMentionType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocMentionType
+    public let swift: TeamLog.PaperDocMentionType
 
     public init(swift: TeamLog.PaperDocMentionType) {
         self.swift = swift
@@ -51237,7 +51580,7 @@ public class DBXTeamLogPaperDocOwnershipChangedDetails: NSObject {
         self.swift = TeamLog.PaperDocOwnershipChangedDetails(eventUuid: eventUuid, newOwnerUserId: newOwnerUserId, oldOwnerUserId: oldOwnerUserId)
     }
 
-    let swift: TeamLog.PaperDocOwnershipChangedDetails
+    public let swift: TeamLog.PaperDocOwnershipChangedDetails
 
     public init(swift: TeamLog.PaperDocOwnershipChangedDetails) {
         self.swift = swift
@@ -51259,7 +51602,7 @@ public class DBXTeamLogPaperDocOwnershipChangedType: NSObject {
         self.swift = TeamLog.PaperDocOwnershipChangedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocOwnershipChangedType
+    public let swift: TeamLog.PaperDocOwnershipChangedType
 
     public init(swift: TeamLog.PaperDocOwnershipChangedType) {
         self.swift = swift
@@ -51281,7 +51624,7 @@ public class DBXTeamLogPaperDocRequestAccessDetails: NSObject {
         self.swift = TeamLog.PaperDocRequestAccessDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocRequestAccessDetails
+    public let swift: TeamLog.PaperDocRequestAccessDetails
 
     public init(swift: TeamLog.PaperDocRequestAccessDetails) {
         self.swift = swift
@@ -51303,7 +51646,7 @@ public class DBXTeamLogPaperDocRequestAccessType: NSObject {
         self.swift = TeamLog.PaperDocRequestAccessType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocRequestAccessType
+    public let swift: TeamLog.PaperDocRequestAccessType
 
     public init(swift: TeamLog.PaperDocRequestAccessType) {
         self.swift = swift
@@ -51328,7 +51671,7 @@ public class DBXTeamLogPaperDocResolveCommentDetails: NSObject {
         self.swift = TeamLog.PaperDocResolveCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.PaperDocResolveCommentDetails
+    public let swift: TeamLog.PaperDocResolveCommentDetails
 
     public init(swift: TeamLog.PaperDocResolveCommentDetails) {
         self.swift = swift
@@ -51350,7 +51693,7 @@ public class DBXTeamLogPaperDocResolveCommentType: NSObject {
         self.swift = TeamLog.PaperDocResolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocResolveCommentType
+    public let swift: TeamLog.PaperDocResolveCommentType
 
     public init(swift: TeamLog.PaperDocResolveCommentType) {
         self.swift = swift
@@ -51372,7 +51715,7 @@ public class DBXTeamLogPaperDocRevertDetails: NSObject {
         self.swift = TeamLog.PaperDocRevertDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocRevertDetails
+    public let swift: TeamLog.PaperDocRevertDetails
 
     public init(swift: TeamLog.PaperDocRevertDetails) {
         self.swift = swift
@@ -51394,7 +51737,7 @@ public class DBXTeamLogPaperDocRevertType: NSObject {
         self.swift = TeamLog.PaperDocRevertType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocRevertType
+    public let swift: TeamLog.PaperDocRevertType
 
     public init(swift: TeamLog.PaperDocRevertType) {
         self.swift = swift
@@ -51416,7 +51759,7 @@ public class DBXTeamLogPaperDocSlackShareDetails: NSObject {
         self.swift = TeamLog.PaperDocSlackShareDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocSlackShareDetails
+    public let swift: TeamLog.PaperDocSlackShareDetails
 
     public init(swift: TeamLog.PaperDocSlackShareDetails) {
         self.swift = swift
@@ -51438,7 +51781,7 @@ public class DBXTeamLogPaperDocSlackShareType: NSObject {
         self.swift = TeamLog.PaperDocSlackShareType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocSlackShareType
+    public let swift: TeamLog.PaperDocSlackShareType
 
     public init(swift: TeamLog.PaperDocSlackShareType) {
         self.swift = swift
@@ -51460,7 +51803,7 @@ public class DBXTeamLogPaperDocTeamInviteDetails: NSObject {
         self.swift = TeamLog.PaperDocTeamInviteDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocTeamInviteDetails
+    public let swift: TeamLog.PaperDocTeamInviteDetails
 
     public init(swift: TeamLog.PaperDocTeamInviteDetails) {
         self.swift = swift
@@ -51482,7 +51825,7 @@ public class DBXTeamLogPaperDocTeamInviteType: NSObject {
         self.swift = TeamLog.PaperDocTeamInviteType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocTeamInviteType
+    public let swift: TeamLog.PaperDocTeamInviteType
 
     public init(swift: TeamLog.PaperDocTeamInviteType) {
         self.swift = swift
@@ -51504,7 +51847,7 @@ public class DBXTeamLogPaperDocTrashedDetails: NSObject {
         self.swift = TeamLog.PaperDocTrashedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocTrashedDetails
+    public let swift: TeamLog.PaperDocTrashedDetails
 
     public init(swift: TeamLog.PaperDocTrashedDetails) {
         self.swift = swift
@@ -51526,7 +51869,7 @@ public class DBXTeamLogPaperDocTrashedType: NSObject {
         self.swift = TeamLog.PaperDocTrashedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocTrashedType
+    public let swift: TeamLog.PaperDocTrashedType
 
     public init(swift: TeamLog.PaperDocTrashedType) {
         self.swift = swift
@@ -51551,7 +51894,7 @@ public class DBXTeamLogPaperDocUnresolveCommentDetails: NSObject {
         self.swift = TeamLog.PaperDocUnresolveCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.PaperDocUnresolveCommentDetails
+    public let swift: TeamLog.PaperDocUnresolveCommentDetails
 
     public init(swift: TeamLog.PaperDocUnresolveCommentDetails) {
         self.swift = swift
@@ -51573,7 +51916,7 @@ public class DBXTeamLogPaperDocUnresolveCommentType: NSObject {
         self.swift = TeamLog.PaperDocUnresolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocUnresolveCommentType
+    public let swift: TeamLog.PaperDocUnresolveCommentType
 
     public init(swift: TeamLog.PaperDocUnresolveCommentType) {
         self.swift = swift
@@ -51595,7 +51938,7 @@ public class DBXTeamLogPaperDocUntrashedDetails: NSObject {
         self.swift = TeamLog.PaperDocUntrashedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocUntrashedDetails
+    public let swift: TeamLog.PaperDocUntrashedDetails
 
     public init(swift: TeamLog.PaperDocUntrashedDetails) {
         self.swift = swift
@@ -51617,7 +51960,7 @@ public class DBXTeamLogPaperDocUntrashedType: NSObject {
         self.swift = TeamLog.PaperDocUntrashedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocUntrashedType
+    public let swift: TeamLog.PaperDocUntrashedType
 
     public init(swift: TeamLog.PaperDocUntrashedType) {
         self.swift = swift
@@ -51639,7 +51982,7 @@ public class DBXTeamLogPaperDocViewDetails: NSObject {
         self.swift = TeamLog.PaperDocViewDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperDocViewDetails
+    public let swift: TeamLog.PaperDocViewDetails
 
     public init(swift: TeamLog.PaperDocViewDetails) {
         self.swift = swift
@@ -51661,7 +52004,7 @@ public class DBXTeamLogPaperDocViewType: NSObject {
         self.swift = TeamLog.PaperDocViewType(description_: description_)
     }
 
-    let swift: TeamLog.PaperDocViewType
+    public let swift: TeamLog.PaperDocViewType
 
     public init(swift: TeamLog.PaperDocViewType) {
         self.swift = swift
@@ -51686,7 +52029,7 @@ public class DBXTeamLogPaperDocumentLogInfo: NSObject {
         self.swift = TeamLog.PaperDocumentLogInfo(docId: docId, docTitle: docTitle)
     }
 
-    let swift: TeamLog.PaperDocumentLogInfo
+    public let swift: TeamLog.PaperDocumentLogInfo
 
     public init(swift: TeamLog.PaperDocumentLogInfo) {
         self.swift = swift
@@ -51699,9 +52042,9 @@ public class DBXTeamLogPaperDocumentLogInfo: NSObject {
 /// Objective-C compatible PaperDownloadFormat union
 @objc
 public class DBXTeamLogPaperDownloadFormat: NSObject {
-    let swift: TeamLog.PaperDownloadFormat
+    public let swift: TeamLog.PaperDownloadFormat
 
-    public init(swift: TeamLog.PaperDownloadFormat) {
+    fileprivate init(swift: TeamLog.PaperDownloadFormat) {
         self.swift = swift
     }
 
@@ -51802,7 +52145,12 @@ public class DBXTeamLogPaperDownloadFormatOther: DBXTeamLogPaperDownloadFormat {
 /// Added users to Paper-enabled users list.
 @objc
 public class DBXTeamLogPaperEnabledUsersGroupAdditionDetails: NSObject {
-    let swift: TeamLog.PaperEnabledUsersGroupAdditionDetails
+    public override init() {
+        self.swift = TeamLog.PaperEnabledUsersGroupAdditionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PaperEnabledUsersGroupAdditionDetails
 
     public init(swift: TeamLog.PaperEnabledUsersGroupAdditionDetails) {
         self.swift = swift
@@ -51824,7 +52172,7 @@ public class DBXTeamLogPaperEnabledUsersGroupAdditionType: NSObject {
         self.swift = TeamLog.PaperEnabledUsersGroupAdditionType(description_: description_)
     }
 
-    let swift: TeamLog.PaperEnabledUsersGroupAdditionType
+    public let swift: TeamLog.PaperEnabledUsersGroupAdditionType
 
     public init(swift: TeamLog.PaperEnabledUsersGroupAdditionType) {
         self.swift = swift
@@ -51837,7 +52185,12 @@ public class DBXTeamLogPaperEnabledUsersGroupAdditionType: NSObject {
 /// Removed users from Paper-enabled users list.
 @objc
 public class DBXTeamLogPaperEnabledUsersGroupRemovalDetails: NSObject {
-    let swift: TeamLog.PaperEnabledUsersGroupRemovalDetails
+    public override init() {
+        self.swift = TeamLog.PaperEnabledUsersGroupRemovalDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PaperEnabledUsersGroupRemovalDetails
 
     public init(swift: TeamLog.PaperEnabledUsersGroupRemovalDetails) {
         self.swift = swift
@@ -51859,7 +52212,7 @@ public class DBXTeamLogPaperEnabledUsersGroupRemovalType: NSObject {
         self.swift = TeamLog.PaperEnabledUsersGroupRemovalType(description_: description_)
     }
 
-    let swift: TeamLog.PaperEnabledUsersGroupRemovalType
+    public let swift: TeamLog.PaperEnabledUsersGroupRemovalType
 
     public init(swift: TeamLog.PaperEnabledUsersGroupRemovalType) {
         self.swift = swift
@@ -51881,7 +52234,7 @@ public class DBXTeamLogPaperExternalViewAllowDetails: NSObject {
         self.swift = TeamLog.PaperExternalViewAllowDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperExternalViewAllowDetails
+    public let swift: TeamLog.PaperExternalViewAllowDetails
 
     public init(swift: TeamLog.PaperExternalViewAllowDetails) {
         self.swift = swift
@@ -51903,7 +52256,7 @@ public class DBXTeamLogPaperExternalViewAllowType: NSObject {
         self.swift = TeamLog.PaperExternalViewAllowType(description_: description_)
     }
 
-    let swift: TeamLog.PaperExternalViewAllowType
+    public let swift: TeamLog.PaperExternalViewAllowType
 
     public init(swift: TeamLog.PaperExternalViewAllowType) {
         self.swift = swift
@@ -51925,7 +52278,7 @@ public class DBXTeamLogPaperExternalViewDefaultTeamDetails: NSObject {
         self.swift = TeamLog.PaperExternalViewDefaultTeamDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperExternalViewDefaultTeamDetails
+    public let swift: TeamLog.PaperExternalViewDefaultTeamDetails
 
     public init(swift: TeamLog.PaperExternalViewDefaultTeamDetails) {
         self.swift = swift
@@ -51947,7 +52300,7 @@ public class DBXTeamLogPaperExternalViewDefaultTeamType: NSObject {
         self.swift = TeamLog.PaperExternalViewDefaultTeamType(description_: description_)
     }
 
-    let swift: TeamLog.PaperExternalViewDefaultTeamType
+    public let swift: TeamLog.PaperExternalViewDefaultTeamType
 
     public init(swift: TeamLog.PaperExternalViewDefaultTeamType) {
         self.swift = swift
@@ -51969,7 +52322,7 @@ public class DBXTeamLogPaperExternalViewForbidDetails: NSObject {
         self.swift = TeamLog.PaperExternalViewForbidDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperExternalViewForbidDetails
+    public let swift: TeamLog.PaperExternalViewForbidDetails
 
     public init(swift: TeamLog.PaperExternalViewForbidDetails) {
         self.swift = swift
@@ -51991,7 +52344,7 @@ public class DBXTeamLogPaperExternalViewForbidType: NSObject {
         self.swift = TeamLog.PaperExternalViewForbidType(description_: description_)
     }
 
-    let swift: TeamLog.PaperExternalViewForbidType
+    public let swift: TeamLog.PaperExternalViewForbidType
 
     public init(swift: TeamLog.PaperExternalViewForbidType) {
         self.swift = swift
@@ -52023,7 +52376,7 @@ public class DBXTeamLogPaperFolderChangeSubscriptionDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperFolderChangeSubscriptionDetails
+    public let swift: TeamLog.PaperFolderChangeSubscriptionDetails
 
     public init(swift: TeamLog.PaperFolderChangeSubscriptionDetails) {
         self.swift = swift
@@ -52045,7 +52398,7 @@ public class DBXTeamLogPaperFolderChangeSubscriptionType: NSObject {
         self.swift = TeamLog.PaperFolderChangeSubscriptionType(description_: description_)
     }
 
-    let swift: TeamLog.PaperFolderChangeSubscriptionType
+    public let swift: TeamLog.PaperFolderChangeSubscriptionType
 
     public init(swift: TeamLog.PaperFolderChangeSubscriptionType) {
         self.swift = swift
@@ -52067,7 +52420,7 @@ public class DBXTeamLogPaperFolderDeletedDetails: NSObject {
         self.swift = TeamLog.PaperFolderDeletedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperFolderDeletedDetails
+    public let swift: TeamLog.PaperFolderDeletedDetails
 
     public init(swift: TeamLog.PaperFolderDeletedDetails) {
         self.swift = swift
@@ -52089,7 +52442,7 @@ public class DBXTeamLogPaperFolderDeletedType: NSObject {
         self.swift = TeamLog.PaperFolderDeletedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperFolderDeletedType
+    public let swift: TeamLog.PaperFolderDeletedType
 
     public init(swift: TeamLog.PaperFolderDeletedType) {
         self.swift = swift
@@ -52111,7 +52464,7 @@ public class DBXTeamLogPaperFolderFollowedDetails: NSObject {
         self.swift = TeamLog.PaperFolderFollowedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperFolderFollowedDetails
+    public let swift: TeamLog.PaperFolderFollowedDetails
 
     public init(swift: TeamLog.PaperFolderFollowedDetails) {
         self.swift = swift
@@ -52133,7 +52486,7 @@ public class DBXTeamLogPaperFolderFollowedType: NSObject {
         self.swift = TeamLog.PaperFolderFollowedType(description_: description_)
     }
 
-    let swift: TeamLog.PaperFolderFollowedType
+    public let swift: TeamLog.PaperFolderFollowedType
 
     public init(swift: TeamLog.PaperFolderFollowedType) {
         self.swift = swift
@@ -52158,7 +52511,7 @@ public class DBXTeamLogPaperFolderLogInfo: NSObject {
         self.swift = TeamLog.PaperFolderLogInfo(folderId: folderId, folderName: folderName)
     }
 
-    let swift: TeamLog.PaperFolderLogInfo
+    public let swift: TeamLog.PaperFolderLogInfo
 
     public init(swift: TeamLog.PaperFolderLogInfo) {
         self.swift = swift
@@ -52180,7 +52533,7 @@ public class DBXTeamLogPaperFolderTeamInviteDetails: NSObject {
         self.swift = TeamLog.PaperFolderTeamInviteDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperFolderTeamInviteDetails
+    public let swift: TeamLog.PaperFolderTeamInviteDetails
 
     public init(swift: TeamLog.PaperFolderTeamInviteDetails) {
         self.swift = swift
@@ -52202,7 +52555,7 @@ public class DBXTeamLogPaperFolderTeamInviteType: NSObject {
         self.swift = TeamLog.PaperFolderTeamInviteType(description_: description_)
     }
 
-    let swift: TeamLog.PaperFolderTeamInviteType
+    public let swift: TeamLog.PaperFolderTeamInviteType
 
     public init(swift: TeamLog.PaperFolderTeamInviteType) {
         self.swift = swift
@@ -52215,9 +52568,9 @@ public class DBXTeamLogPaperFolderTeamInviteType: NSObject {
 /// Policy for controlling if team members can share Paper documents externally.
 @objc
 public class DBXTeamLogPaperMemberPolicy: NSObject {
-    let swift: TeamLog.PaperMemberPolicy
+    public let swift: TeamLog.PaperMemberPolicy
 
-    public init(swift: TeamLog.PaperMemberPolicy) {
+    fileprivate init(swift: TeamLog.PaperMemberPolicy) {
         self.swift = swift
     }
 
@@ -52320,7 +52673,7 @@ public class DBXTeamLogPaperPublishedLinkChangePermissionDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.PaperPublishedLinkChangePermissionDetails
+    public let swift: TeamLog.PaperPublishedLinkChangePermissionDetails
 
     public init(swift: TeamLog.PaperPublishedLinkChangePermissionDetails) {
         self.swift = swift
@@ -52342,7 +52695,7 @@ public class DBXTeamLogPaperPublishedLinkChangePermissionType: NSObject {
         self.swift = TeamLog.PaperPublishedLinkChangePermissionType(description_: description_)
     }
 
-    let swift: TeamLog.PaperPublishedLinkChangePermissionType
+    public let swift: TeamLog.PaperPublishedLinkChangePermissionType
 
     public init(swift: TeamLog.PaperPublishedLinkChangePermissionType) {
         self.swift = swift
@@ -52364,7 +52717,7 @@ public class DBXTeamLogPaperPublishedLinkCreateDetails: NSObject {
         self.swift = TeamLog.PaperPublishedLinkCreateDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperPublishedLinkCreateDetails
+    public let swift: TeamLog.PaperPublishedLinkCreateDetails
 
     public init(swift: TeamLog.PaperPublishedLinkCreateDetails) {
         self.swift = swift
@@ -52386,7 +52739,7 @@ public class DBXTeamLogPaperPublishedLinkCreateType: NSObject {
         self.swift = TeamLog.PaperPublishedLinkCreateType(description_: description_)
     }
 
-    let swift: TeamLog.PaperPublishedLinkCreateType
+    public let swift: TeamLog.PaperPublishedLinkCreateType
 
     public init(swift: TeamLog.PaperPublishedLinkCreateType) {
         self.swift = swift
@@ -52408,7 +52761,7 @@ public class DBXTeamLogPaperPublishedLinkDisabledDetails: NSObject {
         self.swift = TeamLog.PaperPublishedLinkDisabledDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperPublishedLinkDisabledDetails
+    public let swift: TeamLog.PaperPublishedLinkDisabledDetails
 
     public init(swift: TeamLog.PaperPublishedLinkDisabledDetails) {
         self.swift = swift
@@ -52430,7 +52783,7 @@ public class DBXTeamLogPaperPublishedLinkDisabledType: NSObject {
         self.swift = TeamLog.PaperPublishedLinkDisabledType(description_: description_)
     }
 
-    let swift: TeamLog.PaperPublishedLinkDisabledType
+    public let swift: TeamLog.PaperPublishedLinkDisabledType
 
     public init(swift: TeamLog.PaperPublishedLinkDisabledType) {
         self.swift = swift
@@ -52452,7 +52805,7 @@ public class DBXTeamLogPaperPublishedLinkViewDetails: NSObject {
         self.swift = TeamLog.PaperPublishedLinkViewDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.PaperPublishedLinkViewDetails
+    public let swift: TeamLog.PaperPublishedLinkViewDetails
 
     public init(swift: TeamLog.PaperPublishedLinkViewDetails) {
         self.swift = swift
@@ -52474,7 +52827,7 @@ public class DBXTeamLogPaperPublishedLinkViewType: NSObject {
         self.swift = TeamLog.PaperPublishedLinkViewType(description_: description_)
     }
 
-    let swift: TeamLog.PaperPublishedLinkViewType
+    public let swift: TeamLog.PaperPublishedLinkViewType
 
     public init(swift: TeamLog.PaperPublishedLinkViewType) {
         self.swift = swift
@@ -52487,9 +52840,9 @@ public class DBXTeamLogPaperPublishedLinkViewType: NSObject {
 /// A user or group
 @objc
 public class DBXTeamLogParticipantLogInfo: NSObject {
-    let swift: TeamLog.ParticipantLogInfo
+    public let swift: TeamLog.ParticipantLogInfo
 
-    public init(swift: TeamLog.ParticipantLogInfo) {
+    fileprivate init(swift: TeamLog.ParticipantLogInfo) {
         self.swift = swift
     }
 
@@ -52566,9 +52919,9 @@ public class DBXTeamLogParticipantLogInfoOther: DBXTeamLogParticipantLogInfo {
 /// Objective-C compatible PassPolicy union
 @objc
 public class DBXTeamLogPassPolicy: NSObject {
-    let swift: TeamLog.PassPolicy
+    public let swift: TeamLog.PassPolicy
 
-    public init(swift: TeamLog.PassPolicy) {
+    fileprivate init(swift: TeamLog.PassPolicy) {
         self.swift = swift
     }
 
@@ -52652,7 +53005,12 @@ public class DBXTeamLogPassPolicyOther: DBXTeamLogPassPolicy {
 /// Changed password.
 @objc
 public class DBXTeamLogPasswordChangeDetails: NSObject {
-    let swift: TeamLog.PasswordChangeDetails
+    public override init() {
+        self.swift = TeamLog.PasswordChangeDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PasswordChangeDetails
 
     public init(swift: TeamLog.PasswordChangeDetails) {
         self.swift = swift
@@ -52674,7 +53032,7 @@ public class DBXTeamLogPasswordChangeType: NSObject {
         self.swift = TeamLog.PasswordChangeType(description_: description_)
     }
 
-    let swift: TeamLog.PasswordChangeType
+    public let swift: TeamLog.PasswordChangeType
 
     public init(swift: TeamLog.PasswordChangeType) {
         self.swift = swift
@@ -52687,7 +53045,12 @@ public class DBXTeamLogPasswordChangeType: NSObject {
 /// Reset all team member passwords.
 @objc
 public class DBXTeamLogPasswordResetAllDetails: NSObject {
-    let swift: TeamLog.PasswordResetAllDetails
+    public override init() {
+        self.swift = TeamLog.PasswordResetAllDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PasswordResetAllDetails
 
     public init(swift: TeamLog.PasswordResetAllDetails) {
         self.swift = swift
@@ -52709,7 +53072,7 @@ public class DBXTeamLogPasswordResetAllType: NSObject {
         self.swift = TeamLog.PasswordResetAllType(description_: description_)
     }
 
-    let swift: TeamLog.PasswordResetAllType
+    public let swift: TeamLog.PasswordResetAllType
 
     public init(swift: TeamLog.PasswordResetAllType) {
         self.swift = swift
@@ -52722,7 +53085,12 @@ public class DBXTeamLogPasswordResetAllType: NSObject {
 /// Reset password.
 @objc
 public class DBXTeamLogPasswordResetDetails: NSObject {
-    let swift: TeamLog.PasswordResetDetails
+    public override init() {
+        self.swift = TeamLog.PasswordResetDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.PasswordResetDetails
 
     public init(swift: TeamLog.PasswordResetDetails) {
         self.swift = swift
@@ -52744,7 +53112,7 @@ public class DBXTeamLogPasswordResetType: NSObject {
         self.swift = TeamLog.PasswordResetType(description_: description_)
     }
 
-    let swift: TeamLog.PasswordResetType
+    public let swift: TeamLog.PasswordResetType
 
     public init(swift: TeamLog.PasswordResetType) {
         self.swift = swift
@@ -52759,17 +53127,17 @@ public class DBXTeamLogPasswordResetType: NSObject {
 public class DBXTeamLogPasswordStrengthRequirementsChangePolicyDetails: NSObject {
     /// Old password strength policy.
     @objc
-    public var previousValue: DBXTeamPoliciesPasswordStrengthPolicy { DBXTeamPoliciesPasswordStrengthPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamPoliciesPasswordStrengthPolicy { DBXTeamPoliciesPasswordStrengthPolicy.factory(swift: swift.previousValue) }
     /// New password strength policy.
     @objc
-    public var newValue: DBXTeamPoliciesPasswordStrengthPolicy { DBXTeamPoliciesPasswordStrengthPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesPasswordStrengthPolicy { DBXTeamPoliciesPasswordStrengthPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamPoliciesPasswordStrengthPolicy, newValue: DBXTeamPoliciesPasswordStrengthPolicy) {
         self.swift = TeamLog.PasswordStrengthRequirementsChangePolicyDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.PasswordStrengthRequirementsChangePolicyDetails
+    public let swift: TeamLog.PasswordStrengthRequirementsChangePolicyDetails
 
     public init(swift: TeamLog.PasswordStrengthRequirementsChangePolicyDetails) {
         self.swift = swift
@@ -52791,7 +53159,7 @@ public class DBXTeamLogPasswordStrengthRequirementsChangePolicyType: NSObject {
         self.swift = TeamLog.PasswordStrengthRequirementsChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PasswordStrengthRequirementsChangePolicyType
+    public let swift: TeamLog.PasswordStrengthRequirementsChangePolicyType
 
     public init(swift: TeamLog.PasswordStrengthRequirementsChangePolicyType) {
         self.swift = swift
@@ -52816,7 +53184,7 @@ public class DBXTeamLogPathLogInfo: NSObject {
         self.swift = TeamLog.PathLogInfo(namespaceRelative: namespaceRelative.swift, contextual: contextual)
     }
 
-    let swift: TeamLog.PathLogInfo
+    public let swift: TeamLog.PathLogInfo
 
     public init(swift: TeamLog.PathLogInfo) {
         self.swift = swift
@@ -52838,7 +53206,7 @@ public class DBXTeamLogPendingSecondaryEmailAddedDetails: NSObject {
         self.swift = TeamLog.PendingSecondaryEmailAddedDetails(secondaryEmail: secondaryEmail)
     }
 
-    let swift: TeamLog.PendingSecondaryEmailAddedDetails
+    public let swift: TeamLog.PendingSecondaryEmailAddedDetails
 
     public init(swift: TeamLog.PendingSecondaryEmailAddedDetails) {
         self.swift = swift
@@ -52860,7 +53228,7 @@ public class DBXTeamLogPendingSecondaryEmailAddedType: NSObject {
         self.swift = TeamLog.PendingSecondaryEmailAddedType(description_: description_)
     }
 
-    let swift: TeamLog.PendingSecondaryEmailAddedType
+    public let swift: TeamLog.PendingSecondaryEmailAddedType
 
     public init(swift: TeamLog.PendingSecondaryEmailAddedType) {
         self.swift = swift
@@ -52875,11 +53243,11 @@ public class DBXTeamLogPendingSecondaryEmailAddedType: NSObject {
 public class DBXTeamLogPermanentDeleteChangePolicyDetails: NSObject {
     /// New permanent delete content policy.
     @objc
-    public var newValue: DBXTeamLogContentPermanentDeletePolicy { DBXTeamLogContentPermanentDeletePolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogContentPermanentDeletePolicy { DBXTeamLogContentPermanentDeletePolicy.factory(swift: swift.newValue) }
     /// Previous permanent delete content policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogContentPermanentDeletePolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogContentPermanentDeletePolicy(swift: swift)
+        return DBXTeamLogContentPermanentDeletePolicy.factory(swift: swift)
     }
 
     @objc
@@ -52887,7 +53255,7 @@ public class DBXTeamLogPermanentDeleteChangePolicyDetails: NSObject {
         self.swift = TeamLog.PermanentDeleteChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.PermanentDeleteChangePolicyDetails
+    public let swift: TeamLog.PermanentDeleteChangePolicyDetails
 
     public init(swift: TeamLog.PermanentDeleteChangePolicyDetails) {
         self.swift = swift
@@ -52909,7 +53277,7 @@ public class DBXTeamLogPermanentDeleteChangePolicyType: NSObject {
         self.swift = TeamLog.PermanentDeleteChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.PermanentDeleteChangePolicyType
+    public let swift: TeamLog.PermanentDeleteChangePolicyType
 
     public init(swift: TeamLog.PermanentDeleteChangePolicyType) {
         self.swift = swift
@@ -52922,9 +53290,9 @@ public class DBXTeamLogPermanentDeleteChangePolicyType: NSObject {
 /// Objective-C compatible PlacementRestriction union
 @objc
 public class DBXTeamLogPlacementRestriction: NSObject {
-    let swift: TeamLog.PlacementRestriction
+    public let swift: TeamLog.PlacementRestriction
 
-    public init(swift: TeamLog.PlacementRestriction) {
+    fileprivate init(swift: TeamLog.PlacementRestriction) {
         self.swift = swift
     }
 
@@ -53059,9 +53427,9 @@ public class DBXTeamLogPlacementRestrictionOther: DBXTeamLogPlacementRestriction
 /// Objective-C compatible PolicyType union
 @objc
 public class DBXTeamLogPolicyType: NSObject {
-    let swift: TeamLog.PolicyType
+    public let swift: TeamLog.PolicyType
 
-    public init(swift: TeamLog.PolicyType) {
+    fileprivate init(swift: TeamLog.PolicyType) {
         self.swift = swift
     }
 
@@ -53140,7 +53508,7 @@ public class DBXTeamLogPrimaryTeamRequestAcceptedDetails: NSObject {
         self.swift = TeamLog.PrimaryTeamRequestAcceptedDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.PrimaryTeamRequestAcceptedDetails
+    public let swift: TeamLog.PrimaryTeamRequestAcceptedDetails
 
     public init(swift: TeamLog.PrimaryTeamRequestAcceptedDetails) {
         self.swift = swift
@@ -53165,7 +53533,7 @@ public class DBXTeamLogPrimaryTeamRequestCanceledDetails: NSObject {
         self.swift = TeamLog.PrimaryTeamRequestCanceledDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.PrimaryTeamRequestCanceledDetails
+    public let swift: TeamLog.PrimaryTeamRequestCanceledDetails
 
     public init(swift: TeamLog.PrimaryTeamRequestCanceledDetails) {
         self.swift = swift
@@ -53190,7 +53558,7 @@ public class DBXTeamLogPrimaryTeamRequestExpiredDetails: NSObject {
         self.swift = TeamLog.PrimaryTeamRequestExpiredDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.PrimaryTeamRequestExpiredDetails
+    public let swift: TeamLog.PrimaryTeamRequestExpiredDetails
 
     public init(swift: TeamLog.PrimaryTeamRequestExpiredDetails) {
         self.swift = swift
@@ -53215,7 +53583,7 @@ public class DBXTeamLogPrimaryTeamRequestReminderDetails: NSObject {
         self.swift = TeamLog.PrimaryTeamRequestReminderDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
     }
 
-    let swift: TeamLog.PrimaryTeamRequestReminderDetails
+    public let swift: TeamLog.PrimaryTeamRequestReminderDetails
 
     public init(swift: TeamLog.PrimaryTeamRequestReminderDetails) {
         self.swift = swift
@@ -53228,9 +53596,9 @@ public class DBXTeamLogPrimaryTeamRequestReminderDetails: NSObject {
 /// Quick action type.
 @objc
 public class DBXTeamLogQuickActionType: NSObject {
-    let swift: TeamLog.QuickActionType
+    public let swift: TeamLog.QuickActionType
 
-    public init(swift: TeamLog.QuickActionType) {
+    fileprivate init(swift: TeamLog.QuickActionType) {
         self.swift = swift
     }
 
@@ -53365,7 +53733,12 @@ public class DBXTeamLogQuickActionTypeOther: DBXTeamLogQuickActionType {
 /// Created ransomware report.
 @objc
 public class DBXTeamLogRansomwareAlertCreateReportDetails: NSObject {
-    let swift: TeamLog.RansomwareAlertCreateReportDetails
+    public override init() {
+        self.swift = TeamLog.RansomwareAlertCreateReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.RansomwareAlertCreateReportDetails
 
     public init(swift: TeamLog.RansomwareAlertCreateReportDetails) {
         self.swift = swift
@@ -53380,14 +53753,14 @@ public class DBXTeamLogRansomwareAlertCreateReportDetails: NSObject {
 public class DBXTeamLogRansomwareAlertCreateReportFailedDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.RansomwareAlertCreateReportFailedDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.RansomwareAlertCreateReportFailedDetails
+    public let swift: TeamLog.RansomwareAlertCreateReportFailedDetails
 
     public init(swift: TeamLog.RansomwareAlertCreateReportFailedDetails) {
         self.swift = swift
@@ -53409,7 +53782,7 @@ public class DBXTeamLogRansomwareAlertCreateReportFailedType: NSObject {
         self.swift = TeamLog.RansomwareAlertCreateReportFailedType(description_: description_)
     }
 
-    let swift: TeamLog.RansomwareAlertCreateReportFailedType
+    public let swift: TeamLog.RansomwareAlertCreateReportFailedType
 
     public init(swift: TeamLog.RansomwareAlertCreateReportFailedType) {
         self.swift = swift
@@ -53431,7 +53804,7 @@ public class DBXTeamLogRansomwareAlertCreateReportType: NSObject {
         self.swift = TeamLog.RansomwareAlertCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.RansomwareAlertCreateReportType
+    public let swift: TeamLog.RansomwareAlertCreateReportType
 
     public init(swift: TeamLog.RansomwareAlertCreateReportType) {
         self.swift = swift
@@ -53463,7 +53836,7 @@ public class DBXTeamLogRansomwareRestoreProcessCompletedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.RansomwareRestoreProcessCompletedDetails
+    public let swift: TeamLog.RansomwareRestoreProcessCompletedDetails
 
     public init(swift: TeamLog.RansomwareRestoreProcessCompletedDetails) {
         self.swift = swift
@@ -53485,7 +53858,7 @@ public class DBXTeamLogRansomwareRestoreProcessCompletedType: NSObject {
         self.swift = TeamLog.RansomwareRestoreProcessCompletedType(description_: description_)
     }
 
-    let swift: TeamLog.RansomwareRestoreProcessCompletedType
+    public let swift: TeamLog.RansomwareRestoreProcessCompletedType
 
     public init(swift: TeamLog.RansomwareRestoreProcessCompletedType) {
         self.swift = swift
@@ -53507,7 +53880,7 @@ public class DBXTeamLogRansomwareRestoreProcessStartedDetails: NSObject {
         self.swift = TeamLog.RansomwareRestoreProcessStartedDetails(extension_: extension_)
     }
 
-    let swift: TeamLog.RansomwareRestoreProcessStartedDetails
+    public let swift: TeamLog.RansomwareRestoreProcessStartedDetails
 
     public init(swift: TeamLog.RansomwareRestoreProcessStartedDetails) {
         self.swift = swift
@@ -53529,7 +53902,7 @@ public class DBXTeamLogRansomwareRestoreProcessStartedType: NSObject {
         self.swift = TeamLog.RansomwareRestoreProcessStartedType(description_: description_)
     }
 
-    let swift: TeamLog.RansomwareRestoreProcessStartedType
+    public let swift: TeamLog.RansomwareRestoreProcessStartedType
 
     public init(swift: TeamLog.RansomwareRestoreProcessStartedType) {
         self.swift = swift
@@ -53545,7 +53918,7 @@ public class DBXTeamLogRecipientsConfiguration: NSObject {
     /// Recipients setting type.
     @objc
     public var recipientSettingType: DBXTeamLogAlertRecipientsSettingType? { guard let swift = swift.recipientSettingType else { return nil }
-        return DBXTeamLogAlertRecipientsSettingType(swift: swift)
+        return DBXTeamLogAlertRecipientsSettingType.factory(swift: swift)
     }
 
     /// A list of user emails to notify.
@@ -53560,7 +53933,7 @@ public class DBXTeamLogRecipientsConfiguration: NSObject {
         self.swift = TeamLog.RecipientsConfiguration(recipientSettingType: recipientSettingType?.swift, emails: emails, groups: groups)
     }
 
-    let swift: TeamLog.RecipientsConfiguration
+    public let swift: TeamLog.RecipientsConfiguration
 
     public init(swift: TeamLog.RecipientsConfiguration) {
         self.swift = swift
@@ -53585,7 +53958,7 @@ public class DBXTeamLogRelocateAssetReferencesLogInfo: NSObject {
         self.swift = TeamLog.RelocateAssetReferencesLogInfo(srcAssetIndex: srcAssetIndex.uint64Value, destAssetIndex: destAssetIndex.uint64Value)
     }
 
-    let swift: TeamLog.RelocateAssetReferencesLogInfo
+    public let swift: TeamLog.RelocateAssetReferencesLogInfo
 
     public init(swift: TeamLog.RelocateAssetReferencesLogInfo) {
         self.swift = swift
@@ -53598,7 +53971,12 @@ public class DBXTeamLogRelocateAssetReferencesLogInfo: NSObject {
 /// Deleted files in Replay.
 @objc
 public class DBXTeamLogReplayFileDeleteDetails: NSObject {
-    let swift: TeamLog.ReplayFileDeleteDetails
+    public override init() {
+        self.swift = TeamLog.ReplayFileDeleteDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ReplayFileDeleteDetails
 
     public init(swift: TeamLog.ReplayFileDeleteDetails) {
         self.swift = swift
@@ -53620,7 +53998,7 @@ public class DBXTeamLogReplayFileDeleteType: NSObject {
         self.swift = TeamLog.ReplayFileDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.ReplayFileDeleteType
+    public let swift: TeamLog.ReplayFileDeleteType
 
     public init(swift: TeamLog.ReplayFileDeleteType) {
         self.swift = swift
@@ -53633,7 +54011,12 @@ public class DBXTeamLogReplayFileDeleteType: NSObject {
 /// Created shared link in Replay.
 @objc
 public class DBXTeamLogReplayFileSharedLinkCreatedDetails: NSObject {
-    let swift: TeamLog.ReplayFileSharedLinkCreatedDetails
+    public override init() {
+        self.swift = TeamLog.ReplayFileSharedLinkCreatedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ReplayFileSharedLinkCreatedDetails
 
     public init(swift: TeamLog.ReplayFileSharedLinkCreatedDetails) {
         self.swift = swift
@@ -53655,7 +54038,7 @@ public class DBXTeamLogReplayFileSharedLinkCreatedType: NSObject {
         self.swift = TeamLog.ReplayFileSharedLinkCreatedType(description_: description_)
     }
 
-    let swift: TeamLog.ReplayFileSharedLinkCreatedType
+    public let swift: TeamLog.ReplayFileSharedLinkCreatedType
 
     public init(swift: TeamLog.ReplayFileSharedLinkCreatedType) {
         self.swift = swift
@@ -53668,7 +54051,12 @@ public class DBXTeamLogReplayFileSharedLinkCreatedType: NSObject {
 /// Modified shared link in Replay.
 @objc
 public class DBXTeamLogReplayFileSharedLinkModifiedDetails: NSObject {
-    let swift: TeamLog.ReplayFileSharedLinkModifiedDetails
+    public override init() {
+        self.swift = TeamLog.ReplayFileSharedLinkModifiedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ReplayFileSharedLinkModifiedDetails
 
     public init(swift: TeamLog.ReplayFileSharedLinkModifiedDetails) {
         self.swift = swift
@@ -53690,7 +54078,7 @@ public class DBXTeamLogReplayFileSharedLinkModifiedType: NSObject {
         self.swift = TeamLog.ReplayFileSharedLinkModifiedType(description_: description_)
     }
 
-    let swift: TeamLog.ReplayFileSharedLinkModifiedType
+    public let swift: TeamLog.ReplayFileSharedLinkModifiedType
 
     public init(swift: TeamLog.ReplayFileSharedLinkModifiedType) {
         self.swift = swift
@@ -53703,7 +54091,12 @@ public class DBXTeamLogReplayFileSharedLinkModifiedType: NSObject {
 /// Added member to Replay Project.
 @objc
 public class DBXTeamLogReplayProjectTeamAddDetails: NSObject {
-    let swift: TeamLog.ReplayProjectTeamAddDetails
+    public override init() {
+        self.swift = TeamLog.ReplayProjectTeamAddDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ReplayProjectTeamAddDetails
 
     public init(swift: TeamLog.ReplayProjectTeamAddDetails) {
         self.swift = swift
@@ -53725,7 +54118,7 @@ public class DBXTeamLogReplayProjectTeamAddType: NSObject {
         self.swift = TeamLog.ReplayProjectTeamAddType(description_: description_)
     }
 
-    let swift: TeamLog.ReplayProjectTeamAddType
+    public let swift: TeamLog.ReplayProjectTeamAddType
 
     public init(swift: TeamLog.ReplayProjectTeamAddType) {
         self.swift = swift
@@ -53738,7 +54131,12 @@ public class DBXTeamLogReplayProjectTeamAddType: NSObject {
 /// Removed member from Replay Project.
 @objc
 public class DBXTeamLogReplayProjectTeamDeleteDetails: NSObject {
-    let swift: TeamLog.ReplayProjectTeamDeleteDetails
+    public override init() {
+        self.swift = TeamLog.ReplayProjectTeamDeleteDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ReplayProjectTeamDeleteDetails
 
     public init(swift: TeamLog.ReplayProjectTeamDeleteDetails) {
         self.swift = swift
@@ -53760,7 +54158,7 @@ public class DBXTeamLogReplayProjectTeamDeleteType: NSObject {
         self.swift = TeamLog.ReplayProjectTeamDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.ReplayProjectTeamDeleteType
+    public let swift: TeamLog.ReplayProjectTeamDeleteType
 
     public init(swift: TeamLog.ReplayProjectTeamDeleteType) {
         self.swift = swift
@@ -53785,7 +54183,7 @@ public class DBXTeamLogResellerLogInfo: NSObject {
         self.swift = TeamLog.ResellerLogInfo(resellerName: resellerName, resellerEmail: resellerEmail)
     }
 
-    let swift: TeamLog.ResellerLogInfo
+    public let swift: TeamLog.ResellerLogInfo
 
     public init(swift: TeamLog.ResellerLogInfo) {
         self.swift = swift
@@ -53798,9 +54196,9 @@ public class DBXTeamLogResellerLogInfo: NSObject {
 /// Objective-C compatible ResellerRole union
 @objc
 public class DBXTeamLogResellerRole: NSObject {
-    let swift: TeamLog.ResellerRole
+    public let swift: TeamLog.ResellerRole
 
-    public init(swift: TeamLog.ResellerRole) {
+    fileprivate init(swift: TeamLog.ResellerRole) {
         self.swift = swift
     }
 
@@ -53869,17 +54267,17 @@ public class DBXTeamLogResellerRoleOther: DBXTeamLogResellerRole {
 public class DBXTeamLogResellerSupportChangePolicyDetails: NSObject {
     /// New Reseller support policy.
     @objc
-    public var newValue: DBXTeamLogResellerSupportPolicy { DBXTeamLogResellerSupportPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogResellerSupportPolicy { DBXTeamLogResellerSupportPolicy.factory(swift: swift.newValue) }
     /// Previous Reseller support policy.
     @objc
-    public var previousValue: DBXTeamLogResellerSupportPolicy { DBXTeamLogResellerSupportPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogResellerSupportPolicy { DBXTeamLogResellerSupportPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogResellerSupportPolicy, previousValue: DBXTeamLogResellerSupportPolicy) {
         self.swift = TeamLog.ResellerSupportChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ResellerSupportChangePolicyDetails
+    public let swift: TeamLog.ResellerSupportChangePolicyDetails
 
     public init(swift: TeamLog.ResellerSupportChangePolicyDetails) {
         self.swift = swift
@@ -53901,7 +54299,7 @@ public class DBXTeamLogResellerSupportChangePolicyType: NSObject {
         self.swift = TeamLog.ResellerSupportChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ResellerSupportChangePolicyType
+    public let swift: TeamLog.ResellerSupportChangePolicyType
 
     public init(swift: TeamLog.ResellerSupportChangePolicyType) {
         self.swift = swift
@@ -53914,9 +54312,9 @@ public class DBXTeamLogResellerSupportChangePolicyType: NSObject {
 /// Policy for controlling if reseller can access the admin console as administrator
 @objc
 public class DBXTeamLogResellerSupportPolicy: NSObject {
-    let swift: TeamLog.ResellerSupportPolicy
+    public let swift: TeamLog.ResellerSupportPolicy
 
-    public init(swift: TeamLog.ResellerSupportPolicy) {
+    fileprivate init(swift: TeamLog.ResellerSupportPolicy) {
         self.swift = swift
     }
 
@@ -53983,7 +54381,12 @@ public class DBXTeamLogResellerSupportPolicyOther: DBXTeamLogResellerSupportPoli
 /// Ended reseller support session.
 @objc
 public class DBXTeamLogResellerSupportSessionEndDetails: NSObject {
-    let swift: TeamLog.ResellerSupportSessionEndDetails
+    public override init() {
+        self.swift = TeamLog.ResellerSupportSessionEndDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ResellerSupportSessionEndDetails
 
     public init(swift: TeamLog.ResellerSupportSessionEndDetails) {
         self.swift = swift
@@ -54005,7 +54408,7 @@ public class DBXTeamLogResellerSupportSessionEndType: NSObject {
         self.swift = TeamLog.ResellerSupportSessionEndType(description_: description_)
     }
 
-    let swift: TeamLog.ResellerSupportSessionEndType
+    public let swift: TeamLog.ResellerSupportSessionEndType
 
     public init(swift: TeamLog.ResellerSupportSessionEndType) {
         self.swift = swift
@@ -54018,7 +54421,12 @@ public class DBXTeamLogResellerSupportSessionEndType: NSObject {
 /// Started reseller support session.
 @objc
 public class DBXTeamLogResellerSupportSessionStartDetails: NSObject {
-    let swift: TeamLog.ResellerSupportSessionStartDetails
+    public override init() {
+        self.swift = TeamLog.ResellerSupportSessionStartDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ResellerSupportSessionStartDetails
 
     public init(swift: TeamLog.ResellerSupportSessionStartDetails) {
         self.swift = swift
@@ -54040,7 +54448,7 @@ public class DBXTeamLogResellerSupportSessionStartType: NSObject {
         self.swift = TeamLog.ResellerSupportSessionStartType(description_: description_)
     }
 
-    let swift: TeamLog.ResellerSupportSessionStartType
+    public let swift: TeamLog.ResellerSupportSessionStartType
 
     public init(swift: TeamLog.ResellerSupportSessionStartType) {
         self.swift = swift
@@ -54062,7 +54470,7 @@ public class DBXTeamLogRewindFolderDetails: NSObject {
         self.swift = TeamLog.RewindFolderDetails(rewindFolderTargetTsMs: rewindFolderTargetTsMs)
     }
 
-    let swift: TeamLog.RewindFolderDetails
+    public let swift: TeamLog.RewindFolderDetails
 
     public init(swift: TeamLog.RewindFolderDetails) {
         self.swift = swift
@@ -54084,7 +54492,7 @@ public class DBXTeamLogRewindFolderType: NSObject {
         self.swift = TeamLog.RewindFolderType(description_: description_)
     }
 
-    let swift: TeamLog.RewindFolderType
+    public let swift: TeamLog.RewindFolderType
 
     public init(swift: TeamLog.RewindFolderType) {
         self.swift = swift
@@ -54097,9 +54505,9 @@ public class DBXTeamLogRewindFolderType: NSObject {
 /// Policy for controlling whether team members can rewind
 @objc
 public class DBXTeamLogRewindPolicy: NSObject {
-    let swift: TeamLog.RewindPolicy
+    public let swift: TeamLog.RewindPolicy
 
-    public init(swift: TeamLog.RewindPolicy) {
+    fileprivate init(swift: TeamLog.RewindPolicy) {
         self.swift = swift
     }
 
@@ -54168,17 +54576,17 @@ public class DBXTeamLogRewindPolicyOther: DBXTeamLogRewindPolicy {
 public class DBXTeamLogRewindPolicyChangedDetails: NSObject {
     /// New Dropbox Rewind policy.
     @objc
-    public var newValue: DBXTeamLogRewindPolicy { DBXTeamLogRewindPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogRewindPolicy { DBXTeamLogRewindPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Rewind policy.
     @objc
-    public var previousValue: DBXTeamLogRewindPolicy { DBXTeamLogRewindPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogRewindPolicy { DBXTeamLogRewindPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogRewindPolicy, previousValue: DBXTeamLogRewindPolicy) {
         self.swift = TeamLog.RewindPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.RewindPolicyChangedDetails
+    public let swift: TeamLog.RewindPolicyChangedDetails
 
     public init(swift: TeamLog.RewindPolicyChangedDetails) {
         self.swift = swift
@@ -54200,7 +54608,7 @@ public class DBXTeamLogRewindPolicyChangedType: NSObject {
         self.swift = TeamLog.RewindPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.RewindPolicyChangedType
+    public let swift: TeamLog.RewindPolicyChangedType
 
     public init(swift: TeamLog.RewindPolicyChangedType) {
         self.swift = swift
@@ -54222,7 +54630,7 @@ public class DBXTeamLogSecondaryEmailDeletedDetails: NSObject {
         self.swift = TeamLog.SecondaryEmailDeletedDetails(secondaryEmail: secondaryEmail)
     }
 
-    let swift: TeamLog.SecondaryEmailDeletedDetails
+    public let swift: TeamLog.SecondaryEmailDeletedDetails
 
     public init(swift: TeamLog.SecondaryEmailDeletedDetails) {
         self.swift = swift
@@ -54244,7 +54652,7 @@ public class DBXTeamLogSecondaryEmailDeletedType: NSObject {
         self.swift = TeamLog.SecondaryEmailDeletedType(description_: description_)
     }
 
-    let swift: TeamLog.SecondaryEmailDeletedType
+    public let swift: TeamLog.SecondaryEmailDeletedType
 
     public init(swift: TeamLog.SecondaryEmailDeletedType) {
         self.swift = swift
@@ -54266,7 +54674,7 @@ public class DBXTeamLogSecondaryEmailVerifiedDetails: NSObject {
         self.swift = TeamLog.SecondaryEmailVerifiedDetails(secondaryEmail: secondaryEmail)
     }
 
-    let swift: TeamLog.SecondaryEmailVerifiedDetails
+    public let swift: TeamLog.SecondaryEmailVerifiedDetails
 
     public init(swift: TeamLog.SecondaryEmailVerifiedDetails) {
         self.swift = swift
@@ -54288,7 +54696,7 @@ public class DBXTeamLogSecondaryEmailVerifiedType: NSObject {
         self.swift = TeamLog.SecondaryEmailVerifiedType(description_: description_)
     }
 
-    let swift: TeamLog.SecondaryEmailVerifiedType
+    public let swift: TeamLog.SecondaryEmailVerifiedType
 
     public init(swift: TeamLog.SecondaryEmailVerifiedType) {
         self.swift = swift
@@ -54301,9 +54709,9 @@ public class DBXTeamLogSecondaryEmailVerifiedType: NSObject {
 /// Objective-C compatible SecondaryMailsPolicy union
 @objc
 public class DBXTeamLogSecondaryMailsPolicy: NSObject {
-    let swift: TeamLog.SecondaryMailsPolicy
+    public let swift: TeamLog.SecondaryMailsPolicy
 
-    public init(swift: TeamLog.SecondaryMailsPolicy) {
+    fileprivate init(swift: TeamLog.SecondaryMailsPolicy) {
         self.swift = swift
     }
 
@@ -54372,17 +54780,17 @@ public class DBXTeamLogSecondaryMailsPolicyOther: DBXTeamLogSecondaryMailsPolicy
 public class DBXTeamLogSecondaryMailsPolicyChangedDetails: NSObject {
     /// Previous secondary mails policy.
     @objc
-    public var previousValue: DBXTeamLogSecondaryMailsPolicy { DBXTeamLogSecondaryMailsPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSecondaryMailsPolicy { DBXTeamLogSecondaryMailsPolicy.factory(swift: swift.previousValue) }
     /// New secondary mails policy.
     @objc
-    public var newValue: DBXTeamLogSecondaryMailsPolicy { DBXTeamLogSecondaryMailsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSecondaryMailsPolicy { DBXTeamLogSecondaryMailsPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogSecondaryMailsPolicy, newValue: DBXTeamLogSecondaryMailsPolicy) {
         self.swift = TeamLog.SecondaryMailsPolicyChangedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.SecondaryMailsPolicyChangedDetails
+    public let swift: TeamLog.SecondaryMailsPolicyChangedDetails
 
     public init(swift: TeamLog.SecondaryMailsPolicyChangedDetails) {
         self.swift = swift
@@ -54404,7 +54812,7 @@ public class DBXTeamLogSecondaryMailsPolicyChangedType: NSObject {
         self.swift = TeamLog.SecondaryMailsPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.SecondaryMailsPolicyChangedType
+    public let swift: TeamLog.SecondaryMailsPolicyChangedType
 
     public init(swift: TeamLog.SecondaryMailsPolicyChangedType) {
         self.swift = swift
@@ -54429,7 +54837,7 @@ public class DBXTeamLogSecondaryTeamRequestAcceptedDetails: NSObject {
         self.swift = TeamLog.SecondaryTeamRequestAcceptedDetails(primaryTeam: primaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.SecondaryTeamRequestAcceptedDetails
+    public let swift: TeamLog.SecondaryTeamRequestAcceptedDetails
 
     public init(swift: TeamLog.SecondaryTeamRequestAcceptedDetails) {
         self.swift = swift
@@ -54454,7 +54862,7 @@ public class DBXTeamLogSecondaryTeamRequestCanceledDetails: NSObject {
         self.swift = TeamLog.SecondaryTeamRequestCanceledDetails(sentTo: sentTo, sentBy: sentBy)
     }
 
-    let swift: TeamLog.SecondaryTeamRequestCanceledDetails
+    public let swift: TeamLog.SecondaryTeamRequestCanceledDetails
 
     public init(swift: TeamLog.SecondaryTeamRequestCanceledDetails) {
         self.swift = swift
@@ -54476,7 +54884,7 @@ public class DBXTeamLogSecondaryTeamRequestExpiredDetails: NSObject {
         self.swift = TeamLog.SecondaryTeamRequestExpiredDetails(sentTo: sentTo)
     }
 
-    let swift: TeamLog.SecondaryTeamRequestExpiredDetails
+    public let swift: TeamLog.SecondaryTeamRequestExpiredDetails
 
     public init(swift: TeamLog.SecondaryTeamRequestExpiredDetails) {
         self.swift = swift
@@ -54498,7 +54906,7 @@ public class DBXTeamLogSecondaryTeamRequestReminderDetails: NSObject {
         self.swift = TeamLog.SecondaryTeamRequestReminderDetails(sentTo: sentTo)
     }
 
-    let swift: TeamLog.SecondaryTeamRequestReminderDetails
+    public let swift: TeamLog.SecondaryTeamRequestReminderDetails
 
     public init(swift: TeamLog.SecondaryTeamRequestReminderDetails) {
         self.swift = swift
@@ -54511,9 +54919,9 @@ public class DBXTeamLogSecondaryTeamRequestReminderDetails: NSObject {
 /// Policy for controlling team access to send for signature feature
 @objc
 public class DBXTeamLogSendForSignaturePolicy: NSObject {
-    let swift: TeamLog.SendForSignaturePolicy
+    public let swift: TeamLog.SendForSignaturePolicy
 
-    public init(swift: TeamLog.SendForSignaturePolicy) {
+    fileprivate init(swift: TeamLog.SendForSignaturePolicy) {
         self.swift = swift
     }
 
@@ -54582,17 +54990,17 @@ public class DBXTeamLogSendForSignaturePolicyOther: DBXTeamLogSendForSignaturePo
 public class DBXTeamLogSendForSignaturePolicyChangedDetails: NSObject {
     /// New send for signature policy.
     @objc
-    public var newValue: DBXTeamLogSendForSignaturePolicy { DBXTeamLogSendForSignaturePolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSendForSignaturePolicy { DBXTeamLogSendForSignaturePolicy.factory(swift: swift.newValue) }
     /// Previous send for signature policy.
     @objc
-    public var previousValue: DBXTeamLogSendForSignaturePolicy { DBXTeamLogSendForSignaturePolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSendForSignaturePolicy { DBXTeamLogSendForSignaturePolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogSendForSignaturePolicy, previousValue: DBXTeamLogSendForSignaturePolicy) {
         self.swift = TeamLog.SendForSignaturePolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.SendForSignaturePolicyChangedDetails
+    public let swift: TeamLog.SendForSignaturePolicyChangedDetails
 
     public init(swift: TeamLog.SendForSignaturePolicyChangedDetails) {
         self.swift = swift
@@ -54614,7 +55022,7 @@ public class DBXTeamLogSendForSignaturePolicyChangedType: NSObject {
         self.swift = TeamLog.SendForSignaturePolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.SendForSignaturePolicyChangedType
+    public let swift: TeamLog.SendForSignaturePolicyChangedType
 
     public init(swift: TeamLog.SendForSignaturePolicyChangedType) {
         self.swift = swift
@@ -54650,7 +55058,7 @@ public class DBXTeamLogSfAddGroupDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfAddGroupDetails
+    public let swift: TeamLog.SfAddGroupDetails
 
     public init(swift: TeamLog.SfAddGroupDetails) {
         self.swift = swift
@@ -54672,7 +55080,7 @@ public class DBXTeamLogSfAddGroupType: NSObject {
         self.swift = TeamLog.SfAddGroupType(description_: description_)
     }
 
-    let swift: TeamLog.SfAddGroupType
+    public let swift: TeamLog.SfAddGroupType
 
     public init(swift: TeamLog.SfAddGroupType) {
         self.swift = swift
@@ -54704,7 +55112,7 @@ public class DBXTeamLogSfAllowNonMembersToViewSharedLinksDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfAllowNonMembersToViewSharedLinksDetails
+    public let swift: TeamLog.SfAllowNonMembersToViewSharedLinksDetails
 
     public init(swift: TeamLog.SfAllowNonMembersToViewSharedLinksDetails) {
         self.swift = swift
@@ -54726,7 +55134,7 @@ public class DBXTeamLogSfAllowNonMembersToViewSharedLinksType: NSObject {
         self.swift = TeamLog.SfAllowNonMembersToViewSharedLinksType(description_: description_)
     }
 
-    let swift: TeamLog.SfAllowNonMembersToViewSharedLinksType
+    public let swift: TeamLog.SfAllowNonMembersToViewSharedLinksType
 
     public init(swift: TeamLog.SfAllowNonMembersToViewSharedLinksType) {
         self.swift = swift
@@ -54762,7 +55170,7 @@ public class DBXTeamLogSfExternalInviteWarnDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfExternalInviteWarnDetails
+    public let swift: TeamLog.SfExternalInviteWarnDetails
 
     public init(swift: TeamLog.SfExternalInviteWarnDetails) {
         self.swift = swift
@@ -54784,7 +55192,7 @@ public class DBXTeamLogSfExternalInviteWarnType: NSObject {
         self.swift = TeamLog.SfExternalInviteWarnType(description_: description_)
     }
 
-    let swift: TeamLog.SfExternalInviteWarnType
+    public let swift: TeamLog.SfExternalInviteWarnType
 
     public init(swift: TeamLog.SfExternalInviteWarnType) {
         self.swift = swift
@@ -54820,7 +55228,7 @@ public class DBXTeamLogSfFbInviteChangeRoleDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfFbInviteChangeRoleDetails
+    public let swift: TeamLog.SfFbInviteChangeRoleDetails
 
     public init(swift: TeamLog.SfFbInviteChangeRoleDetails) {
         self.swift = swift
@@ -54842,7 +55250,7 @@ public class DBXTeamLogSfFbInviteChangeRoleType: NSObject {
         self.swift = TeamLog.SfFbInviteChangeRoleType(description_: description_)
     }
 
-    let swift: TeamLog.SfFbInviteChangeRoleType
+    public let swift: TeamLog.SfFbInviteChangeRoleType
 
     public init(swift: TeamLog.SfFbInviteChangeRoleType) {
         self.swift = swift
@@ -54874,7 +55282,7 @@ public class DBXTeamLogSfFbInviteDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfFbInviteDetails
+    public let swift: TeamLog.SfFbInviteDetails
 
     public init(swift: TeamLog.SfFbInviteDetails) {
         self.swift = swift
@@ -54896,7 +55304,7 @@ public class DBXTeamLogSfFbInviteType: NSObject {
         self.swift = TeamLog.SfFbInviteType(description_: description_)
     }
 
-    let swift: TeamLog.SfFbInviteType
+    public let swift: TeamLog.SfFbInviteType
 
     public init(swift: TeamLog.SfFbInviteType) {
         self.swift = swift
@@ -54921,7 +55329,7 @@ public class DBXTeamLogSfFbUninviteDetails: NSObject {
         self.swift = TeamLog.SfFbUninviteDetails(targetAssetIndex: targetAssetIndex.uint64Value, originalFolderName: originalFolderName)
     }
 
-    let swift: TeamLog.SfFbUninviteDetails
+    public let swift: TeamLog.SfFbUninviteDetails
 
     public init(swift: TeamLog.SfFbUninviteDetails) {
         self.swift = swift
@@ -54943,7 +55351,7 @@ public class DBXTeamLogSfFbUninviteType: NSObject {
         self.swift = TeamLog.SfFbUninviteType(description_: description_)
     }
 
-    let swift: TeamLog.SfFbUninviteType
+    public let swift: TeamLog.SfFbUninviteType
 
     public init(swift: TeamLog.SfFbUninviteType) {
         self.swift = swift
@@ -54965,7 +55373,7 @@ public class DBXTeamLogSfInviteGroupDetails: NSObject {
         self.swift = TeamLog.SfInviteGroupDetails(targetAssetIndex: targetAssetIndex.uint64Value)
     }
 
-    let swift: TeamLog.SfInviteGroupDetails
+    public let swift: TeamLog.SfInviteGroupDetails
 
     public init(swift: TeamLog.SfInviteGroupDetails) {
         self.swift = swift
@@ -54987,7 +55395,7 @@ public class DBXTeamLogSfInviteGroupType: NSObject {
         self.swift = TeamLog.SfInviteGroupType(description_: description_)
     }
 
-    let swift: TeamLog.SfInviteGroupType
+    public let swift: TeamLog.SfInviteGroupType
 
     public init(swift: TeamLog.SfInviteGroupType) {
         self.swift = swift
@@ -55012,7 +55420,7 @@ public class DBXTeamLogSfTeamGrantAccessDetails: NSObject {
         self.swift = TeamLog.SfTeamGrantAccessDetails(targetAssetIndex: targetAssetIndex.uint64Value, originalFolderName: originalFolderName)
     }
 
-    let swift: TeamLog.SfTeamGrantAccessDetails
+    public let swift: TeamLog.SfTeamGrantAccessDetails
 
     public init(swift: TeamLog.SfTeamGrantAccessDetails) {
         self.swift = swift
@@ -55034,7 +55442,7 @@ public class DBXTeamLogSfTeamGrantAccessType: NSObject {
         self.swift = TeamLog.SfTeamGrantAccessType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamGrantAccessType
+    public let swift: TeamLog.SfTeamGrantAccessType
 
     public init(swift: TeamLog.SfTeamGrantAccessType) {
         self.swift = swift
@@ -55070,7 +55478,7 @@ public class DBXTeamLogSfTeamInviteChangeRoleDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfTeamInviteChangeRoleDetails
+    public let swift: TeamLog.SfTeamInviteChangeRoleDetails
 
     public init(swift: TeamLog.SfTeamInviteChangeRoleDetails) {
         self.swift = swift
@@ -55092,7 +55500,7 @@ public class DBXTeamLogSfTeamInviteChangeRoleType: NSObject {
         self.swift = TeamLog.SfTeamInviteChangeRoleType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamInviteChangeRoleType
+    public let swift: TeamLog.SfTeamInviteChangeRoleType
 
     public init(swift: TeamLog.SfTeamInviteChangeRoleType) {
         self.swift = swift
@@ -55124,7 +55532,7 @@ public class DBXTeamLogSfTeamInviteDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfTeamInviteDetails
+    public let swift: TeamLog.SfTeamInviteDetails
 
     public init(swift: TeamLog.SfTeamInviteDetails) {
         self.swift = swift
@@ -55146,7 +55554,7 @@ public class DBXTeamLogSfTeamInviteType: NSObject {
         self.swift = TeamLog.SfTeamInviteType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamInviteType
+    public let swift: TeamLog.SfTeamInviteType
 
     public init(swift: TeamLog.SfTeamInviteType) {
         self.swift = swift
@@ -55171,7 +55579,7 @@ public class DBXTeamLogSfTeamJoinDetails: NSObject {
         self.swift = TeamLog.SfTeamJoinDetails(targetAssetIndex: targetAssetIndex.uint64Value, originalFolderName: originalFolderName)
     }
 
-    let swift: TeamLog.SfTeamJoinDetails
+    public let swift: TeamLog.SfTeamJoinDetails
 
     public init(swift: TeamLog.SfTeamJoinDetails) {
         self.swift = swift
@@ -55207,7 +55615,7 @@ public class DBXTeamLogSfTeamJoinFromOobLinkDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SfTeamJoinFromOobLinkDetails
+    public let swift: TeamLog.SfTeamJoinFromOobLinkDetails
 
     public init(swift: TeamLog.SfTeamJoinFromOobLinkDetails) {
         self.swift = swift
@@ -55229,7 +55637,7 @@ public class DBXTeamLogSfTeamJoinFromOobLinkType: NSObject {
         self.swift = TeamLog.SfTeamJoinFromOobLinkType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamJoinFromOobLinkType
+    public let swift: TeamLog.SfTeamJoinFromOobLinkType
 
     public init(swift: TeamLog.SfTeamJoinFromOobLinkType) {
         self.swift = swift
@@ -55251,7 +55659,7 @@ public class DBXTeamLogSfTeamJoinType: NSObject {
         self.swift = TeamLog.SfTeamJoinType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamJoinType
+    public let swift: TeamLog.SfTeamJoinType
 
     public init(swift: TeamLog.SfTeamJoinType) {
         self.swift = swift
@@ -55276,7 +55684,7 @@ public class DBXTeamLogSfTeamUninviteDetails: NSObject {
         self.swift = TeamLog.SfTeamUninviteDetails(targetAssetIndex: targetAssetIndex.uint64Value, originalFolderName: originalFolderName)
     }
 
-    let swift: TeamLog.SfTeamUninviteDetails
+    public let swift: TeamLog.SfTeamUninviteDetails
 
     public init(swift: TeamLog.SfTeamUninviteDetails) {
         self.swift = swift
@@ -55298,7 +55706,7 @@ public class DBXTeamLogSfTeamUninviteType: NSObject {
         self.swift = TeamLog.SfTeamUninviteType(description_: description_)
     }
 
-    let swift: TeamLog.SfTeamUninviteType
+    public let swift: TeamLog.SfTeamUninviteType
 
     public init(swift: TeamLog.SfTeamUninviteType) {
         self.swift = swift
@@ -55313,7 +55721,7 @@ public class DBXTeamLogSfTeamUninviteType: NSObject {
 public class DBXTeamLogSharedContentAddInviteesDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// A list of invitees.
     @objc
     public var invitees: [String] { swift.invitees }
@@ -55323,7 +55731,7 @@ public class DBXTeamLogSharedContentAddInviteesDetails: NSObject {
         self.swift = TeamLog.SharedContentAddInviteesDetails(sharedContentAccessLevel: sharedContentAccessLevel.swift, invitees: invitees)
     }
 
-    let swift: TeamLog.SharedContentAddInviteesDetails
+    public let swift: TeamLog.SharedContentAddInviteesDetails
 
     public init(swift: TeamLog.SharedContentAddInviteesDetails) {
         self.swift = swift
@@ -55345,7 +55753,7 @@ public class DBXTeamLogSharedContentAddInviteesType: NSObject {
         self.swift = TeamLog.SharedContentAddInviteesType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentAddInviteesType
+    public let swift: TeamLog.SharedContentAddInviteesType
 
     public init(swift: TeamLog.SharedContentAddInviteesType) {
         self.swift = swift
@@ -55367,7 +55775,7 @@ public class DBXTeamLogSharedContentAddLinkExpiryDetails: NSObject {
         self.swift = TeamLog.SharedContentAddLinkExpiryDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.SharedContentAddLinkExpiryDetails
+    public let swift: TeamLog.SharedContentAddLinkExpiryDetails
 
     public init(swift: TeamLog.SharedContentAddLinkExpiryDetails) {
         self.swift = swift
@@ -55389,7 +55797,7 @@ public class DBXTeamLogSharedContentAddLinkExpiryType: NSObject {
         self.swift = TeamLog.SharedContentAddLinkExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentAddLinkExpiryType
+    public let swift: TeamLog.SharedContentAddLinkExpiryType
 
     public init(swift: TeamLog.SharedContentAddLinkExpiryType) {
         self.swift = swift
@@ -55402,7 +55810,12 @@ public class DBXTeamLogSharedContentAddLinkExpiryType: NSObject {
 /// Added password to link for shared file/folder.
 @objc
 public class DBXTeamLogSharedContentAddLinkPasswordDetails: NSObject {
-    let swift: TeamLog.SharedContentAddLinkPasswordDetails
+    public override init() {
+        self.swift = TeamLog.SharedContentAddLinkPasswordDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedContentAddLinkPasswordDetails
 
     public init(swift: TeamLog.SharedContentAddLinkPasswordDetails) {
         self.swift = swift
@@ -55424,7 +55837,7 @@ public class DBXTeamLogSharedContentAddLinkPasswordType: NSObject {
         self.swift = TeamLog.SharedContentAddLinkPasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentAddLinkPasswordType
+    public let swift: TeamLog.SharedContentAddLinkPasswordType
 
     public init(swift: TeamLog.SharedContentAddLinkPasswordType) {
         self.swift = swift
@@ -55439,14 +55852,14 @@ public class DBXTeamLogSharedContentAddLinkPasswordType: NSObject {
 public class DBXTeamLogSharedContentAddMemberDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
 
     @objc
     public init(sharedContentAccessLevel: DBXSharingAccessLevel) {
         self.swift = TeamLog.SharedContentAddMemberDetails(sharedContentAccessLevel: sharedContentAccessLevel.swift)
     }
 
-    let swift: TeamLog.SharedContentAddMemberDetails
+    public let swift: TeamLog.SharedContentAddMemberDetails
 
     public init(swift: TeamLog.SharedContentAddMemberDetails) {
         self.swift = swift
@@ -55468,7 +55881,7 @@ public class DBXTeamLogSharedContentAddMemberType: NSObject {
         self.swift = TeamLog.SharedContentAddMemberType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentAddMemberType
+    public let swift: TeamLog.SharedContentAddMemberType
 
     public init(swift: TeamLog.SharedContentAddMemberType) {
         self.swift = swift
@@ -55483,11 +55896,11 @@ public class DBXTeamLogSharedContentAddMemberType: NSObject {
 public class DBXTeamLogSharedContentChangeDownloadsPolicyDetails: NSObject {
     /// New downloads policy.
     @objc
-    public var newValue: DBXTeamLogDownloadPolicyType { DBXTeamLogDownloadPolicyType(swift: swift.newValue) }
+    public var newValue: DBXTeamLogDownloadPolicyType { DBXTeamLogDownloadPolicyType.factory(swift: swift.newValue) }
     /// Previous downloads policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogDownloadPolicyType? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogDownloadPolicyType(swift: swift)
+        return DBXTeamLogDownloadPolicyType.factory(swift: swift)
     }
 
     @objc
@@ -55495,7 +55908,7 @@ public class DBXTeamLogSharedContentChangeDownloadsPolicyDetails: NSObject {
         self.swift = TeamLog.SharedContentChangeDownloadsPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedContentChangeDownloadsPolicyDetails
+    public let swift: TeamLog.SharedContentChangeDownloadsPolicyDetails
 
     public init(swift: TeamLog.SharedContentChangeDownloadsPolicyDetails) {
         self.swift = swift
@@ -55517,7 +55930,7 @@ public class DBXTeamLogSharedContentChangeDownloadsPolicyType: NSObject {
         self.swift = TeamLog.SharedContentChangeDownloadsPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeDownloadsPolicyType
+    public let swift: TeamLog.SharedContentChangeDownloadsPolicyType
 
     public init(swift: TeamLog.SharedContentChangeDownloadsPolicyType) {
         self.swift = swift
@@ -55533,12 +55946,12 @@ public class DBXTeamLogSharedContentChangeInviteeRoleDetails: NSObject {
     /// Previous access level. Might be missing due to historical data gap.
     @objc
     public var previousAccessLevel: DBXSharingAccessLevel? { guard let swift = swift.previousAccessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
+        return DBXSharingAccessLevel.factory(swift: swift)
     }
 
     /// New access level.
     @objc
-    public var newAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.newAccessLevel) }
+    public var newAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.newAccessLevel) }
     /// The invitee whose role was changed.
     @objc
     public var invitee: String { swift.invitee }
@@ -55552,7 +55965,7 @@ public class DBXTeamLogSharedContentChangeInviteeRoleDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedContentChangeInviteeRoleDetails
+    public let swift: TeamLog.SharedContentChangeInviteeRoleDetails
 
     public init(swift: TeamLog.SharedContentChangeInviteeRoleDetails) {
         self.swift = swift
@@ -55574,7 +55987,7 @@ public class DBXTeamLogSharedContentChangeInviteeRoleType: NSObject {
         self.swift = TeamLog.SharedContentChangeInviteeRoleType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeInviteeRoleType
+    public let swift: TeamLog.SharedContentChangeInviteeRoleType
 
     public init(swift: TeamLog.SharedContentChangeInviteeRoleType) {
         self.swift = swift
@@ -55589,11 +56002,11 @@ public class DBXTeamLogSharedContentChangeInviteeRoleType: NSObject {
 public class DBXTeamLogSharedContentChangeLinkAudienceDetails: NSObject {
     /// New link audience value.
     @objc
-    public var newValue: DBXSharingLinkAudience { DBXSharingLinkAudience(swift: swift.newValue) }
+    public var newValue: DBXSharingLinkAudience { DBXSharingLinkAudience.factory(swift: swift.newValue) }
     /// Previous link audience value.
     @objc
     public var previousValue: DBXSharingLinkAudience? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingLinkAudience(swift: swift)
+        return DBXSharingLinkAudience.factory(swift: swift)
     }
 
     @objc
@@ -55601,7 +56014,7 @@ public class DBXTeamLogSharedContentChangeLinkAudienceDetails: NSObject {
         self.swift = TeamLog.SharedContentChangeLinkAudienceDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedContentChangeLinkAudienceDetails
+    public let swift: TeamLog.SharedContentChangeLinkAudienceDetails
 
     public init(swift: TeamLog.SharedContentChangeLinkAudienceDetails) {
         self.swift = swift
@@ -55623,7 +56036,7 @@ public class DBXTeamLogSharedContentChangeLinkAudienceType: NSObject {
         self.swift = TeamLog.SharedContentChangeLinkAudienceType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeLinkAudienceType
+    public let swift: TeamLog.SharedContentChangeLinkAudienceType
 
     public init(swift: TeamLog.SharedContentChangeLinkAudienceType) {
         self.swift = swift
@@ -55648,7 +56061,7 @@ public class DBXTeamLogSharedContentChangeLinkExpiryDetails: NSObject {
         self.swift = TeamLog.SharedContentChangeLinkExpiryDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.SharedContentChangeLinkExpiryDetails
+    public let swift: TeamLog.SharedContentChangeLinkExpiryDetails
 
     public init(swift: TeamLog.SharedContentChangeLinkExpiryDetails) {
         self.swift = swift
@@ -55670,7 +56083,7 @@ public class DBXTeamLogSharedContentChangeLinkExpiryType: NSObject {
         self.swift = TeamLog.SharedContentChangeLinkExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeLinkExpiryType
+    public let swift: TeamLog.SharedContentChangeLinkExpiryType
 
     public init(swift: TeamLog.SharedContentChangeLinkExpiryType) {
         self.swift = swift
@@ -55683,7 +56096,12 @@ public class DBXTeamLogSharedContentChangeLinkExpiryType: NSObject {
 /// Changed link password of shared file/folder.
 @objc
 public class DBXTeamLogSharedContentChangeLinkPasswordDetails: NSObject {
-    let swift: TeamLog.SharedContentChangeLinkPasswordDetails
+    public override init() {
+        self.swift = TeamLog.SharedContentChangeLinkPasswordDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedContentChangeLinkPasswordDetails
 
     public init(swift: TeamLog.SharedContentChangeLinkPasswordDetails) {
         self.swift = swift
@@ -55705,7 +56123,7 @@ public class DBXTeamLogSharedContentChangeLinkPasswordType: NSObject {
         self.swift = TeamLog.SharedContentChangeLinkPasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeLinkPasswordType
+    public let swift: TeamLog.SharedContentChangeLinkPasswordType
 
     public init(swift: TeamLog.SharedContentChangeLinkPasswordType) {
         self.swift = swift
@@ -55721,19 +56139,19 @@ public class DBXTeamLogSharedContentChangeMemberRoleDetails: NSObject {
     /// Previous access level. Might be missing due to historical data gap.
     @objc
     public var previousAccessLevel: DBXSharingAccessLevel? { guard let swift = swift.previousAccessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
+        return DBXSharingAccessLevel.factory(swift: swift)
     }
 
     /// New access level.
     @objc
-    public var newAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.newAccessLevel) }
+    public var newAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.newAccessLevel) }
 
     @objc
     public init(newAccessLevel: DBXSharingAccessLevel, previousAccessLevel: DBXSharingAccessLevel?) {
         self.swift = TeamLog.SharedContentChangeMemberRoleDetails(newAccessLevel: newAccessLevel.swift, previousAccessLevel: previousAccessLevel?.swift)
     }
 
-    let swift: TeamLog.SharedContentChangeMemberRoleDetails
+    public let swift: TeamLog.SharedContentChangeMemberRoleDetails
 
     public init(swift: TeamLog.SharedContentChangeMemberRoleDetails) {
         self.swift = swift
@@ -55755,7 +56173,7 @@ public class DBXTeamLogSharedContentChangeMemberRoleType: NSObject {
         self.swift = TeamLog.SharedContentChangeMemberRoleType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeMemberRoleType
+    public let swift: TeamLog.SharedContentChangeMemberRoleType
 
     public init(swift: TeamLog.SharedContentChangeMemberRoleType) {
         self.swift = swift
@@ -55770,11 +56188,11 @@ public class DBXTeamLogSharedContentChangeMemberRoleType: NSObject {
 public class DBXTeamLogSharedContentChangeViewerInfoPolicyDetails: NSObject {
     /// New viewer info policy.
     @objc
-    public var newValue: DBXSharingViewerInfoPolicy { DBXSharingViewerInfoPolicy(swift: swift.newValue) }
+    public var newValue: DBXSharingViewerInfoPolicy { DBXSharingViewerInfoPolicy.factory(swift: swift.newValue) }
     /// Previous view info policy.
     @objc
     public var previousValue: DBXSharingViewerInfoPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingViewerInfoPolicy(swift: swift)
+        return DBXSharingViewerInfoPolicy.factory(swift: swift)
     }
 
     @objc
@@ -55782,7 +56200,7 @@ public class DBXTeamLogSharedContentChangeViewerInfoPolicyDetails: NSObject {
         self.swift = TeamLog.SharedContentChangeViewerInfoPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedContentChangeViewerInfoPolicyDetails
+    public let swift: TeamLog.SharedContentChangeViewerInfoPolicyDetails
 
     public init(swift: TeamLog.SharedContentChangeViewerInfoPolicyDetails) {
         self.swift = swift
@@ -55804,7 +56222,7 @@ public class DBXTeamLogSharedContentChangeViewerInfoPolicyType: NSObject {
         self.swift = TeamLog.SharedContentChangeViewerInfoPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentChangeViewerInfoPolicyType
+    public let swift: TeamLog.SharedContentChangeViewerInfoPolicyType
 
     public init(swift: TeamLog.SharedContentChangeViewerInfoPolicyType) {
         self.swift = swift
@@ -55826,7 +56244,7 @@ public class DBXTeamLogSharedContentClaimInvitationDetails: NSObject {
         self.swift = TeamLog.SharedContentClaimInvitationDetails(sharedContentLink: sharedContentLink)
     }
 
-    let swift: TeamLog.SharedContentClaimInvitationDetails
+    public let swift: TeamLog.SharedContentClaimInvitationDetails
 
     public init(swift: TeamLog.SharedContentClaimInvitationDetails) {
         self.swift = swift
@@ -55848,7 +56266,7 @@ public class DBXTeamLogSharedContentClaimInvitationType: NSObject {
         self.swift = TeamLog.SharedContentClaimInvitationType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentClaimInvitationType
+    public let swift: TeamLog.SharedContentClaimInvitationType
 
     public init(swift: TeamLog.SharedContentClaimInvitationType) {
         self.swift = swift
@@ -55872,7 +56290,7 @@ public class DBXTeamLogSharedContentCopyDetails: NSObject {
 
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// The path where the member saved the content.
     @objc
     public var destinationPath: String { swift.destinationPath }
@@ -55892,7 +56310,7 @@ public class DBXTeamLogSharedContentCopyDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedContentCopyDetails
+    public let swift: TeamLog.SharedContentCopyDetails
 
     public init(swift: TeamLog.SharedContentCopyDetails) {
         self.swift = swift
@@ -55914,7 +56332,7 @@ public class DBXTeamLogSharedContentCopyType: NSObject {
         self.swift = TeamLog.SharedContentCopyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentCopyType
+    public let swift: TeamLog.SharedContentCopyType
 
     public init(swift: TeamLog.SharedContentCopyType) {
         self.swift = swift
@@ -55938,7 +56356,7 @@ public class DBXTeamLogSharedContentDownloadDetails: NSObject {
 
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
 
     @objc
     public init(sharedContentLink: String, sharedContentAccessLevel: DBXSharingAccessLevel, sharedContentOwner: DBXTeamLogUserLogInfo?) {
@@ -55949,7 +56367,7 @@ public class DBXTeamLogSharedContentDownloadDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedContentDownloadDetails
+    public let swift: TeamLog.SharedContentDownloadDetails
 
     public init(swift: TeamLog.SharedContentDownloadDetails) {
         self.swift = swift
@@ -55971,7 +56389,7 @@ public class DBXTeamLogSharedContentDownloadType: NSObject {
         self.swift = TeamLog.SharedContentDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentDownloadType
+    public let swift: TeamLog.SharedContentDownloadType
 
     public init(swift: TeamLog.SharedContentDownloadType) {
         self.swift = swift
@@ -55984,7 +56402,12 @@ public class DBXTeamLogSharedContentDownloadType: NSObject {
 /// Left shared file/folder.
 @objc
 public class DBXTeamLogSharedContentRelinquishMembershipDetails: NSObject {
-    let swift: TeamLog.SharedContentRelinquishMembershipDetails
+    public override init() {
+        self.swift = TeamLog.SharedContentRelinquishMembershipDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedContentRelinquishMembershipDetails
 
     public init(swift: TeamLog.SharedContentRelinquishMembershipDetails) {
         self.swift = swift
@@ -56006,7 +56429,7 @@ public class DBXTeamLogSharedContentRelinquishMembershipType: NSObject {
         self.swift = TeamLog.SharedContentRelinquishMembershipType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRelinquishMembershipType
+    public let swift: TeamLog.SharedContentRelinquishMembershipType
 
     public init(swift: TeamLog.SharedContentRelinquishMembershipType) {
         self.swift = swift
@@ -56028,7 +56451,7 @@ public class DBXTeamLogSharedContentRemoveInviteesDetails: NSObject {
         self.swift = TeamLog.SharedContentRemoveInviteesDetails(invitees: invitees)
     }
 
-    let swift: TeamLog.SharedContentRemoveInviteesDetails
+    public let swift: TeamLog.SharedContentRemoveInviteesDetails
 
     public init(swift: TeamLog.SharedContentRemoveInviteesDetails) {
         self.swift = swift
@@ -56050,7 +56473,7 @@ public class DBXTeamLogSharedContentRemoveInviteesType: NSObject {
         self.swift = TeamLog.SharedContentRemoveInviteesType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRemoveInviteesType
+    public let swift: TeamLog.SharedContentRemoveInviteesType
 
     public init(swift: TeamLog.SharedContentRemoveInviteesType) {
         self.swift = swift
@@ -56072,7 +56495,7 @@ public class DBXTeamLogSharedContentRemoveLinkExpiryDetails: NSObject {
         self.swift = TeamLog.SharedContentRemoveLinkExpiryDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.SharedContentRemoveLinkExpiryDetails
+    public let swift: TeamLog.SharedContentRemoveLinkExpiryDetails
 
     public init(swift: TeamLog.SharedContentRemoveLinkExpiryDetails) {
         self.swift = swift
@@ -56094,7 +56517,7 @@ public class DBXTeamLogSharedContentRemoveLinkExpiryType: NSObject {
         self.swift = TeamLog.SharedContentRemoveLinkExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRemoveLinkExpiryType
+    public let swift: TeamLog.SharedContentRemoveLinkExpiryType
 
     public init(swift: TeamLog.SharedContentRemoveLinkExpiryType) {
         self.swift = swift
@@ -56107,7 +56530,12 @@ public class DBXTeamLogSharedContentRemoveLinkExpiryType: NSObject {
 /// Removed link password of shared file/folder.
 @objc
 public class DBXTeamLogSharedContentRemoveLinkPasswordDetails: NSObject {
-    let swift: TeamLog.SharedContentRemoveLinkPasswordDetails
+    public override init() {
+        self.swift = TeamLog.SharedContentRemoveLinkPasswordDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedContentRemoveLinkPasswordDetails
 
     public init(swift: TeamLog.SharedContentRemoveLinkPasswordDetails) {
         self.swift = swift
@@ -56129,7 +56557,7 @@ public class DBXTeamLogSharedContentRemoveLinkPasswordType: NSObject {
         self.swift = TeamLog.SharedContentRemoveLinkPasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRemoveLinkPasswordType
+    public let swift: TeamLog.SharedContentRemoveLinkPasswordType
 
     public init(swift: TeamLog.SharedContentRemoveLinkPasswordType) {
         self.swift = swift
@@ -56145,7 +56573,7 @@ public class DBXTeamLogSharedContentRemoveMemberDetails: NSObject {
     /// Shared content access level.
     @objc
     public var sharedContentAccessLevel: DBXSharingAccessLevel? { guard let swift = swift.sharedContentAccessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
+        return DBXSharingAccessLevel.factory(swift: swift)
     }
 
     @objc
@@ -56153,7 +56581,7 @@ public class DBXTeamLogSharedContentRemoveMemberDetails: NSObject {
         self.swift = TeamLog.SharedContentRemoveMemberDetails(sharedContentAccessLevel: sharedContentAccessLevel?.swift)
     }
 
-    let swift: TeamLog.SharedContentRemoveMemberDetails
+    public let swift: TeamLog.SharedContentRemoveMemberDetails
 
     public init(swift: TeamLog.SharedContentRemoveMemberDetails) {
         self.swift = swift
@@ -56175,7 +56603,7 @@ public class DBXTeamLogSharedContentRemoveMemberType: NSObject {
         self.swift = TeamLog.SharedContentRemoveMemberType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRemoveMemberType
+    public let swift: TeamLog.SharedContentRemoveMemberType
 
     public init(swift: TeamLog.SharedContentRemoveMemberType) {
         self.swift = swift
@@ -56197,7 +56625,7 @@ public class DBXTeamLogSharedContentRequestAccessDetails: NSObject {
         self.swift = TeamLog.SharedContentRequestAccessDetails(sharedContentLink: sharedContentLink)
     }
 
-    let swift: TeamLog.SharedContentRequestAccessDetails
+    public let swift: TeamLog.SharedContentRequestAccessDetails
 
     public init(swift: TeamLog.SharedContentRequestAccessDetails) {
         self.swift = swift
@@ -56219,7 +56647,7 @@ public class DBXTeamLogSharedContentRequestAccessType: NSObject {
         self.swift = TeamLog.SharedContentRequestAccessType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRequestAccessType
+    public let swift: TeamLog.SharedContentRequestAccessType
 
     public init(swift: TeamLog.SharedContentRequestAccessType) {
         self.swift = swift
@@ -56234,7 +56662,7 @@ public class DBXTeamLogSharedContentRequestAccessType: NSObject {
 public class DBXTeamLogSharedContentRestoreInviteesDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// A list of invitees.
     @objc
     public var invitees: [String] { swift.invitees }
@@ -56244,7 +56672,7 @@ public class DBXTeamLogSharedContentRestoreInviteesDetails: NSObject {
         self.swift = TeamLog.SharedContentRestoreInviteesDetails(sharedContentAccessLevel: sharedContentAccessLevel.swift, invitees: invitees)
     }
 
-    let swift: TeamLog.SharedContentRestoreInviteesDetails
+    public let swift: TeamLog.SharedContentRestoreInviteesDetails
 
     public init(swift: TeamLog.SharedContentRestoreInviteesDetails) {
         self.swift = swift
@@ -56266,7 +56694,7 @@ public class DBXTeamLogSharedContentRestoreInviteesType: NSObject {
         self.swift = TeamLog.SharedContentRestoreInviteesType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRestoreInviteesType
+    public let swift: TeamLog.SharedContentRestoreInviteesType
 
     public init(swift: TeamLog.SharedContentRestoreInviteesType) {
         self.swift = swift
@@ -56281,14 +56709,14 @@ public class DBXTeamLogSharedContentRestoreInviteesType: NSObject {
 public class DBXTeamLogSharedContentRestoreMemberDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
 
     @objc
     public init(sharedContentAccessLevel: DBXSharingAccessLevel) {
         self.swift = TeamLog.SharedContentRestoreMemberDetails(sharedContentAccessLevel: sharedContentAccessLevel.swift)
     }
 
-    let swift: TeamLog.SharedContentRestoreMemberDetails
+    public let swift: TeamLog.SharedContentRestoreMemberDetails
 
     public init(swift: TeamLog.SharedContentRestoreMemberDetails) {
         self.swift = swift
@@ -56310,7 +56738,7 @@ public class DBXTeamLogSharedContentRestoreMemberType: NSObject {
         self.swift = TeamLog.SharedContentRestoreMemberType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentRestoreMemberType
+    public let swift: TeamLog.SharedContentRestoreMemberType
 
     public init(swift: TeamLog.SharedContentRestoreMemberType) {
         self.swift = swift
@@ -56323,7 +56751,12 @@ public class DBXTeamLogSharedContentRestoreMemberType: NSObject {
 /// Unshared file/folder by clearing membership.
 @objc
 public class DBXTeamLogSharedContentUnshareDetails: NSObject {
-    let swift: TeamLog.SharedContentUnshareDetails
+    public override init() {
+        self.swift = TeamLog.SharedContentUnshareDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedContentUnshareDetails
 
     public init(swift: TeamLog.SharedContentUnshareDetails) {
         self.swift = swift
@@ -56345,7 +56778,7 @@ public class DBXTeamLogSharedContentUnshareType: NSObject {
         self.swift = TeamLog.SharedContentUnshareType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentUnshareType
+    public let swift: TeamLog.SharedContentUnshareType
 
     public init(swift: TeamLog.SharedContentUnshareType) {
         self.swift = swift
@@ -56369,7 +56802,7 @@ public class DBXTeamLogSharedContentViewDetails: NSObject {
 
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
 
     @objc
     public init(sharedContentLink: String, sharedContentAccessLevel: DBXSharingAccessLevel, sharedContentOwner: DBXTeamLogUserLogInfo?) {
@@ -56380,7 +56813,7 @@ public class DBXTeamLogSharedContentViewDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedContentViewDetails
+    public let swift: TeamLog.SharedContentViewDetails
 
     public init(swift: TeamLog.SharedContentViewDetails) {
         self.swift = swift
@@ -56402,7 +56835,7 @@ public class DBXTeamLogSharedContentViewType: NSObject {
         self.swift = TeamLog.SharedContentViewType(description_: description_)
     }
 
-    let swift: TeamLog.SharedContentViewType
+    public let swift: TeamLog.SharedContentViewType
 
     public init(swift: TeamLog.SharedContentViewType) {
         self.swift = swift
@@ -56417,11 +56850,11 @@ public class DBXTeamLogSharedContentViewType: NSObject {
 public class DBXTeamLogSharedFolderChangeLinkPolicyDetails: NSObject {
     /// New shared folder link policy.
     @objc
-    public var newValue: DBXSharingSharedLinkPolicy { DBXSharingSharedLinkPolicy(swift: swift.newValue) }
+    public var newValue: DBXSharingSharedLinkPolicy { DBXSharingSharedLinkPolicy.factory(swift: swift.newValue) }
     /// Previous shared folder link policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXSharingSharedLinkPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingSharedLinkPolicy(swift: swift)
+        return DBXSharingSharedLinkPolicy.factory(swift: swift)
     }
 
     @objc
@@ -56429,7 +56862,7 @@ public class DBXTeamLogSharedFolderChangeLinkPolicyDetails: NSObject {
         self.swift = TeamLog.SharedFolderChangeLinkPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedFolderChangeLinkPolicyDetails
+    public let swift: TeamLog.SharedFolderChangeLinkPolicyDetails
 
     public init(swift: TeamLog.SharedFolderChangeLinkPolicyDetails) {
         self.swift = swift
@@ -56451,7 +56884,7 @@ public class DBXTeamLogSharedFolderChangeLinkPolicyType: NSObject {
         self.swift = TeamLog.SharedFolderChangeLinkPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderChangeLinkPolicyType
+    public let swift: TeamLog.SharedFolderChangeLinkPolicyType
 
     public init(swift: TeamLog.SharedFolderChangeLinkPolicyType) {
         self.swift = swift
@@ -56466,11 +56899,11 @@ public class DBXTeamLogSharedFolderChangeLinkPolicyType: NSObject {
 public class DBXTeamLogSharedFolderChangeMembersInheritancePolicyDetails: NSObject {
     /// New member inheritance policy.
     @objc
-    public var newValue: DBXTeamLogSharedFolderMembersInheritancePolicy { DBXTeamLogSharedFolderMembersInheritancePolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSharedFolderMembersInheritancePolicy { DBXTeamLogSharedFolderMembersInheritancePolicy.factory(swift: swift.newValue) }
     /// Previous member inheritance policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogSharedFolderMembersInheritancePolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogSharedFolderMembersInheritancePolicy(swift: swift)
+        return DBXTeamLogSharedFolderMembersInheritancePolicy.factory(swift: swift)
     }
 
     @objc
@@ -56478,7 +56911,7 @@ public class DBXTeamLogSharedFolderChangeMembersInheritancePolicyDetails: NSObje
         self.swift = TeamLog.SharedFolderChangeMembersInheritancePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersInheritancePolicyDetails
+    public let swift: TeamLog.SharedFolderChangeMembersInheritancePolicyDetails
 
     public init(swift: TeamLog.SharedFolderChangeMembersInheritancePolicyDetails) {
         self.swift = swift
@@ -56500,7 +56933,7 @@ public class DBXTeamLogSharedFolderChangeMembersInheritancePolicyType: NSObject 
         self.swift = TeamLog.SharedFolderChangeMembersInheritancePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersInheritancePolicyType
+    public let swift: TeamLog.SharedFolderChangeMembersInheritancePolicyType
 
     public init(swift: TeamLog.SharedFolderChangeMembersInheritancePolicyType) {
         self.swift = swift
@@ -56515,11 +56948,11 @@ public class DBXTeamLogSharedFolderChangeMembersInheritancePolicyType: NSObject 
 public class DBXTeamLogSharedFolderChangeMembersManagementPolicyDetails: NSObject {
     /// New members management policy.
     @objc
-    public var newValue: DBXSharingAclUpdatePolicy { DBXSharingAclUpdatePolicy(swift: swift.newValue) }
+    public var newValue: DBXSharingAclUpdatePolicy { DBXSharingAclUpdatePolicy.factory(swift: swift.newValue) }
     /// Previous members management policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXSharingAclUpdatePolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingAclUpdatePolicy(swift: swift)
+        return DBXSharingAclUpdatePolicy.factory(swift: swift)
     }
 
     @objc
@@ -56527,7 +56960,7 @@ public class DBXTeamLogSharedFolderChangeMembersManagementPolicyDetails: NSObjec
         self.swift = TeamLog.SharedFolderChangeMembersManagementPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersManagementPolicyDetails
+    public let swift: TeamLog.SharedFolderChangeMembersManagementPolicyDetails
 
     public init(swift: TeamLog.SharedFolderChangeMembersManagementPolicyDetails) {
         self.swift = swift
@@ -56549,7 +56982,7 @@ public class DBXTeamLogSharedFolderChangeMembersManagementPolicyType: NSObject {
         self.swift = TeamLog.SharedFolderChangeMembersManagementPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersManagementPolicyType
+    public let swift: TeamLog.SharedFolderChangeMembersManagementPolicyType
 
     public init(swift: TeamLog.SharedFolderChangeMembersManagementPolicyType) {
         self.swift = swift
@@ -56564,11 +56997,11 @@ public class DBXTeamLogSharedFolderChangeMembersManagementPolicyType: NSObject {
 public class DBXTeamLogSharedFolderChangeMembersPolicyDetails: NSObject {
     /// New external invite policy.
     @objc
-    public var newValue: DBXSharingMemberPolicy { DBXSharingMemberPolicy(swift: swift.newValue) }
+    public var newValue: DBXSharingMemberPolicy { DBXSharingMemberPolicy.factory(swift: swift.newValue) }
     /// Previous external invite policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXSharingMemberPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingMemberPolicy(swift: swift)
+        return DBXSharingMemberPolicy.factory(swift: swift)
     }
 
     @objc
@@ -56576,7 +57009,7 @@ public class DBXTeamLogSharedFolderChangeMembersPolicyDetails: NSObject {
         self.swift = TeamLog.SharedFolderChangeMembersPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersPolicyDetails
+    public let swift: TeamLog.SharedFolderChangeMembersPolicyDetails
 
     public init(swift: TeamLog.SharedFolderChangeMembersPolicyDetails) {
         self.swift = swift
@@ -56598,7 +57031,7 @@ public class DBXTeamLogSharedFolderChangeMembersPolicyType: NSObject {
         self.swift = TeamLog.SharedFolderChangeMembersPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderChangeMembersPolicyType
+    public let swift: TeamLog.SharedFolderChangeMembersPolicyType
 
     public init(swift: TeamLog.SharedFolderChangeMembersPolicyType) {
         self.swift = swift
@@ -56620,7 +57053,7 @@ public class DBXTeamLogSharedFolderCreateDetails: NSObject {
         self.swift = TeamLog.SharedFolderCreateDetails(targetNsId: targetNsId)
     }
 
-    let swift: TeamLog.SharedFolderCreateDetails
+    public let swift: TeamLog.SharedFolderCreateDetails
 
     public init(swift: TeamLog.SharedFolderCreateDetails) {
         self.swift = swift
@@ -56642,7 +57075,7 @@ public class DBXTeamLogSharedFolderCreateType: NSObject {
         self.swift = TeamLog.SharedFolderCreateType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderCreateType
+    public let swift: TeamLog.SharedFolderCreateType
 
     public init(swift: TeamLog.SharedFolderCreateType) {
         self.swift = swift
@@ -56655,7 +57088,12 @@ public class DBXTeamLogSharedFolderCreateType: NSObject {
 /// Declined team member's invite to shared folder.
 @objc
 public class DBXTeamLogSharedFolderDeclineInvitationDetails: NSObject {
-    let swift: TeamLog.SharedFolderDeclineInvitationDetails
+    public override init() {
+        self.swift = TeamLog.SharedFolderDeclineInvitationDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedFolderDeclineInvitationDetails
 
     public init(swift: TeamLog.SharedFolderDeclineInvitationDetails) {
         self.swift = swift
@@ -56677,7 +57115,7 @@ public class DBXTeamLogSharedFolderDeclineInvitationType: NSObject {
         self.swift = TeamLog.SharedFolderDeclineInvitationType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderDeclineInvitationType
+    public let swift: TeamLog.SharedFolderDeclineInvitationType
 
     public init(swift: TeamLog.SharedFolderDeclineInvitationType) {
         self.swift = swift
@@ -56690,9 +57128,9 @@ public class DBXTeamLogSharedFolderDeclineInvitationType: NSObject {
 /// Specifies if a shared folder inherits its members from the parent folder.
 @objc
 public class DBXTeamLogSharedFolderMembersInheritancePolicy: NSObject {
-    let swift: TeamLog.SharedFolderMembersInheritancePolicy
+    public let swift: TeamLog.SharedFolderMembersInheritancePolicy
 
-    public init(swift: TeamLog.SharedFolderMembersInheritancePolicy) {
+    fileprivate init(swift: TeamLog.SharedFolderMembersInheritancePolicy) {
         self.swift = swift
     }
 
@@ -56759,7 +57197,12 @@ public class DBXTeamLogSharedFolderMembersInheritancePolicyOther: DBXTeamLogShar
 /// Added shared folder to own Dropbox.
 @objc
 public class DBXTeamLogSharedFolderMountDetails: NSObject {
-    let swift: TeamLog.SharedFolderMountDetails
+    public override init() {
+        self.swift = TeamLog.SharedFolderMountDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedFolderMountDetails
 
     public init(swift: TeamLog.SharedFolderMountDetails) {
         self.swift = swift
@@ -56781,7 +57224,7 @@ public class DBXTeamLogSharedFolderMountType: NSObject {
         self.swift = TeamLog.SharedFolderMountType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderMountType
+    public let swift: TeamLog.SharedFolderMountType
 
     public init(swift: TeamLog.SharedFolderMountType) {
         self.swift = swift
@@ -56817,7 +57260,7 @@ public class DBXTeamLogSharedFolderNestDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedFolderNestDetails
+    public let swift: TeamLog.SharedFolderNestDetails
 
     public init(swift: TeamLog.SharedFolderNestDetails) {
         self.swift = swift
@@ -56839,7 +57282,7 @@ public class DBXTeamLogSharedFolderNestType: NSObject {
         self.swift = TeamLog.SharedFolderNestType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderNestType
+    public let swift: TeamLog.SharedFolderNestType
 
     public init(swift: TeamLog.SharedFolderNestType) {
         self.swift = swift
@@ -56864,7 +57307,7 @@ public class DBXTeamLogSharedFolderTransferOwnershipDetails: NSObject {
         self.swift = TeamLog.SharedFolderTransferOwnershipDetails(newOwnerEmail: newOwnerEmail, previousOwnerEmail: previousOwnerEmail)
     }
 
-    let swift: TeamLog.SharedFolderTransferOwnershipDetails
+    public let swift: TeamLog.SharedFolderTransferOwnershipDetails
 
     public init(swift: TeamLog.SharedFolderTransferOwnershipDetails) {
         self.swift = swift
@@ -56886,7 +57329,7 @@ public class DBXTeamLogSharedFolderTransferOwnershipType: NSObject {
         self.swift = TeamLog.SharedFolderTransferOwnershipType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderTransferOwnershipType
+    public let swift: TeamLog.SharedFolderTransferOwnershipType
 
     public init(swift: TeamLog.SharedFolderTransferOwnershipType) {
         self.swift = swift
@@ -56899,7 +57342,12 @@ public class DBXTeamLogSharedFolderTransferOwnershipType: NSObject {
 /// Deleted shared folder from Dropbox.
 @objc
 public class DBXTeamLogSharedFolderUnmountDetails: NSObject {
-    let swift: TeamLog.SharedFolderUnmountDetails
+    public override init() {
+        self.swift = TeamLog.SharedFolderUnmountDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedFolderUnmountDetails
 
     public init(swift: TeamLog.SharedFolderUnmountDetails) {
         self.swift = swift
@@ -56921,7 +57369,7 @@ public class DBXTeamLogSharedFolderUnmountType: NSObject {
         self.swift = TeamLog.SharedFolderUnmountType(description_: description_)
     }
 
-    let swift: TeamLog.SharedFolderUnmountType
+    public let swift: TeamLog.SharedFolderUnmountType
 
     public init(swift: TeamLog.SharedFolderUnmountType) {
         self.swift = swift
@@ -56934,9 +57382,9 @@ public class DBXTeamLogSharedFolderUnmountType: NSObject {
 /// Shared link access level.
 @objc
 public class DBXTeamLogSharedLinkAccessLevel: NSObject {
-    let swift: TeamLog.SharedLinkAccessLevel
+    public let swift: TeamLog.SharedLinkAccessLevel
 
-    public init(swift: TeamLog.SharedLinkAccessLevel) {
+    fileprivate init(swift: TeamLog.SharedLinkAccessLevel) {
         self.swift = swift
     }
 
@@ -57029,7 +57477,7 @@ public class DBXTeamLogSharedLinkAddExpiryDetails: NSObject {
         self.swift = TeamLog.SharedLinkAddExpiryDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.SharedLinkAddExpiryDetails
+    public let swift: TeamLog.SharedLinkAddExpiryDetails
 
     public init(swift: TeamLog.SharedLinkAddExpiryDetails) {
         self.swift = swift
@@ -57051,7 +57499,7 @@ public class DBXTeamLogSharedLinkAddExpiryType: NSObject {
         self.swift = TeamLog.SharedLinkAddExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkAddExpiryType
+    public let swift: TeamLog.SharedLinkAddExpiryType
 
     public init(swift: TeamLog.SharedLinkAddExpiryType) {
         self.swift = swift
@@ -57076,7 +57524,7 @@ public class DBXTeamLogSharedLinkChangeExpiryDetails: NSObject {
         self.swift = TeamLog.SharedLinkChangeExpiryDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.SharedLinkChangeExpiryDetails
+    public let swift: TeamLog.SharedLinkChangeExpiryDetails
 
     public init(swift: TeamLog.SharedLinkChangeExpiryDetails) {
         self.swift = swift
@@ -57098,7 +57546,7 @@ public class DBXTeamLogSharedLinkChangeExpiryType: NSObject {
         self.swift = TeamLog.SharedLinkChangeExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkChangeExpiryType
+    public let swift: TeamLog.SharedLinkChangeExpiryType
 
     public init(swift: TeamLog.SharedLinkChangeExpiryType) {
         self.swift = swift
@@ -57113,11 +57561,11 @@ public class DBXTeamLogSharedLinkChangeExpiryType: NSObject {
 public class DBXTeamLogSharedLinkChangeVisibilityDetails: NSObject {
     /// New shared link visibility.
     @objc
-    public var newValue: DBXTeamLogSharedLinkVisibility { DBXTeamLogSharedLinkVisibility(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSharedLinkVisibility { DBXTeamLogSharedLinkVisibility.factory(swift: swift.newValue) }
     /// Previous shared link visibility. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogSharedLinkVisibility? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogSharedLinkVisibility(swift: swift)
+        return DBXTeamLogSharedLinkVisibility.factory(swift: swift)
     }
 
     @objc
@@ -57125,7 +57573,7 @@ public class DBXTeamLogSharedLinkChangeVisibilityDetails: NSObject {
         self.swift = TeamLog.SharedLinkChangeVisibilityDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharedLinkChangeVisibilityDetails
+    public let swift: TeamLog.SharedLinkChangeVisibilityDetails
 
     public init(swift: TeamLog.SharedLinkChangeVisibilityDetails) {
         self.swift = swift
@@ -57147,7 +57595,7 @@ public class DBXTeamLogSharedLinkChangeVisibilityType: NSObject {
         self.swift = TeamLog.SharedLinkChangeVisibilityType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkChangeVisibilityType
+    public let swift: TeamLog.SharedLinkChangeVisibilityType
 
     public init(swift: TeamLog.SharedLinkChangeVisibilityType) {
         self.swift = swift
@@ -57171,7 +57619,7 @@ public class DBXTeamLogSharedLinkCopyDetails: NSObject {
         self.swift = TeamLog.SharedLinkCopyDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.SharedLinkCopyDetails
+    public let swift: TeamLog.SharedLinkCopyDetails
 
     public init(swift: TeamLog.SharedLinkCopyDetails) {
         self.swift = swift
@@ -57193,7 +57641,7 @@ public class DBXTeamLogSharedLinkCopyType: NSObject {
         self.swift = TeamLog.SharedLinkCopyType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkCopyType
+    public let swift: TeamLog.SharedLinkCopyType
 
     public init(swift: TeamLog.SharedLinkCopyType) {
         self.swift = swift
@@ -57209,7 +57657,7 @@ public class DBXTeamLogSharedLinkCreateDetails: NSObject {
     /// Defines who can access the shared link. Might be missing due to historical data gap.
     @objc
     public var sharedLinkAccessLevel: DBXTeamLogSharedLinkAccessLevel? { guard let swift = swift.sharedLinkAccessLevel else { return nil }
-        return DBXTeamLogSharedLinkAccessLevel(swift: swift)
+        return DBXTeamLogSharedLinkAccessLevel.factory(swift: swift)
     }
 
     @objc
@@ -57217,7 +57665,7 @@ public class DBXTeamLogSharedLinkCreateDetails: NSObject {
         self.swift = TeamLog.SharedLinkCreateDetails(sharedLinkAccessLevel: sharedLinkAccessLevel?.swift)
     }
 
-    let swift: TeamLog.SharedLinkCreateDetails
+    public let swift: TeamLog.SharedLinkCreateDetails
 
     public init(swift: TeamLog.SharedLinkCreateDetails) {
         self.swift = swift
@@ -57239,7 +57687,7 @@ public class DBXTeamLogSharedLinkCreateType: NSObject {
         self.swift = TeamLog.SharedLinkCreateType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkCreateType
+    public let swift: TeamLog.SharedLinkCreateType
 
     public init(swift: TeamLog.SharedLinkCreateType) {
         self.swift = swift
@@ -57263,7 +57711,7 @@ public class DBXTeamLogSharedLinkDisableDetails: NSObject {
         self.swift = TeamLog.SharedLinkDisableDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.SharedLinkDisableDetails
+    public let swift: TeamLog.SharedLinkDisableDetails
 
     public init(swift: TeamLog.SharedLinkDisableDetails) {
         self.swift = swift
@@ -57285,7 +57733,7 @@ public class DBXTeamLogSharedLinkDisableType: NSObject {
         self.swift = TeamLog.SharedLinkDisableType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkDisableType
+    public let swift: TeamLog.SharedLinkDisableType
 
     public init(swift: TeamLog.SharedLinkDisableType) {
         self.swift = swift
@@ -57309,7 +57757,7 @@ public class DBXTeamLogSharedLinkDownloadDetails: NSObject {
         self.swift = TeamLog.SharedLinkDownloadDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.SharedLinkDownloadDetails
+    public let swift: TeamLog.SharedLinkDownloadDetails
 
     public init(swift: TeamLog.SharedLinkDownloadDetails) {
         self.swift = swift
@@ -57331,7 +57779,7 @@ public class DBXTeamLogSharedLinkDownloadType: NSObject {
         self.swift = TeamLog.SharedLinkDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkDownloadType
+    public let swift: TeamLog.SharedLinkDownloadType
 
     public init(swift: TeamLog.SharedLinkDownloadType) {
         self.swift = swift
@@ -57353,7 +57801,7 @@ public class DBXTeamLogSharedLinkRemoveExpiryDetails: NSObject {
         self.swift = TeamLog.SharedLinkRemoveExpiryDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.SharedLinkRemoveExpiryDetails
+    public let swift: TeamLog.SharedLinkRemoveExpiryDetails
 
     public init(swift: TeamLog.SharedLinkRemoveExpiryDetails) {
         self.swift = swift
@@ -57375,7 +57823,7 @@ public class DBXTeamLogSharedLinkRemoveExpiryType: NSObject {
         self.swift = TeamLog.SharedLinkRemoveExpiryType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkRemoveExpiryType
+    public let swift: TeamLog.SharedLinkRemoveExpiryType
 
     public init(swift: TeamLog.SharedLinkRemoveExpiryType) {
         self.swift = swift
@@ -57390,7 +57838,7 @@ public class DBXTeamLogSharedLinkRemoveExpiryType: NSObject {
 public class DBXTeamLogSharedLinkSettingsAddExpirationDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57407,7 +57855,7 @@ public class DBXTeamLogSharedLinkSettingsAddExpirationDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsAddExpirationDetails
+    public let swift: TeamLog.SharedLinkSettingsAddExpirationDetails
 
     public init(swift: TeamLog.SharedLinkSettingsAddExpirationDetails) {
         self.swift = swift
@@ -57429,7 +57877,7 @@ public class DBXTeamLogSharedLinkSettingsAddExpirationType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsAddExpirationType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsAddExpirationType
+    public let swift: TeamLog.SharedLinkSettingsAddExpirationType
 
     public init(swift: TeamLog.SharedLinkSettingsAddExpirationType) {
         self.swift = swift
@@ -57444,7 +57892,7 @@ public class DBXTeamLogSharedLinkSettingsAddExpirationType: NSObject {
 public class DBXTeamLogSharedLinkSettingsAddPasswordDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57457,7 +57905,7 @@ public class DBXTeamLogSharedLinkSettingsAddPasswordDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsAddPasswordDetails
+    public let swift: TeamLog.SharedLinkSettingsAddPasswordDetails
 
     public init(swift: TeamLog.SharedLinkSettingsAddPasswordDetails) {
         self.swift = swift
@@ -57479,7 +57927,7 @@ public class DBXTeamLogSharedLinkSettingsAddPasswordType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsAddPasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsAddPasswordType
+    public let swift: TeamLog.SharedLinkSettingsAddPasswordType
 
     public init(swift: TeamLog.SharedLinkSettingsAddPasswordType) {
         self.swift = swift
@@ -57494,7 +57942,7 @@ public class DBXTeamLogSharedLinkSettingsAddPasswordType: NSObject {
 public class DBXTeamLogSharedLinkSettingsAllowDownloadDisabledDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57507,7 +57955,7 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadDisabledDetails: NSObject 
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledDetails
+    public let swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledDetails
 
     public init(swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledDetails) {
         self.swift = swift
@@ -57529,7 +57977,7 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadDisabledType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsAllowDownloadDisabledType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledType
+    public let swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledType
 
     public init(swift: TeamLog.SharedLinkSettingsAllowDownloadDisabledType) {
         self.swift = swift
@@ -57544,7 +57992,7 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadDisabledType: NSObject {
 public class DBXTeamLogSharedLinkSettingsAllowDownloadEnabledDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57557,7 +58005,7 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadEnabledDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledDetails
+    public let swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledDetails
 
     public init(swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledDetails) {
         self.swift = swift
@@ -57579,7 +58027,7 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadEnabledType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsAllowDownloadEnabledType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledType
+    public let swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledType
 
     public init(swift: TeamLog.SharedLinkSettingsAllowDownloadEnabledType) {
         self.swift = swift
@@ -57594,17 +58042,17 @@ public class DBXTeamLogSharedLinkSettingsAllowDownloadEnabledType: NSObject {
 public class DBXTeamLogSharedLinkSettingsChangeAudienceDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
     /// New link audience value.
     @objc
-    public var newValue: DBXSharingLinkAudience { DBXSharingLinkAudience(swift: swift.newValue) }
+    public var newValue: DBXSharingLinkAudience { DBXSharingLinkAudience.factory(swift: swift.newValue) }
     /// Previous link audience value.
     @objc
     public var previousValue: DBXSharingLinkAudience? { guard let swift = swift.previousValue else { return nil }
-        return DBXSharingLinkAudience(swift: swift)
+        return DBXSharingLinkAudience.factory(swift: swift)
     }
 
     @objc
@@ -57622,7 +58070,7 @@ public class DBXTeamLogSharedLinkSettingsChangeAudienceDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangeAudienceDetails
+    public let swift: TeamLog.SharedLinkSettingsChangeAudienceDetails
 
     public init(swift: TeamLog.SharedLinkSettingsChangeAudienceDetails) {
         self.swift = swift
@@ -57644,7 +58092,7 @@ public class DBXTeamLogSharedLinkSettingsChangeAudienceType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsChangeAudienceType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangeAudienceType
+    public let swift: TeamLog.SharedLinkSettingsChangeAudienceType
 
     public init(swift: TeamLog.SharedLinkSettingsChangeAudienceType) {
         self.swift = swift
@@ -57659,7 +58107,7 @@ public class DBXTeamLogSharedLinkSettingsChangeAudienceType: NSObject {
 public class DBXTeamLogSharedLinkSettingsChangeExpirationDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57680,7 +58128,7 @@ public class DBXTeamLogSharedLinkSettingsChangeExpirationDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangeExpirationDetails
+    public let swift: TeamLog.SharedLinkSettingsChangeExpirationDetails
 
     public init(swift: TeamLog.SharedLinkSettingsChangeExpirationDetails) {
         self.swift = swift
@@ -57702,7 +58150,7 @@ public class DBXTeamLogSharedLinkSettingsChangeExpirationType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsChangeExpirationType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangeExpirationType
+    public let swift: TeamLog.SharedLinkSettingsChangeExpirationType
 
     public init(swift: TeamLog.SharedLinkSettingsChangeExpirationType) {
         self.swift = swift
@@ -57717,7 +58165,7 @@ public class DBXTeamLogSharedLinkSettingsChangeExpirationType: NSObject {
 public class DBXTeamLogSharedLinkSettingsChangePasswordDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57730,7 +58178,7 @@ public class DBXTeamLogSharedLinkSettingsChangePasswordDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangePasswordDetails
+    public let swift: TeamLog.SharedLinkSettingsChangePasswordDetails
 
     public init(swift: TeamLog.SharedLinkSettingsChangePasswordDetails) {
         self.swift = swift
@@ -57752,7 +58200,7 @@ public class DBXTeamLogSharedLinkSettingsChangePasswordType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsChangePasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsChangePasswordType
+    public let swift: TeamLog.SharedLinkSettingsChangePasswordType
 
     public init(swift: TeamLog.SharedLinkSettingsChangePasswordType) {
         self.swift = swift
@@ -57767,7 +58215,7 @@ public class DBXTeamLogSharedLinkSettingsChangePasswordType: NSObject {
 public class DBXTeamLogSharedLinkSettingsRemoveExpirationDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57784,7 +58232,7 @@ public class DBXTeamLogSharedLinkSettingsRemoveExpirationDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsRemoveExpirationDetails
+    public let swift: TeamLog.SharedLinkSettingsRemoveExpirationDetails
 
     public init(swift: TeamLog.SharedLinkSettingsRemoveExpirationDetails) {
         self.swift = swift
@@ -57806,7 +58254,7 @@ public class DBXTeamLogSharedLinkSettingsRemoveExpirationType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsRemoveExpirationType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsRemoveExpirationType
+    public let swift: TeamLog.SharedLinkSettingsRemoveExpirationType
 
     public init(swift: TeamLog.SharedLinkSettingsRemoveExpirationType) {
         self.swift = swift
@@ -57821,7 +58269,7 @@ public class DBXTeamLogSharedLinkSettingsRemoveExpirationType: NSObject {
 public class DBXTeamLogSharedLinkSettingsRemovePasswordDetails: NSObject {
     /// Shared content access level.
     @objc
-    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.sharedContentAccessLevel) }
+    public var sharedContentAccessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel.factory(swift: swift.sharedContentAccessLevel) }
     /// Shared content link.
     @objc
     public var sharedContentLink: String? { swift.sharedContentLink }
@@ -57834,7 +58282,7 @@ public class DBXTeamLogSharedLinkSettingsRemovePasswordDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SharedLinkSettingsRemovePasswordDetails
+    public let swift: TeamLog.SharedLinkSettingsRemovePasswordDetails
 
     public init(swift: TeamLog.SharedLinkSettingsRemovePasswordDetails) {
         self.swift = swift
@@ -57856,7 +58304,7 @@ public class DBXTeamLogSharedLinkSettingsRemovePasswordType: NSObject {
         self.swift = TeamLog.SharedLinkSettingsRemovePasswordType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkSettingsRemovePasswordType
+    public let swift: TeamLog.SharedLinkSettingsRemovePasswordType
 
     public init(swift: TeamLog.SharedLinkSettingsRemovePasswordType) {
         self.swift = swift
@@ -57884,7 +58332,7 @@ public class DBXTeamLogSharedLinkShareDetails: NSObject {
         self.swift = TeamLog.SharedLinkShareDetails(sharedLinkOwner: sharedLinkOwner?.swift, externalUsers: externalUsers?.map(\.swift))
     }
 
-    let swift: TeamLog.SharedLinkShareDetails
+    public let swift: TeamLog.SharedLinkShareDetails
 
     public init(swift: TeamLog.SharedLinkShareDetails) {
         self.swift = swift
@@ -57906,7 +58354,7 @@ public class DBXTeamLogSharedLinkShareType: NSObject {
         self.swift = TeamLog.SharedLinkShareType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkShareType
+    public let swift: TeamLog.SharedLinkShareType
 
     public init(swift: TeamLog.SharedLinkShareType) {
         self.swift = swift
@@ -57930,7 +58378,7 @@ public class DBXTeamLogSharedLinkViewDetails: NSObject {
         self.swift = TeamLog.SharedLinkViewDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.SharedLinkViewDetails
+    public let swift: TeamLog.SharedLinkViewDetails
 
     public init(swift: TeamLog.SharedLinkViewDetails) {
         self.swift = swift
@@ -57952,7 +58400,7 @@ public class DBXTeamLogSharedLinkViewType: NSObject {
         self.swift = TeamLog.SharedLinkViewType(description_: description_)
     }
 
-    let swift: TeamLog.SharedLinkViewType
+    public let swift: TeamLog.SharedLinkViewType
 
     public init(swift: TeamLog.SharedLinkViewType) {
         self.swift = swift
@@ -57965,9 +58413,9 @@ public class DBXTeamLogSharedLinkViewType: NSObject {
 /// Defines who has access to a shared link.
 @objc
 public class DBXTeamLogSharedLinkVisibility: NSObject {
-    let swift: TeamLog.SharedLinkVisibility
+    public let swift: TeamLog.SharedLinkVisibility
 
-    public init(swift: TeamLog.SharedLinkVisibility) {
+    fileprivate init(swift: TeamLog.SharedLinkVisibility) {
         self.swift = swift
     }
 
@@ -58068,7 +58516,12 @@ public class DBXTeamLogSharedLinkVisibilityOther: DBXTeamLogSharedLinkVisibility
 /// Opened shared Paper doc.
 @objc
 public class DBXTeamLogSharedNoteOpenedDetails: NSObject {
-    let swift: TeamLog.SharedNoteOpenedDetails
+    public override init() {
+        self.swift = TeamLog.SharedNoteOpenedDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SharedNoteOpenedDetails
 
     public init(swift: TeamLog.SharedNoteOpenedDetails) {
         self.swift = swift
@@ -58090,7 +58543,7 @@ public class DBXTeamLogSharedNoteOpenedType: NSObject {
         self.swift = TeamLog.SharedNoteOpenedType(description_: description_)
     }
 
-    let swift: TeamLog.SharedNoteOpenedType
+    public let swift: TeamLog.SharedNoteOpenedType
 
     public init(swift: TeamLog.SharedNoteOpenedType) {
         self.swift = swift
@@ -58105,11 +58558,11 @@ public class DBXTeamLogSharedNoteOpenedType: NSObject {
 public class DBXTeamLogSharingChangeFolderJoinPolicyDetails: NSObject {
     /// New external join policy.
     @objc
-    public var newValue: DBXTeamLogSharingFolderJoinPolicy { DBXTeamLogSharingFolderJoinPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSharingFolderJoinPolicy { DBXTeamLogSharingFolderJoinPolicy.factory(swift: swift.newValue) }
     /// Previous external join policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogSharingFolderJoinPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogSharingFolderJoinPolicy(swift: swift)
+        return DBXTeamLogSharingFolderJoinPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58117,7 +58570,7 @@ public class DBXTeamLogSharingChangeFolderJoinPolicyDetails: NSObject {
         self.swift = TeamLog.SharingChangeFolderJoinPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeFolderJoinPolicyDetails
+    public let swift: TeamLog.SharingChangeFolderJoinPolicyDetails
 
     public init(swift: TeamLog.SharingChangeFolderJoinPolicyDetails) {
         self.swift = swift
@@ -58139,7 +58592,7 @@ public class DBXTeamLogSharingChangeFolderJoinPolicyType: NSObject {
         self.swift = TeamLog.SharingChangeFolderJoinPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeFolderJoinPolicyType
+    public let swift: TeamLog.SharingChangeFolderJoinPolicyType
 
     public init(swift: TeamLog.SharingChangeFolderJoinPolicyType) {
         self.swift = swift
@@ -58154,11 +58607,11 @@ public class DBXTeamLogSharingChangeFolderJoinPolicyType: NSObject {
 public class DBXTeamLogSharingChangeLinkAllowChangeExpirationPolicyDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogEnforceLinkPasswordPolicy { DBXTeamLogEnforceLinkPasswordPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogEnforceLinkPasswordPolicy { DBXTeamLogEnforceLinkPasswordPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
     public var previousValue: DBXTeamLogEnforceLinkPasswordPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogEnforceLinkPasswordPolicy(swift: swift)
+        return DBXTeamLogEnforceLinkPasswordPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58166,7 +58619,7 @@ public class DBXTeamLogSharingChangeLinkAllowChangeExpirationPolicyDetails: NSOb
         self.swift = TeamLog.SharingChangeLinkAllowChangeExpirationPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyDetails
+    public let swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyDetails
 
     public init(swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyDetails) {
         self.swift = swift
@@ -58188,7 +58641,7 @@ public class DBXTeamLogSharingChangeLinkAllowChangeExpirationPolicyType: NSObjec
         self.swift = TeamLog.SharingChangeLinkAllowChangeExpirationPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyType
+    public let swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyType
 
     public init(swift: TeamLog.SharingChangeLinkAllowChangeExpirationPolicyType) {
         self.swift = swift
@@ -58203,11 +58656,11 @@ public class DBXTeamLogSharingChangeLinkAllowChangeExpirationPolicyType: NSObjec
 public class DBXTeamLogSharingChangeLinkDefaultExpirationPolicyDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogDefaultLinkExpirationDaysPolicy { DBXTeamLogDefaultLinkExpirationDaysPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogDefaultLinkExpirationDaysPolicy { DBXTeamLogDefaultLinkExpirationDaysPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
     public var previousValue: DBXTeamLogDefaultLinkExpirationDaysPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogDefaultLinkExpirationDaysPolicy(swift: swift)
+        return DBXTeamLogDefaultLinkExpirationDaysPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58215,7 +58668,7 @@ public class DBXTeamLogSharingChangeLinkDefaultExpirationPolicyDetails: NSObject
         self.swift = TeamLog.SharingChangeLinkDefaultExpirationPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyDetails
+    public let swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyDetails
 
     public init(swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyDetails) {
         self.swift = swift
@@ -58237,7 +58690,7 @@ public class DBXTeamLogSharingChangeLinkDefaultExpirationPolicyType: NSObject {
         self.swift = TeamLog.SharingChangeLinkDefaultExpirationPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyType
+    public let swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyType
 
     public init(swift: TeamLog.SharingChangeLinkDefaultExpirationPolicyType) {
         self.swift = swift
@@ -58252,11 +58705,11 @@ public class DBXTeamLogSharingChangeLinkDefaultExpirationPolicyType: NSObject {
 public class DBXTeamLogSharingChangeLinkEnforcePasswordPolicyDetails: NSObject {
     /// To.
     @objc
-    public var newValue: DBXTeamLogChangeLinkExpirationPolicy { DBXTeamLogChangeLinkExpirationPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogChangeLinkExpirationPolicy { DBXTeamLogChangeLinkExpirationPolicy.factory(swift: swift.newValue) }
     /// From.
     @objc
     public var previousValue: DBXTeamLogChangeLinkExpirationPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogChangeLinkExpirationPolicy(swift: swift)
+        return DBXTeamLogChangeLinkExpirationPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58264,7 +58717,7 @@ public class DBXTeamLogSharingChangeLinkEnforcePasswordPolicyDetails: NSObject {
         self.swift = TeamLog.SharingChangeLinkEnforcePasswordPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyDetails
+    public let swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyDetails
 
     public init(swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyDetails) {
         self.swift = swift
@@ -58286,7 +58739,7 @@ public class DBXTeamLogSharingChangeLinkEnforcePasswordPolicyType: NSObject {
         self.swift = TeamLog.SharingChangeLinkEnforcePasswordPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyType
+    public let swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyType
 
     public init(swift: TeamLog.SharingChangeLinkEnforcePasswordPolicyType) {
         self.swift = swift
@@ -58302,11 +58755,11 @@ public class DBXTeamLogSharingChangeLinkEnforcePasswordPolicyType: NSObject {
 public class DBXTeamLogSharingChangeLinkPolicyDetails: NSObject {
     /// New external link accessibility policy.
     @objc
-    public var newValue: DBXTeamLogSharingLinkPolicy { DBXTeamLogSharingLinkPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSharingLinkPolicy { DBXTeamLogSharingLinkPolicy.factory(swift: swift.newValue) }
     /// Previous external link accessibility policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogSharingLinkPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogSharingLinkPolicy(swift: swift)
+        return DBXTeamLogSharingLinkPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58314,7 +58767,7 @@ public class DBXTeamLogSharingChangeLinkPolicyDetails: NSObject {
         self.swift = TeamLog.SharingChangeLinkPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeLinkPolicyDetails
+    public let swift: TeamLog.SharingChangeLinkPolicyDetails
 
     public init(swift: TeamLog.SharingChangeLinkPolicyDetails) {
         self.swift = swift
@@ -58336,7 +58789,7 @@ public class DBXTeamLogSharingChangeLinkPolicyType: NSObject {
         self.swift = TeamLog.SharingChangeLinkPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeLinkPolicyType
+    public let swift: TeamLog.SharingChangeLinkPolicyType
 
     public init(swift: TeamLog.SharingChangeLinkPolicyType) {
         self.swift = swift
@@ -58351,11 +58804,11 @@ public class DBXTeamLogSharingChangeLinkPolicyType: NSObject {
 public class DBXTeamLogSharingChangeMemberPolicyDetails: NSObject {
     /// New external invite policy.
     @objc
-    public var newValue: DBXTeamLogSharingMemberPolicy { DBXTeamLogSharingMemberPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSharingMemberPolicy { DBXTeamLogSharingMemberPolicy.factory(swift: swift.newValue) }
     /// Previous external invite policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogSharingMemberPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogSharingMemberPolicy(swift: swift)
+        return DBXTeamLogSharingMemberPolicy.factory(swift: swift)
     }
 
     @objc
@@ -58363,7 +58816,7 @@ public class DBXTeamLogSharingChangeMemberPolicyDetails: NSObject {
         self.swift = TeamLog.SharingChangeMemberPolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SharingChangeMemberPolicyDetails
+    public let swift: TeamLog.SharingChangeMemberPolicyDetails
 
     public init(swift: TeamLog.SharingChangeMemberPolicyDetails) {
         self.swift = swift
@@ -58385,7 +58838,7 @@ public class DBXTeamLogSharingChangeMemberPolicyType: NSObject {
         self.swift = TeamLog.SharingChangeMemberPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SharingChangeMemberPolicyType
+    public let swift: TeamLog.SharingChangeMemberPolicyType
 
     public init(swift: TeamLog.SharingChangeMemberPolicyType) {
         self.swift = swift
@@ -58398,9 +58851,9 @@ public class DBXTeamLogSharingChangeMemberPolicyType: NSObject {
 /// Policy for controlling if team members can join shared folders owned by non team members.
 @objc
 public class DBXTeamLogSharingFolderJoinPolicy: NSObject {
-    let swift: TeamLog.SharingFolderJoinPolicy
+    public let swift: TeamLog.SharingFolderJoinPolicy
 
-    public init(swift: TeamLog.SharingFolderJoinPolicy) {
+    fileprivate init(swift: TeamLog.SharingFolderJoinPolicy) {
         self.swift = swift
     }
 
@@ -58467,9 +58920,9 @@ public class DBXTeamLogSharingFolderJoinPolicyOther: DBXTeamLogSharingFolderJoin
 /// Policy for controlling if team members can share links externally
 @objc
 public class DBXTeamLogSharingLinkPolicy: NSObject {
-    let swift: TeamLog.SharingLinkPolicy
+    public let swift: TeamLog.SharingLinkPolicy
 
-    public init(swift: TeamLog.SharingLinkPolicy) {
+    fileprivate init(swift: TeamLog.SharingLinkPolicy) {
         self.swift = swift
     }
 
@@ -58570,9 +59023,9 @@ public class DBXTeamLogSharingLinkPolicyOther: DBXTeamLogSharingLinkPolicy {
 /// External sharing policy
 @objc
 public class DBXTeamLogSharingMemberPolicy: NSObject {
-    let swift: TeamLog.SharingMemberPolicy
+    public let swift: TeamLog.SharingMemberPolicy
 
-    public init(swift: TeamLog.SharingMemberPolicy) {
+    fileprivate init(swift: TeamLog.SharingMemberPolicy) {
         self.swift = swift
     }
 
@@ -58667,7 +59120,7 @@ public class DBXTeamLogShmodelDisableDownloadsDetails: NSObject {
         self.swift = TeamLog.ShmodelDisableDownloadsDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.ShmodelDisableDownloadsDetails
+    public let swift: TeamLog.ShmodelDisableDownloadsDetails
 
     public init(swift: TeamLog.ShmodelDisableDownloadsDetails) {
         self.swift = swift
@@ -58689,7 +59142,7 @@ public class DBXTeamLogShmodelDisableDownloadsType: NSObject {
         self.swift = TeamLog.ShmodelDisableDownloadsType(description_: description_)
     }
 
-    let swift: TeamLog.ShmodelDisableDownloadsType
+    public let swift: TeamLog.ShmodelDisableDownloadsType
 
     public init(swift: TeamLog.ShmodelDisableDownloadsType) {
         self.swift = swift
@@ -58713,7 +59166,7 @@ public class DBXTeamLogShmodelEnableDownloadsDetails: NSObject {
         self.swift = TeamLog.ShmodelEnableDownloadsDetails(sharedLinkOwner: sharedLinkOwner?.swift)
     }
 
-    let swift: TeamLog.ShmodelEnableDownloadsDetails
+    public let swift: TeamLog.ShmodelEnableDownloadsDetails
 
     public init(swift: TeamLog.ShmodelEnableDownloadsDetails) {
         self.swift = swift
@@ -58735,7 +59188,7 @@ public class DBXTeamLogShmodelEnableDownloadsType: NSObject {
         self.swift = TeamLog.ShmodelEnableDownloadsType(description_: description_)
     }
 
-    let swift: TeamLog.ShmodelEnableDownloadsType
+    public let swift: TeamLog.ShmodelEnableDownloadsType
 
     public init(swift: TeamLog.ShmodelEnableDownloadsType) {
         self.swift = swift
@@ -58748,7 +59201,12 @@ public class DBXTeamLogShmodelEnableDownloadsType: NSObject {
 /// Shared link with group.
 @objc
 public class DBXTeamLogShmodelGroupShareDetails: NSObject {
-    let swift: TeamLog.ShmodelGroupShareDetails
+    public override init() {
+        self.swift = TeamLog.ShmodelGroupShareDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.ShmodelGroupShareDetails
 
     public init(swift: TeamLog.ShmodelGroupShareDetails) {
         self.swift = swift
@@ -58770,7 +59228,7 @@ public class DBXTeamLogShmodelGroupShareType: NSObject {
         self.swift = TeamLog.ShmodelGroupShareType(description_: description_)
     }
 
-    let swift: TeamLog.ShmodelGroupShareType
+    public let swift: TeamLog.ShmodelGroupShareType
 
     public init(swift: TeamLog.ShmodelGroupShareType) {
         self.swift = swift
@@ -58792,7 +59250,7 @@ public class DBXTeamLogShowcaseAccessGrantedDetails: NSObject {
         self.swift = TeamLog.ShowcaseAccessGrantedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseAccessGrantedDetails
+    public let swift: TeamLog.ShowcaseAccessGrantedDetails
 
     public init(swift: TeamLog.ShowcaseAccessGrantedDetails) {
         self.swift = swift
@@ -58814,7 +59272,7 @@ public class DBXTeamLogShowcaseAccessGrantedType: NSObject {
         self.swift = TeamLog.ShowcaseAccessGrantedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseAccessGrantedType
+    public let swift: TeamLog.ShowcaseAccessGrantedType
 
     public init(swift: TeamLog.ShowcaseAccessGrantedType) {
         self.swift = swift
@@ -58836,7 +59294,7 @@ public class DBXTeamLogShowcaseAddMemberDetails: NSObject {
         self.swift = TeamLog.ShowcaseAddMemberDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseAddMemberDetails
+    public let swift: TeamLog.ShowcaseAddMemberDetails
 
     public init(swift: TeamLog.ShowcaseAddMemberDetails) {
         self.swift = swift
@@ -58858,7 +59316,7 @@ public class DBXTeamLogShowcaseAddMemberType: NSObject {
         self.swift = TeamLog.ShowcaseAddMemberType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseAddMemberType
+    public let swift: TeamLog.ShowcaseAddMemberType
 
     public init(swift: TeamLog.ShowcaseAddMemberType) {
         self.swift = swift
@@ -58880,7 +59338,7 @@ public class DBXTeamLogShowcaseArchivedDetails: NSObject {
         self.swift = TeamLog.ShowcaseArchivedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseArchivedDetails
+    public let swift: TeamLog.ShowcaseArchivedDetails
 
     public init(swift: TeamLog.ShowcaseArchivedDetails) {
         self.swift = swift
@@ -58902,7 +59360,7 @@ public class DBXTeamLogShowcaseArchivedType: NSObject {
         self.swift = TeamLog.ShowcaseArchivedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseArchivedType
+    public let swift: TeamLog.ShowcaseArchivedType
 
     public init(swift: TeamLog.ShowcaseArchivedType) {
         self.swift = swift
@@ -58917,17 +59375,17 @@ public class DBXTeamLogShowcaseArchivedType: NSObject {
 public class DBXTeamLogShowcaseChangeDownloadPolicyDetails: NSObject {
     /// New Dropbox Showcase download policy.
     @objc
-    public var newValue: DBXTeamLogShowcaseDownloadPolicy { DBXTeamLogShowcaseDownloadPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogShowcaseDownloadPolicy { DBXTeamLogShowcaseDownloadPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Showcase download policy.
     @objc
-    public var previousValue: DBXTeamLogShowcaseDownloadPolicy { DBXTeamLogShowcaseDownloadPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogShowcaseDownloadPolicy { DBXTeamLogShowcaseDownloadPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogShowcaseDownloadPolicy, previousValue: DBXTeamLogShowcaseDownloadPolicy) {
         self.swift = TeamLog.ShowcaseChangeDownloadPolicyDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ShowcaseChangeDownloadPolicyDetails
+    public let swift: TeamLog.ShowcaseChangeDownloadPolicyDetails
 
     public init(swift: TeamLog.ShowcaseChangeDownloadPolicyDetails) {
         self.swift = swift
@@ -58949,7 +59407,7 @@ public class DBXTeamLogShowcaseChangeDownloadPolicyType: NSObject {
         self.swift = TeamLog.ShowcaseChangeDownloadPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseChangeDownloadPolicyType
+    public let swift: TeamLog.ShowcaseChangeDownloadPolicyType
 
     public init(swift: TeamLog.ShowcaseChangeDownloadPolicyType) {
         self.swift = swift
@@ -58964,17 +59422,17 @@ public class DBXTeamLogShowcaseChangeDownloadPolicyType: NSObject {
 public class DBXTeamLogShowcaseChangeEnabledPolicyDetails: NSObject {
     /// New Dropbox Showcase policy.
     @objc
-    public var newValue: DBXTeamLogShowcaseEnabledPolicy { DBXTeamLogShowcaseEnabledPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogShowcaseEnabledPolicy { DBXTeamLogShowcaseEnabledPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Showcase policy.
     @objc
-    public var previousValue: DBXTeamLogShowcaseEnabledPolicy { DBXTeamLogShowcaseEnabledPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogShowcaseEnabledPolicy { DBXTeamLogShowcaseEnabledPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogShowcaseEnabledPolicy, previousValue: DBXTeamLogShowcaseEnabledPolicy) {
         self.swift = TeamLog.ShowcaseChangeEnabledPolicyDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ShowcaseChangeEnabledPolicyDetails
+    public let swift: TeamLog.ShowcaseChangeEnabledPolicyDetails
 
     public init(swift: TeamLog.ShowcaseChangeEnabledPolicyDetails) {
         self.swift = swift
@@ -58996,7 +59454,7 @@ public class DBXTeamLogShowcaseChangeEnabledPolicyType: NSObject {
         self.swift = TeamLog.ShowcaseChangeEnabledPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseChangeEnabledPolicyType
+    public let swift: TeamLog.ShowcaseChangeEnabledPolicyType
 
     public init(swift: TeamLog.ShowcaseChangeEnabledPolicyType) {
         self.swift = swift
@@ -59011,17 +59469,17 @@ public class DBXTeamLogShowcaseChangeEnabledPolicyType: NSObject {
 public class DBXTeamLogShowcaseChangeExternalSharingPolicyDetails: NSObject {
     /// New Dropbox Showcase external sharing policy.
     @objc
-    public var newValue: DBXTeamLogShowcaseExternalSharingPolicy { DBXTeamLogShowcaseExternalSharingPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogShowcaseExternalSharingPolicy { DBXTeamLogShowcaseExternalSharingPolicy.factory(swift: swift.newValue) }
     /// Previous Dropbox Showcase external sharing policy.
     @objc
-    public var previousValue: DBXTeamLogShowcaseExternalSharingPolicy { DBXTeamLogShowcaseExternalSharingPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogShowcaseExternalSharingPolicy { DBXTeamLogShowcaseExternalSharingPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogShowcaseExternalSharingPolicy, previousValue: DBXTeamLogShowcaseExternalSharingPolicy) {
         self.swift = TeamLog.ShowcaseChangeExternalSharingPolicyDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.ShowcaseChangeExternalSharingPolicyDetails
+    public let swift: TeamLog.ShowcaseChangeExternalSharingPolicyDetails
 
     public init(swift: TeamLog.ShowcaseChangeExternalSharingPolicyDetails) {
         self.swift = swift
@@ -59043,7 +59501,7 @@ public class DBXTeamLogShowcaseChangeExternalSharingPolicyType: NSObject {
         self.swift = TeamLog.ShowcaseChangeExternalSharingPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseChangeExternalSharingPolicyType
+    public let swift: TeamLog.ShowcaseChangeExternalSharingPolicyType
 
     public init(swift: TeamLog.ShowcaseChangeExternalSharingPolicyType) {
         self.swift = swift
@@ -59065,7 +59523,7 @@ public class DBXTeamLogShowcaseCreatedDetails: NSObject {
         self.swift = TeamLog.ShowcaseCreatedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseCreatedDetails
+    public let swift: TeamLog.ShowcaseCreatedDetails
 
     public init(swift: TeamLog.ShowcaseCreatedDetails) {
         self.swift = swift
@@ -59087,7 +59545,7 @@ public class DBXTeamLogShowcaseCreatedType: NSObject {
         self.swift = TeamLog.ShowcaseCreatedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseCreatedType
+    public let swift: TeamLog.ShowcaseCreatedType
 
     public init(swift: TeamLog.ShowcaseCreatedType) {
         self.swift = swift
@@ -59112,7 +59570,7 @@ public class DBXTeamLogShowcaseDeleteCommentDetails: NSObject {
         self.swift = TeamLog.ShowcaseDeleteCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.ShowcaseDeleteCommentDetails
+    public let swift: TeamLog.ShowcaseDeleteCommentDetails
 
     public init(swift: TeamLog.ShowcaseDeleteCommentDetails) {
         self.swift = swift
@@ -59134,7 +59592,7 @@ public class DBXTeamLogShowcaseDeleteCommentType: NSObject {
         self.swift = TeamLog.ShowcaseDeleteCommentType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseDeleteCommentType
+    public let swift: TeamLog.ShowcaseDeleteCommentType
 
     public init(swift: TeamLog.ShowcaseDeleteCommentType) {
         self.swift = swift
@@ -59159,7 +59617,7 @@ public class DBXTeamLogShowcaseDocumentLogInfo: NSObject {
         self.swift = TeamLog.ShowcaseDocumentLogInfo(showcaseId: showcaseId, showcaseTitle: showcaseTitle)
     }
 
-    let swift: TeamLog.ShowcaseDocumentLogInfo
+    public let swift: TeamLog.ShowcaseDocumentLogInfo
 
     public init(swift: TeamLog.ShowcaseDocumentLogInfo) {
         self.swift = swift
@@ -59172,9 +59630,9 @@ public class DBXTeamLogShowcaseDocumentLogInfo: NSObject {
 /// Policy for controlling if files can be downloaded from Showcases by team members
 @objc
 public class DBXTeamLogShowcaseDownloadPolicy: NSObject {
-    let swift: TeamLog.ShowcaseDownloadPolicy
+    public let swift: TeamLog.ShowcaseDownloadPolicy
 
-    public init(swift: TeamLog.ShowcaseDownloadPolicy) {
+    fileprivate init(swift: TeamLog.ShowcaseDownloadPolicy) {
         self.swift = swift
     }
 
@@ -59253,7 +59711,7 @@ public class DBXTeamLogShowcaseEditCommentDetails: NSObject {
         self.swift = TeamLog.ShowcaseEditCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.ShowcaseEditCommentDetails
+    public let swift: TeamLog.ShowcaseEditCommentDetails
 
     public init(swift: TeamLog.ShowcaseEditCommentDetails) {
         self.swift = swift
@@ -59275,7 +59733,7 @@ public class DBXTeamLogShowcaseEditCommentType: NSObject {
         self.swift = TeamLog.ShowcaseEditCommentType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseEditCommentType
+    public let swift: TeamLog.ShowcaseEditCommentType
 
     public init(swift: TeamLog.ShowcaseEditCommentType) {
         self.swift = swift
@@ -59297,7 +59755,7 @@ public class DBXTeamLogShowcaseEditedDetails: NSObject {
         self.swift = TeamLog.ShowcaseEditedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseEditedDetails
+    public let swift: TeamLog.ShowcaseEditedDetails
 
     public init(swift: TeamLog.ShowcaseEditedDetails) {
         self.swift = swift
@@ -59319,7 +59777,7 @@ public class DBXTeamLogShowcaseEditedType: NSObject {
         self.swift = TeamLog.ShowcaseEditedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseEditedType
+    public let swift: TeamLog.ShowcaseEditedType
 
     public init(swift: TeamLog.ShowcaseEditedType) {
         self.swift = swift
@@ -59332,9 +59790,9 @@ public class DBXTeamLogShowcaseEditedType: NSObject {
 /// Policy for controlling whether Showcase is enabled.
 @objc
 public class DBXTeamLogShowcaseEnabledPolicy: NSObject {
-    let swift: TeamLog.ShowcaseEnabledPolicy
+    public let swift: TeamLog.ShowcaseEnabledPolicy
 
-    public init(swift: TeamLog.ShowcaseEnabledPolicy) {
+    fileprivate init(swift: TeamLog.ShowcaseEnabledPolicy) {
         self.swift = swift
     }
 
@@ -59401,9 +59859,9 @@ public class DBXTeamLogShowcaseEnabledPolicyOther: DBXTeamLogShowcaseEnabledPoli
 /// Policy for controlling if team members can share Showcases externally.
 @objc
 public class DBXTeamLogShowcaseExternalSharingPolicy: NSObject {
-    let swift: TeamLog.ShowcaseExternalSharingPolicy
+    public let swift: TeamLog.ShowcaseExternalSharingPolicy
 
-    public init(swift: TeamLog.ShowcaseExternalSharingPolicy) {
+    fileprivate init(swift: TeamLog.ShowcaseExternalSharingPolicy) {
         self.swift = swift
     }
 
@@ -59479,7 +59937,7 @@ public class DBXTeamLogShowcaseFileAddedDetails: NSObject {
         self.swift = TeamLog.ShowcaseFileAddedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseFileAddedDetails
+    public let swift: TeamLog.ShowcaseFileAddedDetails
 
     public init(swift: TeamLog.ShowcaseFileAddedDetails) {
         self.swift = swift
@@ -59501,7 +59959,7 @@ public class DBXTeamLogShowcaseFileAddedType: NSObject {
         self.swift = TeamLog.ShowcaseFileAddedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseFileAddedType
+    public let swift: TeamLog.ShowcaseFileAddedType
 
     public init(swift: TeamLog.ShowcaseFileAddedType) {
         self.swift = swift
@@ -59526,7 +59984,7 @@ public class DBXTeamLogShowcaseFileDownloadDetails: NSObject {
         self.swift = TeamLog.ShowcaseFileDownloadDetails(eventUuid: eventUuid, downloadType: downloadType)
     }
 
-    let swift: TeamLog.ShowcaseFileDownloadDetails
+    public let swift: TeamLog.ShowcaseFileDownloadDetails
 
     public init(swift: TeamLog.ShowcaseFileDownloadDetails) {
         self.swift = swift
@@ -59548,7 +60006,7 @@ public class DBXTeamLogShowcaseFileDownloadType: NSObject {
         self.swift = TeamLog.ShowcaseFileDownloadType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseFileDownloadType
+    public let swift: TeamLog.ShowcaseFileDownloadType
 
     public init(swift: TeamLog.ShowcaseFileDownloadType) {
         self.swift = swift
@@ -59570,7 +60028,7 @@ public class DBXTeamLogShowcaseFileRemovedDetails: NSObject {
         self.swift = TeamLog.ShowcaseFileRemovedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseFileRemovedDetails
+    public let swift: TeamLog.ShowcaseFileRemovedDetails
 
     public init(swift: TeamLog.ShowcaseFileRemovedDetails) {
         self.swift = swift
@@ -59592,7 +60050,7 @@ public class DBXTeamLogShowcaseFileRemovedType: NSObject {
         self.swift = TeamLog.ShowcaseFileRemovedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseFileRemovedType
+    public let swift: TeamLog.ShowcaseFileRemovedType
 
     public init(swift: TeamLog.ShowcaseFileRemovedType) {
         self.swift = swift
@@ -59614,7 +60072,7 @@ public class DBXTeamLogShowcaseFileViewDetails: NSObject {
         self.swift = TeamLog.ShowcaseFileViewDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseFileViewDetails
+    public let swift: TeamLog.ShowcaseFileViewDetails
 
     public init(swift: TeamLog.ShowcaseFileViewDetails) {
         self.swift = swift
@@ -59636,7 +60094,7 @@ public class DBXTeamLogShowcaseFileViewType: NSObject {
         self.swift = TeamLog.ShowcaseFileViewType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseFileViewType
+    public let swift: TeamLog.ShowcaseFileViewType
 
     public init(swift: TeamLog.ShowcaseFileViewType) {
         self.swift = swift
@@ -59658,7 +60116,7 @@ public class DBXTeamLogShowcasePermanentlyDeletedDetails: NSObject {
         self.swift = TeamLog.ShowcasePermanentlyDeletedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcasePermanentlyDeletedDetails
+    public let swift: TeamLog.ShowcasePermanentlyDeletedDetails
 
     public init(swift: TeamLog.ShowcasePermanentlyDeletedDetails) {
         self.swift = swift
@@ -59680,7 +60138,7 @@ public class DBXTeamLogShowcasePermanentlyDeletedType: NSObject {
         self.swift = TeamLog.ShowcasePermanentlyDeletedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcasePermanentlyDeletedType
+    public let swift: TeamLog.ShowcasePermanentlyDeletedType
 
     public init(swift: TeamLog.ShowcasePermanentlyDeletedType) {
         self.swift = swift
@@ -59705,7 +60163,7 @@ public class DBXTeamLogShowcasePostCommentDetails: NSObject {
         self.swift = TeamLog.ShowcasePostCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.ShowcasePostCommentDetails
+    public let swift: TeamLog.ShowcasePostCommentDetails
 
     public init(swift: TeamLog.ShowcasePostCommentDetails) {
         self.swift = swift
@@ -59727,7 +60185,7 @@ public class DBXTeamLogShowcasePostCommentType: NSObject {
         self.swift = TeamLog.ShowcasePostCommentType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcasePostCommentType
+    public let swift: TeamLog.ShowcasePostCommentType
 
     public init(swift: TeamLog.ShowcasePostCommentType) {
         self.swift = swift
@@ -59749,7 +60207,7 @@ public class DBXTeamLogShowcaseRemoveMemberDetails: NSObject {
         self.swift = TeamLog.ShowcaseRemoveMemberDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseRemoveMemberDetails
+    public let swift: TeamLog.ShowcaseRemoveMemberDetails
 
     public init(swift: TeamLog.ShowcaseRemoveMemberDetails) {
         self.swift = swift
@@ -59771,7 +60229,7 @@ public class DBXTeamLogShowcaseRemoveMemberType: NSObject {
         self.swift = TeamLog.ShowcaseRemoveMemberType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseRemoveMemberType
+    public let swift: TeamLog.ShowcaseRemoveMemberType
 
     public init(swift: TeamLog.ShowcaseRemoveMemberType) {
         self.swift = swift
@@ -59793,7 +60251,7 @@ public class DBXTeamLogShowcaseRenamedDetails: NSObject {
         self.swift = TeamLog.ShowcaseRenamedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseRenamedDetails
+    public let swift: TeamLog.ShowcaseRenamedDetails
 
     public init(swift: TeamLog.ShowcaseRenamedDetails) {
         self.swift = swift
@@ -59815,7 +60273,7 @@ public class DBXTeamLogShowcaseRenamedType: NSObject {
         self.swift = TeamLog.ShowcaseRenamedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseRenamedType
+    public let swift: TeamLog.ShowcaseRenamedType
 
     public init(swift: TeamLog.ShowcaseRenamedType) {
         self.swift = swift
@@ -59837,7 +60295,7 @@ public class DBXTeamLogShowcaseRequestAccessDetails: NSObject {
         self.swift = TeamLog.ShowcaseRequestAccessDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseRequestAccessDetails
+    public let swift: TeamLog.ShowcaseRequestAccessDetails
 
     public init(swift: TeamLog.ShowcaseRequestAccessDetails) {
         self.swift = swift
@@ -59859,7 +60317,7 @@ public class DBXTeamLogShowcaseRequestAccessType: NSObject {
         self.swift = TeamLog.ShowcaseRequestAccessType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseRequestAccessType
+    public let swift: TeamLog.ShowcaseRequestAccessType
 
     public init(swift: TeamLog.ShowcaseRequestAccessType) {
         self.swift = swift
@@ -59884,7 +60342,7 @@ public class DBXTeamLogShowcaseResolveCommentDetails: NSObject {
         self.swift = TeamLog.ShowcaseResolveCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.ShowcaseResolveCommentDetails
+    public let swift: TeamLog.ShowcaseResolveCommentDetails
 
     public init(swift: TeamLog.ShowcaseResolveCommentDetails) {
         self.swift = swift
@@ -59906,7 +60364,7 @@ public class DBXTeamLogShowcaseResolveCommentType: NSObject {
         self.swift = TeamLog.ShowcaseResolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseResolveCommentType
+    public let swift: TeamLog.ShowcaseResolveCommentType
 
     public init(swift: TeamLog.ShowcaseResolveCommentType) {
         self.swift = swift
@@ -59928,7 +60386,7 @@ public class DBXTeamLogShowcaseRestoredDetails: NSObject {
         self.swift = TeamLog.ShowcaseRestoredDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseRestoredDetails
+    public let swift: TeamLog.ShowcaseRestoredDetails
 
     public init(swift: TeamLog.ShowcaseRestoredDetails) {
         self.swift = swift
@@ -59950,7 +60408,7 @@ public class DBXTeamLogShowcaseRestoredType: NSObject {
         self.swift = TeamLog.ShowcaseRestoredType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseRestoredType
+    public let swift: TeamLog.ShowcaseRestoredType
 
     public init(swift: TeamLog.ShowcaseRestoredType) {
         self.swift = swift
@@ -59972,7 +60430,7 @@ public class DBXTeamLogShowcaseTrashedDeprecatedDetails: NSObject {
         self.swift = TeamLog.ShowcaseTrashedDeprecatedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseTrashedDeprecatedDetails
+    public let swift: TeamLog.ShowcaseTrashedDeprecatedDetails
 
     public init(swift: TeamLog.ShowcaseTrashedDeprecatedDetails) {
         self.swift = swift
@@ -59994,7 +60452,7 @@ public class DBXTeamLogShowcaseTrashedDeprecatedType: NSObject {
         self.swift = TeamLog.ShowcaseTrashedDeprecatedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseTrashedDeprecatedType
+    public let swift: TeamLog.ShowcaseTrashedDeprecatedType
 
     public init(swift: TeamLog.ShowcaseTrashedDeprecatedType) {
         self.swift = swift
@@ -60016,7 +60474,7 @@ public class DBXTeamLogShowcaseTrashedDetails: NSObject {
         self.swift = TeamLog.ShowcaseTrashedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseTrashedDetails
+    public let swift: TeamLog.ShowcaseTrashedDetails
 
     public init(swift: TeamLog.ShowcaseTrashedDetails) {
         self.swift = swift
@@ -60038,7 +60496,7 @@ public class DBXTeamLogShowcaseTrashedType: NSObject {
         self.swift = TeamLog.ShowcaseTrashedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseTrashedType
+    public let swift: TeamLog.ShowcaseTrashedType
 
     public init(swift: TeamLog.ShowcaseTrashedType) {
         self.swift = swift
@@ -60063,7 +60521,7 @@ public class DBXTeamLogShowcaseUnresolveCommentDetails: NSObject {
         self.swift = TeamLog.ShowcaseUnresolveCommentDetails(eventUuid: eventUuid, commentText: commentText)
     }
 
-    let swift: TeamLog.ShowcaseUnresolveCommentDetails
+    public let swift: TeamLog.ShowcaseUnresolveCommentDetails
 
     public init(swift: TeamLog.ShowcaseUnresolveCommentDetails) {
         self.swift = swift
@@ -60085,7 +60543,7 @@ public class DBXTeamLogShowcaseUnresolveCommentType: NSObject {
         self.swift = TeamLog.ShowcaseUnresolveCommentType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseUnresolveCommentType
+    public let swift: TeamLog.ShowcaseUnresolveCommentType
 
     public init(swift: TeamLog.ShowcaseUnresolveCommentType) {
         self.swift = swift
@@ -60107,7 +60565,7 @@ public class DBXTeamLogShowcaseUntrashedDeprecatedDetails: NSObject {
         self.swift = TeamLog.ShowcaseUntrashedDeprecatedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseUntrashedDeprecatedDetails
+    public let swift: TeamLog.ShowcaseUntrashedDeprecatedDetails
 
     public init(swift: TeamLog.ShowcaseUntrashedDeprecatedDetails) {
         self.swift = swift
@@ -60129,7 +60587,7 @@ public class DBXTeamLogShowcaseUntrashedDeprecatedType: NSObject {
         self.swift = TeamLog.ShowcaseUntrashedDeprecatedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseUntrashedDeprecatedType
+    public let swift: TeamLog.ShowcaseUntrashedDeprecatedType
 
     public init(swift: TeamLog.ShowcaseUntrashedDeprecatedType) {
         self.swift = swift
@@ -60151,7 +60609,7 @@ public class DBXTeamLogShowcaseUntrashedDetails: NSObject {
         self.swift = TeamLog.ShowcaseUntrashedDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseUntrashedDetails
+    public let swift: TeamLog.ShowcaseUntrashedDetails
 
     public init(swift: TeamLog.ShowcaseUntrashedDetails) {
         self.swift = swift
@@ -60173,7 +60631,7 @@ public class DBXTeamLogShowcaseUntrashedType: NSObject {
         self.swift = TeamLog.ShowcaseUntrashedType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseUntrashedType
+    public let swift: TeamLog.ShowcaseUntrashedType
 
     public init(swift: TeamLog.ShowcaseUntrashedType) {
         self.swift = swift
@@ -60195,7 +60653,7 @@ public class DBXTeamLogShowcaseViewDetails: NSObject {
         self.swift = TeamLog.ShowcaseViewDetails(eventUuid: eventUuid)
     }
 
-    let swift: TeamLog.ShowcaseViewDetails
+    public let swift: TeamLog.ShowcaseViewDetails
 
     public init(swift: TeamLog.ShowcaseViewDetails) {
         self.swift = swift
@@ -60217,7 +60675,7 @@ public class DBXTeamLogShowcaseViewType: NSObject {
         self.swift = TeamLog.ShowcaseViewType(description_: description_)
     }
 
-    let swift: TeamLog.ShowcaseViewType
+    public let swift: TeamLog.ShowcaseViewType
 
     public init(swift: TeamLog.ShowcaseViewType) {
         self.swift = swift
@@ -60230,7 +60688,12 @@ public class DBXTeamLogShowcaseViewType: NSObject {
 /// Ended admin sign-in-as session.
 @objc
 public class DBXTeamLogSignInAsSessionEndDetails: NSObject {
-    let swift: TeamLog.SignInAsSessionEndDetails
+    public override init() {
+        self.swift = TeamLog.SignInAsSessionEndDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SignInAsSessionEndDetails
 
     public init(swift: TeamLog.SignInAsSessionEndDetails) {
         self.swift = swift
@@ -60252,7 +60715,7 @@ public class DBXTeamLogSignInAsSessionEndType: NSObject {
         self.swift = TeamLog.SignInAsSessionEndType(description_: description_)
     }
 
-    let swift: TeamLog.SignInAsSessionEndType
+    public let swift: TeamLog.SignInAsSessionEndType
 
     public init(swift: TeamLog.SignInAsSessionEndType) {
         self.swift = swift
@@ -60265,7 +60728,12 @@ public class DBXTeamLogSignInAsSessionEndType: NSObject {
 /// Started admin sign-in-as session.
 @objc
 public class DBXTeamLogSignInAsSessionStartDetails: NSObject {
-    let swift: TeamLog.SignInAsSessionStartDetails
+    public override init() {
+        self.swift = TeamLog.SignInAsSessionStartDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SignInAsSessionStartDetails
 
     public init(swift: TeamLog.SignInAsSessionStartDetails) {
         self.swift = swift
@@ -60287,7 +60755,7 @@ public class DBXTeamLogSignInAsSessionStartType: NSObject {
         self.swift = TeamLog.SignInAsSessionStartType(description_: description_)
     }
 
-    let swift: TeamLog.SignInAsSessionStartType
+    public let swift: TeamLog.SignInAsSessionStartType
 
     public init(swift: TeamLog.SignInAsSessionStartType) {
         self.swift = swift
@@ -60303,13 +60771,13 @@ public class DBXTeamLogSmartSyncChangePolicyDetails: NSObject {
     /// New smart sync policy.
     @objc
     public var newValue: DBXTeamPoliciesSmartSyncPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamPoliciesSmartSyncPolicy(swift: swift)
+        return DBXTeamPoliciesSmartSyncPolicy.factory(swift: swift)
     }
 
     /// Previous smart sync policy.
     @objc
     public var previousValue: DBXTeamPoliciesSmartSyncPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesSmartSyncPolicy(swift: swift)
+        return DBXTeamPoliciesSmartSyncPolicy.factory(swift: swift)
     }
 
     @objc
@@ -60317,7 +60785,7 @@ public class DBXTeamLogSmartSyncChangePolicyDetails: NSObject {
         self.swift = TeamLog.SmartSyncChangePolicyDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SmartSyncChangePolicyDetails
+    public let swift: TeamLog.SmartSyncChangePolicyDetails
 
     public init(swift: TeamLog.SmartSyncChangePolicyDetails) {
         self.swift = swift
@@ -60339,7 +60807,7 @@ public class DBXTeamLogSmartSyncChangePolicyType: NSObject {
         self.swift = TeamLog.SmartSyncChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SmartSyncChangePolicyType
+    public let swift: TeamLog.SmartSyncChangePolicyType
 
     public init(swift: TeamLog.SmartSyncChangePolicyType) {
         self.swift = swift
@@ -60352,7 +60820,12 @@ public class DBXTeamLogSmartSyncChangePolicyType: NSObject {
 /// Created Smart Sync non-admin devices report.
 @objc
 public class DBXTeamLogSmartSyncCreateAdminPrivilegeReportDetails: NSObject {
-    let swift: TeamLog.SmartSyncCreateAdminPrivilegeReportDetails
+    public override init() {
+        self.swift = TeamLog.SmartSyncCreateAdminPrivilegeReportDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SmartSyncCreateAdminPrivilegeReportDetails
 
     public init(swift: TeamLog.SmartSyncCreateAdminPrivilegeReportDetails) {
         self.swift = swift
@@ -60374,7 +60847,7 @@ public class DBXTeamLogSmartSyncCreateAdminPrivilegeReportType: NSObject {
         self.swift = TeamLog.SmartSyncCreateAdminPrivilegeReportType(description_: description_)
     }
 
-    let swift: TeamLog.SmartSyncCreateAdminPrivilegeReportType
+    public let swift: TeamLog.SmartSyncCreateAdminPrivilegeReportType
 
     public init(swift: TeamLog.SmartSyncCreateAdminPrivilegeReportType) {
         self.swift = swift
@@ -60389,17 +60862,17 @@ public class DBXTeamLogSmartSyncCreateAdminPrivilegeReportType: NSObject {
 public class DBXTeamLogSmartSyncNotOptOutDetails: NSObject {
     /// Previous Smart Sync opt out policy.
     @objc
-    public var previousValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy.factory(swift: swift.previousValue) }
     /// New Smart Sync opt out policy.
     @objc
-    public var newValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogSmartSyncOptOutPolicy, newValue: DBXTeamLogSmartSyncOptOutPolicy) {
         self.swift = TeamLog.SmartSyncNotOptOutDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.SmartSyncNotOptOutDetails
+    public let swift: TeamLog.SmartSyncNotOptOutDetails
 
     public init(swift: TeamLog.SmartSyncNotOptOutDetails) {
         self.swift = swift
@@ -60421,7 +60894,7 @@ public class DBXTeamLogSmartSyncNotOptOutType: NSObject {
         self.swift = TeamLog.SmartSyncNotOptOutType(description_: description_)
     }
 
-    let swift: TeamLog.SmartSyncNotOptOutType
+    public let swift: TeamLog.SmartSyncNotOptOutType
 
     public init(swift: TeamLog.SmartSyncNotOptOutType) {
         self.swift = swift
@@ -60436,17 +60909,17 @@ public class DBXTeamLogSmartSyncNotOptOutType: NSObject {
 public class DBXTeamLogSmartSyncOptOutDetails: NSObject {
     /// Previous Smart Sync opt out policy.
     @objc
-    public var previousValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy.factory(swift: swift.previousValue) }
     /// New Smart Sync opt out policy.
     @objc
-    public var newValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogSmartSyncOptOutPolicy { DBXTeamLogSmartSyncOptOutPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogSmartSyncOptOutPolicy, newValue: DBXTeamLogSmartSyncOptOutPolicy) {
         self.swift = TeamLog.SmartSyncOptOutDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.SmartSyncOptOutDetails
+    public let swift: TeamLog.SmartSyncOptOutDetails
 
     public init(swift: TeamLog.SmartSyncOptOutDetails) {
         self.swift = swift
@@ -60459,9 +60932,9 @@ public class DBXTeamLogSmartSyncOptOutDetails: NSObject {
 /// Objective-C compatible SmartSyncOptOutPolicy union
 @objc
 public class DBXTeamLogSmartSyncOptOutPolicy: NSObject {
-    let swift: TeamLog.SmartSyncOptOutPolicy
+    public let swift: TeamLog.SmartSyncOptOutPolicy
 
-    public init(swift: TeamLog.SmartSyncOptOutPolicy) {
+    fileprivate init(swift: TeamLog.SmartSyncOptOutPolicy) {
         self.swift = swift
     }
 
@@ -60537,7 +61010,7 @@ public class DBXTeamLogSmartSyncOptOutType: NSObject {
         self.swift = TeamLog.SmartSyncOptOutType(description_: description_)
     }
 
-    let swift: TeamLog.SmartSyncOptOutType
+    public let swift: TeamLog.SmartSyncOptOutType
 
     public init(swift: TeamLog.SmartSyncOptOutType) {
         self.swift = swift
@@ -60552,17 +61025,17 @@ public class DBXTeamLogSmartSyncOptOutType: NSObject {
 public class DBXTeamLogSmarterSmartSyncPolicyChangedDetails: NSObject {
     /// Previous automatic Smart Sync setting.
     @objc
-    public var previousValue: DBXTeamPoliciesSmarterSmartSyncPolicyState { DBXTeamPoliciesSmarterSmartSyncPolicyState(swift: swift.previousValue) }
+    public var previousValue: DBXTeamPoliciesSmarterSmartSyncPolicyState { DBXTeamPoliciesSmarterSmartSyncPolicyState.factory(swift: swift.previousValue) }
     /// New automatic Smart Sync setting.
     @objc
-    public var newValue: DBXTeamPoliciesSmarterSmartSyncPolicyState { DBXTeamPoliciesSmarterSmartSyncPolicyState(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesSmarterSmartSyncPolicyState { DBXTeamPoliciesSmarterSmartSyncPolicyState.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamPoliciesSmarterSmartSyncPolicyState, newValue: DBXTeamPoliciesSmarterSmartSyncPolicyState) {
         self.swift = TeamLog.SmarterSmartSyncPolicyChangedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.SmarterSmartSyncPolicyChangedDetails
+    public let swift: TeamLog.SmarterSmartSyncPolicyChangedDetails
 
     public init(swift: TeamLog.SmarterSmartSyncPolicyChangedDetails) {
         self.swift = swift
@@ -60584,7 +61057,7 @@ public class DBXTeamLogSmarterSmartSyncPolicyChangedType: NSObject {
         self.swift = TeamLog.SmarterSmartSyncPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.SmarterSmartSyncPolicyChangedType
+    public let swift: TeamLog.SmarterSmartSyncPolicyChangedType
 
     public init(swift: TeamLog.SmarterSmartSyncPolicyChangedType) {
         self.swift = swift
@@ -60597,9 +61070,9 @@ public class DBXTeamLogSmarterSmartSyncPolicyChangedType: NSObject {
 /// Space limit alert policy
 @objc
 public class DBXTeamLogSpaceCapsType: NSObject {
-    let swift: TeamLog.SpaceCapsType
+    public let swift: TeamLog.SpaceCapsType
 
-    public init(swift: TeamLog.SpaceCapsType) {
+    fileprivate init(swift: TeamLog.SpaceCapsType) {
         self.swift = swift
     }
 
@@ -60683,9 +61156,9 @@ public class DBXTeamLogSpaceCapsTypeOther: DBXTeamLogSpaceCapsType {
 /// Objective-C compatible SpaceLimitsStatus union
 @objc
 public class DBXTeamLogSpaceLimitsStatus: NSObject {
-    let swift: TeamLog.SpaceLimitsStatus
+    public let swift: TeamLog.SpaceLimitsStatus
 
-    public init(swift: TeamLog.SpaceLimitsStatus) {
+    fileprivate init(swift: TeamLog.SpaceLimitsStatus) {
         self.swift = swift
     }
 
@@ -60778,7 +61251,7 @@ public class DBXTeamLogSsoAddCertDetails: NSObject {
         self.swift = TeamLog.SsoAddCertDetails(certificateDetails: certificateDetails.swift)
     }
 
-    let swift: TeamLog.SsoAddCertDetails
+    public let swift: TeamLog.SsoAddCertDetails
 
     public init(swift: TeamLog.SsoAddCertDetails) {
         self.swift = swift
@@ -60800,7 +61273,7 @@ public class DBXTeamLogSsoAddCertType: NSObject {
         self.swift = TeamLog.SsoAddCertType(description_: description_)
     }
 
-    let swift: TeamLog.SsoAddCertType
+    public let swift: TeamLog.SsoAddCertType
 
     public init(swift: TeamLog.SsoAddCertType) {
         self.swift = swift
@@ -60822,7 +61295,7 @@ public class DBXTeamLogSsoAddLoginUrlDetails: NSObject {
         self.swift = TeamLog.SsoAddLoginUrlDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.SsoAddLoginUrlDetails
+    public let swift: TeamLog.SsoAddLoginUrlDetails
 
     public init(swift: TeamLog.SsoAddLoginUrlDetails) {
         self.swift = swift
@@ -60844,7 +61317,7 @@ public class DBXTeamLogSsoAddLoginUrlType: NSObject {
         self.swift = TeamLog.SsoAddLoginUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoAddLoginUrlType
+    public let swift: TeamLog.SsoAddLoginUrlType
 
     public init(swift: TeamLog.SsoAddLoginUrlType) {
         self.swift = swift
@@ -60866,7 +61339,7 @@ public class DBXTeamLogSsoAddLogoutUrlDetails: NSObject {
         self.swift = TeamLog.SsoAddLogoutUrlDetails(newValue: newValue)
     }
 
-    let swift: TeamLog.SsoAddLogoutUrlDetails
+    public let swift: TeamLog.SsoAddLogoutUrlDetails
 
     public init(swift: TeamLog.SsoAddLogoutUrlDetails) {
         self.swift = swift
@@ -60888,7 +61361,7 @@ public class DBXTeamLogSsoAddLogoutUrlType: NSObject {
         self.swift = TeamLog.SsoAddLogoutUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoAddLogoutUrlType
+    public let swift: TeamLog.SsoAddLogoutUrlType
 
     public init(swift: TeamLog.SsoAddLogoutUrlType) {
         self.swift = swift
@@ -60919,7 +61392,7 @@ public class DBXTeamLogSsoChangeCertDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.SsoChangeCertDetails
+    public let swift: TeamLog.SsoChangeCertDetails
 
     public init(swift: TeamLog.SsoChangeCertDetails) {
         self.swift = swift
@@ -60941,7 +61414,7 @@ public class DBXTeamLogSsoChangeCertType: NSObject {
         self.swift = TeamLog.SsoChangeCertType(description_: description_)
     }
 
-    let swift: TeamLog.SsoChangeCertType
+    public let swift: TeamLog.SsoChangeCertType
 
     public init(swift: TeamLog.SsoChangeCertType) {
         self.swift = swift
@@ -60966,7 +61439,7 @@ public class DBXTeamLogSsoChangeLoginUrlDetails: NSObject {
         self.swift = TeamLog.SsoChangeLoginUrlDetails(previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.SsoChangeLoginUrlDetails
+    public let swift: TeamLog.SsoChangeLoginUrlDetails
 
     public init(swift: TeamLog.SsoChangeLoginUrlDetails) {
         self.swift = swift
@@ -60988,7 +61461,7 @@ public class DBXTeamLogSsoChangeLoginUrlType: NSObject {
         self.swift = TeamLog.SsoChangeLoginUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoChangeLoginUrlType
+    public let swift: TeamLog.SsoChangeLoginUrlType
 
     public init(swift: TeamLog.SsoChangeLoginUrlType) {
         self.swift = swift
@@ -61013,7 +61486,7 @@ public class DBXTeamLogSsoChangeLogoutUrlDetails: NSObject {
         self.swift = TeamLog.SsoChangeLogoutUrlDetails(previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.SsoChangeLogoutUrlDetails
+    public let swift: TeamLog.SsoChangeLogoutUrlDetails
 
     public init(swift: TeamLog.SsoChangeLogoutUrlDetails) {
         self.swift = swift
@@ -61035,7 +61508,7 @@ public class DBXTeamLogSsoChangeLogoutUrlType: NSObject {
         self.swift = TeamLog.SsoChangeLogoutUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoChangeLogoutUrlType
+    public let swift: TeamLog.SsoChangeLogoutUrlType
 
     public init(swift: TeamLog.SsoChangeLogoutUrlType) {
         self.swift = swift
@@ -61050,11 +61523,11 @@ public class DBXTeamLogSsoChangeLogoutUrlType: NSObject {
 public class DBXTeamLogSsoChangePolicyDetails: NSObject {
     /// New single sign-on policy.
     @objc
-    public var newValue: DBXTeamPoliciesSsoPolicy { DBXTeamPoliciesSsoPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesSsoPolicy { DBXTeamPoliciesSsoPolicy.factory(swift: swift.newValue) }
     /// Previous single sign-on policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesSsoPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesSsoPolicy(swift: swift)
+        return DBXTeamPoliciesSsoPolicy.factory(swift: swift)
     }
 
     @objc
@@ -61062,7 +61535,7 @@ public class DBXTeamLogSsoChangePolicyDetails: NSObject {
         self.swift = TeamLog.SsoChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.SsoChangePolicyDetails
+    public let swift: TeamLog.SsoChangePolicyDetails
 
     public init(swift: TeamLog.SsoChangePolicyDetails) {
         self.swift = swift
@@ -61084,7 +61557,7 @@ public class DBXTeamLogSsoChangePolicyType: NSObject {
         self.swift = TeamLog.SsoChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.SsoChangePolicyType
+    public let swift: TeamLog.SsoChangePolicyType
 
     public init(swift: TeamLog.SsoChangePolicyType) {
         self.swift = swift
@@ -61109,7 +61582,7 @@ public class DBXTeamLogSsoChangeSamlIdentityModeDetails: NSObject {
         self.swift = TeamLog.SsoChangeSamlIdentityModeDetails(previousValue: previousValue.int64Value, newValue: newValue.int64Value)
     }
 
-    let swift: TeamLog.SsoChangeSamlIdentityModeDetails
+    public let swift: TeamLog.SsoChangeSamlIdentityModeDetails
 
     public init(swift: TeamLog.SsoChangeSamlIdentityModeDetails) {
         self.swift = swift
@@ -61131,7 +61604,7 @@ public class DBXTeamLogSsoChangeSamlIdentityModeType: NSObject {
         self.swift = TeamLog.SsoChangeSamlIdentityModeType(description_: description_)
     }
 
-    let swift: TeamLog.SsoChangeSamlIdentityModeType
+    public let swift: TeamLog.SsoChangeSamlIdentityModeType
 
     public init(swift: TeamLog.SsoChangeSamlIdentityModeType) {
         self.swift = swift
@@ -61153,7 +61626,7 @@ public class DBXTeamLogSsoErrorDetails: NSObject {
         self.swift = TeamLog.SsoErrorDetails(errorDetails: errorDetails.swift)
     }
 
-    let swift: TeamLog.SsoErrorDetails
+    public let swift: TeamLog.SsoErrorDetails
 
     public init(swift: TeamLog.SsoErrorDetails) {
         self.swift = swift
@@ -61175,7 +61648,7 @@ public class DBXTeamLogSsoErrorType: NSObject {
         self.swift = TeamLog.SsoErrorType(description_: description_)
     }
 
-    let swift: TeamLog.SsoErrorType
+    public let swift: TeamLog.SsoErrorType
 
     public init(swift: TeamLog.SsoErrorType) {
         self.swift = swift
@@ -61188,7 +61661,12 @@ public class DBXTeamLogSsoErrorType: NSObject {
 /// Removed X.509 certificate for SSO.
 @objc
 public class DBXTeamLogSsoRemoveCertDetails: NSObject {
-    let swift: TeamLog.SsoRemoveCertDetails
+    public override init() {
+        self.swift = TeamLog.SsoRemoveCertDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.SsoRemoveCertDetails
 
     public init(swift: TeamLog.SsoRemoveCertDetails) {
         self.swift = swift
@@ -61210,7 +61688,7 @@ public class DBXTeamLogSsoRemoveCertType: NSObject {
         self.swift = TeamLog.SsoRemoveCertType(description_: description_)
     }
 
-    let swift: TeamLog.SsoRemoveCertType
+    public let swift: TeamLog.SsoRemoveCertType
 
     public init(swift: TeamLog.SsoRemoveCertType) {
         self.swift = swift
@@ -61232,7 +61710,7 @@ public class DBXTeamLogSsoRemoveLoginUrlDetails: NSObject {
         self.swift = TeamLog.SsoRemoveLoginUrlDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.SsoRemoveLoginUrlDetails
+    public let swift: TeamLog.SsoRemoveLoginUrlDetails
 
     public init(swift: TeamLog.SsoRemoveLoginUrlDetails) {
         self.swift = swift
@@ -61254,7 +61732,7 @@ public class DBXTeamLogSsoRemoveLoginUrlType: NSObject {
         self.swift = TeamLog.SsoRemoveLoginUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoRemoveLoginUrlType
+    public let swift: TeamLog.SsoRemoveLoginUrlType
 
     public init(swift: TeamLog.SsoRemoveLoginUrlType) {
         self.swift = swift
@@ -61276,7 +61754,7 @@ public class DBXTeamLogSsoRemoveLogoutUrlDetails: NSObject {
         self.swift = TeamLog.SsoRemoveLogoutUrlDetails(previousValue: previousValue)
     }
 
-    let swift: TeamLog.SsoRemoveLogoutUrlDetails
+    public let swift: TeamLog.SsoRemoveLogoutUrlDetails
 
     public init(swift: TeamLog.SsoRemoveLogoutUrlDetails) {
         self.swift = swift
@@ -61298,7 +61776,7 @@ public class DBXTeamLogSsoRemoveLogoutUrlType: NSObject {
         self.swift = TeamLog.SsoRemoveLogoutUrlType(description_: description_)
     }
 
-    let swift: TeamLog.SsoRemoveLogoutUrlType
+    public let swift: TeamLog.SsoRemoveLogoutUrlType
 
     public init(swift: TeamLog.SsoRemoveLogoutUrlType) {
         self.swift = swift
@@ -61313,14 +61791,14 @@ public class DBXTeamLogSsoRemoveLogoutUrlType: NSObject {
 public class DBXTeamLogStartedEnterpriseAdminSessionDetails: NSObject {
     /// More information about the organization or team.
     @objc
-    public var federationExtraDetails: DBXTeamLogFedExtraDetails { DBXTeamLogFedExtraDetails(swift: swift.federationExtraDetails) }
+    public var federationExtraDetails: DBXTeamLogFedExtraDetails { DBXTeamLogFedExtraDetails.factory(swift: swift.federationExtraDetails) }
 
     @objc
     public init(federationExtraDetails: DBXTeamLogFedExtraDetails) {
         self.swift = TeamLog.StartedEnterpriseAdminSessionDetails(federationExtraDetails: federationExtraDetails.swift)
     }
 
-    let swift: TeamLog.StartedEnterpriseAdminSessionDetails
+    public let swift: TeamLog.StartedEnterpriseAdminSessionDetails
 
     public init(swift: TeamLog.StartedEnterpriseAdminSessionDetails) {
         self.swift = swift
@@ -61342,7 +61820,7 @@ public class DBXTeamLogStartedEnterpriseAdminSessionType: NSObject {
         self.swift = TeamLog.StartedEnterpriseAdminSessionType(description_: description_)
     }
 
-    let swift: TeamLog.StartedEnterpriseAdminSessionType
+    public let swift: TeamLog.StartedEnterpriseAdminSessionType
 
     public init(swift: TeamLog.StartedEnterpriseAdminSessionType) {
         self.swift = swift
@@ -61367,7 +61845,7 @@ public class DBXTeamLogTeamActivityCreateReportDetails: NSObject {
         self.swift = TeamLog.TeamActivityCreateReportDetails(startDate: startDate, endDate: endDate)
     }
 
-    let swift: TeamLog.TeamActivityCreateReportDetails
+    public let swift: TeamLog.TeamActivityCreateReportDetails
 
     public init(swift: TeamLog.TeamActivityCreateReportDetails) {
         self.swift = swift
@@ -61382,14 +61860,14 @@ public class DBXTeamLogTeamActivityCreateReportDetails: NSObject {
 public class DBXTeamLogTeamActivityCreateReportFailDetails: NSObject {
     /// Failure reason.
     @objc
-    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason(swift: swift.failureReason) }
+    public var failureReason: DBXTeamTeamReportFailureReason { DBXTeamTeamReportFailureReason.factory(swift: swift.failureReason) }
 
     @objc
     public init(failureReason: DBXTeamTeamReportFailureReason) {
         self.swift = TeamLog.TeamActivityCreateReportFailDetails(failureReason: failureReason.swift)
     }
 
-    let swift: TeamLog.TeamActivityCreateReportFailDetails
+    public let swift: TeamLog.TeamActivityCreateReportFailDetails
 
     public init(swift: TeamLog.TeamActivityCreateReportFailDetails) {
         self.swift = swift
@@ -61411,7 +61889,7 @@ public class DBXTeamLogTeamActivityCreateReportFailType: NSObject {
         self.swift = TeamLog.TeamActivityCreateReportFailType(description_: description_)
     }
 
-    let swift: TeamLog.TeamActivityCreateReportFailType
+    public let swift: TeamLog.TeamActivityCreateReportFailType
 
     public init(swift: TeamLog.TeamActivityCreateReportFailType) {
         self.swift = swift
@@ -61433,7 +61911,7 @@ public class DBXTeamLogTeamActivityCreateReportType: NSObject {
         self.swift = TeamLog.TeamActivityCreateReportType(description_: description_)
     }
 
-    let swift: TeamLog.TeamActivityCreateReportType
+    public let swift: TeamLog.TeamActivityCreateReportType
 
     public init(swift: TeamLog.TeamActivityCreateReportType) {
         self.swift = swift
@@ -61446,9 +61924,9 @@ public class DBXTeamLogTeamActivityCreateReportType: NSObject {
 /// Policy for controlling team access to setting up branding feature
 @objc
 public class DBXTeamLogTeamBrandingPolicy: NSObject {
-    let swift: TeamLog.TeamBrandingPolicy
+    public let swift: TeamLog.TeamBrandingPolicy
 
-    public init(swift: TeamLog.TeamBrandingPolicy) {
+    fileprivate init(swift: TeamLog.TeamBrandingPolicy) {
         self.swift = swift
     }
 
@@ -61517,17 +61995,17 @@ public class DBXTeamLogTeamBrandingPolicyOther: DBXTeamLogTeamBrandingPolicy {
 public class DBXTeamLogTeamBrandingPolicyChangedDetails: NSObject {
     /// New team branding policy.
     @objc
-    public var newValue: DBXTeamLogTeamBrandingPolicy { DBXTeamLogTeamBrandingPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTeamBrandingPolicy { DBXTeamLogTeamBrandingPolicy.factory(swift: swift.newValue) }
     /// Previous team branding policy.
     @objc
-    public var previousValue: DBXTeamLogTeamBrandingPolicy { DBXTeamLogTeamBrandingPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogTeamBrandingPolicy { DBXTeamLogTeamBrandingPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogTeamBrandingPolicy, previousValue: DBXTeamLogTeamBrandingPolicy) {
         self.swift = TeamLog.TeamBrandingPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.TeamBrandingPolicyChangedDetails
+    public let swift: TeamLog.TeamBrandingPolicyChangedDetails
 
     public init(swift: TeamLog.TeamBrandingPolicyChangedDetails) {
         self.swift = swift
@@ -61549,7 +62027,7 @@ public class DBXTeamLogTeamBrandingPolicyChangedType: NSObject {
         self.swift = TeamLog.TeamBrandingPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamBrandingPolicyChangedType
+    public let swift: TeamLog.TeamBrandingPolicyChangedType
 
     public init(swift: TeamLog.TeamBrandingPolicyChangedType) {
         self.swift = swift
@@ -61571,7 +62049,7 @@ public class DBXTeamLogTeamDetails: NSObject {
         self.swift = TeamLog.TeamDetails(team: team)
     }
 
-    let swift: TeamLog.TeamDetails
+    public let swift: TeamLog.TeamDetails
 
     public init(swift: TeamLog.TeamDetails) {
         self.swift = swift
@@ -61584,7 +62062,12 @@ public class DBXTeamLogTeamDetails: NSObject {
 /// Canceled team encryption key deletion.
 @objc
 public class DBXTeamLogTeamEncryptionKeyCancelKeyDeletionDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionDetails) {
         self.swift = swift
@@ -61606,7 +62089,7 @@ public class DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyCancelKeyDeletionType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionType
+    public let swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionType
 
     public init(swift: TeamLog.TeamEncryptionKeyCancelKeyDeletionType) {
         self.swift = swift
@@ -61619,7 +62102,12 @@ public class DBXTeamLogTeamEncryptionKeyCancelKeyDeletionType: NSObject {
 /// Created team encryption key.
 @objc
 public class DBXTeamLogTeamEncryptionKeyCreateKeyDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyCreateKeyDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyCreateKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyCreateKeyDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyCreateKeyDetails) {
         self.swift = swift
@@ -61641,7 +62129,7 @@ public class DBXTeamLogTeamEncryptionKeyCreateKeyType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyCreateKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyCreateKeyType
+    public let swift: TeamLog.TeamEncryptionKeyCreateKeyType
 
     public init(swift: TeamLog.TeamEncryptionKeyCreateKeyType) {
         self.swift = swift
@@ -61654,7 +62142,12 @@ public class DBXTeamLogTeamEncryptionKeyCreateKeyType: NSObject {
 /// Deleted team encryption key.
 @objc
 public class DBXTeamLogTeamEncryptionKeyDeleteKeyDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyDeleteKeyDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyDeleteKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyDeleteKeyDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyDeleteKeyDetails) {
         self.swift = swift
@@ -61676,7 +62169,7 @@ public class DBXTeamLogTeamEncryptionKeyDeleteKeyType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyDeleteKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyDeleteKeyType
+    public let swift: TeamLog.TeamEncryptionKeyDeleteKeyType
 
     public init(swift: TeamLog.TeamEncryptionKeyDeleteKeyType) {
         self.swift = swift
@@ -61689,7 +62182,12 @@ public class DBXTeamLogTeamEncryptionKeyDeleteKeyType: NSObject {
 /// Disabled team encryption key.
 @objc
 public class DBXTeamLogTeamEncryptionKeyDisableKeyDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyDisableKeyDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyDisableKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyDisableKeyDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyDisableKeyDetails) {
         self.swift = swift
@@ -61711,7 +62209,7 @@ public class DBXTeamLogTeamEncryptionKeyDisableKeyType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyDisableKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyDisableKeyType
+    public let swift: TeamLog.TeamEncryptionKeyDisableKeyType
 
     public init(swift: TeamLog.TeamEncryptionKeyDisableKeyType) {
         self.swift = swift
@@ -61724,7 +62222,12 @@ public class DBXTeamLogTeamEncryptionKeyDisableKeyType: NSObject {
 /// Enabled team encryption key.
 @objc
 public class DBXTeamLogTeamEncryptionKeyEnableKeyDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyEnableKeyDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyEnableKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyEnableKeyDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyEnableKeyDetails) {
         self.swift = swift
@@ -61746,7 +62249,7 @@ public class DBXTeamLogTeamEncryptionKeyEnableKeyType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyEnableKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyEnableKeyType
+    public let swift: TeamLog.TeamEncryptionKeyEnableKeyType
 
     public init(swift: TeamLog.TeamEncryptionKeyEnableKeyType) {
         self.swift = swift
@@ -61759,7 +62262,12 @@ public class DBXTeamLogTeamEncryptionKeyEnableKeyType: NSObject {
 /// Rotated team encryption key.
 @objc
 public class DBXTeamLogTeamEncryptionKeyRotateKeyDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyRotateKeyDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyRotateKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyRotateKeyDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyRotateKeyDetails) {
         self.swift = swift
@@ -61781,7 +62289,7 @@ public class DBXTeamLogTeamEncryptionKeyRotateKeyType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyRotateKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyRotateKeyType
+    public let swift: TeamLog.TeamEncryptionKeyRotateKeyType
 
     public init(swift: TeamLog.TeamEncryptionKeyRotateKeyType) {
         self.swift = swift
@@ -61794,7 +62302,12 @@ public class DBXTeamLogTeamEncryptionKeyRotateKeyType: NSObject {
 /// Scheduled encryption key deletion.
 @objc
 public class DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionDetails: NSObject {
-    let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails
+    public override init() {
+        self.swift = TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails
 
     public init(swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionDetails) {
         self.swift = swift
@@ -61816,7 +62329,7 @@ public class DBXTeamLogTeamEncryptionKeyScheduleKeyDeletionType: NSObject {
         self.swift = TeamLog.TeamEncryptionKeyScheduleKeyDeletionType(description_: description_)
     }
 
-    let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionType
+    public let swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionType
 
     public init(swift: TeamLog.TeamEncryptionKeyScheduleKeyDeletionType) {
         self.swift = swift
@@ -61834,11 +62347,11 @@ public class DBXTeamLogTeamEvent: NSObject {
     public var timestamp_: Date { swift.timestamp_ }
     /// The category that this type of action belongs to.
     @objc
-    public var eventCategory: DBXTeamLogEventCategory { DBXTeamLogEventCategory(swift: swift.eventCategory) }
+    public var eventCategory: DBXTeamLogEventCategory { DBXTeamLogEventCategory.factory(swift: swift.eventCategory) }
     /// The entity who actually performed the action. Might be missing due to historical data gap.
     @objc
     public var actor: DBXTeamLogActorLogInfo? { guard let swift = swift.actor else { return nil }
-        return DBXTeamLogActorLogInfo(swift: swift)
+        return DBXTeamLogActorLogInfo.factory(swift: swift)
     }
 
     /// The origin from which the actor performed the action including information about host, ip address, location,
@@ -61857,24 +62370,24 @@ public class DBXTeamLogTeamEvent: NSObject {
     /// gap.
     @objc
     public var context: DBXTeamLogContextLogInfo? { guard let swift = swift.context else { return nil }
-        return DBXTeamLogContextLogInfo(swift: swift)
+        return DBXTeamLogContextLogInfo.factory(swift: swift)
     }
 
     /// Zero or more users and/or groups that are affected by the action. Note that this list doesn't include any
     /// actors or users in context.
     @objc
-    public var participants: [DBXTeamLogParticipantLogInfo]? { swift.participants?.map { DBXTeamLogParticipantLogInfo(swift: $0) } }
+    public var participants: [DBXTeamLogParticipantLogInfo]? { swift.participants?.map { DBXTeamLogParticipantLogInfo.factory(swift: $0) } }
     /// Zero or more content assets involved in the action. Currently these include Dropbox files and folders but in
     /// the future we might add other asset types such as Paper documents, folders, projects, etc.
     @objc
-    public var assets: [DBXTeamLogAssetLogInfo]? { swift.assets?.map { DBXTeamLogAssetLogInfo(swift: $0) } }
+    public var assets: [DBXTeamLogAssetLogInfo]? { swift.assets?.map { DBXTeamLogAssetLogInfo.factory(swift: $0) } }
     /// The particular type of action taken.
     @objc
-    public var eventType: DBXTeamLogEventType { DBXTeamLogEventType(swift: swift.eventType) }
+    public var eventType: DBXTeamLogEventType { DBXTeamLogEventType.factory(swift: swift.eventType) }
     /// The variable event schema applicable to this type of action, instantiated with respect to this particular
     /// action.
     @objc
-    public var details: DBXTeamLogEventDetails { DBXTeamLogEventDetails(swift: swift.details) }
+    public var details: DBXTeamLogEventDetails { DBXTeamLogEventDetails.factory(swift: swift.details) }
 
     @objc
     public init(
@@ -61903,7 +62416,7 @@ public class DBXTeamLogTeamEvent: NSObject {
         )
     }
 
-    let swift: TeamLog.TeamEvent
+    public let swift: TeamLog.TeamEvent
 
     public init(swift: TeamLog.TeamEvent) {
         self.swift = swift
@@ -61916,9 +62429,9 @@ public class DBXTeamLogTeamEvent: NSObject {
 /// Policy for controlling whether App Integrations are enabled for the team.
 @objc
 public class DBXTeamLogTeamExtensionsPolicy: NSObject {
-    let swift: TeamLog.TeamExtensionsPolicy
+    public let swift: TeamLog.TeamExtensionsPolicy
 
-    public init(swift: TeamLog.TeamExtensionsPolicy) {
+    fileprivate init(swift: TeamLog.TeamExtensionsPolicy) {
         self.swift = swift
     }
 
@@ -61987,17 +62500,17 @@ public class DBXTeamLogTeamExtensionsPolicyOther: DBXTeamLogTeamExtensionsPolicy
 public class DBXTeamLogTeamExtensionsPolicyChangedDetails: NSObject {
     /// New Extensions policy.
     @objc
-    public var newValue: DBXTeamLogTeamExtensionsPolicy { DBXTeamLogTeamExtensionsPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTeamExtensionsPolicy { DBXTeamLogTeamExtensionsPolicy.factory(swift: swift.newValue) }
     /// Previous Extensions policy.
     @objc
-    public var previousValue: DBXTeamLogTeamExtensionsPolicy { DBXTeamLogTeamExtensionsPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogTeamExtensionsPolicy { DBXTeamLogTeamExtensionsPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogTeamExtensionsPolicy, previousValue: DBXTeamLogTeamExtensionsPolicy) {
         self.swift = TeamLog.TeamExtensionsPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.TeamExtensionsPolicyChangedDetails
+    public let swift: TeamLog.TeamExtensionsPolicyChangedDetails
 
     public init(swift: TeamLog.TeamExtensionsPolicyChangedDetails) {
         self.swift = swift
@@ -62019,7 +62532,7 @@ public class DBXTeamLogTeamExtensionsPolicyChangedType: NSObject {
         self.swift = TeamLog.TeamExtensionsPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamExtensionsPolicyChangedType
+    public let swift: TeamLog.TeamExtensionsPolicyChangedType
 
     public init(swift: TeamLog.TeamExtensionsPolicyChangedType) {
         self.swift = swift
@@ -62034,11 +62547,11 @@ public class DBXTeamLogTeamExtensionsPolicyChangedType: NSObject {
 public class DBXTeamLogTeamFolderChangeStatusDetails: NSObject {
     /// New team folder status.
     @objc
-    public var newValue: DBXTeamTeamFolderStatus { DBXTeamTeamFolderStatus(swift: swift.newValue) }
+    public var newValue: DBXTeamTeamFolderStatus { DBXTeamTeamFolderStatus.factory(swift: swift.newValue) }
     /// Previous team folder status. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamTeamFolderStatus? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamTeamFolderStatus(swift: swift)
+        return DBXTeamTeamFolderStatus.factory(swift: swift)
     }
 
     @objc
@@ -62046,7 +62559,7 @@ public class DBXTeamLogTeamFolderChangeStatusDetails: NSObject {
         self.swift = TeamLog.TeamFolderChangeStatusDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.TeamFolderChangeStatusDetails
+    public let swift: TeamLog.TeamFolderChangeStatusDetails
 
     public init(swift: TeamLog.TeamFolderChangeStatusDetails) {
         self.swift = swift
@@ -62068,7 +62581,7 @@ public class DBXTeamLogTeamFolderChangeStatusType: NSObject {
         self.swift = TeamLog.TeamFolderChangeStatusType(description_: description_)
     }
 
-    let swift: TeamLog.TeamFolderChangeStatusType
+    public let swift: TeamLog.TeamFolderChangeStatusType
 
     public init(swift: TeamLog.TeamFolderChangeStatusType) {
         self.swift = swift
@@ -62081,7 +62594,12 @@ public class DBXTeamLogTeamFolderChangeStatusType: NSObject {
 /// Created team folder in active status.
 @objc
 public class DBXTeamLogTeamFolderCreateDetails: NSObject {
-    let swift: TeamLog.TeamFolderCreateDetails
+    public override init() {
+        self.swift = TeamLog.TeamFolderCreateDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamFolderCreateDetails
 
     public init(swift: TeamLog.TeamFolderCreateDetails) {
         self.swift = swift
@@ -62103,7 +62621,7 @@ public class DBXTeamLogTeamFolderCreateType: NSObject {
         self.swift = TeamLog.TeamFolderCreateType(description_: description_)
     }
 
-    let swift: TeamLog.TeamFolderCreateType
+    public let swift: TeamLog.TeamFolderCreateType
 
     public init(swift: TeamLog.TeamFolderCreateType) {
         self.swift = swift
@@ -62125,7 +62643,7 @@ public class DBXTeamLogTeamFolderDowngradeDetails: NSObject {
         self.swift = TeamLog.TeamFolderDowngradeDetails(targetAssetIndex: targetAssetIndex.uint64Value)
     }
 
-    let swift: TeamLog.TeamFolderDowngradeDetails
+    public let swift: TeamLog.TeamFolderDowngradeDetails
 
     public init(swift: TeamLog.TeamFolderDowngradeDetails) {
         self.swift = swift
@@ -62147,7 +62665,7 @@ public class DBXTeamLogTeamFolderDowngradeType: NSObject {
         self.swift = TeamLog.TeamFolderDowngradeType(description_: description_)
     }
 
-    let swift: TeamLog.TeamFolderDowngradeType
+    public let swift: TeamLog.TeamFolderDowngradeType
 
     public init(swift: TeamLog.TeamFolderDowngradeType) {
         self.swift = swift
@@ -62160,7 +62678,12 @@ public class DBXTeamLogTeamFolderDowngradeType: NSObject {
 /// Permanently deleted archived team folder.
 @objc
 public class DBXTeamLogTeamFolderPermanentlyDeleteDetails: NSObject {
-    let swift: TeamLog.TeamFolderPermanentlyDeleteDetails
+    public override init() {
+        self.swift = TeamLog.TeamFolderPermanentlyDeleteDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamFolderPermanentlyDeleteDetails
 
     public init(swift: TeamLog.TeamFolderPermanentlyDeleteDetails) {
         self.swift = swift
@@ -62182,7 +62705,7 @@ public class DBXTeamLogTeamFolderPermanentlyDeleteType: NSObject {
         self.swift = TeamLog.TeamFolderPermanentlyDeleteType(description_: description_)
     }
 
-    let swift: TeamLog.TeamFolderPermanentlyDeleteType
+    public let swift: TeamLog.TeamFolderPermanentlyDeleteType
 
     public init(swift: TeamLog.TeamFolderPermanentlyDeleteType) {
         self.swift = swift
@@ -62207,7 +62730,7 @@ public class DBXTeamLogTeamFolderRenameDetails: NSObject {
         self.swift = TeamLog.TeamFolderRenameDetails(previousFolderName: previousFolderName, newFolderName: newFolderName)
     }
 
-    let swift: TeamLog.TeamFolderRenameDetails
+    public let swift: TeamLog.TeamFolderRenameDetails
 
     public init(swift: TeamLog.TeamFolderRenameDetails) {
         self.swift = swift
@@ -62229,7 +62752,7 @@ public class DBXTeamLogTeamFolderRenameType: NSObject {
         self.swift = TeamLog.TeamFolderRenameType(description_: description_)
     }
 
-    let swift: TeamLog.TeamFolderRenameType
+    public let swift: TeamLog.TeamFolderRenameType
 
     public init(swift: TeamLog.TeamFolderRenameType) {
         self.swift = swift
@@ -62244,7 +62767,7 @@ public class DBXTeamLogTeamFolderRenameType: NSObject {
 public class DBXTeamLogTeamInviteDetails: NSObject {
     /// How the user was invited to the team.
     @objc
-    public var inviteMethod: DBXTeamLogInviteMethod { DBXTeamLogInviteMethod(swift: swift.inviteMethod) }
+    public var inviteMethod: DBXTeamLogInviteMethod { DBXTeamLogInviteMethod.factory(swift: swift.inviteMethod) }
     /// True if the invitation incurred an additional license purchase.
     @objc
     public var additionalLicensePurchase: NSNumber? { swift.additionalLicensePurchase as NSNumber? }
@@ -62254,7 +62777,7 @@ public class DBXTeamLogTeamInviteDetails: NSObject {
         self.swift = TeamLog.TeamInviteDetails(inviteMethod: inviteMethod.swift, additionalLicensePurchase: additionalLicensePurchase?.boolValue)
     }
 
-    let swift: TeamLog.TeamInviteDetails
+    public let swift: TeamLog.TeamInviteDetails
 
     public init(swift: TeamLog.TeamInviteDetails) {
         self.swift = swift
@@ -62267,7 +62790,14 @@ public class DBXTeamLogTeamInviteDetails: NSObject {
 /// Team linked app
 @objc
 public class DBXTeamLogTeamLinkedAppLogInfo: DBXTeamLogAppLogInfo {
-    let subSwift: TeamLog.TeamLinkedAppLogInfo
+    @objc
+    public override init(appId: String?, displayName: String?) {
+        let swift = TeamLog.TeamLinkedAppLogInfo(appId: appId, displayName: displayName)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.TeamLinkedAppLogInfo
 
     public init(swift: TeamLog.TeamLinkedAppLogInfo) {
         self.subSwift = swift
@@ -62290,7 +62820,7 @@ public class DBXTeamLogTeamLogInfo: NSObject {
         self.swift = TeamLog.TeamLogInfo(displayName: displayName)
     }
 
-    let swift: TeamLog.TeamLogInfo
+    public let swift: TeamLog.TeamLogInfo
 
     public init(swift: TeamLog.TeamLogInfo) {
         self.swift = swift
@@ -62329,7 +62859,7 @@ public class DBXTeamLogTeamMemberLogInfo: DBXTeamLogUserLogInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.TeamMemberLogInfo
+    public let subSwift: TeamLog.TeamMemberLogInfo
 
     public init(swift: TeamLog.TeamMemberLogInfo) {
         self.subSwift = swift
@@ -62343,9 +62873,9 @@ public class DBXTeamLogTeamMemberLogInfo: DBXTeamLogUserLogInfo {
 /// Objective-C compatible TeamMembershipType union
 @objc
 public class DBXTeamLogTeamMembershipType: NSObject {
-    let swift: TeamLog.TeamMembershipType
+    public let swift: TeamLog.TeamMembershipType
 
-    public init(swift: TeamLog.TeamMembershipType) {
+    fileprivate init(swift: TeamLog.TeamMembershipType) {
         self.swift = swift
     }
 
@@ -62438,7 +62968,7 @@ public class DBXTeamLogTeamMergeFromDetails: NSObject {
         self.swift = TeamLog.TeamMergeFromDetails(teamName: teamName)
     }
 
-    let swift: TeamLog.TeamMergeFromDetails
+    public let swift: TeamLog.TeamMergeFromDetails
 
     public init(swift: TeamLog.TeamMergeFromDetails) {
         self.swift = swift
@@ -62460,7 +62990,7 @@ public class DBXTeamLogTeamMergeFromType: NSObject {
         self.swift = TeamLog.TeamMergeFromType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeFromType
+    public let swift: TeamLog.TeamMergeFromType
 
     public init(swift: TeamLog.TeamMergeFromType) {
         self.swift = swift
@@ -62476,7 +63006,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedDetails: NSObject {
     /// Team merge request acceptance details.
     @objc
     public var requestAcceptedDetails: DBXTeamLogTeamMergeRequestAcceptedExtraDetails {
-        DBXTeamLogTeamMergeRequestAcceptedExtraDetails(swift: swift.requestAcceptedDetails)
+        DBXTeamLogTeamMergeRequestAcceptedExtraDetails.factory(swift: swift.requestAcceptedDetails)
     }
 
     @objc
@@ -62484,7 +63014,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestAcceptedDetails(requestAcceptedDetails: requestAcceptedDetails.swift)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedDetails
+    public let swift: TeamLog.TeamMergeRequestAcceptedDetails
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedDetails) {
         self.swift = swift
@@ -62497,9 +63027,9 @@ public class DBXTeamLogTeamMergeRequestAcceptedDetails: NSObject {
 /// Team merge request acceptance details
 @objc
 public class DBXTeamLogTeamMergeRequestAcceptedExtraDetails: NSObject {
-    let swift: TeamLog.TeamMergeRequestAcceptedExtraDetails
+    public let swift: TeamLog.TeamMergeRequestAcceptedExtraDetails
 
-    public init(swift: TeamLog.TeamMergeRequestAcceptedExtraDetails) {
+    fileprivate init(swift: TeamLog.TeamMergeRequestAcceptedExtraDetails) {
         self.swift = swift
     }
 
@@ -62588,7 +63118,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedShownToPrimaryTeamDetails: NSObje
         self.swift = TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -62610,7 +63140,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedShownToPrimaryTeamType: NSObject 
         self.swift = TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedShownToPrimaryTeamType) {
         self.swift = swift
@@ -62635,7 +63165,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedShownToSecondaryTeamDetails: NSOb
         self.swift = TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetails(primaryTeam: primaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -62657,7 +63187,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedShownToSecondaryTeamType: NSObjec
         self.swift = TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedShownToSecondaryTeamType) {
         self.swift = swift
@@ -62679,7 +63209,7 @@ public class DBXTeamLogTeamMergeRequestAcceptedType: NSObject {
         self.swift = TeamLog.TeamMergeRequestAcceptedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestAcceptedType
+    public let swift: TeamLog.TeamMergeRequestAcceptedType
 
     public init(swift: TeamLog.TeamMergeRequestAcceptedType) {
         self.swift = swift
@@ -62701,7 +63231,7 @@ public class DBXTeamLogTeamMergeRequestAutoCanceledDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestAutoCanceledDetails(details: details)
     }
 
-    let swift: TeamLog.TeamMergeRequestAutoCanceledDetails
+    public let swift: TeamLog.TeamMergeRequestAutoCanceledDetails
 
     public init(swift: TeamLog.TeamMergeRequestAutoCanceledDetails) {
         self.swift = swift
@@ -62723,7 +63253,7 @@ public class DBXTeamLogTeamMergeRequestAutoCanceledType: NSObject {
         self.swift = TeamLog.TeamMergeRequestAutoCanceledType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestAutoCanceledType
+    public let swift: TeamLog.TeamMergeRequestAutoCanceledType
 
     public init(swift: TeamLog.TeamMergeRequestAutoCanceledType) {
         self.swift = swift
@@ -62739,7 +63269,7 @@ public class DBXTeamLogTeamMergeRequestCanceledDetails: NSObject {
     /// Team merge request cancellation details.
     @objc
     public var requestCanceledDetails: DBXTeamLogTeamMergeRequestCanceledExtraDetails {
-        DBXTeamLogTeamMergeRequestCanceledExtraDetails(swift: swift.requestCanceledDetails)
+        DBXTeamLogTeamMergeRequestCanceledExtraDetails.factory(swift: swift.requestCanceledDetails)
     }
 
     @objc
@@ -62747,7 +63277,7 @@ public class DBXTeamLogTeamMergeRequestCanceledDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestCanceledDetails(requestCanceledDetails: requestCanceledDetails.swift)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledDetails
+    public let swift: TeamLog.TeamMergeRequestCanceledDetails
 
     public init(swift: TeamLog.TeamMergeRequestCanceledDetails) {
         self.swift = swift
@@ -62760,9 +63290,9 @@ public class DBXTeamLogTeamMergeRequestCanceledDetails: NSObject {
 /// Team merge request cancellation details
 @objc
 public class DBXTeamLogTeamMergeRequestCanceledExtraDetails: NSObject {
-    let swift: TeamLog.TeamMergeRequestCanceledExtraDetails
+    public let swift: TeamLog.TeamMergeRequestCanceledExtraDetails
 
-    public init(swift: TeamLog.TeamMergeRequestCanceledExtraDetails) {
+    fileprivate init(swift: TeamLog.TeamMergeRequestCanceledExtraDetails) {
         self.swift = swift
     }
 
@@ -62851,7 +63381,7 @@ public class DBXTeamLogTeamMergeRequestCanceledShownToPrimaryTeamDetails: NSObje
         self.swift = TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -62873,7 +63403,7 @@ public class DBXTeamLogTeamMergeRequestCanceledShownToPrimaryTeamType: NSObject 
         self.swift = TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestCanceledShownToPrimaryTeamType) {
         self.swift = swift
@@ -62898,7 +63428,7 @@ public class DBXTeamLogTeamMergeRequestCanceledShownToSecondaryTeamDetails: NSOb
         self.swift = TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetails(sentTo: sentTo, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -62920,7 +63450,7 @@ public class DBXTeamLogTeamMergeRequestCanceledShownToSecondaryTeamType: NSObjec
         self.swift = TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestCanceledShownToSecondaryTeamType) {
         self.swift = swift
@@ -62942,7 +63472,7 @@ public class DBXTeamLogTeamMergeRequestCanceledType: NSObject {
         self.swift = TeamLog.TeamMergeRequestCanceledType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestCanceledType
+    public let swift: TeamLog.TeamMergeRequestCanceledType
 
     public init(swift: TeamLog.TeamMergeRequestCanceledType) {
         self.swift = swift
@@ -62958,7 +63488,7 @@ public class DBXTeamLogTeamMergeRequestExpiredDetails: NSObject {
     /// Team merge request expiration details.
     @objc
     public var requestExpiredDetails: DBXTeamLogTeamMergeRequestExpiredExtraDetails {
-        DBXTeamLogTeamMergeRequestExpiredExtraDetails(swift: swift.requestExpiredDetails)
+        DBXTeamLogTeamMergeRequestExpiredExtraDetails.factory(swift: swift.requestExpiredDetails)
     }
 
     @objc
@@ -62966,7 +63496,7 @@ public class DBXTeamLogTeamMergeRequestExpiredDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestExpiredDetails(requestExpiredDetails: requestExpiredDetails.swift)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredDetails
+    public let swift: TeamLog.TeamMergeRequestExpiredDetails
 
     public init(swift: TeamLog.TeamMergeRequestExpiredDetails) {
         self.swift = swift
@@ -62979,9 +63509,9 @@ public class DBXTeamLogTeamMergeRequestExpiredDetails: NSObject {
 /// Team merge request expiration details
 @objc
 public class DBXTeamLogTeamMergeRequestExpiredExtraDetails: NSObject {
-    let swift: TeamLog.TeamMergeRequestExpiredExtraDetails
+    public let swift: TeamLog.TeamMergeRequestExpiredExtraDetails
 
-    public init(swift: TeamLog.TeamMergeRequestExpiredExtraDetails) {
+    fileprivate init(swift: TeamLog.TeamMergeRequestExpiredExtraDetails) {
         self.swift = swift
     }
 
@@ -63070,7 +63600,7 @@ public class DBXTeamLogTeamMergeRequestExpiredShownToPrimaryTeamDetails: NSObjec
         self.swift = TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -63092,7 +63622,7 @@ public class DBXTeamLogTeamMergeRequestExpiredShownToPrimaryTeamType: NSObject {
         self.swift = TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestExpiredShownToPrimaryTeamType) {
         self.swift = swift
@@ -63114,7 +63644,7 @@ public class DBXTeamLogTeamMergeRequestExpiredShownToSecondaryTeamDetails: NSObj
         self.swift = TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetails(sentTo: sentTo)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -63136,7 +63666,7 @@ public class DBXTeamLogTeamMergeRequestExpiredShownToSecondaryTeamType: NSObject
         self.swift = TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestExpiredShownToSecondaryTeamType) {
         self.swift = swift
@@ -63158,7 +63688,7 @@ public class DBXTeamLogTeamMergeRequestExpiredType: NSObject {
         self.swift = TeamLog.TeamMergeRequestExpiredType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestExpiredType
+    public let swift: TeamLog.TeamMergeRequestExpiredType
 
     public init(swift: TeamLog.TeamMergeRequestExpiredType) {
         self.swift = swift
@@ -63183,7 +63713,7 @@ public class DBXTeamLogTeamMergeRequestRejectedShownToPrimaryTeamDetails: NSObje
         self.swift = TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -63205,7 +63735,7 @@ public class DBXTeamLogTeamMergeRequestRejectedShownToPrimaryTeamType: NSObject 
         self.swift = TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestRejectedShownToPrimaryTeamType) {
         self.swift = swift
@@ -63227,7 +63757,7 @@ public class DBXTeamLogTeamMergeRequestRejectedShownToSecondaryTeamDetails: NSOb
         self.swift = TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetails(sentBy: sentBy)
     }
 
-    let swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -63249,7 +63779,7 @@ public class DBXTeamLogTeamMergeRequestRejectedShownToSecondaryTeamType: NSObjec
         self.swift = TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestRejectedShownToSecondaryTeamType) {
         self.swift = swift
@@ -63265,7 +63795,7 @@ public class DBXTeamLogTeamMergeRequestReminderDetails: NSObject {
     /// Team merge request reminder details.
     @objc
     public var requestReminderDetails: DBXTeamLogTeamMergeRequestReminderExtraDetails {
-        DBXTeamLogTeamMergeRequestReminderExtraDetails(swift: swift.requestReminderDetails)
+        DBXTeamLogTeamMergeRequestReminderExtraDetails.factory(swift: swift.requestReminderDetails)
     }
 
     @objc
@@ -63273,7 +63803,7 @@ public class DBXTeamLogTeamMergeRequestReminderDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestReminderDetails(requestReminderDetails: requestReminderDetails.swift)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderDetails
+    public let swift: TeamLog.TeamMergeRequestReminderDetails
 
     public init(swift: TeamLog.TeamMergeRequestReminderDetails) {
         self.swift = swift
@@ -63286,9 +63816,9 @@ public class DBXTeamLogTeamMergeRequestReminderDetails: NSObject {
 /// Team merge request reminder details
 @objc
 public class DBXTeamLogTeamMergeRequestReminderExtraDetails: NSObject {
-    let swift: TeamLog.TeamMergeRequestReminderExtraDetails
+    public let swift: TeamLog.TeamMergeRequestReminderExtraDetails
 
-    public init(swift: TeamLog.TeamMergeRequestReminderExtraDetails) {
+    fileprivate init(swift: TeamLog.TeamMergeRequestReminderExtraDetails) {
         self.swift = swift
     }
 
@@ -63377,7 +63907,7 @@ public class DBXTeamLogTeamMergeRequestReminderShownToPrimaryTeamDetails: NSObje
         self.swift = TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -63399,7 +63929,7 @@ public class DBXTeamLogTeamMergeRequestReminderShownToPrimaryTeamType: NSObject 
         self.swift = TeamLog.TeamMergeRequestReminderShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestReminderShownToPrimaryTeamType) {
         self.swift = swift
@@ -63421,7 +63951,7 @@ public class DBXTeamLogTeamMergeRequestReminderShownToSecondaryTeamDetails: NSOb
         self.swift = TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetails(sentTo: sentTo)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -63443,7 +63973,7 @@ public class DBXTeamLogTeamMergeRequestReminderShownToSecondaryTeamType: NSObjec
         self.swift = TeamLog.TeamMergeRequestReminderShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestReminderShownToSecondaryTeamType) {
         self.swift = swift
@@ -63465,7 +63995,7 @@ public class DBXTeamLogTeamMergeRequestReminderType: NSObject {
         self.swift = TeamLog.TeamMergeRequestReminderType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestReminderType
+    public let swift: TeamLog.TeamMergeRequestReminderType
 
     public init(swift: TeamLog.TeamMergeRequestReminderType) {
         self.swift = swift
@@ -63487,7 +64017,7 @@ public class DBXTeamLogTeamMergeRequestRevokedDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestRevokedDetails(team: team)
     }
 
-    let swift: TeamLog.TeamMergeRequestRevokedDetails
+    public let swift: TeamLog.TeamMergeRequestRevokedDetails
 
     public init(swift: TeamLog.TeamMergeRequestRevokedDetails) {
         self.swift = swift
@@ -63509,7 +64039,7 @@ public class DBXTeamLogTeamMergeRequestRevokedType: NSObject {
         self.swift = TeamLog.TeamMergeRequestRevokedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestRevokedType
+    public let swift: TeamLog.TeamMergeRequestRevokedType
 
     public init(swift: TeamLog.TeamMergeRequestRevokedType) {
         self.swift = swift
@@ -63534,7 +64064,7 @@ public class DBXTeamLogTeamMergeRequestSentShownToPrimaryTeamDetails: NSObject {
         self.swift = TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetails(secondaryTeam: secondaryTeam, sentTo: sentTo)
     }
 
-    let swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamDetails) {
         self.swift = swift
@@ -63556,7 +64086,7 @@ public class DBXTeamLogTeamMergeRequestSentShownToPrimaryTeamType: NSObject {
         self.swift = TeamLog.TeamMergeRequestSentShownToPrimaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamType
+    public let swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestSentShownToPrimaryTeamType) {
         self.swift = swift
@@ -63578,7 +64108,7 @@ public class DBXTeamLogTeamMergeRequestSentShownToSecondaryTeamDetails: NSObject
         self.swift = TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetails(sentTo: sentTo)
     }
 
-    let swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetails
+    public let swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetails
 
     public init(swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamDetails) {
         self.swift = swift
@@ -63600,7 +64130,7 @@ public class DBXTeamLogTeamMergeRequestSentShownToSecondaryTeamType: NSObject {
         self.swift = TeamLog.TeamMergeRequestSentShownToSecondaryTeamType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamType
+    public let swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamType
 
     public init(swift: TeamLog.TeamMergeRequestSentShownToSecondaryTeamType) {
         self.swift = swift
@@ -63622,7 +64152,7 @@ public class DBXTeamLogTeamMergeToDetails: NSObject {
         self.swift = TeamLog.TeamMergeToDetails(teamName: teamName)
     }
 
-    let swift: TeamLog.TeamMergeToDetails
+    public let swift: TeamLog.TeamMergeToDetails
 
     public init(swift: TeamLog.TeamMergeToDetails) {
         self.swift = swift
@@ -63644,7 +64174,7 @@ public class DBXTeamLogTeamMergeToType: NSObject {
         self.swift = TeamLog.TeamMergeToType(description_: description_)
     }
 
-    let swift: TeamLog.TeamMergeToType
+    public let swift: TeamLog.TeamMergeToType
 
     public init(swift: TeamLog.TeamMergeToType) {
         self.swift = swift
@@ -63669,7 +64199,7 @@ public class DBXTeamLogTeamName: NSObject {
         self.swift = TeamLog.TeamName(teamDisplayName: teamDisplayName, teamLegalName: teamLegalName)
     }
 
-    let swift: TeamLog.TeamName
+    public let swift: TeamLog.TeamName
 
     public init(swift: TeamLog.TeamName) {
         self.swift = swift
@@ -63682,7 +64212,12 @@ public class DBXTeamLogTeamName: NSObject {
 /// Added team background to display on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileAddBackgroundDetails: NSObject {
-    let swift: TeamLog.TeamProfileAddBackgroundDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileAddBackgroundDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileAddBackgroundDetails
 
     public init(swift: TeamLog.TeamProfileAddBackgroundDetails) {
         self.swift = swift
@@ -63704,7 +64239,7 @@ public class DBXTeamLogTeamProfileAddBackgroundType: NSObject {
         self.swift = TeamLog.TeamProfileAddBackgroundType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileAddBackgroundType
+    public let swift: TeamLog.TeamProfileAddBackgroundType
 
     public init(swift: TeamLog.TeamProfileAddBackgroundType) {
         self.swift = swift
@@ -63717,7 +64252,12 @@ public class DBXTeamLogTeamProfileAddBackgroundType: NSObject {
 /// Added team logo to display on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileAddLogoDetails: NSObject {
-    let swift: TeamLog.TeamProfileAddLogoDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileAddLogoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileAddLogoDetails
 
     public init(swift: TeamLog.TeamProfileAddLogoDetails) {
         self.swift = swift
@@ -63739,7 +64279,7 @@ public class DBXTeamLogTeamProfileAddLogoType: NSObject {
         self.swift = TeamLog.TeamProfileAddLogoType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileAddLogoType
+    public let swift: TeamLog.TeamProfileAddLogoType
 
     public init(swift: TeamLog.TeamProfileAddLogoType) {
         self.swift = swift
@@ -63752,7 +64292,12 @@ public class DBXTeamLogTeamProfileAddLogoType: NSObject {
 /// Changed team background displayed on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileChangeBackgroundDetails: NSObject {
-    let swift: TeamLog.TeamProfileChangeBackgroundDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileChangeBackgroundDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileChangeBackgroundDetails
 
     public init(swift: TeamLog.TeamProfileChangeBackgroundDetails) {
         self.swift = swift
@@ -63774,7 +64319,7 @@ public class DBXTeamLogTeamProfileChangeBackgroundType: NSObject {
         self.swift = TeamLog.TeamProfileChangeBackgroundType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileChangeBackgroundType
+    public let swift: TeamLog.TeamProfileChangeBackgroundType
 
     public init(swift: TeamLog.TeamProfileChangeBackgroundType) {
         self.swift = swift
@@ -63799,7 +64344,7 @@ public class DBXTeamLogTeamProfileChangeDefaultLanguageDetails: NSObject {
         self.swift = TeamLog.TeamProfileChangeDefaultLanguageDetails(newValue: newValue, previousValue: previousValue)
     }
 
-    let swift: TeamLog.TeamProfileChangeDefaultLanguageDetails
+    public let swift: TeamLog.TeamProfileChangeDefaultLanguageDetails
 
     public init(swift: TeamLog.TeamProfileChangeDefaultLanguageDetails) {
         self.swift = swift
@@ -63821,7 +64366,7 @@ public class DBXTeamLogTeamProfileChangeDefaultLanguageType: NSObject {
         self.swift = TeamLog.TeamProfileChangeDefaultLanguageType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileChangeDefaultLanguageType
+    public let swift: TeamLog.TeamProfileChangeDefaultLanguageType
 
     public init(swift: TeamLog.TeamProfileChangeDefaultLanguageType) {
         self.swift = swift
@@ -63834,7 +64379,12 @@ public class DBXTeamLogTeamProfileChangeDefaultLanguageType: NSObject {
 /// Changed team logo displayed on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileChangeLogoDetails: NSObject {
-    let swift: TeamLog.TeamProfileChangeLogoDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileChangeLogoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileChangeLogoDetails
 
     public init(swift: TeamLog.TeamProfileChangeLogoDetails) {
         self.swift = swift
@@ -63856,7 +64406,7 @@ public class DBXTeamLogTeamProfileChangeLogoType: NSObject {
         self.swift = TeamLog.TeamProfileChangeLogoType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileChangeLogoType
+    public let swift: TeamLog.TeamProfileChangeLogoType
 
     public init(swift: TeamLog.TeamProfileChangeLogoType) {
         self.swift = swift
@@ -63884,7 +64434,7 @@ public class DBXTeamLogTeamProfileChangeNameDetails: NSObject {
         self.swift = TeamLog.TeamProfileChangeNameDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.TeamProfileChangeNameDetails
+    public let swift: TeamLog.TeamProfileChangeNameDetails
 
     public init(swift: TeamLog.TeamProfileChangeNameDetails) {
         self.swift = swift
@@ -63906,7 +64456,7 @@ public class DBXTeamLogTeamProfileChangeNameType: NSObject {
         self.swift = TeamLog.TeamProfileChangeNameType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileChangeNameType
+    public let swift: TeamLog.TeamProfileChangeNameType
 
     public init(swift: TeamLog.TeamProfileChangeNameType) {
         self.swift = swift
@@ -63919,7 +64469,12 @@ public class DBXTeamLogTeamProfileChangeNameType: NSObject {
 /// Removed team background displayed on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileRemoveBackgroundDetails: NSObject {
-    let swift: TeamLog.TeamProfileRemoveBackgroundDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileRemoveBackgroundDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileRemoveBackgroundDetails
 
     public init(swift: TeamLog.TeamProfileRemoveBackgroundDetails) {
         self.swift = swift
@@ -63941,7 +64496,7 @@ public class DBXTeamLogTeamProfileRemoveBackgroundType: NSObject {
         self.swift = TeamLog.TeamProfileRemoveBackgroundType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileRemoveBackgroundType
+    public let swift: TeamLog.TeamProfileRemoveBackgroundType
 
     public init(swift: TeamLog.TeamProfileRemoveBackgroundType) {
         self.swift = swift
@@ -63954,7 +64509,12 @@ public class DBXTeamLogTeamProfileRemoveBackgroundType: NSObject {
 /// Removed team logo displayed on shared link headers.
 @objc
 public class DBXTeamLogTeamProfileRemoveLogoDetails: NSObject {
-    let swift: TeamLog.TeamProfileRemoveLogoDetails
+    public override init() {
+        self.swift = TeamLog.TeamProfileRemoveLogoDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TeamProfileRemoveLogoDetails
 
     public init(swift: TeamLog.TeamProfileRemoveLogoDetails) {
         self.swift = swift
@@ -63976,7 +64536,7 @@ public class DBXTeamLogTeamProfileRemoveLogoType: NSObject {
         self.swift = TeamLog.TeamProfileRemoveLogoType(description_: description_)
     }
 
-    let swift: TeamLog.TeamProfileRemoveLogoType
+    public let swift: TeamLog.TeamProfileRemoveLogoType
 
     public init(swift: TeamLog.TeamProfileRemoveLogoType) {
         self.swift = swift
@@ -63989,9 +64549,9 @@ public class DBXTeamLogTeamProfileRemoveLogoType: NSObject {
 /// Policy for controlling whether team selective sync is enabled for team.
 @objc
 public class DBXTeamLogTeamSelectiveSyncPolicy: NSObject {
-    let swift: TeamLog.TeamSelectiveSyncPolicy
+    public let swift: TeamLog.TeamSelectiveSyncPolicy
 
-    public init(swift: TeamLog.TeamSelectiveSyncPolicy) {
+    fileprivate init(swift: TeamLog.TeamSelectiveSyncPolicy) {
         self.swift = swift
     }
 
@@ -64060,17 +64620,17 @@ public class DBXTeamLogTeamSelectiveSyncPolicyOther: DBXTeamLogTeamSelectiveSync
 public class DBXTeamLogTeamSelectiveSyncPolicyChangedDetails: NSObject {
     /// New Team Selective Sync policy.
     @objc
-    public var newValue: DBXTeamLogTeamSelectiveSyncPolicy { DBXTeamLogTeamSelectiveSyncPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTeamSelectiveSyncPolicy { DBXTeamLogTeamSelectiveSyncPolicy.factory(swift: swift.newValue) }
     /// Previous Team Selective Sync policy.
     @objc
-    public var previousValue: DBXTeamLogTeamSelectiveSyncPolicy { DBXTeamLogTeamSelectiveSyncPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogTeamSelectiveSyncPolicy { DBXTeamLogTeamSelectiveSyncPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogTeamSelectiveSyncPolicy, previousValue: DBXTeamLogTeamSelectiveSyncPolicy) {
         self.swift = TeamLog.TeamSelectiveSyncPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.TeamSelectiveSyncPolicyChangedDetails
+    public let swift: TeamLog.TeamSelectiveSyncPolicyChangedDetails
 
     public init(swift: TeamLog.TeamSelectiveSyncPolicyChangedDetails) {
         self.swift = swift
@@ -64092,7 +64652,7 @@ public class DBXTeamLogTeamSelectiveSyncPolicyChangedType: NSObject {
         self.swift = TeamLog.TeamSelectiveSyncPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamSelectiveSyncPolicyChangedType
+    public let swift: TeamLog.TeamSelectiveSyncPolicyChangedType
 
     public init(swift: TeamLog.TeamSelectiveSyncPolicyChangedType) {
         self.swift = swift
@@ -64107,17 +64667,17 @@ public class DBXTeamLogTeamSelectiveSyncPolicyChangedType: NSObject {
 public class DBXTeamLogTeamSelectiveSyncSettingsChangedDetails: NSObject {
     /// Previous value.
     @objc
-    public var previousValue: DBXFilesSyncSetting { DBXFilesSyncSetting(swift: swift.previousValue) }
+    public var previousValue: DBXFilesSyncSetting { DBXFilesSyncSetting.factory(swift: swift.previousValue) }
     /// New value.
     @objc
-    public var newValue: DBXFilesSyncSetting { DBXFilesSyncSetting(swift: swift.newValue) }
+    public var newValue: DBXFilesSyncSetting { DBXFilesSyncSetting.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXFilesSyncSetting, newValue: DBXFilesSyncSetting) {
         self.swift = TeamLog.TeamSelectiveSyncSettingsChangedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.TeamSelectiveSyncSettingsChangedDetails
+    public let swift: TeamLog.TeamSelectiveSyncSettingsChangedDetails
 
     public init(swift: TeamLog.TeamSelectiveSyncSettingsChangedDetails) {
         self.swift = swift
@@ -64139,7 +64699,7 @@ public class DBXTeamLogTeamSelectiveSyncSettingsChangedType: NSObject {
         self.swift = TeamLog.TeamSelectiveSyncSettingsChangedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamSelectiveSyncSettingsChangedType
+    public let swift: TeamLog.TeamSelectiveSyncSettingsChangedType
 
     public init(swift: TeamLog.TeamSelectiveSyncSettingsChangedType) {
         self.swift = swift
@@ -64167,7 +64727,7 @@ public class DBXTeamLogTeamSharingWhitelistSubjectsChangedDetails: NSObject {
         )
     }
 
-    let swift: TeamLog.TeamSharingWhitelistSubjectsChangedDetails
+    public let swift: TeamLog.TeamSharingWhitelistSubjectsChangedDetails
 
     public init(swift: TeamLog.TeamSharingWhitelistSubjectsChangedDetails) {
         self.swift = swift
@@ -64189,7 +64749,7 @@ public class DBXTeamLogTeamSharingWhitelistSubjectsChangedType: NSObject {
         self.swift = TeamLog.TeamSharingWhitelistSubjectsChangedType(description_: description_)
     }
 
-    let swift: TeamLog.TeamSharingWhitelistSubjectsChangedType
+    public let swift: TeamLog.TeamSharingWhitelistSubjectsChangedType
 
     public init(swift: TeamLog.TeamSharingWhitelistSubjectsChangedType) {
         self.swift = swift
@@ -64202,7 +64762,12 @@ public class DBXTeamLogTeamSharingWhitelistSubjectsChangedType: NSObject {
 /// Added backup phone for two-step verification.
 @objc
 public class DBXTeamLogTfaAddBackupPhoneDetails: NSObject {
-    let swift: TeamLog.TfaAddBackupPhoneDetails
+    public override init() {
+        self.swift = TeamLog.TfaAddBackupPhoneDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaAddBackupPhoneDetails
 
     public init(swift: TeamLog.TfaAddBackupPhoneDetails) {
         self.swift = swift
@@ -64224,7 +64789,7 @@ public class DBXTeamLogTfaAddBackupPhoneType: NSObject {
         self.swift = TeamLog.TfaAddBackupPhoneType(description_: description_)
     }
 
-    let swift: TeamLog.TfaAddBackupPhoneType
+    public let swift: TeamLog.TfaAddBackupPhoneType
 
     public init(swift: TeamLog.TfaAddBackupPhoneType) {
         self.swift = swift
@@ -64237,7 +64802,12 @@ public class DBXTeamLogTfaAddBackupPhoneType: NSObject {
 /// Added members to two factor authentication exception list.
 @objc
 public class DBXTeamLogTfaAddExceptionDetails: NSObject {
-    let swift: TeamLog.TfaAddExceptionDetails
+    public override init() {
+        self.swift = TeamLog.TfaAddExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaAddExceptionDetails
 
     public init(swift: TeamLog.TfaAddExceptionDetails) {
         self.swift = swift
@@ -64259,7 +64829,7 @@ public class DBXTeamLogTfaAddExceptionType: NSObject {
         self.swift = TeamLog.TfaAddExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.TfaAddExceptionType
+    public let swift: TeamLog.TfaAddExceptionType
 
     public init(swift: TeamLog.TfaAddExceptionType) {
         self.swift = swift
@@ -64272,7 +64842,12 @@ public class DBXTeamLogTfaAddExceptionType: NSObject {
 /// Added security key for two-step verification.
 @objc
 public class DBXTeamLogTfaAddSecurityKeyDetails: NSObject {
-    let swift: TeamLog.TfaAddSecurityKeyDetails
+    public override init() {
+        self.swift = TeamLog.TfaAddSecurityKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaAddSecurityKeyDetails
 
     public init(swift: TeamLog.TfaAddSecurityKeyDetails) {
         self.swift = swift
@@ -64294,7 +64869,7 @@ public class DBXTeamLogTfaAddSecurityKeyType: NSObject {
         self.swift = TeamLog.TfaAddSecurityKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TfaAddSecurityKeyType
+    public let swift: TeamLog.TfaAddSecurityKeyType
 
     public init(swift: TeamLog.TfaAddSecurityKeyType) {
         self.swift = swift
@@ -64307,7 +64882,12 @@ public class DBXTeamLogTfaAddSecurityKeyType: NSObject {
 /// Changed backup phone for two-step verification.
 @objc
 public class DBXTeamLogTfaChangeBackupPhoneDetails: NSObject {
-    let swift: TeamLog.TfaChangeBackupPhoneDetails
+    public override init() {
+        self.swift = TeamLog.TfaChangeBackupPhoneDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaChangeBackupPhoneDetails
 
     public init(swift: TeamLog.TfaChangeBackupPhoneDetails) {
         self.swift = swift
@@ -64329,7 +64909,7 @@ public class DBXTeamLogTfaChangeBackupPhoneType: NSObject {
         self.swift = TeamLog.TfaChangeBackupPhoneType(description_: description_)
     }
 
-    let swift: TeamLog.TfaChangeBackupPhoneType
+    public let swift: TeamLog.TfaChangeBackupPhoneType
 
     public init(swift: TeamLog.TfaChangeBackupPhoneType) {
         self.swift = swift
@@ -64344,11 +64924,11 @@ public class DBXTeamLogTfaChangeBackupPhoneType: NSObject {
 public class DBXTeamLogTfaChangePolicyDetails: NSObject {
     /// New change policy.
     @objc
-    public var newValue: DBXTeamPoliciesTwoStepVerificationPolicy { DBXTeamPoliciesTwoStepVerificationPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamPoliciesTwoStepVerificationPolicy { DBXTeamPoliciesTwoStepVerificationPolicy.factory(swift: swift.newValue) }
     /// Previous change policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamPoliciesTwoStepVerificationPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamPoliciesTwoStepVerificationPolicy(swift: swift)
+        return DBXTeamPoliciesTwoStepVerificationPolicy.factory(swift: swift)
     }
 
     @objc
@@ -64356,7 +64936,7 @@ public class DBXTeamLogTfaChangePolicyDetails: NSObject {
         self.swift = TeamLog.TfaChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.TfaChangePolicyDetails
+    public let swift: TeamLog.TfaChangePolicyDetails
 
     public init(swift: TeamLog.TfaChangePolicyDetails) {
         self.swift = swift
@@ -64378,7 +64958,7 @@ public class DBXTeamLogTfaChangePolicyType: NSObject {
         self.swift = TeamLog.TfaChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.TfaChangePolicyType
+    public let swift: TeamLog.TfaChangePolicyType
 
     public init(swift: TeamLog.TfaChangePolicyType) {
         self.swift = swift
@@ -64393,11 +64973,11 @@ public class DBXTeamLogTfaChangePolicyType: NSObject {
 public class DBXTeamLogTfaChangeStatusDetails: NSObject {
     /// The new two factor authentication configuration.
     @objc
-    public var newValue: DBXTeamLogTfaConfiguration { DBXTeamLogTfaConfiguration(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTfaConfiguration { DBXTeamLogTfaConfiguration.factory(swift: swift.newValue) }
     /// The previous two factor authentication configuration. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogTfaConfiguration? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogTfaConfiguration(swift: swift)
+        return DBXTeamLogTfaConfiguration.factory(swift: swift)
     }
 
     /// Used two factor authentication rescue code. This flag is relevant when the two factor authentication
@@ -64410,7 +64990,7 @@ public class DBXTeamLogTfaChangeStatusDetails: NSObject {
         self.swift = TeamLog.TfaChangeStatusDetails(newValue: newValue.swift, previousValue: previousValue?.swift, usedRescueCode: usedRescueCode?.boolValue)
     }
 
-    let swift: TeamLog.TfaChangeStatusDetails
+    public let swift: TeamLog.TfaChangeStatusDetails
 
     public init(swift: TeamLog.TfaChangeStatusDetails) {
         self.swift = swift
@@ -64432,7 +65012,7 @@ public class DBXTeamLogTfaChangeStatusType: NSObject {
         self.swift = TeamLog.TfaChangeStatusType(description_: description_)
     }
 
-    let swift: TeamLog.TfaChangeStatusType
+    public let swift: TeamLog.TfaChangeStatusType
 
     public init(swift: TeamLog.TfaChangeStatusType) {
         self.swift = swift
@@ -64445,9 +65025,9 @@ public class DBXTeamLogTfaChangeStatusType: NSObject {
 /// Two factor authentication configuration. Note: the enabled option is deprecated.
 @objc
 public class DBXTeamLogTfaConfiguration: NSObject {
-    let swift: TeamLog.TfaConfiguration
+    public let swift: TeamLog.TfaConfiguration
 
-    public init(swift: TeamLog.TfaConfiguration) {
+    fileprivate init(swift: TeamLog.TfaConfiguration) {
         self.swift = swift
     }
 
@@ -64548,7 +65128,12 @@ public class DBXTeamLogTfaConfigurationOther: DBXTeamLogTfaConfiguration {
 /// Removed backup phone for two-step verification.
 @objc
 public class DBXTeamLogTfaRemoveBackupPhoneDetails: NSObject {
-    let swift: TeamLog.TfaRemoveBackupPhoneDetails
+    public override init() {
+        self.swift = TeamLog.TfaRemoveBackupPhoneDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaRemoveBackupPhoneDetails
 
     public init(swift: TeamLog.TfaRemoveBackupPhoneDetails) {
         self.swift = swift
@@ -64570,7 +65155,7 @@ public class DBXTeamLogTfaRemoveBackupPhoneType: NSObject {
         self.swift = TeamLog.TfaRemoveBackupPhoneType(description_: description_)
     }
 
-    let swift: TeamLog.TfaRemoveBackupPhoneType
+    public let swift: TeamLog.TfaRemoveBackupPhoneType
 
     public init(swift: TeamLog.TfaRemoveBackupPhoneType) {
         self.swift = swift
@@ -64583,7 +65168,12 @@ public class DBXTeamLogTfaRemoveBackupPhoneType: NSObject {
 /// Removed members from two factor authentication exception list.
 @objc
 public class DBXTeamLogTfaRemoveExceptionDetails: NSObject {
-    let swift: TeamLog.TfaRemoveExceptionDetails
+    public override init() {
+        self.swift = TeamLog.TfaRemoveExceptionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaRemoveExceptionDetails
 
     public init(swift: TeamLog.TfaRemoveExceptionDetails) {
         self.swift = swift
@@ -64605,7 +65195,7 @@ public class DBXTeamLogTfaRemoveExceptionType: NSObject {
         self.swift = TeamLog.TfaRemoveExceptionType(description_: description_)
     }
 
-    let swift: TeamLog.TfaRemoveExceptionType
+    public let swift: TeamLog.TfaRemoveExceptionType
 
     public init(swift: TeamLog.TfaRemoveExceptionType) {
         self.swift = swift
@@ -64618,7 +65208,12 @@ public class DBXTeamLogTfaRemoveExceptionType: NSObject {
 /// Removed security key for two-step verification.
 @objc
 public class DBXTeamLogTfaRemoveSecurityKeyDetails: NSObject {
-    let swift: TeamLog.TfaRemoveSecurityKeyDetails
+    public override init() {
+        self.swift = TeamLog.TfaRemoveSecurityKeyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaRemoveSecurityKeyDetails
 
     public init(swift: TeamLog.TfaRemoveSecurityKeyDetails) {
         self.swift = swift
@@ -64640,7 +65235,7 @@ public class DBXTeamLogTfaRemoveSecurityKeyType: NSObject {
         self.swift = TeamLog.TfaRemoveSecurityKeyType(description_: description_)
     }
 
-    let swift: TeamLog.TfaRemoveSecurityKeyType
+    public let swift: TeamLog.TfaRemoveSecurityKeyType
 
     public init(swift: TeamLog.TfaRemoveSecurityKeyType) {
         self.swift = swift
@@ -64653,7 +65248,12 @@ public class DBXTeamLogTfaRemoveSecurityKeyType: NSObject {
 /// Reset two-step verification for team member.
 @objc
 public class DBXTeamLogTfaResetDetails: NSObject {
-    let swift: TeamLog.TfaResetDetails
+    public override init() {
+        self.swift = TeamLog.TfaResetDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.TfaResetDetails
 
     public init(swift: TeamLog.TfaResetDetails) {
         self.swift = swift
@@ -64675,7 +65275,7 @@ public class DBXTeamLogTfaResetType: NSObject {
         self.swift = TeamLog.TfaResetType(description_: description_)
     }
 
-    let swift: TeamLog.TfaResetType
+    public let swift: TeamLog.TfaResetType
 
     public init(swift: TeamLog.TfaResetType) {
         self.swift = swift
@@ -64688,9 +65288,9 @@ public class DBXTeamLogTfaResetType: NSObject {
 /// Objective-C compatible TimeUnit union
 @objc
 public class DBXTeamLogTimeUnit: NSObject {
-    let swift: TeamLog.TimeUnit
+    public let swift: TeamLog.TimeUnit
 
-    public init(swift: TeamLog.TimeUnit) {
+    fileprivate init(swift: TeamLog.TimeUnit) {
         self.swift = swift
     }
 
@@ -64861,7 +65461,10 @@ public class DBXTeamLogTimeUnitOther: DBXTeamLogTimeUnit {
 public class DBXTeamLogTrustedNonTeamMemberLogInfo: DBXTeamLogUserLogInfo {
     /// Indicates the type of the member of a trusted team.
     @objc
-    public var trustedNonTeamMemberType: DBXTeamLogTrustedNonTeamMemberType { DBXTeamLogTrustedNonTeamMemberType(swift: subSwift.trustedNonTeamMemberType) }
+    public var trustedNonTeamMemberType: DBXTeamLogTrustedNonTeamMemberType {
+        DBXTeamLogTrustedNonTeamMemberType.factory(swift: subSwift.trustedNonTeamMemberType)
+    }
+
     /// Details about this user's trusted team.
     @objc
     public var team: DBXTeamLogTeamLogInfo? { guard let swift = subSwift.team else { return nil }
@@ -64887,7 +65490,7 @@ public class DBXTeamLogTrustedNonTeamMemberLogInfo: DBXTeamLogUserLogInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.TrustedNonTeamMemberLogInfo
+    public let subSwift: TeamLog.TrustedNonTeamMemberLogInfo
 
     public init(swift: TeamLog.TrustedNonTeamMemberLogInfo) {
         self.subSwift = swift
@@ -64901,9 +65504,9 @@ public class DBXTeamLogTrustedNonTeamMemberLogInfo: DBXTeamLogUserLogInfo {
 /// Objective-C compatible TrustedNonTeamMemberType union
 @objc
 public class DBXTeamLogTrustedNonTeamMemberType: NSObject {
-    let swift: TeamLog.TrustedNonTeamMemberType
+    public let swift: TeamLog.TrustedNonTeamMemberType
 
-    public init(swift: TeamLog.TrustedNonTeamMemberType) {
+    fileprivate init(swift: TeamLog.TrustedNonTeamMemberType) {
         self.swift = swift
     }
 
@@ -64970,9 +65573,9 @@ public class DBXTeamLogTrustedNonTeamMemberTypeOther: DBXTeamLogTrustedNonTeamMe
 /// Objective-C compatible TrustedTeamsRequestAction union
 @objc
 public class DBXTeamLogTrustedTeamsRequestAction: NSObject {
-    let swift: TeamLog.TrustedTeamsRequestAction
+    public let swift: TeamLog.TrustedTeamsRequestAction
 
-    public init(swift: TeamLog.TrustedTeamsRequestAction) {
+    fileprivate init(swift: TeamLog.TrustedTeamsRequestAction) {
         self.swift = swift
     }
 
@@ -65090,9 +65693,9 @@ public class DBXTeamLogTrustedTeamsRequestActionOther: DBXTeamLogTrustedTeamsReq
 /// Objective-C compatible TrustedTeamsRequestState union
 @objc
 public class DBXTeamLogTrustedTeamsRequestState: NSObject {
-    let swift: TeamLog.TrustedTeamsRequestState
+    public let swift: TeamLog.TrustedTeamsRequestState
 
-    public init(swift: TeamLog.TrustedTeamsRequestState) {
+    fileprivate init(swift: TeamLog.TrustedTeamsRequestState) {
         self.swift = swift
     }
 
@@ -65178,11 +65781,11 @@ public class DBXTeamLogTrustedTeamsRequestStateOther: DBXTeamLogTrustedTeamsRequ
 public class DBXTeamLogTwoAccountChangePolicyDetails: NSObject {
     /// New two account policy.
     @objc
-    public var newValue: DBXTeamLogTwoAccountPolicy { DBXTeamLogTwoAccountPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogTwoAccountPolicy { DBXTeamLogTwoAccountPolicy.factory(swift: swift.newValue) }
     /// Previous two account policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogTwoAccountPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogTwoAccountPolicy(swift: swift)
+        return DBXTeamLogTwoAccountPolicy.factory(swift: swift)
     }
 
     @objc
@@ -65190,7 +65793,7 @@ public class DBXTeamLogTwoAccountChangePolicyDetails: NSObject {
         self.swift = TeamLog.TwoAccountChangePolicyDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.TwoAccountChangePolicyDetails
+    public let swift: TeamLog.TwoAccountChangePolicyDetails
 
     public init(swift: TeamLog.TwoAccountChangePolicyDetails) {
         self.swift = swift
@@ -65212,7 +65815,7 @@ public class DBXTeamLogTwoAccountChangePolicyType: NSObject {
         self.swift = TeamLog.TwoAccountChangePolicyType(description_: description_)
     }
 
-    let swift: TeamLog.TwoAccountChangePolicyType
+    public let swift: TeamLog.TwoAccountChangePolicyType
 
     public init(swift: TeamLog.TwoAccountChangePolicyType) {
         self.swift = swift
@@ -65225,9 +65828,9 @@ public class DBXTeamLogTwoAccountChangePolicyType: NSObject {
 /// Policy for pairing personal account to work account
 @objc
 public class DBXTeamLogTwoAccountPolicy: NSObject {
-    let swift: TeamLog.TwoAccountPolicy
+    public let swift: TeamLog.TwoAccountPolicy
 
-    public init(swift: TeamLog.TwoAccountPolicy) {
+    fileprivate init(swift: TeamLog.TwoAccountPolicy) {
         self.swift = swift
     }
 
@@ -65294,7 +65897,12 @@ public class DBXTeamLogTwoAccountPolicyOther: DBXTeamLogTwoAccountPolicy {
 /// Reverted naming convention.
 @objc
 public class DBXTeamLogUndoNamingConventionDetails: NSObject {
-    let swift: TeamLog.UndoNamingConventionDetails
+    public override init() {
+        self.swift = TeamLog.UndoNamingConventionDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.UndoNamingConventionDetails
 
     public init(swift: TeamLog.UndoNamingConventionDetails) {
         self.swift = swift
@@ -65316,7 +65924,7 @@ public class DBXTeamLogUndoNamingConventionType: NSObject {
         self.swift = TeamLog.UndoNamingConventionType(description_: description_)
     }
 
-    let swift: TeamLog.UndoNamingConventionType
+    public let swift: TeamLog.UndoNamingConventionType
 
     public init(swift: TeamLog.UndoNamingConventionType) {
         self.swift = swift
@@ -65329,7 +65937,12 @@ public class DBXTeamLogUndoNamingConventionType: NSObject {
 /// Removed multi-file organize.
 @objc
 public class DBXTeamLogUndoOrganizeFolderWithTidyDetails: NSObject {
-    let swift: TeamLog.UndoOrganizeFolderWithTidyDetails
+    public override init() {
+        self.swift = TeamLog.UndoOrganizeFolderWithTidyDetails()
+        super.init()
+    }
+
+    public let swift: TeamLog.UndoOrganizeFolderWithTidyDetails
 
     public init(swift: TeamLog.UndoOrganizeFolderWithTidyDetails) {
         self.swift = swift
@@ -65351,7 +65964,7 @@ public class DBXTeamLogUndoOrganizeFolderWithTidyType: NSObject {
         self.swift = TeamLog.UndoOrganizeFolderWithTidyType(description_: description_)
     }
 
-    let swift: TeamLog.UndoOrganizeFolderWithTidyType
+    public let swift: TeamLog.UndoOrganizeFolderWithTidyType
 
     public init(swift: TeamLog.UndoOrganizeFolderWithTidyType) {
         self.swift = swift
@@ -65364,7 +65977,14 @@ public class DBXTeamLogUndoOrganizeFolderWithTidyType: NSObject {
 /// User linked app
 @objc
 public class DBXTeamLogUserLinkedAppLogInfo: DBXTeamLogAppLogInfo {
-    let subSwift: TeamLog.UserLinkedAppLogInfo
+    @objc
+    public override init(appId: String?, displayName: String?) {
+        let swift = TeamLog.UserLinkedAppLogInfo(appId: appId, displayName: displayName)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.UserLinkedAppLogInfo
 
     public init(swift: TeamLog.UserLinkedAppLogInfo) {
         self.subSwift = swift
@@ -65393,7 +66013,7 @@ public class DBXTeamLogUserNameLogInfo: NSObject {
         self.swift = TeamLog.UserNameLogInfo(givenName: givenName, surname: surname, locale: locale)
     }
 
-    let swift: TeamLog.UserNameLogInfo
+    public let swift: TeamLog.UserNameLogInfo
 
     public init(swift: TeamLog.UserNameLogInfo) {
         self.swift = swift
@@ -65406,7 +66026,14 @@ public class DBXTeamLogUserNameLogInfo: NSObject {
 /// User or team linked app. Used when linked type is missing due to historical data gap.
 @objc
 public class DBXTeamLogUserOrTeamLinkedAppLogInfo: DBXTeamLogAppLogInfo {
-    let subSwift: TeamLog.UserOrTeamLinkedAppLogInfo
+    @objc
+    public override init(appId: String?, displayName: String?) {
+        let swift = TeamLog.UserOrTeamLinkedAppLogInfo(appId: appId, displayName: displayName)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.UserOrTeamLinkedAppLogInfo
 
     public init(swift: TeamLog.UserOrTeamLinkedAppLogInfo) {
         self.subSwift = swift
@@ -65429,7 +66056,7 @@ public class DBXTeamLogUserTagsAddedDetails: NSObject {
         self.swift = TeamLog.UserTagsAddedDetails(values: values)
     }
 
-    let swift: TeamLog.UserTagsAddedDetails
+    public let swift: TeamLog.UserTagsAddedDetails
 
     public init(swift: TeamLog.UserTagsAddedDetails) {
         self.swift = swift
@@ -65451,7 +66078,7 @@ public class DBXTeamLogUserTagsAddedType: NSObject {
         self.swift = TeamLog.UserTagsAddedType(description_: description_)
     }
 
-    let swift: TeamLog.UserTagsAddedType
+    public let swift: TeamLog.UserTagsAddedType
 
     public init(swift: TeamLog.UserTagsAddedType) {
         self.swift = swift
@@ -65473,7 +66100,7 @@ public class DBXTeamLogUserTagsRemovedDetails: NSObject {
         self.swift = TeamLog.UserTagsRemovedDetails(values: values)
     }
 
-    let swift: TeamLog.UserTagsRemovedDetails
+    public let swift: TeamLog.UserTagsRemovedDetails
 
     public init(swift: TeamLog.UserTagsRemovedDetails) {
         self.swift = swift
@@ -65495,7 +66122,7 @@ public class DBXTeamLogUserTagsRemovedType: NSObject {
         self.swift = TeamLog.UserTagsRemovedType(description_: description_)
     }
 
-    let swift: TeamLog.UserTagsRemovedType
+    public let swift: TeamLog.UserTagsRemovedType
 
     public init(swift: TeamLog.UserTagsRemovedType) {
         self.swift = swift
@@ -65510,17 +66137,17 @@ public class DBXTeamLogUserTagsRemovedType: NSObject {
 public class DBXTeamLogViewerInfoPolicyChangedDetails: NSObject {
     /// Previous Viewer Info policy.
     @objc
-    public var previousValue: DBXTeamLogPassPolicy { DBXTeamLogPassPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogPassPolicy { DBXTeamLogPassPolicy.factory(swift: swift.previousValue) }
     /// New Viewer Info policy.
     @objc
-    public var newValue: DBXTeamLogPassPolicy { DBXTeamLogPassPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogPassPolicy { DBXTeamLogPassPolicy.factory(swift: swift.newValue) }
 
     @objc
     public init(previousValue: DBXTeamLogPassPolicy, newValue: DBXTeamLogPassPolicy) {
         self.swift = TeamLog.ViewerInfoPolicyChangedDetails(previousValue: previousValue.swift, newValue: newValue.swift)
     }
 
-    let swift: TeamLog.ViewerInfoPolicyChangedDetails
+    public let swift: TeamLog.ViewerInfoPolicyChangedDetails
 
     public init(swift: TeamLog.ViewerInfoPolicyChangedDetails) {
         self.swift = swift
@@ -65542,7 +66169,7 @@ public class DBXTeamLogViewerInfoPolicyChangedType: NSObject {
         self.swift = TeamLog.ViewerInfoPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.ViewerInfoPolicyChangedType
+    public let swift: TeamLog.ViewerInfoPolicyChangedType
 
     public init(swift: TeamLog.ViewerInfoPolicyChangedType) {
         self.swift = swift
@@ -65555,9 +66182,9 @@ public class DBXTeamLogViewerInfoPolicyChangedType: NSObject {
 /// Policy for controlling team access to watermarking feature
 @objc
 public class DBXTeamLogWatermarkingPolicy: NSObject {
-    let swift: TeamLog.WatermarkingPolicy
+    public let swift: TeamLog.WatermarkingPolicy
 
-    public init(swift: TeamLog.WatermarkingPolicy) {
+    fileprivate init(swift: TeamLog.WatermarkingPolicy) {
         self.swift = swift
     }
 
@@ -65626,17 +66253,17 @@ public class DBXTeamLogWatermarkingPolicyOther: DBXTeamLogWatermarkingPolicy {
 public class DBXTeamLogWatermarkingPolicyChangedDetails: NSObject {
     /// New watermarking policy.
     @objc
-    public var newValue: DBXTeamLogWatermarkingPolicy { DBXTeamLogWatermarkingPolicy(swift: swift.newValue) }
+    public var newValue: DBXTeamLogWatermarkingPolicy { DBXTeamLogWatermarkingPolicy.factory(swift: swift.newValue) }
     /// Previous watermarking policy.
     @objc
-    public var previousValue: DBXTeamLogWatermarkingPolicy { DBXTeamLogWatermarkingPolicy(swift: swift.previousValue) }
+    public var previousValue: DBXTeamLogWatermarkingPolicy { DBXTeamLogWatermarkingPolicy.factory(swift: swift.previousValue) }
 
     @objc
     public init(newValue: DBXTeamLogWatermarkingPolicy, previousValue: DBXTeamLogWatermarkingPolicy) {
         self.swift = TeamLog.WatermarkingPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
     }
 
-    let swift: TeamLog.WatermarkingPolicyChangedDetails
+    public let swift: TeamLog.WatermarkingPolicyChangedDetails
 
     public init(swift: TeamLog.WatermarkingPolicyChangedDetails) {
         self.swift = swift
@@ -65658,7 +66285,7 @@ public class DBXTeamLogWatermarkingPolicyChangedType: NSObject {
         self.swift = TeamLog.WatermarkingPolicyChangedType(description_: description_)
     }
 
-    let swift: TeamLog.WatermarkingPolicyChangedType
+    public let swift: TeamLog.WatermarkingPolicyChangedType
 
     public init(swift: TeamLog.WatermarkingPolicyChangedType) {
         self.swift = swift
@@ -65702,7 +66329,7 @@ public class DBXTeamLogWebDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: TeamLog.WebDeviceSessionLogInfo
+    public let subSwift: TeamLog.WebDeviceSessionLogInfo
 
     public init(swift: TeamLog.WebDeviceSessionLogInfo) {
         self.subSwift = swift
@@ -65716,7 +66343,14 @@ public class DBXTeamLogWebDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInfo {
 /// Web session.
 @objc
 public class DBXTeamLogWebSessionLogInfo: DBXTeamLogSessionLogInfo {
-    let subSwift: TeamLog.WebSessionLogInfo
+    @objc
+    public override init(sessionId: String?) {
+        let swift = TeamLog.WebSessionLogInfo(sessionId: sessionId)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: TeamLog.WebSessionLogInfo
 
     public init(swift: TeamLog.WebSessionLogInfo) {
         self.subSwift = swift
@@ -65742,7 +66376,7 @@ public class DBXTeamLogWebSessionsChangeActiveSessionLimitDetails: NSObject {
         self.swift = TeamLog.WebSessionsChangeActiveSessionLimitDetails(previousValue: previousValue, newValue: newValue)
     }
 
-    let swift: TeamLog.WebSessionsChangeActiveSessionLimitDetails
+    public let swift: TeamLog.WebSessionsChangeActiveSessionLimitDetails
 
     public init(swift: TeamLog.WebSessionsChangeActiveSessionLimitDetails) {
         self.swift = swift
@@ -65764,7 +66398,7 @@ public class DBXTeamLogWebSessionsChangeActiveSessionLimitType: NSObject {
         self.swift = TeamLog.WebSessionsChangeActiveSessionLimitType(description_: description_)
     }
 
-    let swift: TeamLog.WebSessionsChangeActiveSessionLimitType
+    public let swift: TeamLog.WebSessionsChangeActiveSessionLimitType
 
     public init(swift: TeamLog.WebSessionsChangeActiveSessionLimitType) {
         self.swift = swift
@@ -65780,13 +66414,13 @@ public class DBXTeamLogWebSessionsChangeFixedLengthPolicyDetails: NSObject {
     /// New session length policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamLogWebSessionsFixedLengthPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogWebSessionsFixedLengthPolicy(swift: swift)
+        return DBXTeamLogWebSessionsFixedLengthPolicy.factory(swift: swift)
     }
 
     /// Previous session length policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogWebSessionsFixedLengthPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogWebSessionsFixedLengthPolicy(swift: swift)
+        return DBXTeamLogWebSessionsFixedLengthPolicy.factory(swift: swift)
     }
 
     @objc
@@ -65794,7 +66428,7 @@ public class DBXTeamLogWebSessionsChangeFixedLengthPolicyDetails: NSObject {
         self.swift = TeamLog.WebSessionsChangeFixedLengthPolicyDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.WebSessionsChangeFixedLengthPolicyDetails
+    public let swift: TeamLog.WebSessionsChangeFixedLengthPolicyDetails
 
     public init(swift: TeamLog.WebSessionsChangeFixedLengthPolicyDetails) {
         self.swift = swift
@@ -65816,7 +66450,7 @@ public class DBXTeamLogWebSessionsChangeFixedLengthPolicyType: NSObject {
         self.swift = TeamLog.WebSessionsChangeFixedLengthPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.WebSessionsChangeFixedLengthPolicyType
+    public let swift: TeamLog.WebSessionsChangeFixedLengthPolicyType
 
     public init(swift: TeamLog.WebSessionsChangeFixedLengthPolicyType) {
         self.swift = swift
@@ -65832,13 +66466,13 @@ public class DBXTeamLogWebSessionsChangeIdleLengthPolicyDetails: NSObject {
     /// New idle length policy. Might be missing due to historical data gap.
     @objc
     public var newValue: DBXTeamLogWebSessionsIdleLengthPolicy? { guard let swift = swift.newValue else { return nil }
-        return DBXTeamLogWebSessionsIdleLengthPolicy(swift: swift)
+        return DBXTeamLogWebSessionsIdleLengthPolicy.factory(swift: swift)
     }
 
     /// Previous idle length policy. Might be missing due to historical data gap.
     @objc
     public var previousValue: DBXTeamLogWebSessionsIdleLengthPolicy? { guard let swift = swift.previousValue else { return nil }
-        return DBXTeamLogWebSessionsIdleLengthPolicy(swift: swift)
+        return DBXTeamLogWebSessionsIdleLengthPolicy.factory(swift: swift)
     }
 
     @objc
@@ -65846,7 +66480,7 @@ public class DBXTeamLogWebSessionsChangeIdleLengthPolicyDetails: NSObject {
         self.swift = TeamLog.WebSessionsChangeIdleLengthPolicyDetails(newValue: newValue?.swift, previousValue: previousValue?.swift)
     }
 
-    let swift: TeamLog.WebSessionsChangeIdleLengthPolicyDetails
+    public let swift: TeamLog.WebSessionsChangeIdleLengthPolicyDetails
 
     public init(swift: TeamLog.WebSessionsChangeIdleLengthPolicyDetails) {
         self.swift = swift
@@ -65868,7 +66502,7 @@ public class DBXTeamLogWebSessionsChangeIdleLengthPolicyType: NSObject {
         self.swift = TeamLog.WebSessionsChangeIdleLengthPolicyType(description_: description_)
     }
 
-    let swift: TeamLog.WebSessionsChangeIdleLengthPolicyType
+    public let swift: TeamLog.WebSessionsChangeIdleLengthPolicyType
 
     public init(swift: TeamLog.WebSessionsChangeIdleLengthPolicyType) {
         self.swift = swift
@@ -65881,9 +66515,9 @@ public class DBXTeamLogWebSessionsChangeIdleLengthPolicyType: NSObject {
 /// Web sessions fixed length policy.
 @objc
 public class DBXTeamLogWebSessionsFixedLengthPolicy: NSObject {
-    let swift: TeamLog.WebSessionsFixedLengthPolicy
+    public let swift: TeamLog.WebSessionsFixedLengthPolicy
 
-    public init(swift: TeamLog.WebSessionsFixedLengthPolicy) {
+    fileprivate init(swift: TeamLog.WebSessionsFixedLengthPolicy) {
         self.swift = swift
     }
 
@@ -65955,9 +66589,9 @@ public class DBXTeamLogWebSessionsFixedLengthPolicyOther: DBXTeamLogWebSessionsF
 /// Web sessions idle length policy.
 @objc
 public class DBXTeamLogWebSessionsIdleLengthPolicy: NSObject {
-    let swift: TeamLog.WebSessionsIdleLengthPolicy
+    public let swift: TeamLog.WebSessionsIdleLengthPolicy
 
-    public init(swift: TeamLog.WebSessionsIdleLengthPolicy) {
+    fileprivate init(swift: TeamLog.WebSessionsIdleLengthPolicy) {
         self.swift = swift
     }
 

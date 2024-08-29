@@ -25,7 +25,7 @@ public class DBXDropboxTransportClient: NSObject {
     public var pathRoot: DBXCommonPathRoot? {
         get {
             guard let swift = swift.pathRoot else { return nil }
-            return DBXCommonPathRoot(swift: swift)
+            return DBXCommonPathRoot.factory(swift: swift)
         }
         set { swift.pathRoot = newValue?.swift }
     }

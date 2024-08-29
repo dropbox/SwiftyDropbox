@@ -59,7 +59,7 @@ public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXOpenidUserInfoError(swift: box.unboxed)
+                routeError = DBXOpenidUserInfoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
