@@ -67,7 +67,8 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
         appSecret: String,
         baseHosts: BaseHosts = .default,
         userAgent: String?,
-        authChallengeHandler: @escaping AuthChallenge.Handler
+        authChallengeHandler: @escaping AuthChallenge.Handler,
+        headersForRouteHost: HeadersForRouteRequest? = nil
     ) {
         self.init(
             authStrategy: .appKeyAndSecret(appKey, appSecret),
@@ -75,7 +76,8 @@ public class DropboxTransportClientImpl: DropboxTransportClientInternal {
             userAgent: userAgent,
             selectUser: nil,
             sessionCreation: DefaultSessionCreation,
-            authChallengeHandler: authChallengeHandler
+            authChallengeHandler: authChallengeHandler,
+            headersForRouteHost: headersForRouteHost
         )
     }
 
