@@ -1971,7 +1971,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMemberDevicesResult?, DBXTeamListMemberDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2038,7 +2038,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMembersDevicesResult?, DBXTeamListMembersDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2105,7 +2105,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListTeamDevicesResult?, DBXTeamListTeamDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2172,7 +2172,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -2235,7 +2235,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionBatchResult?, DBXTeamRevokeDeviceSessionBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2302,7 +2302,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamFeaturesGetValuesBatchResult?, DBXTeamFeaturesGetValuesBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2369,7 +2369,7 @@ public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamGetInfoResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2425,7 +2425,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2492,7 +2492,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamGroupDeleteError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2559,7 +2559,7 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2626,7 +2626,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXTeamGroupsPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2693,7 +2693,7 @@ public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2749,7 +2749,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXTeamGroupsListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2816,7 +2816,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersAddError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2883,7 +2883,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupSelectorError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2950,7 +2950,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupsMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3017,7 +3017,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3084,7 +3084,7 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3151,7 +3151,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3218,7 +3218,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3285,7 +3285,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsGetPolicyError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3352,7 +3352,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3419,7 +3419,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3486,7 +3486,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListPoliciesResult?, DBXTeamLegalHoldsListPoliciesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3553,7 +3553,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsPolicyReleaseError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -3616,7 +3616,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3683,7 +3683,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMemberAppsResult?, DBXTeamListMemberAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3750,7 +3750,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMembersAppsResult?, DBXTeamListMembersAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3817,7 +3817,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListTeamAppsResult?, DBXTeamListTeamAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3884,7 +3884,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeLinkedAppError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -3947,7 +3947,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeLinkedAppBatchResult?, DBXTeamRevokeLinkedAppBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4014,7 +4014,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4081,7 +4081,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4148,7 +4148,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4215,7 +4215,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4282,7 +4282,7 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4349,7 +4349,7 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamRemoveCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4416,7 +4416,7 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4483,7 +4483,7 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4539,7 +4539,7 @@ public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4595,7 +4595,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4662,7 +4662,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4729,7 +4729,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4796,7 +4796,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4863,7 +4863,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4919,7 +4919,7 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamMembersGetInfoItem]?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4986,7 +4986,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5053,7 +5053,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5120,7 +5120,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5187,7 +5187,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5254,7 +5254,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5321,7 +5321,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersTransferFormerMembersFilesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5388,7 +5388,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5455,7 +5455,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersRecoverError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -5518,7 +5518,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5585,7 +5585,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5652,7 +5652,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamAddSecondaryEmailsResult?, DBXTeamAddSecondaryEmailsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5719,7 +5719,7 @@ public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamDeleteSecondaryEmailsResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5775,7 +5775,7 @@ public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NS
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamResendVerificationEmailResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5831,7 +5831,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSendWelcomeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -5894,7 +5894,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSetPermissionsResult?, DBXTeamMembersSetPermissionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5961,7 +5961,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6028,7 +6028,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6095,7 +6095,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6162,7 +6162,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6229,7 +6229,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6296,7 +6296,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSuspendError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -6359,7 +6359,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersUnsuspendError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -6422,7 +6422,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6489,7 +6489,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6556,7 +6556,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6623,7 +6623,7 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6690,7 +6690,7 @@ public class DBXTeamPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6757,7 +6757,7 @@ public class DBXTeamPropertiesTemplateUpdateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6824,7 +6824,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetActivityReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6891,7 +6891,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetDevicesReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6958,7 +6958,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetMembershipReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7025,7 +7025,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetStorageReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7092,7 +7092,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistAddResponse?, DBXTeamSharingAllowlistAddError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7159,7 +7159,7 @@ public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7226,7 +7226,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7293,7 +7293,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistRemoveResponse?, DBXTeamSharingAllowlistRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7360,7 +7360,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderActivateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7427,7 +7427,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderArchiveLaunch?, DBXTeamTeamFolderArchiveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7494,7 +7494,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderArchiveJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7561,7 +7561,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7628,7 +7628,7 @@ public class DBXTeamTeamFolderGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamTeamFolderGetInfoItem]?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7684,7 +7684,7 @@ public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7751,7 +7751,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7818,7 +7818,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderPermanentlyDeleteError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -7881,7 +7881,7 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderRenameError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7948,7 +7948,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderUpdateSyncSettingsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -8015,7 +8015,7 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTokenGetAuthenticatedAdminResult?, DBXTeamTokenGetAuthenticatedAdminError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in

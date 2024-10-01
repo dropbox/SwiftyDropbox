@@ -37,7 +37,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAuthTokenFromOAuth1Result?, DBXAuthTokenFromOAuth1Error?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in

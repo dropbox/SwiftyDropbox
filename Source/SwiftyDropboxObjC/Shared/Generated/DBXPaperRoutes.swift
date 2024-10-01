@@ -37,7 +37,7 @@ public class DBXPaperDocsArchiveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -100,7 +100,7 @@ public class DBXPaperDocsCreateUploadRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperPaperDocCreateUpdateResult?, DBXPaperPaperDocCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -173,7 +173,7 @@ public class DBXPaperDocsDownloadDownloadRequestFile: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperPaperDocExportResult?, URL?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -248,7 +248,7 @@ public class DBXPaperDocsDownloadDownloadRequestMemory: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperPaperDocExportResult?, Data?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -323,7 +323,7 @@ public class DBXPaperDocsFolderUsersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListUsersOnFolderResponse?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -390,7 +390,7 @@ public class DBXPaperDocsFolderUsersListContinueRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListUsersOnFolderResponse?, DBXPaperListUsersCursorError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -457,7 +457,7 @@ public class DBXPaperDocsGetFolderInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperFoldersContainingPaperDoc?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -524,7 +524,7 @@ public class DBXPaperDocsListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListPaperDocsResponse?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -580,7 +580,7 @@ public class DBXPaperDocsListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListPaperDocsResponse?, DBXPaperListDocsCursorError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -647,7 +647,7 @@ public class DBXPaperDocsPermanentlyDeleteRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -710,7 +710,7 @@ public class DBXPaperDocsSharingPolicyGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperSharingPolicy?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -777,7 +777,7 @@ public class DBXPaperDocsSharingPolicySetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -840,7 +840,7 @@ public class DBXPaperDocsUpdateUploadRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperPaperDocCreateUpdateResult?, DBXPaperPaperDocUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -913,7 +913,7 @@ public class DBXPaperDocsUsersAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXPaperAddPaperDocUserMemberResult]?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -980,7 +980,7 @@ public class DBXPaperDocsUsersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListUsersOnPaperDocResponse?, DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1047,7 +1047,7 @@ public class DBXPaperDocsUsersListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperListUsersOnPaperDocResponse?, DBXPaperListUsersCursorError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1114,7 +1114,7 @@ public class DBXPaperDocsUsersRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperDocLookupError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -1177,7 +1177,7 @@ public class DBXPaperFoldersCreateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXPaperPaperFolderCreateResult?, DBXPaperPaperFolderCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in

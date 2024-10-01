@@ -358,7 +358,16 @@ public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesAddPropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesAddPropertiesError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXFilePropertiesAddPropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -421,7 +430,16 @@ public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesInvalidPropertyGroupError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesInvalidPropertyGroupError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXFilePropertiesInvalidPropertyGroupError?
             var callError: DBXCallError?
             switch error {
@@ -484,7 +502,16 @@ public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXFilePropertiesRemovePropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -547,7 +574,16 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesPropertiesSearchError?
             var callError: DBXCallError?
             switch error {
@@ -614,7 +650,16 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesPropertiesSearchContinueError?
             var callError: DBXCallError?
             switch error {
@@ -681,7 +726,16 @@ public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesUpdatePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesUpdatePropertiesError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXFilePropertiesUpdatePropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -741,7 +795,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -811,7 +865,16 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesModifyTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -875,7 +938,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -945,7 +1008,16 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -1009,7 +1081,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1079,7 +1151,16 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -1143,7 +1224,7 @@ public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXReq
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -1209,7 +1290,16 @@ public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXReq
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXFilePropertiesTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -1269,7 +1359,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1339,7 +1429,16 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFilePropertiesModifyTemplateError?
             var callError: DBXCallError?
             switch error {

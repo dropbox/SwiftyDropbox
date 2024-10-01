@@ -105,7 +105,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -172,7 +172,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in

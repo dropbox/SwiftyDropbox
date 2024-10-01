@@ -13,9 +13,15 @@ import stone_sdk_swift_objc
 public class SDKShimHelpers: NSObject {
     // MARK: DBAPIRpcTask
 
-    @objc public static func setResponseBlockRPC(block: @escaping DBRpcResponseBlockImpl, on task: DBXRequest, with queue: OperationQueue?) -> Bool {
+    @objc
+    @discardableResult public static func setResponseBlockRPC(
+        block: @escaping DBRpcResponseBlockImpl,
+        on task: DBXRequest,
+        with queue: OperationQueue?,
+        analyticsBlock: AnalyticsBlock?
+    ) -> Bool {
         if let task = task as? DBXAccountSetProfilePhotoRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXAccountSetProfilePhotoResultToDBOptional(object: result)
                 let mappedError = mapDBXAccountSetProfilePhotoErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -25,7 +31,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXAuthTokenRevokeRpcRequest {
-            task.response { networkError in
+            task.response(analyticsBlock: analyticsBlock) { networkError in
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(networkError == nil ? DBNilObject() : nil, nil, mappedCallError) }
                 Self.processCompletion(wrappedBlock, queue: queue)
@@ -33,7 +39,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXCheckUserRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXCheckEchoResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -42,7 +48,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXContactsDeleteManualContactsRpcRequest {
-            task.response { networkError in
+            task.response(analyticsBlock: analyticsBlock) { networkError in
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(networkError == nil ? DBNilObject() : nil, nil, mappedCallError) }
                 Self.processCompletion(wrappedBlock, queue: queue)
@@ -50,7 +56,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXContactsDeleteManualContactsBatchRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXContactsDeleteManualContactsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -59,7 +65,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesAddRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilePropertiesAddPropertiesErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -68,7 +74,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesOverwriteRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilePropertiesInvalidPropertyGroupErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -77,7 +83,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesRemoveRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilePropertiesRemovePropertiesErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -86,7 +92,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesSearchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesPropertiesSearchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesPropertiesSearchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -96,7 +102,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesSearchContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesPropertiesSearchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesPropertiesSearchContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -106,7 +112,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesPropertiesUpdateRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilePropertiesUpdatePropertiesErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -115,7 +121,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesTemplatesAddForUserRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesAddTemplateResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesModifyTemplateErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -125,7 +131,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesTemplatesGetForUserRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesGetTemplateResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesTemplateErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -135,7 +141,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesTemplatesListForUserRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesListTemplateResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesTemplateErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -145,7 +151,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesTemplatesRemoveForUserRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilePropertiesTemplateErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -154,7 +160,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilePropertiesTemplatesUpdateForUserRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilePropertiesUpdateTemplateResultToDBOptional(object: result)
                 let mappedError = mapDBXFilePropertiesModifyTemplateErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -164,7 +170,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsCountRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsCountFileRequestsResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsCountFileRequestsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -174,7 +180,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsCreateRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsFileRequestToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsCreateFileRequestErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -184,7 +190,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsDeleteRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsDeleteFileRequestsResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsDeleteFileRequestErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -194,7 +200,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsDeleteAllClosedRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsDeleteAllClosedFileRequestsResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsDeleteAllClosedFileRequestsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -204,7 +210,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsGetRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsFileRequestToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsGetFileRequestErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -214,7 +220,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsList_RpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsListFileRequestsResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsListFileRequestsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -224,7 +230,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsList_RpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsListFileRequestsV2ResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsListFileRequestsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -234,7 +240,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsListContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsListFileRequestsV2ResultToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsListFileRequestsContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -244,7 +250,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFileRequestsUpdateRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFileRequestsFileRequestToDBOptional(object: result)
                 let mappedError = mapDBXFileRequestsUpdateFileRequestErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -254,7 +260,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCopyRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesRelocationResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesRelocationErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -264,7 +270,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCopyBatchRpcRequestV2 {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesRelocationBatchV2LaunchToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -273,7 +279,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCopyBatchCheckRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesRelocationBatchV2JobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -283,7 +289,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCopyReferenceGetRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesGetCopyReferenceResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesGetCopyReferenceErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -293,7 +299,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCopyReferenceSaveRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesSaveCopyReferenceResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesSaveCopyReferenceErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -303,7 +309,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCreateFolderRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesCreateFolderResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesCreateFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -313,7 +319,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCreateFolderBatchRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesCreateFolderBatchLaunchToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -322,7 +328,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesCreateFolderBatchCheckRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesCreateFolderBatchJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -332,7 +338,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesDeleteRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesDeleteResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesDeleteErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -342,7 +348,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesDeleteBatchRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesDeleteBatchLaunchToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -351,7 +357,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesDeleteBatchCheckRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesDeleteBatchJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -361,7 +367,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesGetFileLockBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesLockFileBatchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesLockFileErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -371,7 +377,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesGetMetadataRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesMetadataToDBOptional(object: result)
                 let mappedError = mapDBXFilesGetMetadataErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -381,7 +387,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesGetTemporaryLinkRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesGetTemporaryLinkResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesGetTemporaryLinkErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -391,7 +397,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesGetTemporaryUploadLinkRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesGetTemporaryUploadLinkResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -400,7 +406,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesGetThumbnailBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesGetThumbnailBatchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesGetThumbnailBatchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -410,7 +416,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesListFolderRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesListFolderResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesListFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -420,7 +426,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesListFolderContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesListFolderResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesListFolderContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -430,7 +436,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesListFolderGetLatestCursorRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesListFolderGetLatestCursorResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesListFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -440,7 +446,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesListFolderLongpollRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesListFolderLongpollResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesListFolderLongpollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -450,7 +456,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesListRevisionsRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesListRevisionsResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesListRevisionsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -460,7 +466,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesLockFileBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesLockFileBatchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesLockFileErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -470,7 +476,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesMoveRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesRelocationResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesRelocationErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -480,7 +486,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesMoveBatchRpcRequestV2 {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesRelocationBatchV2LaunchToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -489,7 +495,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesMoveBatchCheckRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesRelocationBatchV2JobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -499,7 +505,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesPermanentlyDeleteRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilesDeleteErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -508,7 +514,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesRestoreRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesFileMetadataToDBOptional(object: result)
                 let mappedError = mapDBXFilesRestoreErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -518,7 +524,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesSaveUrlRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesSaveUrlResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesSaveUrlErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -528,7 +534,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesSaveUrlCheckJobStatusRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesSaveUrlJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -538,7 +544,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesSearchRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesSearchV2ResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesSearchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -548,7 +554,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesSearchContinueRpcRequestV2 {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesSearchV2ResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesSearchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -558,7 +564,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesTagsAddRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilesAddTagErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -567,7 +573,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesTagsGetRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesGetTagsResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesBaseTagErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -577,7 +583,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesTagsRemoveRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXFilesRemoveTagErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -586,7 +592,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesUnlockFileBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesLockFileBatchResultToDBOptional(object: result)
                 let mappedError = mapDBXFilesLockFileErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -596,7 +602,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesUploadSessionFinishBatchRpcRequestV2 {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesUploadSessionFinishBatchResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -605,7 +611,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesUploadSessionFinishBatchCheckRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXFilesUploadSessionFinishBatchJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -615,7 +621,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXFilesUploadSessionStartBatchRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXFilesUploadSessionStartBatchResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -624,7 +630,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXOpenidUserinfoRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXOpenidUserInfoResultToDBOptional(object: result)
                 let mappedError = mapDBXOpenidUserInfoErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -634,7 +640,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingAddFileMemberRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = result?.map { mapDBXSharingFileMemberActionResultToDBOptional(object: $0) }
                 let mappedError = mapDBXSharingAddFileMemberErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -644,7 +650,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingAddFolderMemberRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingAddFolderMemberErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -653,7 +659,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingCheckJobStatusRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -663,7 +669,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingCheckRemoveMemberJobStatusRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingRemoveMemberJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -673,7 +679,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingCheckShareJobStatusRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingShareFolderJobStatusToDBOptional(object: result)
                 let mappedError = mapDBXAsyncPollErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -683,7 +689,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingCreateSharedLinkWithSettingsRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedLinkMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingCreateSharedLinkWithSettingsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -693,7 +699,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingGetFileMetadataRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFileMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingGetFileMetadataErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -703,7 +709,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingGetFileMetadataBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = result?.map { mapDBXSharingGetFileMetadataBatchResultToDBOptional(object: $0) }
                 let mappedError = mapDBXSharingSharingUserErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -713,7 +719,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingGetFolderMetadataRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFolderMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingSharedFolderAccessErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -723,7 +729,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingGetSharedLinkMetadataRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedLinkMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingSharedLinkErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -733,7 +739,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFileMembersRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFileMembersToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFileMembersErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -743,7 +749,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFileMembersBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = result?.map { mapDBXSharingListFileMembersBatchResultToDBOptional(object: $0) }
                 let mappedError = mapDBXSharingSharingUserErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -753,7 +759,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFileMembersContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFileMembersToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFileMembersContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -763,7 +769,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFolderMembersRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFolderMembersToDBOptional(object: result)
                 let mappedError = mapDBXSharingSharedFolderAccessErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -773,7 +779,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFolderMembersContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFolderMembersToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFolderMembersContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -783,7 +789,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFoldersRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXSharingListFoldersResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -792,7 +798,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListFoldersContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingListFoldersResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFoldersContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -802,7 +808,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListMountableFoldersRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXSharingListFoldersResultToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -811,7 +817,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListMountableFoldersContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingListFoldersResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFoldersContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -821,7 +827,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListReceivedFilesRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingListFilesResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingSharingUserErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -831,7 +837,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListReceivedFilesContinueRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingListFilesResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingListFilesContinueErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -841,7 +847,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingListSharedLinksRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingListSharedLinksResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingListSharedLinksErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -851,7 +857,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingModifySharedLinkSettingsRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedLinkMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingModifySharedLinkSettingsErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -861,7 +867,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingMountFolderRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFolderMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingMountFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -871,7 +877,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingRelinquishFileMembershipRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingRelinquishFileMembershipErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -880,7 +886,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingRelinquishFolderMembershipRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXAsyncLaunchEmptyResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingRelinquishFolderMembershipErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -890,7 +896,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingRemoveFileMember2RpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingFileMemberRemoveActionResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingRemoveFileMemberErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -900,7 +906,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingRemoveFolderMemberRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXAsyncLaunchResultBaseToDBOptional(object: result)
                 let mappedError = mapDBXSharingRemoveFolderMemberErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -910,7 +916,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingRevokeSharedLinkRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingRevokeSharedLinkErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -919,7 +925,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingSetAccessInheritanceRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingShareFolderLaunchToDBOptional(object: result)
                 let mappedError = mapDBXSharingSetAccessInheritanceErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -929,7 +935,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingShareFolderRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingShareFolderLaunchToDBOptional(object: result)
                 let mappedError = mapDBXSharingShareFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -939,7 +945,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingTransferFolderRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingTransferFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -948,7 +954,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUnmountFolderRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingUnmountFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -957,7 +963,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUnshareFileRpcRequest {
-            task.response { routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { routeError, networkError in
                 let mappedError = mapDBXSharingUnshareFileErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block((networkError == nil && routeError == nil) ? DBNilObject() : nil, mappedError, mappedCallError) }
@@ -966,7 +972,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUnshareFolderRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXAsyncLaunchEmptyResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingUnshareFolderErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -976,7 +982,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUpdateFileMemberRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingMemberAccessLevelResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingFileMemberActionErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -986,7 +992,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUpdateFolderMemberRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingMemberAccessLevelResultToDBOptional(object: result)
                 let mappedError = mapDBXSharingUpdateFolderMemberErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -996,7 +1002,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXSharingUpdateFolderPolicyRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXSharingSharedFolderMetadataToDBOptional(object: result)
                 let mappedError = mapDBXSharingUpdateFolderPolicyErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -1006,7 +1012,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXUsersFeaturesGetValuesRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXUsersUserFeaturesGetValuesBatchResultToDBOptional(object: result)
                 let mappedError = mapDBXUsersUserFeaturesGetValuesBatchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -1016,7 +1022,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXUsersGetAccountRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = mapDBXUsersBasicAccountToDBOptional(object: result)
                 let mappedError = mapDBXUsersGetAccountErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -1026,7 +1032,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXUsersGetAccountBatchRpcRequest {
-            task.response { result, routeError, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, routeError, networkError in
                 let mappedResult = result?.map { mapDBXUsersBasicAccountToDBOptional(object: $0) }
                 let mappedError = mapDBXUsersGetAccountBatchErrorToDBOptional(object: routeError)
                 let mappedCallError = callErrorToDB(error: networkError)
@@ -1036,7 +1042,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXUsersGetCurrentAccountRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXUsersFullAccountToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
@@ -1045,7 +1051,7 @@ public class SDKShimHelpers: NSObject {
             return true
         }
         if let task = task as? DBXUsersGetSpaceUsageRpcRequest {
-            task.response { result, networkError in
+            task.response(analyticsBlock: analyticsBlock) { result, networkError in
                 let mappedResult = mapDBXUsersSpaceUsageToDBOptional(object: result)
                 let mappedCallError = callErrorToDB(error: networkError)
                 let wrappedBlock = { block(mappedResult, nil, mappedCallError) }
