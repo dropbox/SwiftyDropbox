@@ -13,7 +13,7 @@ import stone_sdk_swift_objc
 public class SDKShimHelpers: NSObject {
     // MARK: DBAPIRpcTask
 
-    @objc public static func setResponseBlockRPC(block: @escaping DBRpcResponseBlockImpl, on task: DBXRequest, with queue: OperationQueue) -> Bool {
+    @objc public static func setResponseBlockRPC(block: @escaping DBRpcResponseBlockImpl, on task: DBXRequest, with queue: OperationQueue?) -> Bool {
         if let task = task as? DBXAccountSetProfilePhotoRpcRequest {
             task.response { result, routeError, networkError in
                 let mappedResult = mapDBXAccountSetProfilePhotoResultToDBOptional(object: result)
