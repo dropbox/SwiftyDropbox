@@ -1559,7 +1559,7 @@ private func callErrorToDB(error: DBXCallError?) -> DBRequestError? {
         if let lum = error.localizedUserMessage {
             localizedUserMessage = DBLocalizedUserMessage(text: lum.text, locale: lum.locale)
         }
-        var structuredAuthError: DBAUTHAuthError = {
+        let structuredAuthError: DBAUTHAuthError = {
             if error.error.asInvalidAccessToken != nil {
                 return DBAUTHAuthError(invalidAccessToken: ())
             } else if error.error.asInvalidSelectUser != nil {
@@ -1598,31 +1598,30 @@ private func callErrorToDB(error: DBXCallError?) -> DBRequestError? {
         if let lum = error.localizedUserMessage {
             localizedUserMessage = DBLocalizedUserMessage(text: lum.text, locale: lum.locale)
         }
-        var structuredAccessError: DBAUTHAccessError = {
+        let structuredAccessError: DBAUTHAccessError = {
             if let error = error.error.asInvalidAccountType {
                 let accountTypeError: DBAUTHInvalidAccountTypeError = {
-                    if let error = error.invalidAccountType.asFeature {
+                    if error.invalidAccountType.asFeature != nil {
                         return DBAUTHInvalidAccountTypeError(feature: ())
-                    } else if let error = error.invalidAccountType.asEndpoint {
+                    } else if error.invalidAccountType.asEndpoint != nil {
                         return DBAUTHInvalidAccountTypeError(endpoint: ())
                     } else {
                         return DBAUTHInvalidAccountTypeError(other: ())
                     }
                 }()
-
                 return DBAUTHAccessError(invalidAccountType: accountTypeError)
             } else if let error = error.error.asPaperAccessDenied {
                 let paperAccessError: DBAUTHPaperAccessError = {
-                    if let error = error.paperAccessDenied.asNotPaperUser {
+                    if error.paperAccessDenied.asNotPaperUser != nil {
                         return DBAUTHPaperAccessError(notPaperUser: ())
-                    } else if let error = error.paperAccessDenied.asPaperDisabled {
+                    } else if error.paperAccessDenied.asPaperDisabled != nil {
                         return DBAUTHPaperAccessError(paperDisabled: ())
                     } else {
                         return DBAUTHPaperAccessError(other: ())
                     }
                 }()
                 return DBAUTHAccessError(paperAccessDenied: paperAccessError)
-            } else if let error = error.error.asTeamAccessDenied {
+            } else if error.error.asTeamAccessDenied != nil {
                 return DBAUTHAccessError(teamAccessDenied: ())
             } else if let error = error.error.asNoPermission {
                 let noPermissionError: DBAUTHNoPermissionError = {
