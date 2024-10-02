@@ -166,8 +166,9 @@ def main():
 
     if args.objc_shim:
         base_args.append('--objc-shim')
-        team_args.append('--objc-shim')
-        app_args.append('--objc-shim')
+        # uncomment the below to generate shims for team and app auth routes
+        # team_args.append('--objc-shim')
+        # app_args.append('--objc-shim')
 
     o = subprocess.check_output(
         (stone_cmd_prefix + route_attrs + swift_client + specs + base_args),
