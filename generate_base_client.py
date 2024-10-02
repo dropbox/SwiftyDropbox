@@ -94,6 +94,9 @@ def main():
     if not os.path.isabs(dropbox_objc_pkg_path):
         dropbox_objc_pkg_path = os.path.abspath(dropbox_objc_pkg_path)
 
+    if not os.path.isabs(dropbox_objc_shim_output_path):
+        dropbox_objc_shim_output_path = os.path.abspath(dropbox_objc_shim_output_path)
+
     # clear out all old files
     if args.objc:
         if os.path.exists(dropbox_objc_pkg_path):
@@ -124,7 +127,13 @@ def main():
     if args.route_whitelist_filter:
         stone_cmd_prefix += ['-r', args.route_whitelist_filter]
 
-    output_path = dropbox_objc_pkg_path if args.objc else dropbox_pkg_path
+    if args.objc:
+        output_path = dropbox_objc_pkg_path
+    elif args.objc_shim:
+        output_path = dropbox_objc_shim_output_path
+    else:
+        output_path = dropbox_pkg_path
+
     types_cmd = list(stone_cmd_prefix + ['swift_types', output_path] + specs)
 
     if args.objc or args.documentation or args.objc_shim:
@@ -166,9 +175,8 @@ def main():
 
     if args.objc_shim:
         base_args.append('--objc-shim')
-        # uncomment the below to generate shims for team and app auth routes
-        # team_args.append('--objc-shim')
-        # app_args.append('--objc-shim')
+        team_args.append('--objc-shim')
+        app_args.append('--objc-shim')
 
     o = subprocess.check_output(
         (stone_cmd_prefix + route_attrs + swift_client + specs + base_args),
