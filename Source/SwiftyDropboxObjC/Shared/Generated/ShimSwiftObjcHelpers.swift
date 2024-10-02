@@ -1636,7 +1636,7 @@ private func callErrorToDB(error: DBXCallError?) -> DBRequestError? {
                     }
                 }()
                 return DBAUTHAccessError(noPermission: noPermissionError)
-            } else if let error = error.error.asPpAccessDenied {
+            } else if error.error.asPpAccessDenied != nil {
                 return DBAUTHAccessError(ppAccessDenied: ())
             } else {
                 return DBAUTHAccessError(other: ())
@@ -1658,10 +1658,10 @@ private func callErrorToDB(error: DBXCallError?) -> DBRequestError? {
         if let lum = error.localizedUserMessage {
             localizedUserMessage = DBLocalizedUserMessage(text: lum.text, locale: lum.locale)
         }
-        var reason: DBAUTHRateLimitReason = {
-            if let error = error.error.reason.asTooManyRequests {
+        let reason: DBAUTHRateLimitReason = {
+            if error.error.reason.asTooManyRequests != nil {
                 DBAUTHRateLimitReason(tooManyRequests: ())
-            } else if let error = error.error.reason.asTooManyWriteOperations {
+            } else if error.error.reason.asTooManyWriteOperations != nil {
                 DBAUTHRateLimitReason(tooManyWriteOperations: ())
             } else {
                 DBAUTHRateLimitReason(other: ())
