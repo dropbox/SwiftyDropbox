@@ -41,7 +41,12 @@ _cmdline_parser.add_argument(
 _cmdline_parser.add_argument(
     '--objc',
     action='store_true',
-    help='Generate objective-c routes',
+    help='Generate Objective-C routes.',
+)
+_cmdline_parser.add_argument(
+    '--objc-shim',
+    action='store_true',
+    help='Generate Objective-C to Swift migration shim.',
 )
 _cmdline_parser.add_argument(
     '-r',
@@ -77,6 +82,7 @@ def main():
 
     dropbox_default_output_path = 'Source/SwiftyDropbox/Shared/Generated'
     dropbox_objc_output_path = 'Source/SwiftyDropboxObjC/Shared/Generated'
+    dropbox_objc_shim_output_path = 'Source/SwiftyDropboxObjCShim/Shared/Generated'
     dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
     dropbox_objc_pkg_path = args.output_path if args.output_path else dropbox_objc_output_path
 
@@ -93,6 +99,10 @@ def main():
         if os.path.exists(dropbox_objc_pkg_path):
             shutil.rmtree(dropbox_objc_pkg_path)
         os.makedirs(dropbox_objc_pkg_path)
+    elif args.objc_shim:
+        if os.path.exists(dropbox_objc_shim_output_path):
+            shutil.rmtree(dropbox_objc_shim_output_path)
+        os.makedirs(dropbox_objc_shim_output_path)
     else:
         if os.path.exists(dropbox_pkg_path):
             shutil.rmtree(dropbox_pkg_path)
@@ -117,12 +127,14 @@ def main():
     output_path = dropbox_objc_pkg_path if args.objc else dropbox_pkg_path
     types_cmd = list(stone_cmd_prefix + ['swift_types', output_path] + specs)
 
-    if args.objc or args.documentation:
+    if args.objc or args.documentation or args.objc_shim:
         types_cmd.append('--')
         if args.objc:
             types_cmd.append('--objc')
         if args.documentation:
             types_cmd.append('--documentation')
+        if args.objc_shim:
+            types_cmd.append('--objc-shim')
 
     o = subprocess.check_output(
         (types_cmd),
@@ -151,6 +163,11 @@ def main():
         base_args.append('--objc')
         team_args.append('--objc')
         app_args.append('--objc')
+
+    if args.objc_shim:
+        base_args.append('--objc-shim')
+        team_args.append('--objc-shim')
+        app_args.append('--objc-shim')
 
     o = subprocess.check_output(
         (stone_cmd_prefix + route_attrs + swift_client + specs + base_args),
