@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// There is an error accessing the file requests functionality.
 @objc
 public class DBXFileRequestsGeneralFileRequestsError: NSObject {
-    let swift: FileRequests.GeneralFileRequestsError
+    public let swift: FileRequests.GeneralFileRequestsError
 
-    public init(swift: FileRequests.GeneralFileRequestsError) {
+    fileprivate init(swift: FileRequests.GeneralFileRequestsError) {
         self.swift = swift
     }
 
@@ -65,9 +65,9 @@ public class DBXFileRequestsGeneralFileRequestsErrorOther: DBXFileRequestsGenera
 /// There was an error counting the file requests.
 @objc
 public class DBXFileRequestsCountFileRequestsError: NSObject {
-    let swift: FileRequests.CountFileRequestsError
+    public let swift: FileRequests.CountFileRequestsError
 
-    public init(swift: FileRequests.CountFileRequestsError) {
+    fileprivate init(swift: FileRequests.CountFileRequestsError) {
         self.swift = swift
     }
 
@@ -126,7 +126,7 @@ public class DBXFileRequestsCountFileRequestsResult: NSObject {
         self.swift = FileRequests.CountFileRequestsResult(fileRequestCount: fileRequestCount.uint64Value)
     }
 
-    let swift: FileRequests.CountFileRequestsResult
+    public let swift: FileRequests.CountFileRequestsResult
 
     public init(swift: FileRequests.CountFileRequestsResult) {
         self.swift = swift
@@ -171,7 +171,7 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
         )
     }
 
-    let swift: FileRequests.CreateFileRequestArgs
+    public let swift: FileRequests.CreateFileRequestArgs
 
     public init(swift: FileRequests.CreateFileRequestArgs) {
         self.swift = swift
@@ -184,9 +184,9 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
 /// There is an error with the file request.
 @objc
 public class DBXFileRequestsFileRequestError: NSObject {
-    let swift: FileRequests.FileRequestError
+    public let swift: FileRequests.FileRequestError
 
-    public init(swift: FileRequests.FileRequestError) {
+    fileprivate init(swift: FileRequests.FileRequestError) {
         self.swift = swift
     }
 
@@ -341,9 +341,9 @@ public class DBXFileRequestsFileRequestErrorValidationError: DBXFileRequestsFile
 /// There was an error creating the file request.
 @objc
 public class DBXFileRequestsCreateFileRequestError: NSObject {
-    let swift: FileRequests.CreateFileRequestError
+    public let swift: FileRequests.CreateFileRequestError
 
-    public init(swift: FileRequests.CreateFileRequestError) {
+    fileprivate init(swift: FileRequests.CreateFileRequestError) {
         self.swift = swift
     }
 
@@ -533,9 +533,9 @@ public class DBXFileRequestsCreateFileRequestErrorRateLimit: DBXFileRequestsCrea
 /// There was an error deleting all closed file requests.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsError: NSObject {
-    let swift: FileRequests.DeleteAllClosedFileRequestsError
+    public let swift: FileRequests.DeleteAllClosedFileRequestsError
 
-    public init(swift: FileRequests.DeleteAllClosedFileRequestsError) {
+    fileprivate init(swift: FileRequests.DeleteAllClosedFileRequestsError) {
         self.swift = swift
     }
 
@@ -699,7 +699,7 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsResult: NSObject {
         self.swift = FileRequests.DeleteAllClosedFileRequestsResult(fileRequests: fileRequests.map(\.swift))
     }
 
-    let swift: FileRequests.DeleteAllClosedFileRequestsResult
+    public let swift: FileRequests.DeleteAllClosedFileRequestsResult
 
     public init(swift: FileRequests.DeleteAllClosedFileRequestsResult) {
         self.swift = swift
@@ -721,7 +721,7 @@ public class DBXFileRequestsDeleteFileRequestArgs: NSObject {
         self.swift = FileRequests.DeleteFileRequestArgs(ids: ids)
     }
 
-    let swift: FileRequests.DeleteFileRequestArgs
+    public let swift: FileRequests.DeleteFileRequestArgs
 
     public init(swift: FileRequests.DeleteFileRequestArgs) {
         self.swift = swift
@@ -734,9 +734,9 @@ public class DBXFileRequestsDeleteFileRequestArgs: NSObject {
 /// There was an error deleting these file requests.
 @objc
 public class DBXFileRequestsDeleteFileRequestError: NSObject {
-    let swift: FileRequests.DeleteFileRequestError
+    public let swift: FileRequests.DeleteFileRequestError
 
-    public init(swift: FileRequests.DeleteFileRequestError) {
+    fileprivate init(swift: FileRequests.DeleteFileRequestError) {
         self.swift = swift
     }
 
@@ -917,7 +917,7 @@ public class DBXFileRequestsDeleteFileRequestsResult: NSObject {
         self.swift = FileRequests.DeleteFileRequestsResult(fileRequests: fileRequests.map(\.swift))
     }
 
-    let swift: FileRequests.DeleteFileRequestsResult
+    public let swift: FileRequests.DeleteFileRequestsResult
 
     public init(swift: FileRequests.DeleteFileRequestsResult) {
         self.swift = swift
@@ -988,7 +988,7 @@ public class DBXFileRequestsFileRequest: NSObject {
         )
     }
 
-    let swift: FileRequests.FileRequest
+    public let swift: FileRequests.FileRequest
 
     public init(swift: FileRequests.FileRequest) {
         self.swift = swift
@@ -1007,7 +1007,7 @@ public class DBXFileRequestsFileRequestDeadline: NSObject {
     /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
     @objc
     public var allowLateUploads: DBXFileRequestsGracePeriod? { guard let swift = swift.allowLateUploads else { return nil }
-        return DBXFileRequestsGracePeriod(swift: swift)
+        return DBXFileRequestsGracePeriod.factory(swift: swift)
     }
 
     @objc
@@ -1015,7 +1015,7 @@ public class DBXFileRequestsFileRequestDeadline: NSObject {
         self.swift = FileRequests.FileRequestDeadline(deadline: deadline, allowLateUploads: allowLateUploads?.swift)
     }
 
-    let swift: FileRequests.FileRequestDeadline
+    public let swift: FileRequests.FileRequestDeadline
 
     public init(swift: FileRequests.FileRequestDeadline) {
         self.swift = swift
@@ -1037,7 +1037,7 @@ public class DBXFileRequestsGetFileRequestArgs: NSObject {
         self.swift = FileRequests.GetFileRequestArgs(id: id)
     }
 
-    let swift: FileRequests.GetFileRequestArgs
+    public let swift: FileRequests.GetFileRequestArgs
 
     public init(swift: FileRequests.GetFileRequestArgs) {
         self.swift = swift
@@ -1050,9 +1050,9 @@ public class DBXFileRequestsGetFileRequestArgs: NSObject {
 /// There was an error retrieving the specified file request.
 @objc
 public class DBXFileRequestsGetFileRequestError: NSObject {
-    let swift: FileRequests.GetFileRequestError
+    public let swift: FileRequests.GetFileRequestError
 
-    public init(swift: FileRequests.GetFileRequestError) {
+    fileprivate init(swift: FileRequests.GetFileRequestError) {
         self.swift = swift
     }
 
@@ -1207,9 +1207,9 @@ public class DBXFileRequestsGetFileRequestErrorValidationError: DBXFileRequestsG
 /// Objective-C compatible GracePeriod union
 @objc
 public class DBXFileRequestsGracePeriod: NSObject {
-    let swift: FileRequests.GracePeriod
+    public let swift: FileRequests.GracePeriod
 
-    public init(swift: FileRequests.GracePeriod) {
+    fileprivate init(swift: FileRequests.GracePeriod) {
         self.swift = swift
     }
 
@@ -1336,7 +1336,7 @@ public class DBXFileRequestsListFileRequestsArg: NSObject {
         self.swift = FileRequests.ListFileRequestsArg(limit: limit.uint64Value)
     }
 
-    let swift: FileRequests.ListFileRequestsArg
+    public let swift: FileRequests.ListFileRequestsArg
 
     public init(swift: FileRequests.ListFileRequestsArg) {
         self.swift = swift
@@ -1358,7 +1358,7 @@ public class DBXFileRequestsListFileRequestsContinueArg: NSObject {
         self.swift = FileRequests.ListFileRequestsContinueArg(cursor: cursor)
     }
 
-    let swift: FileRequests.ListFileRequestsContinueArg
+    public let swift: FileRequests.ListFileRequestsContinueArg
 
     public init(swift: FileRequests.ListFileRequestsContinueArg) {
         self.swift = swift
@@ -1371,9 +1371,9 @@ public class DBXFileRequestsListFileRequestsContinueArg: NSObject {
 /// There was an error retrieving the file requests.
 @objc
 public class DBXFileRequestsListFileRequestsContinueError: NSObject {
-    let swift: FileRequests.ListFileRequestsContinueError
+    public let swift: FileRequests.ListFileRequestsContinueError
 
-    public init(swift: FileRequests.ListFileRequestsContinueError) {
+    fileprivate init(swift: FileRequests.ListFileRequestsContinueError) {
         self.swift = swift
     }
 
@@ -1440,9 +1440,9 @@ public class DBXFileRequestsListFileRequestsContinueErrorInvalidCursor: DBXFileR
 /// There was an error retrieving the file requests.
 @objc
 public class DBXFileRequestsListFileRequestsError: NSObject {
-    let swift: FileRequests.ListFileRequestsError
+    public let swift: FileRequests.ListFileRequestsError
 
-    public init(swift: FileRequests.ListFileRequestsError) {
+    fileprivate init(swift: FileRequests.ListFileRequestsError) {
         self.swift = swift
     }
 
@@ -1502,7 +1502,7 @@ public class DBXFileRequestsListFileRequestsResult: NSObject {
         self.swift = FileRequests.ListFileRequestsResult(fileRequests: fileRequests.map(\.swift))
     }
 
-    let swift: FileRequests.ListFileRequestsResult
+    public let swift: FileRequests.ListFileRequestsResult
 
     public init(swift: FileRequests.ListFileRequestsResult) {
         self.swift = swift
@@ -1532,7 +1532,7 @@ public class DBXFileRequestsListFileRequestsV2Result: NSObject {
         self.swift = FileRequests.ListFileRequestsV2Result(fileRequests: fileRequests.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
     }
 
-    let swift: FileRequests.ListFileRequestsV2Result
+    public let swift: FileRequests.ListFileRequestsV2Result
 
     public init(swift: FileRequests.ListFileRequestsV2Result) {
         self.swift = swift
@@ -1557,7 +1557,7 @@ public class DBXFileRequestsUpdateFileRequestArgs: NSObject {
     public var destination: String? { swift.destination }
     /// The new deadline for the file request. Deadlines can only be set by Professional and Business accounts.
     @objc
-    public var deadline: DBXFileRequestsUpdateFileRequestDeadline { DBXFileRequestsUpdateFileRequestDeadline(swift: swift.deadline) }
+    public var deadline: DBXFileRequestsUpdateFileRequestDeadline { DBXFileRequestsUpdateFileRequestDeadline.factory(swift: swift.deadline) }
     /// Whether to set this file request as open or closed.
     @objc
     public var open: NSNumber? { swift.open as NSNumber? }
@@ -1577,7 +1577,7 @@ public class DBXFileRequestsUpdateFileRequestArgs: NSObject {
         )
     }
 
-    let swift: FileRequests.UpdateFileRequestArgs
+    public let swift: FileRequests.UpdateFileRequestArgs
 
     public init(swift: FileRequests.UpdateFileRequestArgs) {
         self.swift = swift
@@ -1590,9 +1590,9 @@ public class DBXFileRequestsUpdateFileRequestArgs: NSObject {
 /// Objective-C compatible UpdateFileRequestDeadline union
 @objc
 public class DBXFileRequestsUpdateFileRequestDeadline: NSObject {
-    let swift: FileRequests.UpdateFileRequestDeadline
+    public let swift: FileRequests.UpdateFileRequestDeadline
 
-    public init(swift: FileRequests.UpdateFileRequestDeadline) {
+    fileprivate init(swift: FileRequests.UpdateFileRequestDeadline) {
         self.swift = swift
     }
 
@@ -1665,9 +1665,9 @@ public class DBXFileRequestsUpdateFileRequestDeadlineOther: DBXFileRequestsUpdat
 /// There is an error updating the file request.
 @objc
 public class DBXFileRequestsUpdateFileRequestError: NSObject {
-    let swift: FileRequests.UpdateFileRequestError
+    public let swift: FileRequests.UpdateFileRequestError
 
-    public init(swift: FileRequests.UpdateFileRequestError) {
+    fileprivate init(swift: FileRequests.UpdateFileRequestError) {
         self.swift = swift
     }
 

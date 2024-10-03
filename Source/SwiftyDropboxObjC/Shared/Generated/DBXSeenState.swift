@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Possible platforms on which a user may view content.
 @objc
 public class DBXSeenStatePlatformType: NSObject {
-    let swift: SeenState.PlatformType
+    public let swift: SeenState.PlatformType
 
-    public init(swift: SeenState.PlatformType) {
+    fileprivate init(swift: SeenState.PlatformType) {
         self.swift = swift
     }
 

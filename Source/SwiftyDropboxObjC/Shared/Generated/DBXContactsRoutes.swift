@@ -68,7 +68,16 @@ public class DBXContactsDeleteManualContactsRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             completionHandler(error?.objc)
         }
         return self
@@ -120,12 +129,21 @@ public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXContactsDeleteManualContactsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXContactsDeleteManualContactsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXContactsDeleteManualContactsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXContactsDeleteManualContactsError(swift: box.unboxed)
+                routeError = DBXContactsDeleteManualContactsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

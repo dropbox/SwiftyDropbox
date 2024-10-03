@@ -22,7 +22,7 @@ public class DBXContactsDeleteManualContactsArg: NSObject {
         self.swift = Contacts.DeleteManualContactsArg(emailAddresses: emailAddresses)
     }
 
-    let swift: Contacts.DeleteManualContactsArg
+    public let swift: Contacts.DeleteManualContactsArg
 
     public init(swift: Contacts.DeleteManualContactsArg) {
         self.swift = swift
@@ -35,9 +35,9 @@ public class DBXContactsDeleteManualContactsArg: NSObject {
 /// Objective-C compatible DeleteManualContactsError union
 @objc
 public class DBXContactsDeleteManualContactsError: NSObject {
-    let swift: Contacts.DeleteManualContactsError
+    public let swift: Contacts.DeleteManualContactsError
 
-    public init(swift: Contacts.DeleteManualContactsError) {
+    fileprivate init(swift: Contacts.DeleteManualContactsError) {
         self.swift = swift
     }
 

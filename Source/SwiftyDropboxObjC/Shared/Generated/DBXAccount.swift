@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Objective-C compatible PhotoSourceArg union
 @objc
 public class DBXAccountPhotoSourceArg: NSObject {
-    let swift: Account.PhotoSourceArg
+    public let swift: Account.PhotoSourceArg
 
-    public init(swift: Account.PhotoSourceArg) {
+    fileprivate init(swift: Account.PhotoSourceArg) {
         self.swift = swift
     }
 
@@ -72,14 +72,14 @@ public class DBXAccountPhotoSourceArgOther: DBXAccountPhotoSourceArg {
 public class DBXAccountSetProfilePhotoArg: NSObject {
     /// Image to set as the user's new profile photo.
     @objc
-    public var photo: DBXAccountPhotoSourceArg { DBXAccountPhotoSourceArg(swift: swift.photo) }
+    public var photo: DBXAccountPhotoSourceArg { DBXAccountPhotoSourceArg.factory(swift: swift.photo) }
 
     @objc
     public init(photo: DBXAccountPhotoSourceArg) {
         self.swift = Account.SetProfilePhotoArg(photo: photo.swift)
     }
 
-    let swift: Account.SetProfilePhotoArg
+    public let swift: Account.SetProfilePhotoArg
 
     public init(swift: Account.SetProfilePhotoArg) {
         self.swift = swift
@@ -92,9 +92,9 @@ public class DBXAccountSetProfilePhotoArg: NSObject {
 /// Objective-C compatible SetProfilePhotoError union
 @objc
 public class DBXAccountSetProfilePhotoError: NSObject {
-    let swift: Account.SetProfilePhotoError
+    public let swift: Account.SetProfilePhotoError
 
-    public init(swift: Account.SetProfilePhotoError) {
+    fileprivate init(swift: Account.SetProfilePhotoError) {
         self.swift = swift
     }
 
@@ -221,7 +221,7 @@ public class DBXAccountSetProfilePhotoResult: NSObject {
         self.swift = Account.SetProfilePhotoResult(profilePhotoUrl: profilePhotoUrl)
     }
 
-    let swift: Account.SetProfilePhotoResult
+    public let swift: Account.SetProfilePhotoResult
 
     public init(swift: Account.SetProfilePhotoResult) {
         self.swift = swift

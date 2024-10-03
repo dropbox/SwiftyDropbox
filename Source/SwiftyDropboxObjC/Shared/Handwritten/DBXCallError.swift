@@ -182,7 +182,7 @@ public class DBXAuthError: DBXRequestError {
     public let localizedUserMessage: DBXLocalizedUserMessage?
 
     init(error: Auth.AuthError, localizedUserMessage: LocalizedUserMessage?, message: String?, requestId: String?, description: String) {
-        self.error = DBXAuthAuthError(swift: error)
+        self.error = DBXAuthAuthError.factory(swift: error)
         if let localizedUserMessage = localizedUserMessage {
             self.localizedUserMessage = DBXLocalizedUserMessage(localizedUserMessage: localizedUserMessage)
         } else {
@@ -201,7 +201,7 @@ public class DBXAccessError: DBXRequestError {
     public let localizedUserMessage: DBXLocalizedUserMessage?
 
     init(error: Auth.AccessError, localizedUserMessage: LocalizedUserMessage?, message: String?, requestId: String?, description: String) {
-        self.error = DBXAuthAccessError(swift: error)
+        self.error = DBXAuthAccessError.factory(swift: error)
         if let localizedUserMessage = localizedUserMessage {
             self.localizedUserMessage = DBXLocalizedUserMessage(localizedUserMessage: localizedUserMessage)
         } else {

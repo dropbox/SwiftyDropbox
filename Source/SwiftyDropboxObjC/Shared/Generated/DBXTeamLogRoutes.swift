@@ -105,7 +105,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -113,7 +113,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLogGetTeamEventsError(swift: box.unboxed)
+                routeError = DBXTeamLogGetTeamEventsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -172,7 +172,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -180,7 +180,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLogGetTeamEventsContinueError(swift: box.unboxed)
+                routeError = DBXTeamLogGetTeamEventsContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
