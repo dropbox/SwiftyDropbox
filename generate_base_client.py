@@ -85,6 +85,7 @@ def main():
     dropbox_objc_shim_output_path = 'Source/SwiftyDropboxObjCShim/Shared/Generated'
     dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
     dropbox_objc_pkg_path = args.output_path if args.output_path else dropbox_objc_output_path
+    dropbox_objc_shim_output_path = args.output_path if args.output_path else dropbox_objc_shim_output_path
 
     # we run stone generation relative to the stone module,
     # so we make our output path absolute here so it's relative to where we are called
