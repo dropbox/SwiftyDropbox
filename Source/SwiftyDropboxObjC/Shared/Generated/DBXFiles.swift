@@ -1313,9 +1313,7 @@ public class DBXFilesDeleteBatchResult: DBXFilesFileOpsResult {
 public class DBXFilesDeleteBatchResultData: NSObject {
     /// Metadata of the deleted object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -1512,9 +1510,7 @@ public class DBXFilesDeleteErrorOther: DBXFilesDeleteError {
 public class DBXFilesDeleteResult: DBXFilesFileOpsResult {
     /// Metadata of the deleted object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -1570,7 +1566,7 @@ public class DBXFilesMetadata: NSObject {
 
     public let swift: Files.Metadata
 
-    public init(swift: Files.Metadata) {
+    fileprivate init(swift: Files.Metadata) {
         self.swift = swift
     }
 
@@ -2865,10 +2861,7 @@ public class DBXFilesGetCopyReferenceErrorOther: DBXFilesGetCopyReferenceError {
 public class DBXFilesGetCopyReferenceResult: NSObject {
     /// Metadata of the file or folder.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
-
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
     /// A copy reference to the file or folder.
     @objc
     public var copyReference: String { swift.copyReference }
@@ -3871,12 +3864,7 @@ public class DBXFilesListFolderLongpollResult: NSObject {
 public class DBXFilesListFolderResult: NSObject {
     /// The files and (direct) subfolders in the folder.
     @objc
-    public var entries: [DBXFilesMetadata] {
-        swift.entries.map {
-            DBXFilesMetadata.wrapPreservingSubtypes(swift: $0)
-        }
-    }
-
+    public var entries: [DBXFilesMetadata] { swift.entries.map { DBXFilesMetadata.wrapPreservingSubtypes(swift: $0) } }
     /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
     @objc
     public var cursor: String { swift.cursor }
@@ -4362,10 +4350,7 @@ public class DBXFilesLockFileErrorOther: DBXFilesLockFileError {
 public class DBXFilesLockFileResult: NSObject {
     /// Metadata of the file.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
-
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
     /// The file lock state after the operation.
     @objc
     public var lock: DBXFilesFileLock { DBXFilesFileLock(swift: swift.lock) }
@@ -4692,7 +4677,7 @@ public class DBXFilesMediaMetadata: NSObject {
 
     public let swift: Files.MediaMetadata
 
-    public init(swift: Files.MediaMetadata) {
+    fileprivate init(swift: Files.MediaMetadata) {
         self.swift = swift
     }
 
@@ -6902,9 +6887,7 @@ public class DBXFilesRelocationBatchResult: DBXFilesFileOpsResult {
 public class DBXFilesRelocationBatchResultData: NSObject {
     /// Metadata of the relocated object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -7153,9 +7136,7 @@ public class DBXFilesRelocationBatchV2Result: DBXFilesFileOpsResult {
 public class DBXFilesRelocationResult: DBXFilesFileOpsResult {
     /// Metadata of the relocated object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -7568,9 +7549,7 @@ public class DBXFilesSaveCopyReferenceErrorOther: DBXFilesSaveCopyReferenceError
 public class DBXFilesSaveCopyReferenceResult: NSObject {
     /// The metadata of the saved file or folder in the user's Dropbox.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -8004,9 +7983,7 @@ public class DBXFilesSearchMatch: NSObject {
     public var matchType: DBXFilesSearchMatchType { DBXFilesSearchMatchType.factory(swift: swift.matchType) }
     /// The metadata for the matched file or folder.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(matchType: DBXFilesSearchMatchType, metadata: DBXFilesMetadata) {

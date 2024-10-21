@@ -193,9 +193,7 @@ public class DBXUsersFullAccount: DBXUsersAccount {
     public var accountType: DBXUsersCommonAccountType { DBXUsersCommonAccountType.factory(swift: subSwift.accountType) }
     /// The root info for this account.
     @objc
-    public var rootInfo: DBXCommonRootInfo {
-        DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo)
-    }
+    public var rootInfo: DBXCommonRootInfo { DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo) }
 
     @objc
     public init(

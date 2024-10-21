@@ -1428,7 +1428,7 @@ public class DBXSharingLinkMetadata: NSObject {
 
     public let swift: Sharing.LinkMetadata
 
-    public init(swift: Sharing.LinkMetadata) {
+    fileprivate init(swift: Sharing.LinkMetadata) {
         self.swift = swift
     }
 
@@ -2211,7 +2211,7 @@ public class DBXSharingSharedLinkMetadata: NSObject {
 
     public let swift: Sharing.SharedLinkMetadata
 
-    public init(swift: Sharing.SharedLinkMetadata) {
+    fileprivate init(swift: Sharing.SharedLinkMetadata) {
         self.swift = swift
     }
 
@@ -3578,11 +3578,7 @@ public class DBXSharingGetSharedLinksErrorOther: DBXSharingGetSharedLinksError {
 public class DBXSharingGetSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingLinkMetadata] {
-        swift.links.map {
-            DBXSharingLinkMetadata.wrapPreservingSubtypes(swift: $0)
-        }
-    }
+    public var links: [DBXSharingLinkMetadata] { swift.links.map { DBXSharingLinkMetadata.wrapPreservingSubtypes(swift: $0) } }
 
     @objc
     public init(links: [DBXSharingLinkMetadata]) {
@@ -5981,12 +5977,7 @@ public class DBXSharingListSharedLinksErrorOther: DBXSharingListSharedLinksError
 public class DBXSharingListSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingSharedLinkMetadata] {
-        swift.links.map {
-            DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: $0)
-        }
-    }
-
+    public var links: [DBXSharingSharedLinkMetadata] { swift.links.map { DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: $0) } }
     /// Is true if there are additional shared links that have not been returned yet. Pass the cursor into
     /// listSharedLinks to retrieve them.
     @objc

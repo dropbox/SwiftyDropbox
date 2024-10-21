@@ -201,7 +201,7 @@ public class DBXCommonRootInfo: NSObject {
 
     public let swift: Common.RootInfo
 
-    public init(swift: Common.RootInfo) {
+    fileprivate init(swift: Common.RootInfo) {
         self.swift = swift
     }
 

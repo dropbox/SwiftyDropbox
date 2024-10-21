@@ -2570,9 +2570,7 @@ public class DBXTeamLogApiSessionLogInfo: NSObject {
 public class DBXTeamLogAppBlockedByPermissionsDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo {
-        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
-    }
+    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo) }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2616,9 +2614,7 @@ public class DBXTeamLogAppBlockedByPermissionsType: NSObject {
 public class DBXTeamLogAppLinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo {
-        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
-    }
+    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo) }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2662,9 +2658,7 @@ public class DBXTeamLogAppLinkTeamType: NSObject {
 public class DBXTeamLogAppLinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo {
-        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
-    }
+    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo) }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2720,7 +2714,7 @@ public class DBXTeamLogAppLogInfo: NSObject {
 
     public let swift: TeamLog.AppLogInfo
 
-    public init(swift: TeamLog.AppLogInfo) {
+    fileprivate init(swift: TeamLog.AppLogInfo) {
         self.swift = swift
     }
 
@@ -2812,9 +2806,7 @@ public class DBXTeamLogAppPermissionsChangedType: NSObject {
 public class DBXTeamLogAppUnlinkTeamDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo {
-        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
-    }
+    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo) }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -2858,9 +2850,7 @@ public class DBXTeamLogAppUnlinkTeamType: NSObject {
 public class DBXTeamLogAppUnlinkUserDetails: NSObject {
     /// Relevant application details.
     @objc
-    public var appInfo: DBXTeamLogAppLogInfo {
-        DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo)
-    }
+    public var appInfo: DBXTeamLogAppLogInfo { DBXTeamLogAppLogInfo.wrapPreservingSubtypes(swift: swift.appInfo) }
 
     @objc
     public init(appInfo: DBXTeamLogAppLogInfo) {
@@ -5419,7 +5409,7 @@ public class DBXTeamLogDeviceSessionLogInfo: NSObject {
 
     public let swift: TeamLog.DeviceSessionLogInfo
 
-    public init(swift: TeamLog.DeviceSessionLogInfo) {
+    fileprivate init(swift: TeamLog.DeviceSessionLogInfo) {
         self.swift = swift
     }
 
@@ -5519,7 +5509,7 @@ public class DBXTeamLogSessionLogInfo: NSObject {
 
     public let swift: TeamLog.SessionLogInfo
 
-    public init(swift: TeamLog.SessionLogInfo) {
+    fileprivate init(swift: TeamLog.SessionLogInfo) {
         self.swift = swift
     }
 
@@ -5923,9 +5913,7 @@ public class DBXTeamLogDeviceApprovalsRemoveExceptionType: NSObject {
 public class DBXTeamLogDeviceChangeIpDesktopDetails: NSObject {
     /// Device's session logged information.
     @objc
-    public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo {
-        DBXTeamLogDeviceSessionLogInfo.wrapPreservingSubtypes(swift: swift.deviceSessionInfo)
-    }
+    public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo { DBXTeamLogDeviceSessionLogInfo.wrapPreservingSubtypes(swift: swift.deviceSessionInfo) }
 
     @objc
     public init(deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo) {
@@ -5970,7 +5958,7 @@ public class DBXTeamLogDeviceChangeIpMobileDetails: NSObject {
     /// Device's session logged information.
     @objc
     public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo? { guard let swift = swift.deviceSessionInfo else { return nil }
-        return DBXTeamLogDeviceSessionLogInfo(swift: swift)
+        return DBXTeamLogDeviceSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -6060,7 +6048,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkFailDetails: NSObject {
     /// Session unique id.
     @objc
     public var sessionInfo: DBXTeamLogSessionLogInfo? { guard let swift = swift.sessionInfo else { return nil }
-        return DBXTeamLogSessionLogInfo(swift: swift)
+        return DBXTeamLogSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// The device name. Might be missing due to historical data gap.
@@ -6113,7 +6101,7 @@ public class DBXTeamLogDeviceDeleteOnUnlinkSuccessDetails: NSObject {
     /// Session unique id.
     @objc
     public var sessionInfo: DBXTeamLogSessionLogInfo? { guard let swift = swift.sessionInfo else { return nil }
-        return DBXTeamLogSessionLogInfo(swift: swift)
+        return DBXTeamLogSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// The device name. Might be missing due to historical data gap.
@@ -6210,7 +6198,7 @@ public class DBXTeamLogDeviceLinkSuccessDetails: NSObject {
     /// Device's session logged information.
     @objc
     public var deviceSessionInfo: DBXTeamLogDeviceSessionLogInfo? { guard let swift = swift.deviceSessionInfo else { return nil }
-        return DBXTeamLogDeviceSessionLogInfo(swift: swift)
+        return DBXTeamLogDeviceSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -6459,7 +6447,7 @@ public class DBXTeamLogDeviceUnlinkDetails: NSObject {
     /// Session unique id.
     @objc
     public var sessionInfo: DBXTeamLogSessionLogInfo? { guard let swift = swift.sessionInfo else { return nil }
-        return DBXTeamLogSessionLogInfo(swift: swift)
+        return DBXTeamLogSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// The device name. Might be missing due to historical data gap.
@@ -45885,7 +45873,7 @@ public class DBXTeamLogLegacyDeviceSessionLogInfo: DBXTeamLogDeviceSessionLogInf
     /// Session unique id.
     @objc
     public var sessionInfo: DBXTeamLogSessionLogInfo? { guard let swift = subSwift.sessionInfo else { return nil }
-        return DBXTeamLogSessionLogInfo(swift: swift)
+        return DBXTeamLogSessionLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// The device name. Might be missing due to historical data gap.
@@ -49438,7 +49426,7 @@ public class DBXTeamLogUserLogInfo: NSObject {
 
     public let swift: TeamLog.UserLogInfo
 
-    public init(swift: TeamLog.UserLogInfo) {
+    fileprivate init(swift: TeamLog.UserLogInfo) {
         self.swift = swift
     }
 
@@ -56285,7 +56273,7 @@ public class DBXTeamLogSharedContentCopyDetails: NSObject {
     /// The shared content owner.
     @objc
     public var sharedContentOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedContentOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// Shared content access level.
@@ -56351,7 +56339,7 @@ public class DBXTeamLogSharedContentDownloadDetails: NSObject {
     /// The shared content owner.
     @objc
     public var sharedContentOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedContentOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// Shared content access level.
@@ -56797,7 +56785,7 @@ public class DBXTeamLogSharedContentViewDetails: NSObject {
     /// The shared content owner.
     @objc
     public var sharedContentOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedContentOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// Shared content access level.
@@ -57611,7 +57599,7 @@ public class DBXTeamLogSharedLinkCopyDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -57703,7 +57691,7 @@ public class DBXTeamLogSharedLinkDisableDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -57749,7 +57737,7 @@ public class DBXTeamLogSharedLinkDownloadDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -58320,7 +58308,7 @@ public class DBXTeamLogSharedLinkShareDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     /// Users without a Dropbox account that were added as shared link audience.
@@ -58370,7 +58358,7 @@ public class DBXTeamLogSharedLinkViewDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -59112,7 +59100,7 @@ public class DBXTeamLogShmodelDisableDownloadsDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
@@ -59158,7 +59146,7 @@ public class DBXTeamLogShmodelEnableDownloadsDetails: NSObject {
     /// Shared link owner details. Might be missing due to historical data gap.
     @objc
     public var sharedLinkOwner: DBXTeamLogUserLogInfo? { guard let swift = swift.sharedLinkOwner else { return nil }
-        return DBXTeamLogUserLogInfo(swift: swift)
+        return DBXTeamLogUserLogInfo.wrapPreservingSubtypes(swift: swift)
     }
 
     @objc
