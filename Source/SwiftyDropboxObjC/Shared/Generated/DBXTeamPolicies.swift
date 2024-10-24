@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Objective-C compatible CameraUploadsPolicyState union
 @objc
 public class DBXTeamPoliciesCameraUploadsPolicyState: NSObject {
-    let swift: TeamPolicies.CameraUploadsPolicyState
+    public let swift: TeamPolicies.CameraUploadsPolicyState
 
-    public init(swift: TeamPolicies.CameraUploadsPolicyState) {
+    fileprivate init(swift: TeamPolicies.CameraUploadsPolicyState) {
         self.swift = swift
     }
 
@@ -82,9 +82,9 @@ public class DBXTeamPoliciesCameraUploadsPolicyStateOther: DBXTeamPoliciesCamera
 /// Objective-C compatible ComputerBackupPolicyState union
 @objc
 public class DBXTeamPoliciesComputerBackupPolicyState: NSObject {
-    let swift: TeamPolicies.ComputerBackupPolicyState
+    public let swift: TeamPolicies.ComputerBackupPolicyState
 
-    public init(swift: TeamPolicies.ComputerBackupPolicyState) {
+    fileprivate init(swift: TeamPolicies.ComputerBackupPolicyState) {
         self.swift = swift
     }
 
@@ -168,9 +168,9 @@ public class DBXTeamPoliciesComputerBackupPolicyStateOther: DBXTeamPoliciesCompu
 /// Objective-C compatible EmmState union
 @objc
 public class DBXTeamPoliciesEmmState: NSObject {
-    let swift: TeamPolicies.EmmState
+    public let swift: TeamPolicies.EmmState
 
-    public init(swift: TeamPolicies.EmmState) {
+    fileprivate init(swift: TeamPolicies.EmmState) {
         self.swift = swift
     }
 
@@ -254,9 +254,9 @@ public class DBXTeamPoliciesEmmStateOther: DBXTeamPoliciesEmmState {
 /// Objective-C compatible ExternalDriveBackupPolicyState union
 @objc
 public class DBXTeamPoliciesExternalDriveBackupPolicyState: NSObject {
-    let swift: TeamPolicies.ExternalDriveBackupPolicyState
+    public let swift: TeamPolicies.ExternalDriveBackupPolicyState
 
-    public init(swift: TeamPolicies.ExternalDriveBackupPolicyState) {
+    fileprivate init(swift: TeamPolicies.ExternalDriveBackupPolicyState) {
         self.swift = swift
     }
 
@@ -340,9 +340,9 @@ public class DBXTeamPoliciesExternalDriveBackupPolicyStateOther: DBXTeamPolicies
 /// Objective-C compatible FileLockingPolicyState union
 @objc
 public class DBXTeamPoliciesFileLockingPolicyState: NSObject {
-    let swift: TeamPolicies.FileLockingPolicyState
+    public let swift: TeamPolicies.FileLockingPolicyState
 
-    public init(swift: TeamPolicies.FileLockingPolicyState) {
+    fileprivate init(swift: TeamPolicies.FileLockingPolicyState) {
         self.swift = swift
     }
 
@@ -409,9 +409,9 @@ public class DBXTeamPoliciesFileLockingPolicyStateOther: DBXTeamPoliciesFileLock
 /// Objective-C compatible FileProviderMigrationPolicyState union
 @objc
 public class DBXTeamPoliciesFileProviderMigrationPolicyState: NSObject {
-    let swift: TeamPolicies.FileProviderMigrationPolicyState
+    public let swift: TeamPolicies.FileProviderMigrationPolicyState
 
-    public init(swift: TeamPolicies.FileProviderMigrationPolicyState) {
+    fileprivate init(swift: TeamPolicies.FileProviderMigrationPolicyState) {
         self.swift = swift
     }
 
@@ -495,9 +495,9 @@ public class DBXTeamPoliciesFileProviderMigrationPolicyStateOther: DBXTeamPolici
 /// Objective-C compatible GroupCreation union
 @objc
 public class DBXTeamPoliciesGroupCreation: NSObject {
-    let swift: TeamPolicies.GroupCreation
+    public let swift: TeamPolicies.GroupCreation
 
-    public init(swift: TeamPolicies.GroupCreation) {
+    fileprivate init(swift: TeamPolicies.GroupCreation) {
         self.swift = swift
     }
 
@@ -547,9 +547,9 @@ public class DBXTeamPoliciesGroupCreationAdminsOnly: DBXTeamPoliciesGroupCreatio
 /// Objective-C compatible OfficeAddInPolicy union
 @objc
 public class DBXTeamPoliciesOfficeAddInPolicy: NSObject {
-    let swift: TeamPolicies.OfficeAddInPolicy
+    public let swift: TeamPolicies.OfficeAddInPolicy
 
-    public init(swift: TeamPolicies.OfficeAddInPolicy) {
+    fileprivate init(swift: TeamPolicies.OfficeAddInPolicy) {
         self.swift = swift
     }
 
@@ -616,9 +616,9 @@ public class DBXTeamPoliciesOfficeAddInPolicyOther: DBXTeamPoliciesOfficeAddInPo
 /// Objective-C compatible PaperDefaultFolderPolicy union
 @objc
 public class DBXTeamPoliciesPaperDefaultFolderPolicy: NSObject {
-    let swift: TeamPolicies.PaperDefaultFolderPolicy
+    public let swift: TeamPolicies.PaperDefaultFolderPolicy
 
-    public init(swift: TeamPolicies.PaperDefaultFolderPolicy) {
+    fileprivate init(swift: TeamPolicies.PaperDefaultFolderPolicy) {
         self.swift = swift
     }
 
@@ -685,9 +685,9 @@ public class DBXTeamPoliciesPaperDefaultFolderPolicyOther: DBXTeamPoliciesPaperD
 /// Objective-C compatible PaperDeploymentPolicy union
 @objc
 public class DBXTeamPoliciesPaperDeploymentPolicy: NSObject {
-    let swift: TeamPolicies.PaperDeploymentPolicy
+    public let swift: TeamPolicies.PaperDeploymentPolicy
 
-    public init(swift: TeamPolicies.PaperDeploymentPolicy) {
+    fileprivate init(swift: TeamPolicies.PaperDeploymentPolicy) {
         self.swift = swift
     }
 
@@ -755,9 +755,9 @@ public class DBXTeamPoliciesPaperDeploymentPolicyOther: DBXTeamPoliciesPaperDepl
 /// Objective-C compatible PaperDesktopPolicy union
 @objc
 public class DBXTeamPoliciesPaperDesktopPolicy: NSObject {
-    let swift: TeamPolicies.PaperDesktopPolicy
+    public let swift: TeamPolicies.PaperDesktopPolicy
 
-    public init(swift: TeamPolicies.PaperDesktopPolicy) {
+    fileprivate init(swift: TeamPolicies.PaperDesktopPolicy) {
         self.swift = swift
     }
 
@@ -824,9 +824,9 @@ public class DBXTeamPoliciesPaperDesktopPolicyOther: DBXTeamPoliciesPaperDesktop
 /// Objective-C compatible PaperEnabledPolicy union
 @objc
 public class DBXTeamPoliciesPaperEnabledPolicy: NSObject {
-    let swift: TeamPolicies.PaperEnabledPolicy
+    public let swift: TeamPolicies.PaperEnabledPolicy
 
-    public init(swift: TeamPolicies.PaperEnabledPolicy) {
+    fileprivate init(swift: TeamPolicies.PaperEnabledPolicy) {
         self.swift = swift
     }
 
@@ -910,9 +910,9 @@ public class DBXTeamPoliciesPaperEnabledPolicyOther: DBXTeamPoliciesPaperEnabled
 /// Objective-C compatible PasswordControlMode union
 @objc
 public class DBXTeamPoliciesPasswordControlMode: NSObject {
-    let swift: TeamPolicies.PasswordControlMode
+    public let swift: TeamPolicies.PasswordControlMode
 
-    public init(swift: TeamPolicies.PasswordControlMode) {
+    fileprivate init(swift: TeamPolicies.PasswordControlMode) {
         self.swift = swift
     }
 
@@ -979,9 +979,9 @@ public class DBXTeamPoliciesPasswordControlModeOther: DBXTeamPoliciesPasswordCon
 /// Objective-C compatible PasswordStrengthPolicy union
 @objc
 public class DBXTeamPoliciesPasswordStrengthPolicy: NSObject {
-    let swift: TeamPolicies.PasswordStrengthPolicy
+    public let swift: TeamPolicies.PasswordStrengthPolicy
 
-    public init(swift: TeamPolicies.PasswordStrengthPolicy) {
+    fileprivate init(swift: TeamPolicies.PasswordStrengthPolicy) {
         self.swift = swift
     }
 
@@ -1065,9 +1065,9 @@ public class DBXTeamPoliciesPasswordStrengthPolicyOther: DBXTeamPoliciesPassword
 /// Objective-C compatible RolloutMethod union
 @objc
 public class DBXTeamPoliciesRolloutMethod: NSObject {
-    let swift: TeamPolicies.RolloutMethod
+    public let swift: TeamPolicies.RolloutMethod
 
-    public init(swift: TeamPolicies.RolloutMethod) {
+    fileprivate init(swift: TeamPolicies.RolloutMethod) {
         self.swift = swift
     }
 
@@ -1134,9 +1134,9 @@ public class DBXTeamPoliciesRolloutMethodAddMemberToExceptions: DBXTeamPoliciesR
 /// Policy governing whether shared folder membership is required to access shared links.
 @objc
 public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy: NSObject {
-    let swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
+    public let swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
 
-    public init(swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy) {
+    fileprivate init(swift: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy) {
         self.swift = swift
     }
 
@@ -1203,9 +1203,9 @@ public class DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicyOther: DBXTe
 /// Policy governing which shared folders a team member can join.
 @objc
 public class DBXTeamPoliciesSharedFolderJoinPolicy: NSObject {
-    let swift: TeamPolicies.SharedFolderJoinPolicy
+    public let swift: TeamPolicies.SharedFolderJoinPolicy
 
-    public init(swift: TeamPolicies.SharedFolderJoinPolicy) {
+    fileprivate init(swift: TeamPolicies.SharedFolderJoinPolicy) {
         self.swift = swift
     }
 
@@ -1272,9 +1272,9 @@ public class DBXTeamPoliciesSharedFolderJoinPolicyOther: DBXTeamPoliciesSharedFo
 /// Policy governing who can be a member of a folder shared by a team member.
 @objc
 public class DBXTeamPoliciesSharedFolderMemberPolicy: NSObject {
-    let swift: TeamPolicies.SharedFolderMemberPolicy
+    public let swift: TeamPolicies.SharedFolderMemberPolicy
 
-    public init(swift: TeamPolicies.SharedFolderMemberPolicy) {
+    fileprivate init(swift: TeamPolicies.SharedFolderMemberPolicy) {
         self.swift = swift
     }
 
@@ -1342,9 +1342,9 @@ public class DBXTeamPoliciesSharedFolderMemberPolicyOther: DBXTeamPoliciesShared
 /// shared links.
 @objc
 public class DBXTeamPoliciesSharedLinkCreatePolicy: NSObject {
-    let swift: TeamPolicies.SharedLinkCreatePolicy
+    public let swift: TeamPolicies.SharedLinkCreatePolicy
 
-    public init(swift: TeamPolicies.SharedLinkCreatePolicy) {
+    fileprivate init(swift: TeamPolicies.SharedLinkCreatePolicy) {
         self.swift = swift
     }
 
@@ -1449,9 +1449,9 @@ public class DBXTeamPoliciesSharedLinkCreatePolicyOther: DBXTeamPoliciesSharedLi
 /// Objective-C compatible ShowcaseDownloadPolicy union
 @objc
 public class DBXTeamPoliciesShowcaseDownloadPolicy: NSObject {
-    let swift: TeamPolicies.ShowcaseDownloadPolicy
+    public let swift: TeamPolicies.ShowcaseDownloadPolicy
 
-    public init(swift: TeamPolicies.ShowcaseDownloadPolicy) {
+    fileprivate init(swift: TeamPolicies.ShowcaseDownloadPolicy) {
         self.swift = swift
     }
 
@@ -1518,9 +1518,9 @@ public class DBXTeamPoliciesShowcaseDownloadPolicyOther: DBXTeamPoliciesShowcase
 /// Objective-C compatible ShowcaseEnabledPolicy union
 @objc
 public class DBXTeamPoliciesShowcaseEnabledPolicy: NSObject {
-    let swift: TeamPolicies.ShowcaseEnabledPolicy
+    public let swift: TeamPolicies.ShowcaseEnabledPolicy
 
-    public init(swift: TeamPolicies.ShowcaseEnabledPolicy) {
+    fileprivate init(swift: TeamPolicies.ShowcaseEnabledPolicy) {
         self.swift = swift
     }
 
@@ -1587,9 +1587,9 @@ public class DBXTeamPoliciesShowcaseEnabledPolicyOther: DBXTeamPoliciesShowcaseE
 /// Objective-C compatible ShowcaseExternalSharingPolicy union
 @objc
 public class DBXTeamPoliciesShowcaseExternalSharingPolicy: NSObject {
-    let swift: TeamPolicies.ShowcaseExternalSharingPolicy
+    public let swift: TeamPolicies.ShowcaseExternalSharingPolicy
 
-    public init(swift: TeamPolicies.ShowcaseExternalSharingPolicy) {
+    fileprivate init(swift: TeamPolicies.ShowcaseExternalSharingPolicy) {
         self.swift = swift
     }
 
@@ -1656,9 +1656,9 @@ public class DBXTeamPoliciesShowcaseExternalSharingPolicyOther: DBXTeamPoliciesS
 /// Objective-C compatible SmartSyncPolicy union
 @objc
 public class DBXTeamPoliciesSmartSyncPolicy: NSObject {
-    let swift: TeamPolicies.SmartSyncPolicy
+    public let swift: TeamPolicies.SmartSyncPolicy
 
-    public init(swift: TeamPolicies.SmartSyncPolicy) {
+    fileprivate init(swift: TeamPolicies.SmartSyncPolicy) {
         self.swift = swift
     }
 
@@ -1725,9 +1725,9 @@ public class DBXTeamPoliciesSmartSyncPolicyOther: DBXTeamPoliciesSmartSyncPolicy
 /// Objective-C compatible SmarterSmartSyncPolicyState union
 @objc
 public class DBXTeamPoliciesSmarterSmartSyncPolicyState: NSObject {
-    let swift: TeamPolicies.SmarterSmartSyncPolicyState
+    public let swift: TeamPolicies.SmarterSmartSyncPolicyState
 
-    public init(swift: TeamPolicies.SmarterSmartSyncPolicyState) {
+    fileprivate init(swift: TeamPolicies.SmarterSmartSyncPolicyState) {
         self.swift = swift
     }
 
@@ -1794,9 +1794,9 @@ public class DBXTeamPoliciesSmarterSmartSyncPolicyStateOther: DBXTeamPoliciesSma
 /// Objective-C compatible SsoPolicy union
 @objc
 public class DBXTeamPoliciesSsoPolicy: NSObject {
-    let swift: TeamPolicies.SsoPolicy
+    public let swift: TeamPolicies.SsoPolicy
 
-    public init(swift: TeamPolicies.SsoPolicy) {
+    fileprivate init(swift: TeamPolicies.SsoPolicy) {
         self.swift = swift
     }
 
@@ -1880,9 +1880,9 @@ public class DBXTeamPoliciesSsoPolicyOther: DBXTeamPoliciesSsoPolicy {
 /// Objective-C compatible SuggestMembersPolicy union
 @objc
 public class DBXTeamPoliciesSuggestMembersPolicy: NSObject {
-    let swift: TeamPolicies.SuggestMembersPolicy
+    public let swift: TeamPolicies.SuggestMembersPolicy
 
-    public init(swift: TeamPolicies.SuggestMembersPolicy) {
+    fileprivate init(swift: TeamPolicies.SuggestMembersPolicy) {
         self.swift = swift
     }
 
@@ -1957,13 +1957,13 @@ public class DBXTeamPoliciesTeamMemberPolicies: NSObject {
     /// restrictions upon the team's Dropbox usage on mobile devices. This is a new feature and in the future
     /// we'll be adding more new fields and additional documentation.
     @objc
-    public var emmState: DBXTeamPoliciesEmmState { DBXTeamPoliciesEmmState(swift: swift.emmState) }
+    public var emmState: DBXTeamPoliciesEmmState { DBXTeamPoliciesEmmState.factory(swift: swift.emmState) }
     /// The admin policy around the Dropbox Office Add-In for this team.
     @objc
-    public var officeAddin: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy(swift: swift.officeAddin) }
+    public var officeAddin: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy.factory(swift: swift.officeAddin) }
     /// The team policy on if teammembers are allowed to suggest users for admins to invite to the team.
     @objc
-    public var suggestMembersPolicy: DBXTeamPoliciesSuggestMembersPolicy { DBXTeamPoliciesSuggestMembersPolicy(swift: swift.suggestMembersPolicy) }
+    public var suggestMembersPolicy: DBXTeamPoliciesSuggestMembersPolicy { DBXTeamPoliciesSuggestMembersPolicy.factory(swift: swift.suggestMembersPolicy) }
 
     @objc
     public init(
@@ -1980,7 +1980,7 @@ public class DBXTeamPoliciesTeamMemberPolicies: NSObject {
         )
     }
 
-    let swift: TeamPolicies.TeamMemberPolicies
+    public let swift: TeamPolicies.TeamMemberPolicies
 
     public init(swift: TeamPolicies.TeamMemberPolicies) {
         self.swift = swift
@@ -1996,22 +1996,28 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
     /// Who can join folders shared by team members.
     @objc
     public var sharedFolderMemberPolicy: DBXTeamPoliciesSharedFolderMemberPolicy {
-        DBXTeamPoliciesSharedFolderMemberPolicy(swift: swift.sharedFolderMemberPolicy)
+        DBXTeamPoliciesSharedFolderMemberPolicy.factory(swift: swift.sharedFolderMemberPolicy)
     }
 
     /// Which shared folders team members can join.
     @objc
-    public var sharedFolderJoinPolicy: DBXTeamPoliciesSharedFolderJoinPolicy { DBXTeamPoliciesSharedFolderJoinPolicy(swift: swift.sharedFolderJoinPolicy) }
+    public var sharedFolderJoinPolicy: DBXTeamPoliciesSharedFolderJoinPolicy {
+        DBXTeamPoliciesSharedFolderJoinPolicy.factory(swift: swift.sharedFolderJoinPolicy)
+    }
+
     /// Who can view shared links owned by team members.
     @objc
-    public var sharedLinkCreatePolicy: DBXTeamPoliciesSharedLinkCreatePolicy { DBXTeamPoliciesSharedLinkCreatePolicy(swift: swift.sharedLinkCreatePolicy) }
+    public var sharedLinkCreatePolicy: DBXTeamPoliciesSharedLinkCreatePolicy {
+        DBXTeamPoliciesSharedLinkCreatePolicy.factory(swift: swift.sharedLinkCreatePolicy)
+    }
+
     /// Who can create groups.
     @objc
-    public var groupCreationPolicy: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation(swift: swift.groupCreationPolicy) }
+    public var groupCreationPolicy: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation.factory(swift: swift.groupCreationPolicy) }
     /// Who can view links to content in shared folders.
     @objc
     public var sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
-        DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy(swift: swift.sharedFolderLinkRestrictionPolicy)
+        DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy.factory(swift: swift.sharedFolderLinkRestrictionPolicy)
     }
 
     @objc
@@ -2031,7 +2037,7 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
         )
     }
 
-    let swift: TeamPolicies.TeamSharingPolicies
+    public let swift: TeamPolicies.TeamSharingPolicies
 
     public init(swift: TeamPolicies.TeamSharingPolicies) {
         self.swift = swift
@@ -2044,9 +2050,9 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
 /// Objective-C compatible TwoStepVerificationPolicy union
 @objc
 public class DBXTeamPoliciesTwoStepVerificationPolicy: NSObject {
-    let swift: TeamPolicies.TwoStepVerificationPolicy
+    public let swift: TeamPolicies.TwoStepVerificationPolicy
 
-    public init(swift: TeamPolicies.TwoStepVerificationPolicy) {
+    fileprivate init(swift: TeamPolicies.TwoStepVerificationPolicy) {
         self.swift = swift
     }
 
@@ -2113,9 +2119,9 @@ public class DBXTeamPoliciesTwoStepVerificationPolicyOther: DBXTeamPoliciesTwoSt
 /// Objective-C compatible TwoStepVerificationState union
 @objc
 public class DBXTeamPoliciesTwoStepVerificationState: NSObject {
-    let swift: TeamPolicies.TwoStepVerificationState
+    public let swift: TeamPolicies.TwoStepVerificationState
 
-    public init(swift: TeamPolicies.TwoStepVerificationState) {
+    fileprivate init(swift: TeamPolicies.TwoStepVerificationState) {
         self.swift = swift
     }
 

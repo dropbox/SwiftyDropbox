@@ -37,7 +37,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAuthTokenFromOAuth1Result?, DBXAuthTokenFromOAuth1Error?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -45,7 +45,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAuthTokenFromOAuth1Error(swift: box.unboxed)
+                routeError = DBXAuthTokenFromOAuth1Error.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

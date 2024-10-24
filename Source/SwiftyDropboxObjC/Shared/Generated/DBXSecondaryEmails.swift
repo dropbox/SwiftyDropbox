@@ -25,7 +25,7 @@ public class DBXSecondaryEmailsSecondaryEmail: NSObject {
         self.swift = SecondaryEmails.SecondaryEmail(email: email, isVerified: isVerified.boolValue)
     }
 
-    let swift: SecondaryEmails.SecondaryEmail
+    public let swift: SecondaryEmails.SecondaryEmail
 
     public init(swift: SecondaryEmails.SecondaryEmail) {
         self.swift = swift

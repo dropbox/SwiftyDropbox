@@ -231,12 +231,21 @@ public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsCountFileRequestsResult?, DBXFileRequestsCountFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsCountFileRequestsResult?, DBXFileRequestsCountFileRequestsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsCountFileRequestsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsCountFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsCountFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -298,12 +307,21 @@ public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsCreateFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsCreateFileRequestError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsCreateFileRequestError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsCreateFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsCreateFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -365,12 +383,21 @@ public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsDeleteFileRequestsResult?, DBXFileRequestsDeleteFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsDeleteFileRequestsResult?, DBXFileRequestsDeleteFileRequestError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsDeleteFileRequestError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsDeleteFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsDeleteFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -434,12 +461,22 @@ public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?)
             -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?)
+            -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsDeleteAllClosedFileRequestsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsDeleteAllClosedFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsDeleteAllClosedFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -501,12 +538,21 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsGetFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsGetFileRequestError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsGetFileRequestError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsGetFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsGetFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -568,12 +614,21 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsListFileRequestsResult?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsListFileRequestsResult?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsListFileRequestsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -635,12 +690,21 @@ public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsListFileRequestsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -702,12 +766,21 @@ public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsListFileRequestsContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsListFileRequestsContinueError(swift: box.unboxed)
+                routeError = DBXFileRequestsListFileRequestsContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -769,12 +842,21 @@ public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsUpdateFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsUpdateFileRequestError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXFileRequestsUpdateFileRequestError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFileRequestsUpdateFileRequestError(swift: box.unboxed)
+                routeError = DBXFileRequestsUpdateFileRequestError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

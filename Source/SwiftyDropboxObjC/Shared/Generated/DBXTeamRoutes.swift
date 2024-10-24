@@ -1971,7 +1971,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMemberDevicesResult?, DBXTeamListMemberDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1979,7 +1979,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListMemberDevicesError(swift: box.unboxed)
+                routeError = DBXTeamListMemberDevicesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2038,7 +2038,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMembersDevicesResult?, DBXTeamListMembersDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2046,7 +2046,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListMembersDevicesError(swift: box.unboxed)
+                routeError = DBXTeamListMembersDevicesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2105,7 +2105,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListTeamDevicesResult?, DBXTeamListTeamDevicesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2113,7 +2113,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListTeamDevicesError(swift: box.unboxed)
+                routeError = DBXTeamListTeamDevicesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2172,7 +2172,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -2180,7 +2180,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamRevokeDeviceSessionError(swift: box.unboxed)
+                routeError = DBXTeamRevokeDeviceSessionError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2235,7 +2235,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionBatchResult?, DBXTeamRevokeDeviceSessionBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2243,7 +2243,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamRevokeDeviceSessionBatchError(swift: box.unboxed)
+                routeError = DBXTeamRevokeDeviceSessionBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2302,7 +2302,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamFeaturesGetValuesBatchResult?, DBXTeamFeaturesGetValuesBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2310,7 +2310,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamFeaturesGetValuesBatchError(swift: box.unboxed)
+                routeError = DBXTeamFeaturesGetValuesBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2369,7 +2369,7 @@ public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamGetInfoResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2425,7 +2425,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2433,7 +2433,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupCreateError(swift: box.unboxed)
+                routeError = DBXTeamGroupCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2492,7 +2492,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamGroupDeleteError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2500,7 +2500,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupDeleteError(swift: box.unboxed)
+                routeError = DBXTeamGroupDeleteError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2559,7 +2559,7 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2567,7 +2567,7 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupsGetInfoError(swift: box.unboxed)
+                routeError = DBXTeamGroupsGetInfoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2626,7 +2626,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXTeamGroupsPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2634,7 +2634,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupsPollError(swift: box.unboxed)
+                routeError = DBXTeamGroupsPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2693,7 +2693,7 @@ public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2749,7 +2749,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXTeamGroupsListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2757,7 +2757,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupsListContinueError(swift: box.unboxed)
+                routeError = DBXTeamGroupsListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2816,7 +2816,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersAddError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2824,7 +2824,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupMembersAddError(swift: box.unboxed)
+                routeError = DBXTeamGroupMembersAddError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2883,7 +2883,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupSelectorError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2891,7 +2891,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupSelectorError(swift: box.unboxed)
+                routeError = DBXTeamGroupSelectorError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2950,7 +2950,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupsMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -2958,7 +2958,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupsMembersListContinueError(swift: box.unboxed)
+                routeError = DBXTeamGroupsMembersListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3017,7 +3017,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3025,7 +3025,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupMembersRemoveError(swift: box.unboxed)
+                routeError = DBXTeamGroupMembersRemoveError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3084,7 +3084,7 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3092,7 +3092,7 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupMemberSetAccessTypeError(swift: box.unboxed)
+                routeError = DBXTeamGroupMemberSetAccessTypeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3151,7 +3151,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3159,7 +3159,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamGroupUpdateError(swift: box.unboxed)
+                routeError = DBXTeamGroupUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3218,7 +3218,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3226,7 +3226,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsPolicyCreateError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsPolicyCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3285,7 +3285,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsGetPolicyError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3293,7 +3293,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsGetPolicyError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsGetPolicyError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3352,7 +3352,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3360,7 +3360,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsListHeldRevisionsError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsListHeldRevisionsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3419,7 +3419,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3427,7 +3427,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsListHeldRevisionsError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsListHeldRevisionsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3486,7 +3486,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsListPoliciesResult?, DBXTeamLegalHoldsListPoliciesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3494,7 +3494,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsListPoliciesError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsListPoliciesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3553,7 +3553,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldsPolicyReleaseError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -3561,7 +3561,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsPolicyReleaseError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsPolicyReleaseError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3616,7 +3616,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3624,7 +3624,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamLegalHoldsPolicyUpdateError(swift: box.unboxed)
+                routeError = DBXTeamLegalHoldsPolicyUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3683,7 +3683,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMemberAppsResult?, DBXTeamListMemberAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3691,7 +3691,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListMemberAppsError(swift: box.unboxed)
+                routeError = DBXTeamListMemberAppsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3750,7 +3750,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListMembersAppsResult?, DBXTeamListMembersAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3758,7 +3758,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListMembersAppsError(swift: box.unboxed)
+                routeError = DBXTeamListMembersAppsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3817,7 +3817,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamListTeamAppsResult?, DBXTeamListTeamAppsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3825,7 +3825,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamListTeamAppsError(swift: box.unboxed)
+                routeError = DBXTeamListTeamAppsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3884,7 +3884,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeLinkedAppError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -3892,7 +3892,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamRevokeLinkedAppError(swift: box.unboxed)
+                routeError = DBXTeamRevokeLinkedAppError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3947,7 +3947,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamRevokeLinkedAppBatchResult?, DBXTeamRevokeLinkedAppBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3955,7 +3955,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamRevokeLinkedAppBatchError(swift: box.unboxed)
+                routeError = DBXTeamRevokeLinkedAppBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4014,7 +4014,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4022,7 +4022,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamExcludedUsersUpdateError(swift: box.unboxed)
+                routeError = DBXTeamExcludedUsersUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4081,7 +4081,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4089,7 +4089,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamExcludedUsersListError(swift: box.unboxed)
+                routeError = DBXTeamExcludedUsersListError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4148,7 +4148,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4156,7 +4156,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamExcludedUsersListContinueError(swift: box.unboxed)
+                routeError = DBXTeamExcludedUsersListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4215,7 +4215,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4223,7 +4223,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamExcludedUsersUpdateError(swift: box.unboxed)
+                routeError = DBXTeamExcludedUsersUpdateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4282,7 +4282,7 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4290,7 +4290,7 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamCustomQuotaError(swift: box.unboxed)
+                routeError = DBXTeamCustomQuotaError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4349,7 +4349,7 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamRemoveCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4357,7 +4357,7 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamCustomQuotaError(swift: box.unboxed)
+                routeError = DBXTeamCustomQuotaError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4416,7 +4416,7 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4424,7 +4424,7 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamSetCustomQuotaError(swift: box.unboxed)
+                routeError = DBXTeamSetCustomQuotaError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4483,7 +4483,7 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4539,7 +4539,7 @@ public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4595,7 +4595,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4603,7 +4603,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4662,7 +4662,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4670,7 +4670,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4729,7 +4729,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4737,7 +4737,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersDeleteProfilePhotoError(swift: box.unboxed)
+                routeError = DBXTeamMembersDeleteProfilePhotoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4796,7 +4796,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4804,7 +4804,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersDeleteProfilePhotoError(swift: box.unboxed)
+                routeError = DBXTeamMembersDeleteProfilePhotoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4863,7 +4863,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4919,7 +4919,7 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamMembersGetInfoItem]?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4927,7 +4927,7 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersGetInfoError(swift: box.unboxed)
+                routeError = DBXTeamMembersGetInfoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4986,7 +4986,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -4994,7 +4994,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersGetInfoError(swift: box.unboxed)
+                routeError = DBXTeamMembersGetInfoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5053,7 +5053,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5061,7 +5061,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListError(swift: box.unboxed)
+                routeError = DBXTeamMembersListError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5120,7 +5120,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5128,7 +5128,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListError(swift: box.unboxed)
+                routeError = DBXTeamMembersListError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5187,7 +5187,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5195,7 +5195,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListContinueError(swift: box.unboxed)
+                routeError = DBXTeamMembersListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5254,7 +5254,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5262,7 +5262,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersListContinueError(swift: box.unboxed)
+                routeError = DBXTeamMembersListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5321,7 +5321,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersTransferFormerMembersFilesError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5329,7 +5329,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersTransferFormerMembersFilesError(swift: box.unboxed)
+                routeError = DBXTeamMembersTransferFormerMembersFilesError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5388,7 +5388,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5396,7 +5396,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5455,7 +5455,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersRecoverError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -5463,7 +5463,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersRecoverError(swift: box.unboxed)
+                routeError = DBXTeamMembersRecoverError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5518,7 +5518,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5526,7 +5526,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersRemoveError(swift: box.unboxed)
+                routeError = DBXTeamMembersRemoveError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5585,7 +5585,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5593,7 +5593,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5652,7 +5652,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamAddSecondaryEmailsResult?, DBXTeamAddSecondaryEmailsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5660,7 +5660,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamAddSecondaryEmailsError(swift: box.unboxed)
+                routeError = DBXTeamAddSecondaryEmailsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5719,7 +5719,7 @@ public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamDeleteSecondaryEmailsResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5775,7 +5775,7 @@ public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NS
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamResendVerificationEmailResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5831,7 +5831,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSendWelcomeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -5839,7 +5839,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSendWelcomeError(swift: box.unboxed)
+                routeError = DBXTeamMembersSendWelcomeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5894,7 +5894,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSetPermissionsResult?, DBXTeamMembersSetPermissionsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5902,7 +5902,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetPermissionsError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetPermissionsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -5961,7 +5961,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -5969,7 +5969,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetPermissions2Error(swift: box.unboxed)
+                routeError = DBXTeamMembersSetPermissions2Error.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6028,7 +6028,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6036,7 +6036,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfileError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetProfileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6095,7 +6095,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6103,7 +6103,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfileError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetProfileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6162,7 +6162,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6170,7 +6170,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfilePhotoError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetProfilePhotoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6229,7 +6229,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6237,7 +6237,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSetProfilePhotoError(swift: box.unboxed)
+                routeError = DBXTeamMembersSetProfilePhotoError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6296,7 +6296,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersSuspendError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -6304,7 +6304,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersSuspendError(swift: box.unboxed)
+                routeError = DBXTeamMembersSuspendError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6359,7 +6359,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamMembersUnsuspendError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -6367,7 +6367,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamMembersUnsuspendError(swift: box.unboxed)
+                routeError = DBXTeamMembersUnsuspendError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6422,7 +6422,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6430,7 +6430,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamNamespacesListError(swift: box.unboxed)
+                routeError = DBXTeamTeamNamespacesListError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6489,7 +6489,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6497,7 +6497,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamNamespacesListContinueError(swift: box.unboxed)
+                routeError = DBXTeamTeamNamespacesListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6556,7 +6556,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6564,7 +6564,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6623,7 +6623,7 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6631,7 +6631,7 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6690,7 +6690,7 @@ public class DBXTeamPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6698,7 +6698,7 @@ public class DBXTeamPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6757,7 +6757,7 @@ public class DBXTeamPropertiesTemplateUpdateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6765,7 +6765,7 @@ public class DBXTeamPropertiesTemplateUpdateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
+                routeError = DBXFilePropertiesModifyTemplateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6824,7 +6824,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetActivityReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6832,7 +6832,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamDateRangeError(swift: box.unboxed)
+                routeError = DBXTeamDateRangeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6891,7 +6891,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetDevicesReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6899,7 +6899,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamDateRangeError(swift: box.unboxed)
+                routeError = DBXTeamDateRangeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -6958,7 +6958,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetMembershipReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -6966,7 +6966,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamDateRangeError(swift: box.unboxed)
+                routeError = DBXTeamDateRangeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7025,7 +7025,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamGetStorageReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7033,7 +7033,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamDateRangeError(swift: box.unboxed)
+                routeError = DBXTeamDateRangeError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7092,7 +7092,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistAddResponse?, DBXTeamSharingAllowlistAddError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7100,7 +7100,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistAddError(swift: box.unboxed)
+                routeError = DBXTeamSharingAllowlistAddError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7159,7 +7159,7 @@ public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7226,7 +7226,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7234,7 +7234,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistListContinueError(swift: box.unboxed)
+                routeError = DBXTeamSharingAllowlistListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7293,7 +7293,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamSharingAllowlistRemoveResponse?, DBXTeamSharingAllowlistRemoveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7301,7 +7301,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistRemoveError(swift: box.unboxed)
+                routeError = DBXTeamSharingAllowlistRemoveError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7360,7 +7360,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderActivateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7368,7 +7368,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderActivateError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderActivateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7427,7 +7427,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderArchiveLaunch?, DBXTeamTeamFolderArchiveError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7435,7 +7435,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderArchiveError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderArchiveError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7494,7 +7494,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderArchiveJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7502,7 +7502,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7561,7 +7561,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderCreateError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7569,7 +7569,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderCreateError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderCreateError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7628,7 +7628,7 @@ public class DBXTeamTeamFolderGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping ([DBXTeamTeamFolderGetInfoItem]?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7684,7 +7684,7 @@ public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7751,7 +7751,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListContinueError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7759,7 +7759,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderListContinueError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderListContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7818,7 +7818,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderPermanentlyDeleteError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { _, error in
@@ -7826,7 +7826,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderPermanentlyDeleteError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderPermanentlyDeleteError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7881,7 +7881,7 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderRenameError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7889,7 +7889,7 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderRenameError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderRenameError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -7948,7 +7948,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderUpdateSyncSettingsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -7956,7 +7956,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTeamFolderUpdateSyncSettingsError(swift: box.unboxed)
+                routeError = DBXTeamTeamFolderUpdateSyncSettingsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -8015,7 +8015,7 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXTeamTokenGetAuthenticatedAdminResult?, DBXTeamTokenGetAuthenticatedAdminError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -8023,7 +8023,7 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamTokenGetAuthenticatedAdminError(swift: box.unboxed)
+                routeError = DBXTeamTokenGetAuthenticatedAdminError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

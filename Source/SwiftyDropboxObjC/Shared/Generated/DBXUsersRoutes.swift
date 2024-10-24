@@ -109,12 +109,21 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXUsersUserFeaturesGetValuesBatchResult?, DBXUsersUserFeaturesGetValuesBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXUsersUserFeaturesGetValuesBatchResult?, DBXUsersUserFeaturesGetValuesBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXUsersUserFeaturesGetValuesBatchError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersUserFeaturesGetValuesBatchError(swift: box.unboxed)
+                routeError = DBXUsersUserFeaturesGetValuesBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -176,12 +185,21 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXUsersBasicAccount?, DBXUsersGetAccountError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXUsersBasicAccount?, DBXUsersGetAccountError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXUsersGetAccountError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersGetAccountError(swift: box.unboxed)
+                routeError = DBXUsersGetAccountError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -243,12 +261,21 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping ([DBXUsersBasicAccount]?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping ([DBXUsersBasicAccount]?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXUsersGetAccountBatchError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXUsersGetAccountBatchError(swift: box.unboxed)
+                routeError = DBXUsersGetAccountBatchError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -310,7 +337,16 @@ public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXUsersFullAccount?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXUsersFullAccount?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var objc: DBXUsersFullAccount?
             if let swift = result {
                 objc = DBXUsersFullAccount(swift: swift)
@@ -366,7 +402,16 @@ public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXUsersSpaceUsage?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXUsersSpaceUsage?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var objc: DBXUsersSpaceUsage?
             if let swift = result {
                 objc = DBXUsersSpaceUsage(swift: swift)

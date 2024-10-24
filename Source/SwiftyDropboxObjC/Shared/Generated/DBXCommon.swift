@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Objective-C compatible PathRoot union
 @objc
 public class DBXCommonPathRoot: NSObject {
-    let swift: Common.PathRoot
+    public let swift: Common.PathRoot
 
-    public init(swift: Common.PathRoot) {
+    fileprivate init(swift: Common.PathRoot) {
         self.swift = swift
     }
 
@@ -111,9 +111,9 @@ public class DBXCommonPathRootOther: DBXCommonPathRoot {
 /// Objective-C compatible PathRootError union
 @objc
 public class DBXCommonPathRootError: NSObject {
-    let swift: Common.PathRootError
+    public let swift: Common.PathRootError
 
-    public init(swift: Common.PathRootError) {
+    fileprivate init(swift: Common.PathRootError) {
         self.swift = swift
     }
 
@@ -199,9 +199,9 @@ public class DBXCommonRootInfo: NSObject {
         self.swift = Common.RootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
     }
 
-    let swift: Common.RootInfo
+    public let swift: Common.RootInfo
 
-    public init(swift: Common.RootInfo) {
+    fileprivate init(swift: Common.RootInfo) {
         self.swift = swift
     }
 
@@ -234,7 +234,7 @@ public class DBXCommonTeamRootInfo: DBXCommonRootInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: Common.TeamRootInfo
+    public let subSwift: Common.TeamRootInfo
 
     public init(swift: Common.TeamRootInfo) {
         self.subSwift = swift
@@ -249,7 +249,14 @@ public class DBXCommonTeamRootInfo: DBXCommonRootInfo {
 /// separate root namespace.
 @objc
 public class DBXCommonUserRootInfo: DBXCommonRootInfo {
-    let subSwift: Common.UserRootInfo
+    @objc
+    public override init(rootNamespaceId: String, homeNamespaceId: String) {
+        let swift = Common.UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: Common.UserRootInfo
 
     public init(swift: Common.UserRootInfo) {
         self.subSwift = swift

@@ -2378,6 +2378,8 @@ public class TeamLog {
 
     /// Disabled downloads.
     public class AllowDownloadDisabledDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try AllowDownloadDisabledDetailsSerializer().serialize(self)
         }
@@ -2452,6 +2454,8 @@ public class TeamLog {
 
     /// Enabled downloads.
     public class AllowDownloadEnabledDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try AllowDownloadEnabledDetailsSerializer().serialize(self)
         }
@@ -3164,6 +3168,8 @@ public class TeamLog {
 
     /// Applied naming convention.
     public class ApplyNamingConventionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ApplyNamingConventionDetailsSerializer().serialize(self)
         }
@@ -3328,6 +3334,8 @@ public class TeamLog {
 
     /// Invited members to activate Backup.
     public class BackupAdminInvitationSentDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try BackupAdminInvitationSentDetailsSerializer().serialize(self)
         }
@@ -3402,6 +3410,8 @@ public class TeamLog {
 
     /// Opened Backup invite.
     public class BackupInvitationOpenedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try BackupInvitationOpenedDetailsSerializer().serialize(self)
         }
@@ -5088,6 +5098,8 @@ public class TeamLog {
 
     /// Created Classification report.
     public class ClassificationCreateReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ClassificationCreateReportDetailsSerializer().serialize(self)
         }
@@ -5914,6 +5926,8 @@ public class TeamLog {
 
     /// Created folders.
     public class CreateFolderDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try CreateFolderDetailsSerializer().serialize(self)
         }
@@ -6249,6 +6263,8 @@ public class TeamLog {
 
     /// Requested data residency migration for team data.
     public class DataResidencyMigrationRequestSuccessfulDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DataResidencyMigrationRequestSuccessfulDetailsSerializer().serialize(self)
         }
@@ -6323,6 +6339,8 @@ public class TeamLog {
 
     /// Request for data residency migration for team data has failed.
     public class DataResidencyMigrationRequestUnsuccessfulDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DataResidencyMigrationRequestUnsuccessfulDetailsSerializer().serialize(self)
         }
@@ -6872,6 +6890,8 @@ public class TeamLog {
 
     /// Added members to device approvals exception list.
     public class DeviceApprovalsAddExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DeviceApprovalsAddExceptionDetailsSerializer().serialize(self)
         }
@@ -7359,6 +7379,8 @@ public class TeamLog {
 
     /// Removed members from device approvals exception list.
     public class DeviceApprovalsRemoveExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DeviceApprovalsRemoveExceptionDetailsSerializer().serialize(self)
         }
@@ -8039,6 +8061,8 @@ public class TeamLog {
 
     /// Disabled device management.
     public class DeviceManagementDisabledDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DeviceManagementDisabledDetailsSerializer().serialize(self)
         }
@@ -8113,6 +8137,8 @@ public class TeamLog {
 
     /// Enabled device management.
     public class DeviceManagementEnabledDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DeviceManagementEnabledDetailsSerializer().serialize(self)
         }
@@ -8500,6 +8526,8 @@ public class TeamLog {
 
     /// Added members to directory restrictions list.
     public class DirectoryRestrictionsAddMembersDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DirectoryRestrictionsAddMembersDetailsSerializer().serialize(self)
         }
@@ -8574,6 +8602,8 @@ public class TeamLog {
 
     /// Removed members from directory restrictions list.
     public class DirectoryRestrictionsRemoveMembersDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DirectoryRestrictionsRemoveMembersDetailsSerializer().serialize(self)
         }
@@ -8648,6 +8678,8 @@ public class TeamLog {
 
     /// Disabled domain invites.
     public class DisabledDomainInvitesDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DisabledDomainInvitesDetailsSerializer().serialize(self)
         }
@@ -8783,6 +8815,8 @@ public class TeamLog {
 
     /// Approved user's request to join team.
     public class DomainInvitesApproveRequestToJoinTeamDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DomainInvitesApproveRequestToJoinTeamDetailsSerializer().serialize(self)
         }
@@ -8857,6 +8891,8 @@ public class TeamLog {
 
     /// Declined user's request to join team.
     public class DomainInvitesDeclineRequestToJoinTeamDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DomainInvitesDeclineRequestToJoinTeamDetailsSerializer().serialize(self)
         }
@@ -9021,6 +9057,8 @@ public class TeamLog {
 
     /// Requested to join team.
     public class DomainInvitesRequestToJoinTeamDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DomainInvitesRequestToJoinTeamDetailsSerializer().serialize(self)
         }
@@ -9095,6 +9133,8 @@ public class TeamLog {
 
     /// Disabled "Automatically invite new users".
     public class DomainInvitesSetInviteNewUserPrefToNoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DomainInvitesSetInviteNewUserPrefToNoDetailsSerializer().serialize(self)
         }
@@ -9169,6 +9209,8 @@ public class TeamLog {
 
     /// Enabled "Automatically invite new users".
     public class DomainInvitesSetInviteNewUserPrefToYesDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try DomainInvitesSetInviteNewUserPrefToYesDetailsSerializer().serialize(self)
         }
@@ -10208,6 +10250,8 @@ public class TeamLog {
 
     /// Added members to EMM exception list.
     public class EmmAddExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EmmAddExceptionDetailsSerializer().serialize(self)
         }
@@ -10370,6 +10414,8 @@ public class TeamLog {
 
     /// Created EMM-excluded users report.
     public class EmmCreateExceptionsReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EmmCreateExceptionsReportDetailsSerializer().serialize(self)
         }
@@ -10444,6 +10490,8 @@ public class TeamLog {
 
     /// Created EMM mobile app usage report.
     public class EmmCreateUsageReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EmmCreateUsageReportDetailsSerializer().serialize(self)
         }
@@ -10601,6 +10649,8 @@ public class TeamLog {
 
     /// Refreshed auth token used for setting up EMM.
     public class EmmRefreshAuthTokenDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EmmRefreshAuthTokenDetailsSerializer().serialize(self)
         }
@@ -10675,6 +10725,8 @@ public class TeamLog {
 
     /// Removed members from EMM exception list.
     public class EmmRemoveExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EmmRemoveExceptionDetailsSerializer().serialize(self)
         }
@@ -10749,6 +10801,8 @@ public class TeamLog {
 
     /// Enabled domain invites.
     public class EnabledDomainInvitesDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EnabledDomainInvitesDetailsSerializer().serialize(self)
         }
@@ -10906,6 +10960,8 @@ public class TeamLog {
 
     /// Ended enterprise admin session.
     public class EndedEnterpriseAdminSessionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try EndedEnterpriseAdminSessionDetailsSerializer().serialize(self)
         }
@@ -24620,6 +24676,8 @@ public class TeamLog {
 
     /// Created member data report.
     public class ExportMembersReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ExportMembersReportDetailsSerializer().serialize(self)
         }
@@ -25456,6 +25514,8 @@ public class TeamLog {
 
     /// Created External sharing report.
     public class ExternalSharingCreateReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ExternalSharingCreateReportDetailsSerializer().serialize(self)
         }
@@ -26081,6 +26141,8 @@ public class TeamLog {
 
     /// Added files and/or folders.
     public class FileAddDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileAddDetailsSerializer().serialize(self)
         }
@@ -26113,6 +26175,8 @@ public class TeamLog {
 
     /// Added files and/or folders from automation.
     public class FileAddFromAutomationDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileAddFromAutomationDetailsSerializer().serialize(self)
         }
@@ -26695,6 +26759,8 @@ public class TeamLog {
 
     /// Deleted files and/or folders.
     public class FileDeleteDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileDeleteDetailsSerializer().serialize(self)
         }
@@ -26769,6 +26835,8 @@ public class TeamLog {
 
     /// Downloaded files and/or folders.
     public class FileDownloadDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileDownloadDetailsSerializer().serialize(self)
         }
@@ -26933,6 +27001,8 @@ public class TeamLog {
 
     /// Edited files.
     public class FileEditDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileEditDetailsSerializer().serialize(self)
         }
@@ -27007,6 +27077,8 @@ public class TeamLog {
 
     /// Created copy reference to file/folder.
     public class FileGetCopyReferenceDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileGetCopyReferenceDetailsSerializer().serialize(self)
         }
@@ -27521,6 +27593,8 @@ public class TeamLog {
 
     /// Permanently deleted files and/or folders.
     public class FilePermanentlyDeleteDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FilePermanentlyDeleteDetailsSerializer().serialize(self)
         }
@@ -27595,6 +27669,8 @@ public class TeamLog {
 
     /// Previewed files and/or folders.
     public class FilePreviewDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FilePreviewDetailsSerializer().serialize(self)
         }
@@ -28503,6 +28579,8 @@ public class TeamLog {
 
     /// Enabled file request emails for everyone.
     public class FileRequestsEmailsEnabledDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileRequestsEmailsEnabledDetailsSerializer().serialize(self)
         }
@@ -28577,6 +28655,8 @@ public class TeamLog {
 
     /// Enabled file request emails for team.
     public class FileRequestsEmailsRestrictedToTeamOnlyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileRequestsEmailsRestrictedToTeamOnlyDetailsSerializer().serialize(self)
         }
@@ -28796,6 +28876,8 @@ public class TeamLog {
 
     /// Restored deleted files and/or folders.
     public class FileRestoreDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileRestoreDetailsSerializer().serialize(self)
         }
@@ -28870,6 +28952,8 @@ public class TeamLog {
 
     /// Reverted files to previous version.
     public class FileRevertDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileRevertDetailsSerializer().serialize(self)
         }
@@ -28944,6 +29028,8 @@ public class TeamLog {
 
     /// Rolled back file actions.
     public class FileRollbackChangesDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try FileRollbackChangesDetailsSerializer().serialize(self)
         }
@@ -32729,6 +32815,8 @@ public class TeamLog {
 
     /// Updated group.
     public class GroupDescriptionUpdatedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try GroupDescriptionUpdatedDetailsSerializer().serialize(self)
         }
@@ -33006,6 +33094,8 @@ public class TeamLog {
 
     /// Moved group.
     public class GroupMovedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try GroupMovedDetailsSerializer().serialize(self)
         }
@@ -33164,6 +33254,8 @@ public class TeamLog {
 
     /// Removed team members from group.
     public class GroupRemoveMemberDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try GroupRemoveMemberDetailsSerializer().serialize(self)
         }
@@ -37017,6 +37109,8 @@ public class TeamLog {
 
     /// Cleared manually added contacts.
     public class MemberDeleteManualContactsDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberDeleteManualContactsDetailsSerializer().serialize(self)
         }
@@ -37091,6 +37185,8 @@ public class TeamLog {
 
     /// Deleted team member profile photo.
     public class MemberDeleteProfilePhotoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberDeleteProfilePhotoDetailsSerializer().serialize(self)
         }
@@ -37165,6 +37261,8 @@ public class TeamLog {
 
     /// Permanently deleted contents of deleted team member account.
     public class MemberPermanentlyDeleteAccountContentsDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberPermanentlyDeleteAccountContentsDetailsSerializer().serialize(self)
         }
@@ -37714,6 +37812,8 @@ public class TeamLog {
 
     /// Set team member profile photo.
     public class MemberSetProfilePhotoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberSetProfilePhotoDetailsSerializer().serialize(self)
         }
@@ -37872,6 +37972,8 @@ public class TeamLog {
 
     /// Added members to member space limit exception list.
     public class MemberSpaceLimitsAddExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberSpaceLimitsAddExceptionDetailsSerializer().serialize(self)
         }
@@ -38302,6 +38404,8 @@ public class TeamLog {
 
     /// Removed custom member space limit.
     public class MemberSpaceLimitsRemoveCustomQuotaDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberSpaceLimitsRemoveCustomQuotaDetailsSerializer().serialize(self)
         }
@@ -38376,6 +38480,8 @@ public class TeamLog {
 
     /// Removed members from member space limit exception list.
     public class MemberSpaceLimitsRemoveExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberSpaceLimitsRemoveExceptionDetailsSerializer().serialize(self)
         }
@@ -38776,6 +38882,8 @@ public class TeamLog {
 
     /// Transferred contents of deleted member account to another member.
     public class MemberTransferAccountContentsDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try MemberTransferAccountContentsDetailsSerializer().serialize(self)
         }
@@ -40089,6 +40197,8 @@ public class TeamLog {
 
     /// Changed Paper doc to invite-only.
     public class NoteAclInviteOnlyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try NoteAclInviteOnlyDetailsSerializer().serialize(self)
         }
@@ -40163,6 +40273,8 @@ public class TeamLog {
 
     /// Changed Paper doc to link-accessible.
     public class NoteAclLinkDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try NoteAclLinkDetailsSerializer().serialize(self)
         }
@@ -40237,6 +40349,8 @@ public class TeamLog {
 
     /// Changed Paper doc to link-accessible for team.
     public class NoteAclTeamLinkDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try NoteAclTeamLinkDetailsSerializer().serialize(self)
         }
@@ -40311,6 +40425,8 @@ public class TeamLog {
 
     /// Shared received Paper doc.
     public class NoteShareReceiveDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try NoteShareReceiveDetailsSerializer().serialize(self)
         }
@@ -40385,6 +40501,8 @@ public class TeamLog {
 
     /// Shared Paper doc.
     public class NoteSharedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try NoteSharedDetailsSerializer().serialize(self)
         }
@@ -40708,6 +40826,8 @@ public class TeamLog {
 
     /// Opened shared Paper doc.
     public class OpenNoteSharedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try OpenNoteSharedDetailsSerializer().serialize(self)
         }
@@ -40866,6 +40986,8 @@ public class TeamLog {
 
     /// Organized a folder with multi-file organize.
     public class OrganizeFolderWithTidyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try OrganizeFolderWithTidyDetailsSerializer().serialize(self)
         }
@@ -41226,6 +41348,8 @@ public class TeamLog {
 
     /// Exported all team Paper docs.
     public class PaperAdminExportStartDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PaperAdminExportStartDetailsSerializer().serialize(self)
         }
@@ -44700,6 +44824,8 @@ public class TeamLog {
 
     /// Added users to Paper-enabled users list.
     public class PaperEnabledUsersGroupAdditionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PaperEnabledUsersGroupAdditionDetailsSerializer().serialize(self)
         }
@@ -44774,6 +44900,8 @@ public class TeamLog {
 
     /// Removed users from Paper-enabled users list.
     public class PaperEnabledUsersGroupRemovalDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PaperEnabledUsersGroupRemovalDetailsSerializer().serialize(self)
         }
@@ -46054,6 +46182,8 @@ public class TeamLog {
 
     /// Changed password.
     public class PasswordChangeDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PasswordChangeDetailsSerializer().serialize(self)
         }
@@ -46128,6 +46258,8 @@ public class TeamLog {
 
     /// Reset all team member passwords.
     public class PasswordResetAllDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PasswordResetAllDetailsSerializer().serialize(self)
         }
@@ -46202,6 +46334,8 @@ public class TeamLog {
 
     /// Reset password.
     public class PasswordResetDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try PasswordResetDetailsSerializer().serialize(self)
         }
@@ -47022,6 +47156,8 @@ public class TeamLog {
 
     /// Created ransomware report.
     public class RansomwareAlertCreateReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try RansomwareAlertCreateReportDetailsSerializer().serialize(self)
         }
@@ -47465,6 +47601,8 @@ public class TeamLog {
 
     /// Deleted files in Replay.
     public class ReplayFileDeleteDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ReplayFileDeleteDetailsSerializer().serialize(self)
         }
@@ -47539,6 +47677,8 @@ public class TeamLog {
 
     /// Created shared link in Replay.
     public class ReplayFileSharedLinkCreatedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ReplayFileSharedLinkCreatedDetailsSerializer().serialize(self)
         }
@@ -47613,6 +47753,8 @@ public class TeamLog {
 
     /// Modified shared link in Replay.
     public class ReplayFileSharedLinkModifiedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ReplayFileSharedLinkModifiedDetailsSerializer().serialize(self)
         }
@@ -47687,6 +47829,8 @@ public class TeamLog {
 
     /// Added member to Replay Project.
     public class ReplayProjectTeamAddDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ReplayProjectTeamAddDetailsSerializer().serialize(self)
         }
@@ -47761,6 +47905,8 @@ public class TeamLog {
 
     /// Removed member from Replay Project.
     public class ReplayProjectTeamDeleteDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ReplayProjectTeamDeleteDetailsSerializer().serialize(self)
         }
@@ -48093,6 +48239,8 @@ public class TeamLog {
 
     /// Ended reseller support session.
     public class ResellerSupportSessionEndDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ResellerSupportSessionEndDetailsSerializer().serialize(self)
         }
@@ -48167,6 +48315,8 @@ public class TeamLog {
 
     /// Started reseller support session.
     public class ResellerSupportSessionStartDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ResellerSupportSessionStartDetailsSerializer().serialize(self)
         }
@@ -50565,6 +50715,8 @@ public class TeamLog {
 
     /// Added password to link for shared file/folder.
     public class SharedContentAddLinkPasswordDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedContentAddLinkPasswordDetailsSerializer().serialize(self)
         }
@@ -51080,6 +51232,8 @@ public class TeamLog {
 
     /// Changed link password of shared file/folder.
     public class SharedContentChangeLinkPasswordDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedContentChangeLinkPasswordDetailsSerializer().serialize(self)
         }
@@ -51622,6 +51776,8 @@ public class TeamLog {
 
     /// Left shared file/folder.
     public class SharedContentRelinquishMembershipDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedContentRelinquishMembershipDetailsSerializer().serialize(self)
         }
@@ -51863,6 +52019,8 @@ public class TeamLog {
 
     /// Removed link password of shared file/folder.
     public class SharedContentRemoveLinkPasswordDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedContentRemoveLinkPasswordDetailsSerializer().serialize(self)
         }
@@ -52277,6 +52435,8 @@ public class TeamLog {
 
     /// Unshared file/folder by clearing membership.
     public class SharedContentUnshareDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedContentUnshareDetailsSerializer().serialize(self)
         }
@@ -52886,6 +53046,8 @@ public class TeamLog {
 
     /// Declined team member's invite to shared folder.
     public class SharedFolderDeclineInvitationDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedFolderDeclineInvitationDetailsSerializer().serialize(self)
         }
@@ -53021,6 +53183,8 @@ public class TeamLog {
 
     /// Added shared folder to own Dropbox.
     public class SharedFolderMountDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedFolderMountDetailsSerializer().serialize(self)
         }
@@ -53292,6 +53456,8 @@ public class TeamLog {
 
     /// Deleted shared folder from Dropbox.
     public class SharedFolderUnmountDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedFolderUnmountDetailsSerializer().serialize(self)
         }
@@ -55219,6 +55385,8 @@ public class TeamLog {
 
     /// Opened shared Paper doc.
     public class SharedNoteOpenedDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SharedNoteOpenedDetailsSerializer().serialize(self)
         }
@@ -56195,6 +56363,8 @@ public class TeamLog {
 
     /// Shared link with group.
     public class ShmodelGroupShareDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try ShmodelGroupShareDetailsSerializer().serialize(self)
         }
@@ -58816,6 +58986,8 @@ public class TeamLog {
 
     /// Ended admin sign-in-as session.
     public class SignInAsSessionEndDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SignInAsSessionEndDetailsSerializer().serialize(self)
         }
@@ -58890,6 +59062,8 @@ public class TeamLog {
 
     /// Started admin sign-in-as session.
     public class SignInAsSessionStartDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SignInAsSessionStartDetailsSerializer().serialize(self)
         }
@@ -59052,6 +59226,8 @@ public class TeamLog {
 
     /// Created Smart Sync non-admin devices report.
     public class SmartSyncCreateAdminPrivilegeReportDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SmartSyncCreateAdminPrivilegeReportDetailsSerializer().serialize(self)
         }
@@ -60370,6 +60546,8 @@ public class TeamLog {
 
     /// Removed X.509 certificate for SSO.
     public class SsoRemoveCertDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try SsoRemoveCertDetailsSerializer().serialize(self)
         }
@@ -61057,6 +61235,8 @@ public class TeamLog {
 
     /// Canceled team encryption key deletion.
     public class TeamEncryptionKeyCancelKeyDeletionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyCancelKeyDeletionDetailsSerializer().serialize(self)
         }
@@ -61131,6 +61311,8 @@ public class TeamLog {
 
     /// Created team encryption key.
     public class TeamEncryptionKeyCreateKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyCreateKeyDetailsSerializer().serialize(self)
         }
@@ -61205,6 +61387,8 @@ public class TeamLog {
 
     /// Deleted team encryption key.
     public class TeamEncryptionKeyDeleteKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyDeleteKeyDetailsSerializer().serialize(self)
         }
@@ -61279,6 +61463,8 @@ public class TeamLog {
 
     /// Disabled team encryption key.
     public class TeamEncryptionKeyDisableKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyDisableKeyDetailsSerializer().serialize(self)
         }
@@ -61353,6 +61539,8 @@ public class TeamLog {
 
     /// Enabled team encryption key.
     public class TeamEncryptionKeyEnableKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyEnableKeyDetailsSerializer().serialize(self)
         }
@@ -61427,6 +61615,8 @@ public class TeamLog {
 
     /// Rotated team encryption key.
     public class TeamEncryptionKeyRotateKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyRotateKeyDetailsSerializer().serialize(self)
         }
@@ -61501,6 +61691,8 @@ public class TeamLog {
 
     /// Scheduled encryption key deletion.
     public class TeamEncryptionKeyScheduleKeyDeletionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamEncryptionKeyScheduleKeyDeletionDetailsSerializer().serialize(self)
         }
@@ -61928,6 +62120,8 @@ public class TeamLog {
 
     /// Created team folder in active status.
     public class TeamFolderCreateDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamFolderCreateDetailsSerializer().serialize(self)
         }
@@ -62086,6 +62280,8 @@ public class TeamLog {
 
     /// Permanently deleted archived team folder.
     public class TeamFolderPermanentlyDeleteDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamFolderPermanentlyDeleteDetailsSerializer().serialize(self)
         }
@@ -64539,6 +64735,8 @@ public class TeamLog {
 
     /// Added team background to display on shared link headers.
     public class TeamProfileAddBackgroundDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileAddBackgroundDetailsSerializer().serialize(self)
         }
@@ -64613,6 +64811,8 @@ public class TeamLog {
 
     /// Added team logo to display on shared link headers.
     public class TeamProfileAddLogoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileAddLogoDetailsSerializer().serialize(self)
         }
@@ -64687,6 +64887,8 @@ public class TeamLog {
 
     /// Changed team background displayed on shared link headers.
     public class TeamProfileChangeBackgroundDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileChangeBackgroundDetailsSerializer().serialize(self)
         }
@@ -64851,6 +65053,8 @@ public class TeamLog {
 
     /// Changed team logo displayed on shared link headers.
     public class TeamProfileChangeLogoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileChangeLogoDetailsSerializer().serialize(self)
         }
@@ -65013,6 +65217,8 @@ public class TeamLog {
 
     /// Removed team background displayed on shared link headers.
     public class TeamProfileRemoveBackgroundDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileRemoveBackgroundDetailsSerializer().serialize(self)
         }
@@ -65087,6 +65293,8 @@ public class TeamLog {
 
     /// Removed team logo displayed on shared link headers.
     public class TeamProfileRemoveLogoDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TeamProfileRemoveLogoDetailsSerializer().serialize(self)
         }
@@ -65491,6 +65699,8 @@ public class TeamLog {
 
     /// Added backup phone for two-step verification.
     public class TfaAddBackupPhoneDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaAddBackupPhoneDetailsSerializer().serialize(self)
         }
@@ -65565,6 +65775,8 @@ public class TeamLog {
 
     /// Added members to two factor authentication exception list.
     public class TfaAddExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaAddExceptionDetailsSerializer().serialize(self)
         }
@@ -65639,6 +65851,8 @@ public class TeamLog {
 
     /// Added security key for two-step verification.
     public class TfaAddSecurityKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaAddSecurityKeyDetailsSerializer().serialize(self)
         }
@@ -65713,6 +65927,8 @@ public class TeamLog {
 
     /// Changed backup phone for two-step verification.
     public class TfaChangeBackupPhoneDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaChangeBackupPhoneDetailsSerializer().serialize(self)
         }
@@ -66046,6 +66262,8 @@ public class TeamLog {
 
     /// Removed backup phone for two-step verification.
     public class TfaRemoveBackupPhoneDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaRemoveBackupPhoneDetailsSerializer().serialize(self)
         }
@@ -66120,6 +66338,8 @@ public class TeamLog {
 
     /// Removed members from two factor authentication exception list.
     public class TfaRemoveExceptionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaRemoveExceptionDetailsSerializer().serialize(self)
         }
@@ -66194,6 +66414,8 @@ public class TeamLog {
 
     /// Removed security key for two-step verification.
     public class TfaRemoveSecurityKeyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaRemoveSecurityKeyDetailsSerializer().serialize(self)
         }
@@ -66268,6 +66490,8 @@ public class TeamLog {
 
     /// Reset two-step verification for team member.
     public class TfaResetDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try TfaResetDetailsSerializer().serialize(self)
         }
@@ -66876,6 +67100,8 @@ public class TeamLog {
 
     /// Reverted naming convention.
     public class UndoNamingConventionDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try UndoNamingConventionDetailsSerializer().serialize(self)
         }
@@ -66950,6 +67176,8 @@ public class TeamLog {
 
     /// Removed multi-file organize.
     public class UndoOrganizeFolderWithTidyDetails: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try UndoOrganizeFolderWithTidyDetailsSerializer().serialize(self)
         }

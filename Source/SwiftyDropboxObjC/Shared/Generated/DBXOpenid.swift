@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// Objective-C compatible OpenIdError union
 @objc
 public class DBXOpenidOpenIdError: NSObject {
-    let swift: Openid.OpenIdError
+    public let swift: Openid.OpenIdError
 
-    public init(swift: Openid.OpenIdError) {
+    fileprivate init(swift: Openid.OpenIdError) {
         self.swift = swift
     }
 
@@ -65,7 +65,12 @@ public class DBXOpenidOpenIdErrorOther: DBXOpenidOpenIdError {
 /// No Parameters
 @objc
 public class DBXOpenidUserInfoArgs: NSObject {
-    let swift: Openid.UserInfoArgs
+    public override init() {
+        self.swift = Openid.UserInfoArgs()
+        super.init()
+    }
+
+    public let swift: Openid.UserInfoArgs
 
     public init(swift: Openid.UserInfoArgs) {
         self.swift = swift
@@ -78,16 +83,16 @@ public class DBXOpenidUserInfoArgs: NSObject {
 /// Objective-C compatible UserInfoError union
 @objc
 public class DBXOpenidUserInfoError: NSObject {
-    let swift: Openid.UserInfoError
+    public let swift: Openid.UserInfoError
 
-    public init(swift: Openid.UserInfoError) {
+    fileprivate init(swift: Openid.UserInfoError) {
         self.swift = swift
     }
 
     public static func factory(swift: Openid.UserInfoError) -> DBXOpenidUserInfoError {
         switch swift {
         case .openidError(let swiftArg):
-            let arg = DBXOpenidOpenIdError(swift: swiftArg)
+            let arg = DBXOpenidOpenIdError.factory(swift: swiftArg)
             return DBXOpenidUserInfoErrorOpenidError(arg)
         case .other:
             return DBXOpenidUserInfoErrorOther()
@@ -167,7 +172,7 @@ public class DBXOpenidUserInfoResult: NSObject {
         )
     }
 
-    let swift: Openid.UserInfoResult
+    public let swift: Openid.UserInfoResult
 
     public init(swift: Openid.UserInfoResult) {
         self.swift = swift

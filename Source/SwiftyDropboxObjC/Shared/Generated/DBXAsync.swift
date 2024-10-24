@@ -15,9 +15,9 @@ import SwiftyDropbox
 /// the type of the synchronous response. See LaunchEmptyResult for an example.
 @objc
 public class DBXAsyncLaunchResultBase: NSObject {
-    let swift: Async.LaunchResultBase
+    public let swift: Async.LaunchResultBase
 
-    public init(swift: Async.LaunchResultBase) {
+    fileprivate init(swift: Async.LaunchResultBase) {
         self.swift = swift
     }
 
@@ -57,9 +57,9 @@ public class DBXAsyncLaunchResultBaseAsyncJobId: DBXAsyncLaunchResultBase {
 /// synchronous completion of the job, no additional information is returned.
 @objc
 public class DBXAsyncLaunchEmptyResult: NSObject {
-    let swift: Async.LaunchEmptyResult
+    public let swift: Async.LaunchEmptyResult
 
-    public init(swift: Async.LaunchEmptyResult) {
+    fileprivate init(swift: Async.LaunchEmptyResult) {
         self.swift = swift
     }
 
@@ -124,7 +124,7 @@ public class DBXAsyncPollArg: NSObject {
         self.swift = Async.PollArg(asyncJobId: asyncJobId)
     }
 
-    let swift: Async.PollArg
+    public let swift: Async.PollArg
 
     public init(swift: Async.PollArg) {
         self.swift = swift
@@ -139,9 +139,9 @@ public class DBXAsyncPollArg: NSObject {
 /// example.
 @objc
 public class DBXAsyncPollResultBase: NSObject {
-    let swift: Async.PollResultBase
+    public let swift: Async.PollResultBase
 
-    public init(swift: Async.PollResultBase) {
+    fileprivate init(swift: Async.PollResultBase) {
         self.swift = swift
     }
 
@@ -175,9 +175,9 @@ public class DBXAsyncPollResultBaseInProgress: DBXAsyncPollResultBase {
 /// additional information is returned.
 @objc
 public class DBXAsyncPollEmptyResult: NSObject {
-    let swift: Async.PollEmptyResult
+    public let swift: Async.PollEmptyResult
 
-    public init(swift: Async.PollEmptyResult) {
+    fileprivate init(swift: Async.PollEmptyResult) {
         self.swift = swift
     }
 
@@ -227,9 +227,9 @@ public class DBXAsyncPollEmptyResultComplete: DBXAsyncPollEmptyResult {
 /// Error returned by methods for polling the status of asynchronous job.
 @objc
 public class DBXAsyncPollError: NSObject {
-    let swift: Async.PollError
+    public let swift: Async.PollError
 
-    public init(swift: Async.PollError) {
+    fileprivate init(swift: Async.PollError) {
         self.swift = swift
     }
 

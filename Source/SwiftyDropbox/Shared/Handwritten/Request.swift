@@ -86,11 +86,22 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
     }
 }
 
+public typealias AnalyticsBlock = (_ success: Bool, _ resultData: Data?, _ response: HTTPURLResponse?, _ error: Error?) -> Void
+
 /// An "rpc-style" request
 public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Request<RSerial, ESerial> {
     @discardableResult
     public func response(
         queue: DispatchQueue? = nil,
+        completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void
+    ) -> Self {
+        response(queue: queue, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @discardableResult
+    public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
         completionHandler: @escaping (RSerial.ValueType?, CallError<ESerial.ValueType>?) -> Void
     ) -> Self {
         request.setCompletionHandlerProvider(queue: queue, completionHandlerProvider: .dataCompletionHandlerProvider({ [weak self] response in
@@ -114,10 +125,29 @@ public class RpcRequest<RSerial: JSONSerializer, ESerial: JSONSerializer>: Reque
             }
 
             return {
+                strongSelf.callAnalyticsBlockIfNeeded(response: response, analyticsBlock)
                 completionHandler(result, error)
             }
         }))
         return self
+    }
+
+    private func callAnalyticsBlockIfNeeded(response: NetworkDataTaskResult, _ analyticsBlock: AnalyticsBlock?) {
+        guard let analyticsBlock = analyticsBlock else {
+            return
+        }
+
+        switch response {
+        case .success((let data, let response)):
+            analyticsBlock(true, data, response, nil)
+        case .failure(let failure):
+            switch failure {
+            case .badStatusCode(let data, _, let response):
+                analyticsBlock(false, data, response, nil)
+            case .failedWithError(let error):
+                analyticsBlock(false, nil, nil, error)
+            }
+        }
     }
 }
 

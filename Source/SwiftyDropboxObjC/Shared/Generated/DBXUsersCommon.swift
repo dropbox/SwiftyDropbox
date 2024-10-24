@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// What type of account this user has.
 @objc
 public class DBXUsersCommonAccountType: NSObject {
-    let swift: UsersCommon.AccountType
+    public let swift: UsersCommon.AccountType
 
-    public init(swift: UsersCommon.AccountType) {
+    fileprivate init(swift: UsersCommon.AccountType) {
         self.swift = swift
     }
 
