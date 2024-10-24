@@ -1105,12 +1105,21 @@ public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping ([DBXSharingFileMemberActionResult]?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping ([DBXSharingFileMemberActionResult]?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingAddFileMemberError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingAddFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingAddFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1172,12 +1181,21 @@ public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingAddFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingAddFolderMemberError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingAddFolderMemberError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingAddFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingAddFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1235,12 +1253,21 @@ public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXAsyncPollError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1302,12 +1329,21 @@ public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingRemoveMemberJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingRemoveMemberJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXAsyncPollError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1369,12 +1405,21 @@ public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingShareFolderJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingShareFolderJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXAsyncPollError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
+                routeError = DBXAsyncPollError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1433,7 +1478,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXSharingPathLinkMetadata?, DBXSharingCreateSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1441,7 +1486,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingCreateSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingCreateSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1503,12 +1548,21 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingCreateSharedLinkWithSettingsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingCreateSharedLinkWithSettingsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingCreateSharedLinkWithSettingsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingCreateSharedLinkWithSettingsError(swift: box.unboxed)
+                routeError = DBXSharingCreateSharedLinkWithSettingsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1570,12 +1624,21 @@ public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFileMetadata?, DBXSharingGetFileMetadataError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFileMetadata?, DBXSharingGetFileMetadataError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingGetFileMetadataError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetFileMetadataError(swift: box.unboxed)
+                routeError = DBXSharingGetFileMetadataError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1637,12 +1700,21 @@ public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping ([DBXSharingGetFileMetadataBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping ([DBXSharingGetFileMetadataBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharingUserError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1704,12 +1776,21 @@ public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharedFolderAccessError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedFolderAccessError(swift: box.unboxed)
+                routeError = DBXSharingSharedFolderAccessError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1768,7 +1849,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, URL?, DBXSharingGetSharedLinkFileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1776,7 +1857,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinkFileError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinkFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1843,7 +1924,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, Data?, DBXSharingGetSharedLinkFileError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1851,7 +1932,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinkFileError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinkFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1921,12 +2002,21 @@ public class DBXSharingGetSharedLinkMetadataRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharedLinkError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -1985,7 +2075,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXSharingGetSharedLinksResult?, DBXSharingGetSharedLinksError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -1993,7 +2083,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingGetSharedLinksError(swift: box.unboxed)
+                routeError = DBXSharingGetSharedLinksError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2055,12 +2145,21 @@ public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFileMembersError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFileMembersError(swift: box.unboxed)
+                routeError = DBXSharingListFileMembersError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2122,12 +2221,21 @@ public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping ([DBXSharingListFileMembersBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping ([DBXSharingListFileMembersBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharingUserError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2189,12 +2297,21 @@ public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFileMembersContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFileMembersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFileMembersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2256,12 +2373,21 @@ public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharedFolderAccessError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedFolderAccessError(swift: box.unboxed)
+                routeError = DBXSharingSharedFolderAccessError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2323,12 +2449,21 @@ public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingListFolderMembersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingListFolderMembersContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFolderMembersContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFolderMembersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFolderMembersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2390,7 +2525,16 @@ public class DBXSharingListFoldersRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var objc: DBXSharingListFoldersResult?
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
@@ -2446,12 +2590,21 @@ public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFoldersContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFoldersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFoldersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2513,7 +2666,16 @@ public class DBXSharingListMountableFoldersRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var objc: DBXSharingListFoldersResult?
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
@@ -2569,12 +2731,21 @@ public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequ
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFoldersContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFoldersContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFoldersContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2636,12 +2807,21 @@ public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSharingUserError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharingUserError(swift: box.unboxed)
+                routeError = DBXSharingSharingUserError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2703,12 +2883,21 @@ public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingListFilesContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingListFilesContinueError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListFilesContinueError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListFilesContinueError(swift: box.unboxed)
+                routeError = DBXSharingListFilesContinueError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2770,12 +2959,21 @@ public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingListSharedLinksResult?, DBXSharingListSharedLinksError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingListSharedLinksResult?, DBXSharingListSharedLinksError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingListSharedLinksError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingListSharedLinksError(swift: box.unboxed)
+                routeError = DBXSharingListSharedLinksError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2837,12 +3035,21 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingModifySharedLinkSettingsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingModifySharedLinkSettingsError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingModifySharedLinkSettingsError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingModifySharedLinkSettingsError(swift: box.unboxed)
+                routeError = DBXSharingModifySharedLinkSettingsError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2904,12 +3111,21 @@ public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingMountFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingMountFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingMountFolderError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingMountFolderError(swift: box.unboxed)
+                routeError = DBXSharingMountFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -2971,12 +3187,21 @@ public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest 
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingRelinquishFileMembershipError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingRelinquishFileMembershipError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingRelinquishFileMembershipError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRelinquishFileMembershipError(swift: box.unboxed)
+                routeError = DBXSharingRelinquishFileMembershipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3034,12 +3259,21 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingRelinquishFolderMembershipError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingRelinquishFolderMembershipError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingRelinquishFolderMembershipError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRelinquishFolderMembershipError(swift: box.unboxed)
+                routeError = DBXSharingRelinquishFolderMembershipError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3098,7 +3332,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXSharingFileMemberActionIndividualResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
@@ -3106,7 +3340,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3168,12 +3402,21 @@ public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingFileMemberRemoveActionResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingFileMemberRemoveActionResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingRemoveFileMemberError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFileMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFileMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3235,12 +3478,21 @@ public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXSharingRemoveFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXSharingRemoveFolderMemberError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingRemoveFolderMemberError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingRemoveFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3302,12 +3554,21 @@ public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingRevokeSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingRevokeSharedLinkError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingRevokeSharedLinkError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingRevokeSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingRevokeSharedLinkError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3365,12 +3626,21 @@ public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingSetAccessInheritanceError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingSetAccessInheritanceError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingSetAccessInheritanceError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSetAccessInheritanceError(swift: box.unboxed)
+                routeError = DBXSharingSetAccessInheritanceError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3432,12 +3702,21 @@ public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingShareFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingShareFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingShareFolderError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingShareFolderError(swift: box.unboxed)
+                routeError = DBXSharingShareFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3499,12 +3778,21 @@ public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingTransferFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingTransferFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingTransferFolderError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingTransferFolderError(swift: box.unboxed)
+                routeError = DBXSharingTransferFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3562,12 +3850,21 @@ public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingUnmountFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingUnmountFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingUnmountFolderError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnmountFolderError(swift: box.unboxed)
+                routeError = DBXSharingUnmountFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3625,12 +3922,21 @@ public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingUnshareFileError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingUnshareFileError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { _, error in
             var routeError: DBXSharingUnshareFileError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnshareFileError(swift: box.unboxed)
+                routeError = DBXSharingUnshareFileError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3688,12 +3994,21 @@ public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingUnshareFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingUnshareFolderError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingUnshareFolderError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUnshareFolderError(swift: box.unboxed)
+                routeError = DBXSharingUnshareFolderError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3755,12 +4070,21 @@ public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingFileMemberActionError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingFileMemberActionError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingFileMemberActionError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingFileMemberActionError(swift: box.unboxed)
+                routeError = DBXSharingFileMemberActionError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3822,12 +4146,21 @@ public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingUpdateFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingUpdateFolderMemberError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingUpdateFolderMemberError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUpdateFolderMemberError(swift: box.unboxed)
+                routeError = DBXSharingUpdateFolderMemberError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -3889,12 +4222,21 @@ public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingUpdateFolderPolicyError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { result, error in
+        response(queue: nil, analyticsBlock: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue? = nil,
+        analyticsBlock: AnalyticsBlock? = nil,
+        completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingUpdateFolderPolicyError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue, analyticsBlock: analyticsBlock) { result, error in
             var routeError: DBXSharingUpdateFolderPolicyError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingUpdateFolderPolicyError(swift: box.unboxed)
+                routeError = DBXSharingUpdateFolderPolicyError.factory(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil

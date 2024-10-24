@@ -63,6 +63,8 @@ public class Openid {
 
     /// No Parameters
     public class UserInfoArgs: CustomStringConvertible, JSONRepresentable {
+        public init() {}
+
         func json() throws -> JSON {
             try UserInfoArgsSerializer().serialize(self)
         }

@@ -45,7 +45,7 @@ public class DBXUsersAccount: NSObject {
         )
     }
 
-    let swift: Users.Account
+    public let swift: Users.Account
 
     public init(swift: Users.Account) {
         self.swift = swift
@@ -92,7 +92,7 @@ public class DBXUsersBasicAccount: DBXUsersAccount {
         super.init(swift: swift)
     }
 
-    let subSwift: Users.BasicAccount
+    public let subSwift: Users.BasicAccount
 
     public init(swift: Users.BasicAccount) {
         self.subSwift = swift
@@ -106,9 +106,9 @@ public class DBXUsersBasicAccount: DBXUsersAccount {
 /// The value for fileLocking in UserFeature.
 @objc
 public class DBXUsersFileLockingValue: NSObject {
-    let swift: Users.FileLockingValue
+    public let swift: Users.FileLockingValue
 
-    public init(swift: Users.FileLockingValue) {
+    fileprivate init(swift: Users.FileLockingValue) {
         self.swift = swift
     }
 
@@ -190,12 +190,10 @@ public class DBXUsersFullAccount: DBXUsersAccount {
     public var isPaired: NSNumber { subSwift.isPaired as NSNumber }
     /// What type of account this user has.
     @objc
-    public var accountType: DBXUsersCommonAccountType { DBXUsersCommonAccountType(swift: subSwift.accountType) }
+    public var accountType: DBXUsersCommonAccountType { DBXUsersCommonAccountType.factory(swift: subSwift.accountType) }
     /// The root info for this account.
     @objc
-    public var rootInfo: DBXCommonRootInfo {
-        DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo)
-    }
+    public var rootInfo: DBXCommonRootInfo { DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo) }
 
     @objc
     public init(
@@ -234,7 +232,7 @@ public class DBXUsersFullAccount: DBXUsersAccount {
         super.init(swift: swift)
     }
 
-    let subSwift: Users.FullAccount
+    public let subSwift: Users.FullAccount
 
     public init(swift: Users.FullAccount) {
         self.subSwift = swift
@@ -260,7 +258,7 @@ public class DBXUsersTeam: NSObject {
         self.swift = Users.Team(id: id, name: name)
     }
 
-    let swift: Users.Team
+    public let swift: Users.Team
 
     public init(swift: Users.Team) {
         self.swift = swift
@@ -278,7 +276,7 @@ public class DBXUsersFullTeam: DBXUsersTeam {
     public var sharingPolicies: DBXTeamPoliciesTeamSharingPolicies { DBXTeamPoliciesTeamSharingPolicies(swift: subSwift.sharingPolicies) }
     /// Team policy governing the use of the Office Add-In.
     @objc
-    public var officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy(swift: subSwift.officeAddinPolicy) }
+    public var officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy.factory(swift: subSwift.officeAddinPolicy) }
 
     @objc
     public init(id: String, name: String, sharingPolicies: DBXTeamPoliciesTeamSharingPolicies, officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy) {
@@ -287,7 +285,7 @@ public class DBXUsersFullTeam: DBXUsersTeam {
         super.init(swift: swift)
     }
 
-    let subSwift: Users.FullTeam
+    public let subSwift: Users.FullTeam
 
     public init(swift: Users.FullTeam) {
         self.subSwift = swift
@@ -310,7 +308,7 @@ public class DBXUsersGetAccountArg: NSObject {
         self.swift = Users.GetAccountArg(accountId: accountId)
     }
 
-    let swift: Users.GetAccountArg
+    public let swift: Users.GetAccountArg
 
     public init(swift: Users.GetAccountArg) {
         self.swift = swift
@@ -332,7 +330,7 @@ public class DBXUsersGetAccountBatchArg: NSObject {
         self.swift = Users.GetAccountBatchArg(accountIds: accountIds)
     }
 
-    let swift: Users.GetAccountBatchArg
+    public let swift: Users.GetAccountBatchArg
 
     public init(swift: Users.GetAccountBatchArg) {
         self.swift = swift
@@ -345,9 +343,9 @@ public class DBXUsersGetAccountBatchArg: NSObject {
 /// Objective-C compatible GetAccountBatchError union
 @objc
 public class DBXUsersGetAccountBatchError: NSObject {
-    let swift: Users.GetAccountBatchError
+    public let swift: Users.GetAccountBatchError
 
-    public init(swift: Users.GetAccountBatchError) {
+    fileprivate init(swift: Users.GetAccountBatchError) {
         self.swift = swift
     }
 
@@ -402,9 +400,9 @@ public class DBXUsersGetAccountBatchErrorOther: DBXUsersGetAccountBatchError {
 /// Objective-C compatible GetAccountError union
 @objc
 public class DBXUsersGetAccountError: NSObject {
-    let swift: Users.GetAccountError
+    public let swift: Users.GetAccountError
 
-    public init(swift: Users.GetAccountError) {
+    fileprivate init(swift: Users.GetAccountError) {
         self.swift = swift
     }
 
@@ -463,7 +461,7 @@ public class DBXUsersIndividualSpaceAllocation: NSObject {
         self.swift = Users.IndividualSpaceAllocation(allocated: allocated.uint64Value)
     }
 
-    let swift: Users.IndividualSpaceAllocation
+    public let swift: Users.IndividualSpaceAllocation
 
     public init(swift: Users.IndividualSpaceAllocation) {
         self.swift = swift
@@ -498,7 +496,7 @@ public class DBXUsersName: NSObject {
         self.swift = Users.Name(givenName: givenName, surname: surname, familiarName: familiarName, displayName: displayName, abbreviatedName: abbreviatedName)
     }
 
-    let swift: Users.Name
+    public let swift: Users.Name
 
     public init(swift: Users.Name) {
         self.swift = swift
@@ -511,9 +509,9 @@ public class DBXUsersName: NSObject {
 /// The value for paperAsFiles in UserFeature.
 @objc
 public class DBXUsersPaperAsFilesValue: NSObject {
-    let swift: Users.PaperAsFilesValue
+    public let swift: Users.PaperAsFilesValue
 
-    public init(swift: Users.PaperAsFilesValue) {
+    fileprivate init(swift: Users.PaperAsFilesValue) {
         self.swift = swift
     }
 
@@ -570,9 +568,9 @@ public class DBXUsersPaperAsFilesValueOther: DBXUsersPaperAsFilesValue {
 /// Space is allocated differently based on the type of account.
 @objc
 public class DBXUsersSpaceAllocation: NSObject {
-    let swift: Users.SpaceAllocation
+    public let swift: Users.SpaceAllocation
 
-    public init(swift: Users.SpaceAllocation) {
+    fileprivate init(swift: Users.SpaceAllocation) {
         self.swift = swift
     }
 
@@ -654,14 +652,14 @@ public class DBXUsersSpaceUsage: NSObject {
     public var used: NSNumber { swift.used as NSNumber }
     /// The user's space allocation.
     @objc
-    public var allocation: DBXUsersSpaceAllocation { DBXUsersSpaceAllocation(swift: swift.allocation) }
+    public var allocation: DBXUsersSpaceAllocation { DBXUsersSpaceAllocation.factory(swift: swift.allocation) }
 
     @objc
     public init(used: NSNumber, allocation: DBXUsersSpaceAllocation) {
         self.swift = Users.SpaceUsage(used: used.uint64Value, allocation: allocation.swift)
     }
 
-    let swift: Users.SpaceUsage
+    public let swift: Users.SpaceUsage
 
     public init(swift: Users.SpaceUsage) {
         self.swift = swift
@@ -686,7 +684,10 @@ public class DBXUsersTeamSpaceAllocation: NSObject {
     public var userWithinTeamSpaceAllocated: NSNumber { swift.userWithinTeamSpaceAllocated as NSNumber }
     /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
     @objc
-    public var userWithinTeamSpaceLimitType: DBXTeamCommonMemberSpaceLimitType { DBXTeamCommonMemberSpaceLimitType(swift: swift.userWithinTeamSpaceLimitType) }
+    public var userWithinTeamSpaceLimitType: DBXTeamCommonMemberSpaceLimitType {
+        DBXTeamCommonMemberSpaceLimitType.factory(swift: swift.userWithinTeamSpaceLimitType)
+    }
+
     /// An accurate cached calculation of a team member's total space usage (bytes).
     @objc
     public var userWithinTeamSpaceUsedCached: NSNumber { swift.userWithinTeamSpaceUsedCached as NSNumber }
@@ -708,7 +709,7 @@ public class DBXUsersTeamSpaceAllocation: NSObject {
         )
     }
 
-    let swift: Users.TeamSpaceAllocation
+    public let swift: Users.TeamSpaceAllocation
 
     public init(swift: Users.TeamSpaceAllocation) {
         self.swift = swift
@@ -721,9 +722,9 @@ public class DBXUsersTeamSpaceAllocation: NSObject {
 /// A set of features that a Dropbox User account may have configured.
 @objc
 public class DBXUsersUserFeature: NSObject {
-    let swift: Users.UserFeature
+    public let swift: Users.UserFeature
 
-    public init(swift: Users.UserFeature) {
+    fileprivate init(swift: Users.UserFeature) {
         self.swift = swift
     }
 
@@ -790,19 +791,19 @@ public class DBXUsersUserFeatureOther: DBXUsersUserFeature {
 /// Values that correspond to entries in UserFeature.
 @objc
 public class DBXUsersUserFeatureValue: NSObject {
-    let swift: Users.UserFeatureValue
+    public let swift: Users.UserFeatureValue
 
-    public init(swift: Users.UserFeatureValue) {
+    fileprivate init(swift: Users.UserFeatureValue) {
         self.swift = swift
     }
 
     public static func factory(swift: Users.UserFeatureValue) -> DBXUsersUserFeatureValue {
         switch swift {
         case .paperAsFiles(let swiftArg):
-            let arg = DBXUsersPaperAsFilesValue(swift: swiftArg)
+            let arg = DBXUsersPaperAsFilesValue.factory(swift: swiftArg)
             return DBXUsersUserFeatureValuePaperAsFiles(arg)
         case .fileLocking(let swiftArg):
-            let arg = DBXUsersFileLockingValue(swift: swiftArg)
+            let arg = DBXUsersFileLockingValue.factory(swift: swiftArg)
             return DBXUsersUserFeatureValueFileLocking(arg)
         case .other:
             return DBXUsersUserFeatureValueOther()
@@ -872,14 +873,14 @@ public class DBXUsersUserFeaturesGetValuesBatchArg: NSObject {
     /// A list of features in UserFeature. If the list is empty, this route will return
     /// UserFeaturesGetValuesBatchError.
     @objc
-    public var features: [DBXUsersUserFeature] { swift.features.map { DBXUsersUserFeature(swift: $0) } }
+    public var features: [DBXUsersUserFeature] { swift.features.map { DBXUsersUserFeature.factory(swift: $0) } }
 
     @objc
     public init(features: [DBXUsersUserFeature]) {
         self.swift = Users.UserFeaturesGetValuesBatchArg(features: features.map(\.swift))
     }
 
-    let swift: Users.UserFeaturesGetValuesBatchArg
+    public let swift: Users.UserFeaturesGetValuesBatchArg
 
     public init(swift: Users.UserFeaturesGetValuesBatchArg) {
         self.swift = swift
@@ -892,9 +893,9 @@ public class DBXUsersUserFeaturesGetValuesBatchArg: NSObject {
 /// Objective-C compatible UserFeaturesGetValuesBatchError union
 @objc
 public class DBXUsersUserFeaturesGetValuesBatchError: NSObject {
-    let swift: Users.UserFeaturesGetValuesBatchError
+    public let swift: Users.UserFeaturesGetValuesBatchError
 
-    public init(swift: Users.UserFeaturesGetValuesBatchError) {
+    fileprivate init(swift: Users.UserFeaturesGetValuesBatchError) {
         self.swift = swift
     }
 
@@ -946,14 +947,14 @@ public class DBXUsersUserFeaturesGetValuesBatchErrorOther: DBXUsersUserFeaturesG
 public class DBXUsersUserFeaturesGetValuesBatchResult: NSObject {
     /// (no description)
     @objc
-    public var values: [DBXUsersUserFeatureValue] { swift.values.map { DBXUsersUserFeatureValue(swift: $0) } }
+    public var values: [DBXUsersUserFeatureValue] { swift.values.map { DBXUsersUserFeatureValue.factory(swift: $0) } }
 
     @objc
     public init(values: [DBXUsersUserFeatureValue]) {
         self.swift = Users.UserFeaturesGetValuesBatchResult(values: values.map(\.swift))
     }
 
-    let swift: Users.UserFeaturesGetValuesBatchResult
+    public let swift: Users.UserFeaturesGetValuesBatchResult
 
     public init(swift: Users.UserFeaturesGetValuesBatchResult) {
         self.swift = swift

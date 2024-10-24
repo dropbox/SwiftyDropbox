@@ -13,19 +13,19 @@ import SwiftyDropbox
 /// Error occurred because the account doesn't have permission to access the resource.
 @objc
 public class DBXAuthAccessError: NSObject {
-    let swift: Auth.AccessError
+    public let swift: Auth.AccessError
 
-    public init(swift: Auth.AccessError) {
+    fileprivate init(swift: Auth.AccessError) {
         self.swift = swift
     }
 
     public static func factory(swift: Auth.AccessError) -> DBXAuthAccessError {
         switch swift {
         case .invalidAccountType(let swiftArg):
-            let arg = DBXAuthInvalidAccountTypeError(swift: swiftArg)
+            let arg = DBXAuthInvalidAccountTypeError.factory(swift: swiftArg)
             return DBXAuthAccessErrorInvalidAccountType(arg)
         case .paperAccessDenied(let swiftArg):
-            let arg = DBXAuthPaperAccessError(swift: swiftArg)
+            let arg = DBXAuthPaperAccessError.factory(swift: swiftArg)
             return DBXAuthAccessErrorPaperAccessDenied(arg)
         case .other:
             return DBXAuthAccessErrorOther()
@@ -92,9 +92,9 @@ public class DBXAuthAccessErrorOther: DBXAuthAccessError {
 /// Errors occurred during authentication.
 @objc
 public class DBXAuthAuthError: NSObject {
-    let swift: Auth.AuthError
+    public let swift: Auth.AuthError
 
-    public init(swift: Auth.AuthError) {
+    fileprivate init(swift: Auth.AuthError) {
         self.swift = swift
     }
 
@@ -251,9 +251,9 @@ public class DBXAuthAuthErrorOther: DBXAuthAuthError {
 /// Objective-C compatible InvalidAccountTypeError union
 @objc
 public class DBXAuthInvalidAccountTypeError: NSObject {
-    let swift: Auth.InvalidAccountTypeError
+    public let swift: Auth.InvalidAccountTypeError
 
-    public init(swift: Auth.InvalidAccountTypeError) {
+    fileprivate init(swift: Auth.InvalidAccountTypeError) {
         self.swift = swift
     }
 
@@ -320,9 +320,9 @@ public class DBXAuthInvalidAccountTypeErrorOther: DBXAuthInvalidAccountTypeError
 /// Objective-C compatible PaperAccessError union
 @objc
 public class DBXAuthPaperAccessError: NSObject {
-    let swift: Auth.PaperAccessError
+    public let swift: Auth.PaperAccessError
 
-    public init(swift: Auth.PaperAccessError) {
+    fileprivate init(swift: Auth.PaperAccessError) {
         self.swift = swift
     }
 
@@ -391,7 +391,7 @@ public class DBXAuthPaperAccessErrorOther: DBXAuthPaperAccessError {
 public class DBXAuthRateLimitError: NSObject {
     /// The reason why the app is being rate limited.
     @objc
-    public var reason: DBXAuthRateLimitReason { DBXAuthRateLimitReason(swift: swift.reason) }
+    public var reason: DBXAuthRateLimitReason { DBXAuthRateLimitReason.factory(swift: swift.reason) }
     /// The number of seconds that the app should wait before making another request.
     @objc
     public var retryAfter: NSNumber { swift.retryAfter as NSNumber }
@@ -401,7 +401,7 @@ public class DBXAuthRateLimitError: NSObject {
         self.swift = Auth.RateLimitError(reason: reason.swift, retryAfter: retryAfter.uint64Value)
     }
 
-    let swift: Auth.RateLimitError
+    public let swift: Auth.RateLimitError
 
     public init(swift: Auth.RateLimitError) {
         self.swift = swift
@@ -414,9 +414,9 @@ public class DBXAuthRateLimitError: NSObject {
 /// Objective-C compatible RateLimitReason union
 @objc
 public class DBXAuthRateLimitReason: NSObject {
-    let swift: Auth.RateLimitReason
+    public let swift: Auth.RateLimitReason
 
-    public init(swift: Auth.RateLimitReason) {
+    fileprivate init(swift: Auth.RateLimitReason) {
         self.swift = swift
     }
 
@@ -495,7 +495,7 @@ public class DBXAuthTokenFromOAuth1Arg: NSObject {
         self.swift = Auth.TokenFromOAuth1Arg(oauth1Token: oauth1Token, oauth1TokenSecret: oauth1TokenSecret)
     }
 
-    let swift: Auth.TokenFromOAuth1Arg
+    public let swift: Auth.TokenFromOAuth1Arg
 
     public init(swift: Auth.TokenFromOAuth1Arg) {
         self.swift = swift
@@ -508,9 +508,9 @@ public class DBXAuthTokenFromOAuth1Arg: NSObject {
 /// Objective-C compatible TokenFromOAuth1Error union
 @objc
 public class DBXAuthTokenFromOAuth1Error: NSObject {
-    let swift: Auth.TokenFromOAuth1Error
+    public let swift: Auth.TokenFromOAuth1Error
 
-    public init(swift: Auth.TokenFromOAuth1Error) {
+    fileprivate init(swift: Auth.TokenFromOAuth1Error) {
         self.swift = swift
     }
 
@@ -586,7 +586,7 @@ public class DBXAuthTokenFromOAuth1Result: NSObject {
         self.swift = Auth.TokenFromOAuth1Result(oauth2Token: oauth2Token)
     }
 
-    let swift: Auth.TokenFromOAuth1Result
+    public let swift: Auth.TokenFromOAuth1Result
 
     public init(swift: Auth.TokenFromOAuth1Result) {
         self.swift = swift
@@ -608,7 +608,7 @@ public class DBXAuthTokenScopeError: NSObject {
         self.swift = Auth.TokenScopeError(requiredScope: requiredScope)
     }
 
-    let swift: Auth.TokenScopeError
+    public let swift: Auth.TokenScopeError
 
     public init(swift: Auth.TokenScopeError) {
         self.swift = swift

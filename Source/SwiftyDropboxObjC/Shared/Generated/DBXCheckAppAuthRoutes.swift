@@ -65,7 +65,7 @@ public class DBXCheckAppRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        queue: DispatchQueue?,
+        queue: DispatchQueue? = nil,
         completionHandler: @escaping (DBXCheckEchoResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in

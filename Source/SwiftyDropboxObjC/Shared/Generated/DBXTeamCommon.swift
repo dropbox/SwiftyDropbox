@@ -13,9 +13,9 @@ import SwiftyDropbox
 /// The group type determines how a group is managed.
 @objc
 public class DBXTeamCommonGroupManagementType: NSObject {
-    let swift: TeamCommon.GroupManagementType
+    public let swift: TeamCommon.GroupManagementType
 
-    public init(swift: TeamCommon.GroupManagementType) {
+    fileprivate init(swift: TeamCommon.GroupManagementType) {
         self.swift = swift
     }
 
@@ -113,7 +113,7 @@ public class DBXTeamCommonGroupSummary: NSObject {
     public var memberCount: NSNumber? { swift.memberCount as NSNumber? }
     /// Who is allowed to manage the group.
     @objc
-    public var groupManagementType: DBXTeamCommonGroupManagementType { DBXTeamCommonGroupManagementType(swift: swift.groupManagementType) }
+    public var groupManagementType: DBXTeamCommonGroupManagementType { DBXTeamCommonGroupManagementType.factory(swift: swift.groupManagementType) }
 
     @objc
     public init(groupName: String, groupId: String, groupManagementType: DBXTeamCommonGroupManagementType, groupExternalId: String?, memberCount: NSNumber?) {
@@ -126,7 +126,7 @@ public class DBXTeamCommonGroupSummary: NSObject {
         )
     }
 
-    let swift: TeamCommon.GroupSummary
+    public let swift: TeamCommon.GroupSummary
 
     public init(swift: TeamCommon.GroupSummary) {
         self.swift = swift
@@ -139,9 +139,9 @@ public class DBXTeamCommonGroupSummary: NSObject {
 /// The group type determines how a group is created and managed.
 @objc
 public class DBXTeamCommonGroupType: NSObject {
-    let swift: TeamCommon.GroupType
+    public let swift: TeamCommon.GroupType
 
-    public init(swift: TeamCommon.GroupType) {
+    fileprivate init(swift: TeamCommon.GroupType) {
         self.swift = swift
     }
 
@@ -209,9 +209,9 @@ public class DBXTeamCommonGroupTypeOther: DBXTeamCommonGroupType {
 /// The type of the space limit imposed on a team member.
 @objc
 public class DBXTeamCommonMemberSpaceLimitType: NSObject {
-    let swift: TeamCommon.MemberSpaceLimitType
+    public let swift: TeamCommon.MemberSpaceLimitType
 
-    public init(swift: TeamCommon.MemberSpaceLimitType) {
+    fileprivate init(swift: TeamCommon.MemberSpaceLimitType) {
         self.swift = swift
     }
 
@@ -307,7 +307,7 @@ public class DBXTeamCommonTimeRange: NSObject {
         self.swift = TeamCommon.TimeRange(startTime: startTime, endTime: endTime)
     }
 
-    let swift: TeamCommon.TimeRange
+    public let swift: TeamCommon.TimeRange
 
     public init(swift: TeamCommon.TimeRange) {
         self.swift = swift

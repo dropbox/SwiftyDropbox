@@ -25,7 +25,7 @@ public class DBXFilesAddTagArg: NSObject {
         self.swift = Files.AddTagArg(path: path, tagText: tagText)
     }
 
-    let swift: Files.AddTagArg
+    public let swift: Files.AddTagArg
 
     public init(swift: Files.AddTagArg) {
         self.swift = swift
@@ -38,16 +38,16 @@ public class DBXFilesAddTagArg: NSObject {
 /// Objective-C compatible BaseTagError union
 @objc
 public class DBXFilesBaseTagError: NSObject {
-    let swift: Files.BaseTagError
+    public let swift: Files.BaseTagError
 
-    public init(swift: Files.BaseTagError) {
+    fileprivate init(swift: Files.BaseTagError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.BaseTagError) -> DBXFilesBaseTagError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesBaseTagErrorPath(arg)
         case .other:
             return DBXFilesBaseTagErrorOther()
@@ -95,16 +95,16 @@ public class DBXFilesBaseTagErrorOther: DBXFilesBaseTagError {
 /// Objective-C compatible AddTagError union
 @objc
 public class DBXFilesAddTagError: NSObject {
-    let swift: Files.AddTagError
+    public let swift: Files.AddTagError
 
-    public init(swift: Files.AddTagError) {
+    fileprivate init(swift: Files.AddTagError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.AddTagError) -> DBXFilesAddTagError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesAddTagErrorPath(arg)
         case .other:
             return DBXFilesAddTagErrorOther()
@@ -187,7 +187,7 @@ public class DBXFilesGetMetadataArg: NSObject {
     /// associated with the file and each of the listed templates.
     @objc
     public var includePropertyGroups: DBXFilePropertiesTemplateFilterBase? { guard let swift = swift.includePropertyGroups else { return nil }
-        return DBXFilePropertiesTemplateFilterBase(swift: swift)
+        return DBXFilePropertiesTemplateFilterBase.factory(swift: swift)
     }
 
     @objc
@@ -207,7 +207,7 @@ public class DBXFilesGetMetadataArg: NSObject {
         )
     }
 
-    let swift: Files.GetMetadataArg
+    public let swift: Files.GetMetadataArg
 
     public init(swift: Files.GetMetadataArg) {
         self.swift = swift
@@ -246,7 +246,7 @@ public class DBXFilesAlphaGetMetadataArg: DBXFilesGetMetadataArg {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.AlphaGetMetadataArg
+    public let subSwift: Files.AlphaGetMetadataArg
 
     public init(swift: Files.AlphaGetMetadataArg) {
         self.subSwift = swift
@@ -260,16 +260,16 @@ public class DBXFilesAlphaGetMetadataArg: DBXFilesGetMetadataArg {
 /// Objective-C compatible GetMetadataError union
 @objc
 public class DBXFilesGetMetadataError: NSObject {
-    let swift: Files.GetMetadataError
+    public let swift: Files.GetMetadataError
 
-    public init(swift: Files.GetMetadataError) {
+    fileprivate init(swift: Files.GetMetadataError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.GetMetadataError) -> DBXFilesGetMetadataError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesGetMetadataErrorPath(arg)
         }
     }
@@ -300,19 +300,19 @@ public class DBXFilesGetMetadataErrorPath: DBXFilesGetMetadataError {
 /// Objective-C compatible AlphaGetMetadataError union
 @objc
 public class DBXFilesAlphaGetMetadataError: NSObject {
-    let swift: Files.AlphaGetMetadataError
+    public let swift: Files.AlphaGetMetadataError
 
-    public init(swift: Files.AlphaGetMetadataError) {
+    fileprivate init(swift: Files.AlphaGetMetadataError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.AlphaGetMetadataError) -> DBXFilesAlphaGetMetadataError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesAlphaGetMetadataErrorPath(arg)
         case .propertiesError(let swiftArg):
-            let arg = DBXFilePropertiesLookUpPropertiesError(swift: swiftArg)
+            let arg = DBXFilePropertiesLookUpPropertiesError.factory(swift: swiftArg)
             return DBXFilesAlphaGetMetadataErrorPropertiesError(arg)
         }
     }
@@ -367,7 +367,7 @@ public class DBXFilesCommitInfo: NSObject {
     public var path: String { swift.path }
     /// Selects what to do if the file already exists.
     @objc
-    public var mode: DBXFilesWriteMode { DBXFilesWriteMode(swift: swift.mode) }
+    public var mode: DBXFilesWriteMode { DBXFilesWriteMode.factory(swift: swift.mode) }
     /// If there's a conflict, as determined by mode, have the Dropbox server try to autorename the file to avoid
     /// conflict.
     @objc
@@ -413,7 +413,7 @@ public class DBXFilesCommitInfo: NSObject {
         )
     }
 
-    let swift: Files.CommitInfo
+    public let swift: Files.CommitInfo
 
     public init(swift: Files.CommitInfo) {
         self.swift = swift
@@ -431,14 +431,14 @@ public class DBXFilesContentSyncSetting: NSObject {
     public var id: String { swift.id }
     /// Setting for this item.
     @objc
-    public var syncSetting: DBXFilesSyncSetting { DBXFilesSyncSetting(swift: swift.syncSetting) }
+    public var syncSetting: DBXFilesSyncSetting { DBXFilesSyncSetting.factory(swift: swift.syncSetting) }
 
     @objc
     public init(id: String, syncSetting: DBXFilesSyncSetting) {
         self.swift = Files.ContentSyncSetting(id: id, syncSetting: syncSetting.swift)
     }
 
-    let swift: Files.ContentSyncSetting
+    public let swift: Files.ContentSyncSetting
 
     public init(swift: Files.ContentSyncSetting) {
         self.swift = swift
@@ -456,14 +456,14 @@ public class DBXFilesContentSyncSettingArg: NSObject {
     public var id: String { swift.id }
     /// Setting for this item.
     @objc
-    public var syncSetting: DBXFilesSyncSettingArg { DBXFilesSyncSettingArg(swift: swift.syncSetting) }
+    public var syncSetting: DBXFilesSyncSettingArg { DBXFilesSyncSettingArg.factory(swift: swift.syncSetting) }
 
     @objc
     public init(id: String, syncSetting: DBXFilesSyncSettingArg) {
         self.swift = Files.ContentSyncSettingArg(id: id, syncSetting: syncSetting.swift)
     }
 
-    let swift: Files.ContentSyncSettingArg
+    public let swift: Files.ContentSyncSettingArg
 
     public init(swift: Files.ContentSyncSettingArg) {
         self.swift = swift
@@ -488,7 +488,7 @@ public class DBXFilesCreateFolderArg: NSObject {
         self.swift = Files.CreateFolderArg(path: path, autorename: autorename.boolValue)
     }
 
-    let swift: Files.CreateFolderArg
+    public let swift: Files.CreateFolderArg
 
     public init(swift: Files.CreateFolderArg) {
         self.swift = swift
@@ -517,7 +517,7 @@ public class DBXFilesCreateFolderBatchArg: NSObject {
         self.swift = Files.CreateFolderBatchArg(paths: paths, autorename: autorename.boolValue, forceAsync: forceAsync.boolValue)
     }
 
-    let swift: Files.CreateFolderBatchArg
+    public let swift: Files.CreateFolderBatchArg
 
     public init(swift: Files.CreateFolderBatchArg) {
         self.swift = swift
@@ -530,9 +530,9 @@ public class DBXFilesCreateFolderBatchArg: NSObject {
 /// Objective-C compatible CreateFolderBatchError union
 @objc
 public class DBXFilesCreateFolderBatchError: NSObject {
-    let swift: Files.CreateFolderBatchError
+    public let swift: Files.CreateFolderBatchError
 
-    public init(swift: Files.CreateFolderBatchError) {
+    fileprivate init(swift: Files.CreateFolderBatchError) {
         self.swift = swift
     }
 
@@ -582,9 +582,9 @@ public class DBXFilesCreateFolderBatchErrorOther: DBXFilesCreateFolderBatchError
 /// Objective-C compatible CreateFolderBatchJobStatus union
 @objc
 public class DBXFilesCreateFolderBatchJobStatus: NSObject {
-    let swift: Files.CreateFolderBatchJobStatus
+    public let swift: Files.CreateFolderBatchJobStatus
 
-    public init(swift: Files.CreateFolderBatchJobStatus) {
+    fileprivate init(swift: Files.CreateFolderBatchJobStatus) {
         self.swift = swift
     }
 
@@ -596,7 +596,7 @@ public class DBXFilesCreateFolderBatchJobStatus: NSObject {
             let arg = DBXFilesCreateFolderBatchResult(swift: swiftArg)
             return DBXFilesCreateFolderBatchJobStatusComplete(arg)
         case .failed(let swiftArg):
-            let arg = DBXFilesCreateFolderBatchError(swift: swiftArg)
+            let arg = DBXFilesCreateFolderBatchError.factory(swift: swiftArg)
             return DBXFilesCreateFolderBatchJobStatusFailed(arg)
         case .other:
             return DBXFilesCreateFolderBatchJobStatusOther()
@@ -678,9 +678,9 @@ public class DBXFilesCreateFolderBatchJobStatusOther: DBXFilesCreateFolderBatchJ
 /// Result returned by createFolderBatch that may either launch an asynchronous job or complete synchronously.
 @objc
 public class DBXFilesCreateFolderBatchLaunch: NSObject {
-    let swift: Files.CreateFolderBatchLaunch
+    public let swift: Files.CreateFolderBatchLaunch
 
-    public init(swift: Files.CreateFolderBatchLaunch) {
+    fileprivate init(swift: Files.CreateFolderBatchLaunch) {
         self.swift = swift
     }
 
@@ -758,7 +758,12 @@ public class DBXFilesCreateFolderBatchLaunchOther: DBXFilesCreateFolderBatchLaun
 /// Objective-C compatible FileOpsResult struct
 @objc
 public class DBXFilesFileOpsResult: NSObject {
-    let swift: Files.FileOpsResult
+    public override init() {
+        self.swift = Files.FileOpsResult()
+        super.init()
+    }
+
+    public let swift: Files.FileOpsResult
 
     public init(swift: Files.FileOpsResult) {
         self.swift = swift
@@ -774,7 +779,7 @@ public class DBXFilesCreateFolderBatchResult: DBXFilesFileOpsResult {
     /// Each entry in paths in CreateFolderBatchArg will appear at the same position inside entries in
     /// CreateFolderBatchResult.
     @objc
-    public var entries: [DBXFilesCreateFolderBatchResultEntry] { subSwift.entries.map { DBXFilesCreateFolderBatchResultEntry(swift: $0) } }
+    public var entries: [DBXFilesCreateFolderBatchResultEntry] { subSwift.entries.map { DBXFilesCreateFolderBatchResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesCreateFolderBatchResultEntry]) {
@@ -783,7 +788,7 @@ public class DBXFilesCreateFolderBatchResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.CreateFolderBatchResult
+    public let subSwift: Files.CreateFolderBatchResult
 
     public init(swift: Files.CreateFolderBatchResult) {
         self.subSwift = swift
@@ -797,9 +802,9 @@ public class DBXFilesCreateFolderBatchResult: DBXFilesFileOpsResult {
 /// Objective-C compatible CreateFolderBatchResultEntry union
 @objc
 public class DBXFilesCreateFolderBatchResultEntry: NSObject {
-    let swift: Files.CreateFolderBatchResultEntry
+    public let swift: Files.CreateFolderBatchResultEntry
 
-    public init(swift: Files.CreateFolderBatchResultEntry) {
+    fileprivate init(swift: Files.CreateFolderBatchResultEntry) {
         self.swift = swift
     }
 
@@ -809,7 +814,7 @@ public class DBXFilesCreateFolderBatchResultEntry: NSObject {
             let arg = DBXFilesCreateFolderEntryResult(swift: swiftArg)
             return DBXFilesCreateFolderBatchResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesCreateFolderEntryError(swift: swiftArg)
+            let arg = DBXFilesCreateFolderEntryError.factory(swift: swiftArg)
             return DBXFilesCreateFolderBatchResultEntryFailure(arg)
         }
     }
@@ -859,16 +864,16 @@ public class DBXFilesCreateFolderBatchResultEntryFailure: DBXFilesCreateFolderBa
 /// Objective-C compatible CreateFolderEntryError union
 @objc
 public class DBXFilesCreateFolderEntryError: NSObject {
-    let swift: Files.CreateFolderEntryError
+    public let swift: Files.CreateFolderEntryError
 
-    public init(swift: Files.CreateFolderEntryError) {
+    fileprivate init(swift: Files.CreateFolderEntryError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.CreateFolderEntryError) -> DBXFilesCreateFolderEntryError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesCreateFolderEntryErrorPath(arg)
         case .other:
             return DBXFilesCreateFolderEntryErrorOther()
@@ -925,7 +930,7 @@ public class DBXFilesCreateFolderEntryResult: NSObject {
         self.swift = Files.CreateFolderEntryResult(metadata: metadata.subSwift)
     }
 
-    let swift: Files.CreateFolderEntryResult
+    public let swift: Files.CreateFolderEntryResult
 
     public init(swift: Files.CreateFolderEntryResult) {
         self.swift = swift
@@ -938,16 +943,16 @@ public class DBXFilesCreateFolderEntryResult: NSObject {
 /// Objective-C compatible CreateFolderError union
 @objc
 public class DBXFilesCreateFolderError: NSObject {
-    let swift: Files.CreateFolderError
+    public let swift: Files.CreateFolderError
 
-    public init(swift: Files.CreateFolderError) {
+    fileprivate init(swift: Files.CreateFolderError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.CreateFolderError) -> DBXFilesCreateFolderError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesCreateFolderErrorPath(arg)
         }
     }
@@ -989,7 +994,7 @@ public class DBXFilesCreateFolderResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.CreateFolderResult
+    public let subSwift: Files.CreateFolderResult
 
     public init(swift: Files.CreateFolderResult) {
         self.subSwift = swift
@@ -1016,7 +1021,7 @@ public class DBXFilesDeleteArg: NSObject {
         self.swift = Files.DeleteArg(path: path, parentRev: parentRev)
     }
 
-    let swift: Files.DeleteArg
+    public let swift: Files.DeleteArg
 
     public init(swift: Files.DeleteArg) {
         self.swift = swift
@@ -1038,7 +1043,7 @@ public class DBXFilesDeleteBatchArg: NSObject {
         self.swift = Files.DeleteBatchArg(entries: entries.map(\.swift))
     }
 
-    let swift: Files.DeleteBatchArg
+    public let swift: Files.DeleteBatchArg
 
     public init(swift: Files.DeleteBatchArg) {
         self.swift = swift
@@ -1051,9 +1056,9 @@ public class DBXFilesDeleteBatchArg: NSObject {
 /// Objective-C compatible DeleteBatchError union
 @objc
 public class DBXFilesDeleteBatchError: NSObject {
-    let swift: Files.DeleteBatchError
+    public let swift: Files.DeleteBatchError
 
-    public init(swift: Files.DeleteBatchError) {
+    fileprivate init(swift: Files.DeleteBatchError) {
         self.swift = swift
     }
 
@@ -1104,9 +1109,9 @@ public class DBXFilesDeleteBatchErrorOther: DBXFilesDeleteBatchError {
 /// Objective-C compatible DeleteBatchJobStatus union
 @objc
 public class DBXFilesDeleteBatchJobStatus: NSObject {
-    let swift: Files.DeleteBatchJobStatus
+    public let swift: Files.DeleteBatchJobStatus
 
-    public init(swift: Files.DeleteBatchJobStatus) {
+    fileprivate init(swift: Files.DeleteBatchJobStatus) {
         self.swift = swift
     }
 
@@ -1118,7 +1123,7 @@ public class DBXFilesDeleteBatchJobStatus: NSObject {
             let arg = DBXFilesDeleteBatchResult(swift: swiftArg)
             return DBXFilesDeleteBatchJobStatusComplete(arg)
         case .failed(let swiftArg):
-            let arg = DBXFilesDeleteBatchError(swift: swiftArg)
+            let arg = DBXFilesDeleteBatchError.factory(swift: swiftArg)
             return DBXFilesDeleteBatchJobStatusFailed(arg)
         case .other:
             return DBXFilesDeleteBatchJobStatusOther()
@@ -1200,9 +1205,9 @@ public class DBXFilesDeleteBatchJobStatusOther: DBXFilesDeleteBatchJobStatus {
 /// Result returned by deleteBatch that may either launch an asynchronous job or complete synchronously.
 @objc
 public class DBXFilesDeleteBatchLaunch: NSObject {
-    let swift: Files.DeleteBatchLaunch
+    public let swift: Files.DeleteBatchLaunch
 
-    public init(swift: Files.DeleteBatchLaunch) {
+    fileprivate init(swift: Files.DeleteBatchLaunch) {
         self.swift = swift
     }
 
@@ -1283,7 +1288,7 @@ public class DBXFilesDeleteBatchResult: DBXFilesFileOpsResult {
     /// Each entry in entries in DeleteBatchArg will appear at the same position inside entries in
     /// DeleteBatchResult.
     @objc
-    public var entries: [DBXFilesDeleteBatchResultEntry] { subSwift.entries.map { DBXFilesDeleteBatchResultEntry(swift: $0) } }
+    public var entries: [DBXFilesDeleteBatchResultEntry] { subSwift.entries.map { DBXFilesDeleteBatchResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesDeleteBatchResultEntry]) {
@@ -1292,7 +1297,7 @@ public class DBXFilesDeleteBatchResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.DeleteBatchResult
+    public let subSwift: Files.DeleteBatchResult
 
     public init(swift: Files.DeleteBatchResult) {
         self.subSwift = swift
@@ -1308,16 +1313,14 @@ public class DBXFilesDeleteBatchResult: DBXFilesFileOpsResult {
 public class DBXFilesDeleteBatchResultData: NSObject {
     /// Metadata of the deleted object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
         self.swift = Files.DeleteBatchResultData(metadata: metadata.swift)
     }
 
-    let swift: Files.DeleteBatchResultData
+    public let swift: Files.DeleteBatchResultData
 
     public init(swift: Files.DeleteBatchResultData) {
         self.swift = swift
@@ -1330,9 +1333,9 @@ public class DBXFilesDeleteBatchResultData: NSObject {
 /// Objective-C compatible DeleteBatchResultEntry union
 @objc
 public class DBXFilesDeleteBatchResultEntry: NSObject {
-    let swift: Files.DeleteBatchResultEntry
+    public let swift: Files.DeleteBatchResultEntry
 
-    public init(swift: Files.DeleteBatchResultEntry) {
+    fileprivate init(swift: Files.DeleteBatchResultEntry) {
         self.swift = swift
     }
 
@@ -1342,7 +1345,7 @@ public class DBXFilesDeleteBatchResultEntry: NSObject {
             let arg = DBXFilesDeleteBatchResultData(swift: swiftArg)
             return DBXFilesDeleteBatchResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesDeleteError(swift: swiftArg)
+            let arg = DBXFilesDeleteError.factory(swift: swiftArg)
             return DBXFilesDeleteBatchResultEntryFailure(arg)
         }
     }
@@ -1392,19 +1395,19 @@ public class DBXFilesDeleteBatchResultEntryFailure: DBXFilesDeleteBatchResultEnt
 /// Objective-C compatible DeleteError union
 @objc
 public class DBXFilesDeleteError: NSObject {
-    let swift: Files.DeleteError
+    public let swift: Files.DeleteError
 
-    public init(swift: Files.DeleteError) {
+    fileprivate init(swift: Files.DeleteError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.DeleteError) -> DBXFilesDeleteError {
         switch swift {
         case .pathLookup(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesDeleteErrorPathLookup(arg)
         case .pathWrite(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesDeleteErrorPathWrite(arg)
         case .tooManyWriteOperations:
             return DBXFilesDeleteErrorTooManyWriteOperations()
@@ -1507,9 +1510,7 @@ public class DBXFilesDeleteErrorOther: DBXFilesDeleteError {
 public class DBXFilesDeleteResult: DBXFilesFileOpsResult {
     /// Metadata of the deleted object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -1518,7 +1519,7 @@ public class DBXFilesDeleteResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.DeleteResult
+    public let subSwift: Files.DeleteResult
 
     public init(swift: Files.DeleteResult) {
         self.subSwift = swift
@@ -1563,9 +1564,9 @@ public class DBXFilesMetadata: NSObject {
         )
     }
 
-    let swift: Files.Metadata
+    public let swift: Files.Metadata
 
-    public init(swift: Files.Metadata) {
+    fileprivate init(swift: Files.Metadata) {
         self.swift = swift
     }
 
@@ -1589,7 +1590,20 @@ public class DBXFilesMetadata: NSObject {
 /// Indicates that there used to be a file or folder at this path, but it no longer exists.
 @objc
 public class DBXFilesDeletedMetadata: DBXFilesMetadata {
-    let subSwift: Files.DeletedMetadata
+    @objc
+    public override init(name: String, pathLower: String?, pathDisplay: String?, parentSharedFolderId: String?, previewUrl: String?) {
+        let swift = Files.DeletedMetadata(
+            name: name,
+            pathLower: pathLower,
+            pathDisplay: pathDisplay,
+            parentSharedFolderId: parentSharedFolderId,
+            previewUrl: previewUrl
+        )
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: Files.DeletedMetadata
 
     public init(swift: Files.DeletedMetadata) {
         self.subSwift = swift
@@ -1615,7 +1629,7 @@ public class DBXFilesDimensions: NSObject {
         self.swift = Files.Dimensions(height: height.uint64Value, width: width.uint64Value)
     }
 
-    let swift: Files.Dimensions
+    public let swift: Files.Dimensions
 
     public init(swift: Files.Dimensions) {
         self.swift = swift
@@ -1640,7 +1654,7 @@ public class DBXFilesDownloadArg: NSObject {
         self.swift = Files.DownloadArg(path: path, rev: rev)
     }
 
-    let swift: Files.DownloadArg
+    public let swift: Files.DownloadArg
 
     public init(swift: Files.DownloadArg) {
         self.swift = swift
@@ -1653,16 +1667,16 @@ public class DBXFilesDownloadArg: NSObject {
 /// Objective-C compatible DownloadError union
 @objc
 public class DBXFilesDownloadError: NSObject {
-    let swift: Files.DownloadError
+    public let swift: Files.DownloadError
 
-    public init(swift: Files.DownloadError) {
+    fileprivate init(swift: Files.DownloadError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.DownloadError) -> DBXFilesDownloadError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesDownloadErrorPath(arg)
         case .unsupportedFile:
             return DBXFilesDownloadErrorUnsupportedFile()
@@ -1736,7 +1750,7 @@ public class DBXFilesDownloadZipArg: NSObject {
         self.swift = Files.DownloadZipArg(path: path)
     }
 
-    let swift: Files.DownloadZipArg
+    public let swift: Files.DownloadZipArg
 
     public init(swift: Files.DownloadZipArg) {
         self.swift = swift
@@ -1749,16 +1763,16 @@ public class DBXFilesDownloadZipArg: NSObject {
 /// Objective-C compatible DownloadZipError union
 @objc
 public class DBXFilesDownloadZipError: NSObject {
-    let swift: Files.DownloadZipError
+    public let swift: Files.DownloadZipError
 
-    public init(swift: Files.DownloadZipError) {
+    fileprivate init(swift: Files.DownloadZipError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.DownloadZipError) -> DBXFilesDownloadZipError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesDownloadZipErrorPath(arg)
         case .tooLarge:
             return DBXFilesDownloadZipErrorTooLarge()
@@ -1849,7 +1863,7 @@ public class DBXFilesDownloadZipResult: NSObject {
         self.swift = Files.DownloadZipResult(metadata: metadata.subSwift)
     }
 
-    let swift: Files.DownloadZipResult
+    public let swift: Files.DownloadZipResult
 
     public init(swift: Files.DownloadZipResult) {
         self.swift = swift
@@ -1876,7 +1890,7 @@ public class DBXFilesExportArg: NSObject {
         self.swift = Files.ExportArg(path: path, exportFormat: exportFormat)
     }
 
-    let swift: Files.ExportArg
+    public let swift: Files.ExportArg
 
     public init(swift: Files.ExportArg) {
         self.swift = swift
@@ -1889,16 +1903,16 @@ public class DBXFilesExportArg: NSObject {
 /// Objective-C compatible ExportError union
 @objc
 public class DBXFilesExportError: NSObject {
-    let swift: Files.ExportError
+    public let swift: Files.ExportError
 
-    public init(swift: Files.ExportError) {
+    fileprivate init(swift: Files.ExportError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ExportError) -> DBXFilesExportError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesExportErrorPath(arg)
         case .nonExportable:
             return DBXFilesExportErrorNonExportable()
@@ -2010,7 +2024,7 @@ public class DBXFilesExportInfo: NSObject {
         self.swift = Files.ExportInfo(exportAs: exportAs, exportOptions: exportOptions)
     }
 
-    let swift: Files.ExportInfo
+    public let swift: Files.ExportInfo
 
     public init(swift: Files.ExportInfo) {
         self.swift = swift
@@ -2043,7 +2057,7 @@ public class DBXFilesExportMetadata: NSObject {
         self.swift = Files.ExportMetadata(name: name, size: size.uint64Value, exportHash: exportHash, paperRevision: paperRevision?.int64Value)
     }
 
-    let swift: Files.ExportMetadata
+    public let swift: Files.ExportMetadata
 
     public init(swift: Files.ExportMetadata) {
         self.swift = swift
@@ -2068,7 +2082,7 @@ public class DBXFilesExportResult: NSObject {
         self.swift = Files.ExportResult(exportMetadata: exportMetadata.swift, fileMetadata: fileMetadata.subSwift)
     }
 
-    let swift: Files.ExportResult
+    public let swift: Files.ExportResult
 
     public init(swift: Files.ExportResult) {
         self.swift = swift
@@ -2081,9 +2095,9 @@ public class DBXFilesExportResult: NSObject {
 /// Objective-C compatible FileCategory union
 @objc
 public class DBXFilesFileCategory: NSObject {
-    let swift: Files.FileCategory
+    public let swift: Files.FileCategory
 
-    public init(swift: Files.FileCategory) {
+    fileprivate init(swift: Files.FileCategory) {
         self.swift = swift
     }
 
@@ -2288,14 +2302,14 @@ public class DBXFilesFileCategoryOther: DBXFilesFileCategory {
 public class DBXFilesFileLock: NSObject {
     /// The lock description.
     @objc
-    public var content: DBXFilesFileLockContent { DBXFilesFileLockContent(swift: swift.content) }
+    public var content: DBXFilesFileLockContent { DBXFilesFileLockContent.factory(swift: swift.content) }
 
     @objc
     public init(content: DBXFilesFileLockContent) {
         self.swift = Files.FileLock(content: content.swift)
     }
 
-    let swift: Files.FileLock
+    public let swift: Files.FileLock
 
     public init(swift: Files.FileLock) {
         self.swift = swift
@@ -2308,9 +2322,9 @@ public class DBXFilesFileLock: NSObject {
 /// Objective-C compatible FileLockContent union
 @objc
 public class DBXFilesFileLockContent: NSObject {
-    let swift: Files.FileLockContent
+    public let swift: Files.FileLockContent
 
-    public init(swift: Files.FileLockContent) {
+    fileprivate init(swift: Files.FileLockContent) {
         self.swift = swift
     }
 
@@ -2405,7 +2419,7 @@ public class DBXFilesFileLockMetadata: NSObject {
         )
     }
 
-    let swift: Files.FileLockMetadata
+    public let swift: Files.FileLockMetadata
 
     public init(swift: Files.FileLockMetadata) {
         self.swift = swift
@@ -2441,7 +2455,7 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
     /// listFolder, listFolderContinue, or getThumbnailBatch, starting December 2, 2019.
     @objc
     public var mediaInfo: DBXFilesMediaInfo? { guard let swift = subSwift.mediaInfo else { return nil }
-        return DBXFilesMediaInfo(swift: swift)
+        return DBXFilesMediaInfo.factory(swift: swift)
     }
 
     /// Set if this file is a symlink.
@@ -2532,7 +2546,7 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.FileMetadata
+    public let subSwift: Files.FileMetadata
 
     public init(swift: Files.FileMetadata) {
         self.subSwift = swift
@@ -2555,7 +2569,7 @@ public class DBXFilesSharingInfo: NSObject {
         self.swift = Files.SharingInfo(readOnly: readOnly.boolValue)
     }
 
-    let swift: Files.SharingInfo
+    public let swift: Files.SharingInfo
 
     public init(swift: Files.SharingInfo) {
         self.swift = swift
@@ -2582,7 +2596,7 @@ public class DBXFilesFileSharingInfo: DBXFilesSharingInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.FileSharingInfo
+    public let subSwift: Files.FileSharingInfo
 
     public init(swift: Files.FileSharingInfo) {
         self.subSwift = swift
@@ -2596,9 +2610,9 @@ public class DBXFilesFileSharingInfo: DBXFilesSharingInfo {
 /// Objective-C compatible FileStatus union
 @objc
 public class DBXFilesFileStatus: NSObject {
-    let swift: Files.FileStatus
+    public let swift: Files.FileStatus
 
-    public init(swift: Files.FileStatus) {
+    fileprivate init(swift: Files.FileStatus) {
         self.swift = swift
     }
 
@@ -2710,7 +2724,7 @@ public class DBXFilesFolderMetadata: DBXFilesMetadata {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.FolderMetadata
+    public let subSwift: Files.FolderMetadata
 
     public init(swift: Files.FolderMetadata) {
         self.subSwift = swift
@@ -2752,7 +2766,7 @@ public class DBXFilesFolderSharingInfo: DBXFilesSharingInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.FolderSharingInfo
+    public let subSwift: Files.FolderSharingInfo
 
     public init(swift: Files.FolderSharingInfo) {
         self.subSwift = swift
@@ -2775,7 +2789,7 @@ public class DBXFilesGetCopyReferenceArg: NSObject {
         self.swift = Files.GetCopyReferenceArg(path: path)
     }
 
-    let swift: Files.GetCopyReferenceArg
+    public let swift: Files.GetCopyReferenceArg
 
     public init(swift: Files.GetCopyReferenceArg) {
         self.swift = swift
@@ -2788,16 +2802,16 @@ public class DBXFilesGetCopyReferenceArg: NSObject {
 /// Objective-C compatible GetCopyReferenceError union
 @objc
 public class DBXFilesGetCopyReferenceError: NSObject {
-    let swift: Files.GetCopyReferenceError
+    public let swift: Files.GetCopyReferenceError
 
-    public init(swift: Files.GetCopyReferenceError) {
+    fileprivate init(swift: Files.GetCopyReferenceError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.GetCopyReferenceError) -> DBXFilesGetCopyReferenceError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesGetCopyReferenceErrorPath(arg)
         case .other:
             return DBXFilesGetCopyReferenceErrorOther()
@@ -2847,10 +2861,7 @@ public class DBXFilesGetCopyReferenceErrorOther: DBXFilesGetCopyReferenceError {
 public class DBXFilesGetCopyReferenceResult: NSObject {
     /// Metadata of the file or folder.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
-
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
     /// A copy reference to the file or folder.
     @objc
     public var copyReference: String { swift.copyReference }
@@ -2864,7 +2875,7 @@ public class DBXFilesGetCopyReferenceResult: NSObject {
         self.swift = Files.GetCopyReferenceResult(metadata: metadata.swift, copyReference: copyReference, expires: expires)
     }
 
-    let swift: Files.GetCopyReferenceResult
+    public let swift: Files.GetCopyReferenceResult
 
     public init(swift: Files.GetCopyReferenceResult) {
         self.swift = swift
@@ -2886,7 +2897,7 @@ public class DBXFilesGetTagsArg: NSObject {
         self.swift = Files.GetTagsArg(paths: paths)
     }
 
-    let swift: Files.GetTagsArg
+    public let swift: Files.GetTagsArg
 
     public init(swift: Files.GetTagsArg) {
         self.swift = swift
@@ -2908,7 +2919,7 @@ public class DBXFilesGetTagsResult: NSObject {
         self.swift = Files.GetTagsResult(pathsToTags: pathsToTags.map(\.swift))
     }
 
-    let swift: Files.GetTagsResult
+    public let swift: Files.GetTagsResult
 
     public init(swift: Files.GetTagsResult) {
         self.swift = swift
@@ -2930,7 +2941,7 @@ public class DBXFilesGetTemporaryLinkArg: NSObject {
         self.swift = Files.GetTemporaryLinkArg(path: path)
     }
 
-    let swift: Files.GetTemporaryLinkArg
+    public let swift: Files.GetTemporaryLinkArg
 
     public init(swift: Files.GetTemporaryLinkArg) {
         self.swift = swift
@@ -2943,16 +2954,16 @@ public class DBXFilesGetTemporaryLinkArg: NSObject {
 /// Objective-C compatible GetTemporaryLinkError union
 @objc
 public class DBXFilesGetTemporaryLinkError: NSObject {
-    let swift: Files.GetTemporaryLinkError
+    public let swift: Files.GetTemporaryLinkError
 
-    public init(swift: Files.GetTemporaryLinkError) {
+    fileprivate init(swift: Files.GetTemporaryLinkError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.GetTemporaryLinkError) -> DBXFilesGetTemporaryLinkError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesGetTemporaryLinkErrorPath(arg)
         case .emailNotVerified:
             return DBXFilesGetTemporaryLinkErrorEmailNotVerified()
@@ -3066,7 +3077,7 @@ public class DBXFilesGetTemporaryLinkResult: NSObject {
         self.swift = Files.GetTemporaryLinkResult(metadata: metadata.subSwift, link: link)
     }
 
-    let swift: Files.GetTemporaryLinkResult
+    public let swift: Files.GetTemporaryLinkResult
 
     public init(swift: Files.GetTemporaryLinkResult) {
         self.swift = swift
@@ -3093,7 +3104,7 @@ public class DBXFilesGetTemporaryUploadLinkArg: NSObject {
         self.swift = Files.GetTemporaryUploadLinkArg(commitInfo: commitInfo.swift, duration: duration.doubleValue)
     }
 
-    let swift: Files.GetTemporaryUploadLinkArg
+    public let swift: Files.GetTemporaryUploadLinkArg
 
     public init(swift: Files.GetTemporaryUploadLinkArg) {
         self.swift = swift
@@ -3115,7 +3126,7 @@ public class DBXFilesGetTemporaryUploadLinkResult: NSObject {
         self.swift = Files.GetTemporaryUploadLinkResult(link: link)
     }
 
-    let swift: Files.GetTemporaryUploadLinkResult
+    public let swift: Files.GetTemporaryUploadLinkResult
 
     public init(swift: Files.GetTemporaryUploadLinkResult) {
         self.swift = swift
@@ -3137,7 +3148,7 @@ public class DBXFilesGetThumbnailBatchArg: NSObject {
         self.swift = Files.GetThumbnailBatchArg(entries: entries.map(\.swift))
     }
 
-    let swift: Files.GetThumbnailBatchArg
+    public let swift: Files.GetThumbnailBatchArg
 
     public init(swift: Files.GetThumbnailBatchArg) {
         self.swift = swift
@@ -3150,9 +3161,9 @@ public class DBXFilesGetThumbnailBatchArg: NSObject {
 /// Objective-C compatible GetThumbnailBatchError union
 @objc
 public class DBXFilesGetThumbnailBatchError: NSObject {
-    let swift: Files.GetThumbnailBatchError
+    public let swift: Files.GetThumbnailBatchError
 
-    public init(swift: Files.GetThumbnailBatchError) {
+    fileprivate init(swift: Files.GetThumbnailBatchError) {
         self.swift = swift
     }
 
@@ -3204,14 +3215,14 @@ public class DBXFilesGetThumbnailBatchErrorOther: DBXFilesGetThumbnailBatchError
 public class DBXFilesGetThumbnailBatchResult: NSObject {
     /// List of files and their thumbnails.
     @objc
-    public var entries: [DBXFilesGetThumbnailBatchResultEntry] { swift.entries.map { DBXFilesGetThumbnailBatchResultEntry(swift: $0) } }
+    public var entries: [DBXFilesGetThumbnailBatchResultEntry] { swift.entries.map { DBXFilesGetThumbnailBatchResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesGetThumbnailBatchResultEntry]) {
         self.swift = Files.GetThumbnailBatchResult(entries: entries.map(\.swift))
     }
 
-    let swift: Files.GetThumbnailBatchResult
+    public let swift: Files.GetThumbnailBatchResult
 
     public init(swift: Files.GetThumbnailBatchResult) {
         self.swift = swift
@@ -3236,7 +3247,7 @@ public class DBXFilesGetThumbnailBatchResultData: NSObject {
         self.swift = Files.GetThumbnailBatchResultData(metadata: metadata.subSwift, thumbnail: thumbnail)
     }
 
-    let swift: Files.GetThumbnailBatchResultData
+    public let swift: Files.GetThumbnailBatchResultData
 
     public init(swift: Files.GetThumbnailBatchResultData) {
         self.swift = swift
@@ -3249,9 +3260,9 @@ public class DBXFilesGetThumbnailBatchResultData: NSObject {
 /// Objective-C compatible GetThumbnailBatchResultEntry union
 @objc
 public class DBXFilesGetThumbnailBatchResultEntry: NSObject {
-    let swift: Files.GetThumbnailBatchResultEntry
+    public let swift: Files.GetThumbnailBatchResultEntry
 
-    public init(swift: Files.GetThumbnailBatchResultEntry) {
+    fileprivate init(swift: Files.GetThumbnailBatchResultEntry) {
         self.swift = swift
     }
 
@@ -3261,7 +3272,7 @@ public class DBXFilesGetThumbnailBatchResultEntry: NSObject {
             let arg = DBXFilesGetThumbnailBatchResultData(swift: swiftArg)
             return DBXFilesGetThumbnailBatchResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesThumbnailError(swift: swiftArg)
+            let arg = DBXFilesThumbnailError.factory(swift: swiftArg)
             return DBXFilesGetThumbnailBatchResultEntryFailure(arg)
         case .other:
             return DBXFilesGetThumbnailBatchResultEntryOther()
@@ -3340,7 +3351,7 @@ public class DBXFilesGpsCoordinates: NSObject {
         self.swift = Files.GpsCoordinates(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
     }
 
-    let swift: Files.GpsCoordinates
+    public let swift: Files.GpsCoordinates
 
     public init(swift: Files.GpsCoordinates) {
         self.swift = swift
@@ -3365,7 +3376,7 @@ public class DBXFilesHighlightSpan: NSObject {
         self.swift = Files.HighlightSpan(highlightStr: highlightStr, isHighlighted: isHighlighted.boolValue)
     }
 
-    let swift: Files.HighlightSpan
+    public let swift: Files.HighlightSpan
 
     public init(swift: Files.HighlightSpan) {
         self.swift = swift
@@ -3378,9 +3389,9 @@ public class DBXFilesHighlightSpan: NSObject {
 /// The import format of the incoming Paper doc content.
 @objc
 public class DBXFilesImportFormat: NSObject {
-    let swift: Files.ImportFormat
+    public let swift: Files.ImportFormat
 
-    public init(swift: Files.ImportFormat) {
+    fileprivate init(swift: Files.ImportFormat) {
         self.swift = swift
     }
 
@@ -3502,7 +3513,7 @@ public class DBXFilesListFolderArg: NSObject {
     /// associated with the file and each of the listed templates.
     @objc
     public var includePropertyGroups: DBXFilePropertiesTemplateFilterBase? { guard let swift = swift.includePropertyGroups else { return nil }
-        return DBXFilePropertiesTemplateFilterBase(swift: swift)
+        return DBXFilePropertiesTemplateFilterBase.factory(swift: swift)
     }
 
     /// If true, include files that are not downloadable, i.e. Google Docs.
@@ -3536,7 +3547,7 @@ public class DBXFilesListFolderArg: NSObject {
         )
     }
 
-    let swift: Files.ListFolderArg
+    public let swift: Files.ListFolderArg
 
     public init(swift: Files.ListFolderArg) {
         self.swift = swift
@@ -3558,7 +3569,7 @@ public class DBXFilesListFolderContinueArg: NSObject {
         self.swift = Files.ListFolderContinueArg(cursor: cursor)
     }
 
-    let swift: Files.ListFolderContinueArg
+    public let swift: Files.ListFolderContinueArg
 
     public init(swift: Files.ListFolderContinueArg) {
         self.swift = swift
@@ -3571,16 +3582,16 @@ public class DBXFilesListFolderContinueArg: NSObject {
 /// Objective-C compatible ListFolderContinueError union
 @objc
 public class DBXFilesListFolderContinueError: NSObject {
-    let swift: Files.ListFolderContinueError
+    public let swift: Files.ListFolderContinueError
 
-    public init(swift: Files.ListFolderContinueError) {
+    fileprivate init(swift: Files.ListFolderContinueError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ListFolderContinueError) -> DBXFilesListFolderContinueError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesListFolderContinueErrorPath(arg)
         case .reset:
             return DBXFilesListFolderContinueErrorReset()
@@ -3645,19 +3656,19 @@ public class DBXFilesListFolderContinueErrorOther: DBXFilesListFolderContinueErr
 /// Objective-C compatible ListFolderError union
 @objc
 public class DBXFilesListFolderError: NSObject {
-    let swift: Files.ListFolderError
+    public let swift: Files.ListFolderError
 
-    public init(swift: Files.ListFolderError) {
+    fileprivate init(swift: Files.ListFolderError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ListFolderError) -> DBXFilesListFolderError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesListFolderErrorPath(arg)
         case .templateError(let swiftArg):
-            let arg = DBXFilePropertiesTemplateError(swift: swiftArg)
+            let arg = DBXFilePropertiesTemplateError.factory(swift: swiftArg)
             return DBXFilesListFolderErrorTemplateError(arg)
         case .other:
             return DBXFilesListFolderErrorOther()
@@ -3733,7 +3744,7 @@ public class DBXFilesListFolderGetLatestCursorResult: NSObject {
         self.swift = Files.ListFolderGetLatestCursorResult(cursor: cursor)
     }
 
-    let swift: Files.ListFolderGetLatestCursorResult
+    public let swift: Files.ListFolderGetLatestCursorResult
 
     public init(swift: Files.ListFolderGetLatestCursorResult) {
         self.swift = swift
@@ -3761,7 +3772,7 @@ public class DBXFilesListFolderLongpollArg: NSObject {
         self.swift = Files.ListFolderLongpollArg(cursor: cursor, timeout: timeout.uint64Value)
     }
 
-    let swift: Files.ListFolderLongpollArg
+    public let swift: Files.ListFolderLongpollArg
 
     public init(swift: Files.ListFolderLongpollArg) {
         self.swift = swift
@@ -3774,9 +3785,9 @@ public class DBXFilesListFolderLongpollArg: NSObject {
 /// Objective-C compatible ListFolderLongpollError union
 @objc
 public class DBXFilesListFolderLongpollError: NSObject {
-    let swift: Files.ListFolderLongpollError
+    public let swift: Files.ListFolderLongpollError
 
-    public init(swift: Files.ListFolderLongpollError) {
+    fileprivate init(swift: Files.ListFolderLongpollError) {
         self.swift = swift
     }
 
@@ -3838,7 +3849,7 @@ public class DBXFilesListFolderLongpollResult: NSObject {
         self.swift = Files.ListFolderLongpollResult(changes: changes.boolValue, backoff: backoff?.uint64Value)
     }
 
-    let swift: Files.ListFolderLongpollResult
+    public let swift: Files.ListFolderLongpollResult
 
     public init(swift: Files.ListFolderLongpollResult) {
         self.swift = swift
@@ -3853,12 +3864,7 @@ public class DBXFilesListFolderLongpollResult: NSObject {
 public class DBXFilesListFolderResult: NSObject {
     /// The files and (direct) subfolders in the folder.
     @objc
-    public var entries: [DBXFilesMetadata] {
-        swift.entries.map {
-            DBXFilesMetadata.wrapPreservingSubtypes(swift: $0)
-        }
-    }
-
+    public var entries: [DBXFilesMetadata] { swift.entries.map { DBXFilesMetadata.wrapPreservingSubtypes(swift: $0) } }
     /// Pass the cursor into listFolderContinue to see what's changed in the folder since your previous query.
     @objc
     public var cursor: String { swift.cursor }
@@ -3871,7 +3877,7 @@ public class DBXFilesListFolderResult: NSObject {
         self.swift = Files.ListFolderResult(entries: entries.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
     }
 
-    let swift: Files.ListFolderResult
+    public let swift: Files.ListFolderResult
 
     public init(swift: Files.ListFolderResult) {
         self.swift = swift
@@ -3889,7 +3895,7 @@ public class DBXFilesListRevisionsArg: NSObject {
     public var path: String { swift.path }
     /// Determines the behavior of the API in listing the revisions for a given file path or id.
     @objc
-    public var mode: DBXFilesListRevisionsMode { DBXFilesListRevisionsMode(swift: swift.mode) }
+    public var mode: DBXFilesListRevisionsMode { DBXFilesListRevisionsMode.factory(swift: swift.mode) }
     /// The maximum number of revision entries returned.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
@@ -3899,7 +3905,7 @@ public class DBXFilesListRevisionsArg: NSObject {
         self.swift = Files.ListRevisionsArg(path: path, mode: mode.swift, limit: limit.uint64Value)
     }
 
-    let swift: Files.ListRevisionsArg
+    public let swift: Files.ListRevisionsArg
 
     public init(swift: Files.ListRevisionsArg) {
         self.swift = swift
@@ -3912,16 +3918,16 @@ public class DBXFilesListRevisionsArg: NSObject {
 /// Objective-C compatible ListRevisionsError union
 @objc
 public class DBXFilesListRevisionsError: NSObject {
-    let swift: Files.ListRevisionsError
+    public let swift: Files.ListRevisionsError
 
-    public init(swift: Files.ListRevisionsError) {
+    fileprivate init(swift: Files.ListRevisionsError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ListRevisionsError) -> DBXFilesListRevisionsError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesListRevisionsErrorPath(arg)
         case .other:
             return DBXFilesListRevisionsErrorOther()
@@ -3969,9 +3975,9 @@ public class DBXFilesListRevisionsErrorOther: DBXFilesListRevisionsError {
 /// Objective-C compatible ListRevisionsMode union
 @objc
 public class DBXFilesListRevisionsMode: NSObject {
-    let swift: Files.ListRevisionsMode
+    public let swift: Files.ListRevisionsMode
 
-    public init(swift: Files.ListRevisionsMode) {
+    fileprivate init(swift: Files.ListRevisionsMode) {
         self.swift = swift
     }
 
@@ -4054,7 +4060,7 @@ public class DBXFilesListRevisionsResult: NSObject {
         self.swift = Files.ListRevisionsResult(isDeleted: isDeleted.boolValue, entries: entries.map(\.subSwift), serverDeleted: serverDeleted)
     }
 
-    let swift: Files.ListRevisionsResult
+    public let swift: Files.ListRevisionsResult
 
     public init(swift: Files.ListRevisionsResult) {
         self.swift = swift
@@ -4076,7 +4082,7 @@ public class DBXFilesLockConflictError: NSObject {
         self.swift = Files.LockConflictError(lock: lock.swift)
     }
 
-    let swift: Files.LockConflictError
+    public let swift: Files.LockConflictError
 
     public init(swift: Files.LockConflictError) {
         self.swift = swift
@@ -4098,7 +4104,7 @@ public class DBXFilesLockFileArg: NSObject {
         self.swift = Files.LockFileArg(path: path)
     }
 
-    let swift: Files.LockFileArg
+    public let swift: Files.LockFileArg
 
     public init(swift: Files.LockFileArg) {
         self.swift = swift
@@ -4121,7 +4127,7 @@ public class DBXFilesLockFileBatchArg: NSObject {
         self.swift = Files.LockFileBatchArg(entries: entries.map(\.swift))
     }
 
-    let swift: Files.LockFileBatchArg
+    public let swift: Files.LockFileBatchArg
 
     public init(swift: Files.LockFileBatchArg) {
         self.swift = swift
@@ -4137,7 +4143,7 @@ public class DBXFilesLockFileBatchResult: DBXFilesFileOpsResult {
     /// Each Entry in the 'entries' will have '.tag' with the operation status (e.g. success), the metadata for the
     /// file and the lock state after the operation.
     @objc
-    public var entries: [DBXFilesLockFileResultEntry] { subSwift.entries.map { DBXFilesLockFileResultEntry(swift: $0) } }
+    public var entries: [DBXFilesLockFileResultEntry] { subSwift.entries.map { DBXFilesLockFileResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesLockFileResultEntry]) {
@@ -4146,7 +4152,7 @@ public class DBXFilesLockFileBatchResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.LockFileBatchResult
+    public let subSwift: Files.LockFileBatchResult
 
     public init(swift: Files.LockFileBatchResult) {
         self.subSwift = swift
@@ -4160,16 +4166,16 @@ public class DBXFilesLockFileBatchResult: DBXFilesFileOpsResult {
 /// Objective-C compatible LockFileError union
 @objc
 public class DBXFilesLockFileError: NSObject {
-    let swift: Files.LockFileError
+    public let swift: Files.LockFileError
 
-    public init(swift: Files.LockFileError) {
+    fileprivate init(swift: Files.LockFileError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.LockFileError) -> DBXFilesLockFileError {
         switch swift {
         case .pathLookup(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesLockFileErrorPathLookup(arg)
         case .tooManyWriteOperations:
             return DBXFilesLockFileErrorTooManyWriteOperations()
@@ -4344,10 +4350,7 @@ public class DBXFilesLockFileErrorOther: DBXFilesLockFileError {
 public class DBXFilesLockFileResult: NSObject {
     /// Metadata of the file.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
-
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
     /// The file lock state after the operation.
     @objc
     public var lock: DBXFilesFileLock { DBXFilesFileLock(swift: swift.lock) }
@@ -4357,7 +4360,7 @@ public class DBXFilesLockFileResult: NSObject {
         self.swift = Files.LockFileResult(metadata: metadata.swift, lock: lock.swift)
     }
 
-    let swift: Files.LockFileResult
+    public let swift: Files.LockFileResult
 
     public init(swift: Files.LockFileResult) {
         self.swift = swift
@@ -4370,9 +4373,9 @@ public class DBXFilesLockFileResult: NSObject {
 /// Objective-C compatible LockFileResultEntry union
 @objc
 public class DBXFilesLockFileResultEntry: NSObject {
-    let swift: Files.LockFileResultEntry
+    public let swift: Files.LockFileResultEntry
 
-    public init(swift: Files.LockFileResultEntry) {
+    fileprivate init(swift: Files.LockFileResultEntry) {
         self.swift = swift
     }
 
@@ -4382,7 +4385,7 @@ public class DBXFilesLockFileResultEntry: NSObject {
             let arg = DBXFilesLockFileResult(swift: swiftArg)
             return DBXFilesLockFileResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesLockFileError(swift: swiftArg)
+            let arg = DBXFilesLockFileError.factory(swift: swiftArg)
             return DBXFilesLockFileResultEntryFailure(arg)
         }
     }
@@ -4432,9 +4435,9 @@ public class DBXFilesLockFileResultEntryFailure: DBXFilesLockFileResultEntry {
 /// Objective-C compatible LookupError union
 @objc
 public class DBXFilesLookupError: NSObject {
-    let swift: Files.LookupError
+    public let swift: Files.LookupError
 
-    public init(swift: Files.LookupError) {
+    fileprivate init(swift: Files.LookupError) {
         self.swift = swift
     }
 
@@ -4594,9 +4597,9 @@ public class DBXFilesLookupErrorOther: DBXFilesLookupError {
 /// Objective-C compatible MediaInfo union
 @objc
 public class DBXFilesMediaInfo: NSObject {
-    let swift: Files.MediaInfo
+    public let swift: Files.MediaInfo
 
-    public init(swift: Files.MediaInfo) {
+    fileprivate init(swift: Files.MediaInfo) {
         self.swift = swift
     }
 
@@ -4672,9 +4675,9 @@ public class DBXFilesMediaMetadata: NSObject {
         self.swift = Files.MediaMetadata(dimensions: dimensions?.swift, location: location?.swift, timeTaken: timeTaken)
     }
 
-    let swift: Files.MediaMetadata
+    public let swift: Files.MediaMetadata
 
-    public init(swift: Files.MediaMetadata) {
+    fileprivate init(swift: Files.MediaMetadata) {
         self.swift = swift
     }
 
@@ -4696,9 +4699,9 @@ public class DBXFilesMediaMetadata: NSObject {
 /// Metadata for a file, folder or other resource types.
 @objc
 public class DBXFilesMetadataV2: NSObject {
-    let swift: Files.MetadataV2
+    public let swift: Files.MetadataV2
 
-    public init(swift: Files.MetadataV2) {
+    fileprivate init(swift: Files.MetadataV2) {
         self.swift = swift
     }
 
@@ -4773,7 +4776,7 @@ public class DBXFilesMinimalFileLinkMetadata: NSObject {
         self.swift = Files.MinimalFileLinkMetadata(url: url, rev: rev, id: id, path: path)
     }
 
-    let swift: Files.MinimalFileLinkMetadata
+    public let swift: Files.MinimalFileLinkMetadata
 
     public init(swift: Files.MinimalFileLinkMetadata) {
         self.swift = swift
@@ -4799,7 +4802,7 @@ public class DBXFilesRelocationBatchArgBase: NSObject {
         self.swift = Files.RelocationBatchArgBase(entries: entries.map(\.swift), autorename: autorename.boolValue)
     }
 
-    let swift: Files.RelocationBatchArgBase
+    public let swift: Files.RelocationBatchArgBase
 
     public init(swift: Files.RelocationBatchArgBase) {
         self.swift = swift
@@ -4828,7 +4831,7 @@ public class DBXFilesMoveBatchArg: DBXFilesRelocationBatchArgBase {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.MoveBatchArg
+    public let subSwift: Files.MoveBatchArg
 
     public init(swift: Files.MoveBatchArg) {
         self.subSwift = swift
@@ -4842,9 +4845,9 @@ public class DBXFilesMoveBatchArg: DBXFilesRelocationBatchArgBase {
 /// Objective-C compatible MoveIntoFamilyError union
 @objc
 public class DBXFilesMoveIntoFamilyError: NSObject {
-    let swift: Files.MoveIntoFamilyError
+    public let swift: Files.MoveIntoFamilyError
 
-    public init(swift: Files.MoveIntoFamilyError) {
+    fileprivate init(swift: Files.MoveIntoFamilyError) {
         self.swift = swift
     }
 
@@ -4894,9 +4897,9 @@ public class DBXFilesMoveIntoFamilyErrorOther: DBXFilesMoveIntoFamilyError {
 /// Objective-C compatible MoveIntoVaultError union
 @objc
 public class DBXFilesMoveIntoVaultError: NSObject {
-    let swift: Files.MoveIntoVaultError
+    public let swift: Files.MoveIntoVaultError
 
-    public init(swift: Files.MoveIntoVaultError) {
+    fileprivate init(swift: Files.MoveIntoVaultError) {
         self.swift = swift
     }
 
@@ -4946,9 +4949,9 @@ public class DBXFilesMoveIntoVaultErrorOther: DBXFilesMoveIntoVaultError {
 /// Objective-C compatible PaperContentError union
 @objc
 public class DBXFilesPaperContentError: NSObject {
-    let swift: Files.PaperContentError
+    public let swift: Files.PaperContentError
 
-    public init(swift: Files.PaperContentError) {
+    fileprivate init(swift: Files.PaperContentError) {
         self.swift = swift
     }
 
@@ -5056,14 +5059,14 @@ public class DBXFilesPaperCreateArg: NSObject {
     public var path: String { swift.path }
     /// The format of the provided data.
     @objc
-    public var importFormat: DBXFilesImportFormat { DBXFilesImportFormat(swift: swift.importFormat) }
+    public var importFormat: DBXFilesImportFormat { DBXFilesImportFormat.factory(swift: swift.importFormat) }
 
     @objc
     public init(path: String, importFormat: DBXFilesImportFormat) {
         self.swift = Files.PaperCreateArg(path: path, importFormat: importFormat.swift)
     }
 
-    let swift: Files.PaperCreateArg
+    public let swift: Files.PaperCreateArg
 
     public init(swift: Files.PaperCreateArg) {
         self.swift = swift
@@ -5076,9 +5079,9 @@ public class DBXFilesPaperCreateArg: NSObject {
 /// Objective-C compatible PaperCreateError union
 @objc
 public class DBXFilesPaperCreateError: NSObject {
-    let swift: Files.PaperCreateError
+    public let swift: Files.PaperCreateError
 
-    public init(swift: Files.PaperCreateError) {
+    fileprivate init(swift: Files.PaperCreateError) {
         self.swift = swift
     }
 
@@ -5266,7 +5269,7 @@ public class DBXFilesPaperCreateResult: NSObject {
         self.swift = Files.PaperCreateResult(url: url, resultPath: resultPath, fileId: fileId, paperRevision: paperRevision.int64Value)
     }
 
-    let swift: Files.PaperCreateResult
+    public let swift: Files.PaperCreateResult
 
     public init(swift: Files.PaperCreateResult) {
         self.swift = swift
@@ -5279,9 +5282,9 @@ public class DBXFilesPaperCreateResult: NSObject {
 /// Objective-C compatible PaperDocUpdatePolicy union
 @objc
 public class DBXFilesPaperDocUpdatePolicy: NSObject {
-    let swift: Files.PaperDocUpdatePolicy
+    public let swift: Files.PaperDocUpdatePolicy
 
-    public init(swift: Files.PaperDocUpdatePolicy) {
+    fileprivate init(swift: Files.PaperDocUpdatePolicy) {
         self.swift = swift
     }
 
@@ -5388,10 +5391,10 @@ public class DBXFilesPaperUpdateArg: NSObject {
     public var path: String { swift.path }
     /// The format of the provided data.
     @objc
-    public var importFormat: DBXFilesImportFormat { DBXFilesImportFormat(swift: swift.importFormat) }
+    public var importFormat: DBXFilesImportFormat { DBXFilesImportFormat.factory(swift: swift.importFormat) }
     /// How the provided content should be applied to the doc.
     @objc
-    public var docUpdatePolicy: DBXFilesPaperDocUpdatePolicy { DBXFilesPaperDocUpdatePolicy(swift: swift.docUpdatePolicy) }
+    public var docUpdatePolicy: DBXFilesPaperDocUpdatePolicy { DBXFilesPaperDocUpdatePolicy.factory(swift: swift.docUpdatePolicy) }
     /// The latest doc revision. Required when doc_update_policy is update. This value must match the current
     /// revision of the doc or error revision_mismatch will be returned.
     @objc
@@ -5407,7 +5410,7 @@ public class DBXFilesPaperUpdateArg: NSObject {
         )
     }
 
-    let swift: Files.PaperUpdateArg
+    public let swift: Files.PaperUpdateArg
 
     public init(swift: Files.PaperUpdateArg) {
         self.swift = swift
@@ -5420,9 +5423,9 @@ public class DBXFilesPaperUpdateArg: NSObject {
 /// Objective-C compatible PaperUpdateError union
 @objc
 public class DBXFilesPaperUpdateError: NSObject {
-    let swift: Files.PaperUpdateError
+    public let swift: Files.PaperUpdateError
 
-    public init(swift: Files.PaperUpdateError) {
+    fileprivate init(swift: Files.PaperUpdateError) {
         self.swift = swift
     }
 
@@ -5439,7 +5442,7 @@ public class DBXFilesPaperUpdateError: NSObject {
         case .other:
             return DBXFilesPaperUpdateErrorOther()
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesPaperUpdateErrorPath(arg)
         case .revisionMismatch:
             return DBXFilesPaperUpdateErrorRevisionMismatch()
@@ -5606,7 +5609,7 @@ public class DBXFilesPaperUpdateResult: NSObject {
         self.swift = Files.PaperUpdateResult(paperRevision: paperRevision.int64Value)
     }
 
-    let swift: Files.PaperUpdateResult
+    public let swift: Files.PaperUpdateResult
 
     public init(swift: Files.PaperUpdateResult) {
         self.swift = swift
@@ -5619,9 +5622,9 @@ public class DBXFilesPaperUpdateResult: NSObject {
 /// Objective-C compatible PathOrLink union
 @objc
 public class DBXFilesPathOrLink: NSObject {
-    let swift: Files.PathOrLink
+    public let swift: Files.PathOrLink
 
-    public init(swift: Files.PathOrLink) {
+    fileprivate init(swift: Files.PathOrLink) {
         self.swift = swift
     }
 
@@ -5703,14 +5706,14 @@ public class DBXFilesPathToTags: NSObject {
     public var path: String { swift.path }
     /// Tags assigned to this item.
     @objc
-    public var tags: [DBXFilesTag] { swift.tags.map { DBXFilesTag(swift: $0) } }
+    public var tags: [DBXFilesTag] { swift.tags.map { DBXFilesTag.factory(swift: $0) } }
 
     @objc
     public init(path: String, tags: [DBXFilesTag]) {
         self.swift = Files.PathToTags(path: path, tags: tags.map(\.swift))
     }
 
-    let swift: Files.PathToTags
+    public let swift: Files.PathToTags
 
     public init(swift: Files.PathToTags) {
         self.swift = swift
@@ -5723,7 +5726,14 @@ public class DBXFilesPathToTags: NSObject {
 /// Metadata for a photo.
 @objc
 public class DBXFilesPhotoMetadata: DBXFilesMediaMetadata {
-    let subSwift: Files.PhotoMetadata
+    @objc
+    public override init(dimensions: DBXFilesDimensions?, location: DBXFilesGpsCoordinates?, timeTaken: Date?) {
+        let swift = Files.PhotoMetadata(dimensions: dimensions?.swift, location: location?.swift, timeTaken: timeTaken)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
+    public let subSwift: Files.PhotoMetadata
 
     public init(swift: Files.PhotoMetadata) {
         self.subSwift = swift
@@ -5749,7 +5759,7 @@ public class DBXFilesPreviewArg: NSObject {
         self.swift = Files.PreviewArg(path: path, rev: rev)
     }
 
-    let swift: Files.PreviewArg
+    public let swift: Files.PreviewArg
 
     public init(swift: Files.PreviewArg) {
         self.swift = swift
@@ -5762,16 +5772,16 @@ public class DBXFilesPreviewArg: NSObject {
 /// Objective-C compatible PreviewError union
 @objc
 public class DBXFilesPreviewError: NSObject {
-    let swift: Files.PreviewError
+    public let swift: Files.PreviewError
 
-    public init(swift: Files.PreviewError) {
+    fileprivate init(swift: Files.PreviewError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.PreviewError) -> DBXFilesPreviewError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesPreviewErrorPath(arg)
         case .inProgress:
             return DBXFilesPreviewErrorInProgress()
@@ -5872,7 +5882,7 @@ public class DBXFilesPreviewResult: NSObject {
         self.swift = Files.PreviewResult(fileMetadata: fileMetadata?.subSwift, linkMetadata: linkMetadata?.swift)
     }
 
-    let swift: Files.PreviewResult
+    public let swift: Files.PreviewResult
 
     public init(swift: Files.PreviewResult) {
         self.swift = swift
@@ -5897,7 +5907,7 @@ public class DBXFilesRelocationPath: NSObject {
         self.swift = Files.RelocationPath(fromPath: fromPath, toPath: toPath)
     }
 
-    let swift: Files.RelocationPath
+    public let swift: Files.RelocationPath
 
     public init(swift: Files.RelocationPath) {
         self.swift = swift
@@ -5934,7 +5944,7 @@ public class DBXFilesRelocationArg: DBXFilesRelocationPath {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.RelocationArg
+    public let subSwift: Files.RelocationArg
 
     public init(swift: Files.RelocationArg) {
         self.subSwift = swift
@@ -5968,7 +5978,7 @@ public class DBXFilesRelocationBatchArg: DBXFilesRelocationBatchArgBase {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.RelocationBatchArg
+    public let subSwift: Files.RelocationBatchArg
 
     public init(swift: Files.RelocationBatchArg) {
         self.subSwift = swift
@@ -5982,22 +5992,22 @@ public class DBXFilesRelocationBatchArg: DBXFilesRelocationBatchArgBase {
 /// Objective-C compatible RelocationError union
 @objc
 public class DBXFilesRelocationError: NSObject {
-    let swift: Files.RelocationError
+    public let swift: Files.RelocationError
 
-    public init(swift: Files.RelocationError) {
+    fileprivate init(swift: Files.RelocationError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.RelocationError) -> DBXFilesRelocationError {
         switch swift {
         case .fromLookup(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesRelocationErrorFromLookup(arg)
         case .fromWrite(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesRelocationErrorFromWrite(arg)
         case .to(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesRelocationErrorTo(arg)
         case .cantCopySharedFolder:
             return DBXFilesRelocationErrorCantCopySharedFolder()
@@ -6018,10 +6028,10 @@ public class DBXFilesRelocationError: NSObject {
         case .cantMoveSharedFolder:
             return DBXFilesRelocationErrorCantMoveSharedFolder()
         case .cantMoveIntoVault(let swiftArg):
-            let arg = DBXFilesMoveIntoVaultError(swift: swiftArg)
+            let arg = DBXFilesMoveIntoVaultError.factory(swift: swiftArg)
             return DBXFilesRelocationErrorCantMoveIntoVault(arg)
         case .cantMoveIntoFamily(let swiftArg):
-            let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
+            let arg = DBXFilesMoveIntoFamilyError.factory(swift: swiftArg)
             return DBXFilesRelocationErrorCantMoveIntoFamily(arg)
         case .other:
             return DBXFilesRelocationErrorOther()
@@ -6282,22 +6292,22 @@ public class DBXFilesRelocationErrorOther: DBXFilesRelocationError {
 /// Objective-C compatible RelocationBatchError union
 @objc
 public class DBXFilesRelocationBatchError: NSObject {
-    let swift: Files.RelocationBatchError
+    public let swift: Files.RelocationBatchError
 
-    public init(swift: Files.RelocationBatchError) {
+    fileprivate init(swift: Files.RelocationBatchError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.RelocationBatchError) -> DBXFilesRelocationBatchError {
         switch swift {
         case .fromLookup(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorFromLookup(arg)
         case .fromWrite(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorFromWrite(arg)
         case .to(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorTo(arg)
         case .cantCopySharedFolder:
             return DBXFilesRelocationBatchErrorCantCopySharedFolder()
@@ -6318,10 +6328,10 @@ public class DBXFilesRelocationBatchError: NSObject {
         case .cantMoveSharedFolder:
             return DBXFilesRelocationBatchErrorCantMoveSharedFolder()
         case .cantMoveIntoVault(let swiftArg):
-            let arg = DBXFilesMoveIntoVaultError(swift: swiftArg)
+            let arg = DBXFilesMoveIntoVaultError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorCantMoveIntoVault(arg)
         case .cantMoveIntoFamily(let swiftArg):
-            let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
+            let arg = DBXFilesMoveIntoFamilyError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorCantMoveIntoFamily(arg)
         case .other:
             return DBXFilesRelocationBatchErrorOther()
@@ -6599,16 +6609,16 @@ public class DBXFilesRelocationBatchErrorTooManyWriteOperations: DBXFilesRelocat
 /// Objective-C compatible RelocationBatchErrorEntry union
 @objc
 public class DBXFilesRelocationBatchErrorEntry: NSObject {
-    let swift: Files.RelocationBatchErrorEntry
+    public let swift: Files.RelocationBatchErrorEntry
 
-    public init(swift: Files.RelocationBatchErrorEntry) {
+    fileprivate init(swift: Files.RelocationBatchErrorEntry) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.RelocationBatchErrorEntry) -> DBXFilesRelocationBatchErrorEntry {
         switch swift {
         case .relocationError(let swiftArg):
-            let arg = DBXFilesRelocationError(swift: swiftArg)
+            let arg = DBXFilesRelocationError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchErrorEntryRelocationError(arg)
         case .internalError:
             return DBXFilesRelocationBatchErrorEntryInternalError()
@@ -6691,9 +6701,9 @@ public class DBXFilesRelocationBatchErrorEntryOther: DBXFilesRelocationBatchErro
 /// Objective-C compatible RelocationBatchJobStatus union
 @objc
 public class DBXFilesRelocationBatchJobStatus: NSObject {
-    let swift: Files.RelocationBatchJobStatus
+    public let swift: Files.RelocationBatchJobStatus
 
-    public init(swift: Files.RelocationBatchJobStatus) {
+    fileprivate init(swift: Files.RelocationBatchJobStatus) {
         self.swift = swift
     }
 
@@ -6705,7 +6715,7 @@ public class DBXFilesRelocationBatchJobStatus: NSObject {
             let arg = DBXFilesRelocationBatchResult(swift: swiftArg)
             return DBXFilesRelocationBatchJobStatusComplete(arg)
         case .failed(let swiftArg):
-            let arg = DBXFilesRelocationBatchError(swift: swiftArg)
+            let arg = DBXFilesRelocationBatchError.factory(swift: swiftArg)
             return DBXFilesRelocationBatchJobStatusFailed(arg)
         }
     }
@@ -6770,9 +6780,9 @@ public class DBXFilesRelocationBatchJobStatusFailed: DBXFilesRelocationBatchJobS
 /// Result returned by copyBatch or moveBatch that may either launch an asynchronous job or complete synchronously.
 @objc
 public class DBXFilesRelocationBatchLaunch: NSObject {
-    let swift: Files.RelocationBatchLaunch
+    public let swift: Files.RelocationBatchLaunch
 
-    public init(swift: Files.RelocationBatchLaunch) {
+    fileprivate init(swift: Files.RelocationBatchLaunch) {
         self.swift = swift
     }
 
@@ -6861,7 +6871,7 @@ public class DBXFilesRelocationBatchResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.RelocationBatchResult
+    public let subSwift: Files.RelocationBatchResult
 
     public init(swift: Files.RelocationBatchResult) {
         self.subSwift = swift
@@ -6877,16 +6887,14 @@ public class DBXFilesRelocationBatchResult: DBXFilesFileOpsResult {
 public class DBXFilesRelocationBatchResultData: NSObject {
     /// Metadata of the relocated object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
         self.swift = Files.RelocationBatchResultData(metadata: metadata.swift)
     }
 
-    let swift: Files.RelocationBatchResultData
+    public let swift: Files.RelocationBatchResultData
 
     public init(swift: Files.RelocationBatchResultData) {
         self.swift = swift
@@ -6899,9 +6907,9 @@ public class DBXFilesRelocationBatchResultData: NSObject {
 /// Objective-C compatible RelocationBatchResultEntry union
 @objc
 public class DBXFilesRelocationBatchResultEntry: NSObject {
-    let swift: Files.RelocationBatchResultEntry
+    public let swift: Files.RelocationBatchResultEntry
 
-    public init(swift: Files.RelocationBatchResultEntry) {
+    fileprivate init(swift: Files.RelocationBatchResultEntry) {
         self.swift = swift
     }
 
@@ -6911,7 +6919,7 @@ public class DBXFilesRelocationBatchResultEntry: NSObject {
             let arg = DBXFilesMetadata(swift: swiftArg)
             return DBXFilesRelocationBatchResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesRelocationBatchErrorEntry(swift: swiftArg)
+            let arg = DBXFilesRelocationBatchErrorEntry.factory(swift: swiftArg)
             return DBXFilesRelocationBatchResultEntryFailure(arg)
         case .other:
             return DBXFilesRelocationBatchResultEntryOther()
@@ -6979,9 +6987,9 @@ public class DBXFilesRelocationBatchResultEntryOther: DBXFilesRelocationBatchRes
 /// for each entry.
 @objc
 public class DBXFilesRelocationBatchV2JobStatus: NSObject {
-    let swift: Files.RelocationBatchV2JobStatus
+    public let swift: Files.RelocationBatchV2JobStatus
 
-    public init(swift: Files.RelocationBatchV2JobStatus) {
+    fileprivate init(swift: Files.RelocationBatchV2JobStatus) {
         self.swift = swift
     }
 
@@ -7037,9 +7045,9 @@ public class DBXFilesRelocationBatchV2JobStatusComplete: DBXFilesRelocationBatch
 /// synchronously.
 @objc
 public class DBXFilesRelocationBatchV2Launch: NSObject {
-    let swift: Files.RelocationBatchV2Launch
+    public let swift: Files.RelocationBatchV2Launch
 
-    public init(swift: Files.RelocationBatchV2Launch) {
+    fileprivate init(swift: Files.RelocationBatchV2Launch) {
         self.swift = swift
     }
 
@@ -7103,7 +7111,7 @@ public class DBXFilesRelocationBatchV2Result: DBXFilesFileOpsResult {
     /// Each entry in CopyBatchArg.entries or entries in MoveBatchArg will appear at the same position inside
     /// entries in RelocationBatchV2Result.
     @objc
-    public var entries: [DBXFilesRelocationBatchResultEntry] { subSwift.entries.map { DBXFilesRelocationBatchResultEntry(swift: $0) } }
+    public var entries: [DBXFilesRelocationBatchResultEntry] { subSwift.entries.map { DBXFilesRelocationBatchResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesRelocationBatchResultEntry]) {
@@ -7112,7 +7120,7 @@ public class DBXFilesRelocationBatchV2Result: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.RelocationBatchV2Result
+    public let subSwift: Files.RelocationBatchV2Result
 
     public init(swift: Files.RelocationBatchV2Result) {
         self.subSwift = swift
@@ -7128,9 +7136,7 @@ public class DBXFilesRelocationBatchV2Result: DBXFilesFileOpsResult {
 public class DBXFilesRelocationResult: DBXFilesFileOpsResult {
     /// Metadata of the relocated object.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: subSwift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
@@ -7139,7 +7145,7 @@ public class DBXFilesRelocationResult: DBXFilesFileOpsResult {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.RelocationResult
+    public let subSwift: Files.RelocationResult
 
     public init(swift: Files.RelocationResult) {
         self.subSwift = swift
@@ -7165,7 +7171,7 @@ public class DBXFilesRemoveTagArg: NSObject {
         self.swift = Files.RemoveTagArg(path: path, tagText: tagText)
     }
 
-    let swift: Files.RemoveTagArg
+    public let swift: Files.RemoveTagArg
 
     public init(swift: Files.RemoveTagArg) {
         self.swift = swift
@@ -7178,16 +7184,16 @@ public class DBXFilesRemoveTagArg: NSObject {
 /// Objective-C compatible RemoveTagError union
 @objc
 public class DBXFilesRemoveTagError: NSObject {
-    let swift: Files.RemoveTagError
+    public let swift: Files.RemoveTagError
 
-    public init(swift: Files.RemoveTagError) {
+    fileprivate init(swift: Files.RemoveTagError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.RemoveTagError) -> DBXFilesRemoveTagError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesRemoveTagErrorPath(arg)
         case .other:
             return DBXFilesRemoveTagErrorOther()
@@ -7264,7 +7270,7 @@ public class DBXFilesRestoreArg: NSObject {
         self.swift = Files.RestoreArg(path: path, rev: rev)
     }
 
-    let swift: Files.RestoreArg
+    public let swift: Files.RestoreArg
 
     public init(swift: Files.RestoreArg) {
         self.swift = swift
@@ -7277,19 +7283,19 @@ public class DBXFilesRestoreArg: NSObject {
 /// Objective-C compatible RestoreError union
 @objc
 public class DBXFilesRestoreError: NSObject {
-    let swift: Files.RestoreError
+    public let swift: Files.RestoreError
 
-    public init(swift: Files.RestoreError) {
+    fileprivate init(swift: Files.RestoreError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.RestoreError) -> DBXFilesRestoreError {
         switch swift {
         case .pathLookup(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesRestoreErrorPathLookup(arg)
         case .pathWrite(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesRestoreErrorPathWrite(arg)
         case .invalidRevision:
             return DBXFilesRestoreErrorInvalidRevision()
@@ -7402,7 +7408,7 @@ public class DBXFilesSaveCopyReferenceArg: NSObject {
         self.swift = Files.SaveCopyReferenceArg(copyReference: copyReference, path: path)
     }
 
-    let swift: Files.SaveCopyReferenceArg
+    public let swift: Files.SaveCopyReferenceArg
 
     public init(swift: Files.SaveCopyReferenceArg) {
         self.swift = swift
@@ -7415,16 +7421,16 @@ public class DBXFilesSaveCopyReferenceArg: NSObject {
 /// Objective-C compatible SaveCopyReferenceError union
 @objc
 public class DBXFilesSaveCopyReferenceError: NSObject {
-    let swift: Files.SaveCopyReferenceError
+    public let swift: Files.SaveCopyReferenceError
 
-    public init(swift: Files.SaveCopyReferenceError) {
+    fileprivate init(swift: Files.SaveCopyReferenceError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.SaveCopyReferenceError) -> DBXFilesSaveCopyReferenceError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesSaveCopyReferenceErrorPath(arg)
         case .invalidCopyReference:
             return DBXFilesSaveCopyReferenceErrorInvalidCopyReference()
@@ -7543,16 +7549,14 @@ public class DBXFilesSaveCopyReferenceErrorOther: DBXFilesSaveCopyReferenceError
 public class DBXFilesSaveCopyReferenceResult: NSObject {
     /// The metadata of the saved file or folder in the user's Dropbox.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(metadata: DBXFilesMetadata) {
         self.swift = Files.SaveCopyReferenceResult(metadata: metadata.swift)
     }
 
-    let swift: Files.SaveCopyReferenceResult
+    public let swift: Files.SaveCopyReferenceResult
 
     public init(swift: Files.SaveCopyReferenceResult) {
         self.swift = swift
@@ -7577,7 +7581,7 @@ public class DBXFilesSaveUrlArg: NSObject {
         self.swift = Files.SaveUrlArg(path: path, url: url)
     }
 
-    let swift: Files.SaveUrlArg
+    public let swift: Files.SaveUrlArg
 
     public init(swift: Files.SaveUrlArg) {
         self.swift = swift
@@ -7590,16 +7594,16 @@ public class DBXFilesSaveUrlArg: NSObject {
 /// Objective-C compatible SaveUrlError union
 @objc
 public class DBXFilesSaveUrlError: NSObject {
-    let swift: Files.SaveUrlError
+    public let swift: Files.SaveUrlError
 
-    public init(swift: Files.SaveUrlError) {
+    fileprivate init(swift: Files.SaveUrlError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.SaveUrlError) -> DBXFilesSaveUrlError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesSaveUrlErrorPath(arg)
         case .downloadFailed:
             return DBXFilesSaveUrlErrorDownloadFailed()
@@ -7699,9 +7703,9 @@ public class DBXFilesSaveUrlErrorOther: DBXFilesSaveUrlError {
 /// Objective-C compatible SaveUrlJobStatus union
 @objc
 public class DBXFilesSaveUrlJobStatus: NSObject {
-    let swift: Files.SaveUrlJobStatus
+    public let swift: Files.SaveUrlJobStatus
 
-    public init(swift: Files.SaveUrlJobStatus) {
+    fileprivate init(swift: Files.SaveUrlJobStatus) {
         self.swift = swift
     }
 
@@ -7713,7 +7717,7 @@ public class DBXFilesSaveUrlJobStatus: NSObject {
             let arg = DBXFilesFileMetadata(swift: swiftArg)
             return DBXFilesSaveUrlJobStatusComplete(arg)
         case .failed(let swiftArg):
-            let arg = DBXFilesSaveUrlError(swift: swiftArg)
+            let arg = DBXFilesSaveUrlError.factory(swift: swiftArg)
             return DBXFilesSaveUrlJobStatusFailed(arg)
         }
     }
@@ -7778,9 +7782,9 @@ public class DBXFilesSaveUrlJobStatusFailed: DBXFilesSaveUrlJobStatus {
 /// Objective-C compatible SaveUrlResult union
 @objc
 public class DBXFilesSaveUrlResult: NSObject {
-    let swift: Files.SaveUrlResult
+    public let swift: Files.SaveUrlResult
 
-    public init(swift: Files.SaveUrlResult) {
+    fileprivate init(swift: Files.SaveUrlResult) {
         self.swift = swift
     }
 
@@ -7858,14 +7862,14 @@ public class DBXFilesSearchArg: NSObject {
     /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching file content is
     /// only available for Dropbox Business accounts.
     @objc
-    public var mode: DBXFilesSearchMode { DBXFilesSearchMode(swift: swift.mode) }
+    public var mode: DBXFilesSearchMode { DBXFilesSearchMode.factory(swift: swift.mode) }
 
     @objc
     public init(path: String, query: String, start: NSNumber, maxResults: NSNumber, mode: DBXFilesSearchMode) {
         self.swift = Files.SearchArg(path: path, query: query, start: start.uint64Value, maxResults: maxResults.uint64Value, mode: mode.swift)
     }
 
-    let swift: Files.SearchArg
+    public let swift: Files.SearchArg
 
     public init(swift: Files.SearchArg) {
         self.swift = swift
@@ -7878,16 +7882,16 @@ public class DBXFilesSearchArg: NSObject {
 /// Objective-C compatible SearchError union
 @objc
 public class DBXFilesSearchError: NSObject {
-    let swift: Files.SearchError
+    public let swift: Files.SearchError
 
-    public init(swift: Files.SearchError) {
+    fileprivate init(swift: Files.SearchError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.SearchError) -> DBXFilesSearchError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesSearchErrorPath(arg)
         case .invalidArgument(let swiftArg):
             let arg = swiftArg
@@ -7976,19 +7980,17 @@ public class DBXFilesSearchErrorOther: DBXFilesSearchError {
 public class DBXFilesSearchMatch: NSObject {
     /// The type of the match.
     @objc
-    public var matchType: DBXFilesSearchMatchType { DBXFilesSearchMatchType(swift: swift.matchType) }
+    public var matchType: DBXFilesSearchMatchType { DBXFilesSearchMatchType.factory(swift: swift.matchType) }
     /// The metadata for the matched file or folder.
     @objc
-    public var metadata: DBXFilesMetadata {
-        DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
-    }
+    public var metadata: DBXFilesMetadata { DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata) }
 
     @objc
     public init(matchType: DBXFilesSearchMatchType, metadata: DBXFilesMetadata) {
         self.swift = Files.SearchMatch(matchType: matchType.swift, metadata: metadata.swift)
     }
 
-    let swift: Files.SearchMatch
+    public let swift: Files.SearchMatch
 
     public init(swift: Files.SearchMatch) {
         self.swift = swift
@@ -8010,7 +8012,7 @@ public class DBXFilesSearchMatchFieldOptions: NSObject {
         self.swift = Files.SearchMatchFieldOptions(includeHighlights: includeHighlights.boolValue)
     }
 
-    let swift: Files.SearchMatchFieldOptions
+    public let swift: Files.SearchMatchFieldOptions
 
     public init(swift: Files.SearchMatchFieldOptions) {
         self.swift = swift
@@ -8023,9 +8025,9 @@ public class DBXFilesSearchMatchFieldOptions: NSObject {
 /// Indicates what type of match was found for a given item.
 @objc
 public class DBXFilesSearchMatchType: NSObject {
-    let swift: Files.SearchMatchType
+    public let swift: Files.SearchMatchType
 
-    public init(swift: Files.SearchMatchType) {
+    fileprivate init(swift: Files.SearchMatchType) {
         self.swift = swift
     }
 
@@ -8092,9 +8094,9 @@ public class DBXFilesSearchMatchTypeBoth: DBXFilesSearchMatchType {
 /// Indicates what type of match was found for a given item.
 @objc
 public class DBXFilesSearchMatchTypeV2: NSObject {
-    let swift: Files.SearchMatchTypeV2
+    public let swift: Files.SearchMatchTypeV2
 
-    public init(swift: Files.SearchMatchTypeV2) {
+    fileprivate init(swift: Files.SearchMatchTypeV2) {
         self.swift = swift
     }
 
@@ -8197,11 +8199,11 @@ public class DBXFilesSearchMatchTypeV2Other: DBXFilesSearchMatchTypeV2 {
 public class DBXFilesSearchMatchV2: NSObject {
     /// The metadata for the matched file or folder.
     @objc
-    public var metadata: DBXFilesMetadataV2 { DBXFilesMetadataV2(swift: swift.metadata) }
+    public var metadata: DBXFilesMetadataV2 { DBXFilesMetadataV2.factory(swift: swift.metadata) }
     /// The type of the match.
     @objc
     public var matchType: DBXFilesSearchMatchTypeV2? { guard let swift = swift.matchType else { return nil }
-        return DBXFilesSearchMatchTypeV2(swift: swift)
+        return DBXFilesSearchMatchTypeV2.factory(swift: swift)
     }
 
     /// The list of HighlightSpan determines which parts of the file title should be highlighted.
@@ -8213,7 +8215,7 @@ public class DBXFilesSearchMatchV2: NSObject {
         self.swift = Files.SearchMatchV2(metadata: metadata.swift, matchType: matchType?.swift, highlightSpans: highlightSpans?.map(\.swift))
     }
 
-    let swift: Files.SearchMatchV2
+    public let swift: Files.SearchMatchV2
 
     public init(swift: Files.SearchMatchV2) {
         self.swift = swift
@@ -8226,9 +8228,9 @@ public class DBXFilesSearchMatchV2: NSObject {
 /// Objective-C compatible SearchMode union
 @objc
 public class DBXFilesSearchMode: NSObject {
-    let swift: Files.SearchMode
+    public let swift: Files.SearchMode
 
-    public init(swift: Files.SearchMode) {
+    fileprivate init(swift: Files.SearchMode) {
         self.swift = swift
     }
 
@@ -8304,12 +8306,12 @@ public class DBXFilesSearchOptions: NSObject {
     /// Specified property of the order of search results. By default, results are sorted by relevance.
     @objc
     public var orderBy: DBXFilesSearchOrderBy? { guard let swift = swift.orderBy else { return nil }
-        return DBXFilesSearchOrderBy(swift: swift)
+        return DBXFilesSearchOrderBy.factory(swift: swift)
     }
 
     /// Restricts search to the given file status.
     @objc
-    public var fileStatus: DBXFilesFileStatus { DBXFilesFileStatus(swift: swift.fileStatus) }
+    public var fileStatus: DBXFilesFileStatus { DBXFilesFileStatus.factory(swift: swift.fileStatus) }
     /// Restricts search to only match on filenames.
     @objc
     public var filenameOnly: NSNumber { swift.filenameOnly as NSNumber }
@@ -8318,7 +8320,7 @@ public class DBXFilesSearchOptions: NSObject {
     public var fileExtensions: [String]? { swift.fileExtensions }
     /// Restricts search to only the file categories specified. Only supported for active file search.
     @objc
-    public var fileCategories: [DBXFilesFileCategory]? { swift.fileCategories?.map { DBXFilesFileCategory(swift: $0) } }
+    public var fileCategories: [DBXFilesFileCategory]? { swift.fileCategories?.map { DBXFilesFileCategory.factory(swift: $0) } }
     /// Restricts results to the given account id.
     @objc
     public var accountId: String? { swift.accountId }
@@ -8346,7 +8348,7 @@ public class DBXFilesSearchOptions: NSObject {
         )
     }
 
-    let swift: Files.SearchOptions
+    public let swift: Files.SearchOptions
 
     public init(swift: Files.SearchOptions) {
         self.swift = swift
@@ -8359,9 +8361,9 @@ public class DBXFilesSearchOptions: NSObject {
 /// Objective-C compatible SearchOrderBy union
 @objc
 public class DBXFilesSearchOrderBy: NSObject {
-    let swift: Files.SearchOrderBy
+    public let swift: Files.SearchOrderBy
 
-    public init(swift: Files.SearchOrderBy) {
+    fileprivate init(swift: Files.SearchOrderBy) {
         self.swift = swift
     }
 
@@ -8444,7 +8446,7 @@ public class DBXFilesSearchResult: NSObject {
         self.swift = Files.SearchResult(matches: matches.map(\.swift), more: more.boolValue, start: start.uint64Value)
     }
 
-    let swift: Files.SearchResult
+    public let swift: Files.SearchResult
 
     public init(swift: Files.SearchResult) {
         self.swift = swift
@@ -8486,7 +8488,7 @@ public class DBXFilesSearchV2Arg: NSObject {
         )
     }
 
-    let swift: Files.SearchV2Arg
+    public let swift: Files.SearchV2Arg
 
     public init(swift: Files.SearchV2Arg) {
         self.swift = swift
@@ -8508,7 +8510,7 @@ public class DBXFilesSearchV2ContinueArg: NSObject {
         self.swift = Files.SearchV2ContinueArg(cursor: cursor)
     }
 
-    let swift: Files.SearchV2ContinueArg
+    public let swift: Files.SearchV2ContinueArg
 
     public init(swift: Files.SearchV2ContinueArg) {
         self.swift = swift
@@ -8537,7 +8539,7 @@ public class DBXFilesSearchV2Result: NSObject {
         self.swift = Files.SearchV2Result(matches: matches.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
     }
 
-    let swift: Files.SearchV2Result
+    public let swift: Files.SearchV2Result
 
     public init(swift: Files.SearchV2Result) {
         self.swift = swift
@@ -8562,7 +8564,7 @@ public class DBXFilesSharedLink: NSObject {
         self.swift = Files.SharedLink(url: url, password: password)
     }
 
-    let swift: Files.SharedLink
+    public let swift: Files.SharedLink
 
     public init(swift: Files.SharedLink) {
         self.swift = swift
@@ -8592,7 +8594,7 @@ public class DBXFilesSharedLinkFileInfo: NSObject {
         self.swift = Files.SharedLinkFileInfo(url: url, path: path, password: password)
     }
 
-    let swift: Files.SharedLinkFileInfo
+    public let swift: Files.SharedLinkFileInfo
 
     public init(swift: Files.SharedLinkFileInfo) {
         self.swift = swift
@@ -8620,7 +8622,7 @@ public class DBXFilesSingleUserLock: NSObject {
         self.swift = Files.SingleUserLock(created: created, lockHolderAccountId: lockHolderAccountId, lockHolderTeamId: lockHolderTeamId)
     }
 
-    let swift: Files.SingleUserLock
+    public let swift: Files.SingleUserLock
 
     public init(swift: Files.SingleUserLock) {
         self.swift = swift
@@ -8642,7 +8644,7 @@ public class DBXFilesSymlinkInfo: NSObject {
         self.swift = Files.SymlinkInfo(target: target)
     }
 
-    let swift: Files.SymlinkInfo
+    public let swift: Files.SymlinkInfo
 
     public init(swift: Files.SymlinkInfo) {
         self.swift = swift
@@ -8655,9 +8657,9 @@ public class DBXFilesSymlinkInfo: NSObject {
 /// Objective-C compatible SyncSetting union
 @objc
 public class DBXFilesSyncSetting: NSObject {
-    let swift: Files.SyncSetting
+    public let swift: Files.SyncSetting
 
-    public init(swift: Files.SyncSetting) {
+    fileprivate init(swift: Files.SyncSetting) {
         self.swift = swift
     }
 
@@ -8743,9 +8745,9 @@ public class DBXFilesSyncSettingOther: DBXFilesSyncSetting {
 /// Objective-C compatible SyncSettingArg union
 @objc
 public class DBXFilesSyncSettingArg: NSObject {
-    let swift: Files.SyncSettingArg
+    public let swift: Files.SyncSettingArg
 
-    public init(swift: Files.SyncSettingArg) {
+    fileprivate init(swift: Files.SyncSettingArg) {
         self.swift = swift
     }
 
@@ -8813,16 +8815,16 @@ public class DBXFilesSyncSettingArgOther: DBXFilesSyncSettingArg {
 /// Objective-C compatible SyncSettingsError union
 @objc
 public class DBXFilesSyncSettingsError: NSObject {
-    let swift: Files.SyncSettingsError
+    public let swift: Files.SyncSettingsError
 
-    public init(swift: Files.SyncSettingsError) {
+    fileprivate init(swift: Files.SyncSettingsError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.SyncSettingsError) -> DBXFilesSyncSettingsError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesSyncSettingsErrorPath(arg)
         case .unsupportedCombination:
             return DBXFilesSyncSettingsErrorUnsupportedCombination()
@@ -8904,9 +8906,9 @@ public class DBXFilesSyncSettingsErrorOther: DBXFilesSyncSettingsError {
 /// Tag that can be added in multiple ways.
 @objc
 public class DBXFilesTag: NSObject {
-    let swift: Files.Tag
+    public let swift: Files.Tag
 
-    public init(swift: Files.Tag) {
+    fileprivate init(swift: Files.Tag) {
         self.swift = swift
     }
 
@@ -8967,20 +8969,20 @@ public class DBXFilesThumbnailArg: NSObject {
     /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
     /// preferred, while png is  better for screenshots and digital arts.
     @objc
-    public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat(swift: swift.format) }
+    public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat.factory(swift: swift.format) }
     /// The size for the thumbnail image.
     @objc
-    public var size: DBXFilesThumbnailSize { DBXFilesThumbnailSize(swift: swift.size) }
+    public var size: DBXFilesThumbnailSize { DBXFilesThumbnailSize.factory(swift: swift.size) }
     /// How to resize and crop the image to achieve the desired size.
     @objc
-    public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
+    public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode.factory(swift: swift.mode) }
 
     @objc
     public init(path: String, format: DBXFilesThumbnailFormat, size: DBXFilesThumbnailSize, mode: DBXFilesThumbnailMode) {
         self.swift = Files.ThumbnailArg(path: path, format: format.swift, size: size.swift, mode: mode.swift)
     }
 
-    let swift: Files.ThumbnailArg
+    public let swift: Files.ThumbnailArg
 
     public init(swift: Files.ThumbnailArg) {
         self.swift = swift
@@ -8993,16 +8995,16 @@ public class DBXFilesThumbnailArg: NSObject {
 /// Objective-C compatible ThumbnailError union
 @objc
 public class DBXFilesThumbnailError: NSObject {
-    let swift: Files.ThumbnailError
+    public let swift: Files.ThumbnailError
 
-    public init(swift: Files.ThumbnailError) {
+    fileprivate init(swift: Files.ThumbnailError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ThumbnailError) -> DBXFilesThumbnailError {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesThumbnailErrorPath(arg)
         case .unsupportedExtension:
             return DBXFilesThumbnailErrorUnsupportedExtension()
@@ -9084,9 +9086,9 @@ public class DBXFilesThumbnailErrorConversionError: DBXFilesThumbnailError {
 /// Objective-C compatible ThumbnailFormat union
 @objc
 public class DBXFilesThumbnailFormat: NSObject {
-    let swift: Files.ThumbnailFormat
+    public let swift: Files.ThumbnailFormat
 
-    public init(swift: Files.ThumbnailFormat) {
+    fileprivate init(swift: Files.ThumbnailFormat) {
         self.swift = swift
     }
 
@@ -9136,9 +9138,9 @@ public class DBXFilesThumbnailFormatPng: DBXFilesThumbnailFormat {
 /// Objective-C compatible ThumbnailMode union
 @objc
 public class DBXFilesThumbnailMode: NSObject {
-    let swift: Files.ThumbnailMode
+    public let swift: Files.ThumbnailMode
 
-    public init(swift: Files.ThumbnailMode) {
+    fileprivate init(swift: Files.ThumbnailMode) {
         self.swift = swift
     }
 
@@ -9205,9 +9207,9 @@ public class DBXFilesThumbnailModeFitoneBestfit: DBXFilesThumbnailMode {
 /// Objective-C compatible ThumbnailSize union
 @objc
 public class DBXFilesThumbnailSize: NSObject {
-    let swift: Files.ThumbnailSize
+    public let swift: Files.ThumbnailSize
 
-    public init(swift: Files.ThumbnailSize) {
+    fileprivate init(swift: Files.ThumbnailSize) {
         self.swift = swift
     }
 
@@ -9379,24 +9381,24 @@ public class DBXFilesThumbnailV2Arg: NSObject {
     /// Information specifying which file to preview. This could be a path to a file, a shared link pointing to a
     /// file, or a shared link pointing to a folder, with a relative path.
     @objc
-    public var resource: DBXFilesPathOrLink { DBXFilesPathOrLink(swift: swift.resource) }
+    public var resource: DBXFilesPathOrLink { DBXFilesPathOrLink.factory(swift: swift.resource) }
     /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
     /// preferred, while png is  better for screenshots and digital arts.
     @objc
-    public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat(swift: swift.format) }
+    public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat.factory(swift: swift.format) }
     /// The size for the thumbnail image.
     @objc
-    public var size: DBXFilesThumbnailSize { DBXFilesThumbnailSize(swift: swift.size) }
+    public var size: DBXFilesThumbnailSize { DBXFilesThumbnailSize.factory(swift: swift.size) }
     /// How to resize and crop the image to achieve the desired size.
     @objc
-    public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
+    public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode.factory(swift: swift.mode) }
 
     @objc
     public init(resource: DBXFilesPathOrLink, format: DBXFilesThumbnailFormat, size: DBXFilesThumbnailSize, mode: DBXFilesThumbnailMode) {
         self.swift = Files.ThumbnailV2Arg(resource: resource.swift, format: format.swift, size: size.swift, mode: mode.swift)
     }
 
-    let swift: Files.ThumbnailV2Arg
+    public let swift: Files.ThumbnailV2Arg
 
     public init(swift: Files.ThumbnailV2Arg) {
         self.swift = swift
@@ -9409,16 +9411,16 @@ public class DBXFilesThumbnailV2Arg: NSObject {
 /// Objective-C compatible ThumbnailV2Error union
 @objc
 public class DBXFilesThumbnailV2Error: NSObject {
-    let swift: Files.ThumbnailV2Error
+    public let swift: Files.ThumbnailV2Error
 
-    public init(swift: Files.ThumbnailV2Error) {
+    fileprivate init(swift: Files.ThumbnailV2Error) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.ThumbnailV2Error) -> DBXFilesThumbnailV2Error {
         switch swift {
         case .path(let swiftArg):
-            let arg = DBXFilesLookupError(swift: swiftArg)
+            let arg = DBXFilesLookupError.factory(swift: swiftArg)
             return DBXFilesThumbnailV2ErrorPath(arg)
         case .unsupportedExtension:
             return DBXFilesThumbnailV2ErrorUnsupportedExtension()
@@ -9560,7 +9562,7 @@ public class DBXFilesUnlockFileArg: NSObject {
         self.swift = Files.UnlockFileArg(path: path)
     }
 
-    let swift: Files.UnlockFileArg
+    public let swift: Files.UnlockFileArg
 
     public init(swift: Files.UnlockFileArg) {
         self.swift = swift
@@ -9583,7 +9585,7 @@ public class DBXFilesUnlockFileBatchArg: NSObject {
         self.swift = Files.UnlockFileBatchArg(entries: entries.map(\.swift))
     }
 
-    let swift: Files.UnlockFileBatchArg
+    public let swift: Files.UnlockFileBatchArg
 
     public init(swift: Files.UnlockFileBatchArg) {
         self.swift = swift
@@ -9627,7 +9629,7 @@ public class DBXFilesUploadArg: DBXFilesCommitInfo {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.UploadArg
+    public let subSwift: Files.UploadArg
 
     public init(swift: Files.UploadArg) {
         self.subSwift = swift
@@ -9641,9 +9643,9 @@ public class DBXFilesUploadArg: DBXFilesCommitInfo {
 /// Objective-C compatible UploadError union
 @objc
 public class DBXFilesUploadError: NSObject {
-    let swift: Files.UploadError
+    public let swift: Files.UploadError
 
-    public init(swift: Files.UploadError) {
+    fileprivate init(swift: Files.UploadError) {
         self.swift = swift
     }
 
@@ -9653,7 +9655,7 @@ public class DBXFilesUploadError: NSObject {
             let arg = DBXFilesUploadWriteFailed(swift: swiftArg)
             return DBXFilesUploadErrorPath(arg)
         case .propertiesError(let swiftArg):
-            let arg = DBXFilePropertiesInvalidPropertyGroupError(swift: swiftArg)
+            let arg = DBXFilePropertiesInvalidPropertyGroupError.factory(swift: swiftArg)
             return DBXFilesUploadErrorPropertiesError(arg)
         case .payloadTooLarge:
             return DBXFilesUploadErrorPayloadTooLarge()
@@ -9772,7 +9774,7 @@ public class DBXFilesUploadSessionAppendArg: NSObject {
         self.swift = Files.UploadSessionAppendArg(cursor: cursor.swift, close: close.boolValue, contentHash: contentHash)
     }
 
-    let swift: Files.UploadSessionAppendArg
+    public let swift: Files.UploadSessionAppendArg
 
     public init(swift: Files.UploadSessionAppendArg) {
         self.swift = swift
@@ -9785,9 +9787,9 @@ public class DBXFilesUploadSessionAppendArg: NSObject {
 /// Objective-C compatible UploadSessionLookupError union
 @objc
 public class DBXFilesUploadSessionLookupError: NSObject {
-    let swift: Files.UploadSessionLookupError
+    public let swift: Files.UploadSessionLookupError
 
-    public init(swift: Files.UploadSessionLookupError) {
+    fileprivate init(swift: Files.UploadSessionLookupError) {
         self.swift = swift
     }
 
@@ -9964,9 +9966,9 @@ public class DBXFilesUploadSessionLookupErrorOther: DBXFilesUploadSessionLookupE
 /// Objective-C compatible UploadSessionAppendError union
 @objc
 public class DBXFilesUploadSessionAppendError: NSObject {
-    let swift: Files.UploadSessionAppendError
+    public let swift: Files.UploadSessionAppendError
 
-    public init(swift: Files.UploadSessionAppendError) {
+    fileprivate init(swift: Files.UploadSessionAppendError) {
         self.swift = swift
     }
 
@@ -10173,7 +10175,7 @@ public class DBXFilesUploadSessionCursor: NSObject {
         self.swift = Files.UploadSessionCursor(sessionId: sessionId, offset: offset.uint64Value)
     }
 
-    let swift: Files.UploadSessionCursor
+    public let swift: Files.UploadSessionCursor
 
     public init(swift: Files.UploadSessionCursor) {
         self.swift = swift
@@ -10203,7 +10205,7 @@ public class DBXFilesUploadSessionFinishArg: NSObject {
         self.swift = Files.UploadSessionFinishArg(cursor: cursor.swift, commit: commit.swift, contentHash: contentHash)
     }
 
-    let swift: Files.UploadSessionFinishArg
+    public let swift: Files.UploadSessionFinishArg
 
     public init(swift: Files.UploadSessionFinishArg) {
         self.swift = swift
@@ -10225,7 +10227,7 @@ public class DBXFilesUploadSessionFinishBatchArg: NSObject {
         self.swift = Files.UploadSessionFinishBatchArg(entries: entries.map(\.swift))
     }
 
-    let swift: Files.UploadSessionFinishBatchArg
+    public let swift: Files.UploadSessionFinishBatchArg
 
     public init(swift: Files.UploadSessionFinishBatchArg) {
         self.swift = swift
@@ -10238,9 +10240,9 @@ public class DBXFilesUploadSessionFinishBatchArg: NSObject {
 /// Objective-C compatible UploadSessionFinishBatchJobStatus union
 @objc
 public class DBXFilesUploadSessionFinishBatchJobStatus: NSObject {
-    let swift: Files.UploadSessionFinishBatchJobStatus
+    public let swift: Files.UploadSessionFinishBatchJobStatus
 
-    public init(swift: Files.UploadSessionFinishBatchJobStatus) {
+    fileprivate init(swift: Files.UploadSessionFinishBatchJobStatus) {
         self.swift = swift
     }
 
@@ -10296,9 +10298,9 @@ public class DBXFilesUploadSessionFinishBatchJobStatusComplete: DBXFilesUploadSe
 /// synchronously.
 @objc
 public class DBXFilesUploadSessionFinishBatchLaunch: NSObject {
-    let swift: Files.UploadSessionFinishBatchLaunch
+    public let swift: Files.UploadSessionFinishBatchLaunch
 
-    public init(swift: Files.UploadSessionFinishBatchLaunch) {
+    fileprivate init(swift: Files.UploadSessionFinishBatchLaunch) {
         self.swift = swift
     }
 
@@ -10379,14 +10381,14 @@ public class DBXFilesUploadSessionFinishBatchResult: NSObject {
     /// Each entry in entries in UploadSessionFinishBatchArg will appear at the same position inside entries in
     /// UploadSessionFinishBatchResult.
     @objc
-    public var entries: [DBXFilesUploadSessionFinishBatchResultEntry] { swift.entries.map { DBXFilesUploadSessionFinishBatchResultEntry(swift: $0) } }
+    public var entries: [DBXFilesUploadSessionFinishBatchResultEntry] { swift.entries.map { DBXFilesUploadSessionFinishBatchResultEntry.factory(swift: $0) } }
 
     @objc
     public init(entries: [DBXFilesUploadSessionFinishBatchResultEntry]) {
         self.swift = Files.UploadSessionFinishBatchResult(entries: entries.map(\.swift))
     }
 
-    let swift: Files.UploadSessionFinishBatchResult
+    public let swift: Files.UploadSessionFinishBatchResult
 
     public init(swift: Files.UploadSessionFinishBatchResult) {
         self.swift = swift
@@ -10399,9 +10401,9 @@ public class DBXFilesUploadSessionFinishBatchResult: NSObject {
 /// Objective-C compatible UploadSessionFinishBatchResultEntry union
 @objc
 public class DBXFilesUploadSessionFinishBatchResultEntry: NSObject {
-    let swift: Files.UploadSessionFinishBatchResultEntry
+    public let swift: Files.UploadSessionFinishBatchResultEntry
 
-    public init(swift: Files.UploadSessionFinishBatchResultEntry) {
+    fileprivate init(swift: Files.UploadSessionFinishBatchResultEntry) {
         self.swift = swift
     }
 
@@ -10411,7 +10413,7 @@ public class DBXFilesUploadSessionFinishBatchResultEntry: NSObject {
             let arg = DBXFilesFileMetadata(swift: swiftArg)
             return DBXFilesUploadSessionFinishBatchResultEntrySuccess(arg)
         case .failure(let swiftArg):
-            let arg = DBXFilesUploadSessionFinishError(swift: swiftArg)
+            let arg = DBXFilesUploadSessionFinishError.factory(swift: swiftArg)
             return DBXFilesUploadSessionFinishBatchResultEntryFailure(arg)
         }
     }
@@ -10461,22 +10463,22 @@ public class DBXFilesUploadSessionFinishBatchResultEntryFailure: DBXFilesUploadS
 /// Objective-C compatible UploadSessionFinishError union
 @objc
 public class DBXFilesUploadSessionFinishError: NSObject {
-    let swift: Files.UploadSessionFinishError
+    public let swift: Files.UploadSessionFinishError
 
-    public init(swift: Files.UploadSessionFinishError) {
+    fileprivate init(swift: Files.UploadSessionFinishError) {
         self.swift = swift
     }
 
     public static func factory(swift: Files.UploadSessionFinishError) -> DBXFilesUploadSessionFinishError {
         switch swift {
         case .lookupFailed(let swiftArg):
-            let arg = DBXFilesUploadSessionLookupError(swift: swiftArg)
+            let arg = DBXFilesUploadSessionLookupError.factory(swift: swiftArg)
             return DBXFilesUploadSessionFinishErrorLookupFailed(arg)
         case .path(let swiftArg):
-            let arg = DBXFilesWriteError(swift: swiftArg)
+            let arg = DBXFilesWriteError.factory(swift: swiftArg)
             return DBXFilesUploadSessionFinishErrorPath(arg)
         case .propertiesError(let swiftArg):
-            let arg = DBXFilePropertiesInvalidPropertyGroupError(swift: swiftArg)
+            let arg = DBXFilePropertiesInvalidPropertyGroupError.factory(swift: swiftArg)
             return DBXFilesUploadSessionFinishErrorPropertiesError(arg)
         case .tooManySharedFolderTargets:
             return DBXFilesUploadSessionFinishErrorTooManySharedFolderTargets()
@@ -10692,7 +10694,7 @@ public class DBXFilesUploadSessionOffsetError: NSObject {
         self.swift = Files.UploadSessionOffsetError(correctOffset: correctOffset.uint64Value)
     }
 
-    let swift: Files.UploadSessionOffsetError
+    public let swift: Files.UploadSessionOffsetError
 
     public init(swift: Files.UploadSessionOffsetError) {
         self.swift = swift
@@ -10712,7 +10714,7 @@ public class DBXFilesUploadSessionStartArg: NSObject {
     /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
     @objc
     public var sessionType: DBXFilesUploadSessionType? { guard let swift = swift.sessionType else { return nil }
-        return DBXFilesUploadSessionType(swift: swift)
+        return DBXFilesUploadSessionType.factory(swift: swift)
     }
 
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
@@ -10726,7 +10728,7 @@ public class DBXFilesUploadSessionStartArg: NSObject {
         self.swift = Files.UploadSessionStartArg(close: close.boolValue, sessionType: sessionType?.swift, contentHash: contentHash)
     }
 
-    let swift: Files.UploadSessionStartArg
+    public let swift: Files.UploadSessionStartArg
 
     public init(swift: Files.UploadSessionStartArg) {
         self.swift = swift
@@ -10742,7 +10744,7 @@ public class DBXFilesUploadSessionStartBatchArg: NSObject {
     /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
     @objc
     public var sessionType: DBXFilesUploadSessionType? { guard let swift = swift.sessionType else { return nil }
-        return DBXFilesUploadSessionType(swift: swift)
+        return DBXFilesUploadSessionType.factory(swift: swift)
     }
 
     /// The number of upload sessions to start.
@@ -10754,7 +10756,7 @@ public class DBXFilesUploadSessionStartBatchArg: NSObject {
         self.swift = Files.UploadSessionStartBatchArg(numSessions: numSessions.uint64Value, sessionType: sessionType?.swift)
     }
 
-    let swift: Files.UploadSessionStartBatchArg
+    public let swift: Files.UploadSessionStartBatchArg
 
     public init(swift: Files.UploadSessionStartBatchArg) {
         self.swift = swift
@@ -10777,7 +10779,7 @@ public class DBXFilesUploadSessionStartBatchResult: NSObject {
         self.swift = Files.UploadSessionStartBatchResult(sessionIds: sessionIds)
     }
 
-    let swift: Files.UploadSessionStartBatchResult
+    public let swift: Files.UploadSessionStartBatchResult
 
     public init(swift: Files.UploadSessionStartBatchResult) {
         self.swift = swift
@@ -10790,9 +10792,9 @@ public class DBXFilesUploadSessionStartBatchResult: NSObject {
 /// Objective-C compatible UploadSessionStartError union
 @objc
 public class DBXFilesUploadSessionStartError: NSObject {
-    let swift: Files.UploadSessionStartError
+    public let swift: Files.UploadSessionStartError
 
-    public init(swift: Files.UploadSessionStartError) {
+    fileprivate init(swift: Files.UploadSessionStartError) {
         self.swift = swift
     }
 
@@ -10902,7 +10904,7 @@ public class DBXFilesUploadSessionStartResult: NSObject {
         self.swift = Files.UploadSessionStartResult(sessionId: sessionId)
     }
 
-    let swift: Files.UploadSessionStartResult
+    public let swift: Files.UploadSessionStartResult
 
     public init(swift: Files.UploadSessionStartResult) {
         self.swift = swift
@@ -10915,9 +10917,9 @@ public class DBXFilesUploadSessionStartResult: NSObject {
 /// Objective-C compatible UploadSessionType union
 @objc
 public class DBXFilesUploadSessionType: NSObject {
-    let swift: Files.UploadSessionType
+    public let swift: Files.UploadSessionType
 
-    public init(swift: Files.UploadSessionType) {
+    fileprivate init(swift: Files.UploadSessionType) {
         self.swift = swift
     }
 
@@ -10986,7 +10988,7 @@ public class DBXFilesUploadSessionTypeOther: DBXFilesUploadSessionType {
 public class DBXFilesUploadWriteFailed: NSObject {
     /// The reason why the file couldn't be saved.
     @objc
-    public var reason: DBXFilesWriteError { DBXFilesWriteError(swift: swift.reason) }
+    public var reason: DBXFilesWriteError { DBXFilesWriteError.factory(swift: swift.reason) }
     /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
     /// used to retry the commit with uploadSessionFinish.
     @objc
@@ -10997,7 +10999,7 @@ public class DBXFilesUploadWriteFailed: NSObject {
         self.swift = Files.UploadWriteFailed(reason: reason.swift, uploadSessionId: uploadSessionId)
     }
 
-    let swift: Files.UploadWriteFailed
+    public let swift: Files.UploadWriteFailed
 
     public init(swift: Files.UploadWriteFailed) {
         self.swift = swift
@@ -11019,7 +11021,7 @@ public class DBXFilesUserGeneratedTag: NSObject {
         self.swift = Files.UserGeneratedTag(tagText: tagText)
     }
 
-    let swift: Files.UserGeneratedTag
+    public let swift: Files.UserGeneratedTag
 
     public init(swift: Files.UserGeneratedTag) {
         self.swift = swift
@@ -11043,7 +11045,7 @@ public class DBXFilesVideoMetadata: DBXFilesMediaMetadata {
         super.init(swift: swift)
     }
 
-    let subSwift: Files.VideoMetadata
+    public let subSwift: Files.VideoMetadata
 
     public init(swift: Files.VideoMetadata) {
         self.subSwift = swift
@@ -11057,9 +11059,9 @@ public class DBXFilesVideoMetadata: DBXFilesMediaMetadata {
 /// Objective-C compatible WriteConflictError union
 @objc
 public class DBXFilesWriteConflictError: NSObject {
-    let swift: Files.WriteConflictError
+    public let swift: Files.WriteConflictError
 
-    public init(swift: Files.WriteConflictError) {
+    fileprivate init(swift: Files.WriteConflictError) {
         self.swift = swift
     }
 
@@ -11143,9 +11145,9 @@ public class DBXFilesWriteConflictErrorOther: DBXFilesWriteConflictError {
 /// Objective-C compatible WriteError union
 @objc
 public class DBXFilesWriteError: NSObject {
-    let swift: Files.WriteError
+    public let swift: Files.WriteError
 
-    public init(swift: Files.WriteError) {
+    fileprivate init(swift: Files.WriteError) {
         self.swift = swift
     }
 
@@ -11155,7 +11157,7 @@ public class DBXFilesWriteError: NSObject {
             let arg = swiftArg
             return DBXFilesWriteErrorMalformedPath(arg)
         case .conflict(let swiftArg):
-            let arg = DBXFilesWriteConflictError(swift: swiftArg)
+            let arg = DBXFilesWriteConflictError.factory(swift: swiftArg)
             return DBXFilesWriteErrorConflict(arg)
         case .noWritePermission:
             return DBXFilesWriteErrorNoWritePermission()
@@ -11331,9 +11333,9 @@ public class DBXFilesWriteErrorOther: DBXFilesWriteError {
 /// different from the contents you're trying to write.
 @objc
 public class DBXFilesWriteMode: NSObject {
-    let swift: Files.WriteMode
+    public let swift: Files.WriteMode
 
-    public init(swift: Files.WriteMode) {
+    fileprivate init(swift: Files.WriteMode) {
         self.swift = swift
     }
 
