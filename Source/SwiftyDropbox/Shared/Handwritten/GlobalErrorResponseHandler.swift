@@ -13,7 +13,7 @@ public class GlobalErrorResponseHandler {
     
     // Locked state
     private struct State {
-        var handlers: [Handler] = []
+        var handlers: [String:Handler] = [:]
     }
     
     private var state = UnfairLock<State>(value: State())
@@ -22,7 +22,7 @@ public class GlobalErrorResponseHandler {
     
     internal func reportGlobalError(_ error: CallError<Any>) {
         state.read { lockedState in
-            lockedState.handlers.forEach { handler in
+            lockedState.handlers.forEach { _, handler in
                 handler.queue.addOperation {
                     handler.callback(error)
                 }
@@ -30,9 +30,24 @@ public class GlobalErrorResponseHandler {
         }
     }
     
-    public func registerGlobalErrorHandler(_ callback: @escaping (CallError<Any>) -> Void, queue: OperationQueue = .main) {
+    @discardableResult
+    public func registerGlobalErrorHandler(_ callback: @escaping (CallError<Any>) -> Void, queue: OperationQueue = .main) -> String {
+        let key = UUID().uuidString
         state.mutate { lockedState in
-            lockedState.handlers.append(Handler(callback: callback, queue: queue))
+            lockedState.handlers[key] = Handler(callback: callback, queue: queue)
+        }
+        return key
+    }
+    
+    public func deregisterGlobalErrorHandler(key: String) {
+        state.mutate { lockedState in
+            lockedState.handlers[key] = nil
+        }
+    }
+    
+    public func deregisterAllGlobalErrorHandlers() {
+        state.mutate { lockedState in
+            lockedState.handlers = [:]
         }
     }
 }
