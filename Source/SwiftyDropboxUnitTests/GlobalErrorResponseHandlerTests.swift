@@ -51,12 +51,17 @@ class GlobalErrorResponseHandlerTests: XCTestCase {
     }
     
     func testDeregisterGlobalHandler() {
+        let expectation = XCTestExpectation(description: "Callback is called")
+        expectation.isInverted = true
         let key = handler.registerGlobalErrorHandler { error in
+            expectation.fulfill()
             XCTFail("Should not be called")
         }
         handler.deregisterGlobalErrorHandler(key: key)
         let error = CallError<String>.authError(Auth.AuthError.expiredAccessToken, LocalizedUserMessage(text: "ábc", locale: "EN-US"), "abc", "def")
         handler.reportGlobalError(error.typeErased)
+        
+        wait(for: [expectation], timeout: 1)
     }
     
     func testDeregisterAllGlobalHandlers() {
