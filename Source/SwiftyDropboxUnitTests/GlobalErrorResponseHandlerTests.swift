@@ -29,6 +29,7 @@ class GlobalErrorResponseHandlerTests: XCTestCase {
             expectation.fulfill()
         }
         handler.reportGlobalError(error.typeErased)
+        wait(for: [expectation], timeout: 1)
     }
     
     func testGlobalHandlerReportsRouteError() {
@@ -46,6 +47,7 @@ class GlobalErrorResponseHandlerTests: XCTestCase {
             expectation.fulfill()
         }
         handler.reportGlobalError(error.typeErased)
+        wait(for: [expectation], timeout: 1)
     }
     
     func testDeregisterGlobalHandler() {
@@ -58,15 +60,21 @@ class GlobalErrorResponseHandlerTests: XCTestCase {
     }
     
     func testDeregisterAllGlobalHandlers() {
+        let expectation = XCTestExpectation(description: "Callback is called")
+        expectation.isInverted = true
         _ = handler.registerGlobalErrorHandler { error in
+            expectation.fulfill()
             XCTFail("Should not be called")
         }
         _ = handler.registerGlobalErrorHandler { error in
+            expectation.fulfill()
             XCTFail("Should not be called")
         }
         handler.deregisterAllGlobalErrorHandlers()
         let error = CallError<String>.authError(Auth.AuthError.expiredAccessToken, LocalizedUserMessage(text: "ábc", locale: "EN-US"), "abc", "def")
         handler.reportGlobalError(error.typeErased)
+        
+        wait(for: [expectation], timeout: 1)
     }
 }
 
@@ -135,6 +143,7 @@ class RequestGlobalErrorHandlerIntegrationTests: XCTestCase {
         }
         
         handler.deregisterGlobalErrorHandler(key: key)
+        wait(for: [globalExpectation, completionHandlerExpectation], timeout: 1)
     }
     
     func testDownloadRequestGlobalErrorHandler() {
@@ -165,6 +174,7 @@ class RequestGlobalErrorHandlerIntegrationTests: XCTestCase {
         }
         
         handler.deregisterGlobalErrorHandler(key: key)
+        wait(for: [globalExpectation, completionHandlerExpectation], timeout: 1)
     }
     
     func testUploadRequestGlobalErrorHandler() {
@@ -199,5 +209,6 @@ class RequestGlobalErrorHandlerIntegrationTests: XCTestCase {
         }
         
         handler.deregisterGlobalErrorHandler(key: key)
+        wait(for: [globalExpectation, completionHandlerExpectation], timeout: 1)
     }
 }
