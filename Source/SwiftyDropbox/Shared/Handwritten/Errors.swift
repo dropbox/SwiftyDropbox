@@ -106,6 +106,32 @@ public enum CallError<EType>: Error, CustomStringConvertible {
             return "\(err)"
         }
     }
+    
+    // Used for global error handlers which cannot know the type of the boxed route error
+    public var typeErased: CallError<Any> {
+        switch self {
+        case .internalServerError(let code, let msg, let requestId):
+            return .internalServerError(code, msg, requestId)
+        case .badInputError(let msg, let requestId):
+            return .badInputError(msg, requestId)
+        case .rateLimitError(let error, let locMsg, let msg, let requestId):
+            return .rateLimitError(error, locMsg, msg, requestId)
+        case .httpError(let code, let msg, let requestId):
+            return .httpError(code, msg, requestId)
+        case .authError(let error, let locMsg, let msg, let requestId):
+            return .authError(error, locMsg, msg, requestId)
+        case .accessError(let error, let locMsg, let msg, let requestId):
+            return .accessError(error, locMsg, msg, requestId)
+        case .routeError(let boxedError, let locMsg, let msg, let requestId):
+            return .routeError(Box(boxedError.unboxed as Any), locMsg, msg, requestId)
+        case .serializationError(let error):
+            return .serializationError(error)
+        case .reconnectionError(let error):
+            return .reconnectionError(error)
+        case .clientError(let error):
+            return .clientError(error)
+        }
+    }
 
     static func error<ESerial: JSONSerializer>(response: HTTPURLResponse, data: Data?, errorSerializer: ESerial) throws -> CallError<ESerial.ValueType> {
         let requestId = requestId(from: response)

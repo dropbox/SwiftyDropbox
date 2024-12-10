@@ -1,7 +1,7 @@
 PODS:
-  - SwiftyDropbox (10.0.0)
-  - SwiftyDropboxObjC (10.0.0):
-    - SwiftyDropbox (~> 10.0.0)
+  - SwiftyDropbox (10.1.0)
+  - SwiftyDropboxObjC (10.1.0):
+    - SwiftyDropbox (~> 10.1.0)
 
 DEPENDENCIES:
   - SwiftyDropbox (from `../`)
@@ -14,9 +14,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SwiftyDropbox: ef7961c2d64e7ac48d4f88d39e6db5554375f774
-  SwiftyDropboxObjC: b99c342560286cdfca8eeff54ac15515d002deaf
+  SwiftyDropbox: a023f55cb1bd8a81bb48c33eea529cd71faf8e29
+  SwiftyDropboxObjC: c7f2189b65386016ea29942d222863dcd03159ac
 
 PODFILE CHECKSUM: e0f6bd11b29f3d698a8cf15c435947aa1ac4eee1
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.16.2
