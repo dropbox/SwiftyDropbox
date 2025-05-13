@@ -140,6 +140,9 @@ public enum OAuth2Error: String, Error {
 
     /// The state param received from the authorization server does not match the state param stored by the SDK.
     case inconsistentState = "inconsistent_state"
+    
+    /// Failed to save the token.
+    case tokenStorageError = "token_storage_error"
 
     /// Some other error (outside of the OAuth2 specification)
     case unknown
