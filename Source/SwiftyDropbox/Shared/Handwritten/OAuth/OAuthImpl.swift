@@ -86,8 +86,11 @@ public class DropboxOAuthManager: AccessTokenRefreshing {
         }
         if canHandleURL(url) {
             extractFromUrl(url) { result in
+                var result = result
                 if case let .success(token) = result {
-                    self.storeAccessToken(token)
+                    if !self.storeAccessToken(token) {
+                        result = .error(.tokenStorageError, nil)
+                    }
                 }
                 completion(result)
             }
@@ -425,8 +428,12 @@ public class DropboxOAuthManager: AccessTokenRefreshing {
             uid: uid, refreshToken: refreshToken, scopes: scopes, appKey: appKey, locale: localeIdentifier
         )
         refreshRequest.start(queue: DispatchQueue.main) { [weak self] result in
+            var result = result
             if case let .success(token) = result {
-                self?.storeAccessToken(token)
+                guard let self else { return }
+                if !self.storeAccessToken(token) {
+                    result = .error(.tokenStorageError, nil)
+                }
             }
             (queue ?? DispatchQueue.main).async { completion(result) }
         }
