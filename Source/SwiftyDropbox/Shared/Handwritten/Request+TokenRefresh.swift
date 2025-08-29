@@ -241,8 +241,19 @@ class RequestWithTokenRefresh: ApiRequest {
         self.filesAccess = filesAccess
 
         let setTask = {
+            // It is important to run this block, which may do a lot of work outside the SDK,
+            // before getting the lock.  We have seen deadlock scenarios like the following:
+            // 1. Enter thread safe code behind a lock in your app
+            // 2. Start a request from behind that lock in your app
+            // 3. We would get the access state lock below before executing requestCreation()
+            // 4. This request creation block eventually goes back out to your app's code to get headers
+            // 5. Once in your app's code, it needs to go into the code locked in step 1 to get info for headers
+            // 6. Deadlock
+            //
+            // Because we don't have contention between threads to run the requestCreation() block,
+            // it can be omitted from the locked section.
+            let task = requestCreation()
             self.accessStateWithLock { state in
-                let task = requestCreation()
                 state.request = task
                 state.handleRequestCreation()
             }
