@@ -8,7 +8,7 @@ import Foundation
 import UIKit
 
 /// A VC with a loading spinner at its view center.
-class LoadingViewController: UIViewController {
+class SwiftyDropboxLoadingViewController: UIViewController {
     private let loadingSpinner: UIActivityIndicatorView
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {

@@ -617,7 +617,7 @@ public class MobileSharedApplication: SharedApplication {
     /// Web OAuth flow, present the spinner over the MobileSafariViewController.
     private func presentLoadingInWeb() {
         let safariViewController = controller?.presentedViewController as? MobileSafariViewController
-        let loadingVC = LoadingViewController(nibName: nil, bundle: nil)
+        let loadingVC = SwiftyDropboxLoadingViewController(nibName: nil, bundle: nil)
         loadingVC.modalPresentationStyle = .overFullScreen
         safariViewController?.present(loadingVC, animated: false)
     }
@@ -625,7 +625,7 @@ public class MobileSharedApplication: SharedApplication {
     // Web OAuth flow, dismiss loading view on the MobileSafariViewController.
     private func dismissLoadingInWeb() {
         let safariViewController = controller?.presentedViewController as? MobileSafariViewController
-        let loadingView = safariViewController?.presentedViewController as? LoadingViewController
+        let loadingView = safariViewController?.presentedViewController as? SwiftyDropboxLoadingViewController
         loadingView?.dismiss(animated: false)
     }
 
@@ -635,7 +635,7 @@ public class MobileSharedApplication: SharedApplication {
         if let loadingStatusDelegate = loadingStatusDelegate {
             loadingStatusDelegate.showLoading()
         } else {
-            let loadingVC = LoadingViewController(nibName: nil, bundle: nil)
+            let loadingVC = SwiftyDropboxLoadingViewController(nibName: nil, bundle: nil)
             loadingVC.modalPresentationStyle = .overFullScreen
             controller?.present(loadingVC, animated: false)
         }
@@ -646,7 +646,7 @@ public class MobileSharedApplication: SharedApplication {
     private func dismissLoadingInApp() {
         if let loadingStatusDelegate = loadingStatusDelegate {
             loadingStatusDelegate.dismissLoading()
-        } else if let loadingView = controller?.presentedViewController as? LoadingViewController {
+        } else if let loadingView = controller?.presentedViewController as? SwiftyDropboxLoadingViewController {
             loadingView.dismiss(animated: false)
         }
     }
