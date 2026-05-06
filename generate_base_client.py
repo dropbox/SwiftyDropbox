@@ -117,12 +117,8 @@ def main():
     output_path = dropbox_objc_pkg_path if args.objc else dropbox_pkg_path
     types_cmd = list(stone_cmd_prefix + ['swift_types', output_path] + specs)
 
-    if args.objc or args.documentation:
-        types_cmd.append('--')
-        if args.objc:
-            types_cmd.append('--objc')
-        if args.documentation:
-            types_cmd.append('--documentation')
+    if args.objc:
+        types_cmd += ['--', '--objc']
 
     o = subprocess.check_output(
         (types_cmd),
