@@ -21,7 +21,7 @@ jobs:
         run: |
           xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_iOS -sdk iphonesimulator \
             -destination "platform=$platform,name=$device" \
-            build-without-testing
+            build-for-testing
 
       - name: Test macOS
         env:
@@ -29,4 +29,4 @@ jobs:
         run: |
           xcodebuild -workspace TestSwiftyDropbox/TestSwiftyDropbox.xcworkspace/ -scheme TestSwiftyDropbox_macOS  \
             -destination "platform=$platform,arch=x86_64" \
-            build-without-testing
+            build-for-testing
