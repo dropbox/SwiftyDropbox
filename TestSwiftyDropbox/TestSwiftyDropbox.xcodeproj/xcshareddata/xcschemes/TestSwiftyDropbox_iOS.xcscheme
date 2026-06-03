@@ -36,48 +36,6 @@
             ReferencedContainer = "container:TestSwiftyDropbox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "EMAIL_TO_ADD_AS_TEAM_MEMBER"
-            value = "$(EMAIL_TO_ADD_AS_TEAM_MEMBER)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "TEAM_MEMBER_EMAIL"
-            value = "$(TEAM_MEMBER_EMAIL)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN"
-            value = "$(FULL_DROPBOX_TESTER_USER_REFRESH_TOKEN)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN"
-            value = "$(FULL_DROPBOX_TESTER_TEAM_REFRESH_TOKEN)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "FULL_DROPBOX_API_APP_KEY"
-            value = "$(FULL_DROPBOX_API_APP_KEY)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "ACCOUNT_ID"
-            value = "$(ACCOUNT_ID)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "ACCOUNT_ID_2"
-            value = "$(ACCOUNT_ID_2)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "ACCOUNT_ID_3"
-            value = "$(ACCOUNT_ID_3)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <Testables>
          <TestableReference
             skipped = "NO">
