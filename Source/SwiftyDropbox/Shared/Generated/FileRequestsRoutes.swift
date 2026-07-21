@@ -38,18 +38,13 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     /// - parameter open: Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
     /// - parameter description_: A description of the file request.
+    /// - parameter videoProjectId: If this request was created from video project, its id.
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on success
     /// or a `FileRequests.CreateFileRequestError` object on failure.
-    @discardableResult public func create(
-        title: String,
-        destination: String,
-        deadline: FileRequests.FileRequestDeadline? = nil,
-        open: Bool = true,
-        description_: String? = nil
-    ) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.CreateFileRequestErrorSerializer> {
+    @discardableResult public func create(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true, description_: String? = nil, videoProjectId: String? = nil) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.CreateFileRequestErrorSerializer> {
         let route = FileRequests.create
-        let serverArgs = FileRequests.CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
+        let serverArgs = FileRequests.CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_, videoProjectId: videoProjectId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -61,8 +56,7 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.DeleteFileRequestsResult`
     /// object on success or a `FileRequests.DeleteFileRequestError` object on failure.
-    @discardableResult public func delete(ids: [String])
-        -> RpcRequest<FileRequests.DeleteFileRequestsResultSerializer, FileRequests.DeleteFileRequestErrorSerializer> {
+    @discardableResult public func delete(ids: Array<String>) -> RpcRequest<FileRequests.DeleteFileRequestsResultSerializer, FileRequests.DeleteFileRequestErrorSerializer> {
         let route = FileRequests.delete
         let serverArgs = FileRequests.DeleteFileRequestArgs(ids: ids)
         return client.request(route, serverArgs: serverArgs)
@@ -76,8 +70,7 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     /// - returns: Through the response callback, the caller will receive a
     /// `FileRequests.DeleteAllClosedFileRequestsResult` object on success or a
     /// `FileRequests.DeleteAllClosedFileRequestsError` object on failure.
-    @discardableResult public func deleteAllClosed()
-        -> RpcRequest<FileRequests.DeleteAllClosedFileRequestsResultSerializer, FileRequests.DeleteAllClosedFileRequestsErrorSerializer> {
+    @discardableResult public func deleteAllClosed() -> RpcRequest<FileRequests.DeleteAllClosedFileRequestsResultSerializer, FileRequests.DeleteAllClosedFileRequestsErrorSerializer> {
         let route = FileRequests.deleteAllClosed
         return client.request(route)
     }
@@ -118,8 +111,7 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
     /// object on success or a `FileRequests.ListFileRequestsError` object on failure.
-    @discardableResult public func listV2(limit: UInt64 = 1_000)
-        -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
+    @discardableResult public func listV2(limit: UInt64 = 1000) -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer> {
         let route = FileRequests.listV2
         let serverArgs = FileRequests.ListFileRequestsArg(limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -134,8 +126,7 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.ListFileRequestsV2Result`
     /// object on success or a `FileRequests.ListFileRequestsContinueError` object on failure.
-    @discardableResult public func listContinue(cursor: String)
-        -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsContinueErrorSerializer> {
+    @discardableResult public func listContinue(cursor: String) -> RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsContinueErrorSerializer> {
         let route = FileRequests.listContinue
         let serverArgs = FileRequests.ListFileRequestsContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -156,23 +147,10 @@ public class FileRequestsRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on success
     /// or a `FileRequests.UpdateFileRequestError` object on failure.
-    @discardableResult public func update(
-        id: String,
-        title: String? = nil,
-        destination: String? = nil,
-        deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate,
-        open: Bool? = nil,
-        description_: String? = nil
-    ) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.UpdateFileRequestErrorSerializer> {
+    @discardableResult public func update(id: String, title: String? = nil, destination: String? = nil, deadline: FileRequests.UpdateFileRequestDeadline = .noUpdate, open: Bool? = nil, description_: String? = nil) -> RpcRequest<FileRequests.FileRequestSerializer, FileRequests.UpdateFileRequestErrorSerializer> {
         let route = FileRequests.update
-        let serverArgs = FileRequests.UpdateFileRequestArgs(
-            id: id,
-            title: title,
-            destination: destination,
-            deadline: deadline,
-            open: open,
-            description_: description_
-        )
+        let serverArgs = FileRequests.UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

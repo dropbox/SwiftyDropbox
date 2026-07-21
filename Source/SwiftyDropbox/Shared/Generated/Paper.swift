@@ -31,26 +31,23 @@ public class Paper {
             }
         }
     }
-
     public class AddMemberSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddMember) throws -> JSON {
             let output = [
-                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
-                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+            "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
+            "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddMember {
             switch json {
-            case .dictionary(let dict):
-                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer()
-                    .deserialize(dict["permission_level"] ?? Paper.PaperDocPermissionLevelSerializer().serialize(.edit))
-                return AddMember(member: member, permissionLevel: permissionLevel)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddMember.self, json: json)
+                case .dictionary(let dict):
+                    let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                    let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? Paper.PaperDocPermissionLevelSerializer().serialize(.edit))
+                    return AddMember(member: member, permissionLevel: permissionLevel)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddMember.self, json: json)
             }
         }
     }
@@ -76,23 +73,21 @@ public class Paper {
             }
         }
     }
-
     public class RefPaperDocSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RefPaperDoc) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RefPaperDoc {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                return RefPaperDoc(docId: docId)
-            default:
-                throw JSONSerializerError.deserializeError(type: RefPaperDoc.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    return RefPaperDoc(docId: docId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: RefPaperDoc.self, json: json)
             }
         }
     }
@@ -100,18 +95,19 @@ public class Paper {
     /// The AddPaperDocUser struct
     public class AddPaperDocUser: Paper.RefPaperDoc {
         /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
-        public let members: [Paper.AddMember]
+        public let members: Array<Paper.AddMember>
         /// A personal message that will be emailed to each successfully added member.
         public let customMessage: String?
         /// Clients should set this to true if no email message shall be sent to added users.
         public let quiet: Bool
-        public init(docId: String, members: [Paper.AddMember], customMessage: String? = nil, quiet: Bool = false) {
+        public init(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) {
             self.members = members
             nullableValidator(stringValidator())(customMessage)
             self.customMessage = customMessage
             self.quiet = quiet
             super.init(docId: docId)
         }
+
 
         public override var description: String {
             do {
@@ -121,29 +117,27 @@ public class Paper {
             }
         }
     }
-
     public class AddPaperDocUserSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddPaperDocUser) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "members": try ArraySerializer(Paper.AddMemberSerializer()).serialize(value.members),
-                "custom_message": try NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
-                "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "members": try ArraySerializer(Paper.AddMemberSerializer()).serialize(value.members),
+            "custom_message": try NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
+            "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddPaperDocUser {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let members = try ArraySerializer(Paper.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
-                let customMessage = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
-                let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
-                return AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddPaperDocUser.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let members = try ArraySerializer(Paper.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
+                    let customMessage = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
+                    let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
+                    return AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddPaperDocUser.self, json: json)
             }
         }
     }
@@ -171,25 +165,23 @@ public class Paper {
             }
         }
     }
-
     public class AddPaperDocUserMemberResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddPaperDocUserMemberResult) throws -> JSON {
             let output = [
-                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
-                "result": try Paper.AddPaperDocUserResultSerializer().serialize(value.result),
+            "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
+            "result": try Paper.AddPaperDocUserResultSerializer().serialize(value.result),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddPaperDocUserMemberResult {
             switch json {
-            case .dictionary(let dict):
-                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                let result = try Paper.AddPaperDocUserResultSerializer().deserialize(dict["result"] ?? .null)
-                return AddPaperDocUserMemberResult(member: member, result: result)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddPaperDocUserMemberResult.self, json: json)
+                case .dictionary(let dict):
+                    let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                    let result = try Paper.AddPaperDocUserResultSerializer().deserialize(dict["result"] ?? .null)
+                    return AddPaperDocUserMemberResult(member: member, result: result)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddPaperDocUserMemberResult.self, json: json)
             }
         }
     }
@@ -225,72 +217,70 @@ public class Paper {
             }
         }
     }
-
     public class AddPaperDocUserResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddPaperDocUserResult) throws -> JSON {
             switch value {
-            case .success:
-                var d = [String: JSON]()
-                d[".tag"] = .str("success")
-                return .dictionary(d)
-            case .unknownError:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unknown_error")
-                return .dictionary(d)
-            case .sharingOutsideTeamDisabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("sharing_outside_team_disabled")
-                return .dictionary(d)
-            case .dailyLimitReached:
-                var d = [String: JSON]()
-                d[".tag"] = .str("daily_limit_reached")
-                return .dictionary(d)
-            case .userIsOwner:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_is_owner")
-                return .dictionary(d)
-            case .failedUserDataRetrieval:
-                var d = [String: JSON]()
-                d[".tag"] = .str("failed_user_data_retrieval")
-                return .dictionary(d)
-            case .permissionAlreadyGranted:
-                var d = [String: JSON]()
-                d[".tag"] = .str("permission_already_granted")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .success:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .unknownError:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown_error")
+                    return .dictionary(d)
+                case .sharingOutsideTeamDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("sharing_outside_team_disabled")
+                    return .dictionary(d)
+                case .dailyLimitReached:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("daily_limit_reached")
+                    return .dictionary(d)
+                case .userIsOwner:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_is_owner")
+                    return .dictionary(d)
+                case .failedUserDataRetrieval:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("failed_user_data_retrieval")
+                    return .dictionary(d)
+                case .permissionAlreadyGranted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("permission_already_granted")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> AddPaperDocUserResult {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "success":
-                    return AddPaperDocUserResult.success
-                case "unknown_error":
-                    return AddPaperDocUserResult.unknownError
-                case "sharing_outside_team_disabled":
-                    return AddPaperDocUserResult.sharingOutsideTeamDisabled
-                case "daily_limit_reached":
-                    return AddPaperDocUserResult.dailyLimitReached
-                case "user_is_owner":
-                    return AddPaperDocUserResult.userIsOwner
-                case "failed_user_data_retrieval":
-                    return AddPaperDocUserResult.failedUserDataRetrieval
-                case "permission_already_granted":
-                    return AddPaperDocUserResult.permissionAlreadyGranted
-                case "other":
-                    return AddPaperDocUserResult.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            return AddPaperDocUserResult.success
+                        case "unknown_error":
+                            return AddPaperDocUserResult.unknownError
+                        case "sharing_outside_team_disabled":
+                            return AddPaperDocUserResult.sharingOutsideTeamDisabled
+                        case "daily_limit_reached":
+                            return AddPaperDocUserResult.dailyLimitReached
+                        case "user_is_owner":
+                            return AddPaperDocUserResult.userIsOwner
+                        case "failed_user_data_retrieval":
+                            return AddPaperDocUserResult.failedUserDataRetrieval
+                        case "permission_already_granted":
+                            return AddPaperDocUserResult.permissionAlreadyGranted
+                        case "other":
+                            return AddPaperDocUserResult.other
+                        default:
+                            return AddPaperDocUserResult.other
+                    }
                 default:
-                    return AddPaperDocUserResult.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: AddPaperDocUserResult.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: AddPaperDocUserResult.self, json: json)
             }
         }
     }
@@ -327,25 +317,23 @@ public class Paper {
             }
         }
     }
-
     public class CursorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: Cursor) throws -> JSON {
             let output = [
-                "value": try Serialization._StringSerializer.serialize(value.value),
-                "expiration": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expiration),
+            "value": try Serialization._StringSerializer.serialize(value.value),
+            "expiration": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.expiration),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> Cursor {
             switch json {
-            case .dictionary(let dict):
-                let value = try Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
-                let expiration = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expiration"] ?? .null)
-                return Cursor(value: value, expiration: expiration)
-            default:
-                throw JSONSerializerError.deserializeError(type: Cursor.self, json: json)
+                case .dictionary(let dict):
+                    let value = try Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
+                    let expiration = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["expiration"] ?? .null)
+                    return Cursor(value: value, expiration: expiration)
+                default:
+                    throw JSONSerializerError.deserializeError(type: Cursor.self, json: json)
             }
         }
     }
@@ -371,36 +359,34 @@ public class Paper {
             }
         }
     }
-
     public class PaperApiBaseErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperApiBaseError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperApiBaseError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return PaperApiBaseError.insufficientPermissions
-                case "other":
-                    return PaperApiBaseError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperApiBaseError.insufficientPermissions
+                        case "other":
+                            return PaperApiBaseError.other
+                        default:
+                            return PaperApiBaseError.other
+                    }
                 default:
-                    return PaperApiBaseError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperApiBaseError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperApiBaseError.self, json: json)
             }
         }
     }
@@ -428,42 +414,40 @@ public class Paper {
             }
         }
     }
-
     public class DocLookupErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: DocLookupError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .docNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_not_found")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .docNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_not_found")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> DocLookupError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return DocLookupError.insufficientPermissions
-                case "other":
-                    return DocLookupError.other
-                case "doc_not_found":
-                    return DocLookupError.docNotFound
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return DocLookupError.insufficientPermissions
+                        case "other":
+                            return DocLookupError.other
+                        case "doc_not_found":
+                            return DocLookupError.docNotFound
+                        default:
+                            throw JSONSerializerError.unknownTag(type: DocLookupError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: DocLookupError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: DocLookupError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: DocLookupError.self, json: json)
             }
         }
     }
@@ -491,48 +475,46 @@ public class Paper {
             }
         }
     }
-
     public class DocSubscriptionLevelSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: DocSubscriptionLevel) throws -> JSON {
             switch value {
-            case .default_:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default")
-                return .dictionary(d)
-            case .ignore:
-                var d = [String: JSON]()
-                d[".tag"] = .str("ignore")
-                return .dictionary(d)
-            case .every:
-                var d = [String: JSON]()
-                d[".tag"] = .str("every")
-                return .dictionary(d)
-            case .noEmail:
-                var d = [String: JSON]()
-                d[".tag"] = .str("no_email")
-                return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .ignore:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("ignore")
+                    return .dictionary(d)
+                case .every:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("every")
+                    return .dictionary(d)
+                case .noEmail:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_email")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> DocSubscriptionLevel {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "default":
-                    return DocSubscriptionLevel.default_
-                case "ignore":
-                    return DocSubscriptionLevel.ignore
-                case "every":
-                    return DocSubscriptionLevel.every
-                case "no_email":
-                    return DocSubscriptionLevel.noEmail
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return DocSubscriptionLevel.default_
+                        case "ignore":
+                            return DocSubscriptionLevel.ignore
+                        case "every":
+                            return DocSubscriptionLevel.every
+                        case "no_email":
+                            return DocSubscriptionLevel.noEmail
+                        default:
+                            throw JSONSerializerError.unknownTag(type: DocSubscriptionLevel.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: DocSubscriptionLevel.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: DocSubscriptionLevel.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: DocSubscriptionLevel.self, json: json)
             }
         }
     }
@@ -543,6 +525,8 @@ public class Paper {
         case html
         /// The markdown export format.
         case markdown
+        /// Doc metadata JSON export format.
+        case json
         /// An unspecified error.
         case other
 
@@ -558,42 +542,46 @@ public class Paper {
             }
         }
     }
-
     public class ExportFormatSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ExportFormat) throws -> JSON {
             switch value {
-            case .html:
-                var d = [String: JSON]()
-                d[".tag"] = .str("html")
-                return .dictionary(d)
-            case .markdown:
-                var d = [String: JSON]()
-                d[".tag"] = .str("markdown")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .html:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("html")
+                    return .dictionary(d)
+                case .markdown:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("markdown")
+                    return .dictionary(d)
+                case .json:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("json")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ExportFormat {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "html":
-                    return ExportFormat.html
-                case "markdown":
-                    return ExportFormat.markdown
-                case "other":
-                    return ExportFormat.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "html":
+                            return ExportFormat.html
+                        case "markdown":
+                            return ExportFormat.markdown
+                        case "json":
+                            return ExportFormat.json
+                        case "other":
+                            return ExportFormat.other
+                        default:
+                            return ExportFormat.other
+                    }
                 default:
-                    return ExportFormat.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ExportFormat.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ExportFormat.self, json: json)
             }
         }
     }
@@ -623,25 +611,23 @@ public class Paper {
             }
         }
     }
-
     public class FolderSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: Folder) throws -> JSON {
             let output = [
-                "id": try Serialization._StringSerializer.serialize(value.id),
-                "name": try Serialization._StringSerializer.serialize(value.name),
+            "id": try Serialization._StringSerializer.serialize(value.id),
+            "name": try Serialization._StringSerializer.serialize(value.name),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> Folder {
             switch json {
-            case .dictionary(let dict):
-                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                return Folder(id: id, name: name)
-            default:
-                throw JSONSerializerError.deserializeError(type: Folder.self, json: json)
+                case .dictionary(let dict):
+                    let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return Folder(id: id, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: Folder.self, json: json)
             }
         }
     }
@@ -665,36 +651,34 @@ public class Paper {
             }
         }
     }
-
     public class FolderSharingPolicyTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: FolderSharingPolicyType) throws -> JSON {
             switch value {
-            case .team:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team")
-                return .dictionary(d)
-            case .inviteOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invite_only")
-                return .dictionary(d)
+                case .team:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team")
+                    return .dictionary(d)
+                case .inviteOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_only")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> FolderSharingPolicyType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "team":
-                    return FolderSharingPolicyType.team
-                case "invite_only":
-                    return FolderSharingPolicyType.inviteOnly
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "team":
+                            return FolderSharingPolicyType.team
+                        case "invite_only":
+                            return FolderSharingPolicyType.inviteOnly
+                        default:
+                            throw JSONSerializerError.unknownTag(type: FolderSharingPolicyType.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: FolderSharingPolicyType.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: FolderSharingPolicyType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: FolderSharingPolicyType.self, json: json)
             }
         }
     }
@@ -722,48 +706,46 @@ public class Paper {
             }
         }
     }
-
     public class FolderSubscriptionLevelSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: FolderSubscriptionLevel) throws -> JSON {
             switch value {
-            case .none:
-                var d = [String: JSON]()
-                d[".tag"] = .str("none")
-                return .dictionary(d)
-            case .activityOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("activity_only")
-                return .dictionary(d)
-            case .dailyEmails:
-                var d = [String: JSON]()
-                d[".tag"] = .str("daily_emails")
-                return .dictionary(d)
-            case .weeklyEmails:
-                var d = [String: JSON]()
-                d[".tag"] = .str("weekly_emails")
-                return .dictionary(d)
+                case .none:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("none")
+                    return .dictionary(d)
+                case .activityOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("activity_only")
+                    return .dictionary(d)
+                case .dailyEmails:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("daily_emails")
+                    return .dictionary(d)
+                case .weeklyEmails:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("weekly_emails")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> FolderSubscriptionLevel {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "none":
-                    return FolderSubscriptionLevel.none
-                case "activity_only":
-                    return FolderSubscriptionLevel.activityOnly
-                case "daily_emails":
-                    return FolderSubscriptionLevel.dailyEmails
-                case "weekly_emails":
-                    return FolderSubscriptionLevel.weeklyEmails
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "none":
+                            return FolderSubscriptionLevel.none
+                        case "activity_only":
+                            return FolderSubscriptionLevel.activityOnly
+                        case "daily_emails":
+                            return FolderSubscriptionLevel.dailyEmails
+                        case "weekly_emails":
+                            return FolderSubscriptionLevel.weeklyEmails
+                        default:
+                            throw JSONSerializerError.unknownTag(type: FolderSubscriptionLevel.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: FolderSubscriptionLevel.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: FolderSubscriptionLevel.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: FolderSubscriptionLevel.self, json: json)
             }
         }
     }
@@ -773,8 +755,8 @@ public class Paper {
         /// The sharing policy of the folder containing the Paper doc.
         public let folderSharingPolicyType: Paper.FolderSharingPolicyType?
         /// The folder path. If present the first folder is the root folder.
-        public let folders: [Paper.Folder]?
-        public init(folderSharingPolicyType: Paper.FolderSharingPolicyType? = nil, folders: [Paper.Folder]? = nil) {
+        public let folders: Array<Paper.Folder>?
+        public init(folderSharingPolicyType: Paper.FolderSharingPolicyType? = nil, folders: Array<Paper.Folder>? = nil) {
             self.folderSharingPolicyType = folderSharingPolicyType
             self.folders = folders
         }
@@ -791,26 +773,69 @@ public class Paper {
             }
         }
     }
-
     public class FoldersContainingPaperDocSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: FoldersContainingPaperDoc) throws -> JSON {
             let output = [
-                "folder_sharing_policy_type": try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).serialize(value.folderSharingPolicyType),
-                "folders": try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).serialize(value.folders),
+            "folder_sharing_policy_type": try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).serialize(value.folderSharingPolicyType),
+            "folders": try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).serialize(value.folders),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> FoldersContainingPaperDoc {
             switch json {
-            case .dictionary(let dict):
-                let folderSharingPolicyType = try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer())
-                    .deserialize(dict["folder_sharing_policy_type"] ?? .null)
-                let folders = try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).deserialize(dict["folders"] ?? .null)
-                return FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType, folders: folders)
-            default:
-                throw JSONSerializerError.deserializeError(type: FoldersContainingPaperDoc.self, json: json)
+                case .dictionary(let dict):
+                    let folderSharingPolicyType = try NullableSerializer(Paper.FolderSharingPolicyTypeSerializer()).deserialize(dict["folder_sharing_policy_type"] ?? .null)
+                    let folders = try NullableSerializer(ArraySerializer(Paper.FolderSerializer())).deserialize(dict["folders"] ?? .null)
+                    return FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType, folders: folders)
+                default:
+                    throw JSONSerializerError.deserializeError(type: FoldersContainingPaperDoc.self, json: json)
+            }
+        }
+    }
+
+    /// Argument for retrieving Paper doc metadata. Accepts either a legacy Paper doc ID or a Cloud Doc file ID.
+    public class GetDocMetadataArg: CustomStringConvertible, JSONRepresentable {
+        /// Legacy Paper doc identifier.
+        public let docId: String?
+        /// Dropbox file ID for Cloud Docs (post-PiFS migration).
+        public let fileId: String?
+        public init(docId: String? = nil, fileId: String? = nil) {
+            nullableValidator(stringValidator())(docId)
+            self.docId = docId
+            nullableValidator(stringValidator(minLength: 4, pattern: "id:.+"))(fileId)
+            self.fileId = fileId
+        }
+
+        func json() throws -> JSON {
+            try GetDocMetadataArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetDocMetadataArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetDocMetadataArg: \(error)"
+            }
+        }
+    }
+    public class GetDocMetadataArgSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: GetDocMetadataArg) throws -> JSON {
+            let output = [
+            "doc_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.docId),
+            "file_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.fileId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> GetDocMetadataArg {
+            switch json {
+                case .dictionary(let dict):
+                    let docId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["doc_id"] ?? .null)
+                    let fileId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["file_id"] ?? .null)
+                    return GetDocMetadataArg(docId: docId, fileId: fileId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: GetDocMetadataArg.self, json: json)
             }
         }
     }
@@ -840,48 +865,46 @@ public class Paper {
             }
         }
     }
-
     public class ImportFormatSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ImportFormat) throws -> JSON {
             switch value {
-            case .html:
-                var d = [String: JSON]()
-                d[".tag"] = .str("html")
-                return .dictionary(d)
-            case .markdown:
-                var d = [String: JSON]()
-                d[".tag"] = .str("markdown")
-                return .dictionary(d)
-            case .plainText:
-                var d = [String: JSON]()
-                d[".tag"] = .str("plain_text")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .html:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("html")
+                    return .dictionary(d)
+                case .markdown:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("markdown")
+                    return .dictionary(d)
+                case .plainText:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("plain_text")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ImportFormat {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "html":
-                    return ImportFormat.html
-                case "markdown":
-                    return ImportFormat.markdown
-                case "plain_text":
-                    return ImportFormat.plainText
-                case "other":
-                    return ImportFormat.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "html":
+                            return ImportFormat.html
+                        case "markdown":
+                            return ImportFormat.markdown
+                        case "plain_text":
+                            return ImportFormat.plainText
+                        case "other":
+                            return ImportFormat.other
+                        default:
+                            return ImportFormat.other
+                    }
                 default:
-                    return ImportFormat.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ImportFormat.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ImportFormat.self, json: json)
             }
         }
     }
@@ -909,25 +932,23 @@ public class Paper {
             }
         }
     }
-
     public class InviteeInfoWithPermissionLevelSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: InviteeInfoWithPermissionLevel) throws -> JSON {
             let output = [
-                "invitee": try Sharing.InviteeInfoSerializer().serialize(value.invitee),
-                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+            "invitee": try Sharing.InviteeInfoSerializer().serialize(value.invitee),
+            "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> InviteeInfoWithPermissionLevel {
             switch json {
-            case .dictionary(let dict):
-                let invitee = try Sharing.InviteeInfoSerializer().deserialize(dict["invitee"] ?? .null)
-                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
-                return InviteeInfoWithPermissionLevel(invitee: invitee, permissionLevel: permissionLevel)
-            default:
-                throw JSONSerializerError.deserializeError(type: InviteeInfoWithPermissionLevel.self, json: json)
+                case .dictionary(let dict):
+                    let invitee = try Sharing.InviteeInfoSerializer().deserialize(dict["invitee"] ?? .null)
+                    let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
+                    return InviteeInfoWithPermissionLevel(invitee: invitee, permissionLevel: permissionLevel)
+                default:
+                    throw JSONSerializerError.deserializeError(type: InviteeInfoWithPermissionLevel.self, json: json)
             }
         }
     }
@@ -951,37 +972,35 @@ public class Paper {
             }
         }
     }
-
     public class ListDocsCursorErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListDocsCursorError) throws -> JSON {
             switch value {
-            case .cursorError(let arg):
-                var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("cursor_error")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .cursorError(let arg):
+                    var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("cursor_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ListDocsCursorError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "cursor_error":
-                    let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
-                    return ListDocsCursorError.cursorError(v)
-                case "other":
-                    return ListDocsCursorError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "cursor_error":
+                            let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
+                            return ListDocsCursorError.cursorError(v)
+                        case "other":
+                            return ListDocsCursorError.other
+                        default:
+                            return ListDocsCursorError.other
+                    }
                 default:
-                    return ListDocsCursorError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ListDocsCursorError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ListDocsCursorError.self, json: json)
             }
         }
     }
@@ -997,17 +1016,15 @@ public class Paper {
         /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
         public let limit: Int32
-        public init(
-            filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed,
-            sortBy: Paper.ListPaperDocsSortBy = .accessed,
-            sortOrder: Paper.ListPaperDocsSortOrder = .ascending,
-            limit: Int32 = 1_000
-        ) {
+        /// Do not return results beyond this date. Behavior depends on sort order.
+        public let stopAtDate: Date?
+        public init(filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed, sortBy: Paper.ListPaperDocsSortBy = .accessed, sortOrder: Paper.ListPaperDocsSortOrder = .ascending, limit: Int32 = 1000, stopAtDate: Date? = nil) {
             self.filterBy = filterBy
             self.sortBy = sortBy
             self.sortOrder = sortOrder
-            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
+            comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
+            self.stopAtDate = stopAtDate
         }
 
         func json() throws -> JSON {
@@ -1022,32 +1039,29 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsArgs) throws -> JSON {
             let output = [
-                "filter_by": try Paper.ListPaperDocsFilterBySerializer().serialize(value.filterBy),
-                "sort_by": try Paper.ListPaperDocsSortBySerializer().serialize(value.sortBy),
-                "sort_order": try Paper.ListPaperDocsSortOrderSerializer().serialize(value.sortOrder),
-                "limit": try Serialization._Int32Serializer.serialize(value.limit),
+            "filter_by": try Paper.ListPaperDocsFilterBySerializer().serialize(value.filterBy),
+            "sort_by": try Paper.ListPaperDocsSortBySerializer().serialize(value.sortBy),
+            "sort_order": try Paper.ListPaperDocsSortOrderSerializer().serialize(value.sortOrder),
+            "limit": try Serialization._Int32Serializer.serialize(value.limit),
+            "stop_at_date": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.stopAtDate),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsArgs {
             switch json {
-            case .dictionary(let dict):
-                let filterBy = try Paper.ListPaperDocsFilterBySerializer()
-                    .deserialize(dict["filter_by"] ?? Paper.ListPaperDocsFilterBySerializer().serialize(.docsAccessed))
-                let sortBy = try Paper.ListPaperDocsSortBySerializer()
-                    .deserialize(dict["sort_by"] ?? Paper.ListPaperDocsSortBySerializer().serialize(.accessed))
-                let sortOrder = try Paper.ListPaperDocsSortOrderSerializer()
-                    .deserialize(dict["sort_order"] ?? Paper.ListPaperDocsSortOrderSerializer().serialize(.ascending))
-                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
-                return ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsArgs.self, json: json)
+                case .dictionary(let dict):
+                    let filterBy = try Paper.ListPaperDocsFilterBySerializer().deserialize(dict["filter_by"] ?? Paper.ListPaperDocsFilterBySerializer().serialize(.docsAccessed))
+                    let sortBy = try Paper.ListPaperDocsSortBySerializer().deserialize(dict["sort_by"] ?? Paper.ListPaperDocsSortBySerializer().serialize(.accessed))
+                    let sortOrder = try Paper.ListPaperDocsSortOrderSerializer().deserialize(dict["sort_order"] ?? Paper.ListPaperDocsSortOrderSerializer().serialize(.ascending))
+                    let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    let stopAtDate = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["stop_at_date"] ?? .null)
+                    return ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit, stopAtDate: stopAtDate)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsArgs.self, json: json)
             }
         }
     }
@@ -1073,23 +1087,21 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsContinueArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsContinueArgs) throws -> JSON {
             let output = [
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
+            "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsContinueArgs {
             switch json {
-            case .dictionary(let dict):
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                return ListPaperDocsContinueArgs(cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsContinueArgs.self, json: json)
+                case .dictionary(let dict):
+                    let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return ListPaperDocsContinueArgs(cursor: cursor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsContinueArgs.self, json: json)
             }
         }
     }
@@ -1115,42 +1127,40 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsFilterBySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsFilterBy) throws -> JSON {
             switch value {
-            case .docsAccessed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("docs_accessed")
-                return .dictionary(d)
-            case .docsCreated:
-                var d = [String: JSON]()
-                d[".tag"] = .str("docs_created")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .docsAccessed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("docs_accessed")
+                    return .dictionary(d)
+                case .docsCreated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("docs_created")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsFilterBy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "docs_accessed":
-                    return ListPaperDocsFilterBy.docsAccessed
-                case "docs_created":
-                    return ListPaperDocsFilterBy.docsCreated
-                case "other":
-                    return ListPaperDocsFilterBy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "docs_accessed":
+                            return ListPaperDocsFilterBy.docsAccessed
+                        case "docs_created":
+                            return ListPaperDocsFilterBy.docsCreated
+                        case "other":
+                            return ListPaperDocsFilterBy.other
+                        default:
+                            return ListPaperDocsFilterBy.other
+                    }
                 default:
-                    return ListPaperDocsFilterBy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsFilterBy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsFilterBy.self, json: json)
             }
         }
     }
@@ -1159,7 +1169,7 @@ public class Paper {
     public class ListPaperDocsResponse: CustomStringConvertible, JSONRepresentable {
         /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
         /// The list is sorted in the order specified by the initial call to docsList.
-        public let docIds: [String]
+        public let docIds: Array<String>
         /// Pass the cursor into docsListContinue to paginate through all files. The cursor preserves all properties as
         /// specified in the original call to docsList.
         public let cursor: Paper.Cursor
@@ -1167,7 +1177,7 @@ public class Paper {
         /// with some results. If set to False please allow some delay before making another call to
         /// docsListContinue.
         public let hasMore: Bool
-        public init(docIds: [String], cursor: Paper.Cursor, hasMore: Bool) {
+        public init(docIds: Array<String>, cursor: Paper.Cursor, hasMore: Bool) {
             arrayValidator(itemValidator: stringValidator())(docIds)
             self.docIds = docIds
             self.cursor = cursor
@@ -1186,27 +1196,25 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsResponseSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsResponse) throws -> JSON {
             let output = [
-                "doc_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.docIds),
-                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
-                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
+            "doc_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.docIds),
+            "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+            "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsResponse {
             switch json {
-            case .dictionary(let dict):
-                let docIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["doc_ids"] ?? .null)
-                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                return ListPaperDocsResponse(docIds: docIds, cursor: cursor, hasMore: hasMore)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsResponse.self, json: json)
+                case .dictionary(let dict):
+                    let docIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["doc_ids"] ?? .null)
+                    let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                    let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    return ListPaperDocsResponse(docIds: docIds, cursor: cursor, hasMore: hasMore)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsResponse.self, json: json)
             }
         }
     }
@@ -1234,48 +1242,46 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsSortBySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsSortBy) throws -> JSON {
             switch value {
-            case .accessed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("accessed")
-                return .dictionary(d)
-            case .modified:
-                var d = [String: JSON]()
-                d[".tag"] = .str("modified")
-                return .dictionary(d)
-            case .created:
-                var d = [String: JSON]()
-                d[".tag"] = .str("created")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .accessed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("accessed")
+                    return .dictionary(d)
+                case .modified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("modified")
+                    return .dictionary(d)
+                case .created:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("created")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsSortBy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "accessed":
-                    return ListPaperDocsSortBy.accessed
-                case "modified":
-                    return ListPaperDocsSortBy.modified
-                case "created":
-                    return ListPaperDocsSortBy.created
-                case "other":
-                    return ListPaperDocsSortBy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "accessed":
+                            return ListPaperDocsSortBy.accessed
+                        case "modified":
+                            return ListPaperDocsSortBy.modified
+                        case "created":
+                            return ListPaperDocsSortBy.created
+                        case "other":
+                            return ListPaperDocsSortBy.other
+                        default:
+                            return ListPaperDocsSortBy.other
+                    }
                 default:
-                    return ListPaperDocsSortBy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsSortBy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsSortBy.self, json: json)
             }
         }
     }
@@ -1301,42 +1307,40 @@ public class Paper {
             }
         }
     }
-
     public class ListPaperDocsSortOrderSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListPaperDocsSortOrder) throws -> JSON {
             switch value {
-            case .ascending:
-                var d = [String: JSON]()
-                d[".tag"] = .str("ascending")
-                return .dictionary(d)
-            case .descending:
-                var d = [String: JSON]()
-                d[".tag"] = .str("descending")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .ascending:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("ascending")
+                    return .dictionary(d)
+                case .descending:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("descending")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ListPaperDocsSortOrder {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "ascending":
-                    return ListPaperDocsSortOrder.ascending
-                case "descending":
-                    return ListPaperDocsSortOrder.descending
-                case "other":
-                    return ListPaperDocsSortOrder.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "ascending":
+                            return ListPaperDocsSortOrder.ascending
+                        case "descending":
+                            return ListPaperDocsSortOrder.descending
+                        case "other":
+                            return ListPaperDocsSortOrder.other
+                        default:
+                            return ListPaperDocsSortOrder.other
+                    }
                 default:
-                    return ListPaperDocsSortOrder.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ListPaperDocsSortOrder.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ListPaperDocsSortOrder.self, json: json)
             }
         }
     }
@@ -1366,49 +1370,47 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersCursorErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersCursorError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .docNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_not_found")
-                return .dictionary(d)
-            case .cursorError(let arg):
-                var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("cursor_error")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .docNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_not_found")
+                    return .dictionary(d)
+                case .cursorError(let arg):
+                    var d = try ["cursor_error": Paper.PaperApiCursorErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("cursor_error")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersCursorError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return ListUsersCursorError.insufficientPermissions
-                case "other":
-                    return ListUsersCursorError.other
-                case "doc_not_found":
-                    return ListUsersCursorError.docNotFound
-                case "cursor_error":
-                    let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
-                    return ListUsersCursorError.cursorError(v)
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return ListUsersCursorError.insufficientPermissions
+                        case "other":
+                            return ListUsersCursorError.other
+                        case "doc_not_found":
+                            return ListUsersCursorError.docNotFound
+                        case "cursor_error":
+                            let v = try Paper.PaperApiCursorErrorSerializer().deserialize(d["cursor_error"] ?? .null)
+                            return ListUsersCursorError.cursorError(v)
+                        default:
+                            throw JSONSerializerError.unknownTag(type: ListUsersCursorError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: ListUsersCursorError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersCursorError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ListUsersCursorError.self, json: json)
             }
         }
     }
@@ -1418,11 +1420,12 @@ public class Paper {
         /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000. Higher value
         /// results in invalid arguments error.
         public let limit: Int32
-        public init(docId: String, limit: Int32 = 1_000) {
-            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
+        public init(docId: String, limit: Int32 = 1000) {
+            comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
             super.init(docId: docId)
         }
+
 
         public override var description: String {
             do {
@@ -1432,25 +1435,23 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnFolderArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnFolderArgs) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "limit": try Serialization._Int32Serializer.serialize(value.limit),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "limit": try Serialization._Int32Serializer.serialize(value.limit),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnFolderArgs {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
-                return ListUsersOnFolderArgs(docId: docId, limit: limit)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderArgs.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    return ListUsersOnFolderArgs(docId: docId, limit: limit)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnFolderArgs.self, json: json)
             }
         }
     }
@@ -1465,6 +1466,7 @@ public class Paper {
             super.init(docId: docId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnFolderContinueArgsSerializer().serialize(self)))"
@@ -1473,25 +1475,23 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnFolderContinueArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnFolderContinueArgs) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnFolderContinueArgs {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                return ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderContinueArgs.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnFolderContinueArgs.self, json: json)
             }
         }
     }
@@ -1499,9 +1499,9 @@ public class Paper {
     /// The ListUsersOnFolderResponse struct
     public class ListUsersOnFolderResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses that are invited on the Paper folder.
-        public let invitees: [Sharing.InviteeInfo]
+        public let invitees: Array<Sharing.InviteeInfo>
         /// List of users that are invited on the Paper folder.
-        public let users: [Sharing.UserInfo]
+        public let users: Array<Sharing.UserInfo>
         /// Pass the cursor into docsFolderUsersListContinue to paginate through all users. The cursor preserves all
         /// properties as specified in the original call to docsFolderUsersList.
         public let cursor: Paper.Cursor
@@ -1509,7 +1509,7 @@ public class Paper {
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsFolderUsersListContinue.
         public let hasMore: Bool
-        public init(invitees: [Sharing.InviteeInfo], users: [Sharing.UserInfo], cursor: Paper.Cursor, hasMore: Bool) {
+        public init(invitees: Array<Sharing.InviteeInfo>, users: Array<Sharing.UserInfo>, cursor: Paper.Cursor, hasMore: Bool) {
             self.invitees = invitees
             self.users = users
             self.cursor = cursor
@@ -1528,29 +1528,27 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnFolderResponseSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnFolderResponse) throws -> JSON {
             let output = [
-                "invitees": try ArraySerializer(Sharing.InviteeInfoSerializer()).serialize(value.invitees),
-                "users": try ArraySerializer(Sharing.UserInfoSerializer()).serialize(value.users),
-                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
-                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
+            "invitees": try ArraySerializer(Sharing.InviteeInfoSerializer()).serialize(value.invitees),
+            "users": try ArraySerializer(Sharing.UserInfoSerializer()).serialize(value.users),
+            "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+            "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnFolderResponse {
             switch json {
-            case .dictionary(let dict):
-                let invitees = try ArraySerializer(Sharing.InviteeInfoSerializer()).deserialize(dict["invitees"] ?? .null)
-                let users = try ArraySerializer(Sharing.UserInfoSerializer()).deserialize(dict["users"] ?? .null)
-                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                return ListUsersOnFolderResponse(invitees: invitees, users: users, cursor: cursor, hasMore: hasMore)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnFolderResponse.self, json: json)
+                case .dictionary(let dict):
+                    let invitees = try ArraySerializer(Sharing.InviteeInfoSerializer()).deserialize(dict["invitees"] ?? .null)
+                    let users = try ArraySerializer(Sharing.UserInfoSerializer()).deserialize(dict["users"] ?? .null)
+                    let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                    let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    return ListUsersOnFolderResponse(invitees: invitees, users: users, cursor: cursor, hasMore: hasMore)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnFolderResponse.self, json: json)
             }
         }
     }
@@ -1562,12 +1560,13 @@ public class Paper {
         public let limit: Int32
         /// Specify this attribute if you want to obtain users that have already accessed the Paper doc.
         public let filterBy: Paper.UserOnPaperDocFilter
-        public init(docId: String, limit: Int32 = 1_000, filterBy: Paper.UserOnPaperDocFilter = .shared) {
-            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
+        public init(docId: String, limit: Int32 = 1000, filterBy: Paper.UserOnPaperDocFilter = .shared) {
+            comparableValidator(minValue: 1, maxValue: 1000)(limit)
             self.limit = limit
             self.filterBy = filterBy
             super.init(docId: docId)
         }
+
 
         public override var description: String {
             do {
@@ -1577,28 +1576,25 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnPaperDocArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnPaperDocArgs) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "limit": try Serialization._Int32Serializer.serialize(value.limit),
-                "filter_by": try Paper.UserOnPaperDocFilterSerializer().serialize(value.filterBy),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "limit": try Serialization._Int32Serializer.serialize(value.limit),
+            "filter_by": try Paper.UserOnPaperDocFilterSerializer().serialize(value.filterBy),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocArgs {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1_000))
-                let filterBy = try Paper.UserOnPaperDocFilterSerializer()
-                    .deserialize(dict["filter_by"] ?? Paper.UserOnPaperDocFilterSerializer().serialize(.shared))
-                return ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocArgs.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let limit = try Serialization._Int32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    let filterBy = try Paper.UserOnPaperDocFilterSerializer().deserialize(dict["filter_by"] ?? Paper.UserOnPaperDocFilterSerializer().serialize(.shared))
+                    return ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocArgs.self, json: json)
             }
         }
     }
@@ -1613,6 +1609,7 @@ public class Paper {
             super.init(docId: docId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try ListUsersOnPaperDocContinueArgsSerializer().serialize(self)))"
@@ -1621,25 +1618,23 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnPaperDocContinueArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnPaperDocContinueArgs) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocContinueArgs {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                return ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocContinueArgs.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocContinueArgs.self, json: json)
             }
         }
     }
@@ -1647,9 +1642,9 @@ public class Paper {
     /// The ListUsersOnPaperDocResponse struct
     public class ListUsersOnPaperDocResponse: CustomStringConvertible, JSONRepresentable {
         /// List of email addresses with their respective permission levels that are invited on the Paper doc.
-        public let invitees: [Paper.InviteeInfoWithPermissionLevel]
+        public let invitees: Array<Paper.InviteeInfoWithPermissionLevel>
         /// List of users with their respective permission levels that are invited on the Paper folder.
-        public let users: [Paper.UserInfoWithPermissionLevel]
+        public let users: Array<Paper.UserInfoWithPermissionLevel>
         /// The Paper doc owner. This field is populated on every single response.
         public let docOwner: Sharing.UserInfo
         /// Pass the cursor into docsUsersListContinue to paginate through all users. The cursor preserves all
@@ -1659,13 +1654,7 @@ public class Paper {
         /// immediately with some results. If set to False please allow some delay before making another call to
         /// docsUsersListContinue.
         public let hasMore: Bool
-        public init(
-            invitees: [Paper.InviteeInfoWithPermissionLevel],
-            users: [Paper.UserInfoWithPermissionLevel],
-            docOwner: Sharing.UserInfo,
-            cursor: Paper.Cursor,
-            hasMore: Bool
-        ) {
+        public init(invitees: Array<Paper.InviteeInfoWithPermissionLevel>, users: Array<Paper.UserInfoWithPermissionLevel>, docOwner: Sharing.UserInfo, cursor: Paper.Cursor, hasMore: Bool) {
             self.invitees = invitees
             self.users = users
             self.docOwner = docOwner
@@ -1685,31 +1674,29 @@ public class Paper {
             }
         }
     }
-
     public class ListUsersOnPaperDocResponseSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListUsersOnPaperDocResponse) throws -> JSON {
             let output = [
-                "invitees": try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).serialize(value.invitees),
-                "users": try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).serialize(value.users),
-                "doc_owner": try Sharing.UserInfoSerializer().serialize(value.docOwner),
-                "cursor": try Paper.CursorSerializer().serialize(value.cursor),
-                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
+            "invitees": try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).serialize(value.invitees),
+            "users": try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).serialize(value.users),
+            "doc_owner": try Sharing.UserInfoSerializer().serialize(value.docOwner),
+            "cursor": try Paper.CursorSerializer().serialize(value.cursor),
+            "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListUsersOnPaperDocResponse {
             switch json {
-            case .dictionary(let dict):
-                let invitees = try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).deserialize(dict["invitees"] ?? .null)
-                let users = try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).deserialize(dict["users"] ?? .null)
-                let docOwner = try Sharing.UserInfoSerializer().deserialize(dict["doc_owner"] ?? .null)
-                let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
-                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
-                return ListUsersOnPaperDocResponse(invitees: invitees, users: users, docOwner: docOwner, cursor: cursor, hasMore: hasMore)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocResponse.self, json: json)
+                case .dictionary(let dict):
+                    let invitees = try ArraySerializer(Paper.InviteeInfoWithPermissionLevelSerializer()).deserialize(dict["invitees"] ?? .null)
+                    let users = try ArraySerializer(Paper.UserInfoWithPermissionLevelSerializer()).deserialize(dict["users"] ?? .null)
+                    let docOwner = try Sharing.UserInfoSerializer().deserialize(dict["doc_owner"] ?? .null)
+                    let cursor = try Paper.CursorSerializer().deserialize(dict["cursor"] ?? .null)
+                    let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    return ListUsersOnPaperDocResponse(invitees: invitees, users: users, docOwner: docOwner, cursor: cursor, hasMore: hasMore)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListUsersOnPaperDocResponse.self, json: json)
             }
         }
     }
@@ -1740,54 +1727,52 @@ public class Paper {
             }
         }
     }
-
     public class PaperApiCursorErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperApiCursorError) throws -> JSON {
             switch value {
-            case .expiredCursor:
-                var d = [String: JSON]()
-                d[".tag"] = .str("expired_cursor")
-                return .dictionary(d)
-            case .invalidCursor:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_cursor")
-                return .dictionary(d)
-            case .wrongUserInCursor:
-                var d = [String: JSON]()
-                d[".tag"] = .str("wrong_user_in_cursor")
-                return .dictionary(d)
-            case .reset:
-                var d = [String: JSON]()
-                d[".tag"] = .str("reset")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .expiredCursor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired_cursor")
+                    return .dictionary(d)
+                case .invalidCursor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_cursor")
+                    return .dictionary(d)
+                case .wrongUserInCursor:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("wrong_user_in_cursor")
+                    return .dictionary(d)
+                case .reset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("reset")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperApiCursorError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "expired_cursor":
-                    return PaperApiCursorError.expiredCursor
-                case "invalid_cursor":
-                    return PaperApiCursorError.invalidCursor
-                case "wrong_user_in_cursor":
-                    return PaperApiCursorError.wrongUserInCursor
-                case "reset":
-                    return PaperApiCursorError.reset
-                case "other":
-                    return PaperApiCursorError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "expired_cursor":
+                            return PaperApiCursorError.expiredCursor
+                        case "invalid_cursor":
+                            return PaperApiCursorError.invalidCursor
+                        case "wrong_user_in_cursor":
+                            return PaperApiCursorError.wrongUserInCursor
+                        case "reset":
+                            return PaperApiCursorError.reset
+                        case "other":
+                            return PaperApiCursorError.other
+                        default:
+                            return PaperApiCursorError.other
+                    }
                 default:
-                    return PaperApiCursorError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperApiCursorError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperApiCursorError.self, json: json)
             }
         }
     }
@@ -1817,25 +1802,23 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocCreateArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocCreateArgs) throws -> JSON {
             let output = [
-                "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
-                "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+            "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
+            "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocCreateArgs {
             switch json {
-            case .dictionary(let dict):
-                let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
-                let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
-                return PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocCreateArgs.self, json: json)
+                case .dictionary(let dict):
+                    let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                    return PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocCreateArgs.self, json: json)
             }
         }
     }
@@ -1870,60 +1853,58 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocCreateErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocCreateError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .contentMalformed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("content_malformed")
-                return .dictionary(d)
-            case .folderNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("folder_not_found")
-                return .dictionary(d)
-            case .docLengthExceeded:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_length_exceeded")
-                return .dictionary(d)
-            case .imageSizeExceeded:
-                var d = [String: JSON]()
-                d[".tag"] = .str("image_size_exceeded")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .folderNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_not_found")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocCreateError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return PaperDocCreateError.insufficientPermissions
-                case "other":
-                    return PaperDocCreateError.other
-                case "content_malformed":
-                    return PaperDocCreateError.contentMalformed
-                case "folder_not_found":
-                    return PaperDocCreateError.folderNotFound
-                case "doc_length_exceeded":
-                    return PaperDocCreateError.docLengthExceeded
-                case "image_size_exceeded":
-                    return PaperDocCreateError.imageSizeExceeded
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperDocCreateError.insufficientPermissions
+                        case "other":
+                            return PaperDocCreateError.other
+                        case "content_malformed":
+                            return PaperDocCreateError.contentMalformed
+                        case "folder_not_found":
+                            return PaperDocCreateError.folderNotFound
+                        case "doc_length_exceeded":
+                            return PaperDocCreateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperDocCreateError.imageSizeExceeded
+                        default:
+                            throw JSONSerializerError.unknownTag(type: PaperDocCreateError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: PaperDocCreateError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocCreateError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDocCreateError.self, json: json)
             }
         }
     }
@@ -1957,27 +1938,25 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocCreateUpdateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocCreateUpdateResult) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "revision": try Serialization._Int64Serializer.serialize(value.revision),
-                "title": try Serialization._StringSerializer.serialize(value.title),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "revision": try Serialization._Int64Serializer.serialize(value.revision),
+            "title": try Serialization._StringSerializer.serialize(value.title),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocCreateUpdateResult {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                return PaperDocCreateUpdateResult(docId: docId, revision: revision, title: title)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocCreateUpdateResult.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                    return PaperDocCreateUpdateResult(docId: docId, revision: revision, title: title)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocCreateUpdateResult.self, json: json)
             }
         }
     }
@@ -1986,10 +1965,16 @@ public class Paper {
     public class PaperDocExport: Paper.RefPaperDoc {
         /// (no description)
         public let exportFormat: Paper.ExportFormat
-        public init(docId: String, exportFormat: Paper.ExportFormat) {
+        /// When true, export includes comment threads (e.g. markdown footnotes). When false or omitted, body only.
+        /// Other formats may adopt this later; currently only markdown uses it. Plain bool (not optional):
+        /// protoc-gen-godbx does not support proto3 optional yet.
+        public let includeComments: Bool
+        public init(docId: String, exportFormat: Paper.ExportFormat, includeComments: Bool = false) {
             self.exportFormat = exportFormat
+            self.includeComments = includeComments
             super.init(docId: docId)
         }
+
 
         public override var description: String {
             do {
@@ -1999,25 +1984,25 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocExportSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocExport) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "export_format": try Paper.ExportFormatSerializer().serialize(value.exportFormat),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "export_format": try Paper.ExportFormatSerializer().serialize(value.exportFormat),
+            "include_comments": try Serialization._BoolSerializer.serialize(value.includeComments),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocExport {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let exportFormat = try Paper.ExportFormatSerializer().deserialize(dict["export_format"] ?? .null)
-                return PaperDocExport(docId: docId, exportFormat: exportFormat)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocExport.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let exportFormat = try Paper.ExportFormatSerializer().deserialize(dict["export_format"] ?? .null)
+                    let includeComments = try Serialization._BoolSerializer.deserialize(dict["include_comments"] ?? .number(0))
+                    return PaperDocExport(docId: docId, exportFormat: exportFormat, includeComments: includeComments)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocExport.self, json: json)
             }
         }
     }
@@ -2055,29 +2040,106 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocExportResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocExportResult) throws -> JSON {
             let output = [
-                "owner": try Serialization._StringSerializer.serialize(value.owner),
-                "title": try Serialization._StringSerializer.serialize(value.title),
-                "revision": try Serialization._Int64Serializer.serialize(value.revision),
-                "mime_type": try Serialization._StringSerializer.serialize(value.mimeType),
+            "owner": try Serialization._StringSerializer.serialize(value.owner),
+            "title": try Serialization._StringSerializer.serialize(value.title),
+            "revision": try Serialization._Int64Serializer.serialize(value.revision),
+            "mime_type": try Serialization._StringSerializer.serialize(value.mimeType),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocExportResult {
             switch json {
-            case .dictionary(let dict):
-                let owner = try Serialization._StringSerializer.deserialize(dict["owner"] ?? .null)
-                let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
-                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                let mimeType = try Serialization._StringSerializer.deserialize(dict["mime_type"] ?? .null)
-                return PaperDocExportResult(owner: owner, title: title, revision: revision, mimeType: mimeType)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocExportResult.self, json: json)
+                case .dictionary(let dict):
+                    let owner = try Serialization._StringSerializer.deserialize(dict["owner"] ?? .null)
+                    let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                    let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let mimeType = try Serialization._StringSerializer.deserialize(dict["mime_type"] ?? .null)
+                    return PaperDocExportResult(owner: owner, title: title, revision: revision, mimeType: mimeType)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocExportResult.self, json: json)
+            }
+        }
+    }
+
+    /// Metadata returned by docs/get_metadata.
+    public class PaperDocGetMetadataResult: CustomStringConvertible, JSONRepresentable {
+        /// The Paper doc ID.
+        public let docId: String
+        /// The Paper doc owner's email address.
+        public let owner: String
+        /// The Paper doc title.
+        public let title: String
+        /// The Paper doc creation date.
+        public let createdDate: Date
+        /// The Paper doc status.
+        public let status: Paper.PaperDocStatus
+        /// The Paper doc revision. Simply an ever increasing number.
+        public let revision: Int64
+        /// The date when the Paper doc was last edited.
+        public let lastUpdatedDate: Date
+        /// The email address of the last editor of the Paper doc.
+        public let lastEditor: String
+        public init(docId: String, owner: String, title: String, createdDate: Date, status: Paper.PaperDocStatus, revision: Int64, lastUpdatedDate: Date, lastEditor: String) {
+            stringValidator()(docId)
+            self.docId = docId
+            stringValidator()(owner)
+            self.owner = owner
+            stringValidator()(title)
+            self.title = title
+            self.createdDate = createdDate
+            self.status = status
+            comparableValidator()(revision)
+            self.revision = revision
+            self.lastUpdatedDate = lastUpdatedDate
+            stringValidator()(lastEditor)
+            self.lastEditor = lastEditor
+        }
+
+        func json() throws -> JSON {
+            try PaperDocGetMetadataResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocGetMetadataResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocGetMetadataResult: \(error)"
+            }
+        }
+    }
+    public class PaperDocGetMetadataResultSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: PaperDocGetMetadataResult) throws -> JSON {
+            let output = [
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "owner": try Serialization._StringSerializer.serialize(value.owner),
+            "title": try Serialization._StringSerializer.serialize(value.title),
+            "created_date": try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.createdDate),
+            "status": try Paper.PaperDocStatusSerializer().serialize(value.status),
+            "revision": try Serialization._Int64Serializer.serialize(value.revision),
+            "last_updated_date": try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").serialize(value.lastUpdatedDate),
+            "last_editor": try Serialization._StringSerializer.serialize(value.lastEditor),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> PaperDocGetMetadataResult {
+            switch json {
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let owner = try Serialization._StringSerializer.deserialize(dict["owner"] ?? .null)
+                    let title = try Serialization._StringSerializer.deserialize(dict["title"] ?? .null)
+                    let createdDate = try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["created_date"] ?? .null)
+                    let status = try Paper.PaperDocStatusSerializer().deserialize(dict["status"] ?? .null)
+                    let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let lastUpdatedDate = try NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["last_updated_date"] ?? .null)
+                    let lastEditor = try Serialization._StringSerializer.deserialize(dict["last_editor"] ?? .null)
+                    return PaperDocGetMetadataResult(docId: docId, owner: owner, title: title, createdDate: createdDate, status: status, revision: revision, lastUpdatedDate: lastUpdatedDate, lastEditor: lastEditor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocGetMetadataResult.self, json: json)
             }
         }
     }
@@ -2103,42 +2165,40 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocPermissionLevelSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocPermissionLevel) throws -> JSON {
             switch value {
-            case .edit:
-                var d = [String: JSON]()
-                d[".tag"] = .str("edit")
-                return .dictionary(d)
-            case .viewAndComment:
-                var d = [String: JSON]()
-                d[".tag"] = .str("view_and_comment")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .edit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("edit")
+                    return .dictionary(d)
+                case .viewAndComment:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("view_and_comment")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocPermissionLevel {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "edit":
-                    return PaperDocPermissionLevel.edit
-                case "view_and_comment":
-                    return PaperDocPermissionLevel.viewAndComment
-                case "other":
-                    return PaperDocPermissionLevel.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "edit":
+                            return PaperDocPermissionLevel.edit
+                        case "view_and_comment":
+                            return PaperDocPermissionLevel.viewAndComment
+                        case "other":
+                            return PaperDocPermissionLevel.other
+                        default:
+                            return PaperDocPermissionLevel.other
+                    }
                 default:
-                    return PaperDocPermissionLevel.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocPermissionLevel.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDocPermissionLevel.self, json: json)
             }
         }
     }
@@ -2152,6 +2212,7 @@ public class Paper {
             super.init(docId: docId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocSharingPolicySerializer().serialize(self)))"
@@ -2160,25 +2221,82 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocSharingPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocSharingPolicy) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "sharing_policy": try Paper.SharingPolicySerializer().serialize(value.sharingPolicy),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "sharing_policy": try Paper.SharingPolicySerializer().serialize(value.sharingPolicy),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocSharingPolicy {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let sharingPolicy = try Paper.SharingPolicySerializer().deserialize(dict["sharing_policy"] ?? .null)
-                return PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocSharingPolicy.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let sharingPolicy = try Paper.SharingPolicySerializer().deserialize(dict["sharing_policy"] ?? .null)
+                    return PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocSharingPolicy.self, json: json)
+            }
+        }
+    }
+
+    /// The status of a Paper doc.
+    public enum PaperDocStatus: CustomStringConvertible, JSONRepresentable {
+        /// The Paper doc is active.
+        case active
+        /// The Paper doc is deleted.
+        case deleted
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try PaperDocStatusSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocStatusSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperDocStatus: \(error)"
+            }
+        }
+    }
+    public class PaperDocStatusSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: PaperDocStatus) throws -> JSON {
+            switch value {
+                case .active:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("active")
+                    return .dictionary(d)
+                case .deleted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("deleted")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> PaperDocStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "active":
+                            return PaperDocStatus.active
+                        case "deleted":
+                            return PaperDocStatus.deleted
+                        case "other":
+                            return PaperDocStatus.other
+                        default:
+                            return PaperDocStatus.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocStatus.self, json: json)
             }
         }
     }
@@ -2200,6 +2318,7 @@ public class Paper {
             super.init(docId: docId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try PaperDocUpdateArgsSerializer().serialize(self)))"
@@ -2208,29 +2327,27 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocUpdateArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocUpdateArgs) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "doc_update_policy": try Paper.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
-                "revision": try Serialization._Int64Serializer.serialize(value.revision),
-                "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "doc_update_policy": try Paper.PaperDocUpdatePolicySerializer().serialize(value.docUpdatePolicy),
+            "revision": try Serialization._Int64Serializer.serialize(value.revision),
+            "import_format": try Paper.ImportFormatSerializer().serialize(value.importFormat),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocUpdateArgs {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let docUpdatePolicy = try Paper.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
-                let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
-                let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
-                return PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocUpdateArgs.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let docUpdatePolicy = try Paper.PaperDocUpdatePolicySerializer().deserialize(dict["doc_update_policy"] ?? .null)
+                    let revision = try Serialization._Int64Serializer.deserialize(dict["revision"] ?? .null)
+                    let importFormat = try Paper.ImportFormatSerializer().deserialize(dict["import_format"] ?? .null)
+                    return PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperDocUpdateArgs.self, json: json)
             }
         }
     }
@@ -2271,78 +2388,76 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocUpdateErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocUpdateError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .docNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_not_found")
-                return .dictionary(d)
-            case .contentMalformed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("content_malformed")
-                return .dictionary(d)
-            case .revisionMismatch:
-                var d = [String: JSON]()
-                d[".tag"] = .str("revision_mismatch")
-                return .dictionary(d)
-            case .docLengthExceeded:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_length_exceeded")
-                return .dictionary(d)
-            case .imageSizeExceeded:
-                var d = [String: JSON]()
-                d[".tag"] = .str("image_size_exceeded")
-                return .dictionary(d)
-            case .docArchived:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_archived")
-                return .dictionary(d)
-            case .docDeleted:
-                var d = [String: JSON]()
-                d[".tag"] = .str("doc_deleted")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .docNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_not_found")
+                    return .dictionary(d)
+                case .contentMalformed:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("content_malformed")
+                    return .dictionary(d)
+                case .revisionMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("revision_mismatch")
+                    return .dictionary(d)
+                case .docLengthExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_length_exceeded")
+                    return .dictionary(d)
+                case .imageSizeExceeded:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("image_size_exceeded")
+                    return .dictionary(d)
+                case .docArchived:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_archived")
+                    return .dictionary(d)
+                case .docDeleted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("doc_deleted")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocUpdateError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return PaperDocUpdateError.insufficientPermissions
-                case "other":
-                    return PaperDocUpdateError.other
-                case "doc_not_found":
-                    return PaperDocUpdateError.docNotFound
-                case "content_malformed":
-                    return PaperDocUpdateError.contentMalformed
-                case "revision_mismatch":
-                    return PaperDocUpdateError.revisionMismatch
-                case "doc_length_exceeded":
-                    return PaperDocUpdateError.docLengthExceeded
-                case "image_size_exceeded":
-                    return PaperDocUpdateError.imageSizeExceeded
-                case "doc_archived":
-                    return PaperDocUpdateError.docArchived
-                case "doc_deleted":
-                    return PaperDocUpdateError.docDeleted
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperDocUpdateError.insufficientPermissions
+                        case "other":
+                            return PaperDocUpdateError.other
+                        case "doc_not_found":
+                            return PaperDocUpdateError.docNotFound
+                        case "content_malformed":
+                            return PaperDocUpdateError.contentMalformed
+                        case "revision_mismatch":
+                            return PaperDocUpdateError.revisionMismatch
+                        case "doc_length_exceeded":
+                            return PaperDocUpdateError.docLengthExceeded
+                        case "image_size_exceeded":
+                            return PaperDocUpdateError.imageSizeExceeded
+                        case "doc_archived":
+                            return PaperDocUpdateError.docArchived
+                        case "doc_deleted":
+                            return PaperDocUpdateError.docDeleted
+                        default:
+                            throw JSONSerializerError.unknownTag(type: PaperDocUpdateError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: PaperDocUpdateError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocUpdateError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDocUpdateError.self, json: json)
             }
         }
     }
@@ -2370,48 +2485,46 @@ public class Paper {
             }
         }
     }
-
     public class PaperDocUpdatePolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDocUpdatePolicy) throws -> JSON {
             switch value {
-            case .append:
-                var d = [String: JSON]()
-                d[".tag"] = .str("append")
-                return .dictionary(d)
-            case .prepend:
-                var d = [String: JSON]()
-                d[".tag"] = .str("prepend")
-                return .dictionary(d)
-            case .overwriteAll:
-                var d = [String: JSON]()
-                d[".tag"] = .str("overwrite_all")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .append:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("append")
+                    return .dictionary(d)
+                case .prepend:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("prepend")
+                    return .dictionary(d)
+                case .overwriteAll:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("overwrite_all")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDocUpdatePolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "append":
-                    return PaperDocUpdatePolicy.append
-                case "prepend":
-                    return PaperDocUpdatePolicy.prepend
-                case "overwrite_all":
-                    return PaperDocUpdatePolicy.overwriteAll
-                case "other":
-                    return PaperDocUpdatePolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "append":
+                            return PaperDocUpdatePolicy.append
+                        case "prepend":
+                            return PaperDocUpdatePolicy.prepend
+                        case "overwrite_all":
+                            return PaperDocUpdatePolicy.overwriteAll
+                        case "other":
+                            return PaperDocUpdatePolicy.other
+                        default:
+                            return PaperDocUpdatePolicy.other
+                    }
                 default:
-                    return PaperDocUpdatePolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDocUpdatePolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDocUpdatePolicy.self, json: json)
             }
         }
     }
@@ -2449,27 +2562,25 @@ public class Paper {
             }
         }
     }
-
     public class PaperFolderCreateArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperFolderCreateArg) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
-                "is_team_folder": try NullableSerializer(Serialization._BoolSerializer).serialize(value.isTeamFolder),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "parent_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderId),
+            "is_team_folder": try NullableSerializer(Serialization._BoolSerializer).serialize(value.isTeamFolder),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperFolderCreateArg {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
-                let isTeamFolder = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_team_folder"] ?? .null)
-                return PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperFolderCreateArg.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let parentFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_id"] ?? .null)
+                    let isTeamFolder = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_team_folder"] ?? .null)
+                    return PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperFolderCreateArg.self, json: json)
             }
         }
     }
@@ -2499,48 +2610,46 @@ public class Paper {
             }
         }
     }
-
     public class PaperFolderCreateErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperFolderCreateError) throws -> JSON {
             switch value {
-            case .insufficientPermissions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("insufficient_permissions")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .folderNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("folder_not_found")
-                return .dictionary(d)
-            case .invalidFolderId:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_folder_id")
-                return .dictionary(d)
+                case .insufficientPermissions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_permissions")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .folderNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folder_not_found")
+                    return .dictionary(d)
+                case .invalidFolderId:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_folder_id")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperFolderCreateError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "insufficient_permissions":
-                    return PaperFolderCreateError.insufficientPermissions
-                case "other":
-                    return PaperFolderCreateError.other
-                case "folder_not_found":
-                    return PaperFolderCreateError.folderNotFound
-                case "invalid_folder_id":
-                    return PaperFolderCreateError.invalidFolderId
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "insufficient_permissions":
+                            return PaperFolderCreateError.insufficientPermissions
+                        case "other":
+                            return PaperFolderCreateError.other
+                        case "folder_not_found":
+                            return PaperFolderCreateError.folderNotFound
+                        case "invalid_folder_id":
+                            return PaperFolderCreateError.invalidFolderId
+                        default:
+                            throw JSONSerializerError.unknownTag(type: PaperFolderCreateError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: PaperFolderCreateError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperFolderCreateError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperFolderCreateError.self, json: json)
             }
         }
     }
@@ -2566,23 +2675,21 @@ public class Paper {
             }
         }
     }
-
     public class PaperFolderCreateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperFolderCreateResult) throws -> JSON {
             let output = [
-                "folder_id": try Serialization._StringSerializer.serialize(value.folderId),
+            "folder_id": try Serialization._StringSerializer.serialize(value.folderId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PaperFolderCreateResult {
             switch json {
-            case .dictionary(let dict):
-                let folderId = try Serialization._StringSerializer.deserialize(dict["folder_id"] ?? .null)
-                return PaperFolderCreateResult(folderId: folderId)
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperFolderCreateResult.self, json: json)
+                case .dictionary(let dict):
+                    let folderId = try Serialization._StringSerializer.deserialize(dict["folder_id"] ?? .null)
+                    return PaperFolderCreateResult(folderId: folderId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperFolderCreateResult.self, json: json)
             }
         }
     }
@@ -2596,6 +2703,7 @@ public class Paper {
             super.init(docId: docId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try RemovePaperDocUserSerializer().serialize(self)))"
@@ -2604,25 +2712,23 @@ public class Paper {
             }
         }
     }
-
     public class RemovePaperDocUserSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RemovePaperDocUser) throws -> JSON {
             let output = [
-                "doc_id": try Serialization._StringSerializer.serialize(value.docId),
-                "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
+            "doc_id": try Serialization._StringSerializer.serialize(value.docId),
+            "member": try Sharing.MemberSelectorSerializer().serialize(value.member),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RemovePaperDocUser {
             switch json {
-            case .dictionary(let dict):
-                let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
-                let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
-                return RemovePaperDocUser(docId: docId, member: member)
-            default:
-                throw JSONSerializerError.deserializeError(type: RemovePaperDocUser.self, json: json)
+                case .dictionary(let dict):
+                    let docId = try Serialization._StringSerializer.deserialize(dict["doc_id"] ?? .null)
+                    let member = try Sharing.MemberSelectorSerializer().deserialize(dict["member"] ?? .null)
+                    return RemovePaperDocUser(docId: docId, member: member)
+                default:
+                    throw JSONSerializerError.deserializeError(type: RemovePaperDocUser.self, json: json)
             }
         }
     }
@@ -2650,26 +2756,23 @@ public class Paper {
             }
         }
     }
-
     public class SharingPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharingPolicy) throws -> JSON {
             let output = [
-                "public_sharing_policy": try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).serialize(value.publicSharingPolicy),
-                "team_sharing_policy": try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).serialize(value.teamSharingPolicy),
+            "public_sharing_policy": try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).serialize(value.publicSharingPolicy),
+            "team_sharing_policy": try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).serialize(value.teamSharingPolicy),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> SharingPolicy {
             switch json {
-            case .dictionary(let dict):
-                let publicSharingPolicy = try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer())
-                    .deserialize(dict["public_sharing_policy"] ?? .null)
-                let teamSharingPolicy = try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).deserialize(dict["team_sharing_policy"] ?? .null)
-                return SharingPolicy(publicSharingPolicy: publicSharingPolicy, teamSharingPolicy: teamSharingPolicy)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingPolicy.self, json: json)
+                case .dictionary(let dict):
+                    let publicSharingPolicy = try NullableSerializer(Paper.SharingPublicPolicyTypeSerializer()).deserialize(dict["public_sharing_policy"] ?? .null)
+                    let teamSharingPolicy = try NullableSerializer(Paper.SharingTeamPolicyTypeSerializer()).deserialize(dict["team_sharing_policy"] ?? .null)
+                    return SharingPolicy(publicSharingPolicy: publicSharingPolicy, teamSharingPolicy: teamSharingPolicy)
+                default:
+                    throw JSONSerializerError.deserializeError(type: SharingPolicy.self, json: json)
             }
         }
     }
@@ -2695,42 +2798,40 @@ public class Paper {
             }
         }
     }
-
     public class SharingTeamPolicyTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharingTeamPolicyType) throws -> JSON {
             switch value {
-            case .peopleWithLinkCanEdit:
-                var d = [String: JSON]()
-                d[".tag"] = .str("people_with_link_can_edit")
-                return .dictionary(d)
-            case .peopleWithLinkCanViewAndComment:
-                var d = [String: JSON]()
-                d[".tag"] = .str("people_with_link_can_view_and_comment")
-                return .dictionary(d)
-            case .inviteOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invite_only")
-                return .dictionary(d)
+                case .peopleWithLinkCanEdit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("people_with_link_can_edit")
+                    return .dictionary(d)
+                case .peopleWithLinkCanViewAndComment:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("people_with_link_can_view_and_comment")
+                    return .dictionary(d)
+                case .inviteOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_only")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharingTeamPolicyType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "people_with_link_can_edit":
-                    return SharingTeamPolicyType.peopleWithLinkCanEdit
-                case "people_with_link_can_view_and_comment":
-                    return SharingTeamPolicyType.peopleWithLinkCanViewAndComment
-                case "invite_only":
-                    return SharingTeamPolicyType.inviteOnly
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "people_with_link_can_edit":
+                            return SharingTeamPolicyType.peopleWithLinkCanEdit
+                        case "people_with_link_can_view_and_comment":
+                            return SharingTeamPolicyType.peopleWithLinkCanViewAndComment
+                        case "invite_only":
+                            return SharingTeamPolicyType.inviteOnly
+                        default:
+                            throw JSONSerializerError.unknownTag(type: SharingTeamPolicyType.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: SharingTeamPolicyType.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingTeamPolicyType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharingTeamPolicyType.self, json: json)
             }
         }
     }
@@ -2758,48 +2859,46 @@ public class Paper {
             }
         }
     }
-
     public class SharingPublicPolicyTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharingPublicPolicyType) throws -> JSON {
             switch value {
-            case .peopleWithLinkCanEdit:
-                var d = [String: JSON]()
-                d[".tag"] = .str("people_with_link_can_edit")
-                return .dictionary(d)
-            case .peopleWithLinkCanViewAndComment:
-                var d = [String: JSON]()
-                d[".tag"] = .str("people_with_link_can_view_and_comment")
-                return .dictionary(d)
-            case .inviteOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invite_only")
-                return .dictionary(d)
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
+                case .peopleWithLinkCanEdit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("people_with_link_can_edit")
+                    return .dictionary(d)
+                case .peopleWithLinkCanViewAndComment:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("people_with_link_can_view_and_comment")
+                    return .dictionary(d)
+                case .inviteOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_only")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharingPublicPolicyType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "people_with_link_can_edit":
-                    return SharingPublicPolicyType.peopleWithLinkCanEdit
-                case "people_with_link_can_view_and_comment":
-                    return SharingPublicPolicyType.peopleWithLinkCanViewAndComment
-                case "invite_only":
-                    return SharingPublicPolicyType.inviteOnly
-                case "disabled":
-                    return SharingPublicPolicyType.disabled
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "people_with_link_can_edit":
+                            return SharingPublicPolicyType.peopleWithLinkCanEdit
+                        case "people_with_link_can_view_and_comment":
+                            return SharingPublicPolicyType.peopleWithLinkCanViewAndComment
+                        case "invite_only":
+                            return SharingPublicPolicyType.inviteOnly
+                        case "disabled":
+                            return SharingPublicPolicyType.disabled
+                        default:
+                            throw JSONSerializerError.unknownTag(type: SharingPublicPolicyType.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: SharingPublicPolicyType.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingPublicPolicyType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharingPublicPolicyType.self, json: json)
             }
         }
     }
@@ -2827,25 +2926,23 @@ public class Paper {
             }
         }
     }
-
     public class UserInfoWithPermissionLevelSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserInfoWithPermissionLevel) throws -> JSON {
             let output = [
-                "user": try Sharing.UserInfoSerializer().serialize(value.user),
-                "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
+            "user": try Sharing.UserInfoSerializer().serialize(value.user),
+            "permission_level": try Paper.PaperDocPermissionLevelSerializer().serialize(value.permissionLevel),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UserInfoWithPermissionLevel {
             switch json {
-            case .dictionary(let dict):
-                let user = try Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
-                let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
-                return UserInfoWithPermissionLevel(user: user, permissionLevel: permissionLevel)
-            default:
-                throw JSONSerializerError.deserializeError(type: UserInfoWithPermissionLevel.self, json: json)
+                case .dictionary(let dict):
+                    let user = try Sharing.UserInfoSerializer().deserialize(dict["user"] ?? .null)
+                    let permissionLevel = try Paper.PaperDocPermissionLevelSerializer().deserialize(dict["permission_level"] ?? .null)
+                    return UserInfoWithPermissionLevel(user: user, permissionLevel: permissionLevel)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UserInfoWithPermissionLevel.self, json: json)
             }
         }
     }
@@ -2872,45 +2969,44 @@ public class Paper {
             }
         }
     }
-
     public class UserOnPaperDocFilterSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserOnPaperDocFilter) throws -> JSON {
             switch value {
-            case .visited:
-                var d = [String: JSON]()
-                d[".tag"] = .str("visited")
-                return .dictionary(d)
-            case .shared:
-                var d = [String: JSON]()
-                d[".tag"] = .str("shared")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .visited:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("visited")
+                    return .dictionary(d)
+                case .shared:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> UserOnPaperDocFilter {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "visited":
-                    return UserOnPaperDocFilter.visited
-                case "shared":
-                    return UserOnPaperDocFilter.shared
-                case "other":
-                    return UserOnPaperDocFilter.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "visited":
+                            return UserOnPaperDocFilter.visited
+                        case "shared":
+                            return UserOnPaperDocFilter.shared
+                        case "other":
+                            return UserOnPaperDocFilter.other
+                        default:
+                            return UserOnPaperDocFilter.other
+                    }
                 default:
-                    return UserOnPaperDocFilter.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: UserOnPaperDocFilter.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: UserOnPaperDocFilter.self, json: json)
             }
         }
     }
+
 
     /// Stone Route Objects
 
@@ -2922,11 +3018,9 @@ public class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsCreate = Route(
         name: "docs/create",
@@ -2936,11 +3030,9 @@ public class Paper {
         argSerializer: Paper.PaperDocCreateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocCreateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .upload
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .upload)
     )
     static let docsDownload = Route(
         name: "docs/download",
@@ -2950,11 +3042,9 @@ public class Paper {
         argSerializer: Paper.PaperDocExportSerializer(),
         responseSerializer: Paper.PaperDocExportResultSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .download
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .download)
     )
     static let docsFolderUsersList = Route(
         name: "docs/folder_users/list",
@@ -2964,11 +3054,9 @@ public class Paper {
         argSerializer: Paper.ListUsersOnFolderArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsFolderUsersListContinue = Route(
         name: "docs/folder_users/list/continue",
@@ -2978,11 +3066,9 @@ public class Paper {
         argSerializer: Paper.ListUsersOnFolderContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnFolderResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsGetFolderInfo = Route(
         name: "docs/get_folder_info",
@@ -2992,11 +3078,21 @@ public class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.FoldersContainingPaperDocSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
+    )
+    static let docsGetMetadata = Route(
+        name: "docs/get_metadata",
+        version: 1,
+        namespace: "paper",
+        deprecated: false,
+        argSerializer: Paper.GetDocMetadataArgSerializer(),
+        responseSerializer: Paper.PaperDocGetMetadataResultSerializer(),
+        errorSerializer: Paper.DocLookupErrorSerializer(),
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsList = Route(
         name: "docs/list",
@@ -3006,11 +3102,9 @@ public class Paper {
         argSerializer: Paper.ListPaperDocsArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsListContinue = Route(
         name: "docs/list/continue",
@@ -3020,11 +3114,9 @@ public class Paper {
         argSerializer: Paper.ListPaperDocsContinueArgsSerializer(),
         responseSerializer: Paper.ListPaperDocsResponseSerializer(),
         errorSerializer: Paper.ListDocsCursorErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsPermanentlyDelete = Route(
         name: "docs/permanently_delete",
@@ -3034,11 +3126,9 @@ public class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsSharingPolicyGet = Route(
         name: "docs/sharing_policy/get",
@@ -3048,11 +3138,9 @@ public class Paper {
         argSerializer: Paper.RefPaperDocSerializer(),
         responseSerializer: Paper.SharingPolicySerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsSharingPolicySet = Route(
         name: "docs/sharing_policy/set",
@@ -3062,11 +3150,9 @@ public class Paper {
         argSerializer: Paper.PaperDocSharingPolicySerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsUpdate = Route(
         name: "docs/update",
@@ -3076,11 +3162,9 @@ public class Paper {
         argSerializer: Paper.PaperDocUpdateArgsSerializer(),
         responseSerializer: Paper.PaperDocCreateUpdateResultSerializer(),
         errorSerializer: Paper.PaperDocUpdateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .upload
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .upload)
     )
     static let docsUsersAdd = Route(
         name: "docs/users/add",
@@ -3090,11 +3174,9 @@ public class Paper {
         argSerializer: Paper.AddPaperDocUserSerializer(),
         responseSerializer: ArraySerializer(Paper.AddPaperDocUserMemberResultSerializer()),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsUsersList = Route(
         name: "docs/users/list",
@@ -3104,11 +3186,9 @@ public class Paper {
         argSerializer: Paper.ListUsersOnPaperDocArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsUsersListContinue = Route(
         name: "docs/users/list/continue",
@@ -3118,11 +3198,9 @@ public class Paper {
         argSerializer: Paper.ListUsersOnPaperDocContinueArgsSerializer(),
         responseSerializer: Paper.ListUsersOnPaperDocResponseSerializer(),
         errorSerializer: Paper.ListUsersCursorErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let docsUsersRemove = Route(
         name: "docs/users/remove",
@@ -3132,11 +3210,9 @@ public class Paper {
         argSerializer: Paper.RemovePaperDocUserSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Paper.DocLookupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let foldersCreate = Route(
         name: "folders/create",
@@ -3146,10 +3222,8 @@ public class Paper {
         argSerializer: Paper.PaperFolderCreateArgSerializer(),
         responseSerializer: Paper.PaperFolderCreateResultSerializer(),
         errorSerializer: Paper.PaperFolderCreateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
 }

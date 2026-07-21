@@ -22,10 +22,15 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
     /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -33,16 +38,9 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
-    @discardableResult public func getThumbnailV2(
-        resource: Files.PathOrLink,
-        format: Files.ThumbnailFormat = .jpeg,
-        size: Files.ThumbnailSize = .w64h64,
-        mode: Files.ThumbnailMode = .strict,
-        overwrite: Bool = false,
-        destination: URL
-    ) -> DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
+    @discardableResult public func getThumbnailV2(resource: Files.PathOrLink, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict, quality: Files.ThumbnailQuality = .quality80, excludeMediaInfo: Bool? = nil, overwrite: Bool = false, destination: URL) -> DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
         let route = Files.getThumbnailV2
-        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode)
+        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
@@ -54,35 +52,35 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
     /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
-    @discardableResult public func getThumbnailV2(
-        resource: Files.PathOrLink,
-        format: Files.ThumbnailFormat = .jpeg,
-        size: Files.ThumbnailSize = .w64h64,
-        mode: Files.ThumbnailMode = .strict
-    ) -> DownloadRequestMemory<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
+    @discardableResult public func getThumbnailV2(resource: Files.PathOrLink, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict, quality: Files.ThumbnailQuality = .quality80, excludeMediaInfo: Bool? = nil) -> DownloadRequestMemory<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
         let route = Files.getThumbnailV2
-        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode)
+        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Starts returning the contents of a folder. If the result's hasMore in ListFolderResult field is true, call
-    /// listFolderContinue with the returned cursor in ListFolderResult to retrieve more entries. If you're using
-    /// recursive in ListFolderArg set to true to keep a local cache of the contents of a Dropbox account, iterate
+    /// listFolderContinue with the returned ListFolderResult.cursor to retrieve more entries. If you're using
+    /// ListFolderArg.recursive set to true to keep a local cache of the contents of a Dropbox account, iterate
     /// through each entry in order and process them as follows to keep your local state in sync: For each
     /// FileMetadata, store the new entry at the given path in your local state. If the required parent folders
     /// don't exist yet, create them. If there's already something else at the given path, replace it and remove all
     /// its children. For each FolderMetadata, store the new entry at the given path in your local state. If the
     /// required parent folders don't exist yet, create them. If there's already something else at the given path,
-    /// replace it but leave the children as they are. Check the new entry's readOnly in FolderSharingInfo and set
-    /// all its children's read-only statuses to match. For each DeletedMetadata, if your local state has something
-    /// at the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
+    /// replace it but leave the children as they are. Check the new entry's FolderSharingInfo.read_only and set all
+    /// its children's read-only statuses to match. For each DeletedMetadata, if your local state has something at
+    /// the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
     /// Note: auth.RateLimitError may be returned if multiple listFolder or listFolderContinue calls with same
     /// parameters are made simultaneously by same API app for same user. If your app implements retry logic, please
     /// hold off the retry until the previous request finishes.
@@ -91,13 +89,16 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter path: A unique identifier for the file.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
-    /// response will contain contents of all subfolders.
-    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video. This parameter will
-    /// no longer have an effect starting December 2, 2019.
+    /// response will contain contents of all subfolders. In some cases, setting recursive in ListFolderArg to true
+    /// may lead to performance issues or errors, especially when traversing folder structures with a large number
+    /// of items. A workaround for such cases is to set recursive in ListFolderArg to false and traverse subfolders
+    /// one at a time.
+    /// - parameter includeMediaInfo: Field is deprecated. If true, mediaInfo in FileMetadata is set for photo and
+    /// video. This parameter will no longer have an effect starting December 2, 2019.
     /// - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
     /// but were deleted.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
-    /// whether or not  that file has any explicit members.
+    /// whether or not that file has any explicit members.
     /// - parameter includeMountedFolders: If true, the results will include entries under mounted folders which
     /// includes app folder, shared folder and team folder.
     /// - parameter limit: The maximum number of results to return per request. Note: This is an approximate number and
@@ -108,34 +109,14 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
     /// - parameter includeNonDownloadableFiles: If true, include files that are not downloadable, i.e. Google Docs.
+    /// - parameter includeRestorableInfo: If true, each returned deleted entry will include whether that entry can be
+    /// restored.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
-    @discardableResult public func listFolder(
-        path: String,
-        recursive: Bool = false,
-        includeMediaInfo: Bool = false,
-        includeDeleted: Bool = false,
-        includeHasExplicitSharedMembers: Bool = false,
-        includeMountedFolders: Bool = true,
-        limit: UInt32? = nil,
-        sharedLink: Files.SharedLink? = nil,
-        includePropertyGroups: FileProperties.TemplateFilterBase? = nil,
-        includeNonDownloadableFiles: Bool = true
-    ) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
+    @discardableResult public func listFolder(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includeNonDownloadableFiles: Bool = true, includeRestorableInfo: Bool = false) -> RpcRequest<Files.ListFolderResultSerializer, Files.ListFolderErrorSerializer> {
         let route = Files.listFolder
-        let serverArgs = Files.ListFolderArg(
-            path: path,
-            recursive: recursive,
-            includeMediaInfo: includeMediaInfo,
-            includeDeleted: includeDeleted,
-            includeHasExplicitSharedMembers: includeHasExplicitSharedMembers,
-            includeMountedFolders: includeMountedFolders,
-            limit: limit,
-            sharedLink: sharedLink,
-            includePropertyGroups: includePropertyGroups,
-            includeNonDownloadableFiles: includeNonDownloadableFiles
-        )
+        let serverArgs = Files.ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups, includeNonDownloadableFiles: includeNonDownloadableFiles, includeRestorableInfo: includeRestorableInfo)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -153,4 +134,5 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
         let serverArgs = Files.ListFolderContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

@@ -12,10 +12,10 @@ public class FileProperties {
     public class AddPropertiesArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
+        /// The property groups which are to be added to a Dropbox file. No two groups in the input should refer to the
         /// same template.
-        public let propertyGroups: [FileProperties.PropertyGroup]
-        public init(path: String, propertyGroups: [FileProperties.PropertyGroup]) {
+        public let propertyGroups: Array<FileProperties.PropertyGroup>
+        public init(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.propertyGroups = propertyGroups
@@ -33,25 +33,23 @@ public class FileProperties {
             }
         }
     }
-
     public class AddPropertiesArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddPropertiesArg) throws -> JSON {
             let output = [
-                "path": try Serialization._StringSerializer.serialize(value.path),
-                "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
+            "path": try Serialization._StringSerializer.serialize(value.path),
+            "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddPropertiesArg {
             switch json {
-            case .dictionary(let dict):
-                let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
-                return AddPropertiesArg(path: path, propertyGroups: propertyGroups)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddPropertiesArg.self, json: json)
+                case .dictionary(let dict):
+                    let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
+                    return AddPropertiesArg(path: path, propertyGroups: propertyGroups)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddPropertiesArg.self, json: json)
             }
         }
     }
@@ -77,43 +75,41 @@ public class FileProperties {
             }
         }
     }
-
     public class TemplateErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TemplateError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TemplateError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return TemplateError.templateNotFound(v)
-                case "restricted_content":
-                    return TemplateError.restrictedContent
-                case "other":
-                    return TemplateError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return TemplateError.templateNotFound(v)
+                        case "restricted_content":
+                            return TemplateError.restrictedContent
+                        case "other":
+                            return TemplateError.other
+                        default:
+                            return TemplateError.other
+                    }
                 default:
-                    return TemplateError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TemplateError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TemplateError.self, json: json)
             }
         }
     }
@@ -143,56 +139,54 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .path(let arg):
-                var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("path")
-                return .dictionary(d)
-            case .unsupportedFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unsupported_folder")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_folder")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return PropertiesError.templateNotFound(v)
-                case "restricted_content":
-                    return PropertiesError.restrictedContent
-                case "other":
-                    return PropertiesError.other
-                case "path":
-                    let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
-                    return PropertiesError.path(v)
-                case "unsupported_folder":
-                    return PropertiesError.unsupportedFolder
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return PropertiesError.templateNotFound(v)
+                        case "restricted_content":
+                            return PropertiesError.restrictedContent
+                        case "other":
+                            return PropertiesError.other
+                        case "path":
+                            let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return PropertiesError.path(v)
+                        case "unsupported_folder":
+                            return PropertiesError.unsupportedFolder
+                        default:
+                            throw JSONSerializerError.unknownTag(type: PropertiesError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: PropertiesError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PropertiesError.self, json: json)
             }
         }
     }
@@ -228,74 +222,72 @@ public class FileProperties {
             }
         }
     }
-
     public class InvalidPropertyGroupErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: InvalidPropertyGroupError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .path(let arg):
-                var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("path")
-                return .dictionary(d)
-            case .unsupportedFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unsupported_folder")
-                return .dictionary(d)
-            case .propertyFieldTooLarge:
-                var d = [String: JSON]()
-                d[".tag"] = .str("property_field_too_large")
-                return .dictionary(d)
-            case .doesNotFitTemplate:
-                var d = [String: JSON]()
-                d[".tag"] = .str("does_not_fit_template")
-                return .dictionary(d)
-            case .duplicatePropertyGroups:
-                var d = [String: JSON]()
-                d[".tag"] = .str("duplicate_property_groups")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_folder")
+                    return .dictionary(d)
+                case .propertyFieldTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("property_field_too_large")
+                    return .dictionary(d)
+                case .doesNotFitTemplate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("does_not_fit_template")
+                    return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> InvalidPropertyGroupError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return InvalidPropertyGroupError.templateNotFound(v)
-                case "restricted_content":
-                    return InvalidPropertyGroupError.restrictedContent
-                case "other":
-                    return InvalidPropertyGroupError.other
-                case "path":
-                    let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
-                    return InvalidPropertyGroupError.path(v)
-                case "unsupported_folder":
-                    return InvalidPropertyGroupError.unsupportedFolder
-                case "property_field_too_large":
-                    return InvalidPropertyGroupError.propertyFieldTooLarge
-                case "does_not_fit_template":
-                    return InvalidPropertyGroupError.doesNotFitTemplate
-                case "duplicate_property_groups":
-                    return InvalidPropertyGroupError.duplicatePropertyGroups
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return InvalidPropertyGroupError.templateNotFound(v)
+                        case "restricted_content":
+                            return InvalidPropertyGroupError.restrictedContent
+                        case "other":
+                            return InvalidPropertyGroupError.other
+                        case "path":
+                            let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return InvalidPropertyGroupError.path(v)
+                        case "unsupported_folder":
+                            return InvalidPropertyGroupError.unsupportedFolder
+                        case "property_field_too_large":
+                            return InvalidPropertyGroupError.propertyFieldTooLarge
+                        case "does_not_fit_template":
+                            return InvalidPropertyGroupError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return InvalidPropertyGroupError.duplicatePropertyGroups
+                        default:
+                            throw JSONSerializerError.unknownTag(type: InvalidPropertyGroupError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: InvalidPropertyGroupError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: InvalidPropertyGroupError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: InvalidPropertyGroupError.self, json: json)
             }
         }
     }
@@ -333,80 +325,78 @@ public class FileProperties {
             }
         }
     }
-
     public class AddPropertiesErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddPropertiesError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .path(let arg):
-                var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("path")
-                return .dictionary(d)
-            case .unsupportedFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unsupported_folder")
-                return .dictionary(d)
-            case .propertyFieldTooLarge:
-                var d = [String: JSON]()
-                d[".tag"] = .str("property_field_too_large")
-                return .dictionary(d)
-            case .doesNotFitTemplate:
-                var d = [String: JSON]()
-                d[".tag"] = .str("does_not_fit_template")
-                return .dictionary(d)
-            case .duplicatePropertyGroups:
-                var d = [String: JSON]()
-                d[".tag"] = .str("duplicate_property_groups")
-                return .dictionary(d)
-            case .propertyGroupAlreadyExists:
-                var d = [String: JSON]()
-                d[".tag"] = .str("property_group_already_exists")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_folder")
+                    return .dictionary(d)
+                case .propertyFieldTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("property_field_too_large")
+                    return .dictionary(d)
+                case .doesNotFitTemplate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("does_not_fit_template")
+                    return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
+                case .propertyGroupAlreadyExists:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("property_group_already_exists")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> AddPropertiesError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return AddPropertiesError.templateNotFound(v)
-                case "restricted_content":
-                    return AddPropertiesError.restrictedContent
-                case "other":
-                    return AddPropertiesError.other
-                case "path":
-                    let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
-                    return AddPropertiesError.path(v)
-                case "unsupported_folder":
-                    return AddPropertiesError.unsupportedFolder
-                case "property_field_too_large":
-                    return AddPropertiesError.propertyFieldTooLarge
-                case "does_not_fit_template":
-                    return AddPropertiesError.doesNotFitTemplate
-                case "duplicate_property_groups":
-                    return AddPropertiesError.duplicatePropertyGroups
-                case "property_group_already_exists":
-                    return AddPropertiesError.propertyGroupAlreadyExists
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return AddPropertiesError.templateNotFound(v)
+                        case "restricted_content":
+                            return AddPropertiesError.restrictedContent
+                        case "other":
+                            return AddPropertiesError.other
+                        case "path":
+                            let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return AddPropertiesError.path(v)
+                        case "unsupported_folder":
+                            return AddPropertiesError.unsupportedFolder
+                        case "property_field_too_large":
+                            return AddPropertiesError.propertyFieldTooLarge
+                        case "does_not_fit_template":
+                            return AddPropertiesError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return AddPropertiesError.duplicatePropertyGroups
+                        case "property_group_already_exists":
+                            return AddPropertiesError.propertyGroupAlreadyExists
+                        default:
+                            throw JSONSerializerError.unknownTag(type: AddPropertiesError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: AddPropertiesError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: AddPropertiesError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: AddPropertiesError.self, json: json)
             }
         }
     }
@@ -419,8 +409,8 @@ public class FileProperties {
         public let description_: String
         /// Definitions of the property fields associated with this template. There can be up to 32 properties in a
         /// single template.
-        public let fields: [FileProperties.PropertyFieldTemplate]
-        public init(name: String, description_: String, fields: [FileProperties.PropertyFieldTemplate]) {
+        public let fields: Array<FileProperties.PropertyFieldTemplate>
+        public init(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) {
             stringValidator()(name)
             self.name = name
             stringValidator()(description_)
@@ -440,33 +430,33 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyGroupTemplateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyGroupTemplate) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "description": try Serialization._StringSerializer.serialize(value.description_),
-                "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyGroupTemplate {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
-                let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
-                return PropertyGroupTemplate(name: name, description_: description_, fields: fields)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyGroupTemplate.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
+                    return PropertyGroupTemplate(name: name, description_: description_, fields: fields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertyGroupTemplate.self, json: json)
             }
         }
     }
 
     /// The AddTemplateArg struct
     public class AddTemplateArg: FileProperties.PropertyGroupTemplate {
+
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try AddTemplateArgSerializer().serialize(self)))"
@@ -475,27 +465,25 @@ public class FileProperties {
             }
         }
     }
-
     public class AddTemplateArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddTemplateArg) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "description": try Serialization._StringSerializer.serialize(value.description_),
-                "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddTemplateArg {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
-                let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
-                return AddTemplateArg(name: name, description_: description_, fields: fields)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddTemplateArg.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
+                    return AddTemplateArg(name: name, description_: description_, fields: fields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddTemplateArg.self, json: json)
             }
         }
     }
@@ -521,23 +509,21 @@ public class FileProperties {
             }
         }
     }
-
     public class AddTemplateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AddTemplateResult) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> AddTemplateResult {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                return AddTemplateResult(templateId: templateId)
-            default:
-                throw JSONSerializerError.deserializeError(type: AddTemplateResult.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    return AddTemplateResult(templateId: templateId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: AddTemplateResult.self, json: json)
             }
         }
     }
@@ -563,29 +549,29 @@ public class FileProperties {
             }
         }
     }
-
     public class GetTemplateArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GetTemplateArg) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> GetTemplateArg {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                return GetTemplateArg(templateId: templateId)
-            default:
-                throw JSONSerializerError.deserializeError(type: GetTemplateArg.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    return GetTemplateArg(templateId: templateId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: GetTemplateArg.self, json: json)
             }
         }
     }
 
     /// The GetTemplateResult struct
     public class GetTemplateResult: FileProperties.PropertyGroupTemplate {
+
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try GetTemplateResultSerializer().serialize(self)))"
@@ -594,27 +580,25 @@ public class FileProperties {
             }
         }
     }
-
     public class GetTemplateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GetTemplateResult) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "description": try Serialization._StringSerializer.serialize(value.description_),
-                "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            "fields": try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).serialize(value.fields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> GetTemplateResult {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
-                let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
-                return GetTemplateResult(name: name, description_: description_, fields: fields)
-            default:
-                throw JSONSerializerError.deserializeError(type: GetTemplateResult.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = try ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
+                    return GetTemplateResult(name: name, description_: description_, fields: fields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: GetTemplateResult.self, json: json)
             }
         }
     }
@@ -622,8 +606,8 @@ public class FileProperties {
     /// The ListTemplateResult struct
     public class ListTemplateResult: CustomStringConvertible, JSONRepresentable {
         /// List of identifiers for templates added by  See templatesAddForUser or templatesAddForTeam.
-        public let templateIds: [String]
-        public init(templateIds: [String]) {
+        public let templateIds: Array<String>
+        public init(templateIds: Array<String>) {
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*"))(templateIds)
             self.templateIds = templateIds
         }
@@ -640,23 +624,21 @@ public class FileProperties {
             }
         }
     }
-
     public class ListTemplateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ListTemplateResult) throws -> JSON {
             let output = [
-                "template_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.templateIds),
+            "template_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.templateIds),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> ListTemplateResult {
             switch json {
-            case .dictionary(let dict):
-                let templateIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["template_ids"] ?? .null)
-                return ListTemplateResult(templateIds: templateIds)
-            default:
-                throw JSONSerializerError.deserializeError(type: ListTemplateResult.self, json: json)
+                case .dictionary(let dict):
+                    let templateIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["template_ids"] ?? .null)
+                    return ListTemplateResult(templateIds: templateIds)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ListTemplateResult.self, json: json)
             }
         }
     }
@@ -680,36 +662,34 @@ public class FileProperties {
             }
         }
     }
-
     public class LogicalOperatorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: LogicalOperator) throws -> JSON {
             switch value {
-            case .orOperator:
-                var d = [String: JSON]()
-                d[".tag"] = .str("or_operator")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .orOperator:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("or_operator")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> LogicalOperator {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "or_operator":
-                    return LogicalOperator.orOperator
-                case "other":
-                    return LogicalOperator.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "or_operator":
+                            return LogicalOperator.orOperator
+                        case "other":
+                            return LogicalOperator.other
+                        default:
+                            return LogicalOperator.other
+                    }
                 default:
-                    return LogicalOperator.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: LogicalOperator.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: LogicalOperator.self, json: json)
             }
         }
     }
@@ -733,36 +713,34 @@ public class FileProperties {
             }
         }
     }
-
     public class LookUpPropertiesErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: LookUpPropertiesError) throws -> JSON {
             switch value {
-            case .propertyGroupNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("property_group_not_found")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .propertyGroupNotFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("property_group_not_found")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> LookUpPropertiesError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "property_group_not_found":
-                    return LookUpPropertiesError.propertyGroupNotFound
-                case "other":
-                    return LookUpPropertiesError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "property_group_not_found":
+                            return LookUpPropertiesError.propertyGroupNotFound
+                        case "other":
+                            return LookUpPropertiesError.other
+                        default:
+                            return LookUpPropertiesError.other
+                    }
                 default:
-                    return LookUpPropertiesError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: LookUpPropertiesError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: LookUpPropertiesError.self, json: json)
             }
         }
     }
@@ -795,61 +773,59 @@ public class FileProperties {
             }
         }
     }
-
     public class LookupErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: LookupError) throws -> JSON {
             switch value {
-            case .malformedPath(let arg):
-                var d = try ["malformed_path": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("malformed_path")
-                return .dictionary(d)
-            case .notFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_found")
-                return .dictionary(d)
-            case .notFile:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_file")
-                return .dictionary(d)
-            case .notFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_folder")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .malformedPath(let arg):
+                    var d = try ["malformed_path": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("malformed_path")
+                    return .dictionary(d)
+                case .notFound:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_found")
+                    return .dictionary(d)
+                case .notFile:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_file")
+                    return .dictionary(d)
+                case .notFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_folder")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> LookupError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "malformed_path":
-                    let v = try Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .null)
-                    return LookupError.malformedPath(v)
-                case "not_found":
-                    return LookupError.notFound
-                case "not_file":
-                    return LookupError.notFile
-                case "not_folder":
-                    return LookupError.notFolder
-                case "restricted_content":
-                    return LookupError.restrictedContent
-                case "other":
-                    return LookupError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "malformed_path":
+                            let v = try Serialization._StringSerializer.deserialize(d["malformed_path"] ?? .null)
+                            return LookupError.malformedPath(v)
+                        case "not_found":
+                            return LookupError.notFound
+                        case "not_file":
+                            return LookupError.notFile
+                        case "not_folder":
+                            return LookupError.notFolder
+                        case "restricted_content":
+                            return LookupError.restrictedContent
+                        case "other":
+                            return LookupError.other
+                        default:
+                            return LookupError.other
+                    }
                 default:
-                    return LookupError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: LookupError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: LookupError.self, json: json)
             }
         }
     }
@@ -883,67 +859,65 @@ public class FileProperties {
             }
         }
     }
-
     public class ModifyTemplateErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ModifyTemplateError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .conflictingPropertyNames:
-                var d = [String: JSON]()
-                d[".tag"] = .str("conflicting_property_names")
-                return .dictionary(d)
-            case .tooManyProperties:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_properties")
-                return .dictionary(d)
-            case .tooManyTemplates:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_templates")
-                return .dictionary(d)
-            case .templateAttributeTooLarge:
-                var d = [String: JSON]()
-                d[".tag"] = .str("template_attribute_too_large")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .conflictingPropertyNames:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("conflicting_property_names")
+                    return .dictionary(d)
+                case .tooManyProperties:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_properties")
+                    return .dictionary(d)
+                case .tooManyTemplates:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_templates")
+                    return .dictionary(d)
+                case .templateAttributeTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("template_attribute_too_large")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ModifyTemplateError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return ModifyTemplateError.templateNotFound(v)
-                case "restricted_content":
-                    return ModifyTemplateError.restrictedContent
-                case "other":
-                    return ModifyTemplateError.other
-                case "conflicting_property_names":
-                    return ModifyTemplateError.conflictingPropertyNames
-                case "too_many_properties":
-                    return ModifyTemplateError.tooManyProperties
-                case "too_many_templates":
-                    return ModifyTemplateError.tooManyTemplates
-                case "template_attribute_too_large":
-                    return ModifyTemplateError.templateAttributeTooLarge
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return ModifyTemplateError.templateNotFound(v)
+                        case "restricted_content":
+                            return ModifyTemplateError.restrictedContent
+                        case "other":
+                            return ModifyTemplateError.other
+                        case "conflicting_property_names":
+                            return ModifyTemplateError.conflictingPropertyNames
+                        case "too_many_properties":
+                            return ModifyTemplateError.tooManyProperties
+                        case "too_many_templates":
+                            return ModifyTemplateError.tooManyTemplates
+                        case "template_attribute_too_large":
+                            return ModifyTemplateError.templateAttributeTooLarge
+                        default:
+                            throw JSONSerializerError.unknownTag(type: ModifyTemplateError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: ModifyTemplateError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ModifyTemplateError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ModifyTemplateError.self, json: json)
             }
         }
     }
@@ -952,10 +926,10 @@ public class FileProperties {
     public class OverwritePropertyGroupArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
+        /// The property groups "snapshot" updates to force apply. No two groups in the input should refer to the same
         /// template.
-        public let propertyGroups: [FileProperties.PropertyGroup]
-        public init(path: String, propertyGroups: [FileProperties.PropertyGroup]) {
+        public let propertyGroups: Array<FileProperties.PropertyGroup>
+        public init(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.propertyGroups = propertyGroups
@@ -973,25 +947,23 @@ public class FileProperties {
             }
         }
     }
-
     public class OverwritePropertyGroupArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: OverwritePropertyGroupArg) throws -> JSON {
             let output = [
-                "path": try Serialization._StringSerializer.serialize(value.path),
-                "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
+            "path": try Serialization._StringSerializer.serialize(value.path),
+            "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> OverwritePropertyGroupArg {
             switch json {
-            case .dictionary(let dict):
-                let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
-                return OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups)
-            default:
-                throw JSONSerializerError.deserializeError(type: OverwritePropertyGroupArg.self, json: json)
+                case .dictionary(let dict):
+                    let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
+                    return OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups)
+                default:
+                    throw JSONSerializerError.deserializeError(type: OverwritePropertyGroupArg.self, json: json)
             }
         }
     }
@@ -999,10 +971,10 @@ public class FileProperties {
     /// The PropertiesSearchArg struct
     public class PropertiesSearchArg: CustomStringConvertible, JSONRepresentable {
         /// Queries to search.
-        public let queries: [FileProperties.PropertiesSearchQuery]
+        public let queries: Array<FileProperties.PropertiesSearchQuery>
         /// Filter results to contain only properties associated with these template IDs.
         public let templateFilter: FileProperties.TemplateFilter
-        public init(queries: [FileProperties.PropertiesSearchQuery], templateFilter: FileProperties.TemplateFilter = .filterNone) {
+        public init(queries: Array<FileProperties.PropertiesSearchQuery>, templateFilter: FileProperties.TemplateFilter = .filterNone) {
             self.queries = queries
             self.templateFilter = templateFilter
         }
@@ -1019,26 +991,23 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchArg) throws -> JSON {
             let output = [
-                "queries": try ArraySerializer(FileProperties.PropertiesSearchQuerySerializer()).serialize(value.queries),
-                "template_filter": try FileProperties.TemplateFilterSerializer().serialize(value.templateFilter),
+            "queries": try ArraySerializer(FileProperties.PropertiesSearchQuerySerializer()).serialize(value.queries),
+            "template_filter": try FileProperties.TemplateFilterSerializer().serialize(value.templateFilter),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchArg {
             switch json {
-            case .dictionary(let dict):
-                let queries = try ArraySerializer(FileProperties.PropertiesSearchQuerySerializer()).deserialize(dict["queries"] ?? .null)
-                let templateFilter = try FileProperties.TemplateFilterSerializer()
-                    .deserialize(dict["template_filter"] ?? FileProperties.TemplateFilterSerializer().serialize(.filterNone))
-                return PropertiesSearchArg(queries: queries, templateFilter: templateFilter)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchArg.self, json: json)
+                case .dictionary(let dict):
+                    let queries = try ArraySerializer(FileProperties.PropertiesSearchQuerySerializer()).deserialize(dict["queries"] ?? .null)
+                    let templateFilter = try FileProperties.TemplateFilterSerializer().deserialize(dict["template_filter"] ?? FileProperties.TemplateFilterSerializer().serialize(.filterNone))
+                    return PropertiesSearchArg(queries: queries, templateFilter: templateFilter)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchArg.self, json: json)
             }
         }
     }
@@ -1064,23 +1033,21 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchContinueArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchContinueArg) throws -> JSON {
             let output = [
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
+            "cursor": try Serialization._StringSerializer.serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchContinueArg {
             switch json {
-            case .dictionary(let dict):
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                return PropertiesSearchContinueArg(cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchContinueArg.self, json: json)
+                case .dictionary(let dict):
+                    let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    return PropertiesSearchContinueArg(cursor: cursor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchContinueArg.self, json: json)
             }
         }
     }
@@ -1104,36 +1071,34 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchContinueErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchContinueError) throws -> JSON {
             switch value {
-            case .reset:
-                var d = [String: JSON]()
-                d[".tag"] = .str("reset")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .reset:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("reset")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchContinueError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "reset":
-                    return PropertiesSearchContinueError.reset
-                case "other":
-                    return PropertiesSearchContinueError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "reset":
+                            return PropertiesSearchContinueError.reset
+                        case "other":
+                            return PropertiesSearchContinueError.other
+                        default:
+                            return PropertiesSearchContinueError.other
+                    }
                 default:
-                    return PropertiesSearchContinueError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchContinueError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchContinueError.self, json: json)
             }
         }
     }
@@ -1157,37 +1122,35 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchError) throws -> JSON {
             switch value {
-            case .propertyGroupLookup(let arg):
-                var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("property_group_lookup")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .propertyGroupLookup(let arg):
+                    var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("property_group_lookup")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "property_group_lookup":
-                    let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
-                    return PropertiesSearchError.propertyGroupLookup(v)
-                case "other":
-                    return PropertiesSearchError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "property_group_lookup":
+                            let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
+                            return PropertiesSearchError.propertyGroupLookup(v)
+                        case "other":
+                            return PropertiesSearchError.other
+                        default:
+                            return PropertiesSearchError.other
+                    }
                 default:
-                    return PropertiesSearchError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchError.self, json: json)
             }
         }
     }
@@ -1201,8 +1164,8 @@ public class FileProperties {
         /// Whether the file or folder is deleted.
         public let isDeleted: Bool
         /// List of custom property groups associated with the file.
-        public let propertyGroups: [FileProperties.PropertyGroup]
-        public init(id: String, path: String, isDeleted: Bool, propertyGroups: [FileProperties.PropertyGroup]) {
+        public let propertyGroups: Array<FileProperties.PropertyGroup>
+        public init(id: String, path: String, isDeleted: Bool, propertyGroups: Array<FileProperties.PropertyGroup>) {
             stringValidator(minLength: 1)(id)
             self.id = id
             stringValidator()(path)
@@ -1223,29 +1186,27 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchMatchSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchMatch) throws -> JSON {
             let output = [
-                "id": try Serialization._StringSerializer.serialize(value.id),
-                "path": try Serialization._StringSerializer.serialize(value.path),
-                "is_deleted": try Serialization._BoolSerializer.serialize(value.isDeleted),
-                "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
+            "id": try Serialization._StringSerializer.serialize(value.id),
+            "path": try Serialization._StringSerializer.serialize(value.path),
+            "is_deleted": try Serialization._BoolSerializer.serialize(value.isDeleted),
+            "property_groups": try ArraySerializer(FileProperties.PropertyGroupSerializer()).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchMatch {
             switch json {
-            case .dictionary(let dict):
-                let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
-                let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let isDeleted = try Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
-                let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
-                return PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted, propertyGroups: propertyGroups)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchMatch.self, json: json)
+                case .dictionary(let dict):
+                    let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let isDeleted = try Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
+                    let propertyGroups = try ArraySerializer(FileProperties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
+                    return PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted, propertyGroups: propertyGroups)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchMatch.self, json: json)
             }
         }
     }
@@ -1269,37 +1230,35 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchModeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchMode) throws -> JSON {
             switch value {
-            case .fieldName(let arg):
-                var d = try ["field_name": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("field_name")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .fieldName(let arg):
+                    var d = try ["field_name": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("field_name")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchMode {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "field_name":
-                    let v = try Serialization._StringSerializer.deserialize(d["field_name"] ?? .null)
-                    return PropertiesSearchMode.fieldName(v)
-                case "other":
-                    return PropertiesSearchMode.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "field_name":
+                            let v = try Serialization._StringSerializer.deserialize(d["field_name"] ?? .null)
+                            return PropertiesSearchMode.fieldName(v)
+                        case "other":
+                            return PropertiesSearchMode.other
+                        default:
+                            return PropertiesSearchMode.other
+                    }
                 default:
-                    return PropertiesSearchMode.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchMode.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchMode.self, json: json)
             }
         }
     }
@@ -1331,28 +1290,25 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchQuerySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchQuery) throws -> JSON {
             let output = [
-                "query": try Serialization._StringSerializer.serialize(value.query),
-                "mode": try FileProperties.PropertiesSearchModeSerializer().serialize(value.mode),
-                "logical_operator": try FileProperties.LogicalOperatorSerializer().serialize(value.logicalOperator),
+            "query": try Serialization._StringSerializer.serialize(value.query),
+            "mode": try FileProperties.PropertiesSearchModeSerializer().serialize(value.mode),
+            "logical_operator": try FileProperties.LogicalOperatorSerializer().serialize(value.logicalOperator),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchQuery {
             switch json {
-            case .dictionary(let dict):
-                let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
-                let mode = try FileProperties.PropertiesSearchModeSerializer().deserialize(dict["mode"] ?? .null)
-                let logicalOperator = try FileProperties.LogicalOperatorSerializer()
-                    .deserialize(dict["logical_operator"] ?? FileProperties.LogicalOperatorSerializer().serialize(.orOperator))
-                return PropertiesSearchQuery(query: query, mode: mode, logicalOperator: logicalOperator)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchQuery.self, json: json)
+                case .dictionary(let dict):
+                    let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
+                    let mode = try FileProperties.PropertiesSearchModeSerializer().deserialize(dict["mode"] ?? .null)
+                    let logicalOperator = try FileProperties.LogicalOperatorSerializer().deserialize(dict["logical_operator"] ?? FileProperties.LogicalOperatorSerializer().serialize(.orOperator))
+                    return PropertiesSearchQuery(query: query, mode: mode, logicalOperator: logicalOperator)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchQuery.self, json: json)
             }
         }
     }
@@ -1360,11 +1316,11 @@ public class FileProperties {
     /// The PropertiesSearchResult struct
     public class PropertiesSearchResult: CustomStringConvertible, JSONRepresentable {
         /// A list (possibly empty) of matches for the query.
-        public let matches: [FileProperties.PropertiesSearchMatch]
+        public let matches: Array<FileProperties.PropertiesSearchMatch>
         /// Pass the cursor into propertiesSearchContinue to continue to receive search results. Cursor will be null
         /// when there are no more results.
         public let cursor: String?
-        public init(matches: [FileProperties.PropertiesSearchMatch], cursor: String? = nil) {
+        public init(matches: Array<FileProperties.PropertiesSearchMatch>, cursor: String? = nil) {
             self.matches = matches
             nullableValidator(stringValidator(minLength: 1))(cursor)
             self.cursor = cursor
@@ -1382,25 +1338,23 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertiesSearchResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertiesSearchResult) throws -> JSON {
             let output = [
-                "matches": try ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).serialize(value.matches),
-                "cursor": try NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
+            "matches": try ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).serialize(value.matches),
+            "cursor": try NullableSerializer(Serialization._StringSerializer).serialize(value.cursor),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertiesSearchResult {
             switch json {
-            case .dictionary(let dict):
-                let matches = try ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).deserialize(dict["matches"] ?? .null)
-                let cursor = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
-                return PropertiesSearchResult(matches: matches, cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertiesSearchResult.self, json: json)
+                case .dictionary(let dict):
+                    let matches = try ArraySerializer(FileProperties.PropertiesSearchMatchSerializer()).deserialize(dict["matches"] ?? .null)
+                    let cursor = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    return PropertiesSearchResult(matches: matches, cursor: cursor)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertiesSearchResult.self, json: json)
             }
         }
     }
@@ -1431,25 +1385,23 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyFieldSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyField) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "value": try Serialization._StringSerializer.serialize(value.value),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "value": try Serialization._StringSerializer.serialize(value.value),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyField {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let value = try Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
-                return PropertyField(name: name, value: value)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyField.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let value = try Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
+                    return PropertyField(name: name, value: value)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertyField.self, json: json)
             }
         }
     }
@@ -1460,8 +1412,7 @@ public class FileProperties {
         public let name: String
         /// Description of the property field. Property field descriptions can be up to 1024 bytes.
         public let description_: String
-        /// Data type of the value of this property field. This type will be enforced upon property creation and
-        /// modifications.
+        /// (no description)
         public let type: FileProperties.PropertyType
         public init(name: String, description_: String, type: FileProperties.PropertyType) {
             stringValidator()(name)
@@ -1483,27 +1434,25 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyFieldTemplateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyFieldTemplate) throws -> JSON {
             let output = [
-                "name": try Serialization._StringSerializer.serialize(value.name),
-                "description": try Serialization._StringSerializer.serialize(value.description_),
-                "type": try FileProperties.PropertyTypeSerializer().serialize(value.type),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            "type": try FileProperties.PropertyTypeSerializer().serialize(value.type),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyFieldTemplate {
             switch json {
-            case .dictionary(let dict):
-                let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
-                let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
-                let type = try FileProperties.PropertyTypeSerializer().deserialize(dict["type"] ?? .null)
-                return PropertyFieldTemplate(name: name, description_: description_, type: type)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyFieldTemplate.self, json: json)
+                case .dictionary(let dict):
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let type = try FileProperties.PropertyTypeSerializer().deserialize(dict["type"] ?? .null)
+                    return PropertyFieldTemplate(name: name, description_: description_, type: type)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertyFieldTemplate.self, json: json)
             }
         }
     }
@@ -1515,8 +1464,8 @@ public class FileProperties {
         /// A unique identifier for the associated template.
         public let templateId: String
         /// The actual properties associated with the template. There can be up to 32 property types per template.
-        public let fields: [FileProperties.PropertyField]
-        public init(templateId: String, fields: [FileProperties.PropertyField]) {
+        public let fields: Array<FileProperties.PropertyField>
+        public init(templateId: String, fields: Array<FileProperties.PropertyField>) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
             self.fields = fields
@@ -1534,39 +1483,37 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyGroupSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyGroup) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
-                "fields": try ArraySerializer(FileProperties.PropertyFieldSerializer()).serialize(value.fields),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "fields": try ArraySerializer(FileProperties.PropertyFieldSerializer()).serialize(value.fields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyGroup {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                let fields = try ArraySerializer(FileProperties.PropertyFieldSerializer()).deserialize(dict["fields"] ?? .null)
-                return PropertyGroup(templateId: templateId, fields: fields)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyGroup.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let fields = try ArraySerializer(FileProperties.PropertyFieldSerializer()).deserialize(dict["fields"] ?? .null)
+                    return PropertyGroup(templateId: templateId, fields: fields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertyGroup.self, json: json)
             }
         }
     }
 
-    /// The PropertyGroupUpdate struct
+    /// Property routes
     public class PropertyGroupUpdate: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for a property template.
         public let templateId: String
         /// Property fields to update. If the property field already exists, it is updated. If the property field
-        /// doesn't exist, the property group is added.
-        public let addOrUpdateFields: [FileProperties.PropertyField]?
+        /// doesn't exist, it will be created as long as the property group already exists.
+        public let addOrUpdateFields: Array<FileProperties.PropertyField>?
         /// Property fields to remove (by name), provided they exist.
-        public let removeFields: [String]?
-        public init(templateId: String, addOrUpdateFields: [FileProperties.PropertyField]? = nil, removeFields: [String]? = nil) {
+        public let removeFields: Array<String>?
+        public init(templateId: String, addOrUpdateFields: Array<FileProperties.PropertyField>? = nil, removeFields: Array<String>? = nil) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
             self.addOrUpdateFields = addOrUpdateFields
@@ -1586,28 +1533,25 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyGroupUpdateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyGroupUpdate) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
-                "add_or_update_fields": try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer())).serialize(value.addOrUpdateFields),
-                "remove_fields": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.removeFields),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "add_or_update_fields": try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer())).serialize(value.addOrUpdateFields),
+            "remove_fields": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.removeFields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyGroupUpdate {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                let addOrUpdateFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer()))
-                    .deserialize(dict["add_or_update_fields"] ?? .null)
-                let removeFields = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["remove_fields"] ?? .null)
-                return PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields, removeFields: removeFields)
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyGroupUpdate.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let addOrUpdateFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer())).deserialize(dict["add_or_update_fields"] ?? .null)
+                    let removeFields = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["remove_fields"] ?? .null)
+                    return PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields, removeFields: removeFields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PropertyGroupUpdate.self, json: json)
             }
         }
     }
@@ -1631,36 +1575,34 @@ public class FileProperties {
             }
         }
     }
-
     public class PropertyTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PropertyType) throws -> JSON {
             switch value {
-            case .string_:
-                var d = [String: JSON]()
-                d[".tag"] = .str("string")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .string_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("string")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PropertyType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "string":
-                    return PropertyType.string_
-                case "other":
-                    return PropertyType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "string":
+                            return PropertyType.string_
+                        case "other":
+                            return PropertyType.other
+                        default:
+                            return PropertyType.other
+                    }
                 default:
-                    return PropertyType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PropertyType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PropertyType.self, json: json)
             }
         }
     }
@@ -1670,8 +1612,8 @@ public class FileProperties {
         /// A unique identifier for the file or folder.
         public let path: String
         /// A list of identifiers for a template created by templatesAddForUser or templatesAddForTeam.
-        public let propertyTemplateIds: [String]
-        public init(path: String, propertyTemplateIds: [String]) {
+        public let propertyTemplateIds: Array<String>
+        public init(path: String, propertyTemplateIds: Array<String>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*"))(propertyTemplateIds)
@@ -1690,25 +1632,23 @@ public class FileProperties {
             }
         }
     }
-
     public class RemovePropertiesArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RemovePropertiesArg) throws -> JSON {
             let output = [
-                "path": try Serialization._StringSerializer.serialize(value.path),
-                "property_template_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.propertyTemplateIds),
+            "path": try Serialization._StringSerializer.serialize(value.path),
+            "property_template_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.propertyTemplateIds),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RemovePropertiesArg {
             switch json {
-            case .dictionary(let dict):
-                let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let propertyTemplateIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["property_template_ids"] ?? .null)
-                return RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
-            default:
-                throw JSONSerializerError.deserializeError(type: RemovePropertiesArg.self, json: json)
+                case .dictionary(let dict):
+                    let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let propertyTemplateIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["property_template_ids"] ?? .null)
+                    return RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
+                default:
+                    throw JSONSerializerError.deserializeError(type: RemovePropertiesArg.self, json: json)
             }
         }
     }
@@ -1740,63 +1680,61 @@ public class FileProperties {
             }
         }
     }
-
     public class RemovePropertiesErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RemovePropertiesError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .path(let arg):
-                var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("path")
-                return .dictionary(d)
-            case .unsupportedFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unsupported_folder")
-                return .dictionary(d)
-            case .propertyGroupLookup(let arg):
-                var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("property_group_lookup")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_folder")
+                    return .dictionary(d)
+                case .propertyGroupLookup(let arg):
+                    var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("property_group_lookup")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> RemovePropertiesError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return RemovePropertiesError.templateNotFound(v)
-                case "restricted_content":
-                    return RemovePropertiesError.restrictedContent
-                case "other":
-                    return RemovePropertiesError.other
-                case "path":
-                    let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
-                    return RemovePropertiesError.path(v)
-                case "unsupported_folder":
-                    return RemovePropertiesError.unsupportedFolder
-                case "property_group_lookup":
-                    let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
-                    return RemovePropertiesError.propertyGroupLookup(v)
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return RemovePropertiesError.templateNotFound(v)
+                        case "restricted_content":
+                            return RemovePropertiesError.restrictedContent
+                        case "other":
+                            return RemovePropertiesError.other
+                        case "path":
+                            let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return RemovePropertiesError.path(v)
+                        case "unsupported_folder":
+                            return RemovePropertiesError.unsupportedFolder
+                        case "property_group_lookup":
+                            let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
+                            return RemovePropertiesError.propertyGroupLookup(v)
+                        default:
+                            throw JSONSerializerError.unknownTag(type: RemovePropertiesError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: RemovePropertiesError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: RemovePropertiesError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: RemovePropertiesError.self, json: json)
             }
         }
     }
@@ -1822,23 +1760,21 @@ public class FileProperties {
             }
         }
     }
-
     public class RemoveTemplateArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RemoveTemplateArg) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RemoveTemplateArg {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                return RemoveTemplateArg(templateId: templateId)
-            default:
-                throw JSONSerializerError.deserializeError(type: RemoveTemplateArg.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    return RemoveTemplateArg(templateId: templateId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: RemoveTemplateArg.self, json: json)
             }
         }
     }
@@ -1846,7 +1782,7 @@ public class FileProperties {
     /// The TemplateFilterBase union
     public enum TemplateFilterBase: CustomStringConvertible, JSONRepresentable {
         /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
-        case filterSome([String])
+        case filterSome(Array<String>)
         /// An unspecified error.
         case other
 
@@ -1862,37 +1798,35 @@ public class FileProperties {
             }
         }
     }
-
     public class TemplateFilterBaseSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TemplateFilterBase) throws -> JSON {
             switch value {
-            case .filterSome(let arg):
-                var d = try ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
-                d[".tag"] = .str("filter_some")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .filterSome(let arg):
+                    var d = try ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                    d[".tag"] = .str("filter_some")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TemplateFilterBase {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "filter_some":
-                    let v = try ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
-                    return TemplateFilterBase.filterSome(v)
-                case "other":
-                    return TemplateFilterBase.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "filter_some":
+                            let v = try ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
+                            return TemplateFilterBase.filterSome(v)
+                        case "other":
+                            return TemplateFilterBase.other
+                        default:
+                            return TemplateFilterBase.other
+                    }
                 default:
-                    return TemplateFilterBase.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TemplateFilterBase.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TemplateFilterBase.self, json: json)
             }
         }
     }
@@ -1900,7 +1834,7 @@ public class FileProperties {
     /// The TemplateFilter union
     public enum TemplateFilter: CustomStringConvertible, JSONRepresentable {
         /// Only templates with an ID in the supplied list will be returned (a subset of templates will be returned).
-        case filterSome([String])
+        case filterSome(Array<String>)
         /// An unspecified error.
         case other
         /// No templates will be filtered from the result (all templates will be returned).
@@ -1918,43 +1852,41 @@ public class FileProperties {
             }
         }
     }
-
     public class TemplateFilterSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TemplateFilter) throws -> JSON {
             switch value {
-            case .filterSome(let arg):
-                var d = try ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
-                d[".tag"] = .str("filter_some")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .filterNone:
-                var d = [String: JSON]()
-                d[".tag"] = .str("filter_none")
-                return .dictionary(d)
+                case .filterSome(let arg):
+                    var d = try ["filter_some": ArraySerializer(Serialization._StringSerializer).serialize(arg)]
+                    d[".tag"] = .str("filter_some")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .filterNone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("filter_none")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TemplateFilter {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "filter_some":
-                    let v = try ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
-                    return TemplateFilter.filterSome(v)
-                case "other":
-                    return TemplateFilter.other
-                case "filter_none":
-                    return TemplateFilter.filterNone
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "filter_some":
+                            let v = try ArraySerializer(Serialization._StringSerializer).deserialize(d["filter_some"] ?? .null)
+                            return TemplateFilter.filterSome(v)
+                        case "other":
+                            return TemplateFilter.other
+                        case "filter_none":
+                            return TemplateFilter.filterNone
+                        default:
+                            throw JSONSerializerError.unknownTag(type: TemplateFilter.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: TemplateFilter.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TemplateFilter.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TemplateFilter.self, json: json)
             }
         }
     }
@@ -1980,42 +1912,40 @@ public class FileProperties {
             }
         }
     }
-
     public class TemplateOwnerTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TemplateOwnerType) throws -> JSON {
             switch value {
-            case .user:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user")
-                return .dictionary(d)
-            case .team:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .user:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user")
+                    return .dictionary(d)
+                case .team:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TemplateOwnerType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user":
-                    return TemplateOwnerType.user
-                case "team":
-                    return TemplateOwnerType.team
-                case "other":
-                    return TemplateOwnerType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "user":
+                            return TemplateOwnerType.user
+                        case "team":
+                            return TemplateOwnerType.team
+                        case "other":
+                            return TemplateOwnerType.other
+                        default:
+                            return TemplateOwnerType.other
+                    }
                 default:
-                    return TemplateOwnerType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TemplateOwnerType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TemplateOwnerType.self, json: json)
             }
         }
     }
@@ -2025,8 +1955,8 @@ public class FileProperties {
         /// A unique identifier for the file or folder.
         public let path: String
         /// The property groups "delta" updates to apply.
-        public let updatePropertyGroups: [FileProperties.PropertyGroupUpdate]
-        public init(path: String, updatePropertyGroups: [FileProperties.PropertyGroupUpdate]) {
+        public let updatePropertyGroups: Array<FileProperties.PropertyGroupUpdate>
+        public init(path: String, updatePropertyGroups: Array<FileProperties.PropertyGroupUpdate>) {
             stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.updatePropertyGroups = updatePropertyGroups
@@ -2044,26 +1974,23 @@ public class FileProperties {
             }
         }
     }
-
     public class UpdatePropertiesArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UpdatePropertiesArg) throws -> JSON {
             let output = [
-                "path": try Serialization._StringSerializer.serialize(value.path),
-                "update_property_groups": try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer()).serialize(value.updatePropertyGroups),
+            "path": try Serialization._StringSerializer.serialize(value.path),
+            "update_property_groups": try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer()).serialize(value.updatePropertyGroups),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UpdatePropertiesArg {
             switch json {
-            case .dictionary(let dict):
-                let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let updatePropertyGroups = try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer())
-                    .deserialize(dict["update_property_groups"] ?? .null)
-                return UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups)
-            default:
-                throw JSONSerializerError.deserializeError(type: UpdatePropertiesArg.self, json: json)
+                case .dictionary(let dict):
+                    let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let updatePropertyGroups = try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer()).deserialize(dict["update_property_groups"] ?? .null)
+                    return UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UpdatePropertiesArg.self, json: json)
             }
         }
     }
@@ -2101,81 +2028,79 @@ public class FileProperties {
             }
         }
     }
-
     public class UpdatePropertiesErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UpdatePropertiesError) throws -> JSON {
             switch value {
-            case .templateNotFound(let arg):
-                var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("template_not_found")
-                return .dictionary(d)
-            case .restrictedContent:
-                var d = [String: JSON]()
-                d[".tag"] = .str("restricted_content")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .path(let arg):
-                var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("path")
-                return .dictionary(d)
-            case .unsupportedFolder:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unsupported_folder")
-                return .dictionary(d)
-            case .propertyFieldTooLarge:
-                var d = [String: JSON]()
-                d[".tag"] = .str("property_field_too_large")
-                return .dictionary(d)
-            case .doesNotFitTemplate:
-                var d = [String: JSON]()
-                d[".tag"] = .str("does_not_fit_template")
-                return .dictionary(d)
-            case .duplicatePropertyGroups:
-                var d = [String: JSON]()
-                d[".tag"] = .str("duplicate_property_groups")
-                return .dictionary(d)
-            case .propertyGroupLookup(let arg):
-                var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("property_group_lookup")
-                return .dictionary(d)
+                case .templateNotFound(let arg):
+                    var d = try ["template_not_found": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("template_not_found")
+                    return .dictionary(d)
+                case .restrictedContent:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("restricted_content")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+                case .path(let arg):
+                    var d = try ["path": FileProperties.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_folder")
+                    return .dictionary(d)
+                case .propertyFieldTooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("property_field_too_large")
+                    return .dictionary(d)
+                case .doesNotFitTemplate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("does_not_fit_template")
+                    return .dictionary(d)
+                case .duplicatePropertyGroups:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("duplicate_property_groups")
+                    return .dictionary(d)
+                case .propertyGroupLookup(let arg):
+                    var d = try ["property_group_lookup": FileProperties.LookUpPropertiesErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("property_group_lookup")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> UpdatePropertiesError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "template_not_found":
-                    let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
-                    return UpdatePropertiesError.templateNotFound(v)
-                case "restricted_content":
-                    return UpdatePropertiesError.restrictedContent
-                case "other":
-                    return UpdatePropertiesError.other
-                case "path":
-                    let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
-                    return UpdatePropertiesError.path(v)
-                case "unsupported_folder":
-                    return UpdatePropertiesError.unsupportedFolder
-                case "property_field_too_large":
-                    return UpdatePropertiesError.propertyFieldTooLarge
-                case "does_not_fit_template":
-                    return UpdatePropertiesError.doesNotFitTemplate
-                case "duplicate_property_groups":
-                    return UpdatePropertiesError.duplicatePropertyGroups
-                case "property_group_lookup":
-                    let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
-                    return UpdatePropertiesError.propertyGroupLookup(v)
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "template_not_found":
+                            let v = try Serialization._StringSerializer.deserialize(d["template_not_found"] ?? .null)
+                            return UpdatePropertiesError.templateNotFound(v)
+                        case "restricted_content":
+                            return UpdatePropertiesError.restrictedContent
+                        case "other":
+                            return UpdatePropertiesError.other
+                        case "path":
+                            let v = try FileProperties.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return UpdatePropertiesError.path(v)
+                        case "unsupported_folder":
+                            return UpdatePropertiesError.unsupportedFolder
+                        case "property_field_too_large":
+                            return UpdatePropertiesError.propertyFieldTooLarge
+                        case "does_not_fit_template":
+                            return UpdatePropertiesError.doesNotFitTemplate
+                        case "duplicate_property_groups":
+                            return UpdatePropertiesError.duplicatePropertyGroups
+                        case "property_group_lookup":
+                            let v = try FileProperties.LookUpPropertiesErrorSerializer().deserialize(d["property_group_lookup"] ?? .null)
+                            return UpdatePropertiesError.propertyGroupLookup(v)
+                        default:
+                            throw JSONSerializerError.unknownTag(type: UpdatePropertiesError.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: UpdatePropertiesError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: UpdatePropertiesError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: UpdatePropertiesError.self, json: json)
             }
         }
     }
@@ -2190,8 +2115,8 @@ public class FileProperties {
         public let description_: String?
         /// Property field templates to be added to the group template. There can be up to 32 properties in a single
         /// template.
-        public let addFields: [FileProperties.PropertyFieldTemplate]?
-        public init(templateId: String, name: String? = nil, description_: String? = nil, addFields: [FileProperties.PropertyFieldTemplate]? = nil) {
+        public let addFields: Array<FileProperties.PropertyFieldTemplate>?
+        public init(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) {
             stringValidator(minLength: 1, pattern: "(/|ptid:).*")(templateId)
             self.templateId = templateId
             nullableValidator(stringValidator())(name)
@@ -2213,30 +2138,27 @@ public class FileProperties {
             }
         }
     }
-
     public class UpdateTemplateArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UpdateTemplateArg) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
-                "name": try NullableSerializer(Serialization._StringSerializer).serialize(value.name),
-                "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
-                "add_fields": try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer())).serialize(value.addFields),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "name": try NullableSerializer(Serialization._StringSerializer).serialize(value.name),
+            "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+            "add_fields": try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer())).serialize(value.addFields),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UpdateTemplateArg {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                let name = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .null)
-                let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                let addFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()))
-                    .deserialize(dict["add_fields"] ?? .null)
-                return UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
-            default:
-                throw JSONSerializerError.deserializeError(type: UpdateTemplateArg.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let name = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .null)
+                    let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    let addFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer())).deserialize(dict["add_fields"] ?? .null)
+                    return UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UpdateTemplateArg.self, json: json)
             }
         }
     }
@@ -2262,26 +2184,25 @@ public class FileProperties {
             }
         }
     }
-
     public class UpdateTemplateResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UpdateTemplateResult) throws -> JSON {
             let output = [
-                "template_id": try Serialization._StringSerializer.serialize(value.templateId),
+            "template_id": try Serialization._StringSerializer.serialize(value.templateId),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UpdateTemplateResult {
             switch json {
-            case .dictionary(let dict):
-                let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                return UpdateTemplateResult(templateId: templateId)
-            default:
-                throw JSONSerializerError.deserializeError(type: UpdateTemplateResult.self, json: json)
+                case .dictionary(let dict):
+                    let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    return UpdateTemplateResult(templateId: templateId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UpdateTemplateResult.self, json: json)
             }
         }
     }
+
 
     /// Stone Route Objects
 
@@ -2293,11 +2214,9 @@ public class FileProperties {
         argSerializer: FileProperties.AddPropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.AddPropertiesErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let propertiesOverwrite = Route(
         name: "properties/overwrite",
@@ -2307,11 +2226,9 @@ public class FileProperties {
         argSerializer: FileProperties.OverwritePropertyGroupArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.InvalidPropertyGroupErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let propertiesRemove = Route(
         name: "properties/remove",
@@ -2321,11 +2238,9 @@ public class FileProperties {
         argSerializer: FileProperties.RemovePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.RemovePropertiesErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let propertiesSearch = Route(
         name: "properties/search",
@@ -2335,11 +2250,9 @@ public class FileProperties {
         argSerializer: FileProperties.PropertiesSearchArgSerializer(),
         responseSerializer: FileProperties.PropertiesSearchResultSerializer(),
         errorSerializer: FileProperties.PropertiesSearchErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let propertiesSearchContinue = Route(
         name: "properties/search/continue",
@@ -2349,11 +2262,9 @@ public class FileProperties {
         argSerializer: FileProperties.PropertiesSearchContinueArgSerializer(),
         responseSerializer: FileProperties.PropertiesSearchResultSerializer(),
         errorSerializer: FileProperties.PropertiesSearchContinueErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let propertiesUpdate = Route(
         name: "properties/update",
@@ -2363,11 +2274,9 @@ public class FileProperties {
         argSerializer: FileProperties.UpdatePropertiesArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.UpdatePropertiesErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesAddForTeam = Route(
         name: "templates/add_for_team",
@@ -2377,11 +2286,9 @@ public class FileProperties {
         argSerializer: FileProperties.AddTemplateArgSerializer(),
         responseSerializer: FileProperties.AddTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.team],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesAddForUser = Route(
         name: "templates/add_for_user",
@@ -2391,11 +2298,9 @@ public class FileProperties {
         argSerializer: FileProperties.AddTemplateArgSerializer(),
         responseSerializer: FileProperties.AddTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesGetForTeam = Route(
         name: "templates/get_for_team",
@@ -2405,11 +2310,9 @@ public class FileProperties {
         argSerializer: FileProperties.GetTemplateArgSerializer(),
         responseSerializer: FileProperties.GetTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.team],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesGetForUser = Route(
         name: "templates/get_for_user",
@@ -2419,11 +2322,9 @@ public class FileProperties {
         argSerializer: FileProperties.GetTemplateArgSerializer(),
         responseSerializer: FileProperties.GetTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesListForTeam = Route(
         name: "templates/list_for_team",
@@ -2433,11 +2334,9 @@ public class FileProperties {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.team],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesListForUser = Route(
         name: "templates/list_for_user",
@@ -2447,11 +2346,9 @@ public class FileProperties {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: FileProperties.ListTemplateResultSerializer(),
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesRemoveForTeam = Route(
         name: "templates/remove_for_team",
@@ -2461,11 +2358,9 @@ public class FileProperties {
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.team],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesRemoveForUser = Route(
         name: "templates/remove_for_user",
@@ -2475,11 +2370,9 @@ public class FileProperties {
         argSerializer: FileProperties.RemoveTemplateArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesUpdateForTeam = Route(
         name: "templates/update_for_team",
@@ -2489,11 +2382,9 @@ public class FileProperties {
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
         responseSerializer: FileProperties.UpdateTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.team],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let templatesUpdateForUser = Route(
         name: "templates/update_for_user",
@@ -2503,10 +2394,8 @@ public class FileProperties {
         argSerializer: FileProperties.UpdateTemplateArgSerializer(),
         responseSerializer: FileProperties.UpdateTemplateResultSerializer(),
         errorSerializer: FileProperties.ModifyTemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
 }

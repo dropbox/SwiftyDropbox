@@ -14,6 +14,10 @@ public class Auth {
         case invalidAccountType(Auth.InvalidAccountTypeError)
         /// Current account cannot access Paper.
         case paperAccessDenied(Auth.PaperAccessError)
+        /// Team doesn't have permission to access.
+        case teamAccessDenied
+        /// Caller does not have permission to access the resource.
+        case noPermission(Auth.NoPermissionError)
         /// An unspecified error.
         case other
 
@@ -29,44 +33,55 @@ public class Auth {
             }
         }
     }
-
     public class AccessErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AccessError) throws -> JSON {
             switch value {
-            case .invalidAccountType(let arg):
-                var d = try ["invalid_account_type": Auth.InvalidAccountTypeErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("invalid_account_type")
-                return .dictionary(d)
-            case .paperAccessDenied(let arg):
-                var d = try ["paper_access_denied": Auth.PaperAccessErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("paper_access_denied")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .invalidAccountType(let arg):
+                    var d = try ["invalid_account_type": Auth.InvalidAccountTypeErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("invalid_account_type")
+                    return .dictionary(d)
+                case .paperAccessDenied(let arg):
+                    var d = try ["paper_access_denied": Auth.PaperAccessErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("paper_access_denied")
+                    return .dictionary(d)
+                case .teamAccessDenied:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_access_denied")
+                    return .dictionary(d)
+                case .noPermission(let arg):
+                    var d = try ["no_permission": Auth.NoPermissionErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("no_permission")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> AccessError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_account_type":
-                    let v = try Auth.InvalidAccountTypeErrorSerializer().deserialize(d["invalid_account_type"] ?? .null)
-                    return AccessError.invalidAccountType(v)
-                case "paper_access_denied":
-                    let v = try Auth.PaperAccessErrorSerializer().deserialize(d["paper_access_denied"] ?? .null)
-                    return AccessError.paperAccessDenied(v)
-                case "other":
-                    return AccessError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_account_type":
+                            let v = try Auth.InvalidAccountTypeErrorSerializer().deserialize(d["invalid_account_type"] ?? .null)
+                            return AccessError.invalidAccountType(v)
+                        case "paper_access_denied":
+                            let v = try Auth.PaperAccessErrorSerializer().deserialize(d["paper_access_denied"] ?? .null)
+                            return AccessError.paperAccessDenied(v)
+                        case "team_access_denied":
+                            return AccessError.teamAccessDenied
+                        case "no_permission":
+                            let v = try Auth.NoPermissionErrorSerializer().deserialize(d["no_permission"] ?? .null)
+                            return AccessError.noPermission(v)
+                        case "other":
+                            return AccessError.other
+                        default:
+                            return AccessError.other
+                    }
                 default:
-                    return AccessError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: AccessError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: AccessError.self, json: json)
             }
         }
     }
@@ -102,73 +117,71 @@ public class Auth {
             }
         }
     }
-
     public class AuthErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AuthError) throws -> JSON {
             switch value {
-            case .invalidAccessToken:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_access_token")
-                return .dictionary(d)
-            case .invalidSelectUser:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_select_user")
-                return .dictionary(d)
-            case .invalidSelectAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_select_admin")
-                return .dictionary(d)
-            case .userSuspended:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_suspended")
-                return .dictionary(d)
-            case .expiredAccessToken:
-                var d = [String: JSON]()
-                d[".tag"] = .str("expired_access_token")
-                return .dictionary(d)
-            case .missingScope(let arg):
-                var d = try Serialization.getFields(Auth.TokenScopeErrorSerializer().serialize(arg))
-                d[".tag"] = .str("missing_scope")
-                return .dictionary(d)
-            case .routeAccessDenied:
-                var d = [String: JSON]()
-                d[".tag"] = .str("route_access_denied")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .invalidAccessToken:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_access_token")
+                    return .dictionary(d)
+                case .invalidSelectUser:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_select_user")
+                    return .dictionary(d)
+                case .invalidSelectAdmin:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_select_admin")
+                    return .dictionary(d)
+                case .userSuspended:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_suspended")
+                    return .dictionary(d)
+                case .expiredAccessToken:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("expired_access_token")
+                    return .dictionary(d)
+                case .missingScope(let arg):
+                    var d = try Serialization.getFields(Auth.TokenScopeErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("missing_scope")
+                    return .dictionary(d)
+                case .routeAccessDenied:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("route_access_denied")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> AuthError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_access_token":
-                    return AuthError.invalidAccessToken
-                case "invalid_select_user":
-                    return AuthError.invalidSelectUser
-                case "invalid_select_admin":
-                    return AuthError.invalidSelectAdmin
-                case "user_suspended":
-                    return AuthError.userSuspended
-                case "expired_access_token":
-                    return AuthError.expiredAccessToken
-                case "missing_scope":
-                    let v = try Auth.TokenScopeErrorSerializer().deserialize(json)
-                    return AuthError.missingScope(v)
-                case "route_access_denied":
-                    return AuthError.routeAccessDenied
-                case "other":
-                    return AuthError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_access_token":
+                            return AuthError.invalidAccessToken
+                        case "invalid_select_user":
+                            return AuthError.invalidSelectUser
+                        case "invalid_select_admin":
+                            return AuthError.invalidSelectAdmin
+                        case "user_suspended":
+                            return AuthError.userSuspended
+                        case "expired_access_token":
+                            return AuthError.expiredAccessToken
+                        case "missing_scope":
+                            let v = try Auth.TokenScopeErrorSerializer().deserialize(json)
+                            return AuthError.missingScope(v)
+                        case "route_access_denied":
+                            return AuthError.routeAccessDenied
+                        case "other":
+                            return AuthError.other
+                        default:
+                            return AuthError.other
+                    }
                 default:
-                    return AuthError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: AuthError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: AuthError.self, json: json)
             }
         }
     }
@@ -194,42 +207,93 @@ public class Auth {
             }
         }
     }
-
     public class InvalidAccountTypeErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: InvalidAccountTypeError) throws -> JSON {
             switch value {
-            case .endpoint:
-                var d = [String: JSON]()
-                d[".tag"] = .str("endpoint")
-                return .dictionary(d)
-            case .feature:
-                var d = [String: JSON]()
-                d[".tag"] = .str("feature")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .endpoint:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("endpoint")
+                    return .dictionary(d)
+                case .feature:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("feature")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> InvalidAccountTypeError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "endpoint":
-                    return InvalidAccountTypeError.endpoint
-                case "feature":
-                    return InvalidAccountTypeError.feature
-                case "other":
-                    return InvalidAccountTypeError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "endpoint":
+                            return InvalidAccountTypeError.endpoint
+                        case "feature":
+                            return InvalidAccountTypeError.feature
+                        case "other":
+                            return InvalidAccountTypeError.other
+                        default:
+                            return InvalidAccountTypeError.other
+                    }
                 default:
-                    return InvalidAccountTypeError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: InvalidAccountTypeError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: InvalidAccountTypeError.self, json: json)
+            }
+        }
+    }
+
+    /// The NoPermissionError union
+    public enum NoPermissionError: CustomStringConvertible, JSONRepresentable {
+        /// Current caller does not have permission to access the account information for one or more of the specified
+        /// account IDs.
+        case unauthorizedAccountIdUsage(Auth.UnauthorizedAccountIdUsageError)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try NoPermissionErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try NoPermissionErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for NoPermissionError: \(error)"
+            }
+        }
+    }
+    public class NoPermissionErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: NoPermissionError) throws -> JSON {
+            switch value {
+                case .unauthorizedAccountIdUsage(let arg):
+                    var d = try Serialization.getFields(Auth.UnauthorizedAccountIdUsageErrorSerializer().serialize(arg))
+                    d[".tag"] = .str("unauthorized_account_id_usage")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> NoPermissionError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "unauthorized_account_id_usage":
+                            let v = try Auth.UnauthorizedAccountIdUsageErrorSerializer().deserialize(json)
+                            return NoPermissionError.unauthorizedAccountIdUsage(v)
+                        case "other":
+                            return NoPermissionError.other
+                        default:
+                            return NoPermissionError.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: NoPermissionError.self, json: json)
             }
         }
     }
@@ -255,42 +319,40 @@ public class Auth {
             }
         }
     }
-
     public class PaperAccessErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperAccessError) throws -> JSON {
             switch value {
-            case .paperDisabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("paper_disabled")
-                return .dictionary(d)
-            case .notPaperUser:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_paper_user")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .paperDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("paper_disabled")
+                    return .dictionary(d)
+                case .notPaperUser:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_paper_user")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperAccessError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "paper_disabled":
-                    return PaperAccessError.paperDisabled
-                case "not_paper_user":
-                    return PaperAccessError.notPaperUser
-                case "other":
-                    return PaperAccessError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "paper_disabled":
+                            return PaperAccessError.paperDisabled
+                        case "not_paper_user":
+                            return PaperAccessError.notPaperUser
+                        case "other":
+                            return PaperAccessError.other
+                        default:
+                            return PaperAccessError.other
+                    }
                 default:
-                    return PaperAccessError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperAccessError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperAccessError.self, json: json)
             }
         }
     }
@@ -319,25 +381,23 @@ public class Auth {
             }
         }
     }
-
     public class RateLimitErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RateLimitError) throws -> JSON {
             let output = [
-                "reason": try Auth.RateLimitReasonSerializer().serialize(value.reason),
-                "retry_after": try Serialization._UInt64Serializer.serialize(value.retryAfter),
+            "reason": try Auth.RateLimitReasonSerializer().serialize(value.reason),
+            "retry_after": try Serialization._UInt64Serializer.serialize(value.retryAfter),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RateLimitError {
             switch json {
-            case .dictionary(let dict):
-                let reason = try Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .null)
-                let retryAfter = try Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .number(1))
-                return RateLimitError(reason: reason, retryAfter: retryAfter)
-            default:
-                throw JSONSerializerError.deserializeError(type: RateLimitError.self, json: json)
+                case .dictionary(let dict):
+                    let reason = try Auth.RateLimitReasonSerializer().deserialize(dict["reason"] ?? .null)
+                    let retryAfter = try Serialization._UInt64Serializer.deserialize(dict["retry_after"] ?? .number(1))
+                    return RateLimitError(reason: reason, retryAfter: retryAfter)
+                default:
+                    throw JSONSerializerError.deserializeError(type: RateLimitError.self, json: json)
             }
         }
     }
@@ -363,42 +423,40 @@ public class Auth {
             }
         }
     }
-
     public class RateLimitReasonSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RateLimitReason) throws -> JSON {
             switch value {
-            case .tooManyRequests:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_requests")
-                return .dictionary(d)
-            case .tooManyWriteOperations:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_write_operations")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .tooManyRequests:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_requests")
+                    return .dictionary(d)
+                case .tooManyWriteOperations:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_write_operations")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> RateLimitReason {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "too_many_requests":
-                    return RateLimitReason.tooManyRequests
-                case "too_many_write_operations":
-                    return RateLimitReason.tooManyWriteOperations
-                case "other":
-                    return RateLimitReason.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "too_many_requests":
+                            return RateLimitReason.tooManyRequests
+                        case "too_many_write_operations":
+                            return RateLimitReason.tooManyWriteOperations
+                        case "other":
+                            return RateLimitReason.other
+                        default:
+                            return RateLimitReason.other
+                    }
                 default:
-                    return RateLimitReason.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: RateLimitReason.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: RateLimitReason.self, json: json)
             }
         }
     }
@@ -428,25 +486,23 @@ public class Auth {
             }
         }
     }
-
     public class TokenFromOAuth1ArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TokenFromOAuth1Arg) throws -> JSON {
             let output = [
-                "oauth1_token": try Serialization._StringSerializer.serialize(value.oauth1Token),
-                "oauth1_token_secret": try Serialization._StringSerializer.serialize(value.oauth1TokenSecret),
+            "oauth1_token": try Serialization._StringSerializer.serialize(value.oauth1Token),
+            "oauth1_token_secret": try Serialization._StringSerializer.serialize(value.oauth1TokenSecret),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TokenFromOAuth1Arg {
             switch json {
-            case .dictionary(let dict):
-                let oauth1Token = try Serialization._StringSerializer.deserialize(dict["oauth1_token"] ?? .null)
-                let oauth1TokenSecret = try Serialization._StringSerializer.deserialize(dict["oauth1_token_secret"] ?? .null)
-                return TokenFromOAuth1Arg(oauth1Token: oauth1Token, oauth1TokenSecret: oauth1TokenSecret)
-            default:
-                throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Arg.self, json: json)
+                case .dictionary(let dict):
+                    let oauth1Token = try Serialization._StringSerializer.deserialize(dict["oauth1_token"] ?? .null)
+                    let oauth1TokenSecret = try Serialization._StringSerializer.deserialize(dict["oauth1_token_secret"] ?? .null)
+                    return TokenFromOAuth1Arg(oauth1Token: oauth1Token, oauth1TokenSecret: oauth1TokenSecret)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Arg.self, json: json)
             }
         }
     }
@@ -472,42 +528,40 @@ public class Auth {
             }
         }
     }
-
     public class TokenFromOAuth1ErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TokenFromOAuth1Error) throws -> JSON {
             switch value {
-            case .invalidOauth1TokenInfo:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_oauth1_token_info")
-                return .dictionary(d)
-            case .appIdMismatch:
-                var d = [String: JSON]()
-                d[".tag"] = .str("app_id_mismatch")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .invalidOauth1TokenInfo:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_oauth1_token_info")
+                    return .dictionary(d)
+                case .appIdMismatch:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("app_id_mismatch")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TokenFromOAuth1Error {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_oauth1_token_info":
-                    return TokenFromOAuth1Error.invalidOauth1TokenInfo
-                case "app_id_mismatch":
-                    return TokenFromOAuth1Error.appIdMismatch
-                case "other":
-                    return TokenFromOAuth1Error.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_oauth1_token_info":
+                            return TokenFromOAuth1Error.invalidOauth1TokenInfo
+                        case "app_id_mismatch":
+                            return TokenFromOAuth1Error.appIdMismatch
+                        case "other":
+                            return TokenFromOAuth1Error.other
+                        default:
+                            return TokenFromOAuth1Error.other
+                    }
                 default:
-                    return TokenFromOAuth1Error.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Error.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Error.self, json: json)
             }
         }
     }
@@ -533,23 +587,21 @@ public class Auth {
             }
         }
     }
-
     public class TokenFromOAuth1ResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TokenFromOAuth1Result) throws -> JSON {
             let output = [
-                "oauth2_token": try Serialization._StringSerializer.serialize(value.oauth2Token),
+            "oauth2_token": try Serialization._StringSerializer.serialize(value.oauth2Token),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TokenFromOAuth1Result {
             switch json {
-            case .dictionary(let dict):
-                let oauth2Token = try Serialization._StringSerializer.deserialize(dict["oauth2_token"] ?? .null)
-                return TokenFromOAuth1Result(oauth2Token: oauth2Token)
-            default:
-                throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Result.self, json: json)
+                case .dictionary(let dict):
+                    let oauth2Token = try Serialization._StringSerializer.deserialize(dict["oauth2_token"] ?? .null)
+                    return TokenFromOAuth1Result(oauth2Token: oauth2Token)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TokenFromOAuth1Result.self, json: json)
             }
         }
     }
@@ -575,26 +627,65 @@ public class Auth {
             }
         }
     }
-
     public class TokenScopeErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TokenScopeError) throws -> JSON {
             let output = [
-                "required_scope": try Serialization._StringSerializer.serialize(value.requiredScope),
+            "required_scope": try Serialization._StringSerializer.serialize(value.requiredScope),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TokenScopeError {
             switch json {
-            case .dictionary(let dict):
-                let requiredScope = try Serialization._StringSerializer.deserialize(dict["required_scope"] ?? .null)
-                return TokenScopeError(requiredScope: requiredScope)
-            default:
-                throw JSONSerializerError.deserializeError(type: TokenScopeError.self, json: json)
+                case .dictionary(let dict):
+                    let requiredScope = try Serialization._StringSerializer.deserialize(dict["required_scope"] ?? .null)
+                    return TokenScopeError(requiredScope: requiredScope)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TokenScopeError.self, json: json)
             }
         }
     }
+
+    /// The UnauthorizedAccountIdUsageError struct
+    public class UnauthorizedAccountIdUsageError: CustomStringConvertible, JSONRepresentable {
+        /// The account IDs that the caller does not have permission to use.
+        public let unauthorizedAccountIds: Array<String>
+        public init(unauthorizedAccountIds: Array<String>) {
+            arrayValidator(itemValidator: stringValidator())(unauthorizedAccountIds)
+            self.unauthorizedAccountIds = unauthorizedAccountIds
+        }
+
+        func json() throws -> JSON {
+            try UnauthorizedAccountIdUsageErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UnauthorizedAccountIdUsageErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UnauthorizedAccountIdUsageError: \(error)"
+            }
+        }
+    }
+    public class UnauthorizedAccountIdUsageErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: UnauthorizedAccountIdUsageError) throws -> JSON {
+            let output = [
+            "unauthorized_account_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.unauthorizedAccountIds),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> UnauthorizedAccountIdUsageError {
+            switch json {
+                case .dictionary(let dict):
+                    let unauthorizedAccountIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["unauthorized_account_ids"] ?? .null)
+                    return UnauthorizedAccountIdUsageError(unauthorizedAccountIds: unauthorizedAccountIds)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UnauthorizedAccountIdUsageError.self, json: json)
+            }
+        }
+    }
+
 
     /// Stone Route Objects
 
@@ -606,11 +697,9 @@ public class Auth {
         argSerializer: Auth.TokenFromOAuth1ArgSerializer(),
         responseSerializer: Auth.TokenFromOAuth1ResultSerializer(),
         errorSerializer: Auth.TokenFromOAuth1ErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.app],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.app],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let tokenRevoke = Route(
         name: "token/revoke",
@@ -620,10 +709,8 @@ public class Auth {
         argSerializer: Serialization._VoidSerializer,
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Serialization._VoidSerializer,
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
 }
