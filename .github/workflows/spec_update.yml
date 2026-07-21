@@ -15,7 +15,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: arn:aws:iam::082972943155:role/oidc-github-dropbox-swiftydropbox-repo
+          role-to-assume: arn:aws:iam::082972943155:role/oidc-github-dropbox-SwiftyDropbox-repo
           aws-region: us-west-2
 
       - name: Fetch GitHub App credentials from Secrets Manager
