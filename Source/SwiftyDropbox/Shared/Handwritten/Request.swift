@@ -73,14 +73,14 @@ public class Request<RSerial: JSONSerializer, ESerial: JSONSerializer> {
 
     func handleResponseError(networkTaskFailure: NetworkTaskFailure) -> CallError<ESerial.ValueType> {
         let callError = parseCallError(from: networkTaskFailure)
-        
+
         // We call the global error response handler to alert it to an error
         // But unlike in the objc SDK we do not stop the SDK from calling the per-route completion handler as well.
         GlobalErrorResponseHandler.shared.reportGlobalError(callError.typeErased)
-        
+
         return callError
     }
-    
+
     private func parseCallError(from networkTaskFailure: NetworkTaskFailure) -> CallError<ESerial.ValueType> {
         switch networkTaskFailure {
         case .badStatusCode(let data, _, let response):
@@ -292,7 +292,7 @@ public class DownloadRequestMemory<RSerial: JSONSerializer, ESerial: JSONSeriali
 
 private func caseInsensitiveLookup(_ lookupKey: String, dictionary: [AnyHashable: Any]) -> String? {
     for key in dictionary.keys {
-        let keyString = key as! String
+        guard let keyString = key as? String else { continue }
         if keyString.lowercased() == lookupKey.lowercased() {
             return dictionary[key] as? String
         }
