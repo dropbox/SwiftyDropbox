@@ -46,7 +46,7 @@ public class SecureStorageAccessDefaultImpl: SecureStorageAccess {
 
         if status == noErr {
             let results = dataResult as? [[String: AnyObject]] ?? []
-            return results.map { d in d["acct"] as! String }
+            return results.compactMap { d in d["acct"] as? String }
         }
         return []
     }
