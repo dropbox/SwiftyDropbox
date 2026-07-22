@@ -31,48 +31,46 @@ public class TeamCommon {
             }
         }
     }
-
     public class GroupManagementTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GroupManagementType) throws -> JSON {
             switch value {
-            case .userManaged:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_managed")
-                return .dictionary(d)
-            case .companyManaged:
-                var d = [String: JSON]()
-                d[".tag"] = .str("company_managed")
-                return .dictionary(d)
-            case .systemManaged:
-                var d = [String: JSON]()
-                d[".tag"] = .str("system_managed")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .userManaged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_managed")
+                    return .dictionary(d)
+                case .companyManaged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("company_managed")
+                    return .dictionary(d)
+                case .systemManaged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("system_managed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> GroupManagementType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user_managed":
-                    return GroupManagementType.userManaged
-                case "company_managed":
-                    return GroupManagementType.companyManaged
-                case "system_managed":
-                    return GroupManagementType.systemManaged
-                case "other":
-                    return GroupManagementType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "user_managed":
+                            return GroupManagementType.userManaged
+                        case "company_managed":
+                            return GroupManagementType.companyManaged
+                        case "system_managed":
+                            return GroupManagementType.systemManaged
+                        case "other":
+                            return GroupManagementType.other
+                        default:
+                            return GroupManagementType.other
+                    }
                 default:
-                    return GroupManagementType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: GroupManagementType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: GroupManagementType.self, json: json)
             }
         }
     }
@@ -89,13 +87,7 @@ public class TeamCommon {
         public let memberCount: UInt32?
         /// Who is allowed to manage the group.
         public let groupManagementType: TeamCommon.GroupManagementType
-        public init(
-            groupName: String,
-            groupId: String,
-            groupManagementType: TeamCommon.GroupManagementType,
-            groupExternalId: String? = nil,
-            memberCount: UInt32? = nil
-        ) {
+        public init(groupName: String, groupId: String, groupManagementType: TeamCommon.GroupManagementType, groupExternalId: String? = nil, memberCount: UInt32? = nil) {
             stringValidator()(groupName)
             self.groupName = groupName
             stringValidator()(groupId)
@@ -119,37 +111,29 @@ public class TeamCommon {
             }
         }
     }
-
     public class GroupSummarySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GroupSummary) throws -> JSON {
             let output = [
-                "group_name": try Serialization._StringSerializer.serialize(value.groupName),
-                "group_id": try Serialization._StringSerializer.serialize(value.groupId),
-                "group_management_type": try TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
-                "group_external_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
-                "member_count": try NullableSerializer(Serialization._UInt32Serializer).serialize(value.memberCount),
+            "group_name": try Serialization._StringSerializer.serialize(value.groupName),
+            "group_id": try Serialization._StringSerializer.serialize(value.groupId),
+            "group_management_type": try TeamCommon.GroupManagementTypeSerializer().serialize(value.groupManagementType),
+            "group_external_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.groupExternalId),
+            "member_count": try NullableSerializer(Serialization._UInt32Serializer).serialize(value.memberCount),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> GroupSummary {
             switch json {
-            case .dictionary(let dict):
-                let groupName = try Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
-                let groupId = try Serialization._StringSerializer.deserialize(dict["group_id"] ?? .null)
-                let groupManagementType = try TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .null)
-                let groupExternalId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .null)
-                let memberCount = try NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .null)
-                return GroupSummary(
-                    groupName: groupName,
-                    groupId: groupId,
-                    groupManagementType: groupManagementType,
-                    groupExternalId: groupExternalId,
-                    memberCount: memberCount
-                )
-            default:
-                throw JSONSerializerError.deserializeError(type: GroupSummary.self, json: json)
+                case .dictionary(let dict):
+                    let groupName = try Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
+                    let groupId = try Serialization._StringSerializer.deserialize(dict["group_id"] ?? .null)
+                    let groupManagementType = try TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .null)
+                    let groupExternalId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .null)
+                    let memberCount = try NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .null)
+                    return GroupSummary(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, groupExternalId: groupExternalId, memberCount: memberCount)
+                default:
+                    throw JSONSerializerError.deserializeError(type: GroupSummary.self, json: json)
             }
         }
     }
@@ -176,42 +160,40 @@ public class TeamCommon {
             }
         }
     }
-
     public class GroupTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GroupType) throws -> JSON {
             switch value {
-            case .team:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team")
-                return .dictionary(d)
-            case .userManaged:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_managed")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .team:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team")
+                    return .dictionary(d)
+                case .userManaged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_managed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> GroupType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "team":
-                    return GroupType.team
-                case "user_managed":
-                    return GroupType.userManaged
-                case "other":
-                    return GroupType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "team":
+                            return GroupType.team
+                        case "user_managed":
+                            return GroupType.userManaged
+                        case "other":
+                            return GroupType.other
+                        default:
+                            return GroupType.other
+                    }
                 default:
-                    return GroupType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: GroupType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: GroupType.self, json: json)
             }
         }
     }
@@ -239,48 +221,46 @@ public class TeamCommon {
             }
         }
     }
-
     public class MemberSpaceLimitTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: MemberSpaceLimitType) throws -> JSON {
             switch value {
-            case .off:
-                var d = [String: JSON]()
-                d[".tag"] = .str("off")
-                return .dictionary(d)
-            case .alertOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("alert_only")
-                return .dictionary(d)
-            case .stopSync:
-                var d = [String: JSON]()
-                d[".tag"] = .str("stop_sync")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .off:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("off")
+                    return .dictionary(d)
+                case .alertOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("alert_only")
+                    return .dictionary(d)
+                case .stopSync:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("stop_sync")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> MemberSpaceLimitType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "off":
-                    return MemberSpaceLimitType.off
-                case "alert_only":
-                    return MemberSpaceLimitType.alertOnly
-                case "stop_sync":
-                    return MemberSpaceLimitType.stopSync
-                case "other":
-                    return MemberSpaceLimitType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "off":
+                            return MemberSpaceLimitType.off
+                        case "alert_only":
+                            return MemberSpaceLimitType.alertOnly
+                        case "stop_sync":
+                            return MemberSpaceLimitType.stopSync
+                        case "other":
+                            return MemberSpaceLimitType.other
+                        default:
+                            return MemberSpaceLimitType.other
+                    }
                 default:
-                    return MemberSpaceLimitType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: MemberSpaceLimitType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: MemberSpaceLimitType.self, json: json)
             }
         }
     }
@@ -308,26 +288,25 @@ public class TeamCommon {
             }
         }
     }
-
     public class TimeRangeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TimeRange) throws -> JSON {
             let output = [
-                "start_time": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.startTime),
-                "end_time": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.endTime),
+            "start_time": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.startTime),
+            "end_time": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.endTime),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TimeRange {
             switch json {
-            case .dictionary(let dict):
-                let startTime = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["start_time"] ?? .null)
-                let endTime = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["end_time"] ?? .null)
-                return TimeRange(startTime: startTime, endTime: endTime)
-            default:
-                throw JSONSerializerError.deserializeError(type: TimeRange.self, json: json)
+                case .dictionary(let dict):
+                    let startTime = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["start_time"] ?? .null)
+                    let endTime = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["end_time"] ?? .null)
+                    return TimeRange(startTime: startTime, endTime: endTime)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TimeRange.self, json: json)
             }
         }
     }
+
 }

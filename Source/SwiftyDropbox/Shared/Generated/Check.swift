@@ -29,23 +29,72 @@ public class Check {
             }
         }
     }
-
     public class EchoArgSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: EchoArg) throws -> JSON {
             let output = [
-                "query": try Serialization._StringSerializer.serialize(value.query),
+            "query": try Serialization._StringSerializer.serialize(value.query),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> EchoArg {
             switch json {
-            case .dictionary(let dict):
-                let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .str(""))
-                return EchoArg(query: query)
-            default:
-                throw JSONSerializerError.deserializeError(type: EchoArg.self, json: json)
+                case .dictionary(let dict):
+                    let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .str(""))
+                    return EchoArg(query: query)
+                default:
+                    throw JSONSerializerError.deserializeError(type: EchoArg.self, json: json)
+            }
+        }
+    }
+
+    /// EchoError contains the error returned from the Dropbox servers.
+    public enum EchoError: CustomStringConvertible, JSONRepresentable {
+        /// The request was successful.
+        case userRequested
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try EchoErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EchoErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EchoError: \(error)"
+            }
+        }
+    }
+    public class EchoErrorSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: EchoError) throws -> JSON {
+            switch value {
+                case .userRequested:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("user_requested")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> EchoError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "user_requested":
+                            return EchoError.userRequested
+                        case "other":
+                            return EchoError.other
+                        default:
+                            return EchoError.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: EchoError.self, json: json)
             }
         }
     }
@@ -71,26 +120,25 @@ public class Check {
             }
         }
     }
-
     public class EchoResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: EchoResult) throws -> JSON {
             let output = [
-                "result": try Serialization._StringSerializer.serialize(value.result),
+            "result": try Serialization._StringSerializer.serialize(value.result),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> EchoResult {
             switch json {
-            case .dictionary(let dict):
-                let result = try Serialization._StringSerializer.deserialize(dict["result"] ?? .str(""))
-                return EchoResult(result: result)
-            default:
-                throw JSONSerializerError.deserializeError(type: EchoResult.self, json: json)
+                case .dictionary(let dict):
+                    let result = try Serialization._StringSerializer.deserialize(dict["result"] ?? .str(""))
+                    return EchoResult(result: result)
+                default:
+                    throw JSONSerializerError.deserializeError(type: EchoResult.self, json: json)
             }
         }
     }
+
 
     /// Stone Route Objects
 
@@ -101,12 +149,10 @@ public class Check {
         deprecated: false,
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
-        attributes: RouteAttributes(
-            auth: [.app],
-            host: .api,
-            style: .rpc
-        )
+        errorSerializer: Check.EchoErrorSerializer(),
+        attributes: RouteAttributes(auth: [.app],
+                                    host: .api,
+                                    style: .rpc)
     )
     static let user = Route(
         name: "user",
@@ -115,11 +161,9 @@ public class Check {
         deprecated: false,
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        errorSerializer: Check.EchoErrorSerializer(),
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
 }

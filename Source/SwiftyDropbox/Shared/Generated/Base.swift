@@ -27,6 +27,8 @@ public class DropboxBase: DropboxTransportClientOwning {
     public var openid: OpenidRoutes!
     /// Routes within the paper namespace. See PaperRoutes for details.
     public var paper: PaperRoutes!
+    /// Routes within the riviera namespace. See RivieraRoutes for details.
+    public var riviera: RivieraRoutes!
     /// Routes within the sharing namespace. See SharingRoutes for details.
     public var sharing: SharingRoutes!
     /// Routes within the teamLog namespace. See TeamLogRoutes for details.
@@ -46,6 +48,7 @@ public class DropboxBase: DropboxTransportClientOwning {
         self.files = FilesRoutes(client: client)
         self.openid = OpenidRoutes(client: client)
         self.paper = PaperRoutes(client: client)
+        self.riviera = RivieraRoutes(client: client)
         self.sharing = SharingRoutes(client: client)
         self.teamLog = TeamLogRoutes(client: client)
         self.users = UsersRoutes(client: client)

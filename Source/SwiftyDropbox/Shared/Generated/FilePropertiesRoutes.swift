@@ -20,14 +20,11 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file. No two groups in the
-    /// input should  refer to the same template.
+    /// input should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.AddPropertiesError` object on failure.
-    @discardableResult public func propertiesAdd(
-        path: String,
-        propertyGroups: [FileProperties.PropertyGroup]
-    ) -> RpcRequest<VoidSerializer, FileProperties.AddPropertiesErrorSerializer> {
+    @discardableResult public func propertiesAdd(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) -> RpcRequest<VoidSerializer, FileProperties.AddPropertiesErrorSerializer> {
         let route = FileProperties.propertiesAdd
         let serverArgs = FileProperties.AddPropertiesArg(path: path, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -42,14 +39,11 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups "snapshot" updates to force apply. No two groups in the input
-    /// should  refer to the same template.
+    /// should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.InvalidPropertyGroupError` object on failure.
-    @discardableResult public func propertiesOverwrite(
-        path: String,
-        propertyGroups: [FileProperties.PropertyGroup]
-    ) -> RpcRequest<VoidSerializer, FileProperties.InvalidPropertyGroupErrorSerializer> {
+    @discardableResult public func propertiesOverwrite(path: String, propertyGroups: Array<FileProperties.PropertyGroup>) -> RpcRequest<VoidSerializer, FileProperties.InvalidPropertyGroupErrorSerializer> {
         let route = FileProperties.propertiesOverwrite
         let serverArgs = FileProperties.OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -67,10 +61,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.RemovePropertiesError` object on failure.
-    @discardableResult public func propertiesRemove(
-        path: String,
-        propertyTemplateIds: [String]
-    ) -> RpcRequest<VoidSerializer, FileProperties.RemovePropertiesErrorSerializer> {
+    @discardableResult public func propertiesRemove(path: String, propertyTemplateIds: Array<String>) -> RpcRequest<VoidSerializer, FileProperties.RemovePropertiesErrorSerializer> {
         let route = FileProperties.propertiesRemove
         let serverArgs = FileProperties.RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
         return client.request(route, serverArgs: serverArgs)
@@ -85,11 +76,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
     /// object on success or a `FileProperties.PropertiesSearchError` object on failure.
-    @discardableResult public func propertiesSearch(
-        queries: [FileProperties.PropertiesSearchQuery],
-        templateFilter: FileProperties
-            .TemplateFilter = .filterNone
-    ) -> RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchErrorSerializer> {
+    @discardableResult public func propertiesSearch(queries: Array<FileProperties.PropertiesSearchQuery>, templateFilter: FileProperties.TemplateFilter = .filterNone) -> RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchErrorSerializer> {
         let route = FileProperties.propertiesSearch
         let serverArgs = FileProperties.PropertiesSearchArg(queries: queries, templateFilter: templateFilter)
         return client.request(route, serverArgs: serverArgs)
@@ -103,8 +90,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
     /// object on success or a `FileProperties.PropertiesSearchContinueError` object on failure.
-    @discardableResult public func propertiesSearchContinue(cursor: String)
-        -> RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchContinueErrorSerializer> {
+    @discardableResult public func propertiesSearchContinue(cursor: String) -> RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchContinueErrorSerializer> {
         let route = FileProperties.propertiesSearchContinue
         let serverArgs = FileProperties.PropertiesSearchContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -122,10 +108,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.UpdatePropertiesError` object on failure.
-    @discardableResult public func propertiesUpdate(
-        path: String,
-        updatePropertyGroups: [FileProperties.PropertyGroupUpdate]
-    ) -> RpcRequest<VoidSerializer, FileProperties.UpdatePropertiesErrorSerializer> {
+    @discardableResult public func propertiesUpdate(path: String, updatePropertyGroups: Array<FileProperties.PropertyGroupUpdate>) -> RpcRequest<VoidSerializer, FileProperties.UpdatePropertiesErrorSerializer> {
         let route = FileProperties.propertiesUpdate
         let serverArgs = FileProperties.UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups)
         return client.request(route, serverArgs: serverArgs)
@@ -139,12 +122,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
-    @discardableResult public func templatesAddForTeam(
-        name: String,
-        description_: String,
-        fields: [FileProperties.PropertyFieldTemplate]
-    )
-        -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    @discardableResult public func templatesAddForTeam(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = FileProperties.templatesAddForTeam
         let serverArgs = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields)
         return client.request(route, serverArgs: serverArgs)
@@ -158,12 +136,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
-    @discardableResult public func templatesAddForUser(
-        name: String,
-        description_: String,
-        fields: [FileProperties.PropertyFieldTemplate]
-    )
-        -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    @discardableResult public func templatesAddForUser(name: String, description_: String, fields: Array<FileProperties.PropertyFieldTemplate>) -> RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = FileProperties.templatesAddForUser
         let serverArgs = FileProperties.AddTemplateArg(name: name, description_: description_, fields: fields)
         return client.request(route, serverArgs: serverArgs)
@@ -178,8 +151,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object on
     /// success or a `FileProperties.TemplateError` object on failure.
-    @discardableResult public func templatesGetForTeam(templateId: String)
-        -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
+    @discardableResult public func templatesGetForTeam(templateId: String) -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = FileProperties.templatesGetForTeam
         let serverArgs = FileProperties.GetTemplateArg(templateId: templateId)
         return client.request(route, serverArgs: serverArgs)
@@ -194,8 +166,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.GetTemplateResult` object on
     /// success or a `FileProperties.TemplateError` object on failure.
-    @discardableResult public func templatesGetForUser(templateId: String)
-        -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
+    @discardableResult public func templatesGetForUser(templateId: String) -> RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer> {
         let route = FileProperties.templatesGetForUser
         let serverArgs = FileProperties.GetTemplateArg(templateId: templateId)
         return client.request(route, serverArgs: serverArgs)
@@ -269,12 +240,7 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult` object
     /// on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @discardableResult public func templatesUpdateForTeam(
-        templateId: String,
-        name: String? = nil,
-        description_: String? = nil,
-        addFields: [FileProperties.PropertyFieldTemplate]? = nil
-    ) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    @discardableResult public func templatesUpdateForTeam(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = FileProperties.templatesUpdateForTeam
         let serverArgs = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
         return client.request(route, serverArgs: serverArgs)
@@ -293,14 +259,10 @@ public class FilePropertiesRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult` object
     /// on success or a `FileProperties.ModifyTemplateError` object on failure.
-    @discardableResult public func templatesUpdateForUser(
-        templateId: String,
-        name: String? = nil,
-        description_: String? = nil,
-        addFields: [FileProperties.PropertyFieldTemplate]? = nil
-    ) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
+    @discardableResult public func templatesUpdateForUser(templateId: String, name: String? = nil, description_: String? = nil, addFields: Array<FileProperties.PropertyFieldTemplate>? = nil) -> RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer> {
         let route = FileProperties.templatesUpdateForUser
         let serverArgs = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

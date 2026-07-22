@@ -14,6 +14,57 @@ public class AccountRoutes: DropboxTransportClientOwning {
         self.client = client
     }
 
+    /// Deletes the current user's profile photo.
+    ///
+    /// - scope: account_info.write
+    ///
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.DeleteProfilePhotoResult` object on
+    /// success or a `Account.DeleteProfilePhotoError` object on failure.
+    @discardableResult public func deleteProfilePhoto() -> RpcRequest<Account.DeleteProfilePhotoResultSerializer, Account.DeleteProfilePhotoErrorSerializer> {
+        let route = Account.deleteProfilePhoto
+        let serverArgs = Account.DeleteProfilePhotoArg()
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// This lovely endpoint gets the account photo of a given user.
+    ///
+    /// - scope: account_info.read
+    ///
+    /// - parameter dbxAccountId: Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    /// - parameter size: A string representing the size of the photo.
+    /// - parameter circleCrop: True if the photo should be cropped and false otherwise.
+    /// - parameter expectAccountPhoto: True if we expect account photo to exist.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
+    /// an NSError will be thrown).
+    /// - parameter destination: The location to write the download to.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.AccountPhotoGetResult` object on
+    /// success or a `Account.AccountPhotoGetError` object on failure.
+    @discardableResult public func getPhoto(dbxAccountId: String, size: String, circleCrop: Bool, expectAccountPhoto: Bool, overwrite: Bool = false, destination: URL) -> DownloadRequestFile<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer> {
+        let route = Account.getPhoto
+        let serverArgs = Account.AccountPhotoGetArg(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop, expectAccountPhoto: expectAccountPhoto)
+        return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
+    }
+
+    /// This lovely endpoint gets the account photo of a given user.
+    ///
+    /// - scope: account_info.read
+    ///
+    /// - parameter dbxAccountId: Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    /// - parameter size: A string representing the size of the photo.
+    /// - parameter circleCrop: True if the photo should be cropped and false otherwise.
+    /// - parameter expectAccountPhoto: True if we expect account photo to exist.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.AccountPhotoGetResult` object on
+    /// success or a `Account.AccountPhotoGetError` object on failure.
+    @discardableResult public func getPhoto(dbxAccountId: String, size: String, circleCrop: Bool, expectAccountPhoto: Bool) -> DownloadRequestMemory<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer> {
+        let route = Account.getPhoto
+        let serverArgs = Account.AccountPhotoGetArg(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop, expectAccountPhoto: expectAccountPhoto)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Sets a user's profile photo.
     ///
     /// - scope: account_info.write
@@ -22,12 +73,10 @@ public class AccountRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Account.SetProfilePhotoResult` object on
     /// success or a `Account.SetProfilePhotoError` object on failure.
-    @discardableResult public func setProfilePhoto(
-        photo: Account
-            .PhotoSourceArg
-    ) -> RpcRequest<Account.SetProfilePhotoResultSerializer, Account.SetProfilePhotoErrorSerializer> {
+    @discardableResult public func setProfilePhoto(photo: Account.PhotoSourceArg) -> RpcRequest<Account.SetProfilePhotoResultSerializer, Account.SetProfilePhotoErrorSerializer> {
         let route = Account.setProfilePhoto
         let serverArgs = Account.SetProfilePhotoArg(photo: photo)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

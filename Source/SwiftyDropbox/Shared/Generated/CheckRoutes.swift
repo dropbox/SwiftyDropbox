@@ -24,10 +24,11 @@ public class CheckRoutes: DropboxTransportClientOwning {
     /// - parameter query: The string that you'd like to be echoed back to you.
     ///
     /// - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
-    /// `Void` object on failure.
-    @discardableResult public func user(query: String = "") -> RpcRequest<Check.EchoResultSerializer, VoidSerializer> {
+    /// `Check.EchoError` object on failure.
+    @discardableResult public func user(query: String = "") -> RpcRequest<Check.EchoResultSerializer, Check.EchoErrorSerializer> {
         let route = Check.user
         let serverArgs = Check.EchoArg(query: query)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

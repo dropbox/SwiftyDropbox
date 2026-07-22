@@ -8,6 +8,52 @@ import Foundation
 
 /// Datatypes and serializers for the common namespace
 public class Common {
+    /// The DropboxDuration struct
+    public class DropboxDuration: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let seconds: Int64
+        /// (no description)
+        public let nanos: Int32
+        public init(seconds: Int64, nanos: Int32) {
+            comparableValidator()(seconds)
+            self.seconds = seconds
+            comparableValidator()(nanos)
+            self.nanos = nanos
+        }
+
+        func json() throws -> JSON {
+            try DropboxDurationSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DropboxDurationSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DropboxDuration: \(error)"
+            }
+        }
+    }
+    public class DropboxDurationSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: DropboxDuration) throws -> JSON {
+            let output = [
+            "seconds": try Serialization._Int64Serializer.serialize(value.seconds),
+            "nanos": try Serialization._Int32Serializer.serialize(value.nanos),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> DropboxDuration {
+            switch json {
+                case .dictionary(let dict):
+                    let seconds = try Serialization._Int64Serializer.deserialize(dict["seconds"] ?? .null)
+                    let nanos = try Serialization._Int32Serializer.deserialize(dict["nanos"] ?? .null)
+                    return DropboxDuration(seconds: seconds, nanos: nanos)
+                default:
+                    throw JSONSerializerError.deserializeError(type: DropboxDuration.self, json: json)
+            }
+        }
+    }
+
     /// The PathRoot union
     public enum PathRoot: CustomStringConvertible, JSONRepresentable {
         /// Paths are relative to the authenticating user's home namespace, whether or not that user belongs to a team.
@@ -33,50 +79,48 @@ public class Common {
             }
         }
     }
-
     public class PathRootSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PathRoot) throws -> JSON {
             switch value {
-            case .home:
-                var d = [String: JSON]()
-                d[".tag"] = .str("home")
-                return .dictionary(d)
-            case .root(let arg):
-                var d = try ["root": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("root")
-                return .dictionary(d)
-            case .namespaceId(let arg):
-                var d = try ["namespace_id": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("namespace_id")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .home:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("home")
+                    return .dictionary(d)
+                case .root(let arg):
+                    var d = try ["root": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("root")
+                    return .dictionary(d)
+                case .namespaceId(let arg):
+                    var d = try ["namespace_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("namespace_id")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PathRoot {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "home":
-                    return PathRoot.home
-                case "root":
-                    let v = try Serialization._StringSerializer.deserialize(d["root"] ?? .null)
-                    return PathRoot.root(v)
-                case "namespace_id":
-                    let v = try Serialization._StringSerializer.deserialize(d["namespace_id"] ?? .null)
-                    return PathRoot.namespaceId(v)
-                case "other":
-                    return PathRoot.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "home":
+                            return PathRoot.home
+                        case "root":
+                            let v = try Serialization._StringSerializer.deserialize(d["root"] ?? .null)
+                            return PathRoot.root(v)
+                        case "namespace_id":
+                            let v = try Serialization._StringSerializer.deserialize(d["namespace_id"] ?? .null)
+                            return PathRoot.namespaceId(v)
+                        case "other":
+                            return PathRoot.other
+                        default:
+                            return PathRoot.other
+                    }
                 default:
-                    return PathRoot.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PathRoot.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PathRoot.self, json: json)
             }
         }
     }
@@ -86,7 +130,7 @@ public class Common {
         /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's
         /// latest root info.
         case invalidRoot(Common.RootInfo)
-        /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
+        /// You don't have permission to access the namespace id in Dropbox-API-Path-Root header.
         case noPermission
         /// An unspecified error.
         case other
@@ -103,43 +147,41 @@ public class Common {
             }
         }
     }
-
     public class PathRootErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PathRootError) throws -> JSON {
             switch value {
-            case .invalidRoot(let arg):
-                var d = try ["invalid_root": Common.RootInfoSerializer().serialize(arg)]
-                d[".tag"] = .str("invalid_root")
-                return .dictionary(d)
-            case .noPermission:
-                var d = [String: JSON]()
-                d[".tag"] = .str("no_permission")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .invalidRoot(let arg):
+                    var d = try ["invalid_root": Common.RootInfoSerializer().serialize(arg)]
+                    d[".tag"] = .str("invalid_root")
+                    return .dictionary(d)
+                case .noPermission:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("no_permission")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PathRootError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_root":
-                    let v = try Common.RootInfoSerializer().deserialize(d["invalid_root"] ?? .null)
-                    return PathRootError.invalidRoot(v)
-                case "no_permission":
-                    return PathRootError.noPermission
-                case "other":
-                    return PathRootError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "invalid_root":
+                            let v = try Common.RootInfoSerializer().deserialize(d["invalid_root"] ?? .null)
+                            return PathRootError.invalidRoot(v)
+                        case "no_permission":
+                            return PathRootError.noPermission
+                        case "other":
+                            return PathRootError.other
+                        default:
+                            return PathRootError.other
+                    }
                 default:
-                    return PathRootError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PathRootError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PathRootError.self, json: json)
             }
         }
     }
@@ -147,8 +189,8 @@ public class Common {
     /// Information about current user's root.
     public class RootInfo: CustomStringConvertible, JSONRepresentable {
         /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
-        /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in
-        /// RootInfo.
+        /// is member of a team with a separate team root, or the user root if user is member of a team with
+        /// separate distinct roots for users. Otherwise it will be the same as homeNamespaceId in RootInfo.
         public let rootNamespaceId: String
         /// The namespace ID for user's home namespace.
         public let homeNamespaceId: String
@@ -171,47 +213,45 @@ public class Common {
             }
         }
     }
-
     public class RootInfoSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RootInfo) throws -> JSON {
             var output = [
-                "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
-                "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
+            "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
+            "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
             ]
             switch value {
-            case let team as Common.TeamRootInfo:
-                for (k, v) in try Serialization.getFields(Common.TeamRootInfoSerializer().serialize(team)) {
-                    output[k] = v
-                }
-                output[".tag"] = .str("team")
-            case let user as Common.UserRootInfo:
-                for (k, v) in try Serialization.getFields(Common.UserRootInfoSerializer().serialize(user)) {
-                    output[k] = v
-                }
-                output[".tag"] = .str("user")
-            default:
-                throw JSONSerializerError.unexpectedSubtype(type: RootInfo.self, subtype: value)
+                case let team as Common.TeamRootInfo:
+                    for (k, v) in try Serialization.getFields(Common.TeamRootInfoSerializer().serialize(team)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .str("team")
+                case let user as Common.UserRootInfo:
+                    for (k, v) in try Serialization.getFields(Common.UserRootInfoSerializer().serialize(user)) {
+                        output[k] = v
+                    }
+                    output[".tag"] = .str("user")
+                default:
+                    throw JSONSerializerError.unexpectedSubtype(type: RootInfo.self, subtype: value)
             }
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> RootInfo {
             switch json {
-            case .dictionary(let dict):
-                let tag = try Serialization.getTag(dict)
-                switch tag {
-                case "team":
-                    return try Common.TeamRootInfoSerializer().deserialize(json)
-                case "user":
-                    return try Common.UserRootInfoSerializer().deserialize(json)
+                case .dictionary(let dict):
+                    let tag = try Serialization.getTag(dict)
+                    switch tag {
+                        case "team":
+                            return try Common.TeamRootInfoSerializer().deserialize(json)
+                        case "user":
+                            return try Common.UserRootInfoSerializer().deserialize(json)
+                        default:
+                            let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
+                            let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
+                            return RootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
+                    }
                 default:
-                    let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
-                    let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
-                    return RootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: RootInfo.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: RootInfo.self, json: json)
             }
         }
     }
@@ -226,6 +266,7 @@ public class Common {
             super.init(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
         }
 
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try TeamRootInfoSerializer().serialize(self)))"
@@ -234,27 +275,25 @@ public class Common {
             }
         }
     }
-
     public class TeamRootInfoSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TeamRootInfo) throws -> JSON {
             let output = [
-                "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
-                "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
-                "home_path": try Serialization._StringSerializer.serialize(value.homePath),
+            "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
+            "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
+            "home_path": try Serialization._StringSerializer.serialize(value.homePath),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TeamRootInfo {
             switch json {
-            case .dictionary(let dict):
-                let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
-                let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
-                let homePath = try Serialization._StringSerializer.deserialize(dict["home_path"] ?? .null)
-                return TeamRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
-            default:
-                throw JSONSerializerError.deserializeError(type: TeamRootInfo.self, json: json)
+                case .dictionary(let dict):
+                    let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
+                    let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
+                    let homePath = try Serialization._StringSerializer.deserialize(dict["home_path"] ?? .null)
+                    return TeamRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamRootInfo.self, json: json)
             }
         }
     }
@@ -262,6 +301,15 @@ public class Common {
     /// Root info when user is not member of a team or the user is a member of a team and the team does not have a
     /// separate root namespace.
     public class UserRootInfo: Common.RootInfo {
+        /// The path for user's home directory under the distinct user root.
+        public let homePath: String?
+        public init(rootNamespaceId: String, homeNamespaceId: String, homePath: String? = nil) {
+            nullableValidator(stringValidator())(homePath)
+            self.homePath = homePath
+            super.init(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
+        }
+
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserRootInfoSerializer().serialize(self)))"
@@ -270,26 +318,27 @@ public class Common {
             }
         }
     }
-
     public class UserRootInfoSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserRootInfo) throws -> JSON {
             let output = [
-                "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
-                "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
+            "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
+            "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
+            "home_path": try NullableSerializer(Serialization._StringSerializer).serialize(value.homePath),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UserRootInfo {
             switch json {
-            case .dictionary(let dict):
-                let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
-                let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
-                return UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
-            default:
-                throw JSONSerializerError.deserializeError(type: UserRootInfo.self, json: json)
+                case .dictionary(let dict):
+                    let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
+                    let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
+                    let homePath = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["home_path"] ?? .null)
+                    return UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UserRootInfo.self, json: json)
             }
         }
     }
+
 }

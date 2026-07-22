@@ -39,73 +39,72 @@ public class SeenState {
             }
         }
     }
-
     public class PlatformTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PlatformType) throws -> JSON {
             switch value {
-            case .web:
-                var d = [String: JSON]()
-                d[".tag"] = .str("web")
-                return .dictionary(d)
-            case .desktop:
-                var d = [String: JSON]()
-                d[".tag"] = .str("desktop")
-                return .dictionary(d)
-            case .mobileIos:
-                var d = [String: JSON]()
-                d[".tag"] = .str("mobile_ios")
-                return .dictionary(d)
-            case .mobileAndroid:
-                var d = [String: JSON]()
-                d[".tag"] = .str("mobile_android")
-                return .dictionary(d)
-            case .api:
-                var d = [String: JSON]()
-                d[".tag"] = .str("api")
-                return .dictionary(d)
-            case .unknown:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unknown")
-                return .dictionary(d)
-            case .mobile:
-                var d = [String: JSON]()
-                d[".tag"] = .str("mobile")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .web:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("web")
+                    return .dictionary(d)
+                case .desktop:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("desktop")
+                    return .dictionary(d)
+                case .mobileIos:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile_ios")
+                    return .dictionary(d)
+                case .mobileAndroid:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile_android")
+                    return .dictionary(d)
+                case .api:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("api")
+                    return .dictionary(d)
+                case .unknown:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unknown")
+                    return .dictionary(d)
+                case .mobile:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("mobile")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PlatformType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "web":
-                    return PlatformType.web
-                case "desktop":
-                    return PlatformType.desktop
-                case "mobile_ios":
-                    return PlatformType.mobileIos
-                case "mobile_android":
-                    return PlatformType.mobileAndroid
-                case "api":
-                    return PlatformType.api
-                case "unknown":
-                    return PlatformType.unknown
-                case "mobile":
-                    return PlatformType.mobile
-                case "other":
-                    return PlatformType.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "web":
+                            return PlatformType.web
+                        case "desktop":
+                            return PlatformType.desktop
+                        case "mobile_ios":
+                            return PlatformType.mobileIos
+                        case "mobile_android":
+                            return PlatformType.mobileAndroid
+                        case "api":
+                            return PlatformType.api
+                        case "unknown":
+                            return PlatformType.unknown
+                        case "mobile":
+                            return PlatformType.mobile
+                        case "other":
+                            return PlatformType.other
+                        default:
+                            return PlatformType.other
+                    }
                 default:
-                    return PlatformType.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PlatformType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PlatformType.self, json: json)
             }
         }
     }
+
 }

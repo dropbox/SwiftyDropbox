@@ -99,7 +99,7 @@ enum JSONSerializerError<T>: Error {
 
 public class VoidSerializer: JSONSerializer {
     public func serialize(_ value: Void) throws -> JSON {
-        .null
+        return .null
     }
 
     public func deserialize(_ json: JSON) throws -> Void {
@@ -109,21 +109,23 @@ public class VoidSerializer: JSONSerializer {
         default:
             throw JSONSerializerError.deserializeError(type: ValueType.self, json: json)
         }
+
     }
 }
 
 public class ArraySerializer<T: JSONSerializer>: JSONSerializer {
+
     var elementSerializer: T
 
     init(_ elementSerializer: T) {
         self.elementSerializer = elementSerializer
     }
 
-    public func serialize(_ arr: [T.ValueType]) throws -> JSON {
-        .array(try arr.map { try self.elementSerializer.serialize($0) })
+    public func serialize(_ arr: Array<T.ValueType>) throws -> JSON {
+        return .array(try arr.map { try self.elementSerializer.serialize($0) })
     }
 
-    public func deserialize(_ json: JSON) throws -> [T.ValueType] {
+    public func deserialize(_ json: JSON) throws -> Array<T.ValueType> {
         switch json {
         case .array(let arr):
             return try arr.map { try self.elementSerializer.deserialize($0) }
@@ -134,17 +136,18 @@ public class ArraySerializer<T: JSONSerializer>: JSONSerializer {
 }
 
 public class DictionarySerializer<T: JSONSerializer>: JSONSerializer {
+
     var valueSerializer: T
 
     init(_ elementSerializer: T) {
         self.valueSerializer = elementSerializer
     }
 
-    public func serialize(_ dict: [String: T.ValueType]) throws -> JSON {
-        .dictionary(try dict.mapValues { try self.valueSerializer.serialize($0) })
+    public func serialize(_ dict: Dictionary<String, T.ValueType>) throws -> JSON {
+        return .dictionary(try dict.mapValues { try self.valueSerializer.serialize($0) })
     }
 
-    public func deserialize(_ json: JSON) throws -> [String: T.ValueType] {
+    public func deserialize(_ json: JSON) throws ->Dictionary<String, T.ValueType> {
         switch json {
         case .dictionary(let dict):
             return try dict.mapValues { try self.valueSerializer.deserialize($0) }
@@ -156,11 +159,11 @@ public class DictionarySerializer<T: JSONSerializer>: JSONSerializer {
 
 public class StringSerializer: JSONSerializer {
     public func serialize(_ value: String) throws -> JSON {
-        .str(value)
+        return .str(value)
     }
 
     public func deserialize(_ json: JSON) throws -> String {
-        switch json {
+        switch (json) {
         case .str(let s):
             return s
         default:
@@ -170,6 +173,7 @@ public class StringSerializer: JSONSerializer {
 }
 
 public class NSDateSerializer: JSONSerializer {
+
     var dateFormatter: DateFormatter
 
     fileprivate func convertFormat(_ format: String) -> String? {
@@ -261,21 +265,21 @@ public class NSDateSerializer: JSONSerializer {
         return newFormat
     }
 
+
     init(_ dateFormat: String) {
         self.dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = convertFormat(dateFormat)
+        self.dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        self.dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = self.convertFormat(dateFormat)
     }
-
     public func serialize(_ value: Date) throws -> JSON {
-        .str(dateFormatter.string(from: value))
+        return .str(self.dateFormatter.string(from: value))
     }
 
     public func deserialize(_ json: JSON) throws -> Date {
         switch json {
         case .str(let s):
-            guard let date = dateFormatter.date(from: s) else {
+            guard let date = self.dateFormatter.date(from: s) else {
                 throw JSONSerializerError.deserializeError(type: ValueType.self, json: json)
             }
             return date
@@ -287,9 +291,8 @@ public class NSDateSerializer: JSONSerializer {
 
 public class BoolSerializer: JSONSerializer {
     public func serialize(_ value: Bool) throws -> JSON {
-        .number(NSNumber(value: value as Bool))
+        return .number(NSNumber(value: value as Bool))
     }
-
     public func deserialize(_ json: JSON) throws -> Bool {
         switch json {
         case .number(let b):
@@ -302,7 +305,7 @@ public class BoolSerializer: JSONSerializer {
 
 public class UInt64Serializer: JSONSerializer {
     public func serialize(_ value: UInt64) throws -> JSON {
-        .number(NSNumber(value: value as UInt64))
+        return .number(NSNumber(value: value as UInt64))
     }
 
     public func deserialize(_ json: JSON) throws -> UInt64 {
@@ -317,7 +320,7 @@ public class UInt64Serializer: JSONSerializer {
 
 public class Int64Serializer: JSONSerializer {
     public func serialize(_ value: Int64) throws -> JSON {
-        .number(NSNumber(value: value as Int64))
+        return .number(NSNumber(value: value as Int64))
     }
 
     public func deserialize(_ json: JSON) throws -> Int64 {
@@ -332,7 +335,7 @@ public class Int64Serializer: JSONSerializer {
 
 public class Int32Serializer: JSONSerializer {
     public func serialize(_ value: Int32) throws -> JSON {
-        .number(NSNumber(value: value as Int32))
+        return .number(NSNumber(value: value as Int32))
     }
 
     public func deserialize(_ json: JSON) throws -> Int32 {
@@ -344,10 +347,9 @@ public class Int32Serializer: JSONSerializer {
         }
     }
 }
-
 public class UInt32Serializer: JSONSerializer {
     public func serialize(_ value: UInt32) throws -> JSON {
-        .number(NSNumber(value: value as UInt32))
+        return .number(NSNumber(value: value as UInt32))
     }
 
     public func deserialize(_ json: JSON) throws -> UInt32 {
@@ -362,11 +364,11 @@ public class UInt32Serializer: JSONSerializer {
 
 public class NSDataSerializer: JSONSerializer {
     public func serialize(_ value: Data) throws -> JSON {
-        .str(value.base64EncodedString(options: []))
+        return .str(value.base64EncodedString(options: []))
     }
 
     public func deserialize(_ json: JSON) throws -> Data {
-        switch json {
+        switch(json) {
         case .str(let s):
             guard let data = Data(base64Encoded: s, options: []) else {
                 throw JSONSerializerError.deserializeError(type: ValueType.self, json: json)
@@ -380,7 +382,7 @@ public class NSDataSerializer: JSONSerializer {
 
 public class FloatSerializer: JSONSerializer {
     public func serialize(_ value: Float) throws -> JSON {
-        .number(NSNumber(value: value as Float))
+        return .number(NSNumber(value: value as Float))
     }
 
     public func deserialize(_ json: JSON) throws -> Float {
@@ -395,7 +397,7 @@ public class FloatSerializer: JSONSerializer {
 
 public class DoubleSerializer: JSONSerializer {
     public func serialize(_ value: Double) throws -> JSON {
-        .number(NSNumber(value: value as Double))
+        return .number(NSNumber(value: value as Double))
     }
 
     public func deserialize(_ json: JSON) throws -> Double {
@@ -408,14 +410,16 @@ public class DoubleSerializer: JSONSerializer {
     }
 }
 
+
 public class NullableSerializer<T: JSONSerializer>: JSONSerializer {
+
     var internalSerializer: T
 
     init(_ serializer: T) {
         self.internalSerializer = serializer
     }
 
-    public func serialize(_ value: T.ValueType?) throws -> JSON {
+    public func serialize(_ value: Optional<T.ValueType>) throws -> JSON {
         if let v = value {
             return try internalSerializer.serialize(v)
         } else {
@@ -423,7 +427,7 @@ public class NullableSerializer<T: JSONSerializer>: JSONSerializer {
         }
     }
 
-    public func deserialize(_ json: JSON) throws -> T.ValueType? {
+    public func deserialize(_ json: JSON) throws -> Optional<T.ValueType> {
         switch json {
         case .null:
             return nil
@@ -448,10 +452,10 @@ struct Serialization {
 
     static func getFields(_ json: JSON) throws -> [String: JSON] {
         switch json {
-        case .dictionary(let dict):
-            return dict
-        default:
-            throw JSONSerializerError<Serialization>.missingOrMalformedFields(json: json)
+            case .dictionary(let dict):
+                return dict
+            default:
+                throw JSONSerializerError<Serialization>.missingOrMalformedFields(json: json)
         }
     }
 

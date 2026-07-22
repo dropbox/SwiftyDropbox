@@ -27,42 +27,41 @@ public class Openid {
             }
         }
     }
-
     public class OpenIdErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: OpenIdError) throws -> JSON {
             switch value {
-            case .incorrectOpenidScopes:
-                var d = [String: JSON]()
-                d[".tag"] = .str("incorrect_openid_scopes")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .incorrectOpenidScopes:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("incorrect_openid_scopes")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> OpenIdError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "incorrect_openid_scopes":
-                    return OpenIdError.incorrectOpenidScopes
-                case "other":
-                    return OpenIdError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "incorrect_openid_scopes":
+                            return OpenIdError.incorrectOpenidScopes
+                        case "other":
+                            return OpenIdError.other
+                        default:
+                            return OpenIdError.other
+                    }
                 default:
-                    return OpenIdError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: OpenIdError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: OpenIdError.self, json: json)
             }
         }
     }
 
     /// No Parameters
     public class UserInfoArgs: CustomStringConvertible, JSONRepresentable {
+
         func json() throws -> JSON {
             try UserInfoArgsSerializer().serialize(self)
         }
@@ -75,20 +74,18 @@ public class Openid {
             }
         }
     }
-
     public class UserInfoArgsSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserInfoArgs) throws -> JSON {
             let output = [String: JSON]()
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UserInfoArgs {
             switch json {
-            case .dictionary:
-                return UserInfoArgs()
-            default:
-                throw JSONSerializerError.deserializeError(type: UserInfoArgs.self, json: json)
+                case .dictionary(_):
+                    return UserInfoArgs()
+                default:
+                    throw JSONSerializerError.deserializeError(type: UserInfoArgs.self, json: json)
             }
         }
     }
@@ -112,37 +109,35 @@ public class Openid {
             }
         }
     }
-
     public class UserInfoErrorSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserInfoError) throws -> JSON {
             switch value {
-            case .openidError(let arg):
-                var d = try ["openid_error": Openid.OpenIdErrorSerializer().serialize(arg)]
-                d[".tag"] = .str("openid_error")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .openidError(let arg):
+                    var d = try ["openid_error": Openid.OpenIdErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("openid_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> UserInfoError {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "openid_error":
-                    let v = try Openid.OpenIdErrorSerializer().deserialize(d["openid_error"] ?? .null)
-                    return UserInfoError.openidError(v)
-                case "other":
-                    return UserInfoError.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "openid_error":
+                            let v = try Openid.OpenIdErrorSerializer().deserialize(d["openid_error"] ?? .null)
+                            return UserInfoError.openidError(v)
+                        case "other":
+                            return UserInfoError.other
+                        default:
+                            return UserInfoError.other
+                    }
                 default:
-                    return UserInfoError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: UserInfoError.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: UserInfoError.self, json: json)
             }
         }
     }
@@ -188,36 +183,35 @@ public class Openid {
             }
         }
     }
-
     public class UserInfoResultSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: UserInfoResult) throws -> JSON {
             let output = [
-                "family_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.familyName),
-                "given_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.givenName),
-                "email": try NullableSerializer(Serialization._StringSerializer).serialize(value.email),
-                "email_verified": try NullableSerializer(Serialization._BoolSerializer).serialize(value.emailVerified),
-                "iss": try Serialization._StringSerializer.serialize(value.iss),
-                "sub": try Serialization._StringSerializer.serialize(value.sub),
+            "family_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.familyName),
+            "given_name": try NullableSerializer(Serialization._StringSerializer).serialize(value.givenName),
+            "email": try NullableSerializer(Serialization._StringSerializer).serialize(value.email),
+            "email_verified": try NullableSerializer(Serialization._BoolSerializer).serialize(value.emailVerified),
+            "iss": try Serialization._StringSerializer.serialize(value.iss),
+            "sub": try Serialization._StringSerializer.serialize(value.sub),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> UserInfoResult {
             switch json {
-            case .dictionary(let dict):
-                let familyName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["family_name"] ?? .null)
-                let givenName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["given_name"] ?? .null)
-                let email = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["email"] ?? .null)
-                let emailVerified = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["email_verified"] ?? .null)
-                let iss = try Serialization._StringSerializer.deserialize(dict["iss"] ?? .str(""))
-                let sub = try Serialization._StringSerializer.deserialize(dict["sub"] ?? .str(""))
-                return UserInfoResult(familyName: familyName, givenName: givenName, email: email, emailVerified: emailVerified, iss: iss, sub: sub)
-            default:
-                throw JSONSerializerError.deserializeError(type: UserInfoResult.self, json: json)
+                case .dictionary(let dict):
+                    let familyName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["family_name"] ?? .null)
+                    let givenName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["given_name"] ?? .null)
+                    let email = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["email"] ?? .null)
+                    let emailVerified = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["email_verified"] ?? .null)
+                    let iss = try Serialization._StringSerializer.deserialize(dict["iss"] ?? .str(""))
+                    let sub = try Serialization._StringSerializer.deserialize(dict["sub"] ?? .str(""))
+                    return UserInfoResult(familyName: familyName, givenName: givenName, email: email, emailVerified: emailVerified, iss: iss, sub: sub)
+                default:
+                    throw JSONSerializerError.deserializeError(type: UserInfoResult.self, json: json)
             }
         }
     }
+
 
     /// Stone Route Objects
 
@@ -229,10 +223,8 @@ public class Openid {
         argSerializer: Openid.UserInfoArgsSerializer(),
         responseSerializer: Openid.UserInfoResultSerializer(),
         errorSerializer: Openid.UserInfoErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
+        attributes: RouteAttributes(auth: [.user],
+                                    host: .api,
+                                    style: .rpc)
     )
 }
