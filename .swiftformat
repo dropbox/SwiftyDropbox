@@ -1,4 +1,4 @@
---exclude stone,spec
+--exclude stone,spec,Source/SwiftyDropbox/Shared/Generated/TeamLog.swift,Source/SwiftyDropboxObjC/Shared/Generated/DBXTeamLog.swift
 --ifdef no-indent
 --maxwidth 160
 --trimwhitespace always
