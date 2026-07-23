@@ -26,3 +26,8 @@
 --disable hoistTry
 --disable wrapPropertyBodies
 --disable wrapSingleLineComments
+# Disabled to avoid SwiftFormat's per-rule timeout on the very large
+# generated files (e.g. DBXTeamLog.swift is ~66k lines) on CI runners.
+# Both rules are no-ops on the current generated output.
+--disable wrap
+--disable redundantInit
