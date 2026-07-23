@@ -12,6 +12,15 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
         let info = try persistedRequestInfo(from: apiRequest)
 
         switch info.namespaceRouteName {
+        case "account/get_photo":
+            return .account_getPhoto(
+                rebuildRequest(
+                    apiRequest: apiRequest,
+                    info: info,
+                    route: Account.getPhoto,
+                    client: client
+                )
+            )
         case "files/alpha/upload":
             return .files_alphaUpload(
                 rebuildRequest(
@@ -117,6 +126,15 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     apiRequest: apiRequest,
                     info: info,
                     route: Files.uploadSessionAppendV2,
+                    client: client
+                )
+            )
+        case "files/upload_session/append_batch":
+            return .files_uploadSessionAppendBatch(
+                rebuildRequest(
+                    apiRequest: apiRequest,
+                    info: info,
+                    route: Files.uploadSessionAppendBatch,
                     client: client
                 )
             )

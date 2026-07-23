@@ -165,6 +165,177 @@ public class DBXTeamPoliciesComputerBackupPolicyStateOther: DBXTeamPoliciesCompu
     }
 }
 
+/// Policy governing default expiration date for new links shared outside the team.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicy: NSObject {
+    let swift: TeamPolicies.DefaultLinkExpirationDaysPolicy
+
+    public init(swift: TeamPolicies.DefaultLinkExpirationDaysPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamPolicies.DefaultLinkExpirationDaysPolicy) -> DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+        switch swift {
+        case .none:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyNone()
+        case .day1:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay1()
+        case .day3:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay3()
+        case .day7:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay7()
+        case .day30:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay30()
+        case .day90:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay90()
+        case .day180:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay180()
+        case .year1:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyYear1()
+        case .other:
+            return DBXTeamPoliciesDefaultLinkExpirationDaysPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asNone: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyNone? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyNone
+    }
+
+    @objc
+    public var asDay1: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay1? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay1
+    }
+
+    @objc
+    public var asDay3: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay3? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay3
+    }
+
+    @objc
+    public var asDay7: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay7? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay7
+    }
+
+    @objc
+    public var asDay30: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay30? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay30
+    }
+
+    @objc
+    public var asDay90: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay90? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay90
+    }
+
+    @objc
+    public var asDay180: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay180? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay180
+    }
+
+    @objc
+    public var asYear1: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyYear1? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyYear1
+    }
+
+    @objc
+    public var asOther: DBXTeamPoliciesDefaultLinkExpirationDaysPolicyOther? {
+        self as? DBXTeamPoliciesDefaultLinkExpirationDaysPolicyOther
+    }
+}
+
+/// New links shared outside the team default to no expiration date.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyNone: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.none
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in one day.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay1: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day1
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in three days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay3: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day3
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in seven days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay7: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day7
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in 30 days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay30: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day30
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in 90 days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay90: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day90
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in 180 days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyDay180: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.day180
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team default to expire in 365 days.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyYear1: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.year1
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamPoliciesDefaultLinkExpirationDaysPolicyOther: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.DefaultLinkExpirationDaysPolicy.other
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible EmmState union
 @objc
 public class DBXTeamPoliciesEmmState: NSObject {
@@ -247,6 +418,75 @@ public class DBXTeamPoliciesEmmStateOther: DBXTeamPoliciesEmmState {
     @objc
     public init() {
         let swift = TeamPolicies.EmmState.other
+        super.init(swift: swift)
+    }
+}
+
+/// Policy governing whether new links shared outside the team require passwords.
+@objc
+public class DBXTeamPoliciesEnforceLinkPasswordPolicy: NSObject {
+    let swift: TeamPolicies.EnforceLinkPasswordPolicy
+
+    public init(swift: TeamPolicies.EnforceLinkPasswordPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamPolicies.EnforceLinkPasswordPolicy) -> DBXTeamPoliciesEnforceLinkPasswordPolicy {
+        switch swift {
+        case .optional:
+            return DBXTeamPoliciesEnforceLinkPasswordPolicyOptional()
+        case .required:
+            return DBXTeamPoliciesEnforceLinkPasswordPolicyRequired()
+        case .other:
+            return DBXTeamPoliciesEnforceLinkPasswordPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asOptional: DBXTeamPoliciesEnforceLinkPasswordPolicyOptional? {
+        self as? DBXTeamPoliciesEnforceLinkPasswordPolicyOptional
+    }
+
+    @objc
+    public var asRequired: DBXTeamPoliciesEnforceLinkPasswordPolicyRequired? {
+        self as? DBXTeamPoliciesEnforceLinkPasswordPolicyRequired
+    }
+
+    @objc
+    public var asOther: DBXTeamPoliciesEnforceLinkPasswordPolicyOther? {
+        self as? DBXTeamPoliciesEnforceLinkPasswordPolicyOther
+    }
+}
+
+/// New links shared outside the team do not require passwords.
+@objc
+public class DBXTeamPoliciesEnforceLinkPasswordPolicyOptional: DBXTeamPoliciesEnforceLinkPasswordPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.EnforceLinkPasswordPolicy.optional
+        super.init(swift: swift)
+    }
+}
+
+/// New links shared outside the team require passwords.
+@objc
+public class DBXTeamPoliciesEnforceLinkPasswordPolicyRequired: DBXTeamPoliciesEnforceLinkPasswordPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.EnforceLinkPasswordPolicy.required
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamPoliciesEnforceLinkPasswordPolicyOther: DBXTeamPoliciesEnforceLinkPasswordPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.EnforceLinkPasswordPolicy.other
         super.init(swift: swift)
     }
 }
@@ -423,6 +663,8 @@ public class DBXTeamPoliciesFileProviderMigrationPolicyState: NSObject {
             return DBXTeamPoliciesFileProviderMigrationPolicyStateEnabled()
         case .default_:
             return DBXTeamPoliciesFileProviderMigrationPolicyStateDefault_()
+        case .immediate:
+            return DBXTeamPoliciesFileProviderMigrationPolicyStateImmediate()
         case .other:
             return DBXTeamPoliciesFileProviderMigrationPolicyStateOther()
         }
@@ -444,6 +686,11 @@ public class DBXTeamPoliciesFileProviderMigrationPolicyState: NSObject {
     @objc
     public var asDefault_: DBXTeamPoliciesFileProviderMigrationPolicyStateDefault_? {
         self as? DBXTeamPoliciesFileProviderMigrationPolicyStateDefault_
+    }
+
+    @objc
+    public var asImmediate: DBXTeamPoliciesFileProviderMigrationPolicyStateImmediate? {
+        self as? DBXTeamPoliciesFileProviderMigrationPolicyStateImmediate
     }
 
     @objc
@@ -478,6 +725,16 @@ public class DBXTeamPoliciesFileProviderMigrationPolicyStateDefault_: DBXTeamPol
     @objc
     public init() {
         let swift = TeamPolicies.FileProviderMigrationPolicyState.default_
+        super.init(swift: swift)
+    }
+}
+
+/// Team admin has chosen to do File Provider Migration immediately for the team.
+@objc
+public class DBXTeamPoliciesFileProviderMigrationPolicyStateImmediate: DBXTeamPoliciesFileProviderMigrationPolicyState {
+    @objc
+    public init() {
+        let swift = TeamPolicies.FileProviderMigrationPolicyState.immediate
         super.init(swift: swift)
     }
 }
@@ -1022,7 +1279,7 @@ public class DBXTeamPoliciesPasswordStrengthPolicy: NSObject {
     }
 }
 
-/// User passwords will adhere to the minimal password strength policy.
+/// User passwords will not adhere to a password strength policy.
 @objc
 public class DBXTeamPoliciesPasswordStrengthPolicyMinimalRequirements: DBXTeamPoliciesPasswordStrengthPolicy {
     @objc
@@ -1032,7 +1289,8 @@ public class DBXTeamPoliciesPasswordStrengthPolicyMinimalRequirements: DBXTeamPo
     }
 }
 
-/// User passwords will adhere to the moderate password strength policy.
+/// User passwords will adhere to the strong password strength policy. Note that product surfaces refer to this
+/// as the strong policy but the value must be kept as is for backwards compatability.
 @objc
 public class DBXTeamPoliciesPasswordStrengthPolicyModeratePassword: DBXTeamPoliciesPasswordStrengthPolicy {
     @objc
@@ -1042,7 +1300,8 @@ public class DBXTeamPoliciesPasswordStrengthPolicyModeratePassword: DBXTeamPolic
     }
 }
 
-/// User passwords will adhere to the very strong password strength policy.
+/// User passwords will adhere to the very strong password strength policy. Note that product surfaces refer to
+/// this as the very strong policy but the value must be kept as is for backwards compatability.
 @objc
 public class DBXTeamPoliciesPasswordStrengthPolicyStrongPassword: DBXTeamPoliciesPasswordStrengthPolicy {
     @objc
@@ -1284,6 +1543,8 @@ public class DBXTeamPoliciesSharedFolderMemberPolicy: NSObject {
             return DBXTeamPoliciesSharedFolderMemberPolicyTeam()
         case .anyone:
             return DBXTeamPoliciesSharedFolderMemberPolicyAnyone()
+        case .teamAndApproved:
+            return DBXTeamPoliciesSharedFolderMemberPolicyTeamAndApproved()
         case .other:
             return DBXTeamPoliciesSharedFolderMemberPolicyOther()
         }
@@ -1300,6 +1561,11 @@ public class DBXTeamPoliciesSharedFolderMemberPolicy: NSObject {
     @objc
     public var asAnyone: DBXTeamPoliciesSharedFolderMemberPolicyAnyone? {
         self as? DBXTeamPoliciesSharedFolderMemberPolicyAnyone
+    }
+
+    @objc
+    public var asTeamAndApproved: DBXTeamPoliciesSharedFolderMemberPolicyTeamAndApproved? {
+        self as? DBXTeamPoliciesSharedFolderMemberPolicyTeamAndApproved
     }
 
     @objc
@@ -1324,6 +1590,16 @@ public class DBXTeamPoliciesSharedFolderMemberPolicyAnyone: DBXTeamPoliciesShare
     @objc
     public init() {
         let swift = TeamPolicies.SharedFolderMemberPolicy.anyone
+        super.init(swift: swift)
+    }
+}
+
+/// Only a teammate and approved people can be a member of a folder shared by a team member.
+@objc
+public class DBXTeamPoliciesSharedFolderMemberPolicyTeamAndApproved: DBXTeamPoliciesSharedFolderMemberPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedFolderMemberPolicy.teamAndApproved
         super.init(swift: swift)
     }
 }
@@ -1442,6 +1718,92 @@ public class DBXTeamPoliciesSharedLinkCreatePolicyOther: DBXTeamPoliciesSharedLi
     @objc
     public init() {
         let swift = TeamPolicies.SharedLinkCreatePolicy.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible SharedLinkDefaultPermissionsPolicy union
+@objc
+public class DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy: NSObject {
+    let swift: TeamPolicies.SharedLinkDefaultPermissionsPolicy
+
+    public init(swift: TeamPolicies.SharedLinkDefaultPermissionsPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamPolicies.SharedLinkDefaultPermissionsPolicy) -> DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy {
+        switch swift {
+        case .default_:
+            return DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyDefault_()
+        case .edit:
+            return DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyEdit()
+        case .view:
+            return DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyView()
+        case .other:
+            return DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asDefault_: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyDefault_? {
+        self as? DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyDefault_
+    }
+
+    @objc
+    public var asEdit: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyEdit? {
+        self as? DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyEdit
+    }
+
+    @objc
+    public var asView: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyView? {
+        self as? DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyView
+    }
+
+    @objc
+    public var asOther: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyOther? {
+        self as? DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyOther
+    }
+}
+
+/// No team default. Member defaults used instead.
+@objc
+public class DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyDefault_: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedLinkDefaultPermissionsPolicy.default_
+        super.init(swift: swift)
+    }
+}
+
+/// Default to edit when creating new sharing links
+@objc
+public class DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyEdit: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedLinkDefaultPermissionsPolicy.edit
+        super.init(swift: swift)
+    }
+}
+
+/// Default to view-only when creating new sharing links
+@objc
+public class DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyView: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedLinkDefaultPermissionsPolicy.view
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamPoliciesSharedLinkDefaultPermissionsPolicyOther: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.SharedLinkDefaultPermissionsPolicy.other
         super.init(swift: swift)
     }
 }
@@ -1964,19 +2326,24 @@ public class DBXTeamPoliciesTeamMemberPolicies: NSObject {
     /// The team policy on if teammembers are allowed to suggest users for admins to invite to the team.
     @objc
     public var suggestMembersPolicy: DBXTeamPoliciesSuggestMembersPolicy { DBXTeamPoliciesSuggestMembersPolicy(swift: swift.suggestMembersPolicy) }
+    /// Policy for deciding whether members can edit team folders at the top level of the team space.
+    @objc
+    public var topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy { DBXTeamPoliciesTopLevelContentPolicy(swift: swift.topLevelContentPolicy) }
 
     @objc
     public init(
         sharing: DBXTeamPoliciesTeamSharingPolicies,
         emmState: DBXTeamPoliciesEmmState,
         officeAddin: DBXTeamPoliciesOfficeAddInPolicy,
-        suggestMembersPolicy: DBXTeamPoliciesSuggestMembersPolicy
+        suggestMembersPolicy: DBXTeamPoliciesSuggestMembersPolicy,
+        topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy
     ) {
         self.swift = TeamPolicies.TeamMemberPolicies(
             sharing: sharing.swift,
             emmState: emmState.swift,
             officeAddin: officeAddin.swift,
-            suggestMembersPolicy: suggestMembersPolicy.swift
+            suggestMembersPolicy: suggestMembersPolicy.swift,
+            topLevelContentPolicy: topLevelContentPolicy.swift
         )
     }
 
@@ -1995,10 +2362,7 @@ public class DBXTeamPoliciesTeamMemberPolicies: NSObject {
 public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
     /// Who can join folders shared by team members.
     @objc
-    public var sharedFolderMemberPolicy: DBXTeamPoliciesSharedFolderMemberPolicy {
-        DBXTeamPoliciesSharedFolderMemberPolicy(swift: swift.sharedFolderMemberPolicy)
-    }
-
+    public var sharedFolderMemberPolicy: DBXTeamPoliciesSharedFolderMemberPolicy { DBXTeamPoliciesSharedFolderMemberPolicy(swift: swift.sharedFolderMemberPolicy) }
     /// Which shared folders team members can join.
     @objc
     public var sharedFolderJoinPolicy: DBXTeamPoliciesSharedFolderJoinPolicy { DBXTeamPoliciesSharedFolderJoinPolicy(swift: swift.sharedFolderJoinPolicy) }
@@ -2010,9 +2374,24 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
     public var groupCreationPolicy: DBXTeamPoliciesGroupCreation { DBXTeamPoliciesGroupCreation(swift: swift.groupCreationPolicy) }
     /// Who can view links to content in shared folders.
     @objc
-    public var sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy {
-        DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy(swift: swift.sharedFolderLinkRestrictionPolicy)
-    }
+    public var sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy { DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy(
+        swift: swift.sharedFolderLinkRestrictionPolicy
+    ) }
+    /// If passwords are required for new links shared outside the team.
+    @objc
+    public var enforceLinkPasswordPolicy: DBXTeamPoliciesEnforceLinkPasswordPolicy { DBXTeamPoliciesEnforceLinkPasswordPolicy(
+        swift: swift.enforceLinkPasswordPolicy
+    ) }
+    /// Default expiration date for new links shared outside the team.
+    @objc
+    public var defaultLinkExpirationDaysPolicy: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy { DBXTeamPoliciesDefaultLinkExpirationDaysPolicy(
+        swift: swift.defaultLinkExpirationDaysPolicy
+    ) }
+    /// Default access level for new links shared by team members.
+    @objc
+    public var sharedLinkDefaultPermissionsPolicy: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy { DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy(
+        swift: swift.sharedLinkDefaultPermissionsPolicy
+    ) }
 
     @objc
     public init(
@@ -2020,14 +2399,20 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
         sharedFolderJoinPolicy: DBXTeamPoliciesSharedFolderJoinPolicy,
         sharedLinkCreatePolicy: DBXTeamPoliciesSharedLinkCreatePolicy,
         groupCreationPolicy: DBXTeamPoliciesGroupCreation,
-        sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy
+        sharedFolderLinkRestrictionPolicy: DBXTeamPoliciesSharedFolderBlanketLinkRestrictionPolicy,
+        enforceLinkPasswordPolicy: DBXTeamPoliciesEnforceLinkPasswordPolicy,
+        defaultLinkExpirationDaysPolicy: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy,
+        sharedLinkDefaultPermissionsPolicy: DBXTeamPoliciesSharedLinkDefaultPermissionsPolicy
     ) {
         self.swift = TeamPolicies.TeamSharingPolicies(
             sharedFolderMemberPolicy: sharedFolderMemberPolicy.swift,
             sharedFolderJoinPolicy: sharedFolderJoinPolicy.swift,
             sharedLinkCreatePolicy: sharedLinkCreatePolicy.swift,
             groupCreationPolicy: groupCreationPolicy.swift,
-            sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy.swift
+            sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy.swift,
+            enforceLinkPasswordPolicy: enforceLinkPasswordPolicy.swift,
+            defaultLinkExpirationDaysPolicy: defaultLinkExpirationDaysPolicy.swift,
+            sharedLinkDefaultPermissionsPolicy: sharedLinkDefaultPermissionsPolicy.swift
         )
     }
 
@@ -2039,6 +2424,75 @@ public class DBXTeamPoliciesTeamSharingPolicies: NSObject {
 
     @objc
     public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TopLevelContentPolicy union
+@objc
+public class DBXTeamPoliciesTopLevelContentPolicy: NSObject {
+    let swift: TeamPolicies.TopLevelContentPolicy
+
+    public init(swift: TeamPolicies.TopLevelContentPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamPolicies.TopLevelContentPolicy) -> DBXTeamPoliciesTopLevelContentPolicy {
+        switch swift {
+        case .adminOnly:
+            return DBXTeamPoliciesTopLevelContentPolicyAdminOnly()
+        case .everyone:
+            return DBXTeamPoliciesTopLevelContentPolicyEveryone()
+        case .other:
+            return DBXTeamPoliciesTopLevelContentPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asAdminOnly: DBXTeamPoliciesTopLevelContentPolicyAdminOnly? {
+        self as? DBXTeamPoliciesTopLevelContentPolicyAdminOnly
+    }
+
+    @objc
+    public var asEveryone: DBXTeamPoliciesTopLevelContentPolicyEveryone? {
+        self as? DBXTeamPoliciesTopLevelContentPolicyEveryone
+    }
+
+    @objc
+    public var asOther: DBXTeamPoliciesTopLevelContentPolicyOther? {
+        self as? DBXTeamPoliciesTopLevelContentPolicyOther
+    }
+}
+
+/// Only admins can edit team folders at the top level of the team space.
+@objc
+public class DBXTeamPoliciesTopLevelContentPolicyAdminOnly: DBXTeamPoliciesTopLevelContentPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.TopLevelContentPolicy.adminOnly
+        super.init(swift: swift)
+    }
+}
+
+/// Everyone on the team can edit team folders at the top level of the team space.
+@objc
+public class DBXTeamPoliciesTopLevelContentPolicyEveryone: DBXTeamPoliciesTopLevelContentPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.TopLevelContentPolicy.everyone
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamPoliciesTopLevelContentPolicyOther: DBXTeamPoliciesTopLevelContentPolicy {
+    @objc
+    public init() {
+        let swift = TeamPolicies.TopLevelContentPolicy.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible TwoStepVerificationPolicy union

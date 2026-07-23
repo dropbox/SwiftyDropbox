@@ -526,6 +526,8 @@ public class DBXPaperExportFormat: NSObject {
             return DBXPaperExportFormatHtml()
         case .markdown:
             return DBXPaperExportFormatMarkdown()
+        case .json:
+            return DBXPaperExportFormatJson()
         case .other:
             return DBXPaperExportFormatOther()
         }
@@ -542,6 +544,11 @@ public class DBXPaperExportFormat: NSObject {
     @objc
     public var asMarkdown: DBXPaperExportFormatMarkdown? {
         self as? DBXPaperExportFormatMarkdown
+    }
+
+    @objc
+    public var asJson: DBXPaperExportFormatJson? {
+        self as? DBXPaperExportFormatJson
     }
 
     @objc
@@ -566,6 +573,16 @@ public class DBXPaperExportFormatMarkdown: DBXPaperExportFormat {
     @objc
     public init() {
         let swift = Paper.ExportFormat.markdown
+        super.init(swift: swift)
+    }
+}
+
+/// Doc metadata JSON export format.
+@objc
+public class DBXPaperExportFormatJson: DBXPaperExportFormat {
+    @objc
+    public init() {
+        let swift = Paper.ExportFormat.json
         super.init(swift: swift)
     }
 }
@@ -771,6 +788,31 @@ public class DBXPaperFoldersContainingPaperDoc: NSObject {
     public override var description: String { swift.description }
 }
 
+/// Argument for retrieving Paper doc metadata. Accepts either a legacy Paper doc ID or a Cloud Doc file ID.
+@objc
+public class DBXPaperGetDocMetadataArg: NSObject {
+    /// Legacy Paper doc identifier.
+    @objc
+    public var docId: String? { swift.docId }
+    /// Dropbox file ID for Cloud Docs (post-PiFS migration).
+    @objc
+    public var fileId: String? { swift.fileId }
+
+    @objc
+    public init(docId: String?, fileId: String?) {
+        self.swift = Paper.GetDocMetadataArg(docId: docId, fileId: fileId)
+    }
+
+    let swift: Paper.GetDocMetadataArg
+
+    public init(swift: Paper.GetDocMetadataArg) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// The import format of the incoming data.
 @objc
 public class DBXPaperImportFormat: NSObject {
@@ -957,10 +999,25 @@ public class DBXPaperListPaperDocsArgs: NSObject {
     /// results in invalid arguments error.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
+    /// Do not return results beyond this date. Behavior depends on sort order.
+    @objc
+    public var stopAtDate: Date? { swift.stopAtDate }
 
     @objc
-    public init(filterBy: DBXPaperListPaperDocsFilterBy, sortBy: DBXPaperListPaperDocsSortBy, sortOrder: DBXPaperListPaperDocsSortOrder, limit: NSNumber) {
-        self.swift = Paper.ListPaperDocsArgs(filterBy: filterBy.swift, sortBy: sortBy.swift, sortOrder: sortOrder.swift, limit: limit.int32Value)
+    public init(
+        filterBy: DBXPaperListPaperDocsFilterBy,
+        sortBy: DBXPaperListPaperDocsSortBy,
+        sortOrder: DBXPaperListPaperDocsSortOrder,
+        limit: NSNumber,
+        stopAtDate: Date?
+    ) {
+        self.swift = Paper.ListPaperDocsArgs(
+            filterBy: filterBy.swift,
+            sortBy: sortBy.swift,
+            sortOrder: sortOrder.swift,
+            limit: limit.int32Value,
+            stopAtDate: stopAtDate
+        )
     }
 
     let swift: Paper.ListPaperDocsArgs
@@ -1824,10 +1881,15 @@ public class DBXPaperPaperDocExport: DBXPaperRefPaperDoc {
     /// (no description)
     @objc
     public var exportFormat: DBXPaperExportFormat { DBXPaperExportFormat(swift: subSwift.exportFormat) }
+    /// When true, export includes comment threads (e.g. markdown footnotes). When false or omitted, body only.
+    /// Other formats may adopt this later; currently only markdown uses it. Plain bool (not optional):
+    /// protoc-gen-godbx does not support proto3 optional yet.
+    @objc
+    public var includeComments: NSNumber { subSwift.includeComments as NSNumber }
 
     @objc
-    public init(docId: String, exportFormat: DBXPaperExportFormat) {
-        let swift = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat.swift)
+    public init(docId: String, exportFormat: DBXPaperExportFormat, includeComments: NSNumber) {
+        let swift = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat.swift, includeComments: includeComments.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -1867,6 +1929,67 @@ public class DBXPaperPaperDocExportResult: NSObject {
     let swift: Paper.PaperDocExportResult
 
     public init(swift: Paper.PaperDocExportResult) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Metadata returned by docs/get_metadata.
+@objc
+public class DBXPaperPaperDocGetMetadataResult: NSObject {
+    /// The Paper doc ID.
+    @objc
+    public var docId: String { swift.docId }
+    /// The Paper doc owner's email address.
+    @objc
+    public var owner: String { swift.owner }
+    /// The Paper doc title.
+    @objc
+    public var title: String { swift.title }
+    /// The Paper doc creation date.
+    @objc
+    public var createdDate: Date { swift.createdDate }
+    /// The Paper doc status.
+    @objc
+    public var status: DBXPaperPaperDocStatus { DBXPaperPaperDocStatus(swift: swift.status) }
+    /// The Paper doc revision. Simply an ever increasing number.
+    @objc
+    public var revision: NSNumber { swift.revision as NSNumber }
+    /// The date when the Paper doc was last edited.
+    @objc
+    public var lastUpdatedDate: Date { swift.lastUpdatedDate }
+    /// The email address of the last editor of the Paper doc.
+    @objc
+    public var lastEditor: String { swift.lastEditor }
+
+    @objc
+    public init(
+        docId: String,
+        owner: String,
+        title: String,
+        createdDate: Date,
+        status: DBXPaperPaperDocStatus,
+        revision: NSNumber,
+        lastUpdatedDate: Date,
+        lastEditor: String
+    ) {
+        self.swift = Paper.PaperDocGetMetadataResult(
+            docId: docId,
+            owner: owner,
+            title: title,
+            createdDate: createdDate,
+            status: status.swift,
+            revision: revision.int64Value,
+            lastUpdatedDate: lastUpdatedDate,
+            lastEditor: lastEditor
+        )
+    }
+
+    let swift: Paper.PaperDocGetMetadataResult
+
+    public init(swift: Paper.PaperDocGetMetadataResult) {
         self.swift = swift
     }
 
@@ -1966,6 +2089,75 @@ public class DBXPaperPaperDocSharingPolicy: DBXPaperRefPaperDoc {
 
     @objc
     public override var description: String { subSwift.description }
+}
+
+/// The status of a Paper doc.
+@objc
+public class DBXPaperPaperDocStatus: NSObject {
+    let swift: Paper.PaperDocStatus
+
+    public init(swift: Paper.PaperDocStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Paper.PaperDocStatus) -> DBXPaperPaperDocStatus {
+        switch swift {
+        case .active:
+            return DBXPaperPaperDocStatusActive()
+        case .deleted:
+            return DBXPaperPaperDocStatusDeleted()
+        case .other:
+            return DBXPaperPaperDocStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asActive: DBXPaperPaperDocStatusActive? {
+        self as? DBXPaperPaperDocStatusActive
+    }
+
+    @objc
+    public var asDeleted: DBXPaperPaperDocStatusDeleted? {
+        self as? DBXPaperPaperDocStatusDeleted
+    }
+
+    @objc
+    public var asOther: DBXPaperPaperDocStatusOther? {
+        self as? DBXPaperPaperDocStatusOther
+    }
+}
+
+/// The Paper doc is active.
+@objc
+public class DBXPaperPaperDocStatusActive: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.active
+        super.init(swift: swift)
+    }
+}
+
+/// The Paper doc is deleted.
+@objc
+public class DBXPaperPaperDocStatusDeleted: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.deleted
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXPaperPaperDocStatusOther: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible PaperDocUpdateArgs struct

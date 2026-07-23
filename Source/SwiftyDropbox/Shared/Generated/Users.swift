@@ -161,6 +161,61 @@ public class Users {
         }
     }
 
+    /// The value for distinctMemberHome in UserFeature.
+    public enum DistinctMemberHomeValue: CustomStringConvertible, JSONRepresentable {
+        /// When this value is True, the user have distinct home and root ns. When the value is False the user's home ns
+        /// and root ns are the same.
+        case enabled(Bool)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try DistinctMemberHomeValueSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DistinctMemberHomeValueSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DistinctMemberHomeValue: \(error)"
+            }
+        }
+    }
+
+    public class DistinctMemberHomeValueSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DistinctMemberHomeValue) throws -> JSON {
+            switch value {
+            case .enabled(let arg):
+                var d = try ["enabled": Serialization._BoolSerializer.serialize(arg)]
+                d[".tag"] = .str("enabled")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DistinctMemberHomeValue {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "enabled":
+                    let v = try Serialization._BoolSerializer.deserialize(d["enabled"] ?? .null)
+                    return DistinctMemberHomeValue.enabled(v)
+                case "other":
+                    return DistinctMemberHomeValue.other
+                default:
+                    return DistinctMemberHomeValue.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DistinctMemberHomeValue.self, json: json)
+            }
+        }
+    }
+
     /// The value for fileLocking in UserFeature.
     public enum FileLockingValue: CustomStringConvertible, JSONRepresentable {
         /// When this value is True, the user can lock files in shared directories. When the value is False the user can
@@ -392,9 +447,18 @@ public class Users {
         public let sharingPolicies: TeamPolicies.TeamSharingPolicies
         /// Team policy governing the use of the Office Add-In.
         public let officeAddinPolicy: TeamPolicies.OfficeAddInPolicy
-        public init(id: String, name: String, sharingPolicies: TeamPolicies.TeamSharingPolicies, officeAddinPolicy: TeamPolicies.OfficeAddInPolicy) {
+        /// Team policy governing whether members can edit team folders at the top level of the team space.
+        public let topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy
+        public init(
+            id: String,
+            name: String,
+            sharingPolicies: TeamPolicies.TeamSharingPolicies,
+            officeAddinPolicy: TeamPolicies.OfficeAddInPolicy,
+            topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy
+        ) {
             self.sharingPolicies = sharingPolicies
             self.officeAddinPolicy = officeAddinPolicy
+            self.topLevelContentPolicy = topLevelContentPolicy
             super.init(id: id, name: name)
         }
 
@@ -415,6 +479,7 @@ public class Users {
                 "name": try Serialization._StringSerializer.serialize(value.name),
                 "sharing_policies": try TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharingPolicies),
                 "office_addin_policy": try TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddinPolicy),
+                "top_level_content_policy": try TeamPolicies.TopLevelContentPolicySerializer().serialize(value.topLevelContentPolicy),
             ]
             return .dictionary(output)
         }
@@ -426,7 +491,14 @@ public class Users {
                 let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
                 let sharingPolicies = try TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing_policies"] ?? .null)
                 let officeAddinPolicy = try TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin_policy"] ?? .null)
-                return FullTeam(id: id, name: name, sharingPolicies: sharingPolicies, officeAddinPolicy: officeAddinPolicy)
+                let topLevelContentPolicy = try TeamPolicies.TopLevelContentPolicySerializer().deserialize(dict["top_level_content_policy"] ?? .null)
+                return FullTeam(
+                    id: id,
+                    name: name,
+                    sharingPolicies: sharingPolicies,
+                    officeAddinPolicy: officeAddinPolicy,
+                    topLevelContentPolicy: topLevelContentPolicy
+                )
             default:
                 throw JSONSerializerError.deserializeError(type: FullTeam.self, json: json)
             }
@@ -899,6 +971,61 @@ public class Users {
         }
     }
 
+    /// The value for teamSharedDropbox in UserFeature.
+    public enum TeamSharedDropboxValue: CustomStringConvertible, JSONRepresentable {
+        /// When this value is True, the user have a shared team root. When the value is False the user have distinct
+        /// root.
+        case enabled(Bool)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TeamSharedDropboxValueSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamSharedDropboxValueSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TeamSharedDropboxValue: \(error)"
+            }
+        }
+    }
+
+    public class TeamSharedDropboxValueSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TeamSharedDropboxValue) throws -> JSON {
+            switch value {
+            case .enabled(let arg):
+                var d = try ["enabled": Serialization._BoolSerializer.serialize(arg)]
+                d[".tag"] = .str("enabled")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> TeamSharedDropboxValue {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "enabled":
+                    let v = try Serialization._BoolSerializer.deserialize(d["enabled"] ?? .null)
+                    return TeamSharedDropboxValue.enabled(v)
+                case "other":
+                    return TeamSharedDropboxValue.other
+                default:
+                    return TeamSharedDropboxValue.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: TeamSharedDropboxValue.self, json: json)
+            }
+        }
+    }
+
     /// The TeamSpaceAllocation struct
     public class TeamSpaceAllocation: CustomStringConvertible, JSONRepresentable {
         /// The total space currently used by the user's team (bytes).
@@ -962,8 +1089,9 @@ public class Users {
                 let used = try Serialization._UInt64Serializer.deserialize(dict["used"] ?? .null)
                 let allocated = try Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .null)
                 let userWithinTeamSpaceAllocated = try Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_allocated"] ?? .null)
-                let userWithinTeamSpaceLimitType = try TeamCommon.MemberSpaceLimitTypeSerializer()
-                    .deserialize(dict["user_within_team_space_limit_type"] ?? .null)
+                let userWithinTeamSpaceLimitType = try TeamCommon.MemberSpaceLimitTypeSerializer().deserialize(
+                    dict["user_within_team_space_limit_type"] ?? .null
+                )
                 let userWithinTeamSpaceUsedCached = try Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_used_cached"] ?? .null)
                 return TeamSpaceAllocation(
                     used: used,
@@ -984,6 +1112,11 @@ public class Users {
         case paperAsFiles
         /// This feature allows users to lock files in order to restrict other users from editing them.
         case fileLocking
+        /// This feature contains information about whether or not the user is part of a team with a shared team root.
+        case teamSharedDropbox
+        /// This feature contains information about whether or not the user's home namespace is distinct from their root
+        /// namespace.
+        case distinctMemberHome
         /// An unspecified error.
         case other
 
@@ -1012,6 +1145,14 @@ public class Users {
                 var d = [String: JSON]()
                 d[".tag"] = .str("file_locking")
                 return .dictionary(d)
+            case .teamSharedDropbox:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_shared_dropbox")
+                return .dictionary(d)
+            case .distinctMemberHome:
+                var d = [String: JSON]()
+                d[".tag"] = .str("distinct_member_home")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -1028,6 +1169,10 @@ public class Users {
                     return UserFeature.paperAsFiles
                 case "file_locking":
                     return UserFeature.fileLocking
+                case "team_shared_dropbox":
+                    return UserFeature.teamSharedDropbox
+                case "distinct_member_home":
+                    return UserFeature.distinctMemberHome
                 case "other":
                     return UserFeature.other
                 default:
@@ -1045,6 +1190,10 @@ public class Users {
         case paperAsFiles(Users.PaperAsFilesValue)
         /// An unspecified error.
         case fileLocking(Users.FileLockingValue)
+        /// An unspecified error.
+        case teamSharedDropbox(Users.TeamSharedDropboxValue)
+        /// An unspecified error.
+        case distinctMemberHome(Users.DistinctMemberHomeValue)
         /// An unspecified error.
         case other
 
@@ -1073,6 +1222,14 @@ public class Users {
                 var d = try ["file_locking": Users.FileLockingValueSerializer().serialize(arg)]
                 d[".tag"] = .str("file_locking")
                 return .dictionary(d)
+            case .teamSharedDropbox(let arg):
+                var d = try ["team_shared_dropbox": Users.TeamSharedDropboxValueSerializer().serialize(arg)]
+                d[".tag"] = .str("team_shared_dropbox")
+                return .dictionary(d)
+            case .distinctMemberHome(let arg):
+                var d = try ["distinct_member_home": Users.DistinctMemberHomeValueSerializer().serialize(arg)]
+                d[".tag"] = .str("distinct_member_home")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -1091,6 +1248,12 @@ public class Users {
                 case "file_locking":
                     let v = try Users.FileLockingValueSerializer().deserialize(d["file_locking"] ?? .null)
                     return UserFeatureValue.fileLocking(v)
+                case "team_shared_dropbox":
+                    let v = try Users.TeamSharedDropboxValueSerializer().deserialize(d["team_shared_dropbox"] ?? .null)
+                    return UserFeatureValue.teamSharedDropbox(v)
+                case "distinct_member_home":
+                    let v = try Users.DistinctMemberHomeValueSerializer().deserialize(d["distinct_member_home"] ?? .null)
+                    return UserFeatureValue.distinctMemberHome(v)
                 case "other":
                     return UserFeatureValue.other
                 default:

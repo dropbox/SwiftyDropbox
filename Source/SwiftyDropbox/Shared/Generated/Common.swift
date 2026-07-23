@@ -8,6 +8,54 @@ import Foundation
 
 /// Datatypes and serializers for the common namespace
 public class Common {
+    /// The DropboxDuration struct
+    public class DropboxDuration: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let seconds: Int64
+        /// (no description)
+        public let nanos: Int32
+        public init(seconds: Int64, nanos: Int32) {
+            comparableValidator()(seconds)
+            self.seconds = seconds
+            comparableValidator()(nanos)
+            self.nanos = nanos
+        }
+
+        func json() throws -> JSON {
+            try DropboxDurationSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DropboxDurationSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DropboxDuration: \(error)"
+            }
+        }
+    }
+
+    public class DropboxDurationSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DropboxDuration) throws -> JSON {
+            let output = [
+                "seconds": try Serialization._Int64Serializer.serialize(value.seconds),
+                "nanos": try Serialization._Int32Serializer.serialize(value.nanos),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> DropboxDuration {
+            switch json {
+            case .dictionary(let dict):
+                let seconds = try Serialization._Int64Serializer.deserialize(dict["seconds"] ?? .null)
+                let nanos = try Serialization._Int32Serializer.deserialize(dict["nanos"] ?? .null)
+                return DropboxDuration(seconds: seconds, nanos: nanos)
+            default:
+                throw JSONSerializerError.deserializeError(type: DropboxDuration.self, json: json)
+            }
+        }
+    }
+
     /// The PathRoot union
     public enum PathRoot: CustomStringConvertible, JSONRepresentable {
         /// Paths are relative to the authenticating user's home namespace, whether or not that user belongs to a team.
@@ -86,7 +134,7 @@ public class Common {
         /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's
         /// latest root info.
         case invalidRoot(Common.RootInfo)
-        /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
+        /// You don't have permission to access the namespace id in Dropbox-API-Path-Root header.
         case noPermission
         /// An unspecified error.
         case other
@@ -147,8 +195,8 @@ public class Common {
     /// Information about current user's root.
     public class RootInfo: CustomStringConvertible, JSONRepresentable {
         /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
-        /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in
-        /// RootInfo.
+        /// is member of a team with a separate team root, or the user root if user is member of a team with
+        /// separate distinct roots for users. Otherwise it will be the same as homeNamespaceId in RootInfo.
         public let rootNamespaceId: String
         /// The namespace ID for user's home namespace.
         public let homeNamespaceId: String
@@ -262,6 +310,14 @@ public class Common {
     /// Root info when user is not member of a team or the user is a member of a team and the team does not have a
     /// separate root namespace.
     public class UserRootInfo: Common.RootInfo {
+        /// The path for user's home directory under the distinct user root.
+        public let homePath: String?
+        public init(rootNamespaceId: String, homeNamespaceId: String, homePath: String? = nil) {
+            nullableValidator(stringValidator())(homePath)
+            self.homePath = homePath
+            super.init(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
+        }
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try UserRootInfoSerializer().serialize(self)))"
@@ -277,6 +333,7 @@ public class Common {
             let output = [
                 "root_namespace_id": try Serialization._StringSerializer.serialize(value.rootNamespaceId),
                 "home_namespace_id": try Serialization._StringSerializer.serialize(value.homeNamespaceId),
+                "home_path": try NullableSerializer(Serialization._StringSerializer).serialize(value.homePath),
             ]
             return .dictionary(output)
         }
@@ -286,7 +343,8 @@ public class Common {
             case .dictionary(let dict):
                 let rootNamespaceId = try Serialization._StringSerializer.deserialize(dict["root_namespace_id"] ?? .null)
                 let homeNamespaceId = try Serialization._StringSerializer.deserialize(dict["home_namespace_id"] ?? .null)
-                return UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId)
+                let homePath = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["home_path"] ?? .null)
+                return UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
             default:
                 throw JSONSerializerError.deserializeError(type: UserRootInfo.self, json: json)
             }

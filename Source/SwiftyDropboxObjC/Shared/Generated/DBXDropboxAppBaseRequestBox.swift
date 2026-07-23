@@ -11,6 +11,9 @@ extension DropboxAppBaseRequestBox {
     var objc: DBXRequest {
         if case .files_getThumbnailV2(let swift) = self {
             return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
+        }
+        if case .sharing_getSharedLinkFile(let swift) = self {
+            return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
         } else {
             fatalError("For Obj-C compatibility, add this route to the Objective-C compatibility module allow-list")
         }

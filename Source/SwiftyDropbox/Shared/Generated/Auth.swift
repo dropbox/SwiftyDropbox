@@ -14,6 +14,10 @@ public class Auth {
         case invalidAccountType(Auth.InvalidAccountTypeError)
         /// Current account cannot access Paper.
         case paperAccessDenied(Auth.PaperAccessError)
+        /// Team doesn't have permission to access.
+        case teamAccessDenied
+        /// Caller does not have permission to access the resource.
+        case noPermission(Auth.NoPermissionError)
         /// An unspecified error.
         case other
 
@@ -42,6 +46,14 @@ public class Auth {
                 var d = try ["paper_access_denied": Auth.PaperAccessErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("paper_access_denied")
                 return .dictionary(d)
+            case .teamAccessDenied:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_access_denied")
+                return .dictionary(d)
+            case .noPermission(let arg):
+                var d = try ["no_permission": Auth.NoPermissionErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("no_permission")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -60,6 +72,11 @@ public class Auth {
                 case "paper_access_denied":
                     let v = try Auth.PaperAccessErrorSerializer().deserialize(d["paper_access_denied"] ?? .null)
                     return AccessError.paperAccessDenied(v)
+                case "team_access_denied":
+                    return AccessError.teamAccessDenied
+                case "no_permission":
+                    let v = try Auth.NoPermissionErrorSerializer().deserialize(d["no_permission"] ?? .null)
+                    return AccessError.noPermission(v)
                 case "other":
                     return AccessError.other
                 default:
@@ -230,6 +247,61 @@ public class Auth {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: InvalidAccountTypeError.self, json: json)
+            }
+        }
+    }
+
+    /// The NoPermissionError union
+    public enum NoPermissionError: CustomStringConvertible, JSONRepresentable {
+        /// Current caller does not have permission to access the account information for one or more of the specified
+        /// account IDs.
+        case unauthorizedAccountIdUsage(Auth.UnauthorizedAccountIdUsageError)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try NoPermissionErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try NoPermissionErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for NoPermissionError: \(error)"
+            }
+        }
+    }
+
+    public class NoPermissionErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: NoPermissionError) throws -> JSON {
+            switch value {
+            case .unauthorizedAccountIdUsage(let arg):
+                var d = try Serialization.getFields(Auth.UnauthorizedAccountIdUsageErrorSerializer().serialize(arg))
+                d[".tag"] = .str("unauthorized_account_id_usage")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> NoPermissionError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "unauthorized_account_id_usage":
+                    let v = try Auth.UnauthorizedAccountIdUsageErrorSerializer().deserialize(json)
+                    return NoPermissionError.unauthorizedAccountIdUsage(v)
+                case "other":
+                    return NoPermissionError.other
+                default:
+                    return NoPermissionError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: NoPermissionError.self, json: json)
             }
         }
     }
@@ -592,6 +664,48 @@ public class Auth {
                 return TokenScopeError(requiredScope: requiredScope)
             default:
                 throw JSONSerializerError.deserializeError(type: TokenScopeError.self, json: json)
+            }
+        }
+    }
+
+    /// The UnauthorizedAccountIdUsageError struct
+    public class UnauthorizedAccountIdUsageError: CustomStringConvertible, JSONRepresentable {
+        /// The account IDs that the caller does not have permission to use.
+        public let unauthorizedAccountIds: [String]
+        public init(unauthorizedAccountIds: [String]) {
+            arrayValidator(itemValidator: stringValidator())(unauthorizedAccountIds)
+            self.unauthorizedAccountIds = unauthorizedAccountIds
+        }
+
+        func json() throws -> JSON {
+            try UnauthorizedAccountIdUsageErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UnauthorizedAccountIdUsageErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UnauthorizedAccountIdUsageError: \(error)"
+            }
+        }
+    }
+
+    public class UnauthorizedAccountIdUsageErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UnauthorizedAccountIdUsageError) throws -> JSON {
+            let output = [
+                "unauthorized_account_ids": try ArraySerializer(Serialization._StringSerializer).serialize(value.unauthorizedAccountIds),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> UnauthorizedAccountIdUsageError {
+            switch json {
+            case .dictionary(let dict):
+                let unauthorizedAccountIds = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["unauthorized_account_ids"] ?? .null)
+                return UnauthorizedAccountIdUsageError(unauthorizedAccountIds: unauthorizedAccountIds)
+            default:
+                throw JSONSerializerError.deserializeError(type: UnauthorizedAccountIdUsageError.self, json: json)
             }
         }
     }
