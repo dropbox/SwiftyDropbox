@@ -22,3 +22,7 @@
 --disable enumNamespaces
 --disable redundantClosure
 --disable redundantVoidReturnType
+--disable docComments
+--disable hoistTry
+--disable wrapPropertyBodies
+--disable wrapSingleLineComments

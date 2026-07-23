@@ -41,6 +41,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install packaging ply six jinja2
+      - name: Install SwiftFormat
+        env:
+          SWIFTFORMAT_VERSION: '0.62.1'
+        run: |
+          curl -fsSL "https://github.com/nicklockwood/SwiftFormat/releases/download/${SWIFTFORMAT_VERSION}/swiftformat_linux.zip" -o swiftformat_linux.zip
+          unzip -o swiftformat_linux.zip
+          chmod +x swiftformat_linux
+          sudo mv swiftformat_linux /usr/local/bin/swiftformat
+          swiftformat --version
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
@@ -87,6 +96,9 @@ jobs:
         run: |
           python generate_base_client.py
           python generate_base_client.py --objc
+      - name: Format generated code
+        run: |
+          swiftformat Source/SwiftyDropbox/Shared/Generated Source/SwiftyDropboxObjC/Shared/Generated
 
       - name: Close Old Pull Requests
         id: close-old-prs
