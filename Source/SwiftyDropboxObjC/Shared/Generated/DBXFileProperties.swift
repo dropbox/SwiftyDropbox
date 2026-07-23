@@ -16,7 +16,7 @@ public class DBXFilePropertiesAddPropertiesArg: NSObject {
     /// A unique identifier for the file or folder.
     @objc
     public var path: String { swift.path }
-    /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
+    /// The property groups which are to be added to a Dropbox file. No two groups in the input should refer to the
     /// same template.
     @objc
     public var propertyGroups: [DBXFilePropertiesPropertyGroup] { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
@@ -1069,7 +1069,7 @@ public class DBXFilePropertiesOverwritePropertyGroupArg: NSObject {
     /// A unique identifier for the file or folder.
     @objc
     public var path: String { swift.path }
-    /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
+    /// The property groups "snapshot" updates to force apply. No two groups in the input should refer to the same
     /// template.
     @objc
     public var propertyGroups: [DBXFilePropertiesPropertyGroup] { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
@@ -1422,8 +1422,7 @@ public class DBXFilePropertiesPropertyFieldTemplate: NSObject {
     /// Description of the property field. Property field descriptions can be up to 1024 bytes.
     @objc
     public var description_: String { swift.description_ }
-    /// Data type of the value of this property field. This type will be enforced upon property creation and
-    /// modifications.
+    /// (no description)
     @objc
     public var type: DBXFilePropertiesPropertyType { DBXFilePropertiesPropertyType(swift: swift.type) }
 
@@ -1469,14 +1468,14 @@ public class DBXFilePropertiesPropertyGroup: NSObject {
     public override var description: String { swift.description }
 }
 
-/// Objective-C compatible PropertyGroupUpdate struct
+/// Property routes
 @objc
 public class DBXFilePropertiesPropertyGroupUpdate: NSObject {
     /// A unique identifier for a property template.
     @objc
     public var templateId: String { swift.templateId }
     /// Property fields to update. If the property field already exists, it is updated. If the property field
-    /// doesn't exist, the property group is added.
+    /// doesn't exist, it will be created as long as the property group already exists.
     @objc
     public var addOrUpdateFields: [DBXFilePropertiesPropertyField]? { swift.addOrUpdateFields?.map { DBXFilePropertiesPropertyField(swift: $0) } }
     /// Property fields to remove (by name), provided they exist.
@@ -1940,9 +1939,7 @@ public class DBXFilePropertiesUpdatePropertiesArg: NSObject {
     public var path: String { swift.path }
     /// The property groups "delta" updates to apply.
     @objc
-    public var updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate] {
-        swift.updatePropertyGroups.map { DBXFilePropertiesPropertyGroupUpdate(swift: $0) }
-    }
+    public var updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate] { swift.updatePropertyGroups.map { DBXFilePropertiesPropertyGroupUpdate(swift: $0) } }
 
     @objc
     public init(path: String, updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate]) {

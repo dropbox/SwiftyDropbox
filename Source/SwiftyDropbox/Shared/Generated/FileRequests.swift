@@ -170,7 +170,16 @@ public class FileRequests {
         public let open: Bool
         /// A description of the file request.
         public let description_: String?
-        public init(title: String, destination: String, deadline: FileRequests.FileRequestDeadline? = nil, open: Bool = true, description_: String? = nil) {
+        /// If this request was created from video project, its id.
+        public let videoProjectId: String?
+        public init(
+            title: String,
+            destination: String,
+            deadline: FileRequests.FileRequestDeadline? = nil,
+            open: Bool = true,
+            description_: String? = nil,
+            videoProjectId: String? = nil
+        ) {
             stringValidator(minLength: 1)(title)
             self.title = title
             stringValidator(pattern: "/(.|[\\r\\n])*")(destination)
@@ -179,6 +188,8 @@ public class FileRequests {
             self.open = open
             nullableValidator(stringValidator())(description_)
             self.description_ = description_
+            nullableValidator(stringValidator())(videoProjectId)
+            self.videoProjectId = videoProjectId
         }
 
         func json() throws -> JSON {
@@ -203,6 +214,7 @@ public class FileRequests {
                 "deadline": try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
                 "open": try Serialization._BoolSerializer.serialize(value.open),
                 "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+                "video_project_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.videoProjectId),
             ]
             return .dictionary(output)
         }
@@ -215,7 +227,15 @@ public class FileRequests {
                 let deadline = try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
                 let open = try Serialization._BoolSerializer.deserialize(dict["open"] ?? .number(1))
                 let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                return CreateFileRequestArgs(title: title, destination: destination, deadline: deadline, open: open, description_: description_)
+                let videoProjectId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["video_project_id"] ?? .null)
+                return CreateFileRequestArgs(
+                    title: title,
+                    destination: destination,
+                    deadline: deadline,
+                    open: open,
+                    description_: description_,
+                    videoProjectId: videoProjectId
+                )
             default:
                 throw JSONSerializerError.deserializeError(type: CreateFileRequestArgs.self, json: json)
             }
@@ -243,6 +263,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
 
         func json() throws -> JSON {
             try FileRequestErrorSerializer().serialize(self)
@@ -293,6 +315,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             }
         }
 
@@ -317,6 +343,8 @@ public class FileRequests {
                     return FileRequestError.emailUnverified
                 case "validation_error":
                     return FileRequestError.validationError
+                case "no_write_permission":
+                    return FileRequestError.noWritePermission
                 default:
                     throw JSONSerializerError.unknownTag(type: FileRequestError.self, json: json, tag: tag)
                 }
@@ -347,6 +375,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
         /// File requests are not available on the specified folder.
         case invalidLocation
         /// The user has reached the rate limit for creating file requests. The limit is currently 4000 file requests
@@ -402,6 +432,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             case .invalidLocation:
                 var d = [String: JSON]()
                 d[".tag"] = .str("invalid_location")
@@ -434,6 +468,8 @@ public class FileRequests {
                     return CreateFileRequestError.emailUnverified
                 case "validation_error":
                     return CreateFileRequestError.validationError
+                case "no_write_permission":
+                    return CreateFileRequestError.noWritePermission
                 case "invalid_location":
                     return CreateFileRequestError.invalidLocation
                 case "rate_limit":
@@ -468,6 +504,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
 
         func json() throws -> JSON {
             try DeleteAllClosedFileRequestsErrorSerializer().serialize(self)
@@ -518,6 +556,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             }
         }
 
@@ -542,6 +584,8 @@ public class FileRequests {
                     return DeleteAllClosedFileRequestsError.emailUnverified
                 case "validation_error":
                     return DeleteAllClosedFileRequestsError.validationError
+                case "no_write_permission":
+                    return DeleteAllClosedFileRequestsError.noWritePermission
                 default:
                     throw JSONSerializerError.unknownTag(type: DeleteAllClosedFileRequestsError.self, json: json, tag: tag)
                 }
@@ -655,6 +699,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
         /// One or more file requests currently open.
         case fileRequestOpen
 
@@ -707,6 +753,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             case .fileRequestOpen:
                 var d = [String: JSON]()
                 d[".tag"] = .str("file_request_open")
@@ -735,6 +785,8 @@ public class FileRequests {
                     return DeleteFileRequestError.emailUnverified
                 case "validation_error":
                     return DeleteFileRequestError.validationError
+                case "no_write_permission":
+                    return DeleteFileRequestError.noWritePermission
                 case "file_request_open":
                     return DeleteFileRequestError.fileRequestOpen
                 default:
@@ -809,6 +861,8 @@ public class FileRequests {
         public let fileCount: Int64
         /// A description of the file request.
         public let description_: String?
+        /// If this request was created from video project, its id.
+        public let videoProjectId: String?
         public init(
             id: String,
             url: String,
@@ -818,7 +872,8 @@ public class FileRequests {
             fileCount: Int64,
             destination: String? = nil,
             deadline: FileRequests.FileRequestDeadline? = nil,
-            description_: String? = nil
+            description_: String? = nil,
+            videoProjectId: String? = nil
         ) {
             stringValidator(minLength: 1, pattern: "[-_0-9a-zA-Z]+")(id)
             self.id = id
@@ -835,6 +890,8 @@ public class FileRequests {
             self.fileCount = fileCount
             nullableValidator(stringValidator())(description_)
             self.description_ = description_
+            nullableValidator(stringValidator())(videoProjectId)
+            self.videoProjectId = videoProjectId
         }
 
         func json() throws -> JSON {
@@ -863,6 +920,7 @@ public class FileRequests {
                 "destination": try NullableSerializer(Serialization._StringSerializer).serialize(value.destination),
                 "deadline": try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).serialize(value.deadline),
                 "description": try NullableSerializer(Serialization._StringSerializer).serialize(value.description_),
+                "video_project_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.videoProjectId),
             ]
             return .dictionary(output)
         }
@@ -879,6 +937,7 @@ public class FileRequests {
                 let destination = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
                 let deadline = try NullableSerializer(FileRequests.FileRequestDeadlineSerializer()).deserialize(dict["deadline"] ?? .null)
                 let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                let videoProjectId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["video_project_id"] ?? .null)
                 return FileRequest(
                     id: id,
                     url: url,
@@ -888,7 +947,8 @@ public class FileRequests {
                     fileCount: fileCount,
                     destination: destination,
                     deadline: deadline,
-                    description_: description_
+                    description_: description_,
+                    videoProjectId: videoProjectId
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: FileRequest.self, json: json)
@@ -900,7 +960,7 @@ public class FileRequests {
     public class FileRequestDeadline: CustomStringConvertible, JSONRepresentable {
         /// The deadline for this file request.
         public let deadline: Date
-        /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
+        /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
         public let allowLateUploads: FileRequests.GracePeriod?
         public init(deadline: Date, allowLateUploads: FileRequests.GracePeriod? = nil) {
             self.deadline = deadline
@@ -1005,6 +1065,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
 
         func json() throws -> JSON {
             try GetFileRequestErrorSerializer().serialize(self)
@@ -1055,6 +1117,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             }
         }
 
@@ -1079,6 +1145,8 @@ public class FileRequests {
                     return GetFileRequestError.emailUnverified
                 case "validation_error":
                     return GetFileRequestError.validationError
+                case "no_write_permission":
+                    return GetFileRequestError.noWritePermission
                 default:
                     throw JSONSerializerError.unknownTag(type: GetFileRequestError.self, json: json, tag: tag)
                 }
@@ -1535,8 +1603,9 @@ public class FileRequests {
                 let id = try Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
                 let title = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["title"] ?? .null)
                 let destination = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["destination"] ?? .null)
-                let deadline = try FileRequests.UpdateFileRequestDeadlineSerializer()
-                    .deserialize(dict["deadline"] ?? FileRequests.UpdateFileRequestDeadlineSerializer().serialize(.noUpdate))
+                let deadline = try FileRequests.UpdateFileRequestDeadlineSerializer().deserialize(
+                    dict["deadline"] ?? FileRequests.UpdateFileRequestDeadlineSerializer().serialize(.noUpdate)
+                )
                 let open = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["open"] ?? .null)
                 let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
                 return UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline, open: open, description_: description_)
@@ -1629,6 +1698,8 @@ public class FileRequests {
         /// There was an error validating the request. For example, the title was invalid, or there were disallowed
         /// characters in the destination path.
         case validationError
+        /// This user doesn't have permission to edit files in a destination folder
+        case noWritePermission
 
         func json() throws -> JSON {
             try UpdateFileRequestErrorSerializer().serialize(self)
@@ -1679,6 +1750,10 @@ public class FileRequests {
                 var d = [String: JSON]()
                 d[".tag"] = .str("validation_error")
                 return .dictionary(d)
+            case .noWritePermission:
+                var d = [String: JSON]()
+                d[".tag"] = .str("no_write_permission")
+                return .dictionary(d)
             }
         }
 
@@ -1703,6 +1778,8 @@ public class FileRequests {
                     return UpdateFileRequestError.emailUnverified
                 case "validation_error":
                     return UpdateFileRequestError.validationError
+                case "no_write_permission":
+                    return UpdateFileRequestError.noWritePermission
                 default:
                     throw JSONSerializerError.unknownTag(type: UpdateFileRequestError.self, json: json, tag: tag)
                 }

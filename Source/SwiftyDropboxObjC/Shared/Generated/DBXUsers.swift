@@ -103,6 +103,64 @@ public class DBXUsersBasicAccount: DBXUsersAccount {
     public override var description: String { subSwift.description }
 }
 
+/// The value for distinctMemberHome in UserFeature.
+@objc
+public class DBXUsersDistinctMemberHomeValue: NSObject {
+    let swift: Users.DistinctMemberHomeValue
+
+    public init(swift: Users.DistinctMemberHomeValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Users.DistinctMemberHomeValue) -> DBXUsersDistinctMemberHomeValue {
+        switch swift {
+        case .enabled(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXUsersDistinctMemberHomeValueEnabled(arg)
+        case .other:
+            return DBXUsersDistinctMemberHomeValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEnabled: DBXUsersDistinctMemberHomeValueEnabled? {
+        self as? DBXUsersDistinctMemberHomeValueEnabled
+    }
+
+    @objc
+    public var asOther: DBXUsersDistinctMemberHomeValueOther? {
+        self as? DBXUsersDistinctMemberHomeValueOther
+    }
+}
+
+/// When this value is True, the user have distinct home and root ns. When the value is False the user's home ns
+/// and root ns are the same.
+@objc
+public class DBXUsersDistinctMemberHomeValueEnabled: DBXUsersDistinctMemberHomeValue {
+    @objc
+    public var enabled: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        self.enabled = arg
+        let swift = Users.DistinctMemberHomeValue.enabled(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersDistinctMemberHomeValueOther: DBXUsersDistinctMemberHomeValue {
+    @objc
+    public init() {
+        let swift = Users.DistinctMemberHomeValue.other
+        super.init(swift: swift)
+    }
+}
+
 /// The value for fileLocking in UserFeature.
 @objc
 public class DBXUsersFileLockingValue: NSObject {
@@ -279,10 +337,25 @@ public class DBXUsersFullTeam: DBXUsersTeam {
     /// Team policy governing the use of the Office Add-In.
     @objc
     public var officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy(swift: subSwift.officeAddinPolicy) }
+    /// Team policy governing whether members can edit team folders at the top level of the team space.
+    @objc
+    public var topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy { DBXTeamPoliciesTopLevelContentPolicy(swift: subSwift.topLevelContentPolicy) }
 
     @objc
-    public init(id: String, name: String, sharingPolicies: DBXTeamPoliciesTeamSharingPolicies, officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy) {
-        let swift = Users.FullTeam(id: id, name: name, sharingPolicies: sharingPolicies.swift, officeAddinPolicy: officeAddinPolicy.swift)
+    public init(
+        id: String,
+        name: String,
+        sharingPolicies: DBXTeamPoliciesTeamSharingPolicies,
+        officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy,
+        topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy
+    ) {
+        let swift = Users.FullTeam(
+            id: id,
+            name: name,
+            sharingPolicies: sharingPolicies.swift,
+            officeAddinPolicy: officeAddinPolicy.swift,
+            topLevelContentPolicy: topLevelContentPolicy.swift
+        )
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -671,6 +744,64 @@ public class DBXUsersSpaceUsage: NSObject {
     public override var description: String { swift.description }
 }
 
+/// The value for teamSharedDropbox in UserFeature.
+@objc
+public class DBXUsersTeamSharedDropboxValue: NSObject {
+    let swift: Users.TeamSharedDropboxValue
+
+    public init(swift: Users.TeamSharedDropboxValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Users.TeamSharedDropboxValue) -> DBXUsersTeamSharedDropboxValue {
+        switch swift {
+        case .enabled(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXUsersTeamSharedDropboxValueEnabled(arg)
+        case .other:
+            return DBXUsersTeamSharedDropboxValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEnabled: DBXUsersTeamSharedDropboxValueEnabled? {
+        self as? DBXUsersTeamSharedDropboxValueEnabled
+    }
+
+    @objc
+    public var asOther: DBXUsersTeamSharedDropboxValueOther? {
+        self as? DBXUsersTeamSharedDropboxValueOther
+    }
+}
+
+/// When this value is True, the user have a shared team root. When the value is False the user have distinct
+/// root.
+@objc
+public class DBXUsersTeamSharedDropboxValueEnabled: DBXUsersTeamSharedDropboxValue {
+    @objc
+    public var enabled: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        self.enabled = arg
+        let swift = Users.TeamSharedDropboxValue.enabled(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersTeamSharedDropboxValueOther: DBXUsersTeamSharedDropboxValue {
+    @objc
+    public init() {
+        let swift = Users.TeamSharedDropboxValue.other
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible TeamSpaceAllocation struct
 @objc
 public class DBXUsersTeamSpaceAllocation: NSObject {
@@ -733,6 +864,10 @@ public class DBXUsersUserFeature: NSObject {
             return DBXUsersUserFeaturePaperAsFiles()
         case .fileLocking:
             return DBXUsersUserFeatureFileLocking()
+        case .teamSharedDropbox:
+            return DBXUsersUserFeatureTeamSharedDropbox()
+        case .distinctMemberHome:
+            return DBXUsersUserFeatureDistinctMemberHome()
         case .other:
             return DBXUsersUserFeatureOther()
         }
@@ -749,6 +884,16 @@ public class DBXUsersUserFeature: NSObject {
     @objc
     public var asFileLocking: DBXUsersUserFeatureFileLocking? {
         self as? DBXUsersUserFeatureFileLocking
+    }
+
+    @objc
+    public var asTeamSharedDropbox: DBXUsersUserFeatureTeamSharedDropbox? {
+        self as? DBXUsersUserFeatureTeamSharedDropbox
+    }
+
+    @objc
+    public var asDistinctMemberHome: DBXUsersUserFeatureDistinctMemberHome? {
+        self as? DBXUsersUserFeatureDistinctMemberHome
     }
 
     @objc
@@ -773,6 +918,27 @@ public class DBXUsersUserFeatureFileLocking: DBXUsersUserFeature {
     @objc
     public init() {
         let swift = Users.UserFeature.fileLocking
+        super.init(swift: swift)
+    }
+}
+
+/// This feature contains information about whether or not the user is part of a team with a shared team root.
+@objc
+public class DBXUsersUserFeatureTeamSharedDropbox: DBXUsersUserFeature {
+    @objc
+    public init() {
+        let swift = Users.UserFeature.teamSharedDropbox
+        super.init(swift: swift)
+    }
+}
+
+/// This feature contains information about whether or not the user's home namespace is distinct from their root
+/// namespace.
+@objc
+public class DBXUsersUserFeatureDistinctMemberHome: DBXUsersUserFeature {
+    @objc
+    public init() {
+        let swift = Users.UserFeature.distinctMemberHome
         super.init(swift: swift)
     }
 }
@@ -804,6 +970,12 @@ public class DBXUsersUserFeatureValue: NSObject {
         case .fileLocking(let swiftArg):
             let arg = DBXUsersFileLockingValue(swift: swiftArg)
             return DBXUsersUserFeatureValueFileLocking(arg)
+        case .teamSharedDropbox(let swiftArg):
+            let arg = DBXUsersTeamSharedDropboxValue(swift: swiftArg)
+            return DBXUsersUserFeatureValueTeamSharedDropbox(arg)
+        case .distinctMemberHome(let swiftArg):
+            let arg = DBXUsersDistinctMemberHomeValue(swift: swiftArg)
+            return DBXUsersUserFeatureValueDistinctMemberHome(arg)
         case .other:
             return DBXUsersUserFeatureValueOther()
         }
@@ -820,6 +992,16 @@ public class DBXUsersUserFeatureValue: NSObject {
     @objc
     public var asFileLocking: DBXUsersUserFeatureValueFileLocking? {
         self as? DBXUsersUserFeatureValueFileLocking
+    }
+
+    @objc
+    public var asTeamSharedDropbox: DBXUsersUserFeatureValueTeamSharedDropbox? {
+        self as? DBXUsersUserFeatureValueTeamSharedDropbox
+    }
+
+    @objc
+    public var asDistinctMemberHome: DBXUsersUserFeatureValueDistinctMemberHome? {
+        self as? DBXUsersUserFeatureValueDistinctMemberHome
     }
 
     @objc
@@ -852,6 +1034,34 @@ public class DBXUsersUserFeatureValueFileLocking: DBXUsersUserFeatureValue {
     public init(_ arg: DBXUsersFileLockingValue) {
         self.fileLocking = arg
         let swift = Users.UserFeatureValue.fileLocking(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersUserFeatureValueTeamSharedDropbox: DBXUsersUserFeatureValue {
+    @objc
+    public var teamSharedDropbox: DBXUsersTeamSharedDropboxValue
+
+    @objc
+    public init(_ arg: DBXUsersTeamSharedDropboxValue) {
+        self.teamSharedDropbox = arg
+        let swift = Users.UserFeatureValue.teamSharedDropbox(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersUserFeatureValueDistinctMemberHome: DBXUsersUserFeatureValue {
+    @objc
+    public var distinctMemberHome: DBXUsersDistinctMemberHomeValue
+
+    @objc
+    public init(_ arg: DBXUsersDistinctMemberHomeValue) {
+        self.distinctMemberHome = arg
+        let swift = Users.UserFeatureValue.distinctMemberHome(arg.swift)
         super.init(swift: swift)
     }
 }

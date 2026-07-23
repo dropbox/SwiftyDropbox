@@ -179,7 +179,7 @@ public class DBXFilesGetMetadataArg: NSObject {
     /// be returned.
     @objc
     public var includeDeleted: NSNumber { swift.includeDeleted as NSNumber }
-    /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
+    /// If true, the results will include a flag for each file indicating whether or not that file has any explicit
     /// members.
     @objc
     public var includeHasExplicitSharedMembers: NSNumber { swift.includeHasExplicitSharedMembers as NSNumber }
@@ -220,8 +220,8 @@ public class DBXFilesGetMetadataArg: NSObject {
 /// Objective-C compatible AlphaGetMetadataArg struct
 @objc
 public class DBXFilesAlphaGetMetadataArg: DBXFilesGetMetadataArg {
-    /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
-    /// properties.
+    /// Field is deprecated. If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files
+    /// with custom properties.
     @objc
     public var includePropertyTemplates: [String]? { subSwift.includePropertyTemplates }
 
@@ -755,7 +755,7 @@ public class DBXFilesCreateFolderBatchLaunchOther: DBXFilesCreateFolderBatchLaun
     }
 }
 
-/// Objective-C compatible FileOpsResult struct
+/// Result for File Operations
 @objc
 public class DBXFilesFileOpsResult: NSObject {
     let swift: Files.FileOpsResult
@@ -1080,8 +1080,8 @@ public class DBXFilesDeleteBatchError: NSObject {
     }
 }
 
-/// Use tooManyWriteOperations in DeleteError. deleteBatch now provides smaller granularity about which entry
-/// has failed because of this.
+/// Field is deprecated. Use tooManyWriteOperations in DeleteError. deleteBatch now provides smaller granularity
+/// about which entry has failed because of this.
 @objc
 public class DBXFilesDeleteBatchErrorTooManyWriteOperations: DBXFilesDeleteBatchError {
     @objc
@@ -1545,7 +1545,8 @@ public class DBXFilesMetadata: NSObject {
     /// returned by listFolderContinue. This field will be null if the file or folder is not mounted.
     @objc
     public var pathDisplay: String? { swift.pathDisplay }
-    /// Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo instead.
+    /// Field is deprecated. Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in
+    /// FolderSharingInfo instead.
     @objc
     public var parentSharedFolderId: String? { swift.parentSharedFolderId }
     /// The preview URL of the file.
@@ -1589,6 +1590,24 @@ public class DBXFilesMetadata: NSObject {
 /// Indicates that there used to be a file or folder at this path, but it no longer exists.
 @objc
 public class DBXFilesDeletedMetadata: DBXFilesMetadata {
+    /// If present, indicates whether this deleted entry can be restored.
+    @objc
+    public var isRestorable: NSNumber? { subSwift.isRestorable as NSNumber? }
+
+    @objc
+    public init(name: String, pathLower: String?, pathDisplay: String?, parentSharedFolderId: String?, previewUrl: String?, isRestorable: NSNumber?) {
+        let swift = Files.DeletedMetadata(
+            name: name,
+            pathLower: pathLower,
+            pathDisplay: pathDisplay,
+            parentSharedFolderId: parentSharedFolderId,
+            previewUrl: previewUrl,
+            isRestorable: isRestorable?.boolValue
+        )
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
     let subSwift: Files.DeletedMetadata
 
     public init(swift: Files.DeletedMetadata) {
@@ -1631,7 +1650,7 @@ public class DBXFilesDownloadArg: NSObject {
     /// The path of the file to download.
     @objc
     public var path: String { swift.path }
-    /// Please specify revision in path instead.
+    /// Field is deprecated. Please specify revision in path instead.
     @objc
     public var rev: String? { swift.rev }
 
@@ -2469,10 +2488,10 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
     /// Additional information if the file has custom properties with the property template specified.
     @objc
     public var propertyGroups: [DBXFilePropertiesPropertyGroup]? { subSwift.propertyGroups?.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
-    /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
-    /// If this  flag is present, it will be true if this file has any explicit shared  members. This is
-    /// different from sharing_info in that this could be true  in the case where a file has explicit members
-    /// but is not contained within  a shared folder.
+    /// This flag will only be present if include_has_explicit_shared_members is true in listFolder or getMetadata.
+    /// If this flag is present, it will be true if this file has any explicit shared members. This is different
+    /// from sharing_info in that this could be true in the case where a file has explicit members but is not
+    /// contained within a shared folder.
     @objc
     public var hasExplicitSharedMembers: NSNumber? { subSwift.hasExplicitSharedMembers as NSNumber? }
     /// A hash of the file content. This field can be used to verify data integrity. For more information see our
@@ -2484,6 +2503,10 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
     public var fileLockInfo: DBXFilesFileLockMetadata? { guard let swift = subSwift.fileLockInfo else { return nil }
         return DBXFilesFileLockMetadata(swift: swift)
     }
+
+    /// If present, indicates whether this file revision can be restored.
+    @objc
+    public var isRestorable: NSNumber? { subSwift.isRestorable as NSNumber? }
 
     @objc
     public init(
@@ -2505,7 +2528,8 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
         propertyGroups: [DBXFilePropertiesPropertyGroup]?,
         hasExplicitSharedMembers: NSNumber?,
         contentHash: String?,
-        fileLockInfo: DBXFilesFileLockMetadata?
+        fileLockInfo: DBXFilesFileLockMetadata?,
+        isRestorable: NSNumber?
     ) {
         let swift = Files.FileMetadata(
             name: name,
@@ -2526,7 +2550,8 @@ public class DBXFilesFileMetadata: DBXFilesMetadata {
             propertyGroups: propertyGroups?.map(\.swift),
             hasExplicitSharedMembers: hasExplicitSharedMembers?.boolValue,
             contentHash: contentHash,
-            fileLockInfo: fileLockInfo?.swift
+            fileLockInfo: fileLockInfo?.swift,
+            isRestorable: isRestorable?.boolValue
         )
         self.subSwift = swift
         super.init(swift: swift)
@@ -2668,7 +2693,7 @@ public class DBXFilesFolderMetadata: DBXFilesMetadata {
     /// A unique identifier for the folder.
     @objc
     public var id: String { subSwift.id }
-    /// Please use sharingInfo instead.
+    /// Field is deprecated. Please use sharingInfo instead.
     @objc
     public var sharedFolderId: String? { subSwift.sharedFolderId }
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
@@ -3083,8 +3108,8 @@ public class DBXFilesGetTemporaryUploadLinkArg: NSObject {
     /// provided to upload.
     @objc
     public var commitInfo: DBXFilesCommitInfo { DBXFilesCommitInfo(swift: swift.commitInfo) }
-    /// How long before this link expires, in seconds.  Attempting to start an upload with this link longer than
-    /// this period  of time after link creation will result in an error.
+    /// How long before this link expires, in seconds. Attempting to start an upload with this link longer than this
+    /// period of time after link creation will result in an error.
     @objc
     public var duration: NSNumber { swift.duration as NSNumber }
 
@@ -3468,17 +3493,20 @@ public class DBXFilesListFolderArg: NSObject {
     @objc
     public var path: String { swift.path }
     /// If true, the list folder operation will be applied recursively to all subfolders and the response will
-    /// contain contents of all subfolders.
+    /// contain contents of all subfolders. In some cases, setting recursive in ListFolderArg to true may lead
+    /// to performance issues or errors, especially when traversing folder structures with a large number of
+    /// items. A workaround for such cases is to set recursive in ListFolderArg to false and traverse subfolders
+    /// one at a time.
     @objc
     public var recursive: NSNumber { swift.recursive as NSNumber }
-    /// If true, mediaInfo in FileMetadata is set for photo and video. This parameter will no longer have an effect
-    /// starting December 2, 2019.
+    /// Field is deprecated. If true, mediaInfo in FileMetadata is set for photo and video. This parameter will no
+    /// longer have an effect starting December 2, 2019.
     @objc
     public var includeMediaInfo: NSNumber { swift.includeMediaInfo as NSNumber }
     /// If true, the results will include entries for files and folders that used to exist but were deleted.
     @objc
     public var includeDeleted: NSNumber { swift.includeDeleted as NSNumber }
-    /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
+    /// If true, the results will include a flag for each file indicating whether or not that file has any explicit
     /// members.
     @objc
     public var includeHasExplicitSharedMembers: NSNumber { swift.includeHasExplicitSharedMembers as NSNumber }
@@ -3508,6 +3536,9 @@ public class DBXFilesListFolderArg: NSObject {
     /// If true, include files that are not downloadable, i.e. Google Docs.
     @objc
     public var includeNonDownloadableFiles: NSNumber { swift.includeNonDownloadableFiles as NSNumber }
+    /// If true, each returned deleted entry will include whether that entry can be restored.
+    @objc
+    public var includeRestorableInfo: NSNumber { swift.includeRestorableInfo as NSNumber }
 
     @objc
     public init(
@@ -3520,7 +3551,8 @@ public class DBXFilesListFolderArg: NSObject {
         limit: NSNumber?,
         sharedLink: DBXFilesSharedLink?,
         includePropertyGroups: DBXFilePropertiesTemplateFilterBase?,
-        includeNonDownloadableFiles: NSNumber
+        includeNonDownloadableFiles: NSNumber,
+        includeRestorableInfo: NSNumber
     ) {
         self.swift = Files.ListFolderArg(
             path: path,
@@ -3532,7 +3564,8 @@ public class DBXFilesListFolderArg: NSObject {
             limit: limit?.uint32Value,
             sharedLink: sharedLink?.swift,
             includePropertyGroups: includePropertyGroups?.swift,
-            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue
+            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue,
+            includeRestorableInfo: includeRestorableInfo.boolValue
         )
     }
 
@@ -3893,10 +3926,23 @@ public class DBXFilesListRevisionsArg: NSObject {
     /// The maximum number of revision entries returned.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
+    /// If set, ListRevisions will only return revisions prior to before_rev. Can be set using the last revision
+    /// from a previous call to list_revisions to fetch the next page of revisions. Only supported in path mode.
+    @objc
+    public var beforeRev: String? { swift.beforeRev }
+    /// If true, each returned revision will include whether that revision can be restored.
+    @objc
+    public var includeRestorableInfo: NSNumber { swift.includeRestorableInfo as NSNumber }
 
     @objc
-    public init(path: String, mode: DBXFilesListRevisionsMode, limit: NSNumber) {
-        self.swift = Files.ListRevisionsArg(path: path, mode: mode.swift, limit: limit.uint64Value)
+    public init(path: String, mode: DBXFilesListRevisionsMode, limit: NSNumber, beforeRev: String?, includeRestorableInfo: NSNumber) {
+        self.swift = Files.ListRevisionsArg(
+            path: path,
+            mode: mode.swift,
+            limit: limit.uint64Value,
+            beforeRev: beforeRev,
+            includeRestorableInfo: includeRestorableInfo.boolValue
+        )
     }
 
     let swift: Files.ListRevisionsArg
@@ -3923,6 +3969,10 @@ public class DBXFilesListRevisionsError: NSObject {
         case .path(let swiftArg):
             let arg = DBXFilesLookupError(swift: swiftArg)
             return DBXFilesListRevisionsErrorPath(arg)
+        case .invalidBeforeRev:
+            return DBXFilesListRevisionsErrorInvalidBeforeRev()
+        case .beforeRevNotSupported:
+            return DBXFilesListRevisionsErrorBeforeRevNotSupported()
         case .other:
             return DBXFilesListRevisionsErrorOther()
         }
@@ -3934,6 +3984,16 @@ public class DBXFilesListRevisionsError: NSObject {
     @objc
     public var asPath: DBXFilesListRevisionsErrorPath? {
         self as? DBXFilesListRevisionsErrorPath
+    }
+
+    @objc
+    public var asInvalidBeforeRev: DBXFilesListRevisionsErrorInvalidBeforeRev? {
+        self as? DBXFilesListRevisionsErrorInvalidBeforeRev
+    }
+
+    @objc
+    public var asBeforeRevNotSupported: DBXFilesListRevisionsErrorBeforeRevNotSupported? {
+        self as? DBXFilesListRevisionsErrorBeforeRevNotSupported
     }
 
     @objc
@@ -3952,6 +4012,26 @@ public class DBXFilesListRevisionsErrorPath: DBXFilesListRevisionsError {
     public init(_ arg: DBXFilesLookupError) {
         self.path = arg
         let swift = Files.ListRevisionsError.path(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The revision in before_rev is invalid.
+@objc
+public class DBXFilesListRevisionsErrorInvalidBeforeRev: DBXFilesListRevisionsError {
+    @objc
+    public init() {
+        let swift = Files.ListRevisionsError.invalidBeforeRev
+        super.init(swift: swift)
+    }
+}
+
+/// The before_rev argument is only supported in path mode.
+@objc
+public class DBXFilesListRevisionsErrorBeforeRevNotSupported: DBXFilesListRevisionsError {
+    @objc
+    public init() {
+        let swift = Files.ListRevisionsError.beforeRevNotSupported
         super.init(swift: swift)
     }
 }
@@ -4039,7 +4119,8 @@ public class DBXFilesListRevisionsModeOther: DBXFilesListRevisionsMode {
 /// Objective-C compatible ListRevisionsResult struct
 @objc
 public class DBXFilesListRevisionsResult: NSObject {
-    /// If the file identified by the latest revision in the response is either deleted or moved.
+    /// If the file identified by the latest revision in the response is either deleted or moved. If before_rev is
+    /// set, this refers to the latest revision of the file older than before_rev.
     @objc
     public var isDeleted: NSNumber { swift.isDeleted as NSNumber }
     /// The time of deletion if the file was deleted.
@@ -4048,10 +4129,19 @@ public class DBXFilesListRevisionsResult: NSObject {
     /// The revisions for the file. Only revisions that are not deleted will show up here.
     @objc
     public var entries: [DBXFilesFileMetadata] { swift.entries.map { DBXFilesFileMetadata(swift: $0) } }
+    /// If true, then there are more entries available. Call list_revisions again with before_rev equal to the
+    /// revision of the last returned entry to retrieve the rest.
+    @objc
+    public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(isDeleted: NSNumber, entries: [DBXFilesFileMetadata], serverDeleted: Date?) {
-        self.swift = Files.ListRevisionsResult(isDeleted: isDeleted.boolValue, entries: entries.map(\.subSwift), serverDeleted: serverDeleted)
+    public init(isDeleted: NSNumber, entries: [DBXFilesFileMetadata], hasMore: NSNumber, serverDeleted: Date?) {
+        self.swift = Files.ListRevisionsResult(
+            isDeleted: isDeleted.boolValue,
+            entries: entries.map(\.subSwift),
+            hasMore: hasMore.boolValue,
+            serverDeleted: serverDeleted
+        )
     }
 
     let swift: Files.ListRevisionsResult
@@ -4348,7 +4438,7 @@ public class DBXFilesLockFileResult: NSObject {
         DBXFilesMetadata.wrapPreservingSubtypes(swift: swift.metadata)
     }
 
-    /// The file lock state after the operation.
+    /// Field is deprecated. The file lock state after the operation.
     @objc
     public var lock: DBXFilesFileLock { DBXFilesFileLock(swift: swift.lock) }
 
@@ -4634,7 +4724,8 @@ public class DBXFilesMediaInfoPending: DBXFilesMediaInfo {
     }
 }
 
-/// The metadata for the photo/video.
+/// The metadata for the photo/video. Uses MediaMetadataAbstract to preserve photo/video subtypes (e.g.
+/// VideoMetadata.duration).
 @objc
 public class DBXFilesMediaInfoMetadata: DBXFilesMediaInfo {
     @objc
@@ -4819,11 +4910,7 @@ public class DBXFilesMoveBatchArg: DBXFilesRelocationBatchArgBase {
 
     @objc
     public init(entries: [DBXFilesRelocationPath], autorename: NSNumber, allowOwnershipTransfer: NSNumber) {
-        let swift = Files.MoveBatchArg(
-            entries: entries.map(\.swift),
-            autorename: autorename.boolValue,
-            allowOwnershipTransfer: allowOwnershipTransfer.boolValue
-        )
+        let swift = Files.MoveBatchArg(entries: entries.map(\.swift), autorename: autorename.boolValue, allowOwnershipTransfer: allowOwnershipTransfer.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -5740,7 +5827,7 @@ public class DBXFilesPreviewArg: NSObject {
     /// The path of the file to preview.
     @objc
     public var path: String { swift.path }
-    /// Please specify revision in path instead.
+    /// Field is deprecated. Please specify revision in path instead.
     @objc
     public var rev: String? { swift.rev }
 
@@ -5820,7 +5907,7 @@ public class DBXFilesPreviewErrorPath: DBXFilesPreviewError {
     }
 }
 
-/// This preview generation is still in progress and the file is not ready  for preview yet.
+/// This preview generation is still in progress and the file is not ready for preview yet.
 @objc
 public class DBXFilesPreviewErrorInProgress: DBXFilesPreviewError {
     @objc
@@ -5910,7 +5997,7 @@ public class DBXFilesRelocationPath: NSObject {
 /// Objective-C compatible RelocationArg struct
 @objc
 public class DBXFilesRelocationArg: DBXFilesRelocationPath {
-    /// This flag has no effect.
+    /// Field is deprecated. This flag has no effect.
     @objc
     public var allowSharedFolder: NSNumber { subSwift.allowSharedFolder as NSNumber }
     /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the conflict.
@@ -5948,7 +6035,7 @@ public class DBXFilesRelocationArg: DBXFilesRelocationPath {
 /// Objective-C compatible RelocationBatchArg struct
 @objc
 public class DBXFilesRelocationBatchArg: DBXFilesRelocationBatchArgBase {
-    /// This flag has no effect.
+    /// Field is deprecated. This flag has no effect.
     @objc
     public var allowSharedFolder: NSNumber { subSwift.allowSharedFolder as NSNumber }
     /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
@@ -7655,8 +7742,8 @@ public class DBXFilesSaveUrlErrorPath: DBXFilesSaveUrlError {
     }
 }
 
-/// Failed downloading the given URL. The URL may be  password-protected and the password provided was
-/// incorrect,  or the link may be disabled.
+/// Failed downloading the given URL. The URL may be password-protected and the password provided was incorrect,
+/// or the link may be disabled.
 @objc
 public class DBXFilesSaveUrlErrorDownloadFailed: DBXFilesSaveUrlError {
     @objc
@@ -8108,6 +8195,8 @@ public class DBXFilesSearchMatchTypeV2: NSObject {
             return DBXFilesSearchMatchTypeV2FilenameAndContent()
         case .imageContent:
             return DBXFilesSearchMatchTypeV2ImageContent()
+        case .metadata:
+            return DBXFilesSearchMatchTypeV2Metadata()
         case .other:
             return DBXFilesSearchMatchTypeV2Other()
         }
@@ -8134,6 +8223,11 @@ public class DBXFilesSearchMatchTypeV2: NSObject {
     @objc
     public var asImageContent: DBXFilesSearchMatchTypeV2ImageContent? {
         self as? DBXFilesSearchMatchTypeV2ImageContent
+    }
+
+    @objc
+    public var asMetadata: DBXFilesSearchMatchTypeV2Metadata? {
+        self as? DBXFilesSearchMatchTypeV2Metadata
     }
 
     @objc
@@ -8178,6 +8272,16 @@ public class DBXFilesSearchMatchTypeV2ImageContent: DBXFilesSearchMatchTypeV2 {
     @objc
     public init() {
         let swift = Files.SearchMatchTypeV2.imageContent
+        super.init(swift: swift)
+    }
+}
+
+/// This item was matched based on its metadata.
+@objc
+public class DBXFilesSearchMatchTypeV2Metadata: DBXFilesSearchMatchTypeV2 {
+    @objc
+    public init() {
+        let swift = Files.SearchMatchTypeV2.metadata
         super.init(swift: swift)
     }
 }
@@ -8472,7 +8576,7 @@ public class DBXFilesSearchV2Arg: NSObject {
         return DBXFilesSearchMatchFieldOptions(swift: swift)
     }
 
-    /// Deprecated and moved this option to SearchMatchFieldOptions.
+    /// Field is deprecated. Deprecated and moved this option to SearchMatchFieldOptions.
     @objc
     public var includeHighlights: NSNumber? { swift.includeHighlights as NSNumber? }
 
@@ -8582,7 +8686,7 @@ public class DBXFilesSharedLinkFileInfo: NSObject {
     /// The path corresponding to a file in a shared link to a folder. Required for shared links to folders.
     @objc
     public var path: String? { swift.path }
-    /// Password for the shared link. Required for password-protected shared links to files  unless it can be read
+    /// Password for the shared link. Required for password-protected shared links to files unless it can be read
     /// from a cookie.
     @objc
     public var password: String? { swift.password }
@@ -8964,8 +9068,8 @@ public class DBXFilesThumbnailArg: NSObject {
     /// The path to the image file you want to thumbnail.
     @objc
     public var path: String { swift.path }
-    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
-    /// preferred, while png is  better for screenshots and digital arts.
+    /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are photos, jpeg should be
+    /// preferred, while png is better for screenshots and digital arts, and web for compression.
     @objc
     public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat(swift: swift.format) }
     /// The size for the thumbnail image.
@@ -8974,10 +9078,31 @@ public class DBXFilesThumbnailArg: NSObject {
     /// How to resize and crop the image to achieve the desired size.
     @objc
     public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
+    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
+    @objc
+    public var quality: DBXFilesThumbnailQuality { DBXFilesThumbnailQuality(swift: swift.quality) }
+    /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
+    /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
+    @objc
+    public var excludeMediaInfo: NSNumber? { swift.excludeMediaInfo as NSNumber? }
 
     @objc
-    public init(path: String, format: DBXFilesThumbnailFormat, size: DBXFilesThumbnailSize, mode: DBXFilesThumbnailMode) {
-        self.swift = Files.ThumbnailArg(path: path, format: format.swift, size: size.swift, mode: mode.swift)
+    public init(
+        path: String,
+        format: DBXFilesThumbnailFormat,
+        size: DBXFilesThumbnailSize,
+        mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?
+    ) {
+        self.swift = Files.ThumbnailArg(
+            path: path,
+            format: format.swift,
+            size: size.swift,
+            mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue
+        )
     }
 
     let swift: Files.ThumbnailArg
@@ -9008,6 +9133,8 @@ public class DBXFilesThumbnailError: NSObject {
             return DBXFilesThumbnailErrorUnsupportedExtension()
         case .unsupportedImage:
             return DBXFilesThumbnailErrorUnsupportedImage()
+        case .encryptedContent:
+            return DBXFilesThumbnailErrorEncryptedContent()
         case .conversionError:
             return DBXFilesThumbnailErrorConversionError()
         }
@@ -9029,6 +9156,11 @@ public class DBXFilesThumbnailError: NSObject {
     @objc
     public var asUnsupportedImage: DBXFilesThumbnailErrorUnsupportedImage? {
         self as? DBXFilesThumbnailErrorUnsupportedImage
+    }
+
+    @objc
+    public var asEncryptedContent: DBXFilesThumbnailErrorEncryptedContent? {
+        self as? DBXFilesThumbnailErrorEncryptedContent
     }
 
     @objc
@@ -9071,6 +9203,16 @@ public class DBXFilesThumbnailErrorUnsupportedImage: DBXFilesThumbnailError {
     }
 }
 
+/// Encrypted content cannot be converted to a thumbnail.
+@objc
+public class DBXFilesThumbnailErrorEncryptedContent: DBXFilesThumbnailError {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailError.encryptedContent
+        super.init(swift: swift)
+    }
+}
+
 /// An error occurs during thumbnail conversion.
 @objc
 public class DBXFilesThumbnailErrorConversionError: DBXFilesThumbnailError {
@@ -9096,6 +9238,8 @@ public class DBXFilesThumbnailFormat: NSObject {
             return DBXFilesThumbnailFormatJpeg()
         case .png:
             return DBXFilesThumbnailFormatPng()
+        case .webp:
+            return DBXFilesThumbnailFormatWebp()
         }
     }
 
@@ -9110,6 +9254,11 @@ public class DBXFilesThumbnailFormat: NSObject {
     @objc
     public var asPng: DBXFilesThumbnailFormatPng? {
         self as? DBXFilesThumbnailFormatPng
+    }
+
+    @objc
+    public var asWebp: DBXFilesThumbnailFormatWebp? {
+        self as? DBXFilesThumbnailFormatWebp
     }
 }
 
@@ -9133,6 +9282,16 @@ public class DBXFilesThumbnailFormatPng: DBXFilesThumbnailFormat {
     }
 }
 
+/// An unspecified error.
+@objc
+public class DBXFilesThumbnailFormatWebp: DBXFilesThumbnailFormat {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailFormat.webp
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible ThumbnailMode union
 @objc
 public class DBXFilesThumbnailMode: NSObject {
@@ -9150,6 +9309,8 @@ public class DBXFilesThumbnailMode: NSObject {
             return DBXFilesThumbnailModeBestfit()
         case .fitoneBestfit:
             return DBXFilesThumbnailModeFitoneBestfit()
+        case .original:
+            return DBXFilesThumbnailModeOriginal()
         }
     }
 
@@ -9169,6 +9330,11 @@ public class DBXFilesThumbnailMode: NSObject {
     @objc
     public var asFitoneBestfit: DBXFilesThumbnailModeFitoneBestfit? {
         self as? DBXFilesThumbnailModeFitoneBestfit
+    }
+
+    @objc
+    public var asOriginal: DBXFilesThumbnailModeOriginal? {
+        self as? DBXFilesThumbnailModeOriginal
     }
 }
 
@@ -9202,6 +9368,68 @@ public class DBXFilesThumbnailModeFitoneBestfit: DBXFilesThumbnailMode {
     }
 }
 
+/// Don't resize the image at all.
+@objc
+public class DBXFilesThumbnailModeOriginal: DBXFilesThumbnailMode {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailMode.original
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible ThumbnailQuality union
+@objc
+public class DBXFilesThumbnailQuality: NSObject {
+    let swift: Files.ThumbnailQuality
+
+    public init(swift: Files.ThumbnailQuality) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Files.ThumbnailQuality) -> DBXFilesThumbnailQuality {
+        switch swift {
+        case .quality80:
+            return DBXFilesThumbnailQualityQuality80()
+        case .quality90:
+            return DBXFilesThumbnailQualityQuality90()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asQuality80: DBXFilesThumbnailQualityQuality80? {
+        self as? DBXFilesThumbnailQualityQuality80
+    }
+
+    @objc
+    public var asQuality90: DBXFilesThumbnailQualityQuality90? {
+        self as? DBXFilesThumbnailQualityQuality90
+    }
+}
+
+/// default thumbnail quality.
+@objc
+public class DBXFilesThumbnailQualityQuality80: DBXFilesThumbnailQuality {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailQuality.quality80
+        super.init(swift: swift)
+    }
+}
+
+/// high thumbnail quality.
+@objc
+public class DBXFilesThumbnailQualityQuality90: DBXFilesThumbnailQuality {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailQuality.quality90
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible ThumbnailSize union
 @objc
 public class DBXFilesThumbnailSize: NSObject {
@@ -9231,6 +9459,8 @@ public class DBXFilesThumbnailSize: NSObject {
             return DBXFilesThumbnailSizeW1024h768()
         case .w2048h1536:
             return DBXFilesThumbnailSizeW2048h1536()
+        case .w3200h2400:
+            return DBXFilesThumbnailSizeW3200h2400()
         }
     }
 
@@ -9280,6 +9510,11 @@ public class DBXFilesThumbnailSize: NSObject {
     @objc
     public var asW2048h1536: DBXFilesThumbnailSizeW2048h1536? {
         self as? DBXFilesThumbnailSizeW2048h1536
+    }
+
+    @objc
+    public var asW3200h2400: DBXFilesThumbnailSizeW3200h2400? {
+        self as? DBXFilesThumbnailSizeW3200h2400
     }
 }
 
@@ -9373,6 +9608,16 @@ public class DBXFilesThumbnailSizeW2048h1536: DBXFilesThumbnailSize {
     }
 }
 
+/// Field is only returned for "internal" callers. 3200 by 2400 px.
+@objc
+public class DBXFilesThumbnailSizeW3200h2400: DBXFilesThumbnailSize {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailSize.w3200h2400
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible ThumbnailV2Arg struct
 @objc
 public class DBXFilesThumbnailV2Arg: NSObject {
@@ -9380,8 +9625,8 @@ public class DBXFilesThumbnailV2Arg: NSObject {
     /// file, or a shared link pointing to a folder, with a relative path.
     @objc
     public var resource: DBXFilesPathOrLink { DBXFilesPathOrLink(swift: swift.resource) }
-    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
-    /// preferred, while png is  better for screenshots and digital arts.
+    /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are photos, jpeg should be
+    /// preferred, while png is better for screenshots and digital arts, and web for compression.
     @objc
     public var format: DBXFilesThumbnailFormat { DBXFilesThumbnailFormat(swift: swift.format) }
     /// The size for the thumbnail image.
@@ -9390,10 +9635,31 @@ public class DBXFilesThumbnailV2Arg: NSObject {
     /// How to resize and crop the image to achieve the desired size.
     @objc
     public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
+    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
+    @objc
+    public var quality: DBXFilesThumbnailQuality { DBXFilesThumbnailQuality(swift: swift.quality) }
+    /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
+    /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
+    @objc
+    public var excludeMediaInfo: NSNumber? { swift.excludeMediaInfo as NSNumber? }
 
     @objc
-    public init(resource: DBXFilesPathOrLink, format: DBXFilesThumbnailFormat, size: DBXFilesThumbnailSize, mode: DBXFilesThumbnailMode) {
-        self.swift = Files.ThumbnailV2Arg(resource: resource.swift, format: format.swift, size: size.swift, mode: mode.swift)
+    public init(
+        resource: DBXFilesPathOrLink,
+        format: DBXFilesThumbnailFormat,
+        size: DBXFilesThumbnailSize,
+        mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?
+    ) {
+        self.swift = Files.ThumbnailV2Arg(
+            resource: resource.swift,
+            format: format.swift,
+            size: size.swift,
+            mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue
+        )
     }
 
     let swift: Files.ThumbnailV2Arg
@@ -9424,6 +9690,8 @@ public class DBXFilesThumbnailV2Error: NSObject {
             return DBXFilesThumbnailV2ErrorUnsupportedExtension()
         case .unsupportedImage:
             return DBXFilesThumbnailV2ErrorUnsupportedImage()
+        case .encryptedContent:
+            return DBXFilesThumbnailV2ErrorEncryptedContent()
         case .conversionError:
             return DBXFilesThumbnailV2ErrorConversionError()
         case .accessDenied:
@@ -9451,6 +9719,11 @@ public class DBXFilesThumbnailV2Error: NSObject {
     @objc
     public var asUnsupportedImage: DBXFilesThumbnailV2ErrorUnsupportedImage? {
         self as? DBXFilesThumbnailV2ErrorUnsupportedImage
+    }
+
+    @objc
+    public var asEncryptedContent: DBXFilesThumbnailV2ErrorEncryptedContent? {
+        self as? DBXFilesThumbnailV2ErrorEncryptedContent
     }
 
     @objc
@@ -9504,6 +9777,16 @@ public class DBXFilesThumbnailV2ErrorUnsupportedImage: DBXFilesThumbnailV2Error 
     @objc
     public init() {
         let swift = Files.ThumbnailV2Error.unsupportedImage
+        super.init(swift: swift)
+    }
+}
+
+/// Encrypted content cannot be converted to a thumbnail.
+@objc
+public class DBXFilesThumbnailV2ErrorEncryptedContent: DBXFilesThumbnailV2Error {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailV2Error.encryptedContent
         super.init(swift: swift)
     }
 }
@@ -9659,6 +9942,8 @@ public class DBXFilesUploadError: NSObject {
             return DBXFilesUploadErrorPayloadTooLarge()
         case .contentHashMismatch:
             return DBXFilesUploadErrorContentHashMismatch()
+        case .encryptionNotSupported:
+            return DBXFilesUploadErrorEncryptionNotSupported()
         case .other:
             return DBXFilesUploadErrorOther()
         }
@@ -9685,6 +9970,11 @@ public class DBXFilesUploadError: NSObject {
     @objc
     public var asContentHashMismatch: DBXFilesUploadErrorContentHashMismatch? {
         self as? DBXFilesUploadErrorContentHashMismatch
+    }
+
+    @objc
+    public var asEncryptionNotSupported: DBXFilesUploadErrorEncryptionNotSupported? {
+        self as? DBXFilesUploadErrorEncryptionNotSupported
     }
 
     @objc
@@ -9721,7 +10011,7 @@ public class DBXFilesUploadErrorPropertiesError: DBXFilesUploadError {
     }
 }
 
-/// The request payload must be at most 150 MB.
+/// The request payload must be at most 150 MiB.
 @objc
 public class DBXFilesUploadErrorPayloadTooLarge: DBXFilesUploadError {
     @objc
@@ -9737,6 +10027,16 @@ public class DBXFilesUploadErrorContentHashMismatch: DBXFilesUploadError {
     @objc
     public init() {
         let swift = Files.UploadError.contentHashMismatch
+        super.init(swift: swift)
+    }
+}
+
+/// The file is required to be encrypted, which is not supported in our public API.
+@objc
+public class DBXFilesUploadErrorEncryptionNotSupported: DBXFilesUploadError {
+    @objc
+    public init() {
+        let swift = Files.UploadError.encryptionNotSupported
         super.init(swift: swift)
     }
 }
@@ -9782,36 +10082,89 @@ public class DBXFilesUploadSessionAppendArg: NSObject {
     public override var description: String { swift.description }
 }
 
-/// Objective-C compatible UploadSessionLookupError union
+/// Objective-C compatible UploadSessionAppendBatchArg struct
 @objc
-public class DBXFilesUploadSessionLookupError: NSObject {
-    let swift: Files.UploadSessionLookupError
+public class DBXFilesUploadSessionAppendBatchArg: NSObject {
+    /// Append information for each file in the batch.
+    @objc
+    public var entries: [DBXFilesUploadSessionAppendBatchArgEntry] { swift.entries.map { DBXFilesUploadSessionAppendBatchArgEntry(swift: $0) } }
+    /// A hash of the entire request body which is all the concatenated pieces of file content that were uploaded in
+    /// this call. If provided and the uploaded content does not match this hash, an error will be returned. For
+    /// more information see our Content hash https://www.dropbox.com/developers/reference/content-hash page.
+    @objc
+    public var contentHash: String? { swift.contentHash }
 
-    public init(swift: Files.UploadSessionLookupError) {
+    @objc
+    public init(entries: [DBXFilesUploadSessionAppendBatchArgEntry], contentHash: String?) {
+        self.swift = Files.UploadSessionAppendBatchArg(entries: entries.map(\.swift), contentHash: contentHash)
+    }
+
+    let swift: Files.UploadSessionAppendBatchArg
+
+    public init(swift: Files.UploadSessionAppendBatchArg) {
         self.swift = swift
     }
 
-    public static func factory(swift: Files.UploadSessionLookupError) -> DBXFilesUploadSessionLookupError {
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible UploadSessionAppendBatchArgEntry struct
+@objc
+public class DBXFilesUploadSessionAppendBatchArgEntry: NSObject {
+    /// Contains the upload session ID and the offset.
+    @objc
+    public var cursor: DBXFilesUploadSessionCursor { DBXFilesUploadSessionCursor(swift: swift.cursor) }
+    /// Length in bytes of the data that should be appended for this session. Used to split the batched upload data
+    /// for multiple upload sessions.
+    @objc
+    public var length: NSNumber { swift.length as NSNumber }
+    /// If true, the current session will be closed, at which point you won't be able to call
+    /// uploadSessionAppendBatch anymore with the current session.
+    @objc
+    public var close: NSNumber { swift.close as NSNumber }
+
+    @objc
+    public init(cursor: DBXFilesUploadSessionCursor, length: NSNumber, close: NSNumber) {
+        self.swift = Files.UploadSessionAppendBatchArgEntry(cursor: cursor.swift, length: length.uint64Value, close: close.boolValue)
+    }
+
+    let swift: Files.UploadSessionAppendBatchArgEntry
+
+    public init(swift: Files.UploadSessionAppendBatchArgEntry) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible UploadSessionAppendBatchEntryError union
+@objc
+public class DBXFilesUploadSessionAppendBatchEntryError: NSObject {
+    let swift: Files.UploadSessionAppendBatchEntryError
+
+    public init(swift: Files.UploadSessionAppendBatchEntryError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Files.UploadSessionAppendBatchEntryError) -> DBXFilesUploadSessionAppendBatchEntryError {
         switch swift {
         case .notFound:
-            return DBXFilesUploadSessionLookupErrorNotFound()
+            return DBXFilesUploadSessionAppendBatchEntryErrorNotFound()
         case .incorrectOffset(let swiftArg):
             let arg = DBXFilesUploadSessionOffsetError(swift: swiftArg)
-            return DBXFilesUploadSessionLookupErrorIncorrectOffset(arg)
+            return DBXFilesUploadSessionAppendBatchEntryErrorIncorrectOffset(arg)
         case .closed:
-            return DBXFilesUploadSessionLookupErrorClosed()
-        case .notClosed:
-            return DBXFilesUploadSessionLookupErrorNotClosed()
+            return DBXFilesUploadSessionAppendBatchEntryErrorClosed()
         case .tooLarge:
-            return DBXFilesUploadSessionLookupErrorTooLarge()
+            return DBXFilesUploadSessionAppendBatchEntryErrorTooLarge()
         case .concurrentSessionInvalidOffset:
-            return DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset()
+            return DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidOffset()
         case .concurrentSessionInvalidDataSize:
-            return DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize()
-        case .payloadTooLarge:
-            return DBXFilesUploadSessionLookupErrorPayloadTooLarge()
+            return DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidDataSize()
         case .other:
-            return DBXFilesUploadSessionLookupErrorOther()
+            return DBXFilesUploadSessionAppendBatchEntryErrorOther()
         }
     }
 
@@ -9819,57 +10172,47 @@ public class DBXFilesUploadSessionLookupError: NSObject {
     public override var description: String { swift.description }
 
     @objc
-    public var asNotFound: DBXFilesUploadSessionLookupErrorNotFound? {
-        self as? DBXFilesUploadSessionLookupErrorNotFound
+    public var asNotFound: DBXFilesUploadSessionAppendBatchEntryErrorNotFound? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorNotFound
     }
 
     @objc
-    public var asIncorrectOffset: DBXFilesUploadSessionLookupErrorIncorrectOffset? {
-        self as? DBXFilesUploadSessionLookupErrorIncorrectOffset
+    public var asIncorrectOffset: DBXFilesUploadSessionAppendBatchEntryErrorIncorrectOffset? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorIncorrectOffset
     }
 
     @objc
-    public var asClosed: DBXFilesUploadSessionLookupErrorClosed? {
-        self as? DBXFilesUploadSessionLookupErrorClosed
+    public var asClosed: DBXFilesUploadSessionAppendBatchEntryErrorClosed? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorClosed
     }
 
     @objc
-    public var asNotClosed: DBXFilesUploadSessionLookupErrorNotClosed? {
-        self as? DBXFilesUploadSessionLookupErrorNotClosed
+    public var asTooLarge: DBXFilesUploadSessionAppendBatchEntryErrorTooLarge? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorTooLarge
     }
 
     @objc
-    public var asTooLarge: DBXFilesUploadSessionLookupErrorTooLarge? {
-        self as? DBXFilesUploadSessionLookupErrorTooLarge
+    public var asConcurrentSessionInvalidOffset: DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidOffset? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidOffset
     }
 
     @objc
-    public var asConcurrentSessionInvalidOffset: DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset? {
-        self as? DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset
+    public var asConcurrentSessionInvalidDataSize: DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidDataSize? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidDataSize
     }
 
     @objc
-    public var asConcurrentSessionInvalidDataSize: DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize? {
-        self as? DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize
-    }
-
-    @objc
-    public var asPayloadTooLarge: DBXFilesUploadSessionLookupErrorPayloadTooLarge? {
-        self as? DBXFilesUploadSessionLookupErrorPayloadTooLarge
-    }
-
-    @objc
-    public var asOther: DBXFilesUploadSessionLookupErrorOther? {
-        self as? DBXFilesUploadSessionLookupErrorOther
+    public var asOther: DBXFilesUploadSessionAppendBatchEntryErrorOther? {
+        self as? DBXFilesUploadSessionAppendBatchEntryErrorOther
     }
 }
 
 /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
 @objc
-public class DBXFilesUploadSessionLookupErrorNotFound: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorNotFound: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.notFound
+        let swift = Files.UploadSessionAppendBatchEntryError.notFound
         super.init(swift: swift)
     }
 }
@@ -9878,85 +10221,232 @@ public class DBXFilesUploadSessionLookupErrorNotFound: DBXFilesUploadSessionLook
 /// previous request was received and processed successfully but the client did not receive the
 /// response, e.g. due to a network error.
 @objc
-public class DBXFilesUploadSessionLookupErrorIncorrectOffset: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorIncorrectOffset: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public var incorrectOffset: DBXFilesUploadSessionOffsetError
 
     @objc
     public init(_ arg: DBXFilesUploadSessionOffsetError) {
         self.incorrectOffset = arg
-        let swift = Files.UploadSessionLookupError.incorrectOffset(arg.swift)
+        let swift = Files.UploadSessionAppendBatchEntryError.incorrectOffset(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
 @objc
-public class DBXFilesUploadSessionLookupErrorClosed: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorClosed: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.closed
+        let swift = Files.UploadSessionAppendBatchEntryError.closed
         super.init(swift: swift)
     }
 }
 
-/// The session must be closed before calling upload_session/finish_batch.
+/// You can not append to the upload session because the size of a file should not exceed the max file size
+/// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
 @objc
-public class DBXFilesUploadSessionLookupErrorNotClosed: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorTooLarge: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.notClosed
+        let swift = Files.UploadSessionAppendBatchEntryError.tooLarge
         super.init(swift: swift)
     }
 }
 
-/// You can not append to the upload session because the size of a file should not reach the max file size limit
-/// (i.e. 350GB).
+/// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
 @objc
-public class DBXFilesUploadSessionLookupErrorTooLarge: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidOffset: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.tooLarge
+        let swift = Files.UploadSessionAppendBatchEntryError.concurrentSessionInvalidOffset
         super.init(swift: swift)
     }
 }
 
-/// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+/// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
 @objc
-public class DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorConcurrentSessionInvalidDataSize: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.concurrentSessionInvalidOffset
-        super.init(swift: swift)
-    }
-}
-
-/// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
-@objc
-public class DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize: DBXFilesUploadSessionLookupError {
-    @objc
-    public init() {
-        let swift = Files.UploadSessionLookupError.concurrentSessionInvalidDataSize
-        super.init(swift: swift)
-    }
-}
-
-/// The request payload must be at most 150 MB.
-@objc
-public class DBXFilesUploadSessionLookupErrorPayloadTooLarge: DBXFilesUploadSessionLookupError {
-    @objc
-    public init() {
-        let swift = Files.UploadSessionLookupError.payloadTooLarge
+        let swift = Files.UploadSessionAppendBatchEntryError.concurrentSessionInvalidDataSize
         super.init(swift: swift)
     }
 }
 
 /// An unspecified error.
 @objc
-public class DBXFilesUploadSessionLookupErrorOther: DBXFilesUploadSessionLookupError {
+public class DBXFilesUploadSessionAppendBatchEntryErrorOther: DBXFilesUploadSessionAppendBatchEntryError {
     @objc
     public init() {
-        let swift = Files.UploadSessionLookupError.other
+        let swift = Files.UploadSessionAppendBatchEntryError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible UploadSessionAppendBatchError union
+@objc
+public class DBXFilesUploadSessionAppendBatchError: NSObject {
+    let swift: Files.UploadSessionAppendBatchError
+
+    public init(swift: Files.UploadSessionAppendBatchError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Files.UploadSessionAppendBatchError) -> DBXFilesUploadSessionAppendBatchError {
+        switch swift {
+        case .payloadTooLarge:
+            return DBXFilesUploadSessionAppendBatchErrorPayloadTooLarge()
+        case .contentHashMismatch:
+            return DBXFilesUploadSessionAppendBatchErrorContentHashMismatch()
+        case .lengthMismatch:
+            return DBXFilesUploadSessionAppendBatchErrorLengthMismatch()
+        case .other:
+            return DBXFilesUploadSessionAppendBatchErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asPayloadTooLarge: DBXFilesUploadSessionAppendBatchErrorPayloadTooLarge? {
+        self as? DBXFilesUploadSessionAppendBatchErrorPayloadTooLarge
+    }
+
+    @objc
+    public var asContentHashMismatch: DBXFilesUploadSessionAppendBatchErrorContentHashMismatch? {
+        self as? DBXFilesUploadSessionAppendBatchErrorContentHashMismatch
+    }
+
+    @objc
+    public var asLengthMismatch: DBXFilesUploadSessionAppendBatchErrorLengthMismatch? {
+        self as? DBXFilesUploadSessionAppendBatchErrorLengthMismatch
+    }
+
+    @objc
+    public var asOther: DBXFilesUploadSessionAppendBatchErrorOther? {
+        self as? DBXFilesUploadSessionAppendBatchErrorOther
+    }
+}
+
+/// The request payload must be at most 150 MiB.
+@objc
+public class DBXFilesUploadSessionAppendBatchErrorPayloadTooLarge: DBXFilesUploadSessionAppendBatchError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendBatchError.payloadTooLarge
+        super.init(swift: swift)
+    }
+}
+
+/// The content received by the Dropbox server in this call does not match the provided content hash.
+@objc
+public class DBXFilesUploadSessionAppendBatchErrorContentHashMismatch: DBXFilesUploadSessionAppendBatchError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendBatchError.contentHashMismatch
+        super.init(swift: swift)
+    }
+}
+
+/// The total length of the content received by the Dropbox server in this call does not match the total of the
+/// provided lengths in the batch arguments.
+@objc
+public class DBXFilesUploadSessionAppendBatchErrorLengthMismatch: DBXFilesUploadSessionAppendBatchError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendBatchError.lengthMismatch
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXFilesUploadSessionAppendBatchErrorOther: DBXFilesUploadSessionAppendBatchError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendBatchError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible UploadSessionAppendBatchResult struct
+@objc
+public class DBXFilesUploadSessionAppendBatchResult: NSObject {
+    /// Each entry in entries in UploadSessionAppendBatchArg will appear at the same position inside entries in
+    /// UploadSessionAppendBatchResult.
+    @objc
+    public var entries: [DBXFilesUploadSessionAppendBatchResultEntry] { swift.entries.map { DBXFilesUploadSessionAppendBatchResultEntry(swift: $0) } }
+
+    @objc
+    public init(entries: [DBXFilesUploadSessionAppendBatchResultEntry]) {
+        self.swift = Files.UploadSessionAppendBatchResult(entries: entries.map(\.swift))
+    }
+
+    let swift: Files.UploadSessionAppendBatchResult
+
+    public init(swift: Files.UploadSessionAppendBatchResult) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible UploadSessionAppendBatchResultEntry union
+@objc
+public class DBXFilesUploadSessionAppendBatchResultEntry: NSObject {
+    let swift: Files.UploadSessionAppendBatchResultEntry
+
+    public init(swift: Files.UploadSessionAppendBatchResultEntry) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Files.UploadSessionAppendBatchResultEntry) -> DBXFilesUploadSessionAppendBatchResultEntry {
+        switch swift {
+        case .success:
+            return DBXFilesUploadSessionAppendBatchResultEntrySuccess()
+        case .failure(let swiftArg):
+            let arg = DBXFilesUploadSessionAppendBatchEntryError(swift: swiftArg)
+            return DBXFilesUploadSessionAppendBatchResultEntryFailure(arg)
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asSuccess: DBXFilesUploadSessionAppendBatchResultEntrySuccess? {
+        self as? DBXFilesUploadSessionAppendBatchResultEntrySuccess
+    }
+
+    @objc
+    public var asFailure: DBXFilesUploadSessionAppendBatchResultEntryFailure? {
+        self as? DBXFilesUploadSessionAppendBatchResultEntryFailure
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXFilesUploadSessionAppendBatchResultEntrySuccess: DBXFilesUploadSessionAppendBatchResultEntry {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendBatchResultEntry.success
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXFilesUploadSessionAppendBatchResultEntryFailure: DBXFilesUploadSessionAppendBatchResultEntry {
+    @objc
+    public var failure: DBXFilesUploadSessionAppendBatchEntryError
+
+    @objc
+    public init(_ arg: DBXFilesUploadSessionAppendBatchEntryError) {
+        self.failure = arg
+        let swift = Files.UploadSessionAppendBatchResultEntry.failure(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -9979,8 +10469,6 @@ public class DBXFilesUploadSessionAppendError: NSObject {
             return DBXFilesUploadSessionAppendErrorIncorrectOffset(arg)
         case .closed:
             return DBXFilesUploadSessionAppendErrorClosed()
-        case .notClosed:
-            return DBXFilesUploadSessionAppendErrorNotClosed()
         case .tooLarge:
             return DBXFilesUploadSessionAppendErrorTooLarge()
         case .concurrentSessionInvalidOffset:
@@ -9989,10 +10477,10 @@ public class DBXFilesUploadSessionAppendError: NSObject {
             return DBXFilesUploadSessionAppendErrorConcurrentSessionInvalidDataSize()
         case .payloadTooLarge:
             return DBXFilesUploadSessionAppendErrorPayloadTooLarge()
-        case .other:
-            return DBXFilesUploadSessionAppendErrorOther()
         case .contentHashMismatch:
             return DBXFilesUploadSessionAppendErrorContentHashMismatch()
+        case .other:
+            return DBXFilesUploadSessionAppendErrorOther()
         }
     }
 
@@ -10012,11 +10500,6 @@ public class DBXFilesUploadSessionAppendError: NSObject {
     @objc
     public var asClosed: DBXFilesUploadSessionAppendErrorClosed? {
         self as? DBXFilesUploadSessionAppendErrorClosed
-    }
-
-    @objc
-    public var asNotClosed: DBXFilesUploadSessionAppendErrorNotClosed? {
-        self as? DBXFilesUploadSessionAppendErrorNotClosed
     }
 
     @objc
@@ -10040,13 +10523,13 @@ public class DBXFilesUploadSessionAppendError: NSObject {
     }
 
     @objc
-    public var asOther: DBXFilesUploadSessionAppendErrorOther? {
-        self as? DBXFilesUploadSessionAppendErrorOther
+    public var asContentHashMismatch: DBXFilesUploadSessionAppendErrorContentHashMismatch? {
+        self as? DBXFilesUploadSessionAppendErrorContentHashMismatch
     }
 
     @objc
-    public var asContentHashMismatch: DBXFilesUploadSessionAppendErrorContentHashMismatch? {
-        self as? DBXFilesUploadSessionAppendErrorContentHashMismatch
+    public var asOther: DBXFilesUploadSessionAppendErrorOther? {
+        self as? DBXFilesUploadSessionAppendErrorOther
     }
 }
 
@@ -10086,18 +10569,8 @@ public class DBXFilesUploadSessionAppendErrorClosed: DBXFilesUploadSessionAppend
     }
 }
 
-/// The session must be closed before calling upload_session/finish_batch.
-@objc
-public class DBXFilesUploadSessionAppendErrorNotClosed: DBXFilesUploadSessionAppendError {
-    @objc
-    public init() {
-        let swift = Files.UploadSessionAppendError.notClosed
-        super.init(swift: swift)
-    }
-}
-
-/// You can not append to the upload session because the size of a file should not reach the max file size limit
-/// (i.e. 350GB).
+/// You can not append to the upload session because the size of a file should not exceed the max file size
+/// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
 @objc
 public class DBXFilesUploadSessionAppendErrorTooLarge: DBXFilesUploadSessionAppendError {
     @objc
@@ -10107,7 +10580,7 @@ public class DBXFilesUploadSessionAppendErrorTooLarge: DBXFilesUploadSessionAppe
     }
 }
 
-/// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+/// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
 @objc
 public class DBXFilesUploadSessionAppendErrorConcurrentSessionInvalidOffset: DBXFilesUploadSessionAppendError {
     @objc
@@ -10117,7 +10590,7 @@ public class DBXFilesUploadSessionAppendErrorConcurrentSessionInvalidOffset: DBX
     }
 }
 
-/// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+/// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
 @objc
 public class DBXFilesUploadSessionAppendErrorConcurrentSessionInvalidDataSize: DBXFilesUploadSessionAppendError {
     @objc
@@ -10127,22 +10600,12 @@ public class DBXFilesUploadSessionAppendErrorConcurrentSessionInvalidDataSize: D
     }
 }
 
-/// The request payload must be at most 150 MB.
+/// The request payload must be at most 150 MiB.
 @objc
 public class DBXFilesUploadSessionAppendErrorPayloadTooLarge: DBXFilesUploadSessionAppendError {
     @objc
     public init() {
         let swift = Files.UploadSessionAppendError.payloadTooLarge
-        super.init(swift: swift)
-    }
-}
-
-/// An unspecified error.
-@objc
-public class DBXFilesUploadSessionAppendErrorOther: DBXFilesUploadSessionAppendError {
-    @objc
-    public init() {
-        let swift = Files.UploadSessionAppendError.other
         super.init(swift: swift)
     }
 }
@@ -10153,6 +10616,16 @@ public class DBXFilesUploadSessionAppendErrorContentHashMismatch: DBXFilesUpload
     @objc
     public init() {
         let swift = Files.UploadSessionAppendError.contentHashMismatch
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXFilesUploadSessionAppendErrorOther: DBXFilesUploadSessionAppendError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionAppendError.other
         super.init(swift: swift)
     }
 }
@@ -10492,6 +10965,8 @@ public class DBXFilesUploadSessionFinishError: NSObject {
             return DBXFilesUploadSessionFinishErrorPayloadTooLarge()
         case .contentHashMismatch:
             return DBXFilesUploadSessionFinishErrorContentHashMismatch()
+        case .encryptionNotSupported:
+            return DBXFilesUploadSessionFinishErrorEncryptionNotSupported()
         case .other:
             return DBXFilesUploadSessionFinishErrorOther()
         }
@@ -10551,6 +11026,11 @@ public class DBXFilesUploadSessionFinishError: NSObject {
     }
 
     @objc
+    public var asEncryptionNotSupported: DBXFilesUploadSessionFinishErrorEncryptionNotSupported? {
+        self as? DBXFilesUploadSessionFinishErrorEncryptionNotSupported
+    }
+
+    @objc
     public var asOther: DBXFilesUploadSessionFinishErrorOther? {
         self as? DBXFilesUploadSessionFinishErrorOther
     }
@@ -10599,8 +11079,8 @@ public class DBXFilesUploadSessionFinishErrorPropertiesError: DBXFilesUploadSess
     }
 }
 
-/// The batch request commits files into too many different shared folders. Please limit your batch request to
-/// files contained in a single shared folder.
+/// Field is deprecated. The batch request commits files into too many different shared folders. Please limit
+/// your batch request to files contained in a single shared folder.
 @objc
 public class DBXFilesUploadSessionFinishErrorTooManySharedFolderTargets: DBXFilesUploadSessionFinishError {
     @objc
@@ -10650,7 +11130,7 @@ public class DBXFilesUploadSessionFinishErrorConcurrentSessionMissingData: DBXFi
     }
 }
 
-/// The request payload must be at most 150 MB.
+/// The request payload must be at most 150 MiB.
 @objc
 public class DBXFilesUploadSessionFinishErrorPayloadTooLarge: DBXFilesUploadSessionFinishError {
     @objc
@@ -10670,12 +11150,201 @@ public class DBXFilesUploadSessionFinishErrorContentHashMismatch: DBXFilesUpload
     }
 }
 
+/// The file is required to be encrypted, which is not supported in our public API.
+@objc
+public class DBXFilesUploadSessionFinishErrorEncryptionNotSupported: DBXFilesUploadSessionFinishError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionFinishError.encryptionNotSupported
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXFilesUploadSessionFinishErrorOther: DBXFilesUploadSessionFinishError {
     @objc
     public init() {
         let swift = Files.UploadSessionFinishError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible UploadSessionLookupError union
+@objc
+public class DBXFilesUploadSessionLookupError: NSObject {
+    let swift: Files.UploadSessionLookupError
+
+    public init(swift: Files.UploadSessionLookupError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Files.UploadSessionLookupError) -> DBXFilesUploadSessionLookupError {
+        switch swift {
+        case .notFound:
+            return DBXFilesUploadSessionLookupErrorNotFound()
+        case .incorrectOffset(let swiftArg):
+            let arg = DBXFilesUploadSessionOffsetError(swift: swiftArg)
+            return DBXFilesUploadSessionLookupErrorIncorrectOffset(arg)
+        case .closed:
+            return DBXFilesUploadSessionLookupErrorClosed()
+        case .notClosed:
+            return DBXFilesUploadSessionLookupErrorNotClosed()
+        case .tooLarge:
+            return DBXFilesUploadSessionLookupErrorTooLarge()
+        case .concurrentSessionInvalidOffset:
+            return DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset()
+        case .concurrentSessionInvalidDataSize:
+            return DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize()
+        case .payloadTooLarge:
+            return DBXFilesUploadSessionLookupErrorPayloadTooLarge()
+        case .other:
+            return DBXFilesUploadSessionLookupErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asNotFound: DBXFilesUploadSessionLookupErrorNotFound? {
+        self as? DBXFilesUploadSessionLookupErrorNotFound
+    }
+
+    @objc
+    public var asIncorrectOffset: DBXFilesUploadSessionLookupErrorIncorrectOffset? {
+        self as? DBXFilesUploadSessionLookupErrorIncorrectOffset
+    }
+
+    @objc
+    public var asClosed: DBXFilesUploadSessionLookupErrorClosed? {
+        self as? DBXFilesUploadSessionLookupErrorClosed
+    }
+
+    @objc
+    public var asNotClosed: DBXFilesUploadSessionLookupErrorNotClosed? {
+        self as? DBXFilesUploadSessionLookupErrorNotClosed
+    }
+
+    @objc
+    public var asTooLarge: DBXFilesUploadSessionLookupErrorTooLarge? {
+        self as? DBXFilesUploadSessionLookupErrorTooLarge
+    }
+
+    @objc
+    public var asConcurrentSessionInvalidOffset: DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset? {
+        self as? DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset
+    }
+
+    @objc
+    public var asConcurrentSessionInvalidDataSize: DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize? {
+        self as? DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize
+    }
+
+    @objc
+    public var asPayloadTooLarge: DBXFilesUploadSessionLookupErrorPayloadTooLarge? {
+        self as? DBXFilesUploadSessionLookupErrorPayloadTooLarge
+    }
+
+    @objc
+    public var asOther: DBXFilesUploadSessionLookupErrorOther? {
+        self as? DBXFilesUploadSessionLookupErrorOther
+    }
+}
+
+/// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+@objc
+public class DBXFilesUploadSessionLookupErrorNotFound: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.notFound
+        super.init(swift: swift)
+    }
+}
+
+/// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
+/// previous request was received and processed successfully but the client did not receive the
+/// response, e.g. due to a network error.
+@objc
+public class DBXFilesUploadSessionLookupErrorIncorrectOffset: DBXFilesUploadSessionLookupError {
+    @objc
+    public var incorrectOffset: DBXFilesUploadSessionOffsetError
+
+    @objc
+    public init(_ arg: DBXFilesUploadSessionOffsetError) {
+        self.incorrectOffset = arg
+        let swift = Files.UploadSessionLookupError.incorrectOffset(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// You are attempting to append data to an upload session that has already been closed (i.e. committed).
+@objc
+public class DBXFilesUploadSessionLookupErrorClosed: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.closed
+        super.init(swift: swift)
+    }
+}
+
+/// The session must be closed before calling upload_session/finish_batch.
+@objc
+public class DBXFilesUploadSessionLookupErrorNotClosed: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.notClosed
+        super.init(swift: swift)
+    }
+}
+
+/// You can not append to the upload session because the size of a file should not exceed the max file size
+/// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
+@objc
+public class DBXFilesUploadSessionLookupErrorTooLarge: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.tooLarge
+        super.init(swift: swift)
+    }
+}
+
+/// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
+@objc
+public class DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidOffset: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.concurrentSessionInvalidOffset
+        super.init(swift: swift)
+    }
+}
+
+/// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
+@objc
+public class DBXFilesUploadSessionLookupErrorConcurrentSessionInvalidDataSize: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.concurrentSessionInvalidDataSize
+        super.init(swift: swift)
+    }
+}
+
+/// The request payload must be at most 150 MiB.
+@objc
+public class DBXFilesUploadSessionLookupErrorPayloadTooLarge: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.payloadTooLarge
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXFilesUploadSessionLookupErrorOther: DBXFilesUploadSessionLookupError {
+    @objc
+    public init() {
+        let swift = Files.UploadSessionLookupError.other
         super.init(swift: swift)
     }
 }
@@ -10860,7 +11529,7 @@ public class DBXFilesUploadSessionStartErrorConcurrentSessionCloseNotAllowed: DB
     }
 }
 
-/// The request payload must be at most 150 MB.
+/// The request payload must be at most 150 MiB.
 @objc
 public class DBXFilesUploadSessionStartErrorPayloadTooLarge: DBXFilesUploadSessionStartError {
     @objc
@@ -11169,6 +11838,8 @@ public class DBXFilesWriteError: NSObject {
             return DBXFilesWriteErrorOperationSuppressed()
         case .tooManyWriteOperations:
             return DBXFilesWriteErrorTooManyWriteOperations()
+        case .accessRestricted:
+            return DBXFilesWriteErrorAccessRestricted()
         case .other:
             return DBXFilesWriteErrorOther()
         }
@@ -11215,6 +11886,11 @@ public class DBXFilesWriteError: NSObject {
     @objc
     public var asTooManyWriteOperations: DBXFilesWriteErrorTooManyWriteOperations? {
         self as? DBXFilesWriteErrorTooManyWriteOperations
+    }
+
+    @objc
+    public var asAccessRestricted: DBXFilesWriteErrorAccessRestricted? {
+        self as? DBXFilesWriteErrorAccessRestricted
     }
 
     @objc
@@ -11309,6 +11985,16 @@ public class DBXFilesWriteErrorTooManyWriteOperations: DBXFilesWriteError {
     @objc
     public init() {
         let swift = Files.WriteError.tooManyWriteOperations
+        super.init(swift: swift)
+    }
+}
+
+/// The user doesn't have permission to perform the action due to restrictions set by a team administrator
+@objc
+public class DBXFilesWriteErrorAccessRestricted: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.accessRestricted
         super.init(swift: swift)
     }
 }

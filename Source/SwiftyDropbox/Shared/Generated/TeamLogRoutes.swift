@@ -58,8 +58,10 @@ public class TeamLogRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `TeamLog.GetTeamEventsResult` object on
     /// success or a `TeamLog.GetTeamEventsContinueError` object on failure.
-    @discardableResult public func getEventsContinue(cursor: String)
-        -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsContinueErrorSerializer> {
+    @discardableResult public func getEventsContinue(cursor: String) -> RpcRequest<
+        TeamLog.GetTeamEventsResultSerializer,
+        TeamLog.GetTeamEventsContinueErrorSerializer
+    > {
         let route = TeamLog.getEventsContinue
         let serverArgs = TeamLog.GetTeamEventsContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)

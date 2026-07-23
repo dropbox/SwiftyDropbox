@@ -18,6 +18,33 @@ public class DBXPaperRoutes: NSObject {
     }
 
     public let client: DBXDropboxTransportClient
+
+    /// Returns metadata for a Paper doc or Cloud Doc.
+    ///
+    /// - scope: files.metadata.read
+    ///
+    /// - parameter docId: Legacy Paper doc identifier.
+    /// - parameter fileId: Dropbox file ID for Cloud Docs (post-PiFS migration).
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocGetMetadataResult` object on
+    /// success or a `Paper.DocLookupError` object on failure.
+    @objc
+    @discardableResult public func docsGetMetadata(docId: String?, fileId: String?) -> DBXPaperDocsGetMetadataRpcRequest {
+        let swift = swift.docsGetMetadata(docId: docId, fileId: fileId)
+        return DBXPaperDocsGetMetadataRpcRequest(swift: swift)
+    }
+
+    /// Returns metadata for a Paper doc or Cloud Doc.
+    ///
+    /// - scope: files.metadata.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocGetMetadataResult` object on
+    /// success or a `Paper.DocLookupError` object on failure.
+    @objc
+    @discardableResult public func docsGetMetadata() -> DBXPaperDocsGetMetadataRpcRequest {
+        let swift = swift.docsGetMetadata()
+        return DBXPaperDocsGetMetadataRpcRequest(swift: swift)
+    }
 }
 
 @objc
@@ -115,7 +142,7 @@ public class DBXPaperDocsCreateUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperPaperDocCreateUpdateResult?
+            var objc: DBXPaperPaperDocCreateUpdateResult? = nil
             if let swift = result {
                 objc = DBXPaperPaperDocCreateUpdateResult(swift: swift)
             }
@@ -188,8 +215,8 @@ public class DBXPaperDocsDownloadDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperPaperDocExportResult?
-            var destination: URL?
+            var objc: DBXPaperPaperDocExportResult? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXPaperPaperDocExportResult(swift: swift.0)
                 destination = swift.1
@@ -263,8 +290,8 @@ public class DBXPaperDocsDownloadDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperPaperDocExportResult?
-            var destination: Data?
+            var objc: DBXPaperPaperDocExportResult? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXPaperPaperDocExportResult(swift: swift.0)
                 destination = swift.1
@@ -338,7 +365,7 @@ public class DBXPaperDocsFolderUsersListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperListUsersOnFolderResponse?
+            var objc: DBXPaperListUsersOnFolderResponse? = nil
             if let swift = result {
                 objc = DBXPaperListUsersOnFolderResponse(swift: swift)
             }
@@ -405,7 +432,7 @@ public class DBXPaperDocsFolderUsersListContinueRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXPaperListUsersOnFolderResponse?
+            var objc: DBXPaperListUsersOnFolderResponse? = nil
             if let swift = result {
                 objc = DBXPaperListUsersOnFolderResponse(swift: swift)
             }
@@ -472,9 +499,76 @@ public class DBXPaperDocsGetFolderInfoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperFoldersContainingPaperDoc?
+            var objc: DBXPaperFoldersContainingPaperDoc? = nil
             if let swift = result {
                 objc = DBXPaperFoldersContainingPaperDoc(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXPaperDocsGetMetadataRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Paper.PaperDocGetMetadataResultSerializer, Paper.DocLookupErrorSerializer>
+
+    init(swift: RpcRequest<Paper.PaperDocGetMetadataResultSerializer, Paper.DocLookupErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXPaperPaperDocGetMetadataResult?, DBXPaperDocLookupError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXPaperPaperDocGetMetadataResult?, DBXPaperDocLookupError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXPaperDocLookupError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXPaperDocLookupError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXPaperPaperDocGetMetadataResult? = nil
+            if let swift = result {
+                objc = DBXPaperPaperDocGetMetadataResult(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -528,7 +622,7 @@ public class DBXPaperDocsListRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXPaperListPaperDocsResponse?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXPaperListPaperDocsResponse?
+            var objc: DBXPaperListPaperDocsResponse? = nil
             if let swift = result {
                 objc = DBXPaperListPaperDocsResponse(swift: swift)
             }
@@ -595,7 +689,7 @@ public class DBXPaperDocsListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperListPaperDocsResponse?
+            var objc: DBXPaperListPaperDocsResponse? = nil
             if let swift = result {
                 objc = DBXPaperListPaperDocsResponse(swift: swift)
             }
@@ -725,7 +819,7 @@ public class DBXPaperDocsSharingPolicyGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperSharingPolicy?
+            var objc: DBXPaperSharingPolicy? = nil
             if let swift = result {
                 objc = DBXPaperSharingPolicy(swift: swift)
             }
@@ -855,7 +949,7 @@ public class DBXPaperDocsUpdateUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperPaperDocCreateUpdateResult?
+            var objc: DBXPaperPaperDocCreateUpdateResult? = nil
             if let swift = result {
                 objc = DBXPaperPaperDocCreateUpdateResult(swift: swift)
             }
@@ -928,7 +1022,7 @@ public class DBXPaperDocsUsersAddRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXPaperAddPaperDocUserMemberResult]?
+            var objc: [DBXPaperAddPaperDocUserMemberResult]? = nil
             if let swift = result {
                 objc = swift.map { DBXPaperAddPaperDocUserMemberResult(swift: $0) }
             }
@@ -995,7 +1089,7 @@ public class DBXPaperDocsUsersListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperListUsersOnPaperDocResponse?
+            var objc: DBXPaperListUsersOnPaperDocResponse? = nil
             if let swift = result {
                 objc = DBXPaperListUsersOnPaperDocResponse(swift: swift)
             }
@@ -1062,7 +1156,7 @@ public class DBXPaperDocsUsersListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperListUsersOnPaperDocResponse?
+            var objc: DBXPaperListUsersOnPaperDocResponse? = nil
             if let swift = result {
                 objc = DBXPaperListUsersOnPaperDocResponse(swift: swift)
             }
@@ -1192,7 +1286,7 @@ public class DBXPaperFoldersCreateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXPaperPaperFolderCreateResult?
+            var objc: DBXPaperPaperFolderCreateResult? = nil
             if let swift = result {
                 objc = DBXPaperPaperFolderCreateResult(swift: swift)
             }

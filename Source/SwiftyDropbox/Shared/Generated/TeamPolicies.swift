@@ -138,6 +138,115 @@ public class TeamPolicies {
         }
     }
 
+    /// Policy governing default expiration date for new links shared outside the team.
+    public enum DefaultLinkExpirationDaysPolicy: CustomStringConvertible, JSONRepresentable {
+        /// New links shared outside the team default to no expiration date.
+        case none
+        /// New links shared outside the team default to expire in one day.
+        case day1
+        /// New links shared outside the team default to expire in three days.
+        case day3
+        /// New links shared outside the team default to expire in seven days.
+        case day7
+        /// New links shared outside the team default to expire in 30 days.
+        case day30
+        /// New links shared outside the team default to expire in 90 days.
+        case day90
+        /// New links shared outside the team default to expire in 180 days.
+        case day180
+        /// New links shared outside the team default to expire in 365 days.
+        case year1
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try DefaultLinkExpirationDaysPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DefaultLinkExpirationDaysPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DefaultLinkExpirationDaysPolicy: \(error)"
+            }
+        }
+    }
+
+    public class DefaultLinkExpirationDaysPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DefaultLinkExpirationDaysPolicy) throws -> JSON {
+            switch value {
+            case .none:
+                var d = [String: JSON]()
+                d[".tag"] = .str("none")
+                return .dictionary(d)
+            case .day1:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_1")
+                return .dictionary(d)
+            case .day3:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_3")
+                return .dictionary(d)
+            case .day7:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_7")
+                return .dictionary(d)
+            case .day30:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_30")
+                return .dictionary(d)
+            case .day90:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_90")
+                return .dictionary(d)
+            case .day180:
+                var d = [String: JSON]()
+                d[".tag"] = .str("day_180")
+                return .dictionary(d)
+            case .year1:
+                var d = [String: JSON]()
+                d[".tag"] = .str("year_1")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DefaultLinkExpirationDaysPolicy {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "none":
+                    return DefaultLinkExpirationDaysPolicy.none
+                case "day_1":
+                    return DefaultLinkExpirationDaysPolicy.day1
+                case "day_3":
+                    return DefaultLinkExpirationDaysPolicy.day3
+                case "day_7":
+                    return DefaultLinkExpirationDaysPolicy.day7
+                case "day_30":
+                    return DefaultLinkExpirationDaysPolicy.day30
+                case "day_90":
+                    return DefaultLinkExpirationDaysPolicy.day90
+                case "day_180":
+                    return DefaultLinkExpirationDaysPolicy.day180
+                case "year_1":
+                    return DefaultLinkExpirationDaysPolicy.year1
+                case "other":
+                    return DefaultLinkExpirationDaysPolicy.other
+                default:
+                    return DefaultLinkExpirationDaysPolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DefaultLinkExpirationDaysPolicy.self, json: json)
+            }
+        }
+    }
+
     /// The EmmState union
     public enum EmmState: CustomStringConvertible, JSONRepresentable {
         /// Emm token is disabled.
@@ -203,6 +312,67 @@ public class TeamPolicies {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: EmmState.self, json: json)
+            }
+        }
+    }
+
+    /// Policy governing whether new links shared outside the team require passwords.
+    public enum EnforceLinkPasswordPolicy: CustomStringConvertible, JSONRepresentable {
+        /// New links shared outside the team do not require passwords.
+        case optional
+        /// New links shared outside the team require passwords.
+        case required
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try EnforceLinkPasswordPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EnforceLinkPasswordPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EnforceLinkPasswordPolicy: \(error)"
+            }
+        }
+    }
+
+    public class EnforceLinkPasswordPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: EnforceLinkPasswordPolicy) throws -> JSON {
+            switch value {
+            case .optional:
+                var d = [String: JSON]()
+                d[".tag"] = .str("optional")
+                return .dictionary(d)
+            case .required:
+                var d = [String: JSON]()
+                d[".tag"] = .str("required")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> EnforceLinkPasswordPolicy {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "optional":
+                    return EnforceLinkPasswordPolicy.optional
+                case "required":
+                    return EnforceLinkPasswordPolicy.required
+                case "other":
+                    return EnforceLinkPasswordPolicy.other
+                default:
+                    return EnforceLinkPasswordPolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: EnforceLinkPasswordPolicy.self, json: json)
             }
         }
     }
@@ -345,6 +515,8 @@ public class TeamPolicies {
         case enabled
         /// Team admin has default value based on team tier.
         case default_
+        /// Team admin has chosen to do File Provider Migration immediately for the team.
+        case immediate
         /// An unspecified error.
         case other
 
@@ -377,6 +549,10 @@ public class TeamPolicies {
                 var d = [String: JSON]()
                 d[".tag"] = .str("default")
                 return .dictionary(d)
+            case .immediate:
+                var d = [String: JSON]()
+                d[".tag"] = .str("immediate")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -395,6 +571,8 @@ public class TeamPolicies {
                     return FileProviderMigrationPolicyState.enabled
                 case "default":
                     return FileProviderMigrationPolicyState.default_
+                case "immediate":
+                    return FileProviderMigrationPolicyState.immediate
                 case "other":
                     return FileProviderMigrationPolicyState.other
                 default:
@@ -836,11 +1014,13 @@ public class TeamPolicies {
 
     /// The PasswordStrengthPolicy union
     public enum PasswordStrengthPolicy: CustomStringConvertible, JSONRepresentable {
-        /// User passwords will adhere to the minimal password strength policy.
+        /// User passwords will not adhere to a password strength policy.
         case minimalRequirements
-        /// User passwords will adhere to the moderate password strength policy.
+        /// User passwords will adhere to the strong password strength policy. Note that product surfaces refer to this
+        /// as the strong policy but the value must be kept as is for backwards compatability.
         case moderatePassword
-        /// User passwords will adhere to the very strong password strength policy.
+        /// User passwords will adhere to the very strong password strength policy. Note that product surfaces refer to
+        /// this as the very strong policy but the value must be kept as is for backwards compatability.
         case strongPassword
         /// An unspecified error.
         case other
@@ -1092,6 +1272,8 @@ public class TeamPolicies {
         case team
         /// Anyone can be a member of a folder shared by a team member.
         case anyone
+        /// Only a teammate and approved people can be a member of a folder shared by a team member.
+        case teamAndApproved
         /// An unspecified error.
         case other
 
@@ -1120,6 +1302,10 @@ public class TeamPolicies {
                 var d = [String: JSON]()
                 d[".tag"] = .str("anyone")
                 return .dictionary(d)
+            case .teamAndApproved:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_and_approved")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -1136,6 +1322,8 @@ public class TeamPolicies {
                     return SharedFolderMemberPolicy.team
                 case "anyone":
                     return SharedFolderMemberPolicy.anyone
+                case "team_and_approved":
+                    return SharedFolderMemberPolicy.teamAndApproved
                 case "other":
                     return SharedFolderMemberPolicy.other
                 default:
@@ -1225,6 +1413,75 @@ public class TeamPolicies {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: SharedLinkCreatePolicy.self, json: json)
+            }
+        }
+    }
+
+    /// The SharedLinkDefaultPermissionsPolicy union
+    public enum SharedLinkDefaultPermissionsPolicy: CustomStringConvertible, JSONRepresentable {
+        /// No team default. Member defaults used instead.
+        case default_
+        /// Default to edit when creating new sharing links
+        case edit
+        /// Default to view-only when creating new sharing links
+        case view
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try SharedLinkDefaultPermissionsPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkDefaultPermissionsPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SharedLinkDefaultPermissionsPolicy: \(error)"
+            }
+        }
+    }
+
+    public class SharedLinkDefaultPermissionsPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: SharedLinkDefaultPermissionsPolicy) throws -> JSON {
+            switch value {
+            case .default_:
+                var d = [String: JSON]()
+                d[".tag"] = .str("default")
+                return .dictionary(d)
+            case .edit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("edit")
+                return .dictionary(d)
+            case .view:
+                var d = [String: JSON]()
+                d[".tag"] = .str("view")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> SharedLinkDefaultPermissionsPolicy {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "default":
+                    return SharedLinkDefaultPermissionsPolicy.default_
+                case "edit":
+                    return SharedLinkDefaultPermissionsPolicy.edit
+                case "view":
+                    return SharedLinkDefaultPermissionsPolicy.view
+                case "other":
+                    return SharedLinkDefaultPermissionsPolicy.other
+                default:
+                    return SharedLinkDefaultPermissionsPolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: SharedLinkDefaultPermissionsPolicy.self, json: json)
             }
         }
     }
@@ -1677,16 +1934,20 @@ public class TeamPolicies {
         public let officeAddin: TeamPolicies.OfficeAddInPolicy
         /// The team policy on if teammembers are allowed to suggest users for admins to invite to the team.
         public let suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy
+        /// Policy for deciding whether members can edit team folders at the top level of the team space.
+        public let topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy
         public init(
             sharing: TeamPolicies.TeamSharingPolicies,
             emmState: TeamPolicies.EmmState,
             officeAddin: TeamPolicies.OfficeAddInPolicy,
-            suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy
+            suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy,
+            topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy
         ) {
             self.sharing = sharing
             self.emmState = emmState
             self.officeAddin = officeAddin
             self.suggestMembersPolicy = suggestMembersPolicy
+            self.topLevelContentPolicy = topLevelContentPolicy
         }
 
         func json() throws -> JSON {
@@ -1710,6 +1971,7 @@ public class TeamPolicies {
                 "emm_state": try TeamPolicies.EmmStateSerializer().serialize(value.emmState),
                 "office_addin": try TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddin),
                 "suggest_members_policy": try TeamPolicies.SuggestMembersPolicySerializer().serialize(value.suggestMembersPolicy),
+                "top_level_content_policy": try TeamPolicies.TopLevelContentPolicySerializer().serialize(value.topLevelContentPolicy),
             ]
             return .dictionary(output)
         }
@@ -1721,7 +1983,14 @@ public class TeamPolicies {
                 let emmState = try TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .null)
                 let officeAddin = try TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin"] ?? .null)
                 let suggestMembersPolicy = try TeamPolicies.SuggestMembersPolicySerializer().deserialize(dict["suggest_members_policy"] ?? .null)
-                return TeamMemberPolicies(sharing: sharing, emmState: emmState, officeAddin: officeAddin, suggestMembersPolicy: suggestMembersPolicy)
+                let topLevelContentPolicy = try TeamPolicies.TopLevelContentPolicySerializer().deserialize(dict["top_level_content_policy"] ?? .null)
+                return TeamMemberPolicies(
+                    sharing: sharing,
+                    emmState: emmState,
+                    officeAddin: officeAddin,
+                    suggestMembersPolicy: suggestMembersPolicy,
+                    topLevelContentPolicy: topLevelContentPolicy
+                )
             default:
                 throw JSONSerializerError.deserializeError(type: TeamMemberPolicies.self, json: json)
             }
@@ -1740,18 +2009,30 @@ public class TeamPolicies {
         public let groupCreationPolicy: TeamPolicies.GroupCreation
         /// Who can view links to content in shared folders.
         public let sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
+        /// If passwords are required for new links shared outside the team.
+        public let enforceLinkPasswordPolicy: TeamPolicies.EnforceLinkPasswordPolicy
+        /// Default expiration date for new links shared outside the team.
+        public let defaultLinkExpirationDaysPolicy: TeamPolicies.DefaultLinkExpirationDaysPolicy
+        /// Default access level for new links shared by team members.
+        public let sharedLinkDefaultPermissionsPolicy: TeamPolicies.SharedLinkDefaultPermissionsPolicy
         public init(
             sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy,
             sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy,
             sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy,
             groupCreationPolicy: TeamPolicies.GroupCreation,
-            sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
+            sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy,
+            enforceLinkPasswordPolicy: TeamPolicies.EnforceLinkPasswordPolicy,
+            defaultLinkExpirationDaysPolicy: TeamPolicies.DefaultLinkExpirationDaysPolicy,
+            sharedLinkDefaultPermissionsPolicy: TeamPolicies.SharedLinkDefaultPermissionsPolicy
         ) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
             self.sharedFolderJoinPolicy = sharedFolderJoinPolicy
             self.sharedLinkCreatePolicy = sharedLinkCreatePolicy
             self.groupCreationPolicy = groupCreationPolicy
             self.sharedFolderLinkRestrictionPolicy = sharedFolderLinkRestrictionPolicy
+            self.enforceLinkPasswordPolicy = enforceLinkPasswordPolicy
+            self.defaultLinkExpirationDaysPolicy = defaultLinkExpirationDaysPolicy
+            self.sharedLinkDefaultPermissionsPolicy = sharedLinkDefaultPermissionsPolicy
         }
 
         func json() throws -> JSON {
@@ -1775,8 +2056,16 @@ public class TeamPolicies {
                 "shared_folder_join_policy": try TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
                 "shared_link_create_policy": try TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),
                 "group_creation_policy": try TeamPolicies.GroupCreationSerializer().serialize(value.groupCreationPolicy),
-                "shared_folder_link_restriction_policy": try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
-                    .serialize(value.sharedFolderLinkRestrictionPolicy),
+                "shared_folder_link_restriction_policy": try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer().serialize(
+                    value.sharedFolderLinkRestrictionPolicy
+                ),
+                "enforce_link_password_policy": try TeamPolicies.EnforceLinkPasswordPolicySerializer().serialize(value.enforceLinkPasswordPolicy),
+                "default_link_expiration_days_policy": try TeamPolicies.DefaultLinkExpirationDaysPolicySerializer().serialize(
+                    value.defaultLinkExpirationDaysPolicy
+                ),
+                "shared_link_default_permissions_policy": try TeamPolicies.SharedLinkDefaultPermissionsPolicySerializer().serialize(
+                    value.sharedLinkDefaultPermissionsPolicy
+                ),
             ]
             return .dictionary(output)
         }
@@ -1784,22 +2073,93 @@ public class TeamPolicies {
         public func deserialize(_ json: JSON) throws -> TeamSharingPolicies {
             switch json {
             case .dictionary(let dict):
-                let sharedFolderMemberPolicy = try TeamPolicies.SharedFolderMemberPolicySerializer()
-                    .deserialize(dict["shared_folder_member_policy"] ?? .null)
+                let sharedFolderMemberPolicy = try TeamPolicies.SharedFolderMemberPolicySerializer().deserialize(dict["shared_folder_member_policy"] ?? .null)
                 let sharedFolderJoinPolicy = try TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
                 let sharedLinkCreatePolicy = try TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
                 let groupCreationPolicy = try TeamPolicies.GroupCreationSerializer().deserialize(dict["group_creation_policy"] ?? .null)
-                let sharedFolderLinkRestrictionPolicy = try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
-                    .deserialize(dict["shared_folder_link_restriction_policy"] ?? .null)
+                let sharedFolderLinkRestrictionPolicy = try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer().deserialize(
+                    dict["shared_folder_link_restriction_policy"] ?? .null
+                )
+                let enforceLinkPasswordPolicy = try TeamPolicies.EnforceLinkPasswordPolicySerializer().deserialize(dict["enforce_link_password_policy"] ?? .null)
+                let defaultLinkExpirationDaysPolicy = try TeamPolicies.DefaultLinkExpirationDaysPolicySerializer().deserialize(
+                    dict["default_link_expiration_days_policy"] ?? .null
+                )
+                let sharedLinkDefaultPermissionsPolicy = try TeamPolicies.SharedLinkDefaultPermissionsPolicySerializer().deserialize(
+                    dict["shared_link_default_permissions_policy"] ?? .null
+                )
                 return TeamSharingPolicies(
                     sharedFolderMemberPolicy: sharedFolderMemberPolicy,
                     sharedFolderJoinPolicy: sharedFolderJoinPolicy,
                     sharedLinkCreatePolicy: sharedLinkCreatePolicy,
                     groupCreationPolicy: groupCreationPolicy,
-                    sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy
+                    sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy,
+                    enforceLinkPasswordPolicy: enforceLinkPasswordPolicy,
+                    defaultLinkExpirationDaysPolicy: defaultLinkExpirationDaysPolicy,
+                    sharedLinkDefaultPermissionsPolicy: sharedLinkDefaultPermissionsPolicy
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: TeamSharingPolicies.self, json: json)
+            }
+        }
+    }
+
+    /// The TopLevelContentPolicy union
+    public enum TopLevelContentPolicy: CustomStringConvertible, JSONRepresentable {
+        /// Only admins can edit team folders at the top level of the team space.
+        case adminOnly
+        /// Everyone on the team can edit team folders at the top level of the team space.
+        case everyone
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TopLevelContentPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TopLevelContentPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TopLevelContentPolicy: \(error)"
+            }
+        }
+    }
+
+    public class TopLevelContentPolicySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TopLevelContentPolicy) throws -> JSON {
+            switch value {
+            case .adminOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("admin_only")
+                return .dictionary(d)
+            case .everyone:
+                var d = [String: JSON]()
+                d[".tag"] = .str("everyone")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> TopLevelContentPolicy {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "admin_only":
+                    return TopLevelContentPolicy.adminOnly
+                case "everyone":
+                    return TopLevelContentPolicy.everyone
+                case "other":
+                    return TopLevelContentPolicy.other
+                default:
+                    return TopLevelContentPolicy.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: TopLevelContentPolicy.self, json: json)
             }
         }
     }

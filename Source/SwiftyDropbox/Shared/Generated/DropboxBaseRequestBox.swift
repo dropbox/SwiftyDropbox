@@ -8,6 +8,7 @@ import Foundation
 
 /// Allows for heterogenous collections of typed requests
 public enum DropboxBaseRequestBox: CustomStringConvertible {
+    case account_getPhoto(DownloadRequestFile<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer>)
     case files_alphaUpload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
     case files_download(DownloadRequestFile<Files.FileMetadataSerializer, Files.DownloadErrorSerializer>)
     case files_downloadZip(DownloadRequestFile<Files.DownloadZipResultSerializer, Files.DownloadZipErrorSerializer>)
@@ -20,6 +21,7 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
     case files_upload(UploadRequest<Files.FileMetadataSerializer, Files.UploadErrorSerializer>)
     case files_uploadSessionAppend(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
     case files_uploadSessionAppendV2(UploadRequest<VoidSerializer, Files.UploadSessionAppendErrorSerializer>)
+    case files_uploadSessionAppendBatch(UploadRequest<Files.UploadSessionAppendBatchResultSerializer, Files.UploadSessionAppendBatchErrorSerializer>)
     case files_uploadSessionFinish(UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer>)
     case files_uploadSessionStart(UploadRequest<Files.UploadSessionStartResultSerializer, Files.UploadSessionStartErrorSerializer>)
     case paper_docsCreate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer>)
@@ -29,6 +31,8 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
 
     public var description: String {
         switch self {
+        case .account_getPhoto:
+            return "account/get_photo"
         case .files_alphaUpload:
             return "files/alpha/upload"
         case .files_download:
@@ -53,6 +57,8 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
             return "files/upload_session/append"
         case .files_uploadSessionAppendV2:
             return "files/upload_session/append_v2"
+        case .files_uploadSessionAppendBatch:
+            return "files/upload_session/append_batch"
         case .files_uploadSessionFinish:
             return "files/upload_session/finish"
         case .files_uploadSessionStart:

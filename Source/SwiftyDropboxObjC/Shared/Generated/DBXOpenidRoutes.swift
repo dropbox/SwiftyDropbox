@@ -66,7 +66,7 @@ public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXOpenidUserInfoResult?
+            var objc: DBXOpenidUserInfoResult? = nil
             if let swift = result {
                 objc = DBXOpenidUserInfoResult(swift: swift)
             }

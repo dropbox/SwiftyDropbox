@@ -159,15 +159,26 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
     /// A description of the file request.
     @objc
     public var description_: String? { swift.description_ }
+    /// If this request was created from video project, its id.
+    @objc
+    public var videoProjectId: String? { swift.videoProjectId }
 
     @objc
-    public init(title: String, destination: String, deadline: DBXFileRequestsFileRequestDeadline?, open: NSNumber, description_: String?) {
+    public init(
+        title: String,
+        destination: String,
+        deadline: DBXFileRequestsFileRequestDeadline?,
+        open: NSNumber,
+        description_: String?,
+        videoProjectId: String?
+    ) {
         self.swift = FileRequests.CreateFileRequestArgs(
             title: title,
             destination: destination,
             deadline: deadline?.swift,
             open: open.boolValue,
-            description_: description_
+            description_: description_,
+            videoProjectId: videoProjectId
         )
     }
 
@@ -208,6 +219,8 @@ public class DBXFileRequestsFileRequestError: NSObject {
             return DBXFileRequestsFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsFileRequestErrorNoWritePermission()
         }
     }
 
@@ -252,6 +265,11 @@ public class DBXFileRequestsFileRequestError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsFileRequestErrorValidationError? {
         self as? DBXFileRequestsFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsFileRequestErrorNoWritePermission? {
+        self as? DBXFileRequestsFileRequestErrorNoWritePermission
     }
 }
 
@@ -338,6 +356,16 @@ public class DBXFileRequestsFileRequestErrorValidationError: DBXFileRequestsFile
     }
 }
 
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsFileRequestErrorNoWritePermission: DBXFileRequestsFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.FileRequestError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+
 /// There was an error creating the file request.
 @objc
 public class DBXFileRequestsCreateFileRequestError: NSObject {
@@ -365,6 +393,8 @@ public class DBXFileRequestsCreateFileRequestError: NSObject {
             return DBXFileRequestsCreateFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsCreateFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsCreateFileRequestErrorNoWritePermission()
         case .invalidLocation:
             return DBXFileRequestsCreateFileRequestErrorInvalidLocation()
         case .rateLimit:
@@ -413,6 +443,11 @@ public class DBXFileRequestsCreateFileRequestError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsCreateFileRequestErrorValidationError? {
         self as? DBXFileRequestsCreateFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsCreateFileRequestErrorNoWritePermission? {
+        self as? DBXFileRequestsCreateFileRequestErrorNoWritePermission
     }
 
     @objc
@@ -509,6 +544,16 @@ public class DBXFileRequestsCreateFileRequestErrorValidationError: DBXFileReques
     }
 }
 
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsCreateFileRequestErrorNoWritePermission: DBXFileRequestsCreateFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.CreateFileRequestError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+
 /// File requests are not available on the specified folder.
 @objc
 public class DBXFileRequestsCreateFileRequestErrorInvalidLocation: DBXFileRequestsCreateFileRequestError {
@@ -557,6 +602,8 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsError: NSObject {
             return DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission()
         }
     }
 
@@ -601,6 +648,11 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError? {
         self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission? {
+        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission
     }
 }
 
@@ -687,6 +739,16 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError: DBX
     }
 }
 
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission: DBXFileRequestsDeleteAllClosedFileRequestsError {
+    @objc
+    public init() {
+        let swift = FileRequests.DeleteAllClosedFileRequestsError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+
 /// Result for deleteAllClosed.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsResult: NSObject {
@@ -758,6 +820,8 @@ public class DBXFileRequestsDeleteFileRequestError: NSObject {
             return DBXFileRequestsDeleteFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsDeleteFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsDeleteFileRequestErrorNoWritePermission()
         case .fileRequestOpen:
             return DBXFileRequestsDeleteFileRequestErrorFileRequestOpen()
         }
@@ -804,6 +868,11 @@ public class DBXFileRequestsDeleteFileRequestError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsDeleteFileRequestErrorValidationError? {
         self as? DBXFileRequestsDeleteFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsDeleteFileRequestErrorNoWritePermission? {
+        self as? DBXFileRequestsDeleteFileRequestErrorNoWritePermission
     }
 
     @objc
@@ -895,6 +964,16 @@ public class DBXFileRequestsDeleteFileRequestErrorValidationError: DBXFileReques
     }
 }
 
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsDeleteFileRequestErrorNoWritePermission: DBXFileRequestsDeleteFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.DeleteFileRequestError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+
 /// One or more file requests currently open.
 @objc
 public class DBXFileRequestsDeleteFileRequestErrorFileRequestOpen: DBXFileRequestsDeleteFileRequestError {
@@ -962,6 +1041,9 @@ public class DBXFileRequestsFileRequest: NSObject {
     /// A description of the file request.
     @objc
     public var description_: String? { swift.description_ }
+    /// If this request was created from video project, its id.
+    @objc
+    public var videoProjectId: String? { swift.videoProjectId }
 
     @objc
     public init(
@@ -973,7 +1055,8 @@ public class DBXFileRequestsFileRequest: NSObject {
         fileCount: NSNumber,
         destination: String?,
         deadline: DBXFileRequestsFileRequestDeadline?,
-        description_: String?
+        description_: String?,
+        videoProjectId: String?
     ) {
         self.swift = FileRequests.FileRequest(
             id: id,
@@ -984,7 +1067,8 @@ public class DBXFileRequestsFileRequest: NSObject {
             fileCount: fileCount.int64Value,
             destination: destination,
             deadline: deadline?.swift,
-            description_: description_
+            description_: description_,
+            videoProjectId: videoProjectId
         )
     }
 
@@ -1004,7 +1088,7 @@ public class DBXFileRequestsFileRequestDeadline: NSObject {
     /// The deadline for this file request.
     @objc
     public var deadline: Date { swift.deadline }
-    /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
+    /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
     @objc
     public var allowLateUploads: DBXFileRequestsGracePeriod? { guard let swift = swift.allowLateUploads else { return nil }
         return DBXFileRequestsGracePeriod(swift: swift)
@@ -1074,6 +1158,8 @@ public class DBXFileRequestsGetFileRequestError: NSObject {
             return DBXFileRequestsGetFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsGetFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsGetFileRequestErrorNoWritePermission()
         }
     }
 
@@ -1118,6 +1204,11 @@ public class DBXFileRequestsGetFileRequestError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsGetFileRequestErrorValidationError? {
         self as? DBXFileRequestsGetFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsGetFileRequestErrorNoWritePermission? {
+        self as? DBXFileRequestsGetFileRequestErrorNoWritePermission
     }
 }
 
@@ -1200,6 +1291,16 @@ public class DBXFileRequestsGetFileRequestErrorValidationError: DBXFileRequestsG
     @objc
     public init() {
         let swift = FileRequests.GetFileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsGetFileRequestErrorNoWritePermission: DBXFileRequestsGetFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.GetFileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }
@@ -1689,6 +1790,8 @@ public class DBXFileRequestsUpdateFileRequestError: NSObject {
             return DBXFileRequestsUpdateFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsUpdateFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsUpdateFileRequestErrorNoWritePermission()
         }
     }
 
@@ -1733,6 +1836,11 @@ public class DBXFileRequestsUpdateFileRequestError: NSObject {
     @objc
     public var asValidationError: DBXFileRequestsUpdateFileRequestErrorValidationError? {
         self as? DBXFileRequestsUpdateFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsUpdateFileRequestErrorNoWritePermission? {
+        self as? DBXFileRequestsUpdateFileRequestErrorNoWritePermission
     }
 }
 
@@ -1815,6 +1923,16 @@ public class DBXFileRequestsUpdateFileRequestErrorValidationError: DBXFileReques
     @objc
     public init() {
         let swift = FileRequests.UpdateFileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsUpdateFileRequestErrorNoWritePermission: DBXFileRequestsUpdateFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.UpdateFileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }

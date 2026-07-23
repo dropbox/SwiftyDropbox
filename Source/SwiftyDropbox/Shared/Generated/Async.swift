@@ -157,7 +157,7 @@ public class Async {
 
     /// Result returned by methods that poll for the status of an asynchronous job. Unions that extend this union should
     /// add a 'complete' field with a type of the information returned upon job completion. See PollEmptyResult for
-    /// an example.
+    /// an example
     public enum PollResultBase: CustomStringConvertible, JSONRepresentable {
         /// The asynchronous job is still in progress.
         case inProgress

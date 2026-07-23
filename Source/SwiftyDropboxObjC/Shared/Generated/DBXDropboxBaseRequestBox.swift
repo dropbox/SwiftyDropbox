@@ -9,6 +9,9 @@ import SwiftyDropbox
 
 extension DropboxBaseRequestBox {
     var objc: DBXRequest {
+        if case .account_getPhoto(let swift) = self {
+            return DBXAccountGetPhotoDownloadRequestFile(swift: swift)
+        }
         if case .files_alphaUpload(let swift) = self {
             return DBXFilesAlphaUploadUploadRequest(swift: swift)
         }
@@ -44,6 +47,9 @@ extension DropboxBaseRequestBox {
         }
         if case .files_uploadSessionAppendV2(let swift) = self {
             return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
+        }
+        if case .files_uploadSessionAppendBatch(let swift) = self {
+            return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
         }
         if case .files_uploadSessionFinish(let swift) = self {
             return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
