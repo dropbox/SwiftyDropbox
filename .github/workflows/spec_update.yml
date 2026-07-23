@@ -86,6 +86,7 @@ jobs:
       - name: Generate New Routes
         run: |
           python generate_base_client.py
+          python generate_base_client.py --objc
 
       - name: Close Old Pull Requests
         id: close-old-prs
